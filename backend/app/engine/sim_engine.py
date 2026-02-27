@@ -42,19 +42,18 @@ def run_simulation(db: Session, team_a: str, team_b: str, date: str, league_code
     # ----------------------------------------------------------------------
     # Corridor selection
     # ----------------------------------------------------------------------
-    if score > 0.3:
-        corridor = "O2.5"
-        translated = "O2.5 (LOW_CONF)"
-    elif score > 0.0:
-        corridor = "O1.5"
-        translated = "O1.5"
-    elif score > -0.3:
-        corridor = "U2.5"
-        translated = "U2.5"
+    if score > 0.5:
+    corridor = "O2.5" if config.volatility > 0.4 else "O1.5"
+    translated = corridor if corridor == "O1.5" else "O2.5 (LOW_CONF)"
+    elif score > 0.1:
+    corridor = "O1.5"
+    translated = "O1.5"
+    elif score > -0.2:
+    corridor = "U2.5"
+    translated = "U2.5"
     else:
-        # Deep under lean
-        corridor = "U3.5/4.5"
-        translated = "U3.5/4.5"
+    corridor = "U3.5/4.5" if config.volatility > 0.4 else "U3.5"
+    translated = corridor
 
     # ----------------------------------------------------------------------
     # Confidence
