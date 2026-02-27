@@ -16,28 +16,31 @@ const dateInput = document.getElementById('date');
 })();
 
 
-// --------------------------------------------------------
 // Load leagues from backend
-// --------------------------------------------------------
 async function loadLeagues() {
   try {
     const res = await fetch('/api/league-list');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
     const leagues = await res.json();
 
     leagueSelect.innerHTML = '';
 
     leagues
       .sort((a, b) => (a.name || a.code).localeCompare(b.name || b.code))
-      .forEach(({ code, name }) => {
+      .forEach(({ code, name, flag }) => {
         const opt = document.createElement('option');
         opt.value = code;
-        opt.textContent = `${name} (${code})`;
+        opt.textContent = `${flag} ${name}`;
         leagueSelect.appendChild(opt);
       });
+
   } catch (err) {
     console.error('Failed loading leagues:', err);
-    leagueSelect.innerHTML = '<option>Error loading leagues</option>';
+
+    leagueSelect.innerHTML = `
+      <option disabled selected>Error loading leagues</option>
+    `;
   }
 }
 
