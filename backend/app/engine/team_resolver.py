@@ -1,87 +1,100 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict
 from sqlalchemy.orm import Session
 from difflib import get_close_matches
 from app.models.team import Team, TeamAlias
 from app.util.text_norm import normalize_team
+
+
+INTERNATIONAL_CLUB = "INTERNATIONAL_CLUB"
+INTERNATIONAL_NATIONS = "INTERNATIONAL_NATIONS"
+
 
 def _find_team_ids_by_key_or_alias(db: Session, key: str) -> List[Team]:
     # Exact match by team_key
     t = db.query(Team).filter(Team.team_key == key).all()
     if t:
         return t
-    # Exact match by alias
+    # Or alias match
     alias_rows = db.query(TeamAlias).filter(TeamAlias.alias_key == key).all()
     if not alias_rows:
         return []
     team_ids = [a.team_id for a in alias_rows]
-    if not team_ids:
-        return []
-    teams = db.query(Team).filter(Team.id.in_(team_ids)).all()
-    return teams
+    return db.query(Team).filter(Team.id.in_(team_ids)).all()
+
 
 def _fuzzy_candidates(db: Session, key: str, n: int = 5) -> List[Dict]:
-    # Collect all keys and aliases (small MVP-scale acceptable)
     keys = [t.team_key for t in db.query(Team).all()]
     alias_keys = [a.alias_key for a in db.query(TeamAlias).all()]
     universe = list(set(keys + alias_keys))
     close = get_close_matches(key, universe, n=n, cutoff=0.8)
-    results = []
+
+    out = []
     for ck in close:
-        # Resolve ck back to Team
         teams = _find_team_ids_by_key_or_alias(db, ck)
         for team in teams:
-            results.append({
+            out.append({
                 "team_key": team.team_key,
                 "display_name": team.display_name,
                 "league_code": team.league_code
             })
-    # Deduplicate by (team_key, league_code)
-    seen = set()
-    unique = []
-    for r in results:
-        sig = (r["team_key"], r["league_code"])
-        if sig not in seen:
-            seen.add(sig)
-            unique.append(r)
-    return unique
+    return out
+
 
 def resolve_league_for_match(db: Session, team_a: str, team_b: str) -> Dict:
     a_key = normalize_team(team_a)
     b_key = normalize_team(team_b)
 
+    # Fetch teams
     a_teams = _find_team_ids_by_key_or_alias(db, a_key)
     b_teams = _find_team_ids_by_key_or_alias(db, b_key)
 
-    # If exact not found, offer fuzzy suggestions
-    suggestions = {"team_a": [], "team_b": []}
-    if not a_teams:
-        suggestions["team_a"] = _fuzzy_candidates(db, a_key)
-    if not b_teams:
-        suggestions["team_b"] = _fuzzy_candidates(db, b_key)
+    # Suggestions
+    suggestions = {
+        "team_a": [] if a_teams else _fuzzy_candidates(db, a_key),
+        "team_b": [] if b_teams else _fuzzy_candidates(db, b_key),
+    }
 
-    leagues_a = set(t.league_code for t in a_teams)
-    leagues_b = set(t.league_code for t in b_teams)
+    # If both sides found exact teams:
+    if a_teams and b_teams:
+        leagues_a = set(t.league_code for t in a_teams)
+        leagues_b = set(t.league_code for t in b_teams)
 
-    # If both resolved and intersection is one league → success
-    if leagues_a and leagues_b:
-        inter = leagues_a.intersection(leagues_b)
-        if len(inter) == 1:
-            return {"resolved": True, "league_code": list(inter)[0], "suggestions": suggestions}
-        elif len(inter) > 1:
-            return {"resolved": False, "leagues": sorted(list(inter)), "suggestions": suggestions}
-        else:
-            # Both found but in different leagues; ambiguous
+        # CASE: National teams → INTERNATIONAL_NATIONS
+        if all(lc == "NATIONAL" for lc in leagues_a.union(leagues_b)):
             return {
-                "resolved": False,
-                "leagues": sorted(list(leagues_a.union(leagues_b))),
+                "resolved": True,
+                "league_code": INTERNATIONAL_NATIONS,
                 "suggestions": suggestions
             }
 
-    # If only one side resolves → still helpful
-    if leagues_a and not leagues_b:
-        return {"resolved": False, "leagues": sorted(list(leagues_a)), "suggestions": suggestions}
-    if leagues_b and not leagues_a:
-        return {"resolved": False, "leagues": sorted(list(leagues_b)), "suggestions": suggestions}
+        # CASE: Same club league
+        intersection = leagues_a.intersection(leagues_b)
+        if len(intersection) == 1:
+            return {
+                "resolved": True,
+                "league_code": list(intersection)[0],
+                "suggestions": suggestions
+            }
 
-    # None resolved
-    return {"resolved": False, "leagues": [], "suggestions": suggestions}
+        # CASE: Teams exist but different leagues → INTERNATIONAL CLUB
+        return {
+            "resolved": True,
+            "league_code": INTERNATIONAL_CLUB,
+            "suggestions": suggestions
+        }
+
+    # Only one team found → unresolved
+    if a_teams or b_teams:
+        detected = list(set([t.league_code for t in (a_teams + b_teams)]))
+        return {
+            "resolved": False,
+            "leagues": detected,
+            "suggestions": suggestions
+        }
+
+    # Nothing found
+    return {
+        "resolved": False,
+        "leagues": [],
+        "suggestions": suggestions
+    }
