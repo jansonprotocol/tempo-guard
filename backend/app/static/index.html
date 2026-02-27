@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ATHENA: Tempo Guard — MVP</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>ATHENA: Tempo Guard</h1>
+    <p class="subtitle">MVP · Corridor → Translated Play</p>
+
+    <form id="sim-form">
+      <div class="row">
+        <label for="teamA">Team A</label>
+        <input id="teamA" name="teamA" type="text" placeholder="Ajax" required/>
+      </div>
+
+      <div class="row">
+        <label for="teamB">Team B</label>
+        <input id="teamB" name="teamB" type="text" placeholder="PSV" required/>
+      </div>
+
+      <div class="row">
+        <label for="date">Match Date</label>
+        <input id="date" name="date" type="date" required/>
+      </div>
+
+      <div class="row">
+        <label for="league">League</label>
+        <select id="league" name="league" required>
+          <option value="NL-EDIV">Eredivisie (NL-EDIV)</option>
+          <option value="FR-L1">Ligue 1 (FR-L1)</option>
+          <option value="BR-A">Brazil Serie A (BR-A)</option>
+        </select>
+      </div>
+
+      <button type="submit">Run ATHENA</button>
+    </form>
+
+    <div id="result" class="card hidden">
+      <h2>Result</h2>
+      <pre id="json"></pre>
+    </div>
+
+    <footer>
+      <a href="/docs" target="_blank">API Docs</a> · <a href="/health" target="_blank">Health</a>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
