@@ -17,3 +17,7 @@ class LeagueConfig(Base):
     volatility = Column(Float, default=0.5)
 
     description = Column(String, default="")
+
+    # NEW:
+    display_name = Column(String, default="")
+    country_code = Column(String, default="")
