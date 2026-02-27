@@ -33,15 +33,6 @@ def league_list(db: Session = Depends(get_db)):
         }
         for r in rows
     ]
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-from app.database.db import get_db
-from app.models.league_config import LeagueConfig
-
-router = APIRouter()
-
-# (Keep your existing routes here, e.g., /league-configs, /league-list)
 
 class UpsertLeaguePayload(BaseModel):
     league_code: str
