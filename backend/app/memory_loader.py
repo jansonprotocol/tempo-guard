@@ -36,8 +36,10 @@ def load_league_configs(db: Session):
             base_under_bias=entry["base_under_bias"],
             tempo_factor=entry["tempo_factor"],
             safety_mode=entry["safety_mode"],
+            aggression_level=entry["aggression_level"],
+            volatility=entry["volatility"],
             description=entry["description"],
-        )
+        ) 
 
         db.add(config)
 
