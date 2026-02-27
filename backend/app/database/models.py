@@ -2,6 +2,8 @@ from app.models.league_config import LeagueConfig
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.sql import func
 from app.database.base import Base
+from app.models.league_config import LeagueConfig
+from app.models.team import Team, TeamAlias
 
 class User(Base):
     __tablename__ = "users"
