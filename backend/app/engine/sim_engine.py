@@ -28,32 +28,47 @@ def run_simulation(db: Session, team_a: str, team_b: str, date: str, league_code
         }
 
     # ----------------------------------------------------------------------
-    # Simple MVP logic:
-    # Combine under/over biases and tempo
+    # MVP+ logic:
+    # Combine base biases, tempo, aggression, safety
     # ----------------------------------------------------------------------
     score = (
         config.base_over_bias
         - config.base_under_bias
         + (config.tempo_factor - 1.0)
         + (config.aggression_level * 0.4)
-        - (config.safety_mode * 0.2)
+        - (0.2 if config.safety_mode else 0)
     )
 
     # ----------------------------------------------------------------------
-    # Corridor selection
+    # Corridor selection (uses volatility)
     # ----------------------------------------------------------------------
     if score > 0.5:
-    corridor = "O2.5" if config.volatility > 0.4 else "O1.5"
-    translated = corridor if corridor == "O1.5" else "O2.5 (LOW_CONF)"
+        # Strong Over lean
+        if config.volatility > 0.4:
+            corridor = "O2.5"
+            translated = "O2.5 (LOW_CONF)"
+        else:
+            corridor = "O1.5"
+            translated = "O1.5"
+
     elif score > 0.1:
-    corridor = "O1.5"
-    translated = "O1.5"
+        # Mild Over lean
+        corridor = "O1.5"
+        translated = "O1.5"
+
     elif score > -0.2:
-    corridor = "U2.5"
-    translated = "U2.5"
+        # Mild Under lean
+        corridor = "U2.5"
+        translated = "U2.5"
+
     else:
-    corridor = "U3.5/4.5" if config.volatility > 0.4 else "U3.5"
-    translated = corridor
+        # Strong Under lean
+        if config.volatility > 0.4:
+            corridor = "U3.5/4.5"
+            translated = "U3.5/4.5"
+        else:
+            corridor = "U3.5"
+            translated = "U3.5"
 
     # ----------------------------------------------------------------------
     # Confidence
@@ -71,7 +86,10 @@ def run_simulation(db: Session, team_a: str, team_b: str, date: str, league_code
     # ----------------------------------------------------------------------
     narrative = (
         f"{league_code}: tempo={config.tempo_factor}, "
-        f"over_bias={config.base_over_bias}, under_bias={config.base_under_bias}, "
+        f"over_bias={config.base_over_bias}, "
+        f"under_bias={config.base_under_bias}, "
+        f"aggression={config.aggression_level}, "
+        f"volatility={config.volatility}, "
         f"score={round(score,3)} → {translated}"
     )
 
