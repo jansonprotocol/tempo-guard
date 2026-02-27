@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Routers
-from app.api.routes_auth import router as auth_router
 from app.api.routes_health import router as health_router
+from app.api.routes_auth import router as auth_router
 from app.api.routes_league import router as league_router
 
 # Database
@@ -20,7 +20,9 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# ---- CORS ----
+# ------------------------------------------------------------------------------
+# CORS
+# ------------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,19 +32,25 @@ app.add_middleware(
 )
 
 
-# ---- STARTUP EVENT ----
+# ------------------------------------------------------------------------------
+# STARTUP EVENT — Create DB tables + Load league configs
+# ------------------------------------------------------------------------------
 @app.on_event("startup")
 def startup_event():
-    # Create tables if missing
+    # Create tables
     Base.metadata.create_all(bind=engine)
 
-    # Load league configs from seed JSON
+    # Load seed data
     db = SessionLocal()
-    load_league_configs(db)
-    db.close()
+    try:
+        load_league_configs(db)
+    finally:
+        db.close()
 
 
-# ---- ROUTERS ----
+# ------------------------------------------------------------------------------
+# ROUTERS
+# ------------------------------------------------------------------------------
 app.include_router(health_router, prefix="/health", tags=["Health"])
 app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
 app.include_router(league_router, prefix="/api", tags=["LeagueConfig"])
