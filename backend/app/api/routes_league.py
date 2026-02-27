@@ -33,3 +33,53 @@ def league_list(db: Session = Depends(get_db)):
         }
         for r in rows
     ]
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from app.database.db import get_db
+from app.models.league_config import LeagueConfig
+
+router = APIRouter()
+
+# (Keep your existing routes here, e.g., /league-configs, /league-list)
+
+class UpsertLeaguePayload(BaseModel):
+    league_code: str
+    base_over_bias: float = 0.0
+    base_under_bias: float = 0.0
+    tempo_factor: float = 1.0
+    safety_mode: bool = True
+    aggression_level: float = 0.5
+    volatility: float = 0.5
+    description: str = ""
+
+@router.post("/league-upsert")
+def league_upsert(payload: UpsertLeaguePayload, db: Session = Depends(get_db)):
+    """
+    Create or update a league config row by league_code.
+    If a row with league_code exists → update it; otherwise → create it.
+    """
+    # Find existing row
+    item = (
+        db.query(LeagueConfig)
+        .filter(LeagueConfig.league_code == payload.league_code)
+        .first()
+    )
+
+    # Create or update
+    if item is None:
+        item = LeagueConfig(league_code=payload.league_code)
+
+    item.base_over_bias = payload.base_over_bias
+    item.base_under_bias = payload.base_under_bias
+    item.tempo_factor = payload.tempo_factor
+    item.safety_mode = payload.safety_mode
+    item.aggression_level = payload.aggression_level
+    item.volatility = payload.volatility
+    item.description = payload.description
+
+    db.add(item)
+    db.commit()
+    db.refresh(item)
+
+    return {"message": "upsert_ok", "league_code": item.league_code}
