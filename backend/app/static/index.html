@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>ATHENA: Tempo Guard — MVP</title>
-  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
@@ -30,9 +30,7 @@
       <div class="row">
         <label for="league">League</label>
         <select id="league" name="league" required>
-          <option value="NL-EDIV">Eredivisie (NL-EDIV)</option>
-          <option value="FR-L1">Ligue 1 (FR-L1)</option>
-          <option value="BR-A">Brazil Serie A (BR-A)</option>
+          <option value="" disabled selected>Loading leagues…</option>
         </select>
       </div>
 
@@ -45,7 +43,8 @@
     </div>
 
     <footer>
-      <a href="/docs" target="_blank">API Docs</a> · <a href="/health" target="_blank">Health</a>
+      <a href="/docs" target="_blank">API Docs</a> ·
+      <a href="/health" target="_blank">Health</a>
     </footer>
   </div>
 
