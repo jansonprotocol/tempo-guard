@@ -35,4 +35,16 @@
     "country": "France",
     "aliases": ["FC Lorient"]
   }
+  {
+    "display_name": "England",
+    "league_code": "NATIONAL",
+    "country": "England",
+    "aliases": ["ENG"]
+  },
+  {
+    "display_name": "Netherlands",
+    "league_code": "NATIONAL",
+    "country": "Netherlands",
+    "aliases": ["Holland", "NED"]
+  }
 ]
