@@ -1,1 +1,26 @@
-
+[
+  {
+    "league_code": "NL-EDIV",
+    "base_over_bias": 0.1,
+    "base_under_bias": 0.3,
+    "tempo_factor": 1.2,
+    "safety_mode": true,
+    "description": "Dutch Eredivisie baseline config"
+  },
+  {
+    "league_code": "FR-L1",
+    "base_over_bias": -0.2,
+    "base_under_bias": 0.4,
+    "tempo_factor": 0.9,
+    "safety_mode": true,
+    "description": "France Ligue 1 conservative config"
+  },
+  {
+    "league_code": "BR-A",
+    "base_over_bias": 0.3,
+    "base_under_bias": 0.1,
+    "tempo_factor": 1.1,
+    "safety_mode": false,
+    "description": "Brazil Serie A more open baseline"
+  }
+]
