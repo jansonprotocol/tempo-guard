@@ -6,15 +6,18 @@ from app.models.league_config import LeagueConfig
 def load_league_configs(db: Session):
     """Load league configs from JSON seed file into DB if missing."""
 
+    # Path to seed file
     seed_path = os.path.join("app", "seed", "league_configs.json")
 
     if not os.path.exists(seed_path):
         print("No seed file found.")
         return
 
+    # Read JSON file
     with open(seed_path, "r") as f:
         data = json.load(f)
 
+    # Insert entries if not already in DB
     for entry in data:
         exists = (
             db.query(LeagueConfig)
@@ -26,6 +29,7 @@ def load_league_configs(db: Session):
             continue
 
         print(f"Seeding league config: {entry['league_code']}")
+
         config = LeagueConfig(
             league_code=entry["league_code"],
             base_over_bias=entry["base_over_bias"],
@@ -34,8 +38,8 @@ def load_league_configs(db: Session):
             safety_mode=entry["safety_mode"],
             description=entry["description"],
         )
+
         db.add(config)
 
     db.commit()
     print("League config seeding complete.")
-``
