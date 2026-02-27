@@ -1,10 +1,17 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
+
 from app.database.db import get_db
 from app.models.league_config import LeagueConfig
 
+
 router = APIRouter()
 
+
+# -------------------------------------------------------------------
+# GET /api/league-configs  (full config list with all fields)
+# -------------------------------------------------------------------
 @router.get("/league-configs")
 def get_league_configs(db: Session = Depends(get_db)):
     rows = db.query(LeagueConfig).all()
@@ -15,16 +22,19 @@ def get_league_configs(db: Session = Depends(get_db)):
             "under_bias": r.base_under_bias,
             "tempo_factor": r.tempo_factor,
             "safety_mode": r.safety_mode,
-            "aggression_level": getattr(r, "aggression_level", 0.5),
-            "volatility": getattr(r, "volatility", 0.5),
-            "description": r.description or ""
+            "aggression_level": r.aggression_level,
+            "volatility": r.volatility,
+            "description": r.description,
         }
         for r in rows
     ]
 
+
+# -------------------------------------------------------------------
+# GET /api/league-list (minimal list for frontend dropdown)
+# -------------------------------------------------------------------
 @router.get("/league-list")
 def league_list(db: Session = Depends(get_db)):
-    """Minimal list for frontend dropdown."""
     rows = db.query(LeagueConfig).order_by(LeagueConfig.league_code).all()
     return [
         {
@@ -34,6 +44,10 @@ def league_list(db: Session = Depends(get_db)):
         for r in rows
     ]
 
+
+# -------------------------------------------------------------------
+# POST /api/league-upsert  (create or update league)
+# -------------------------------------------------------------------
 class UpsertLeaguePayload(BaseModel):
     league_code: str
     base_over_bias: float = 0.0
@@ -44,23 +58,23 @@ class UpsertLeaguePayload(BaseModel):
     volatility: float = 0.5
     description: str = ""
 
+
 @router.post("/league-upsert")
 def league_upsert(payload: UpsertLeaguePayload, db: Session = Depends(get_db)):
-    """
-    Create or update a league config row by league_code.
-    If a row with league_code exists → update it; otherwise → create it.
-    """
-    # Find existing row
+    """Insert or update league config."""
+
+    # Look up existing row
     item = (
         db.query(LeagueConfig)
         .filter(LeagueConfig.league_code == payload.league_code)
         .first()
     )
 
-    # Create or update
+    # Create if missing
     if item is None:
         item = LeagueConfig(league_code=payload.league_code)
 
+    # Update fields
     item.base_over_bias = payload.base_over_bias
     item.base_under_bias = payload.base_under_bias
     item.tempo_factor = payload.tempo_factor
