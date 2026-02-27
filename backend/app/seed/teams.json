@@ -1,0 +1,38 @@
+[
+  {
+    "display_name": "Ajax",
+    "league_code": "NL-EDIV",
+    "country": "Netherlands",
+    "aliases": ["AFC Ajax"]
+  },
+  {
+    "display_name": "PSV",
+    "league_code": "NL-EDIV",
+    "country": "Netherlands",
+    "aliases": ["PSV Eindhoven"]
+  },
+  {
+    "display_name": "Tottenham Hotspur",
+    "league_code": "ENG-EPL",
+    "country": "England",
+    "aliases": ["Tottenham", "Spurs"]
+  },
+  {
+    "display_name": "Chelsea",
+    "league_code": "ENG-EPL",
+    "country": "England",
+    "aliases": []
+  },
+  {
+    "display_name": "Paris Saint-Germain",
+    "league_code": "FR-L1",
+    "country": "France",
+    "aliases": ["PSG", "Paris SG"]
+  },
+  {
+    "display_name": "Lorient",
+    "league_code": "FR-L1",
+    "country": "France",
+    "aliases": ["FC Lorient"]
+  }
+]
