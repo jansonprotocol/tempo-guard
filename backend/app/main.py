@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # Router imports
 from app.api.routes_auth import router as auth_router
 from app.api.routes_health import router as health_router
+from app.api.routes_league import router as league_router
 
 # Database imports
 from app.database.base import Base
@@ -32,6 +33,7 @@ def create_app() -> FastAPI:
     # Register routers
     app.include_router(health_router, prefix="/health", tags=["Health"])
     app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
+    app.include_router(league_router, prefix="/api", tags=["LeagueConfig"])
 
     return app
 
