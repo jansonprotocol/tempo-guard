@@ -5,6 +5,8 @@
     "base_under_bias": 0.3,
     "tempo_factor": 1.2,
     "safety_mode": true,
+    "aggression_level": 0.6,
+    "volatility": 0.5,
     "description": "Dutch Eredivisie baseline config"
   },
   {
@@ -13,6 +15,8 @@
     "base_under_bias": 0.4,
     "tempo_factor": 0.9,
     "safety_mode": true,
+    "aggression_level": 0.3,
+    "volatility": 0.3,
     "description": "France Ligue 1 conservative config"
   },
   {
@@ -21,6 +25,8 @@
     "base_under_bias": 0.1,
     "tempo_factor": 1.1,
     "safety_mode": false,
+    "aggression_level": 0.7,
+    "volatility": 0.6,
     "description": "Brazil Serie A more open baseline"
   }
 ]
