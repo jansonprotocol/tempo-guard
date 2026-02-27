@@ -35,6 +35,8 @@ def run_simulation(db: Session, team_a: str, team_b: str, date: str, league_code
         config.base_over_bias
         - config.base_under_bias
         + (config.tempo_factor - 1.0)
+        + (config.aggression_level * 0.4)
+        - (config.safety_mode * 0.2)
     )
 
     # ----------------------------------------------------------------------
