@@ -36,10 +36,20 @@ def get_league_configs(db: Session = Depends(get_db)):
 @router.get("/league-list")
 def league_list(db: Session = Depends(get_db)):
     rows = db.query(LeagueConfig).order_by(LeagueConfig.league_code).all()
+
+    def flag(cc):
+        try:
+            if len(cc) != 2:
+                return "🌍"
+            return chr(ord(cc.upper()[0]) - 65 + 0x1F1E6) + chr(ord(cc.upper()[1]) - 65 + 0x1F1E6)
+        except:
+            return "🌍"
+
     return [
         {
             "code": r.league_code,
-            "name": (r.description or r.league_code).strip()
+            "name": r.display_name or r.league_code,
+            "flag": flag(r.country_code or ""),
         }
         for r in rows
     ]
