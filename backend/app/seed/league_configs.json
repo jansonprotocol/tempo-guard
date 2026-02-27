@@ -1,32 +1,53 @@
 [
   {
-    "league_code": "NL-EDIV",
-    "base_over_bias": 0.1,
-    "base_under_bias": 0.3,
-    "tempo_factor": 1.2,
-    "safety_mode": true,
-    "aggression_level": 0.6,
-    "volatility": 0.5,
-    "description": "Dutch Eredivisie baseline config"
+  "league_code": "NL-EDIV",
+  "display_name": "Eredivisie",
+  "country_code": "NL",
+
+  "base_over_bias": 0.1,
+  "base_under_bias": 0.3,
+  "tempo_factor": 1.2,
+  "safety_mode": true,
+  "aggression_level": 0.6,
+  "volatility": 0.5,
+  "description": ""
   },
   {
-    "league_code": "FR-L1",
-    "base_over_bias": -0.2,
-    "base_under_bias": 0.4,
-    "tempo_factor": 0.9,
-    "safety_mode": true,
-    "aggression_level": 0.3,
-    "volatility": 0.3,
-    "description": "France Ligue 1 conservative config"
+  "league_code": "FR-L1",
+  "display_name": "Ligue 1",
+  "country_code": "FR",
+
+  "base_over_bias": -0.2,
+  "base_under_bias": 0.4,
+  "tempo_factor": 0.9,
+  "safety_mode": true,
+  "aggression_level": 0.3,
+  "volatility": 0.3,
+  "description": ""
   },
   {
-    "league_code": "BR-A",
-    "base_over_bias": 0.3,
-    "base_under_bias": 0.1,
-    "tempo_factor": 1.1,
-    "safety_mode": false,
-    "aggression_level": 0.7,
-    "volatility": 0.6,
-    "description": "Brazil Serie A more open baseline"
+  "league_code": "ENG-EPL",
+  "display_name": "Premier League",
+  "country_code": "GB",
+
+  "base_over_bias": 0.15,
+  "base_under_bias": 0.2,
+  "tempo_factor": 1.1,
+  "safety_mode": true,
+  "aggression_level": 0.55,
+  "volatility": 0.45,
+  "description": ""
+  }
+  {
+  "league_code": "INTERNATIONAL_CLUB",
+  "display_name": "International (Clubs)",
+  "country_code": "UN",
+  "base_over_bias": 0.05,
+  "base_under_bias": 0.1,
+  "tempo_factor": 1.05,
+  "safety_mode": true,
+  "aggression_level": 0.45,
+  "volatility": 0.4,
+  "description": ""
   }
 ]
