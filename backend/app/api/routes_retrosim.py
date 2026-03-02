@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.database.db import SessionLocal
 from app.engine.types import MatchRequest
 from app.services.predict import predict_match
-from app.services.data_providers.api_football_retro import find_fixture_and_asof_stats
+from app.services.data_providers.fbref_base import asof_features
 
 router = APIRouter()
 
@@ -29,15 +29,8 @@ def get_db():
 @router.post("/retrosim")
 def post_retrosim(body: RetroBody, db: Session = Depends(get_db)):
     try:
-        metrics, fixture_obj = find_fixture_and_asof_stats(
-            league_code=body.league_code,
-            home=body.home_team,
-            away=body.away_team,
-            d=body.match_date,
-            league_search_hint=body.league_search_hint
-        )
+        metrics = asof_features(body.league_code, body.home_team, body.away_team, body.match_date)
 
-        # Build MatchRequest using retro metrics (or fall back to defaults if empty)
         req = MatchRequest(
             league_code=body.league_code,
             home_team=body.home_team,
@@ -50,21 +43,7 @@ def post_retrosim(body: RetroBody, db: Session = Depends(get_db)):
             p_away_tt05=metrics.get("p_away_tt05"),
             tempo_index=metrics.get("tempo_index")
         )
-
         pred = predict_match(db, req)
-
-        # If we found the actual fixture, surface the FT score to compare with corridor
-        actual = None
-        if fixture_obj:
-            goals = fixture_obj.get("goals") or {}
-            actual = {
-                "home": goals.get("home"),
-                "away": goals.get("away"),
-                "total": (goals.get("home") or 0) + (goals.get("away") or 0),
-                "league_id": (fixture_obj.get("league") or {}).get("id"),
-                "fixture_id": (fixture_obj.get("fixture") or {}).get("id"),
-                "status": (fixture_obj.get("fixture") or {}).get("status", {}).get("short"),
-            }
 
         return {
             "mode": "retrosim",
@@ -76,8 +55,8 @@ def post_retrosim(body: RetroBody, db: Session = Depends(get_db)):
             "applied_modules": pred.applied_modules,
             "safety_flags": pred.safety_flags,
             "explanations": pred.explanations,
-            "inputs_used": metrics or {},
-            "actual_result": actual
+            "inputs_used": metrics
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
