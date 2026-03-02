@@ -1,0 +1,10 @@
+{
+  "NL-EDIV": { "api_football": 79 },
+  "NL-ERED": { "api_football": 88 },
+
+  "UCL": { "api_football": null },
+  "UEL": { "api_football": null },
+  "UECL": { "api_football": null },
+
+  "CLUB-FRIENDLY": { "api_football": null }
+}
