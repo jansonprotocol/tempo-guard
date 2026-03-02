@@ -90,7 +90,7 @@ def asof_features(
             leagues=[fbref_comp],
             seasons=seasons,
             data_dir=FBREF_CACHE_DIR,
-            headers={"sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"'}
+            proxy="tor"
         )
 
         # soccerdata export names vary a bit per version; try a small cascade:
