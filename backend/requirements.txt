@@ -9,6 +9,7 @@ argon2-cffi
 pyjwt
 requests
 soccerdata>=1.7.0, 
-pandas>=2.1.0, lxml
+pandas>=2.1.0
+lxml
 pyarrow
 requests-cache
