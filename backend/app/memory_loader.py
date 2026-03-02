@@ -7,32 +7,27 @@ from app.models.team import Team, TeamAlias
 from app.util.text_norm import normalize_team
 
 # ---------------------------------------------------------------------------
-# PATH HANDLING (works on Render, Docker, and locally)
+# PATH HANDLING — 100% SAFE FOR YOUR STRUCTURE (/backend/app)
 # ---------------------------------------------------------------------------
 
-# Absolute directory of THIS file
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Seed folder is always located in: backend/app/seed/
-SEED_DIR = os.path.join(BASE_DIR, "..", "seed")
+# This file lives in: /app/backend/app/memory_loader.py  (Render)
+# Or locally:         /backend/app/memory_loader.py
+# So the seed folder is ALWAYS located at: /backend/app/seed/ (same level)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # → /backend/app
+SEED_DIR = os.path.join(BASE_DIR, "seed")               # → /backend/app/seed
 
 def _seed_path(filename: str) -> str:
     """
-    Build an absolute path to a seed file.
-    This fixes 100% of the path issues you were having on Render.
+    Build an absolute path to a JSON seed file located in /backend/app/seed.
     """
     return os.path.join(SEED_DIR, filename)
 
 
 # ---------------------------------------------------------------------------
-# SEED LOADER UTILITIES
+# JSON LOADER HELPERS
 # ---------------------------------------------------------------------------
 
 def _read_json(path: str):
-    """
-    Read a JSON seed file with graceful logging.
-    Returns list/dict or None if missing.
-    """
     if not os.path.exists(path):
         print(f"[memory_loader] ERROR: Seed file not found → {path}")
         return None
@@ -40,7 +35,7 @@ def _read_json(path: str):
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-            print(f"[memory_loader] Loaded seed: {path} ({len(data)} entries)")
+            print(f"[memory_loader] Loaded seed file: {path} ({len(data)} items)")
             return data
     except Exception as e:
         print(f"[memory_loader] ERROR reading JSON {path}: {e}")
@@ -48,16 +43,10 @@ def _read_json(path: str):
 
 
 # ---------------------------------------------------------------------------
-# LEAGUE CONFIG SEEDER
+# LEAGUE CONFIG LOADER
 # ---------------------------------------------------------------------------
 
 def load_league_configs(db: Session):
-    """
-    Upsert league configs from seed/league_configs.json.
-    Fields include:
-      league_code, base_over_bias, base_under_bias, tempo_factor,
-      safety_mode, aggression_level, volatility, description
-    """
     path = _seed_path("league_configs.json")
     data = _read_json(path)
 
@@ -77,7 +66,7 @@ def load_league_configs(db: Session):
         ).first()
 
         if existing is None:
-            # CREATE NEW
+            # CREATE
             item = LeagueConfig(
                 league_code=code,
                 base_over_bias=float(entry.get("base_over_bias", 0.0)),
@@ -92,7 +81,7 @@ def load_league_configs(db: Session):
             created += 1
 
         else:
-            # UPDATE EXISTING (idempotent)
+            # UPDATE
             existing.base_over_bias = float(entry.get("base_over_bias", existing.base_over_bias))
             existing.base_under_bias = float(entry.get("base_under_bias", existing.base_under_bias))
             existing.tempo_factor = float(entry.get("tempo_factor", existing.tempo_factor))
@@ -107,14 +96,10 @@ def load_league_configs(db: Session):
 
 
 # ---------------------------------------------------------------------------
-# TEAM + ALIAS SEEDER
+# TEAM LOADER
 # ---------------------------------------------------------------------------
 
 def load_teams(db: Session):
-    """
-    Load teams from seed/teams.json.
-    Fields: display_name, league_code, country?, aliases[]
-    """
     path = _seed_path("teams.json")
     data = _read_json(path)
 
@@ -138,15 +123,14 @@ def load_teams(db: Session):
         ).first()
 
         if existing is None:
-            # CREATE NEW TEAM
+            # CREATE
             team = Team(
                 team_key=team_key,
                 display_name=display_name,
                 league_code=league_code,
-                country=(entry.get("country") or "").strip()
+                country=(entry.get("country") or "").strip(),
             )
 
-            # Aliases
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
                 if alias_key and alias_key != team_key:
@@ -156,16 +140,15 @@ def load_teams(db: Session):
             created += 1
 
         else:
-            # UPDATE EXISTING TEAM
+            # UPDATE
             existing.display_name = display_name
             existing.league_code = league_code
 
             if entry.get("country") is not None:
                 existing.country = (entry.get("country") or "").strip()
 
-            # REPLACE ALIASES (seed is authoritative)
+            # Replace aliases
             existing.aliases.clear()
-
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
                 if alias_key and alias_key != team_key:
