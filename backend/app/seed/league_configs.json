@@ -1,53 +1,138 @@
 [
   {
-  "league_code": "NL-EDIV",
-  "display_name": "Eredivisie",
-  "country_code": "NL",
-
-  "base_over_bias": 0.1,
-  "base_under_bias": 0.3,
-  "tempo_factor": 1.2,
-  "safety_mode": true,
-  "aggression_level": 0.6,
-  "volatility": 0.5,
-  "description": ""
+    "league_code": "ENG-PL",
+    "base_over_bias": 0.03,
+    "base_under_bias": 0.01,
+    "tempo_factor": 0.58,
+    "safety_mode": true,
+    "aggression_level": 0.5,
+    "volatility": 0.5,
+    "description": "Premier League (England)"
   },
   {
-  "league_code": "FR-L1",
-  "display_name": "Ligue 1",
-  "country_code": "FR",
-
-  "base_over_bias": -0.2,
-  "base_under_bias": 0.4,
-  "tempo_factor": 0.9,
-  "safety_mode": true,
-  "aggression_level": 0.3,
-  "volatility": 0.3,
-  "description": ""
+    "league_code": "FRA-L1",
+    "base_over_bias": 0.02,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.55,
+    "safety_mode": true,
+    "aggression_level": 0.45,
+    "volatility": 0.5,
+    "description": "Ligue 1 (France)"
   },
   {
-  "league_code": "ENG-EPL",
-  "display_name": "Premier League",
-  "country_code": "GB",
-
-  "base_over_bias": 0.15,
-  "base_under_bias": 0.2,
-  "tempo_factor": 1.1,
-  "safety_mode": true,
-  "aggression_level": 0.55,
-  "volatility": 0.45,
-  "description": ""
+    "league_code": "NED-ERE",
+    "base_over_bias": 0.03,
+    "base_under_bias": 0.01,
+    "tempo_factor": 0.60,
+    "safety_mode": true,
+    "aggression_level": 0.5,
+    "volatility": 0.55,
+    "description": "Eredivisie (Netherlands)"
   },
   {
-  "league_code": "INTERNATIONAL_CLUB",
-  "display_name": "International (Clubs)",
-  "country_code": "UN",
-  "base_over_bias": 0.05,
-  "base_under_bias": 0.1,
-  "tempo_factor": 1.05,
-  "safety_mode": true,
-  "aggression_level": 0.45,
-  "volatility": 0.4,
-  "description": ""
+    "league_code": "GER-BUN",
+    "base_over_bias": 0.04,
+    "base_under_bias": 0.01,
+    "tempo_factor": 0.62,
+    "safety_mode": true,
+    "aggression_level": 0.55,
+    "volatility": 0.55,
+    "description": "Bundesliga (Germany)"
+  },
+  {
+    "league_code": "ITA-SA",
+    "base_over_bias": 0.02,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.52,
+    "safety_mode": true,
+    "aggression_level": 0.45,
+    "volatility": 0.45,
+    "description": "Serie A (Italy)"
+  },
+  {
+    "league_code": "ESP-LL",
+    "base_over_bias": 0.03,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.56,
+    "safety_mode": true,
+    "aggression_level": 0.5,
+    "volatility": 0.5,
+    "description": "LaLiga (Spain)"
+  },
+  {
+    "league_code": "TUR-SL",
+    "base_over_bias": 0.04,
+    "base_under_bias": 0.01,
+    "tempo_factor": 0.63,
+    "safety_mode": true,
+    "aggression_level": 0.55,
+    "volatility": 0.55,
+    "description": "Süper Lig (Turkey)"
+  },
+  {
+    "league_code": "BRA-SA",
+    "base_over_bias": 0.03,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.54,
+    "safety_mode": true,
+    "aggression_level": 0.5,
+    "volatility": 0.55,
+    "description": "Série A (Brazil) - Not Italy"
+  },
+
+  /* -------------- International Club Competitions -------------- */
+
+  {
+    "league_code": "UCL",
+    "base_over_bias": 0.03,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.57,
+    "safety_mode": true,
+    "aggression_level": 0.55,
+    "volatility": 0.60,
+    "description": "UEFA Champions League"
+  },
+  {
+    "league_code": "UEL",
+    "base_over_bias": 0.03,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.55,
+    "safety_mode": true,
+    "aggression_level": 0.50,
+    "volatility": 0.58,
+    "description": "UEFA Europa League"
+  },
+  {
+    "league_code": "UECL",
+    "base_over_bias": 0.03,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.54,
+    "safety_mode": true,
+    "aggression_level": 0.50,
+    "volatility": 0.57,
+    "description": "UEFA Europa Conference League"
+  },
+
+  /* -------------- International Championship Competitions -------------- */
+
+  {
+    "league_code": "EC",
+    "base_over_bias": 0.02,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.53,
+    "safety_mode": true,
+    "aggression_level": 0.45,
+    "volatility": 0.50,
+    "description": "European Championship (National Teams)"
+  },
+  {
+    "league_code": "WC",
+    "base_over_bias": 0.02,
+    "base_under_bias": 0.02,
+    "tempo_factor": 0.55,
+    "safety_mode": true,
+    "aggression_level": 0.48,
+    "volatility": 0.55,
+    "description": "World Cup (National Teams)"
   }
 ]
