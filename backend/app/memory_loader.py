@@ -26,8 +26,8 @@ def load_league_configs(db: Session):
       league_code, base_over_bias, base_under_bias, tempo_factor,
       safety_mode, aggression_level, volatility, description
     """
-    seed_path = os.path.join("app", "seed", "league_configs.json")
-    data = _read_json(seed_path)
+    seed_path = os.path.join("backend", "app", "seed", "league_configs.json")
+
     if not data:
         print("[memory_loader] No league configs to load.")
         return
@@ -81,7 +81,7 @@ def load_teams(db: Session):
       - team_key is a normalized version of display_name (lowercased, no accents/punct)
       - Replaces aliases each load to stay in sync with the seed file
     """
-    seed_path = os.path.join("app", "seed", "teams.json")
+    seed_path = os.path.join("backend", "seed", "teams.json")
     data = _read_json(seed_path)
     if not data:
         print("[memory_loader] No teams to load.")
