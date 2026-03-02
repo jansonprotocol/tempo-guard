@@ -37,7 +37,7 @@
   "aggression_level": 0.55,
   "volatility": 0.45,
   "description": ""
-  }
+  },
   {
   "league_code": "INTERNATIONAL_CLUB",
   "display_name": "International (Clubs)",
@@ -49,5 +49,5 @@
   "aggression_level": 0.45,
   "volatility": 0.4,
   "description": ""
-  }
+  },
 ]
