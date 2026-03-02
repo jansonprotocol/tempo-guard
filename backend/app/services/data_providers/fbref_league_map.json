@@ -1,1 +1,15 @@
-
+{
+  "ENG-PL":   "Premier League",
+  "FRA-L1":   "Ligue 1",
+  "NED-ERE":  "Eredivisie",
+  "GER-BUN":  "Bundesliga",
+  "ITA-SA":   "Serie A",
+  "ESP-LL":   "La Liga",
+  "TUR-SL":   "Süper Lig",
+  "BRA-SA":   "Série A",
+  "UCL":      "UEFA Champions League",
+  "UEL":      "UEFA Europa League",
+  "UECL":     "UEFA Europa Conference League",
+  "EC":       "European Championship",
+  "WC":       "World Cup"
+}
