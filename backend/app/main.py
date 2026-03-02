@@ -6,7 +6,6 @@ from fastapi.staticfiles import StaticFiles
 from app.api.routes_health import router as health_router
 from app.api.routes_auth import router as auth_router
 from app.api.routes_league import router as league_router
-from app.api.routes_simulate import router as simulate_router
 from app.api.routes_team import router as team_router
 from app.api.routes_predict import router as predict_router
 from app.api.routes_futurematch import router as future_router
@@ -60,7 +59,6 @@ def startup_event():
 app.include_router(health_router, prefix="/health", tags=["Health"])
 app.include_router(auth_router,   prefix="/api/auth", tags=["Auth"])
 app.include_router(league_router, prefix="/api",      tags=["LeagueConfig"])
-app.include_router(simulate_router, prefix="/api",    tags=["Simulate"])
 app.include_router(team_router,   prefix="/api",      tags=["Teams"])
 app.include_router(predict_router, prefix="/api", tags=["Predict"])
 app.include_router(future_router, prefix="/api", tags=["Futurematch"])
