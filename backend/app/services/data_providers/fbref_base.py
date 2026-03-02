@@ -1,4 +1,5 @@
 # backend/app/services/data_providers/fbref_base.py
+from pathlib import Path
 from __future__ import annotations
 import os
 from datetime import date, datetime, timedelta
@@ -16,7 +17,8 @@ except Exception as e:
     print("[fbref_base] WARN: soccerdata not importable:", e)
 
 # --- Configuration ---
-FBREF_CACHE_DIR = os.getenv("FBREF_CACHE_DIR", "/tmp/fbref_cache")
+FBREF_CACHE_DIR = Path(os.getenv("FBREF_CACHE_DIR", "/tmp/fbref_cache"))
+FBREF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 ROLLING_MATCHES = int(os.getenv("FBREF_ROLLING_MATCHES", "10"))  # N last matches per team
 MIN_MATCHES = int(os.getenv("FBREF_MIN_MATCHES", "5"))           # require at least 5 for stability
 
