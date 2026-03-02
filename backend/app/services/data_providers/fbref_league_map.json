@@ -1,15 +1,18 @@
 {
-  "ENG-PL":   "Premier League",
-  "FRA-L1":   "Ligue 1",
-  "NED-ERE":  "Eredivisie",
-  "GER-BUN":  "Bundesliga",
-  "ITA-SA":   "Serie A",
-  "ESP-LL":   "La Liga",
-  "TUR-SL":   "Süper Lig",
-  "BRA-SA":   "Série A",
-  "UCL":      "UEFA Champions League",
-  "UEL":      "UEFA Europa League",
-  "UECL":     "UEFA Europa Conference League",
-  "EC":       "European Championship",
-  "WC":       "World Cup"
+  "ENG-PL": "ENG-Premier League",
+  "ESP-LL": "ESP-La Liga",
+  "FRA-L1": "FRA-Ligue 1",
+  "GER-BUN": "GER-Bundesliga",
+  "ITA-SA": "ITA-Serie A",
+
+  "NED-ERE": "NED-Eredivisie",
+  "TUR-SL": "TUR-Super Lig",
+  "BRA-SA": "BRA-Serie A",
+
+  "UCL": "UEFA Champions League",
+  "UEL": "UEFA Europa League",
+  "UECL": "UEFA Europa Conference League",
+
+  "EC": "INT-European Championship",
+  "WC": "INT-World Cup"
 }
