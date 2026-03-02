@@ -86,7 +86,12 @@ def asof_features(
     seasons = [f"{start_season-1}-{start_season}", f"{start_season}-{start_season+1}"]
 
     try:
-        fb = sd.FBref(leagues=[fbref_comp], seasons=seasons, data_dir=FBREF_CACHE_DIR)
+        fb = sd.FBref(
+            leagues=[fbref_comp],
+            seasons=seasons,
+            data_dir=FBREF_CACHE_DIR,
+            headers={"sec-ch-ua": '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"'}
+        )
 
         # soccerdata export names vary a bit per version; try a small cascade:
         matches = None
