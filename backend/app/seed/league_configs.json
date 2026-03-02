@@ -79,9 +79,6 @@
     "volatility": 0.55,
     "description": "Série A (Brazil) - Not Italy"
   },
-
-  /* -------------- International Club Competitions -------------- */
-
   {
     "league_code": "UCL",
     "base_over_bias": 0.03,
@@ -112,9 +109,6 @@
     "volatility": 0.57,
     "description": "UEFA Europa Conference League"
   },
-
-  /* -------------- International Championship Competitions -------------- */
-
   {
     "league_code": "EC",
     "base_over_bias": 0.02,
