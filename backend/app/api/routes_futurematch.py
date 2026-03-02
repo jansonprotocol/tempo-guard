@@ -36,8 +36,12 @@ def get_db():
 @router.post("/futurematch")
 def post_futurematch(body: FutureBody, db: Session = Depends(get_db)):
     try:
-        # Use live enrichment only for the fields user didn't provide
-        req = MatchRequest(**body.model_dump())
+        # REMOVE the unwanted field before creating MatchRequest
+        bd = body.model_dump()
+        league_search_hint = bd.pop("league_search_hint", None)
+
+        req = MatchRequest(**bd)
+
         missing = any([
             req.sot_proj_total is None,
             req.support_idx_over_delta is None,
@@ -53,7 +57,7 @@ def post_futurematch(body: FutureBody, db: Session = Depends(get_db)):
                 home=req.home_team,
                 away=req.away_team,
                 match_date=req.match_date,
-                league_name_for_search=body.league_search_hint
+                league_name_for_search=league_search_hint
             )
             if live:
                 if req.sot_proj_total is None: req.sot_proj_total = live.get("sot_proj_total")
@@ -64,12 +68,20 @@ def post_futurematch(body: FutureBody, db: Session = Depends(get_db)):
                 if req.tempo_index is None: req.tempo_index = live.get("tempo_index")
 
         pred = predict_match(db, req)
+
         return {
             "mode": "futurematch",
             "league_code": pred.league_code,
             "fixture": pred.fixture,
-            "corridor": {"low": pred.corridor.low, "high": pred.corridor.high, "lean": pred.corridor.lean},
-            "translated_play": {"market": pred.translated_play.market, "confidence": pred.translated_play.confidence},
+            "corridor": {
+                "low": pred.corridor.low,
+                "high": pred.corridor.high,
+                "lean": pred.corridor.lean
+            },
+            "translated_play": {
+                "market": pred.translated_play.market,
+                "confidence": pred.translated_play.confidence
+            },
             "confidence_score": pred.confidence_score,
             "applied_modules": pred.applied_modules,
             "safety_flags": pred.safety_flags,
@@ -83,5 +95,6 @@ def post_futurematch(body: FutureBody, db: Session = Depends(get_db)):
                 "tempo_index": req.tempo_index
             }
         }
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
