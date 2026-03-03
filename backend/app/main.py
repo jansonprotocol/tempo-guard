@@ -1,163 +1,4 @@
-# --- FBref HTTP hardening (must be FIRST lines of app/main.py) ---
-import os
-
-# Ensure the process never uses a proxy
-for k in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
-    os.environ.pop(k, None)
-os.environ["NO_PROXY"] = "*"
-
-# Install a small cache (1 day) so repeated calls don’t refetch the same pages
-try:
-    import requests_cache  # make sure requirements.txt has requests-cache
-    requests_cache.install_cache("/tmp/http_cache", expire_after=86400)
-    print("[boot] requests_cache enabled.")
-except Exception as e:
-    print("[boot] requests_cache unavailable:", repr(e))
-
-# Patch BOTH requests.Session AND requests.api.request before anyone imports soccerdata
-try:
-    import requests
-    from requests.adapters import HTTPAdapter
-    from urllib3.util.retry import Retry
-    import requests.api as requests_api
-
-    BROWSER_HEADERS = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/122.0.0.0 Safari/537.36"
-        ),
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Connection": "keep-alive",
-        "Referer": "https://fbref.com/en/",
-    }
-
-    # 1) Patch api.request so calls like requests.get(...) get our headers
-    _ORIG_API_REQUEST = requests_api.request
-    def _tg_api_request(method, url, **kwargs):
-        headers = kwargs.pop("headers", {}) or {}
-        for k, v in BROWSER_HEADERS.items():
-            headers.setdefault(k, v)
-        kwargs["headers"] = headers
-        return _ORIG_API_REQUEST(method, url, **kwargs)
-    requests_api.request = _tg_api_request
-    requests.request = _tg_api_request  # safety
-
-    # 2) Patch Session.__init__ to add headers, retries, and warm-up cookies
-    _ORIG_SESS_INIT = requests.sessions.Session.__init__
-    def _patched_sess_init(self, *args, **kwargs):
-        _ORIG_SESS_INIT(self, *args, **kwargs)
-        self.headers.update(BROWSER_HEADERS)
-        retries = Retry(
-            total=2,
-            backoff_factor=1.2,
-            status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=["GET", "HEAD"],
-            raise_on_status=False,
-        )
-        adapter = HTTPAdapter(max_retries=retries)
-        self.mount("http://", adapter)
-        self.mount("https://", adapter)
-        # Warm-up to set cookies before any /en/comps/ call
-        try:
-            self.get("https://fbref.com/en/", timeout=20)
-            print("[boot] FBref warm-up OK.")
-        except Exception as w:
-            print("[boot] FBref warm-up failed (continuing):", repr(w))
-
-    requests.sessions.Session.__init__ = _patched_sess_init
-    print("[boot] Patched requests (api.request + Session).")
-except Exception as e:
-    print("[boot] Could not patch requests:", repr(e))
-
-import os
-
-# 1) Ensure the process never uses a proxy
-for k in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
-    os.environ.pop(k, None)
-os.environ["NO_PROXY"] = "*"
-
-# 2) Install a small on-disk HTTP cache (1 day) to avoid re-hitting FBref
-try:
-    import requests_cache
-    requests_cache.install_cache("/tmp/http_cache", expire_after=86400)
-except Exception as _e:
-    print("[boot] requests_cache unavailable:", repr(_e))
-
-try:
-    import numpy as _np, pandas as _pd, soccerdata as _sd
-    print("[boot] numpy:", _np.__version__)
-    print("[boot] pandas:", _pd.__version__)
-    print("[boot] soccerdata:", getattr(_sd, "__version__", "unknown"))
-except Exception as e:
-    print("[boot] version check error:", repr(e))
-
-def _probe_fbref():
-    try:
-        import requests
-        r = requests.get("https://fbref.com/en/comps/", timeout=20)
-        print("[probe] fbref status:", r.status_code)
-    except Exception as e:
-        print("[probe] fbref error:", repr(e))
-
-_probe_fbref()
-
-# 3) Monkey-patch requests.Session so EVERY new session (including soccerdata’s)
-#    has browser-like headers, sane retries, and does a warm-up visit to FBref.
-try:
-    import requests
-    from requests.adapters import HTTPAdapter
-    from urllib3.util.retry import Retry
-
-    _ORIG_INIT = requests.sessions.Session.__init__
-
-    def _patched_init(self, *args, **kwargs):
-        _ORIG_INIT(self, *args, **kwargs)
-
-        # Browser-like headers (User-Agent + typical Accepts)
-        self.headers.update({
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/122.0.0.0 Safari/537.36"
-            ),
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
-            "Referer": "https://fbref.com/en/",
-        })
-
-        # Gentle retries (handle transient 429/5xx; 403 kept minimal to avoid loops)
-        retries = Retry(
-            total=2,
-            backoff_factor=1.2,
-            status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=["GET", "HEAD"],
-            raise_on_status=False,
-        )
-        adapter = HTTPAdapter(max_retries=retries)
-        self.mount("http://", adapter)
-        self.mount("https://", adapter)
-
-        # WARM-UP: visit the homepage once to establish cookies before /en/comps/
-        try:
-            self.get("https://fbref.com/en/", timeout=20)
-            print("[boot] FBref warm-up succeeded.")
-        except Exception as _e:
-            print("[boot] FBref warm-up failed (will continue):", repr(_e))
-
-    requests.sessions.Session.__init__ = _patched_init
-    print("[boot] Patched requests.Session with headers, retries, warm-up.")
-except Exception as _e:
-    print("[boot] Could not patch requests.Session:", repr(_e))
-
-# -------------------------------------------------------------------
-# (Your existing imports follow from here)
-
-# -----------------------------------------------------
+# backend/app/main.py
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -176,6 +17,7 @@ from app.api.routes_calibration import router as calib_router
 # Database & models
 from app.database.base import Base
 from app.database.db import engine, SessionLocal
+from app.database.models_fbref import FBrefSnapshot  # registers the new table
 
 # Memory loaders
 from app.memory_loader import load_league_configs, load_teams
@@ -192,7 +34,7 @@ app = FastAPI(
 # ------------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # you can restrict later
+    allow_origins=["*"],   # restrict to your frontend domain when ready
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -203,10 +45,8 @@ app.add_middleware(
 # ------------------------------------------------------------------------------
 @app.on_event("startup")
 def startup_event():
-    # Create DB schema
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine)   # also creates fbref_snapshots table
 
-    # seed loaders
     db = SessionLocal()
     try:
         load_league_configs(db)
@@ -217,14 +57,14 @@ def startup_event():
 # ------------------------------------------------------------------------------
 # ROUTERS
 # ------------------------------------------------------------------------------
-app.include_router(health_router, prefix="/health", tags=["Health"])
-app.include_router(auth_router,   prefix="/api/auth", tags=["Auth"])
-app.include_router(league_router, prefix="/api",      tags=["LeagueConfig"])
-app.include_router(team_router,   prefix="/api",      tags=["Teams"])
-app.include_router(predict_router, prefix="/api", tags=["Predict"])
-app.include_router(future_router, prefix="/api", tags=["Futurematch"])
-app.include_router(retro_router,  prefix="/api", tags=["Retrosim"])
-app.include_router(calib_router,  prefix="/api", tags=["Calibration"])
+app.include_router(health_router,  prefix="/health", tags=["Health"])
+app.include_router(auth_router,    prefix="/api/auth", tags=["Auth"])
+app.include_router(league_router,  prefix="/api",      tags=["LeagueConfig"])
+app.include_router(team_router,    prefix="/api",      tags=["Teams"])
+app.include_router(predict_router, prefix="/api",      tags=["Predict"])
+app.include_router(future_router,  prefix="/api",      tags=["Futurematch"])
+app.include_router(retro_router,   prefix="/api",      tags=["Retrosim"])
+app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
 
 # ------------------------------------------------------------------------------
 # STATIC FRONTEND (served at /app)
