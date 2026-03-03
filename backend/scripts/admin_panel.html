@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ATHENA — Data Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:        #080c10;
+    --surface:   #0e1419;
+    --border:    #1c2a35;
+    --accent:    #00d4ff;
+    --green:     #00ff88;
+    --amber:     #ffaa00;
+    --red:       #ff4466;
+    --muted:     #3a5060;
+    --text:      #c8dde8;
+    --text-dim:  #526070;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── grid bg ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── header ── */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .logo-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .logo-main {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .logo-main span { color: var(--accent); }
+
+  .status-pill {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    border-radius: 2px;
+    border: 1px solid;
+    text-transform: uppercase;
+  }
+
+  .status-pill.idle   { border-color: var(--muted);  color: var(--muted); }
+  .status-pill.live   { border-color: var(--green);  color: var(--green);
+    box-shadow: 0 0 12px rgba(0,255,136,.2);
+    animation: pulse 1.4s ease-in-out infinite; }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50%      { opacity: .5; }
+  }
+
+  /* ── section label ── */
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  /* ── league grid ── */
+  .leagues-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .league-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .league-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,.06) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  .league-card:hover { border-color: var(--muted); }
+  .league-card:hover::after { opacity: 1; }
+
+  .league-card.selected {
+    border-color: var(--accent);
+    background: rgba(0,212,255,.05);
+  }
+
+  .league-card.selected::after { opacity: 1; }
+
+  .lc-code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .lc-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .lc-meta {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .lc-badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    margin-top: 6px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .badge-ok     { background: rgba(0,255,136,.12); color: var(--green); }
+  .badge-stale  { background: rgba(255,170,0,.12);  color: var(--amber); }
+  .badge-none   { background: rgba(255,68,102,.1);  color: var(--red); }
+
+  /* ── controls row ── */
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border: 1px solid;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .15s;
+  }
+
+  .btn-primary {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 20px rgba(0,212,255,.3);
+  }
+
+  .btn-primary:disabled {
+    border-color: var(--muted);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+
+  .btn-ghost {
+    border-color: var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 10px 18px;
+  }
+
+  .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+  .select-info {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-left: auto;
+  }
+
+  /* ── log terminal ── */
+  .terminal {
+    background: #050810;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+    height: 280px;
+    overflow-y: auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    scroll-behavior: smooth;
+  }
+
+  .terminal::-webkit-scrollbar { width: 4px; }
+  .terminal::-webkit-scrollbar-track { background: transparent; }
+  .terminal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .log-line { color: var(--text-dim); }
+  .log-line.ok      { color: var(--green); }
+  .log-line.warn    { color: var(--amber); }
+  .log-line.error   { color: var(--red); }
+  .log-line.info    { color: var(--accent); }
+  .log-line.heading { color: #fff; }
+
+  .terminal-empty {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  /* ── cursor blink ── */
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 13px;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-left: 4px;
+    animation: blink .8s step-end infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── snapshot summary ── */
+  .summary-bar {
+    display: flex;
+    gap: 24px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-val {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .stat-val.accent { color: var(--accent); }
+  .stat-val.green  { color: var(--green); }
+  .stat-val.amber  { color: var(--amber); }
+
+  .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">
+      <span class="logo-sub">Data Control Panel</span>
+      <span class="logo-main">ATH<span>E</span>NA</span>
+    </div>
+    <div id="statusPill" class="status-pill idle">● Idle</div>
+  </header>
+
+  <!-- League selection -->
+  <div class="section-label">Select Leagues to Scrape</div>
+  <div class="leagues-grid" id="leagueGrid">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="scrapeBtn" onclick="startScrape()">
+      ▶ Run Scrape
+    </button>
+    <button class="btn btn-ghost" onclick="selectAll()">Select All</button>
+    <button class="btn btn-ghost" onclick="selectNone()">Clear</button>
+    <span class="select-info" id="selectInfo">0 leagues selected</span>
+  </div>
+
+  <!-- Terminal log -->
+  <div class="section-label">Live Output</div>
+  <div class="terminal" id="terminal">
+    <span class="terminal-empty">// Awaiting command<span class="cursor"></span></span>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="summary-bar" id="summaryBar">
+    <div class="stat">
+      <span class="stat-val accent" id="statTotal">—</span>
+      <span class="stat-label">Total Leagues</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val green" id="statFresh">—</span>
+      <span class="stat-label">Fresh ( &lt; 7 days )</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val amber" id="statStale">—</span>
+      <span class="stat-label">Stale ( &gt; 7 days )</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val" id="statNone">—</span>
+      <span class="stat-label">No Snapshot</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const LEAGUE_NAMES = {
+    "ENG-PL":  "Premier League",
+    "ESP-LL":  "La Liga",
+    "FRA-L1":  "Ligue 1",
+    "GER-BUN": "Bundesliga",
+    "ITA-SA":  "Serie A",
+    "NED-ERE": "Eredivisie",
+    "TUR-SL":  "Süper Lig",
+    "BRA-SA":  "Série A",
+  };
+
+  let selected = new Set(Object.keys(LEAGUE_NAMES));
+  let snapshots = {};
+  let eventSource = null;
+
+  // ── Render league cards ──────────────────────────────────────────────────
+  function renderGrid() {
+    const grid = document.getElementById('leagueGrid');
+    grid.innerHTML = '';
+
+    const now = new Date();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+    Object.entries(LEAGUE_NAMES).forEach(([code, name]) => {
+      const snap = snapshots[code];
+      const card = document.createElement('div');
+      card.className = 'league-card' + (selected.has(code) ? ' selected' : '');
+      card.onclick = () => toggleLeague(code);
+
+      let badgeHtml = '<span class="lc-badge badge-none">No snapshot</span>';
+      let metaHtml  = '<span style="color:var(--red)">Not yet scraped</span>';
+
+      if (snap) {
+        const fetchedAt = new Date(snap.fetched_at + 'Z');
+        const age = now - fetchedAt;
+        const isStale = age > sevenDays;
+        const daysAgo = Math.floor(age / (24*60*60*1000));
+        const label = daysAgo === 0 ? 'today' : daysAgo === 1 ? '1 day ago' : `${daysAgo} days ago`;
+        badgeHtml = isStale
+          ? `<span class="lc-badge badge-stale">Stale</span>`
+          : `<span class="lc-badge badge-ok">Fresh</span>`;
+        metaHtml = `Updated ${label}<br/>${snap.seasons || ''}`;
+      }
+
+      card.innerHTML = `
+        <div class="lc-code">${code}</div>
+        <div class="lc-name">${name}</div>
+        <div class="lc-meta">${metaHtml}</div>
+        ${badgeHtml}
+      `;
+      grid.appendChild(card);
+    });
+
+    document.getElementById('selectInfo').textContent =
+      `${selected.size} of ${Object.keys(LEAGUE_NAMES).length} selected`;
+
+    // Update stats
+    let fresh = 0, stale = 0, none = 0;
+    Object.keys(LEAGUE_NAMES).forEach(code => {
+      const snap = snapshots[code];
+      if (!snap) { none++; return; }
+      const age = now - new Date(snap.fetched_at + 'Z');
+      age > sevenDays ? stale++ : fresh++;
+    });
+
+    document.getElementById('statTotal').textContent = Object.keys(LEAGUE_NAMES).length;
+    document.getElementById('statFresh').textContent = fresh;
+    document.getElementById('statStale').textContent = stale;
+    document.getElementById('statNone').textContent  = none;
+  }
+
+  function toggleLeague(code) {
+    selected.has(code) ? selected.delete(code) : selected.add(code);
+    renderGrid();
+  }
+
+  function selectAll()  { selected = new Set(Object.keys(LEAGUE_NAMES)); renderGrid(); }
+  function selectNone() { selected.clear(); renderGrid(); }
+
+  // ── Log terminal ─────────────────────────────────────────────────────────
+  function logLine(text) {
+    const t = document.getElementById('terminal');
+
+    // Clear placeholder on first real line
+    if (t.querySelector('.terminal-empty')) t.innerHTML = '';
+
+    const div = document.createElement('div');
+    div.className = 'log-line';
+
+    const lower = text.toLowerCase();
+    if (lower.includes('ok') || lower.includes('created') || lower.includes('updated') || lower.includes('complete'))
+      div.classList.add('ok');
+    else if (lower.includes('warn') || lower.includes('waiting') || lower.includes('stale'))
+      div.classList.add('warn');
+    else if (lower.includes('error'))
+      div.classList.add('error');
+    else if (lower.includes('starting') || lower.includes('season') || lower.includes('fetching'))
+      div.classList.add('info');
+
+    div.textContent = text;
+    t.appendChild(div);
+    t.scrollTop = t.scrollHeight;
+  }
+
+  // ── SSE log stream ────────────────────────────────────────────────────────
+  function startLogStream() {
+    if (eventSource) { eventSource.close(); }
+    eventSource = new EventSource('/api/logs');
+    eventSource.onmessage = e => {
+      if (e.data && e.data.trim()) logLine(e.data);
+    };
+  }
+
+  // ── Start scrape ──────────────────────────────────────────────────────────
+  async function startScrape() {
+    if (selected.size === 0) {
+      logLine('[warn] No leagues selected.');
+      return;
+    }
+
+    document.getElementById('scrapeBtn').disabled = true;
+    document.getElementById('terminal').innerHTML = '';
+    setStatus(true);
+    startLogStream();
+
+    const resp = await fetch('/api/scrape', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leagues: [...selected] }),
+    });
+
+    const data = await resp.json();
+    if (!data.ok) {
+      logLine(`[error] ${data.reason}`);
+      setStatus(false);
+      document.getElementById('scrapeBtn').disabled = false;
+    }
+
+    // Poll until done
+    const poll = setInterval(async () => {
+      const s = await fetch('/api/status').then(r => r.json());
+      snapshots = s.snapshots || {};
+      if (!s.is_running) {
+        clearInterval(poll);
+        setStatus(false);
+        document.getElementById('scrapeBtn').disabled = false;
+        renderGrid();
+        if (eventSource) eventSource.close();
+      }
+    }, 2000);
+  }
+
+  function setStatus(running) {
+    const pill = document.getElementById('statusPill');
+    if (running) {
+      pill.className = 'status-pill live';
+      pill.textContent = '● Running';
+    } else {
+      pill.className = 'status-pill idle';
+      pill.textContent = '● Idle';
+    }
+  }
+
+  // ── Initial load ──────────────────────────────────────────────────────────
+  async function init() {
+    const s = await fetch('/api/status').then(r => r.json());
+    snapshots = s.snapshots || {};
+    if (s.is_running) {
+      setStatus(true);
+      document.getElementById('scrapeBtn').disabled = true;
+      startLogStream();
+    }
+    renderGrid();
+  }
+
+  init();
+</script>
+</body>
+</html>
