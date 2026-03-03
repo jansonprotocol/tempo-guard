@@ -19,10 +19,7 @@ ENV http_proxy=
 ENV https_proxy=
 ENV all_proxy=
 ENV NO_PROXY=*
-```
 
-And update **`requirements.txt`** — make sure soccerdata is completely removed from it:
-```
 fastapi
 uvicorn
 pydantic
