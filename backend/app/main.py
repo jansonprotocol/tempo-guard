@@ -1,21 +1,31 @@
+# --- FBref HTTP hardening: place at the VERY TOP of app/main.py ---
 import os
 
+# 1) Ensure the process never uses a proxy
 for k in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
     os.environ.pop(k, None)
 os.environ["NO_PROXY"] = "*"
 
+# 2) Install a small on-disk HTTP cache (1 day) to avoid re-hitting FBref
 try:
     import requests_cache
     requests_cache.install_cache("/tmp/http_cache", expire_after=86400)
 except Exception as _e:
     print("[boot] requests_cache unavailable:", repr(_e))
 
+# 3) Monkey-patch requests.Session so EVERY new session (including soccerdata’s)
+#    has browser-like headers, sane retries, and does a warm-up visit to FBref.
 try:
     import requests
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
+
     _ORIG_INIT = requests.sessions.Session.__init__
 
     def _patched_init(self, *args, **kwargs):
         _ORIG_INIT(self, *args, **kwargs)
+
+        # Browser-like headers (User-Agent + typical Accepts)
         self.headers.update({
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -24,13 +34,37 @@ try:
             ),
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate, br",
             "Connection": "keep-alive",
+            "Referer": "https://fbref.com/en/",
         })
 
+        # Gentle retries (handle transient 429/5xx; 403 kept minimal to avoid loops)
+        retries = Retry(
+            total=2,
+            backoff_factor=1.2,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "HEAD"],
+            raise_on_status=False,
+        )
+        adapter = HTTPAdapter(max_retries=retries)
+        self.mount("http://", adapter)
+        self.mount("https://", adapter)
+
+        # WARM-UP: visit the homepage once to establish cookies before /en/comps/
+        try:
+            self.get("https://fbref.com/en/", timeout=20)
+            print("[boot] FBref warm-up succeeded.")
+        except Exception as _e:
+            print("[boot] FBref warm-up failed (will continue):", repr(_e))
+
     requests.sessions.Session.__init__ = _patched_init
-    print("[boot] Patched requests.Session with browser-like headers.")
+    print("[boot] Patched requests.Session with headers, retries, warm-up.")
 except Exception as _e:
     print("[boot] Could not patch requests.Session:", repr(_e))
+
+# -------------------------------------------------------------------
+# (Your existing imports follow from here)
 
 # -----------------------------------------------------
 
