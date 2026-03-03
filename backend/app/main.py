@@ -13,6 +13,24 @@ try:
 except Exception as _e:
     print("[boot] requests_cache unavailable:", repr(_e))
 
+try:
+    import numpy as _np, pandas as _pd, soccerdata as _sd
+    print("[boot] numpy:", _np.__version__)
+    print("[boot] pandas:", _pd.__version__)
+    print("[boot] soccerdata:", getattr(_sd, "__version__", "unknown"))
+except Exception as e:
+    print("[boot] version check error:", repr(e))
+
+def _probe_fbref():
+    try:
+        import requests
+        r = requests.get("https://fbref.com/en/comps/", timeout=20)
+        print("[probe] fbref status:", r.status_code)
+    except Exception as e:
+        print("[probe] fbref error:", repr(e))
+
+_probe_fbref()
+
 # 3) Monkey-patch requests.Session so EVERY new session (including soccerdata’s)
 #    has browser-like headers, sane retries, and does a warm-up visit to FBref.
 try:
