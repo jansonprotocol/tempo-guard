@@ -19,20 +19,3 @@ ENV http_proxy=
 ENV https_proxy=
 ENV all_proxy=
 ENV NO_PROXY=*
-
-fastapi
-uvicorn
-pydantic
-sqlalchemy
-psycopg2-binary
-python-dotenv
-passlib[argon2]
-argon2-cffi
-pyjwt
-requests
-numpy==1.26.4
-pandas==2.2.2
-requests-cache
-lxml
-pyarrow
-httpx==0.27.2
