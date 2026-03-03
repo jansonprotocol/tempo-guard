@@ -1,3 +1,11 @@
+import os
+
+for k in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
+    os.environ.pop(k, None)
+
+os.environ["NO_PROXY"] = "*"
+# -----------------------------------------------------
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
