@@ -1,4 +1,77 @@
-# --- FBref HTTP hardening: place at the VERY TOP of app/main.py ---
+# --- FBref HTTP hardening (must be FIRST lines of app/main.py) ---
+import os
+
+# Ensure the process never uses a proxy
+for k in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
+    os.environ.pop(k, None)
+os.environ["NO_PROXY"] = "*"
+
+# Install a small cache (1 day) so repeated calls don’t refetch the same pages
+try:
+    import requests_cache  # make sure requirements.txt has requests-cache
+    requests_cache.install_cache("/tmp/http_cache", expire_after=86400)
+    print("[boot] requests_cache enabled.")
+except Exception as e:
+    print("[boot] requests_cache unavailable:", repr(e))
+
+# Patch BOTH requests.Session AND requests.api.request before anyone imports soccerdata
+try:
+    import requests
+    from requests.adapters import HTTPAdapter
+    from urllib3.util.retry import Retry
+    import requests.api as requests_api
+
+    BROWSER_HEADERS = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Referer": "https://fbref.com/en/",
+    }
+
+    # 1) Patch api.request so calls like requests.get(...) get our headers
+    _ORIG_API_REQUEST = requests_api.request
+    def _tg_api_request(method, url, **kwargs):
+        headers = kwargs.pop("headers", {}) or {}
+        for k, v in BROWSER_HEADERS.items():
+            headers.setdefault(k, v)
+        kwargs["headers"] = headers
+        return _ORIG_API_REQUEST(method, url, **kwargs)
+    requests_api.request = _tg_api_request
+    requests.request = _tg_api_request  # safety
+
+    # 2) Patch Session.__init__ to add headers, retries, and warm-up cookies
+    _ORIG_SESS_INIT = requests.sessions.Session.__init__
+    def _patched_sess_init(self, *args, **kwargs):
+        _ORIG_SESS_INIT(self, *args, **kwargs)
+        self.headers.update(BROWSER_HEADERS)
+        retries = Retry(
+            total=2,
+            backoff_factor=1.2,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "HEAD"],
+            raise_on_status=False,
+        )
+        adapter = HTTPAdapter(max_retries=retries)
+        self.mount("http://", adapter)
+        self.mount("https://", adapter)
+        # Warm-up to set cookies before any /en/comps/ call
+        try:
+            self.get("https://fbref.com/en/", timeout=20)
+            print("[boot] FBref warm-up OK.")
+        except Exception as w:
+            print("[boot] FBref warm-up failed (continuing):", repr(w))
+
+    requests.sessions.Session.__init__ = _patched_sess_init
+    print("[boot] Patched requests (api.request + Session).")
+except Exception as e:
+    print("[boot] Could not patch requests:", repr(e))
+
 import os
 
 # 1) Ensure the process never uses a proxy
