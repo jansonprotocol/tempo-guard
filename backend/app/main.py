@@ -2,8 +2,36 @@ import os
 
 for k in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
     os.environ.pop(k, None)
-
 os.environ["NO_PROXY"] = "*"
+
+try:
+    import requests_cache
+    requests_cache.install_cache("/tmp/http_cache", expire_after=86400)
+except Exception as _e:
+    print("[boot] requests_cache unavailable:", repr(_e))
+
+try:
+    import requests
+    _ORIG_INIT = requests.sessions.Session.__init__
+
+    def _patched_init(self, *args, **kwargs):
+        _ORIG_INIT(self, *args, **kwargs)
+        self.headers.update({
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/122.0.0.0 Safari/537.36"
+            ),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Connection": "keep-alive",
+        })
+
+    requests.sessions.Session.__init__ = _patched_init
+    print("[boot] Patched requests.Session with browser-like headers.")
+except Exception as _e:
+    print("[boot] Could not patch requests.Session:", repr(_e))
+
 # -----------------------------------------------------
 
 from fastapi import FastAPI
