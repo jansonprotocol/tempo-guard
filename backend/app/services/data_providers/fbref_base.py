@@ -1,3 +1,6 @@
+import threading, time
+_SCRAPE_LOCK = threading.Lock()
+
 # backend/app/services/data_providers/fbref_base.py
 from __future__ import annotations
 
@@ -82,9 +85,11 @@ def asof_features(
     year = match_date.year
     start_season = year - 1 if match_date.month < 7 else year
     seasons = [f"{start_season-1}-{start_season}", f"{start_season}-{start_season+1}"]
+# inside asof_features(), right before creating the FBref client:
 
     try:
-        # IMPORTANT: no proxy here (proxy=None or omit the argument entirely)
+        with _SCRAPE_LOCK:
+        time.sleep(1.0)  
         fb = sd.FBref(
             leagues=[fbref_comp],
             seasons=seasons,
