@@ -1,13 +1,16 @@
 """
 backend/scripts/scrape_fbref.py
 
-Scrapes FBref directly using curl_cffi (Chrome impersonation).
-No soccerdata dependency — works on any Python version.
+Scrapes FBref using SeleniumBase UC mode to bypass Cloudflare.
+Runs locally only — never on Render.
 
-Run locally:
+Usage:
     cd backend
     venv312\Scripts\activate
     python -m scripts.scrape_fbref
+
+NOTE: Chrome will open and close for each league.
+      Do not click anything while scraping is in progress.
 """
 
 import io
@@ -20,16 +23,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import pandas as pd
-from curl_cffi import requests
+from seleniumbase import Driver
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 
-SLEEP_BETWEEN_LEAGUES = 6  # seconds between leagues — be polite to FBref
+SLEEP_BETWEEN_LEAGUES = 4  # seconds between leagues
 
-# ── League map: internal code → FBref fixtures page URL ──────────────────────
+# ── League map ────────────────────────────────────────────────────────────────
 LEAGUE_MAP = {
+    # Original 8
     "ENG-PL":  "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures",
     "ESP-LL":  "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
     "FRA-L1":  "https://fbref.com/en/comps/13/schedule/Ligue-1-Scores-and-Fixtures",
@@ -38,6 +42,7 @@ LEAGUE_MAP = {
     "NED-ERE": "https://fbref.com/en/comps/23/schedule/Eredivisie-Scores-and-Fixtures",
     "TUR-SL":  "https://fbref.com/en/comps/26/schedule/Super-Lig-Scores-and-Fixtures",
     "BRA-SA":  "https://fbref.com/en/comps/24/schedule/Serie-A-Scores-and-Fixtures",
+    # New 8
     "MLS":     "https://fbref.com/en/comps/22/schedule/Major-League-Soccer-Scores-and-Fixtures",
     "SAU-SPL": "https://fbref.com/en/comps/70/schedule/Saudi-Pro-League-Scores-and-Fixtures",
     "DEN-SL":  "https://fbref.com/en/comps/50/schedule/Danish-Superliga-Scores-and-Fixtures",
@@ -53,38 +58,46 @@ def fetch_league(league_code: str, url: str) -> None:
     print(f"\n[scraper] {league_code}")
     print(f"  URL: {url}")
 
+    driver = None
     try:
-        session = requests.Session(impersonate="chrome")
-        resp = session.get(url, timeout=30)
-        print(f"  Status: {resp.status_code}")
+        driver = Driver(uc=True, headless=False)
+        driver.uc_open_with_reconnect(url, 4)
+        driver.uc_gui_click_captcha()
+        time.sleep(3)
 
-        if resp.status_code == 403:
-            print("  BLOCKED (403) — FBref is blocking. Try again later.")
-            return
-        if resp.status_code != 200:
-            print(f"  ERROR: Unexpected status {resp.status_code}")
-            return
+        html = driver.get_page_source()
+        print(f"  Page loaded ({len(html)} bytes)")
 
     except Exception as e:
-        print(f"  Request failed: {e}")
+        print(f"  Browser error: {e}")
+        if driver:
+            driver.quit()
+        return
+    finally:
+        if driver:
+            driver.quit()
+
+    # Check we got real FBref content
+    if "Just a moment" in html or len(html) < 5000:
+        print("  Still blocked by Cloudflare.")
         return
 
     try:
-        tables = pd.read_html(io.StringIO(resp.text))
-        print(f"  Found {len(tables)} tables on page")
+        tables = pd.read_html(io.StringIO(html))
+        print(f"  Found {len(tables)} tables")
     except Exception as e:
         print(f"  Could not parse tables: {e}")
         return
 
     if not tables:
-        print("  No tables found on page.")
+        print("  No tables found.")
         return
 
     # Biggest table = fixtures/results table
     df = max(tables, key=len)
     df = df.dropna(how="all")
 
-    # Keep only completed matches (rows that have a score like 2-1 or 2–1)
+    # Keep only completed matches
     score_col = next(
         (c for c in df.columns if str(c).lower() in ("score", "scores")), None
     )
@@ -123,6 +136,7 @@ def fetch_league(league_code: str, url: str) -> None:
 
 if __name__ == "__main__":
     print("[scraper] Starting FBref scrape")
+    print("[scraper] Chrome will open and close for each league.")
     print(f"[scraper] Leagues: {list(LEAGUE_MAP.keys())}\n")
 
     codes = list(LEAGUE_MAP.keys())
