@@ -10,6 +10,9 @@ Usage:
     python -m scripts.admin_server
 
 Then open http://localhost:8001 in your browser.
+
+NOTE: SeleniumBase opens a real Chrome window for each league scraped.
+      Do not click anything while scraping is in progress.
 """
 
 import io
@@ -25,7 +28,6 @@ load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from curl_cffi import requests
 import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -35,10 +37,11 @@ import uvicorn
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 
-SLEEP_BETWEEN_LEAGUES = 6  # seconds between leagues — be polite to FBref
+SLEEP_BETWEEN_LEAGUES = 4  # seconds between leagues
 
-# ── League map: internal code → FBref fixtures page URL ──────────────────────
+# ── League map ────────────────────────────────────────────────────────────────
 LEAGUE_MAP = {
+    # Original 8
     "ENG-PL":  "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures",
     "ESP-LL":  "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
     "FRA-L1":  "https://fbref.com/en/comps/13/schedule/Ligue-1-Scores-and-Fixtures",
@@ -47,6 +50,7 @@ LEAGUE_MAP = {
     "NED-ERE": "https://fbref.com/en/comps/23/schedule/Eredivisie-Scores-and-Fixtures",
     "TUR-SL":  "https://fbref.com/en/comps/26/schedule/Super-Lig-Scores-and-Fixtures",
     "BRA-SA":  "https://fbref.com/en/comps/24/schedule/Serie-A-Scores-and-Fixtures",
+    # New 8
     "MLS":     "https://fbref.com/en/comps/22/schedule/Major-League-Soccer-Scores-and-Fixtures",
     "SAU-SPL": "https://fbref.com/en/comps/70/schedule/Saudi-Pro-League-Scores-and-Fixtures",
     "DEN-SL":  "https://fbref.com/en/comps/50/schedule/Danish-Superliga-Scores-and-Fixtures",
@@ -86,27 +90,39 @@ def _get_snapshot_meta() -> dict:
 
 
 def _fetch_league(league_code: str, url: str) -> str:
-    """Fetch one league from FBref using curl_cffi Chrome impersonation."""
+    """Fetch one league from FBref using SeleniumBase UC mode."""
+    from seleniumbase import Driver
 
+    _emit(f"  Opening Chrome for {league_code}...")
+    driver = None
     try:
-        session = requests.Session(impersonate="chrome")
-        resp = session.get(url, timeout=30)
-        _emit(f"  Status: {resp.status_code}")
+        driver = Driver(uc=True, headless=False)
+        driver.uc_open_with_reconnect(url, 4)
+        driver.uc_gui_click_captcha()
 
-        if resp.status_code == 403:
-            _emit("  BLOCKED (403) — try again later.")
-            return "blocked"
+        # Wait for the page to fully load
+        time.sleep(3)
 
-        if resp.status_code != 200:
-            _emit(f"  ERROR: Unexpected status {resp.status_code}")
-            return "error"
+        html = driver.get_page_source()
+        _emit(f"  Page loaded ({len(html)} bytes)")
 
     except Exception as e:
-        _emit(f"  Request failed: {e}")
+        _emit(f"  Browser error: {e}")
+        if driver:
+            driver.quit()
         return "error"
+    finally:
+        if driver:
+            driver.quit()
 
+    # Check we got actual FBref content, not a block page
+    if "Just a moment" in html or len(html) < 5000:
+        _emit(f"  Still blocked by Cloudflare.")
+        return "blocked"
+
+    # Parse tables from the HTML
     try:
-        tables = pd.read_html(io.StringIO(resp.text))
+        tables = pd.read_html(io.StringIO(html))
         _emit(f"  Found {len(tables)} tables")
     except Exception as e:
         _emit(f"  Could not parse tables: {e}")
@@ -120,7 +136,7 @@ def _fetch_league(league_code: str, url: str) -> str:
     df = max(tables, key=len)
     df = df.dropna(how="all")
 
-    # Keep only completed matches (rows that have a score like 2-1 or 2–1)
+    # Keep only completed matches
     score_col = next(
         (c for c in df.columns if str(c).lower() in ("score", "scores")), None
     )
@@ -133,6 +149,7 @@ def _fetch_league(league_code: str, url: str) -> str:
 
     _emit(f"  {len(df)} completed matches found")
 
+    # Store in database
     try:
         parquet_bytes = df.to_parquet(index=True)
         db = SessionLocal()
@@ -165,6 +182,7 @@ def _run_scrape(selected_leagues: list):
     _last_results = {}
 
     _emit(f"Starting scrape for: {selected_leagues}")
+    _emit("Chrome will open and close for each league — do not click anything.")
 
     for i, code in enumerate(selected_leagues):
         url = LEAGUE_MAP.get(code)
