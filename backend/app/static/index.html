@@ -3,51 +3,1000 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>ATHENA: Tempo Guard — MVP</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>ATHENA · Tempo Guard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #080b0f;
+      --bg2:       #0d1117;
+      --bg3:       #111820;
+      --border:    #1c2636;
+      --border2:   #243044;
+      --text:      #cdd6e0;
+      --muted:     #4a6070;
+      --dim:       #2a3a4a;
+      --cyan:      #00d4ff;
+      --cyan2:     #00a8cc;
+      --green:     #00e676;
+      --amber:     #ffb300;
+      --red:       #ff4444;
+      --mono:      'Share Tech Mono', monospace;
+      --sans:      'Barlow', sans-serif;
+      --cond:      'Barlow Condensed', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid background ─────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ──────────────────────────────────────────────────── */
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────── */
+    .header {
+      margin-bottom: 48px;
+    }
+
+    .header-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+
+    .header-title {
+      font-family: var(--cond);
+      font-size: clamp(42px, 8vw, 72px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .header-title span {
+      color: var(--cyan);
+    }
+
+    .header-sub {
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+    }
+
+    /* ── Mode pill ───────────────────────────────────────────────── */
+    .mode-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .mode-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .mode-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 2px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .mode-pill.future {
+      background: rgba(0, 230, 118, 0.1);
+      color: var(--green);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+    }
+
+    .mode-pill.retro {
+      background: rgba(255, 179, 0, 0.1);
+      color: var(--amber);
+      border: 1px solid rgba(255, 179, 0, 0.3);
+    }
+
+    .mode-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── Form card ───────────────────────────────────────────────── */
+    .form-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    /* ── VS row ──────────────────────────────────────────────────── */
+    .vs-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .vs-sep {
+      font-family: var(--cond);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--dim);
+      text-align: center;
+      padding-bottom: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Bottom row ──────────────────────────────────────────────── */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    /* ── Field ───────────────────────────────────────────────────── */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+    }
+
+    .field-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .field-input {
+      padding: 11px 14px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+
+    .field-input:focus {
+      border-color: var(--cyan2);
+      box-shadow: 0 0 0 2px rgba(0,212,255,0.08);
+    }
+
+    .field-input.resolved {
+      border-color: rgba(0, 230, 118, 0.5);
+    }
+
+    .field-input.unresolved {
+      border-color: rgba(255, 179, 0, 0.4);
+    }
+
+    .field-input::placeholder { color: var(--dim); }
+
+    select.field-input {
+      cursor: pointer;
+    }
+
+    select.field-input option {
+      background: var(--bg3);
+    }
+
+    /* ── League hint ─────────────────────────────────────────────── */
+    .league-hint {
+      font-family: var(--mono);
+      font-size: 10px;
+      height: 14px;
+      transition: all 0.2s;
+    }
+
+    .league-hint.ok    { color: var(--green); }
+    .league-hint.warn  { color: var(--amber); }
+    .league-hint.empty { color: transparent; }
+
+    /* ── Submit button ───────────────────────────────────────────── */
+    .btn-run {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      border: 1px solid var(--cyan2);
+      border-radius: 3px;
+      color: var(--cyan);
+      font-family: var(--cond);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-run::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.06), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.4s;
+    }
+
+    .btn-run:hover {
+      background: rgba(0,212,255,0.06);
+      box-shadow: 0 0 20px rgba(0,212,255,0.1);
+    }
+
+    .btn-run:hover::before { transform: translateX(100%); }
+    .btn-run:active { transform: scale(0.99); }
+
+    .btn-run:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── Loading ─────────────────────────────────────────────────── */
+    .loading-bar {
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      width: 0%;
+      transition: width 0.3s;
+      margin-top: 12px;
+      border-radius: 1px;
+    }
+
+    .loading-bar.active {
+      animation: load 1.5s ease-in-out infinite;
+    }
+
+    @keyframes load {
+      0%   { width: 0%; opacity: 1; margin-left: 0; }
+      50%  { width: 70%; opacity: 1; }
+      100% { width: 100%; opacity: 0; margin-left: 0; }
+    }
+
+    /* ── Result card ─────────────────────────────────────────────── */
+    .result-card {
+      margin-top: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      padding: 16px 24px;
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .result-fixture {
+      font-family: var(--cond);
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+
+    .result-mode-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 2px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .result-mode-badge.future {
+      background: rgba(0, 230, 118, 0.1);
+      color: var(--green);
+      border: 1px solid rgba(0, 230, 118, 0.25);
+    }
+
+    .result-mode-badge.retro {
+      background: rgba(255, 179, 0, 0.1);
+      color: var(--amber);
+      border: 1px solid rgba(255, 179, 0, 0.25);
+    }
+
+    .result-body {
+      padding: 24px;
+    }
+
+    /* ── Main play ───────────────────────────────────────────────── */
+    .main-play {
+      margin-bottom: 24px;
+    }
+
+    .play-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .play-market {
+      font-family: var(--cond);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--cyan);
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+
+    .play-conf {
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .conf-bar-wrap {
+      width: 80px;
+      height: 3px;
+      background: var(--border2);
+      border-radius: 2px;
+    }
+
+    .conf-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--cyan);
+      transition: width 0.5s ease;
+    }
+
+    .conf-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ── Stats grid ──────────────────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 14px;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-val {
+      font-family: var(--cond);
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .stat-val.lean-over  { color: var(--green); }
+    .stat-val.lean-under { color: var(--amber); }
+
+    /* ── Flags ───────────────────────────────────────────────────── */
+    .flags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .flag-chip {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 4px 10px;
+      border-radius: 2px;
+      letter-spacing: 0.1em;
+      background: rgba(255, 68, 68, 0.08);
+      color: #ff7070;
+      border: 1px solid rgba(255, 68, 68, 0.2);
+    }
+
+    .flag-chip.module {
+      background: rgba(0, 212, 255, 0.06);
+      color: var(--cyan2);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+    }
+
+    /* ── Divider ─────────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    /* ── Inputs used ─────────────────────────────────────────────── */
+    .inputs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .input-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .input-stat-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .input-stat-val {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .input-stat-val.null-val {
+      color: var(--dim);
+    }
+
+    /* ── Error ───────────────────────────────────────────────────── */
+    .error-card {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: rgba(255, 68, 68, 0.05);
+      border: 1px solid rgba(255, 68, 68, 0.2);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #ff7070;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--cyan); }
+
+    .footer-version {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Hidden ──────────────────────────────────────────────────── */
+    .hidden { display: none !important; }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 520px) {
+      .vs-row { grid-template-columns: 1fr; }
+      .vs-sep { display: none; }
+      .bottom-row { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .inputs-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-card { padding: 20px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>ATHENA: Tempo Guard</h1>
-    <p class="subtitle">MVP · Corridor → Translated Play</p>
+  <div class="shell">
 
-    <form id="sim-form">
-      <div class="row">
-        <label for="teamA">Team A</label>
-        <input id="teamA" name="teamA" type="text" placeholder="Ajax" required/>
-      </div>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-eyebrow">Data Control · Prediction Engine</div>
+      <h1 class="header-title">ATH<span>E</span>NA</h1>
+      <div class="header-sub">TEMPO GUARD · CORRIDOR ANALYSIS · TRANSLATED PLAY</div>
+    </header>
 
-      <div class="row">
-        <label for="teamB">Team B</label>
-        <input id="teamB" name="teamB" type="text" placeholder="PSV" required/>
-      </div>
-
-      <div class="row">
-        <label for="date">Match Date</label>
-        <input id="date" name="date" type="date" required/>
-      </div>
-
-      <div class="row">
-        <label for="league">League</label>
-        <select id="league" name="league" required>
-          <option value="" disabled selected>Loading leagues…</option>
-        </select>
-      </div>
-
-      <button type="submit">Run ATHENA</button>
-    </form>
-
-    <div id="result" class="card hidden">
-      <h2>Result</h2>
-      <pre id="json"></pre>
+    <!-- Mode indicator -->
+    <div class="mode-row">
+      <span class="mode-label">Mode</span>
+      <span class="mode-pill future" id="mode-pill">
+        <span class="mode-dot"></span>
+        <span id="mode-pill-text">Futurematch</span>
+      </span>
     </div>
 
-    <footer>
-      <a href="/docs" target="_blank">API Docs</a> ·
-      <a href="/health" target="_blank">Health</a>
+    <!-- Form -->
+    <div class="form-card">
+      <form id="athena-form">
+
+        <!-- VS row -->
+        <div class="vs-row">
+          <div class="field">
+            <label class="field-label" for="home-team">Home</label>
+            <input class="field-input" id="home-team" type="text"
+                   placeholder="e.g. Arsenal" autocomplete="off" required/>
+          </div>
+          <div class="vs-sep">VS</div>
+          <div class="field">
+            <label class="field-label" for="away-team">Away</label>
+            <input class="field-input" id="away-team" type="text"
+                   placeholder="e.g. Chelsea" autocomplete="off" required/>
+          </div>
+        </div>
+
+        <!-- Date + League -->
+        <div class="bottom-row">
+          <div class="field">
+            <label class="field-label" for="match-date">Match Date</label>
+            <input class="field-input" id="match-date" type="date" required/>
+          </div>
+          <div class="field">
+            <label class="field-label" for="league">League</label>
+            <select class="field-input" id="league" required>
+              <option value="" disabled selected>Auto-detecting…</option>
+            </select>
+            <div class="league-hint empty" id="league-hint">—</div>
+          </div>
+        </div>
+
+        <button class="btn-run" type="submit" id="btn-run">
+          RUN ATHENA
+        </button>
+        <div class="loading-bar" id="loading-bar"></div>
+
+      </form>
+    </div>
+
+    <!-- Error -->
+    <div class="error-card hidden" id="error-card"></div>
+
+    <!-- Result -->
+    <div class="result-card hidden" id="result-card">
+      <div class="result-header">
+        <div class="result-fixture" id="res-fixture">—</div>
+        <div class="result-mode-badge future" id="res-mode-badge">Futurematch</div>
+      </div>
+      <div class="result-body">
+
+        <!-- Main play -->
+        <div class="main-play">
+          <div class="play-eyebrow">Main Play</div>
+          <div class="play-market" id="res-market">—</div>
+          <div class="play-conf">
+            <div class="conf-bar-wrap">
+              <div class="conf-bar" id="res-conf-bar" style="width:0%"></div>
+            </div>
+            <span class="conf-label" id="res-conf-label">—</span>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-label">Corridor</div>
+            <div class="stat-val" id="res-corridor">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Lean</div>
+            <div class="stat-val" id="res-lean">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">p(2+ Goals)</div>
+            <div class="stat-val" id="res-p2plus">—</div>
+          </div>
+        </div>
+
+        <!-- Flags -->
+        <div id="flags-section" class="hidden">
+          <div class="play-eyebrow" style="margin-bottom:8px">Flags & Modules</div>
+          <div class="flags-row" id="res-flags"></div>
+          <div class="divider"></div>
+        </div>
+
+        <!-- Inputs used -->
+        <div id="inputs-section">
+          <div class="play-eyebrow" style="margin-bottom:10px">Data Inputs</div>
+          <div class="inputs-grid">
+            <div class="input-stat">
+              <div class="input-stat-label">SoT Proj.</div>
+              <div class="input-stat-val" id="in-sot">—</div>
+            </div>
+            <div class="input-stat">
+              <div class="input-stat-label">Support Δ</div>
+              <div class="input-stat-val" id="in-support">—</div>
+            </div>
+            <div class="input-stat">
+              <div class="input-stat-label">p(Home Score)</div>
+              <div class="input-stat-val" id="in-home-tt">—</div>
+            </div>
+            <div class="input-stat">
+              <div class="input-stat-label">p(Away Score)</div>
+              <div class="input-stat-val" id="in-away-tt">—</div>
+            </div>
+            <div class="input-stat">
+              <div class="input-stat-label">Tempo Index</div>
+              <div class="input-stat-val" id="in-tempo">—</div>
+            </div>
+            <div class="input-stat">
+              <div class="input-stat-label">Confidence</div>
+              <div class="input-stat-val" id="in-conf-score">—</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="/docs" target="_blank">API Docs</a>
+        <a href="/health" target="_blank">Health</a>
+      </div>
+      <div class="footer-version">ATHENA v2 · Tempo Guard</div>
     </footer>
+
   </div>
 
-  <script src="app.js"></script>
+  <script>
+    // ── State ───────────────────────────────────────────────────────
+    const $ = id => document.getElementById(id);
+    let resolveTimer = null;
+    let leaguesLoaded = false;
+
+    // ── Set default date = today ────────────────────────────────────
+    (function setToday() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      $('match-date').value = `${y}-${m}-${d}`;
+    })();
+
+    // ── Mode detection based on date ─────────────────────────────────
+    function updateModePill() {
+      const val = $('match-date').value;
+      if (!val) return;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const picked = new Date(val + 'T00:00:00');
+      const isFuture = picked >= today;
+
+      const pill = $('mode-pill');
+      const text = $('mode-pill-text');
+      if (isFuture) {
+        pill.className = 'mode-pill future';
+        text.textContent = 'Futurematch';
+      } else {
+        pill.className = 'mode-pill retro';
+        text.textContent = 'Retrosim';
+      }
+    }
+
+    $('match-date').addEventListener('change', updateModePill);
+    updateModePill();
+
+    // ── Load leagues ────────────────────────────────────────────────
+    async function loadLeagues() {
+      try {
+        const res = await fetch('/api/league-list');
+        const leagues = await res.json();
+        const sel = $('league');
+        sel.innerHTML = '';
+
+        const blank = document.createElement('option');
+        blank.value = '';
+        blank.disabled = true;
+        blank.selected = true;
+        blank.textContent = 'Select league…';
+        sel.appendChild(blank);
+
+        leagues
+          .sort((a, b) => (a.name || a.code).localeCompare(b.name || b.code))
+          .forEach(({ code, name, flag }) => {
+            const opt = document.createElement('option');
+            opt.value = code;
+            opt.textContent = flag ? `${flag} ${name}` : name || code;
+            sel.appendChild(opt);
+          });
+
+        leaguesLoaded = true;
+      } catch (err) {
+        console.error('Failed loading leagues:', err);
+        $('league').innerHTML = '<option disabled selected>Error loading leagues</option>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadLeagues);
+
+    // ── Auto-resolve league ──────────────────────────────────────────
+    function scheduleResolve() {
+      clearTimeout(resolveTimer);
+      resolveTimer = setTimeout(resolveLeague, 250);
+    }
+
+    async function resolveLeague() {
+      const a = $('home-team').value.trim();
+      const b = $('away-team').value.trim();
+      if (!a || !b) return;
+
+      const hint = $('league-hint');
+      const sel  = $('league');
+
+      try {
+        const res  = await fetch(`/api/resolve-league?team_a=${encodeURIComponent(a)}&team_b=${encodeURIComponent(b)}`);
+        const data = await res.json();
+
+        if (data.resolved && data.league_code) {
+          sel.value = data.league_code;
+          sel.className = 'field-input resolved';
+          hint.textContent = `✓ Auto-detected: ${data.league_code}`;
+          hint.className = 'league-hint ok';
+        } else {
+          sel.className = 'field-input unresolved';
+          hint.textContent = '⚠ League not auto-detected — select manually';
+          hint.className = 'league-hint warn';
+        }
+      } catch (err) {
+        // Silent fail — user can select manually
+      }
+    }
+
+    $('home-team').addEventListener('input',  scheduleResolve);
+    $('away-team').addEventListener('input',  scheduleResolve);
+    $('home-team').addEventListener('blur',   scheduleResolve);
+    $('away-team').addEventListener('blur',   scheduleResolve);
+
+    // ── Submit ───────────────────────────────────────────────────────
+    $('athena-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const homeTeam   = $('home-team').value.trim();
+      const awayTeam   = $('away-team').value.trim();
+      const matchDate  = $('match-date').value;
+      const leagueCode = $('league').value;
+
+      if (!homeTeam || !awayTeam || !matchDate || !leagueCode) {
+        showError('Please fill in all fields.');
+        return;
+      }
+
+      // Determine mode
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const picked = new Date(matchDate + 'T00:00:00');
+      const isFuture = picked >= today;
+      const endpoint = isFuture ? '/api/futurematch' : '/api/retrosim';
+
+      const payload = {
+        league_code: leagueCode,
+        home_team:   homeTeam,
+        away_team:   awayTeam,
+        match_date:  matchDate,
+      };
+
+      setLoading(true);
+      hideError();
+      hideResult();
+
+      try {
+        const res  = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(err.detail || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        renderResult(data);
+      } catch (err) {
+        showError(err.message || 'Unexpected error. Check the API.');
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // ── Render result ────────────────────────────────────────────────
+    function renderResult(d) {
+      const isFuture = d.mode === 'futurematch';
+
+      // Header
+      $('res-fixture').textContent = d.fixture || '—';
+      const badge = $('res-mode-badge');
+      badge.textContent = isFuture ? 'Futurematch' : 'Retrosim';
+      badge.className = `result-mode-badge ${isFuture ? 'future' : 'retro'}`;
+
+      // Main play
+      const tp = d.translated_play || {};
+      $('res-market').textContent = tp.market || '—';
+
+      // Confidence bar
+      const confMap = { HIGH: 90, MEDIUM: 60, LOW: 30 };
+      const confPct = confMap[tp.confidence] || Math.round((d.confidence_score || 0) * 100);
+      $('res-conf-bar').style.width = confPct + '%';
+      $('res-conf-label').textContent = tp.confidence || (d.confidence_score != null ? (d.confidence_score * 100).toFixed(0) + '%' : '—');
+
+      // Stats
+      const cor = d.corridor || {};
+      $('res-corridor').textContent = (cor.low != null && cor.high != null)
+        ? `${cor.low} – ${cor.high}` : '—';
+
+      const lean = (cor.lean || '').toUpperCase();
+      const leanEl = $('res-lean');
+      leanEl.textContent = lean || '—';
+      leanEl.className = `stat-val ${lean === 'OVER' ? 'lean-over' : lean === 'UNDER' ? 'lean-under' : ''}`;
+
+      const inp = d.inputs_used || {};
+      $('res-p2plus').textContent = inp.p_two_plus != null
+        ? (inp.p_two_plus * 100).toFixed(1) + '%' : '—';
+
+      // Flags + modules
+      const allFlags = [...(d.safety_flags || []), ...(d.applied_modules || [])];
+      const flagsSection = $('flags-section');
+      if (allFlags.length > 0) {
+        const flagsRow = $('res-flags');
+        flagsRow.innerHTML = '';
+        (d.safety_flags || []).forEach(f => {
+          const chip = document.createElement('span');
+          chip.className = 'flag-chip';
+          chip.textContent = f;
+          flagsRow.appendChild(chip);
+        });
+        (d.applied_modules || []).forEach(m => {
+          const chip = document.createElement('span');
+          chip.className = 'flag-chip module';
+          chip.textContent = m;
+          flagsRow.appendChild(chip);
+        });
+        flagsSection.classList.remove('hidden');
+      } else {
+        flagsSection.classList.add('hidden');
+      }
+
+      // Inputs used
+      const fmt = v => v != null ? String(v) : null;
+      setInputStat('in-sot',       fmt(inp.sot_proj_total));
+      setInputStat('in-support',   fmt(inp.support_idx_over_delta));
+      setInputStat('in-home-tt',   inp.p_home_tt05 != null ? (inp.p_home_tt05 * 100).toFixed(1) + '%' : null);
+      setInputStat('in-away-tt',   inp.p_away_tt05 != null ? (inp.p_away_tt05 * 100).toFixed(1) + '%' : null);
+      setInputStat('in-tempo',     fmt(inp.tempo_index));
+      setInputStat('in-conf-score',d.confidence_score != null ? (d.confidence_score * 100).toFixed(0) + '%' : null);
+
+      $('result-card').classList.remove('hidden');
+      $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function setInputStat(id, val) {
+      const el = $(id);
+      if (val != null) {
+        el.textContent = val;
+        el.className = 'input-stat-val';
+      } else {
+        el.textContent = 'n/a';
+        el.className = 'input-stat-val null-val';
+      }
+    }
+
+    // ── UI helpers ───────────────────────────────────────────────────
+    function setLoading(on) {
+      $('btn-run').disabled = on;
+      $('btn-run').textContent = on ? 'RUNNING…' : 'RUN ATHENA';
+      const bar = $('loading-bar');
+      bar.className = on ? 'loading-bar active' : 'loading-bar';
+    }
+
+    function showError(msg) {
+      const el = $('error-card');
+      el.textContent = '⚠ ' + msg;
+      el.classList.remove('hidden');
+    }
+
+    function hideError()  { $('error-card').classList.add('hidden'); }
+    function hideResult() { $('result-card').classList.add('hidden'); }
+  </script>
 </body>
 </html>
