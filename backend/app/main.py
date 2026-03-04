@@ -69,4 +69,4 @@ app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
 # ------------------------------------------------------------------------------
 # STATIC FRONTEND (served at /app)
 # ------------------------------------------------------------------------------
-app.mount("/app", StaticFiles(directory="app/static", html=True), name="app")
+app.mount("/", StaticFiles(directory="app/static", html=True), name="app")
