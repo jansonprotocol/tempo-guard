@@ -1,11 +1,12 @@
 """
 backend/scripts/scrape_fbref.py
 
-Scrapes FBref directly using requests + pandas.read_html().
+Scrapes FBref directly using curl_cffi (Chrome impersonation).
 No soccerdata dependency — works on any Python version.
 
 Run locally:
     cd backend
+    venv312\Scripts\activate
     python -m scripts.scrape_fbref
 """
 
@@ -25,24 +26,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 
-# ── Browser headers ───────────────────────────────────────────────────────────
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/124.0.0.0 Safari/537.36"
-    ),
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Connection": "keep-alive",
-    "Referer": "https://fbref.com/en/",
-}
-
-SLEEP_BETWEEN_LEAGUES = 5  # seconds — be polite to FBref
+SLEEP_BETWEEN_LEAGUES = 6  # seconds between leagues — be polite to FBref
 
 # ── League map: internal code → FBref fixtures page URL ──────────────────────
 LEAGUE_MAP = {
+    # Original 8
     "ENG-PL":  "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures",
     "ESP-LL":  "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
     "FRA-L1":  "https://fbref.com/en/comps/13/schedule/Ligue-1-Scores-and-Fixtures",
@@ -51,6 +39,15 @@ LEAGUE_MAP = {
     "NED-ERE": "https://fbref.com/en/comps/23/schedule/Eredivisie-Scores-and-Fixtures",
     "TUR-SL":  "https://fbref.com/en/comps/26/schedule/Super-Lig-Scores-and-Fixtures",
     "BRA-SA":  "https://fbref.com/en/comps/24/schedule/Serie-A-Scores-and-Fixtures",
+    # New 8
+    "MLS":     "https://fbref.com/en/comps/22/schedule/Major-League-Soccer-Scores-and-Fixtures",
+    "SAU-SPL": "https://fbref.com/en/comps/70/schedule/Saudi-Pro-League-Scores-and-Fixtures",
+    "DEN-SL":  "https://fbref.com/en/comps/50/schedule/Danish-Superliga-Scores-and-Fixtures",
+    "ESP-LL2": "https://fbref.com/en/comps/17/schedule/Segunda-Division-Scores-and-Fixtures",
+    "BEL-PL":  "https://fbref.com/en/comps/37/schedule/Belgian-Pro-League-Scores-and-Fixtures",
+    "NOR-EL":  "https://fbref.com/en/comps/28/schedule/Eliteserien-Scores-and-Fixtures",
+    "SWE-AL":  "https://fbref.com/en/comps/29/schedule/Allsvenskan-Scores-and-Fixtures",
+    "MEX-LMX": "https://fbref.com/en/comps/31/schedule/Liga-MX-Scores-and-Fixtures",
 }
 
 
@@ -58,24 +55,13 @@ def fetch_league(league_code: str, url: str) -> None:
     print(f"\n[scraper] {league_code}")
     print(f"  URL: {url}")
 
-    session = requests.Session()
-    session.headers.update(HEADERS)
-
-    # Warm-up visit to get cookies
     try:
-        session.get("https://fbref.com/en/", timeout=20)
-        print("  Warm-up OK")
-    except Exception as e:
-        print(f"  Warm-up failed (continuing): {e}")
-
-    time.sleep(2)
-
-    try:
+        session = requests.Session(impersonate="chrome")
         resp = session.get(url, timeout=30)
         print(f"  Status: {resp.status_code}")
 
         if resp.status_code == 403:
-            print("  BLOCKED (403) — FBref is rate limiting. Wait a few minutes and try again.")
+            print("  BLOCKED (403) — FBref is blocking. Try again later.")
             return
         if resp.status_code != 200:
             print(f"  ERROR: Unexpected status {resp.status_code}")
