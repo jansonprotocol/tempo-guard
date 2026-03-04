@@ -221,18 +221,30 @@ def calibrate_league(
     current_tempo = float(cfg.tempo_factor    or 0.55) if cfg else 0.55
 
     # ── Run retrosim for each match ──────────────────────────────────
-    market_tracker: dict[str, dict] = {}  # market → {hits, misses, skipped}
-    overall_hits = overall_misses = skipped = 0
+    # Matches sorted most-recent-first (head(limit) on desc-sorted df).
+    # Recency weights:
+    #   positions  1–10  → 1.0  (recent misses MUST be addressed)
+    #   positions 11–30  → 0.5  (notable but not critical)
+    #   positions 31+    → 0.2  (historical context only)
+
+    def _weight(position: int) -> float:
+        if position <= 10: return 1.0
+        if position <= 30: return 0.5
+        return 0.2
+
+    market_tracker: dict[str, dict] = {}
+    w_hits = w_misses = 0.0
+    skipped = 0
     sample_rows: list[dict] = []
 
-    for _, match_row in completed.iterrows():
+    for pos, (_, match_row) in enumerate(completed.iterrows(), start=1):
         match_date = match_row[date_col].date()
         home_team  = str(match_row[home_col])
         away_team  = str(match_row[away_col])
         hg = int(match_row["hg"])
         ag = int(match_row["ag"])
+        w  = _weight(pos)
 
-        # Get features AS OF this match date (excludes this match itself)
         try:
             metrics = asof_features(
                 league_code, home_team, away_team, match_date,
@@ -246,7 +258,6 @@ def calibrate_league(
             skipped += 1
             continue
 
-        # Build request and predict
         try:
             req = MatchRequest(
                 league_code=league_code,
@@ -266,64 +277,78 @@ def calibrate_league(
             continue
 
         market = pred.translated_play.market
-        hit = evaluate_market(market, hg, ag)
+        hit    = evaluate_market(market, hg, ag)
 
-        # Track per-market
         if market not in market_tracker:
-            market_tracker[market] = {"hits": 0, "misses": 0, "skipped": 0}
+            market_tracker[market] = {
+                "w_hits": 0.0, "w_misses": 0.0, "skipped": 0,
+                "raw_hits": 0, "raw_misses": 0,
+            }
 
         if hit is None:
             market_tracker[market]["skipped"] += 1
             skipped += 1
         elif hit:
-            market_tracker[market]["hits"] += 1
-            overall_hits += 1
+            market_tracker[market]["w_hits"]   += w
+            market_tracker[market]["raw_hits"] += 1
+            w_hits += w
         else:
-            market_tracker[market]["misses"] += 1
-            overall_misses += 1
+            market_tracker[market]["w_misses"]   += w
+            market_tracker[market]["raw_misses"] += 1
+            w_misses += w
 
-        # Sample (first 20)
         if len(sample_rows) < 20:
             sample_rows.append({
-                "date":       match_date.isoformat(),
-                "home":       home_team,
-                "away":       away_team,
-                "actual":     f"{hg}-{ag}",
+                "position":    pos,
+                "weight":      w,
+                "date":        match_date.isoformat(),
+                "home":        home_team,
+                "away":        away_team,
+                "actual":      f"{hg}-{ag}",
                 "total_goals": hg + ag,
-                "market":     market,
-                "hit":        hit,
-                "confidence": pred.translated_play.confidence,
-                "corridor":   f"{pred.corridor.low}–{pred.corridor.high}",
-                "lean":       pred.corridor.lean,
-                "inputs":     metrics,
+                "market":      market,
+                "hit":         hit,
+                "confidence":  pred.translated_play.confidence,
+                "corridor":    f"{pred.corridor.low}–{pred.corridor.high}",
+                "lean":        pred.corridor.lean,
+                "inputs":      metrics,
             })
 
-    evaluated = overall_hits + overall_misses
-    overall_hit_rate = round(overall_hits / max(1, evaluated) * 100, 1)
+    evaluated = sum(
+        s["raw_hits"] + s["raw_misses"] for s in market_tracker.values()
+    )
+    overall_hit_rate = round(w_hits / max(0.001, w_hits + w_misses) * 100, 1)
 
     # ── Build per-market stats ────────────────────────────────────────
     by_market = []
-    over_hits = over_total = under_hits = under_total = 0
+    over_w_hits = over_w_total = under_w_hits = under_w_total = 0.0
 
     for market, stats in sorted(market_tracker.items()):
-        h = stats["hits"]
-        m = stats["misses"]
-        s = stats["skipped"]
-        rate = round(h / max(1, h + m) * 100, 1)
+        wh = stats["w_hits"]
+        wm = stats["w_misses"]
+        s  = stats["skipped"]
+        rh = stats["raw_hits"]
+        rm = stats["raw_misses"]
+        # Hit rate reported as weighted %
+        rate = round(wh / max(0.001, wh + wm) * 100, 1)
         by_market.append(MarketStats(
-            market=market, hits=h, misses=m, skipped=s, hit_rate=rate
+            market=market,
+            hits=rh,
+            misses=rm,
+            skipped=s,
+            hit_rate=rate,
         ))
         if market.startswith("O"):
-            over_hits  += h
-            over_total += h + m
+            over_w_hits  += wh
+            over_w_total += wh + wm
         elif market.startswith("U"):
-            under_hits  += h
-            under_total += h + m
+            under_w_hits  += wh
+            under_w_total += wh + wm
 
     # ── Bias suggestion ───────────────────────────────────────────────
     suggestion = _suggest_bias(
-        over_hits, over_total,
-        under_hits, under_total,
+        over_w_hits, over_w_total,
+        under_w_hits, under_w_total,
         current_over, current_under, current_tempo,
     )
 
