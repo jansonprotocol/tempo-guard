@@ -203,7 +203,7 @@ admin.add_middleware(CORSMiddleware, allow_origins=["*"],
 @admin.get("/", response_class=HTMLResponse)
 def serve_panel():
     panel_path = Path(__file__).parent / "admin_panel.html"
-    with open(panel_path) as f:
+    with open(panel_path, encoding="utf-8") as f:
         return f.read()
 
 
