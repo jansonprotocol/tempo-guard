@@ -2,20 +2,19 @@
 fbref_base.py — RENDER-SAFE version.
 
 Render NEVER scrapes FBref. It reads parquet snapshots stored by running:
-    python -m scripts.scrape_fbref   (on your local machine)
+    python -m scripts.admin_server   (on your local machine)
 
 International competitions (UCL, UEL, UECL, EC, WC):
     No dedicated snapshot is scraped for these. Instead, ATHENA looks up
     each team across ALL available domestic league snapshots and uses their
-    recent domestic form as the feature foundation. This gives a solid base
-    without needing to scrape separate international datasets.
+    recent domestic form as the feature foundation.
 """
 from __future__ import annotations
 
 import io
 import math
 from datetime import date, datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import pandas as pd
 
@@ -26,7 +25,6 @@ from app.database.models_fbref import FBrefSnapshot
 ROLLING_MATCHES = 10
 MIN_MATCHES = 5
 
-# These league codes have no dedicated snapshot — handled via domestic fallback
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
 
@@ -44,11 +42,11 @@ def _poisson_p0(mu: float) -> float:
 
 
 def _load_snapshot(league_code: str) -> Optional[pd.DataFrame]:
-    """Load a single league's parquet snapshot from the database."""
     db = SessionLocal()
     try:
         row = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
         if row is None:
+            print(f"[fbref_base] No snapshot in DB for {league_code}.")
             return None
         df = pd.read_parquet(io.BytesIO(row.data))
         print(f"[fbref_base] Loaded snapshot: {league_code} ({len(df)} rows, "
@@ -61,8 +59,7 @@ def _load_snapshot(league_code: str) -> Optional[pd.DataFrame]:
         db.close()
 
 
-def _load_all_snapshots() -> List[pd.DataFrame]:
-    """Load every available domestic league snapshot from the database."""
+def _load_all_snapshots() -> list[pd.DataFrame]:
     db = SessionLocal()
     try:
         rows = db.query(FBrefSnapshot).all()
@@ -73,14 +70,44 @@ def _load_all_snapshots() -> List[pd.DataFrame]:
                 result.append(df)
             except Exception as e:
                 print(f"[fbref_base] Could not parse snapshot {row.league_code}: {e}")
-        print(f"[fbref_base] Loaded {len(result)} domestic snapshots for intl lookup.")
+        print(f"[fbref_base] Loaded {len(result)} snapshots for intl lookup.")
         return result
     finally:
         db.close()
 
 
+def _parse_score_column(df: pd.DataFrame, score_col: str) -> pd.DataFrame:
+    """
+    FBref stores scores as '2–1' or '2-1' in a single column.
+    Split this into hg (home goals) and ag (away goals) integer columns.
+    Rows without a valid score are dropped.
+    """
+    df = df.copy()
+
+    # Normalise dash variants
+    df["_score_clean"] = df[score_col].astype(str).str.replace("–", "-", regex=False)
+
+    # Only keep rows with a valid score like '2-1'
+    mask = df["_score_clean"].str.match(r"^\d+\s*-\s*\d+$", na=False)
+    df = df[mask].copy()
+
+    if df.empty:
+        return df
+
+    split = df["_score_clean"].str.split("-", expand=True)
+    df["hg"] = pd.to_numeric(split[0].str.strip(), errors="coerce").fillna(0).astype(int)
+    df["ag"] = pd.to_numeric(split[1].str.strip(), errors="coerce").fillna(0).astype(int)
+    df = df.drop(columns=["_score_clean"])
+
+    return df
+
+
 def _resolve_columns(df: pd.DataFrame) -> Dict[str, Optional[str]]:
-    """Map logical column names to actual dataframe column names (case-insensitive)."""
+    """
+    Map logical names to actual dataframe column names.
+    Handles both FBref's raw format (Home/Away/Score)
+    and pre-processed formats (home_goals, away_goals etc.)
+    """
     cols = {c.lower(): c for c in df.columns}
 
     def col(*names: str) -> Optional[str]:
@@ -93,17 +120,41 @@ def _resolve_columns(df: pd.DataFrame) -> Dict[str, Optional[str]]:
         "date":  col("date"),
         "ht":    col("home", "home_team"),
         "at":    col("away", "away_team"),
-        "hg":    col("home_goals", "hg", "score_home", "goals_home"),
-        "ag":    col("away_goals", "ag", "score_away", "goals_away"),
+        "hg":    col("hg", "home_goals", "score_home", "goals_home"),
+        "ag":    col("ag", "away_goals", "score_away", "goals_away"),
+        "score": col("score", "scores"),
         "comp":  col("comp", "competition"),
         "soth":  col("home_shots_on_target", "shots_on_target_home", "sot_home"),
         "sota":  col("away_shots_on_target", "shots_on_target_away", "sot_away"),
     }
 
 
+def _prepare_df(df: pd.DataFrame, c: Dict) -> Optional[pd.DataFrame]:
+    """
+    Ensure the dataframe has hg/ag columns.
+    If only a Score column exists, parse it into hg/ag.
+    Returns None if we can't get goal data.
+    """
+    # Already has goal columns
+    if c["hg"] and c["ag"]:
+        return df
+
+    # Has a Score column — parse it
+    if c["score"]:
+        print(f"[fbref_base] Parsing Score column into hg/ag...")
+        df = _parse_score_column(df, c["score"])
+        if df.empty:
+            print("[fbref_base] No valid score rows after parsing.")
+            return None
+        # Refresh column map after adding hg/ag
+        return df
+
+    print("[fbref_base] No goal or score columns found.")
+    return None
+
+
 def _find_team_rows(df: pd.DataFrame, team_lc: str, cutoff: datetime,
                     c: Dict) -> pd.DataFrame:
-    """Return the last N rows for a team in a dataframe, strictly before cutoff."""
     if not all([c["date"], c["ht"], c["at"]]):
         return pd.DataFrame()
 
@@ -126,19 +177,31 @@ def _compute_features_from_frames(
     hname: str,
     aname: str,
     full_df: pd.DataFrame,
-    c: Dict,
 ) -> Dict[str, float]:
-    """
-    Core feature computation given last-N match frames for home and away teams.
-    Shared by both the domestic and international code paths.
-    """
+    """Core feature computation given last-N match frames."""
+
+    # Resolve columns on the prepared df (which now has hg/ag)
+    cols = {c.lower(): c for c in full_df.columns}
+
+    def col(*names):
+        for n in names:
+            if n in cols:
+                return cols[n]
+        return None
+
+    c_ht   = col("home", "home_team")
+    c_at   = col("away", "away_team")
+    c_hg   = col("hg", "home_goals", "score_home", "goals_home")
+    c_ag   = col("ag", "away_goals", "score_away", "goals_away")
+    c_soth = col("home_shots_on_target", "shots_on_target_home", "sot_home")
+    c_sota = col("away_shots_on_target", "shots_on_target_away", "sot_away")
 
     def goals_fa(frame: pd.DataFrame, team_lc: str) -> Tuple[float, float]:
         gf = ga = 0
         for _, r in frame.iterrows():
-            is_home = str(r[c["ht"]]).lower() == team_lc
-            hg = int(r[c["hg"]] or 0) if pd.notnull(r[c["hg"]]) else 0
-            ag = int(r[c["ag"]] or 0) if pd.notnull(r[c["ag"]]) else 0
+            is_home = str(r[c_ht]).lower() == team_lc
+            hg = int(r[c_hg]) if pd.notnull(r[c_hg]) else 0
+            ag = int(r[c_ag]) if pd.notnull(r[c_ag]) else 0
             gf += hg if is_home else ag
             ga += ag if is_home else hg
         n = len(frame)
@@ -147,12 +210,12 @@ def _compute_features_from_frames(
     gfh, _ = goals_fa(H, hname)
     gfa, _ = goals_fa(A, aname)
 
-    # SoT ratio from the reference dataframe (whichever snapshot we're using)
+    # SoT ratio
     ratio_sot = 3.2
-    if c["soth"] and c["sota"] and c["hg"] and c["ag"]:
-        tmp = full_df[[c["hg"], c["ag"], c["soth"], c["sota"]]].copy()
-        tmp["goals"] = tmp[c["hg"]].fillna(0) + tmp[c["ag"]].fillna(0)
-        tmp["sot"]   = tmp[c["soth"]].fillna(0) + tmp[c["sota"]].fillna(0)
+    if c_soth and c_sota and c_hg and c_ag:
+        tmp = full_df[[c_hg, c_ag, c_soth, c_sota]].copy()
+        tmp["goals"] = tmp[c_hg].fillna(0) + tmp[c_ag].fillna(0)
+        tmp["sot"]   = tmp[c_soth].fillna(0) + tmp[c_sota].fillna(0)
         agg = tmp[tmp["goals"] > 0]
         if not agg.empty and agg["goals"].sum() > 0:
             ratio_sot = _clip(agg["sot"].sum() / agg["goals"].sum(), 2.2, 4.5)
@@ -163,8 +226,8 @@ def _compute_features_from_frames(
     p_two_plus = 1.0 - (p0 + p1)
 
     league_mu = float(
-        (full_df[c["hg"]].fillna(0) + full_df[c["ag"]].fillna(0)).mean() or 2.5
-    ) if c["hg"] and c["ag"] else 2.5
+        (full_df[c_hg].fillna(0) + full_df[c_ag].fillna(0)).mean() or 2.5
+    ) if c_hg and c_ag else 2.5
 
     return {
         "p_two_plus":             round(float(p_two_plus), 3),
@@ -182,62 +245,45 @@ def _asof_features_intl(
     away_team: str,
     match_date: date,
 ) -> Dict[str, float]:
-    """
-    For international competitions (UCL, UEL, UECL, EC, WC).
-
-    Searches ALL available domestic league snapshots to find recent form
-    for each team, then computes features from that domestic data.
-    Each team may come from a different snapshot (e.g. Man City from ENG-PL,
-    Real Madrid from ESP-LL) — we find whichever snapshot has the most data.
-    """
     snapshots = _load_all_snapshots()
     if not snapshots:
-        print("[fbref_base] No domestic snapshots available for intl fallback.")
         return {}
 
     cutoff = datetime.combine(match_date, datetime.min.time()) - timedelta(seconds=1)
     hname  = _norm(home_team)
     aname  = _norm(away_team)
 
-    # Find the best (most rows) frame for each team across all snapshots
-    def best_frame_for_team(team_lc: str) -> Tuple[Optional[pd.DataFrame],
-                                                     Optional[pd.DataFrame],
-                                                     Optional[Dict]]:
+    def best_frame_for_team(team_lc: str):
         best_rows = pd.DataFrame()
         best_full = None
-        best_cols = None
+        best_c    = None
         for snap in snapshots:
             c = _resolve_columns(snap)
-            if not all([c["date"], c["ht"], c["at"], c["hg"], c["ag"]]):
+            prepared = _prepare_df(snap, c)
+            if prepared is None:
                 continue
-            rows = _find_team_rows(snap, team_lc, cutoff, c)
+            c2 = _resolve_columns(prepared)
+            if not all([c2["date"], c2["ht"], c2["at"], c2["hg"], c2["ag"]]):
+                continue
+            rows = _find_team_rows(prepared, team_lc, cutoff, c2)
             if len(rows) > len(best_rows):
                 best_rows = rows
-                best_full = snap
-                best_cols = c
-        return best_rows, best_full, best_cols
+                best_full = prepared
+                best_c    = c2
+        return best_rows, best_full, best_c
 
-    H, full_H, cols_H = best_frame_for_team(hname)
-    A, full_A, cols_A = best_frame_for_team(aname)
+    H, full_H, _ = best_frame_for_team(hname)
+    A, full_A, _ = best_frame_for_team(aname)
 
     if len(H) < MIN_MATCHES or len(A) < MIN_MATCHES:
-        print(f"[fbref_base] Intl fallback: not enough domestic data — "
+        print(f"[fbref_base] Intl fallback: not enough data — "
               f"{home_team}={len(H)}, {away_team}={len(A)}")
         return {}
-
-    # Use the home team's snapshot as the reference for league-level stats
-    # (arbitrary but consistent; both teams' goal rates are computed independently)
-    ref_df   = full_H
-    ref_cols = cols_H
-
-    # Merge H and A into one frame using common columns for _compute_features_from_frames
-    # Since they may come from different snapshots we build a unified view
-    combined = pd.concat([H, A]).drop_duplicates()
 
     print(f"[fbref_base] Intl fallback OK — "
           f"{home_team} ({len(H)} rows), {away_team} ({len(A)} rows)")
 
-    return _compute_features_from_frames(H, A, hname, aname, ref_df, ref_cols)
+    return _compute_features_from_frames(H, A, hname, aname, full_H)
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
@@ -248,30 +294,32 @@ def asof_features(
     match_date: date,
 ) -> Dict[str, float]:
     """
-    Main entry point. Called by routes/services for every match prediction.
-
-    - Domestic leagues (ENG-PL, ESP-LL, etc.): uses the league's own snapshot.
-    - International (UCL, UEL, UECL, EC, WC): falls back to each team's
-      domestic league snapshot automatically.
-    - Returns {} if data is unavailable — callers should handle gracefully.
+    Main entry point called for every match prediction.
+    Returns {} if data unavailable — callers handle gracefully.
     """
 
-    # ── International path ────────────────────────────────────────────────
+    # International path
     if league_code in INTL_LEAGUE_CODES:
-        print(f"[fbref_base] Intl competition ({league_code}) — "
-              "using domestic fallback for features.")
+        print(f"[fbref_base] Intl competition ({league_code}) — using domestic fallback.")
         return _asof_features_intl(home_team, away_team, match_date)
 
-    # ── Domestic path ─────────────────────────────────────────────────────
+    # Domestic path
     df = _load_snapshot(league_code)
     if df is None or df.empty:
-        print(f"[fbref_base] No snapshot for {league_code}. "
-              "Run scripts/scrape_fbref.py locally.")
         return {}
 
     c = _resolve_columns(df)
+
+    # Ensure we have goal data (parse Score column if needed)
+    df = _prepare_df(df, c)
+    if df is None:
+        return {}
+
+    # Refresh column map after potential score parsing
+    c = _resolve_columns(df)
+
     if not all([c["date"], c["ht"], c["at"], c["hg"], c["ag"]]):
-        print("[fbref_base] Snapshot missing essential columns.")
+        print("[fbref_base] Still missing essential columns after prepare.")
         return {}
 
     cutoff = datetime.combine(match_date, datetime.min.time()) - timedelta(seconds=1)
@@ -280,6 +328,7 @@ def asof_features(
     work = work[work[c["date"]] < cutoff]
 
     if work.empty:
+        print("[fbref_base] No matches before cutoff date.")
         return {}
 
     hname = _norm(home_team)
@@ -293,4 +342,7 @@ def asof_features(
               f"{home_team}={len(H)}, {away_team}={len(A)}")
         return {}
 
-    return _compute_features_from_frames(H, A, hname, aname, work, c)
+    print(f"[fbref_base] Computing features: "
+          f"{home_team} ({len(H)} rows), {away_team} ({len(A)} rows)")
+
+    return _compute_features_from_frames(H, A, hname, aname, work)
