@@ -69,4 +69,10 @@ app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
 # ------------------------------------------------------------------------------
 # STATIC FRONTEND (served at /app)
 # ------------------------------------------------------------------------------
-app.mount("/", StaticFiles(directory="app/static", html=True), name="app")
+from fastapi.responses import RedirectResponse
+
+@app.get("/")
+def root():
+    return RedirectResponse(url="/app")
+
+app.mount("/app", StaticFiles(directory="app/static", html=True), name="app")
