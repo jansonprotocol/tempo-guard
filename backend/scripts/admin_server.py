@@ -6,6 +6,7 @@ Run on your laptop only — never on Render.
 
 Usage:
     cd backend
+    venv312\Scripts\activate
     python -m scripts.admin_server
 
 Then open http://localhost:8001 in your browser.
@@ -34,24 +35,11 @@ import uvicorn
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 
-# ── Browser headers ───────────────────────────────────────────────────────────
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/124.0.0.0 Safari/537.36"
-    ),
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Connection": "keep-alive",
-    "Referer": "https://fbref.com/en/",
-}
+SLEEP_BETWEEN_LEAGUES = 6  # seconds between leagues — be polite to FBref
 
-SLEEP_BETWEEN_LEAGUES = 5
-
-# ── League map ────────────────────────────────────────────────────────────────
+# ── League map: internal code → FBref fixtures page URL ──────────────────────
 LEAGUE_MAP = {
+    # Original 8
     "ENG-PL":  "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures",
     "ESP-LL":  "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
     "FRA-L1":  "https://fbref.com/en/comps/13/schedule/Ligue-1-Scores-and-Fixtures",
@@ -60,14 +48,15 @@ LEAGUE_MAP = {
     "NED-ERE": "https://fbref.com/en/comps/23/schedule/Eredivisie-Scores-and-Fixtures",
     "TUR-SL":  "https://fbref.com/en/comps/26/schedule/Super-Lig-Scores-and-Fixtures",
     "BRA-SA":  "https://fbref.com/en/comps/24/schedule/Serie-A-Scores-and-Fixtures",
+    # New 8
     "MLS":     "https://fbref.com/en/comps/22/schedule/Major-League-Soccer-Scores-and-Fixtures",
-"SAU-SPL": "https://fbref.com/en/comps/70/schedule/Saudi-Pro-League-Scores-and-Fixtures",
-"DEN-SL":  "https://fbref.com/en/comps/50/schedule/Danish-Superliga-Scores-and-Fixtures",
-"ESP-LL2": "https://fbref.com/en/comps/17/schedule/Segunda-Division-Scores-and-Fixtures",
-"BEL-PL":  "https://fbref.com/en/comps/37/schedule/Belgian-Pro-League-Scores-and-Fixtures",
-"NOR-EL":  "https://fbref.com/en/comps/28/schedule/Eliteserien-Scores-and-Fixtures",
-"SWE-AL":  "https://fbref.com/en/comps/29/schedule/Allsvenskan-Scores-and-Fixtures",
-"MEX-LMX": "https://fbref.com/en/comps/31/schedule/Liga-MX-Scores-and-Fixtures",
+    "SAU-SPL": "https://fbref.com/en/comps/70/schedule/Saudi-Pro-League-Scores-and-Fixtures",
+    "DEN-SL":  "https://fbref.com/en/comps/50/schedule/Danish-Superliga-Scores-and-Fixtures",
+    "ESP-LL2": "https://fbref.com/en/comps/17/schedule/Segunda-Division-Scores-and-Fixtures",
+    "BEL-PL":  "https://fbref.com/en/comps/37/schedule/Belgian-Pro-League-Scores-and-Fixtures",
+    "NOR-EL":  "https://fbref.com/en/comps/28/schedule/Eliteserien-Scores-and-Fixtures",
+    "SWE-AL":  "https://fbref.com/en/comps/29/schedule/Allsvenskan-Scores-and-Fixtures",
+    "MEX-LMX": "https://fbref.com/en/comps/31/schedule/Liga-MX-Scores-and-Fixtures",
 }
 
 # ── Global state ──────────────────────────────────────────────────────────────
@@ -99,24 +88,17 @@ def _get_snapshot_meta() -> dict:
 
 
 def _fetch_league(league_code: str, url: str) -> str:
-    session = requests.Session()
-    session.headers.update(HEADERS)
+    """Fetch one league from FBref using curl_cffi Chrome impersonation."""
 
     try:
-        session.get("https://fbref.com/en/", timeout=20)
-        _emit("  Warm-up OK")
-    except Exception as e:
-        _emit(f"  Warm-up failed (continuing): {e}")
-
-    time.sleep(2)
-
-    try:
+        session = requests.Session(impersonate="chrome")
         resp = session.get(url, timeout=30)
         _emit(f"  Status: {resp.status_code}")
 
         if resp.status_code == 403:
-            _emit("  BLOCKED (403) — FBref is rate limiting. Try again later.")
+            _emit("  BLOCKED (403) — try again later.")
             return "blocked"
+
         if resp.status_code != 200:
             _emit(f"  ERROR: Unexpected status {resp.status_code}")
             return "error"
@@ -136,9 +118,11 @@ def _fetch_league(league_code: str, url: str) -> str:
         _emit("  No tables found.")
         return "no_data"
 
+    # Biggest table = fixtures/results table
     df = max(tables, key=len)
     df = df.dropna(how="all")
 
+    # Keep only completed matches (rows that have a score like 2-1 or 2–1)
     score_col = next(
         (c for c in df.columns if str(c).lower() in ("score", "scores")), None
     )
@@ -195,7 +179,7 @@ def _run_scrape(selected_leagues: list):
         _last_results[code] = result
 
         if i < len(selected_leagues) - 1:
-            _emit(f"  Waiting {SLEEP_BETWEEN_LEAGUES}s...")
+            _emit(f"  Waiting {SLEEP_BETWEEN_LEAGUES}s before next league...")
             time.sleep(SLEEP_BETWEEN_LEAGUES)
 
     _emit("Scrape complete.")
