@@ -202,6 +202,18 @@ def calibrate_league(
             content={"detail": "No completed matches found in snapshot."}
         )
 
+    # ── Check data depth ─────────────────────────────────────────────
+    # If all matches are within a 14-day window, season just started
+    date_range = (completed[date_col].max() - completed[date_col].min()).days
+    if date_range < 14 and total_matches < 50:
+        return JSONResponse(
+            status_code=422,
+            content={
+                "detail": f"Insufficient history for {league_code} — only {total_matches} matches "
+                          f"all within {date_range} days. Rescrape once the season has 6+ rounds played."
+            }
+        )
+
     # ── Load current league config ───────────────────────────────────
     cfg = db.query(LeagueConfig).filter_by(league_code=league_code).first()
     current_over  = float(cfg.base_over_bias  or 0.02) if cfg else 0.02
