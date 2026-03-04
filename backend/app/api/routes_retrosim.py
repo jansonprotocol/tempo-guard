@@ -13,6 +13,22 @@ from app.services.data_providers.fbref_base import asof_features
 
 router = APIRouter()
 
+# ── TEMP DEBUG — remove after fix ────────────────────────────────
+@router.get("/retrosim/debug-pipeline")
+def debug_pipeline():
+    from app.engine.pipeline import under_p2p_guard, UNDER_P2P_HARD, _r
+    notes, modules = [], []
+    p2p = 0.62
+    p2p_r = _r(p2p)
+    result = under_p2p_guard(p2p, -0.055, notes, modules)
+    return {
+        "p2p_r": p2p_r,
+        "UNDER_P2P_HARD": UNDER_P2P_HARD,
+        "comparison": p2p_r <= UNDER_P2P_HARD,
+        "under_guard_result": result,
+        "modules": modules,
+    }
+    
 class RetroBody(BaseModel):
     league_code: str = Field(..., example="ENG-PL")
     home_team: str = Field(..., example="Arsenal")
