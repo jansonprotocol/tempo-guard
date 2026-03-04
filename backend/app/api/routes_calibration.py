@@ -41,6 +41,7 @@ from app.engine.types import MatchRequest
 from app.models.league_config import LeagueConfig
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column
 from app.services.predict import predict_match
+from app.util.asian_lines import evaluate_market
 
 router = APIRouter()
 
@@ -72,42 +73,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-# ── Hit detection ─────────────────────────────────────────────────
-def _check_hit(market: str, hg: int, ag: int) -> Optional[bool]:
-    """
-    Returns True (hit), False (miss), or None (can't evaluate).
-    """
-    total = hg + ag
-    m = market.upper().strip()
-
-    if m == "O1.5": return total >= 2
-    if m == "O2.5": return total >= 3
-    if m == "O3.5": return total >= 4
-    if m == "O4.5": return total >= 5
-    if m == "U1.5": return total <= 1
-    if m == "U2.5": return total <= 2
-    if m == "U3.5": return total <= 3
-    if m == "U4.5": return total <= 4
-    if m == "BTTS": return hg > 0 and ag > 0
-    if m == "NO_BTTS": return not (hg > 0 and ag > 0)
-
-    # Fallback for corridor lean only
-    if m.startswith("O"):
-        try:
-            line = float(m[1:])
-            return total > line
-        except:
-            pass
-    if m.startswith("U"):
-        try:
-            line = float(m[1:])
-            return total < line
-        except:
-            pass
-
-    return None
 
 
 # ── Bias suggestion ───────────────────────────────────────────────
@@ -170,7 +135,7 @@ def calibrate_league(
     league_code: str,
     limit: int = Query(100, ge=10, le=500,
                        description="Max matches to evaluate (most recent first)"),
-    min_matches_before: int = Query(5, ge=3, le=20,
+    min_matches_before: int = Query(3, ge=2, le=20,
                                     description="Min prior matches needed per team to evaluate"),
     apply: bool = Query(False,
                         description="If true, write bias adjustments back to league_configs"),
@@ -257,7 +222,10 @@ def calibrate_league(
 
         # Get features AS OF this match date (excludes this match itself)
         try:
-            metrics = asof_features(league_code, home_team, away_team, match_date)
+            metrics = asof_features(
+                league_code, home_team, away_team, match_date,
+                min_matches=min_matches_before,
+            )
         except Exception:
             skipped += 1
             continue
@@ -286,7 +254,7 @@ def calibrate_league(
             continue
 
         market = pred.translated_play.market
-        hit = _check_hit(market, hg, ag)
+        hit = evaluate_market(market, hg, ag)
 
         # Track per-market
         if market not in market_tracker:
