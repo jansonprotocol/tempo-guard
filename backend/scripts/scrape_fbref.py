@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import pandas as pd
-import requests
+from curl_cffi import requests
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.database.db import SessionLocal
