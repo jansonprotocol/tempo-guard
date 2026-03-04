@@ -1,18 +1,23 @@
 {
-  "ENG-PL": "ENG-Premier League",
-  "ESP-LL": "ESP-La Liga",
-  "FRA-L1": "FRA-Ligue 1",
+  "ENG-PL":  "ENG-Premier League",
+  "ESP-LL":  "ESP-La Liga",
+  "FRA-L1":  "FRA-Ligue 1",
   "GER-BUN": "GER-Bundesliga",
-  "ITA-SA": "ITA-Serie A",
-
+  "ITA-SA":  "ITA-Serie A",
   "NED-ERE": "NED-Eredivisie",
-  "TUR-SL": "TUR-Super Lig",
-  "BRA-SA": "BRA-Serie A",
-
-  "UCL": "UEFA Champions League",
-  "UEL": "UEFA Europa League",
-  "UECL": "UEFA Europa Conference League",
-
-  "EC": "INT-European Championship",
-  "WC": "INT-World Cup"
+  "TUR-SL":  "TUR-Super Lig",
+  "BRA-SA":  "BRA-Serie A",
+  "MLS":     "USA-Major League Soccer",
+  "SAU-SPL": "SAU-Saudi Pro League",
+  "DEN-SL":  "DEN-Superliga",
+  "ESP-LL2": "ESP-Segunda Division",
+  "BEL-PL":  "BEL-Pro League",
+  "NOR-EL":  "NOR-Eliteserien",
+  "SWE-AL":  "SWE-Allsvenskan",
+  "MEX-LMX": "MEX-Liga MX",
+  "UCL":     "UEFA Champions League",
+  "UEL":     "UEFA Europa League",
+  "UECL":    "UEFA Europa Conference League",
+  "EC":      "INT-European Championship",
+  "WC":      "INT-World Cup"
 }
