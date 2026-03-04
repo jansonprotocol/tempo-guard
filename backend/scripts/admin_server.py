@@ -81,7 +81,7 @@ def _get_snapshot_meta() -> dict:
         rows = db.query(FBrefSnapshot).all()
         return {
             r.league_code: {
-                "fetched_at": r.fetched_at.strftime("%Y-%m-%d %H:%M") if r.fetched_at else None,
+                "fetched_at": r.fetched_at.strftime("%Y-%m-%dT%H:%M") if r.fetched_at else None,
                 "seasons":    r.seasons_json,
             }
             for r in rows
