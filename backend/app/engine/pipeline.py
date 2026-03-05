@@ -220,45 +220,72 @@ def translate_play(
     sot_proj_total: float,
     p_home_tt05: float,
     p_away_tt05: float,
+    p2p: float,
+    confidence_score: float,
     notes: List[str],
     flags: List[str],
     modules: List[str],
 ) -> TranslatedPlay:
-    low, high = corridor
-    width = high - low
+    """
+    Translates lean + signal strength into a specific Asian line market.
+
+    Over lines:
+      Weak   (conf < 0.65)  → O1.75  (safe, wins at 2+)
+      Medium (conf < 0.78)  → O2.25  (wins at 3+, push at 2)
+      Strong (conf ≥ 0.78)  → O2.5   (wins at 3+)
+
+    Under lines:
+      Hard guard / very low p2p → U3.5   (confident: max 3 goals)
+      Soft guard / medium under → U3.75  (cushion: wins at max 4)
+      Weak under / balanced     → U4.25  (wide cushion: wins at max 4)
+
+    BurstSentinel always forces Over (line depends on strength).
+    """
+    low, high  = corridor
+    width      = high - low
+    p2p_r      = _r(p2p)
+    conf       = confidence_score
 
     # ── BurstSentinel path ───────────────────────────────────────────
     if burst_on:
         if _o25_addon_allowed(support_delta, sot_proj_total, width,
                                p_home_tt05, p_away_tt05):
-            notes.append("O2.5 add-on gate passed → O2.5 (LOW_CONF).")
+            notes.append("BurstSentinel + O2.5 gate → O2.5.")
             return TranslatedPlay(market="O2.5", confidence="LOW")
+        notes.append("BurstSentinel → O1.5 floor.")
         return TranslatedPlay(market="O1.5", confidence="HIGH")
 
     # ── Hard under guard ─────────────────────────────────────────────
     if under_guard == "hard":
         ceiling_cushion(True, notes, modules)
-        notes.append("UnderGuard hard → U3.5/4.5 (HIGH_CONF).")
-        return TranslatedPlay(market="U3.5/4.5", confidence="HIGH")
+        notes.append("UnderGuard hard + low p2p → U3.5 (tight ceiling).")
+        return TranslatedPlay(market="U3.5", confidence="HIGH")
 
     # ── Under / balanced lean ────────────────────────────────────────
     if lean in ("under", "balanced"):
         ceiling_cushion(True, notes, modules)
-        if under_guard == "soft":
-            return TranslatedPlay(market="U3.5/4.5", confidence="HIGH")
-        return TranslatedPlay(market="U3.5/4.5", confidence="MEDIUM")
+        if under_guard == "soft" or p2p_r <= 0.70:
+            notes.append("Under lean + soft guard → U3.75 (cushion to 4 goals).")
+            return TranslatedPlay(market="U3.75", confidence="HIGH")
+        notes.append("Under/balanced lean → U4.25 (wide cushion).")
+        return TranslatedPlay(market="U4.25", confidence="MEDIUM")
 
     # ── Over lean ────────────────────────────────────────────────────
     if lean == "over":
-        if _o25_addon_allowed(support_delta, sot_proj_total, width,
-                               p_home_tt05, p_away_tt05):
-            notes.append("O2.5 add-on gate passed → O2.5 (LOW_CONF).")
+        if conf >= 0.78 or _o25_addon_allowed(support_delta, sot_proj_total,
+                                               width, p_home_tt05, p_away_tt05):
+            notes.append("Strong over signal → O2.5.")
             return TranslatedPlay(market="O2.5", confidence="LOW")
-        return TranslatedPlay(market="O1.5", confidence="MEDIUM")
+        if conf >= 0.65:
+            notes.append("Medium over signal → O2.25 (push cushion at 2).")
+            return TranslatedPlay(market="O2.25", confidence="MEDIUM")
+        notes.append("Weak over signal → O1.75 (safe floor).")
+        return TranslatedPlay(market="O1.75", confidence="MEDIUM")
 
     # ── Fallback ─────────────────────────────────────────────────────
     flags.append("SinglesOnly")
-    return TranslatedPlay(market="U3.5/4.5", confidence="MEDIUM")
+    notes.append("Fallback → U4.25.")
+    return TranslatedPlay(market="U4.25", confidence="MEDIUM")
 
 
 # ── Main entry ────────────────────────────────────────────────────────────────
@@ -273,13 +300,20 @@ def evaluate_athena(
     modules: List[str] = []
     flags:   List[str] = ["SinglesOnly"]
 
-    # ── Safe input fallbacks ─────────────────────────────────────────
-    tempo         = req.tempo_index              if req.tempo_index              is not None else max(0.0, min(1.0, tempo_factor))
-    sot           = req.sot_proj_total           if req.sot_proj_total           is not None else 9.0
-    support_delta = req.support_idx_over_delta   if req.support_idx_over_delta   is not None else (league_bias_over - league_bias_under)
-    p2p           = req.p_two_plus               if req.p_two_plus               is not None else 0.68
-    p_home_tt05   = req.p_home_tt05              if req.p_home_tt05              is not None else 0.62
-    p_away_tt05   = req.p_away_tt05              if req.p_away_tt05              is not None else 0.58
+    # ── Safe input fallbacks + league bias adjustments ──────────────
+    # League biases are ADDITIVE on top of computed features.
+    # This means calibration apply actually shifts predictions.
+    # tempo_factor scales the raw tempo signal (1.0 = neutral).
+    raw_tempo     = req.tempo_index            if req.tempo_index            is not None else 0.55
+    raw_support   = req.support_idx_over_delta if req.support_idx_over_delta is not None else 0.0
+    sot           = req.sot_proj_total         if req.sot_proj_total         is not None else 9.0
+    p2p           = req.p_two_plus             if req.p_two_plus             is not None else 0.68
+    p_home_tt05   = req.p_home_tt05            if req.p_home_tt05            is not None else 0.62
+    p_away_tt05   = req.p_away_tt05            if req.p_away_tt05            is not None else 0.58
+
+    # Apply league calibration adjustments
+    tempo         = max(0.0, min(1.0, raw_tempo * tempo_factor * 2.0))
+    support_delta = raw_support + (league_bias_over - league_bias_under)
 
     # ── Pre-lean protections ─────────────────────────────────────────
     quality_ok = True
@@ -338,23 +372,25 @@ def evaluate_athena(
         delta=delta, notes=notes, modules=modules,
     )
 
-    # ── Corridor & translation ────────────────────────────────────────
+    # ── Corridor ──────────────────────────────────────────────────────
     low, high = build_corridor(
         final_lean, tempo, p2p, ulr_on, burst_on, under_guard
     )
 
-    translated = translate_play(
-        final_lean, (low, high), burst_on, under_guard,
-        support_delta, sot, p_home_tt05, p_away_tt05,
-        notes, flags, modules,
-    )
-
-    # ── Confidence score ─────────────────────────────────────────────
+    # ── Confidence score (needed by translate_play for line selection) 
     confidence_score = min(0.95, max(0.55,
         0.60
         + (delta * 0.25)
-        + (0.05 if translated.market in ("U3.5/4.5", "O1.5") else 0.0)
+        + (0.05 if final_lean in ("under",) else 0.0)
     ))
+
+    # ── Translation ───────────────────────────────────────────────────
+    translated = translate_play(
+        final_lean, (low, high), burst_on, under_guard,
+        support_delta, sot, p_home_tt05, p_away_tt05,
+        p2p, confidence_score,
+        notes, flags, modules,
+    )
 
     return Prediction(
         league_code=req.league_code,
