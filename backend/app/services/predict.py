@@ -40,5 +40,5 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
     Retrieves league calibration config, applies the engine pipeline,
     and returns a Prediction object.
     """
-    over_bias, under_bias, tempo_factor = (db, req.league_code)
+    over_bias, under_bias, tempo_factor = _get_league_bias(db, req.league_code)
     return evaluate_athena(req, over_bias, under_bias, tempo_factor)
