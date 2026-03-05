@@ -79,18 +79,35 @@ def get_league_configs(db: Session = Depends(get_db)):
 
 # -------------------------------------------------------------------
 # GET /api/league-list  (frontend dropdown)
+# Always driven by the canonical LEAGUE_NAMES dict — never the DB.
+# Stale/old DB rows with wrong codes are ignored entirely.
 # -------------------------------------------------------------------
 @router.get("/league-list")
-def league_list(db: Session = Depends(get_db)):
-    rows = db.query(LeagueConfig).order_by(LeagueConfig.league_code).all()
+def league_list():
     return [
         {
-            "code": r.league_code,
-            "name": LEAGUE_NAMES.get(r.league_code, r.league_code),
-            "flag": LEAGUE_FLAGS.get(r.league_code, "🌍"),
+            "code": code,
+            "name": LEAGUE_NAMES[code],
+            "flag": LEAGUE_FLAGS.get(code, "🌍"),
         }
-        for r in rows
+        for code in LEAGUE_NAMES
     ]
+
+
+# -------------------------------------------------------------------
+# POST /api/league-cleanup  (one-time: remove stale league_code rows)
+# -------------------------------------------------------------------
+@router.post("/league-cleanup")
+def league_cleanup(db: Session = Depends(get_db)):
+    valid_codes = set(LEAGUE_NAMES.keys())
+    all_rows    = db.query(LeagueConfig).all()
+    removed     = []
+    for row in all_rows:
+        if row.league_code not in valid_codes:
+            db.delete(row)
+            removed.append(row.league_code)
+    db.commit()
+    return {"removed": removed, "kept": list(valid_codes)}
 
 
 # -------------------------------------------------------------------
