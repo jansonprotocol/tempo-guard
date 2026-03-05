@@ -272,14 +272,22 @@ def translate_play(
 
     # ── Over lean ────────────────────────────────────────────────────
     if lean == "over":
-        if conf >= 0.78 or _o25_addon_allowed(support_delta, sot_proj_total,
+        # Negative support delta means under pressure is actually stronger —
+        # downgrade to O1.75 unless confidence is very high
+        if _r(support_delta) < 0 and conf < 0.72:
+            notes.append("Negative support delta → downgrade to O1.75 (safe floor).")
+            return TranslatedPlay(market="O1.75", confidence="MEDIUM")
+        # O2.5: only on very strong signal — high conf AND all addon gates
+        if conf >= 0.82 and _o25_addon_allowed(support_delta, sot_proj_total,
                                                width, p_home_tt05, p_away_tt05):
-            notes.append("Strong over signal → O2.5.")
+            notes.append("Strong over signal + all gates → O2.5.")
             return TranslatedPlay(market="O2.5", confidence="LOW")
-        if conf >= 0.65:
-            notes.append("Medium over signal → O2.25 (push cushion at 2).")
+        # O2.25: medium signal — conf ≥ 0.68 or p2p ≥ 0.75
+        if conf >= 0.68 or p2p_r >= 0.75:
+            notes.append("Medium over signal → O2.25 (half win at 2 goals).")
             return TranslatedPlay(market="O2.25", confidence="MEDIUM")
-        notes.append("Weak over signal → O1.75 (safe floor).")
+        # O1.75: weak signal — safe floor, wins at 2+
+        notes.append("Weak over signal → O1.75 (safe floor, wins at 2+).")
         return TranslatedPlay(market="O1.75", confidence="MEDIUM")
 
     # ── Fallback ─────────────────────────────────────────────────────
