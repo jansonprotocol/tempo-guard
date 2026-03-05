@@ -200,16 +200,19 @@ def hit_weight(result: MarketResult) -> float:
     """
     Convert a market result to a numeric weight for calibration scoring.
 
+    Half-wins count as full wins and half-losses as full losses because
+    the bettor always manually offsets the line by -0.25 to -0.5 (over)
+    or +0.25 (under) before placing. So ATHENA's O2.25 becomes O2 or O1.75
+    in reality — the split point never occurs on the actual bet.
+
     Returns:
-        1.0  = full win
-        0.5  = half win  (win half stake)
-        0.25 = half loss (lose half stake) — still partial credit
-        0.0  = full loss
-        -1.0 = unrecognised market (skip in calibration)
+        1.0  = full win  (or half win — offset makes it a full win)
+        0.0  = full loss (or half loss — offset makes it a full loss)
+       -1.0  = unrecognised market (skip in calibration)
     """
     if result is True:        return 1.0
-    if result == "half_win":  return 0.5
-    if result == "half_loss": return 0.25
+    if result == "half_win":  return 1.0   # offset → full win on actual play
+    if result == "half_loss": return 0.0   # offset → full loss on actual play
     if result is False:       return 0.0
     return -1.0  # None = unrecognised
     """Human-readable description for display/debugging."""
