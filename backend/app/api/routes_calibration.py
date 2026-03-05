@@ -275,8 +275,11 @@ def calibrate_league(
             )
             pred = predict_match(db, req)
         except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
             skipped += 1
-            sample_rows.append({"position": pos, "skipped_reason": f"predict_match: {e}"}) if len(sample_rows) < 5 else None
+            if len(sample_rows) < 5:
+                sample_rows.append({"position": pos, "skipped_reason": f"predict_match: {e}", "traceback": tb})
             continue
 
         market = pred.translated_play.market
