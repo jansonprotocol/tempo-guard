@@ -1,16 +1,30 @@
+# syntax=docker/dockerfile:1
 FROM python:3.12-slim
+
 WORKDIR /app
-RUN apt-get update && apt-get install -y \
+
+# System deps — cached by BuildKit, only reruns if this layer changes
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     build-essential libpq-dev libffi-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Pip deps — cached by BuildKit, only reruns if requirements.txt changes
 COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+# App code — only this layer reruns on normal code deploys
 COPY backend/app ./app
+
+# Proxy env vars
+ENV HTTP_PROXY="" \
+    HTTPS_PROXY="" \
+    ALL_PROXY="" \
+    http_proxy="" \
+    https_proxy="" \
+    all_proxy="" \
+    NO_PROXY="*"
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-ENV HTTP_PROXY=
-ENV HTTPS_PROXY=
-ENV ALL_PROXY=
-ENV http_proxy=
-ENV https_proxy=
-ENV all_proxy=
-ENV NO_PROXY=*
