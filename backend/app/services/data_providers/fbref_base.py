@@ -340,7 +340,79 @@ def _asof_features_intl(
     return _compute_features_from_frames(H, A, home_team, away_team, full_H)
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
+# ── Match existence validator ─────────────────────────────────────────────────
+
+def validate_match_existed(
+    league_code: str,
+    home_team: str,
+    away_team: str,
+    match_date: date,
+) -> Tuple[bool, Optional[str]]:
+    """
+    Check whether a completed match between these two teams
+    exists in the snapshot on the given date.
+
+    Returns:
+        (True, None)          — match found, proceed
+        (False, reason_str)   — match not found, reason explains why
+    """
+    if league_code in INTL_LEAGUE_CODES:
+        # Can't validate international fixtures from domestic snapshots
+        # Allow through — futurematch handles these
+        return True, None
+
+    df = _load_snapshot(league_code)
+    if df is None or df.empty:
+        return False, f"No snapshot available for {league_code}. Run the scraper first."
+
+    c = _resolve_columns(df)
+    df = _prepare_df(df, c)
+    if df is None:
+        return False, f"Snapshot for {league_code} could not be parsed."
+
+    c = _resolve_columns(df)
+    if not all([c["date"], c["ht"], c["at"]]):
+        return False, "Snapshot missing required columns."
+
+    df[c["date"]] = pd.to_datetime(df[c["date"]], errors="coerce")
+
+    # Find all matches on that exact date
+    target = pd.Timestamp(match_date)
+    day_matches = df[df[c["date"]].dt.date == match_date]
+
+    if day_matches.empty:
+        return False, f"No matches found in {league_code} on {match_date}. Check the date."
+
+    # Get all team names on that day for fuzzy matching
+    all_teams = list(set(
+        day_matches[c["ht"]].astype(str).tolist() +
+        day_matches[c["at"]].astype(str).tolist()
+    ))
+
+    matched_home = _match_team(home_team, all_teams)
+    matched_away = _match_team(away_team, all_teams)
+
+    if not matched_home:
+        return False, f"{home_team} did not play in {league_code} on {match_date}."
+    if not matched_away:
+        return False, f"{away_team} did not play in {league_code} on {match_date}."
+
+    # Check they played each other specifically
+    h_norm = _norm(matched_home)
+    a_norm = _norm(matched_away)
+
+    fixture_exists = any(
+        _norm(str(r[c["ht"]])) == h_norm and _norm(str(r[c["at"]])) == a_norm
+        for _, r in day_matches.iterrows()
+    )
+
+    if not fixture_exists:
+        return False, (
+            f"{home_team} and {away_team} did not play each other on {match_date}. "
+            f"They may have played on that date but against different opponents."
+        )
+
+    return True, None
 def asof_features(
     league_code: str,
     home_team: str,
