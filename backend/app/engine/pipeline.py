@@ -326,15 +326,25 @@ def evaluate_athena(
     p_away_tt05   = req.p_away_tt05            if req.p_away_tt05            is not None else 0.58
 
     # Apply league calibration adjustments
-    tempo         = max(0.0, min(1.0, raw_tempo * tempo_factor * 2.0))
+    # tempo_factor: 0.5 = neutral, >0.5 amplifies, <0.5 dampens
+    # Capped at 0.95 to prevent artificial BurstSentinel triggers
+    tempo         = max(0.0, min(0.95, raw_tempo * tempo_factor * 2.0))
     support_delta = raw_support + (league_bias_over - league_bias_under)
+
+    # BurstSentinel uses RAW values to prevent bias inflation from
+    # pushing borderline matches into forced-over territory
+    burst_support = raw_support
+    burst_p2p     = req.p_two_plus if req.p_two_plus is not None else 0.68
+    burst_tempo   = raw_tempo
 
     # ── Pre-lean protections ─────────────────────────────────────────
     quality_ok = True
     veto       = inline_veto(quality_ok, notes, modules)
 
     # ── Modules ──────────────────────────────────────────────────────
-    burst_on    = burst_sentinel(support_delta, p2p, tempo, notes, modules)
+    # BurstSentinel uses raw unbiased values — prevents calibration
+    # nudges from artificially triggering forced-over mode
+    burst_on    = burst_sentinel(burst_support, burst_p2p, burst_tempo, notes, modules)
     gateb_block = gate_b(tempo, support_delta, notes, modules)
     ulr_on      = ulr_low_tempo(tempo, notes, modules)
     under_guard = under_p2p_guard(p2p, support_delta, notes, modules)
