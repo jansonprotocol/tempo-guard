@@ -76,55 +76,105 @@ def get_db():
 
 
 # ── Bias suggestion ───────────────────────────────────────────────
+TARGET_HIT_RATE   = 0.86   # minimum acceptable weighted hit rate
+NUDGE_STEP        = 0.01   # max change per calibration run
+MAX_BIAS          = 0.10
+MIN_BIAS          = 0.00
+
+
 def _suggest_bias(
     over_hits: int, over_total: int,
     under_hits: int, under_total: int,
     current_over: float, current_under: float,
     current_tempo: float,
+    overall_hit_rate: float,
 ) -> dict:
     """
     Suggest adjustments to league_config based on observed hit rates.
-    Conservative nudges only — never more than ±0.02 per calibration run.
+    Target: >= 86% weighted hit rate.
+    Conservative nudges — max ±0.01 per run.
+    Run apply=true multiple times to converge on target.
     """
     suggestions = {
         "base_over_bias":  current_over,
         "base_under_bias": current_under,
         "tempo_factor":    current_tempo,
         "notes":           [],
+        "target_hit_rate": TARGET_HIT_RATE,
+        "current_hit_rate": round(overall_hit_rate / 100, 3),
+        "gap_to_target":   round(TARGET_HIT_RATE - overall_hit_rate / 100, 3),
     }
 
+    if overall_hit_rate >= TARGET_HIT_RATE * 100:
+        suggestions["notes"].append(
+            f"Hit rate {overall_hit_rate:.1f}% meets target {TARGET_HIT_RATE*100:.0f}% "
+            f"— no adjustment needed."
+        )
+        return suggestions
+
+    # Below target — work out which side is dragging the rate down
+    over_rate  = over_hits  / max(1, over_total)
+    under_rate = under_hits / max(1, under_total)
+
+    suggestions["notes"].append(
+        f"Hit rate {overall_hit_rate:.1f}% is below target {TARGET_HIT_RATE*100:.0f}% "
+        f"(gap: {(TARGET_HIT_RATE - overall_hit_rate/100)*100:.1f}pp) — adjustments suggested."
+    )
+
+    # Over side underperforming
     if over_total >= 20:
-        over_rate = over_hits / over_total
-        if over_rate > 0.65:
-            new = round(min(current_over + 0.01, 0.08), 3)
-            suggestions["base_over_bias"] = new
+        if over_rate < TARGET_HIT_RATE:
+            gap = TARGET_HIT_RATE - over_rate
+            if gap > 0.20:
+                # Far below target — nudge both bias and tempo
+                new_over = round(min(current_over + NUDGE_STEP, MAX_BIAS), 3)
+                new_tempo = round(min(current_tempo + NUDGE_STEP, 1.0), 3)
+                suggestions["base_over_bias"] = new_over
+                suggestions["tempo_factor"]   = new_tempo
+                suggestions["notes"].append(
+                    f"Over rate {over_rate:.1%} is {gap*100:.1f}pp below target "
+                    f"→ nudge over_bias {current_over}→{new_over}, "
+                    f"tempo_factor {current_tempo}→{new_tempo}"
+                )
+            else:
+                new_over = round(min(current_over + NUDGE_STEP, MAX_BIAS), 3)
+                suggestions["base_over_bias"] = new_over
+                suggestions["notes"].append(
+                    f"Over rate {over_rate:.1%} is {gap*100:.1f}pp below target "
+                    f"→ nudge over_bias {current_over}→{new_over}"
+                )
+        elif over_rate > 0.93:
+            # Overfit — dial back slightly
+            new_over = round(max(current_over - NUDGE_STEP, MIN_BIAS), 3)
+            suggestions["base_over_bias"] = new_over
             suggestions["notes"].append(
-                f"Over hit rate {over_rate:.1%} → nudge over_bias up to {new}"
-            )
-        elif over_rate < 0.40:
-            new = round(max(current_over - 0.01, 0.0), 3)
-            suggestions["base_over_bias"] = new
-            suggestions["notes"].append(
-                f"Over hit rate {over_rate:.1%} → nudge over_bias down to {new}"
+                f"Over rate {over_rate:.1%} very high — possible overfit "
+                f"→ nudge over_bias down {current_over}→{new_over}"
             )
 
+    # Under side underperforming
     if under_total >= 20:
-        under_rate = under_hits / under_total
-        if under_rate > 0.65:
-            new = round(min(current_under + 0.01, 0.08), 3)
-            suggestions["base_under_bias"] = new
+        if under_rate < TARGET_HIT_RATE:
+            gap = TARGET_HIT_RATE - under_rate
+            new_under = round(min(current_under + NUDGE_STEP, MAX_BIAS), 3)
+            suggestions["base_under_bias"] = new_under
             suggestions["notes"].append(
-                f"Under hit rate {under_rate:.1%} → nudge under_bias up to {new}"
+                f"Under rate {under_rate:.1%} is {gap*100:.1f}pp below target "
+                f"→ nudge under_bias {current_under}→{new_under}"
             )
-        elif under_rate < 0.40:
-            new = round(max(current_under - 0.01, 0.0), 3)
-            suggestions["base_under_bias"] = new
+        elif under_rate > 0.93:
+            new_under = round(max(current_under - NUDGE_STEP, MIN_BIAS), 3)
+            suggestions["base_under_bias"] = new_under
             suggestions["notes"].append(
-                f"Under hit rate {under_rate:.1%} → nudge under_bias down to {new}"
+                f"Under rate {under_rate:.1%} very high — possible overfit "
+                f"→ nudge under_bias down {current_under}→{new_under}"
             )
 
-    if not suggestions["notes"]:
-        suggestions["notes"].append("Hit rates within expected range — no adjustment needed.")
+    if len(suggestions["notes"]) == 1:
+        suggestions["notes"].append(
+            "Insufficient data on one or both sides (< 20 matches) — "
+            "run with a higher limit for better suggestions."
+        )
 
     return suggestions
 
@@ -364,6 +414,7 @@ def calibrate_league(
         over_w_hits, over_w_total,
         under_w_hits, under_w_total,
         current_over, current_under, current_tempo,
+        overall_hit_rate,
     )
 
     # ── Apply if requested ────────────────────────────────────────────
