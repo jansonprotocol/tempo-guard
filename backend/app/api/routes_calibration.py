@@ -77,8 +77,10 @@ def get_db():
 
 # ── Bias suggestion ───────────────────────────────────────────────
 TARGET_HIT_RATE   = 0.86
-NUDGE_STEP        = 0.02   # was 0.01 — doubled for more meaningful movement
-MAX_BIAS          = 0.25   # was 0.10 — more room to calibrate
+NUDGE_STEP        = 0.02   # meaningful movement per run
+MAX_BIAS          = 0.13   # max per side — keeps net (over-under) ≤ ±0.13
+                           # typical raw_support range is ±0.15, so bias stays
+                           # meaningful without drowning the actual FBref signal
 MIN_BIAS          = 0.00
 
 
