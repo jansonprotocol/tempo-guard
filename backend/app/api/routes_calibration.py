@@ -121,53 +121,46 @@ def _suggest_bias(
         f"(gap: {(TARGET_HIT_RATE - overall_hit_rate/100)*100:.1f}pp) — adjustments suggested."
     )
 
-    # Over side underperforming
+    # Over side underperforming — reduce over_bias to raise the bar
+    # (fewer over calls but higher quality ones)
     if over_total >= 20:
         if over_rate < TARGET_HIT_RATE:
             gap = TARGET_HIT_RATE - over_rate
-            if gap > 0.20:
-                # Far below target — nudge both bias and tempo
-                new_over = round(min(current_over + NUDGE_STEP, MAX_BIAS), 3)
-                new_tempo = round(min(current_tempo + NUDGE_STEP, 1.0), 3)
-                suggestions["base_over_bias"] = new_over
-                suggestions["tempo_factor"]   = new_tempo
-                suggestions["notes"].append(
-                    f"Over rate {over_rate:.1%} is {gap*100:.1f}pp below target "
-                    f"→ nudge over_bias {current_over}→{new_over}, "
-                    f"tempo_factor {current_tempo}→{new_tempo}"
-                )
-            else:
-                new_over = round(min(current_over + NUDGE_STEP, MAX_BIAS), 3)
-                suggestions["base_over_bias"] = new_over
-                suggestions["notes"].append(
-                    f"Over rate {over_rate:.1%} is {gap*100:.1f}pp below target "
-                    f"→ nudge over_bias {current_over}→{new_over}"
-                )
-        elif over_rate > 0.93:
-            # Overfit — dial back slightly
             new_over = round(max(current_over - NUDGE_STEP, MIN_BIAS), 3)
+            new_under = round(min(current_under + NUDGE_STEP, MAX_BIAS), 3)
+            suggestions["base_over_bias"]  = new_over
+            suggestions["base_under_bias"] = new_under
+            suggestions["notes"].append(
+                f"Over rate {over_rate:.1%} is {gap*100:.1f}pp below target "
+                f"→ tighten over calls: over_bias {current_over}→{new_over}, "
+                f"under_bias {current_under}→{new_under} "
+                f"(shifts borderline matches from over to under)"
+            )
+        elif over_rate > 0.93:
+            # Overfit — over threshold too tight, loosen slightly
+            new_over = round(min(current_over + NUDGE_STEP, MAX_BIAS), 3)
             suggestions["base_over_bias"] = new_over
             suggestions["notes"].append(
-                f"Over rate {over_rate:.1%} very high — possible overfit "
-                f"→ nudge over_bias down {current_over}→{new_over}"
+                f"Over rate {over_rate:.1%} very high — threshold may be too tight "
+                f"→ nudge over_bias up {current_over}→{new_over}"
             )
 
-    # Under side underperforming
+    # Under side underperforming — reduce under_bias to raise the bar
     if under_total >= 20:
         if under_rate < TARGET_HIT_RATE:
             gap = TARGET_HIT_RATE - under_rate
-            new_under = round(min(current_under + NUDGE_STEP, MAX_BIAS), 3)
-            suggestions["base_under_bias"] = new_under
-            suggestions["notes"].append(
-                f"Under rate {under_rate:.1%} is {gap*100:.1f}pp below target "
-                f"→ nudge under_bias {current_under}→{new_under}"
-            )
-        elif under_rate > 0.93:
             new_under = round(max(current_under - NUDGE_STEP, MIN_BIAS), 3)
             suggestions["base_under_bias"] = new_under
             suggestions["notes"].append(
-                f"Under rate {under_rate:.1%} very high — possible overfit "
-                f"→ nudge under_bias down {current_under}→{new_under}"
+                f"Under rate {under_rate:.1%} is {gap*100:.1f}pp below target "
+                f"→ tighten under calls: under_bias {current_under}→{new_under}"
+            )
+        elif under_rate > 0.93:
+            new_under = round(min(current_under + NUDGE_STEP, MAX_BIAS), 3)
+            suggestions["base_under_bias"] = new_under
+            suggestions["notes"].append(
+                f"Under rate {under_rate:.1%} very high — threshold may be too tight "
+                f"→ nudge under_bias up {current_under}→{new_under}"
             )
 
     if len(suggestions["notes"]) == 1:
