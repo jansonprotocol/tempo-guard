@@ -76,19 +76,170 @@ def get_db():
 
 
 # ── Bias suggestion ───────────────────────────────────────────────
-TARGET_HIT_RATE   = 0.86   # minimum acceptable weighted hit rate
-NUDGE_STEP        = 0.01   # max change per calibration run
+TARGET_HIT_RATE   = 0.86
+NUDGE_STEP        = 0.01
 MAX_BIAS          = 0.10
 MIN_BIAS          = 0.00
 
 
 def _suggest_bias(
-    over_hits: int, over_total: int,
-    under_hits: int, under_total: int,
+    over_hits: float, over_total: float,
+    under_hits: float, under_total: float,
     current_over: float, current_under: float,
     current_tempo: float,
     overall_hit_rate: float,
+    miss_patterns: dict,
 ) -> dict:
+    """
+    Suggest adjustments based on miss pattern analysis.
+    Target: >= 86% weighted hit rate.
+
+    Levers and when to nudge them:
+      over_bias DOWN    — too many over calls with low goals or negative delta
+      under_bias UP     — borderline matches should be under instead of over
+      tempo_factor DOWN — high-tempo matches producing low scores repeatedly
+      over_bias UP      — under rate too low (over threshold too tight)
+      under_bias DOWN   — under rate too low (under threshold too tight)
+
+    Max ±0.01 per run. Run apply=true repeatedly to converge.
+    """
+    over_rate  = over_hits  / max(1, over_total)
+    under_rate = under_hits / max(1, under_total)
+
+    new_over  = current_over
+    new_under = current_under
+    new_tempo = current_tempo
+    notes     = []
+
+    suggestions = {
+        "base_over_bias":   current_over,
+        "base_under_bias":  current_under,
+        "tempo_factor":     current_tempo,
+        "notes":            notes,
+        "target_hit_rate":  TARGET_HIT_RATE,
+        "current_hit_rate": round(overall_hit_rate / 100, 3),
+        "gap_to_target":    round(TARGET_HIT_RATE - overall_hit_rate / 100, 3),
+        "miss_patterns":    miss_patterns,
+    }
+
+    if overall_hit_rate >= TARGET_HIT_RATE * 100:
+        notes.append(
+            f"Hit rate {overall_hit_rate:.1f}% meets target "
+            f"{TARGET_HIT_RATE*100:.0f}% — no adjustment needed."
+        )
+        return suggestions
+
+    notes.append(
+        f"Hit rate {overall_hit_rate:.1f}% below target {TARGET_HIT_RATE*100:.0f}% "
+        f"(gap: {(TARGET_HIT_RATE - overall_hit_rate/100)*100:.1f}pp) — analysing miss patterns."
+    )
+
+    total_over_misses  = miss_patterns.get("total_over_misses", 0)
+    total_under_misses = miss_patterns.get("total_under_misses", 0)
+
+    # ── Over miss pattern analysis ────────────────────────────────────
+
+    if total_over_misses > 0:
+
+        # Pattern 1: High tempo → low goals
+        # tempo_factor is amplifying tempo signal, causing over calls on low-scoring matches
+        tempo_ratio = miss_patterns["over_miss_high_tempo"] / total_over_misses
+        if tempo_ratio >= 0.35:
+            new_tempo = round(max(current_tempo - NUDGE_STEP, 0.40), 3)
+            notes.append(
+                f"{miss_patterns['over_miss_high_tempo']}/{total_over_misses} over misses "
+                f"had high tempo + low goals ({tempo_ratio:.0%}) "
+                f"→ tempo_factor {current_tempo}→{new_tempo} (dampens tempo influence)"
+            )
+
+        # Pattern 2: Negative support delta → over called anyway
+        # over_bias is too high, shifting borderline under matches to over
+        neg_delta_ratio = miss_patterns["over_miss_neg_delta"] / total_over_misses
+        if neg_delta_ratio >= 0.40:
+            new_over = round(max(current_over - NUDGE_STEP, MIN_BIAS), 3)
+            new_under = round(min(current_under + NUDGE_STEP, MAX_BIAS), 3)
+            notes.append(
+                f"{miss_patterns['over_miss_neg_delta']}/{total_over_misses} over misses "
+                f"had negative support_delta ({neg_delta_ratio:.0%}) "
+                f"→ over_bias {current_over}→{new_over}, "
+                f"under_bias {current_under}→{new_under} "
+                f"(stops weak-signal over calls)"
+            )
+
+        # Pattern 3: Generally low-scoring over misses (catch-all)
+        low_goals_ratio = miss_patterns["over_miss_low_goals"] / total_over_misses
+        if low_goals_ratio >= 0.50 and neg_delta_ratio < 0.40:
+            new_over = round(max(current_over - NUDGE_STEP, MIN_BIAS), 3)
+            notes.append(
+                f"{miss_patterns['over_miss_low_goals']}/{total_over_misses} over misses "
+                f"ended with ≤1 goal ({low_goals_ratio:.0%}) "
+                f"→ over_bias {current_over}→{new_over} "
+                f"(tightens over call threshold)"
+            )
+
+    # ── Under miss pattern analysis ───────────────────────────────────
+
+    if total_under_misses > 0:
+
+        # Pattern 4: Under called but match scored 4+ goals
+        # under threshold too aggressive — p2p guard triggering too easily
+        high_goals_ratio = miss_patterns["under_miss_high_goals"] / total_under_misses
+        if high_goals_ratio >= 0.40:
+            new_under = round(max(current_under - NUDGE_STEP, MIN_BIAS), 3)
+            notes.append(
+                f"{miss_patterns['under_miss_high_goals']}/{total_under_misses} under misses "
+                f"had 4+ goals ({high_goals_ratio:.0%}) "
+                f"→ under_bias {current_under}→{new_under} "
+                f"(raises bar for under calls)"
+            )
+
+        # Pattern 5: Under called on high p2p matches
+        # UNDER_P2P_HARD/SOFT threshold too loose
+        high_p2p_ratio = miss_patterns["under_miss_high_p2p"] / total_under_misses
+        if high_p2p_ratio >= 0.50:
+            new_under = round(max(current_under - NUDGE_STEP, MIN_BIAS), 3)
+            notes.append(
+                f"{miss_patterns['under_miss_high_p2p']}/{total_under_misses} under misses "
+                f"had p2p > 0.72 ({high_p2p_ratio:.0%}) "
+                f"→ under_bias {current_under}→{new_under} "
+                f"(stops under calls on high-probability goal matches)"
+            )
+
+    # ── No pattern strong enough — fall back to rate-based nudge ─────
+    if len(notes) == 1:
+        if over_rate < TARGET_HIT_RATE and over_total >= 20:
+            new_over  = round(max(current_over  - NUDGE_STEP, MIN_BIAS), 3)
+            new_under = round(min(current_under + NUDGE_STEP, MAX_BIAS), 3)
+            notes.append(
+                f"No dominant miss pattern found. "
+                f"Over rate {over_rate:.1%} below target "
+                f"→ over_bias {current_over}→{new_over}, "
+                f"under_bias {current_under}→{new_under}"
+            )
+        elif under_rate < TARGET_HIT_RATE and under_total >= 20:
+            new_under = round(max(current_under - NUDGE_STEP, MIN_BIAS), 3)
+            notes.append(
+                f"No dominant miss pattern found. "
+                f"Under rate {under_rate:.1%} below target "
+                f"→ under_bias {current_under}→{new_under}"
+            )
+        else:
+            notes.append(
+                "Insufficient data on one or both sides (< 20 matches) — "
+                "run with a higher limit for better suggestions."
+            )
+
+    # ── Half loss info (informational only — not a nudge trigger) ────
+    if miss_patterns.get("half_loss_count", 0) > 0:
+        notes.append(
+            f"Note: {miss_patterns['half_loss_count']} half-losses (e.g. O2.25 at 2 goals) "
+            f"— these are acceptable, bettor recovers half stake."
+        )
+
+    suggestions["base_over_bias"]  = new_over
+    suggestions["base_under_bias"] = new_under
+    suggestions["tempo_factor"]    = new_tempo
+    return suggestions
     """
     Suggest adjustments to league_config based on observed hit rates.
     Target: >= 86% weighted hit rate.
@@ -280,6 +431,19 @@ def calibrate_league(
     skipped = 0
     sample_rows: list[dict] = []
 
+    # ── Miss pattern counters ─────────────────────────────────────────
+    # Used by _suggest_bias to target the right lever
+    miss_patterns = {
+        "over_miss_low_goals":    0,  # over called, total ≤ 1 goal
+        "over_miss_neg_delta":    0,  # over called, support_delta was negative
+        "over_miss_high_tempo":   0,  # over called, tempo > 0.80, total ≤ 2
+        "under_miss_high_goals":  0,  # under called, total ≥ 4
+        "under_miss_high_p2p":    0,  # under called but p2p was > 0.72
+        "half_loss_count":        0,  # O2.25 / U3.75 half losses
+        "total_over_misses":      0,
+        "total_under_misses":     0,
+    }
+
     for pos, (_, match_row) in enumerate(completed.iterrows(), start=1):
         match_date = match_row[date_col].date()
         home_team  = str(match_row[home_col])
@@ -352,6 +516,33 @@ def calibrate_league(
             else:
                 market_tracker[market]["raw_misses"] += 1
 
+            # ── Miss pattern analysis ─────────────────────────────────
+            total_goals  = hg + ag
+            is_full_miss = hw == 0.0
+            is_half_loss = hw == 0.25
+            tempo        = metrics.get("tempo_index") or 0.0
+            p2p          = metrics.get("p_two_plus") or 0.0
+            sd           = metrics.get("support_idx_over_delta") or 0.0
+
+            if is_half_loss:
+                miss_patterns["half_loss_count"] += 1
+
+            if market.startswith("O") and is_full_miss:
+                miss_patterns["total_over_misses"] += 1
+                if total_goals <= 1:
+                    miss_patterns["over_miss_low_goals"] += 1
+                if sd < 0:
+                    miss_patterns["over_miss_neg_delta"] += 1
+                if tempo > 0.80 and total_goals <= 2:
+                    miss_patterns["over_miss_high_tempo"] += 1
+
+            if market.startswith("U") and is_full_miss:
+                miss_patterns["total_under_misses"] += 1
+                if total_goals >= 4:
+                    miss_patterns["under_miss_high_goals"] += 1
+                if p2p > 0.72:
+                    miss_patterns["under_miss_high_p2p"] += 1
+
         if len(sample_rows) < 20:
             sample_rows.append({
                 "position":    pos,
@@ -408,6 +599,7 @@ def calibrate_league(
         under_w_hits, under_w_total,
         current_over, current_under, current_tempo,
         overall_hit_rate,
+        miss_patterns,
     )
 
     # ── Apply if requested ────────────────────────────────────────────
