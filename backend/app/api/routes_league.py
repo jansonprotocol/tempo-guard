@@ -124,7 +124,75 @@ class UpsertLeaguePayload(BaseModel):
     description:      str   = ""
 
 
-@router.post("/league-upsert")
+
+# -------------------------------------------------------------------
+# POST /api/league-reset-biases
+# Resets all league configs to neutral calibration baseline.
+# Run this once after changing the bias scale, then recalibrate.
+# -------------------------------------------------------------------
+
+# Neutral baseline — matches the new scale in routes_calibration.py
+NEUTRAL_OVER_BIAS   = 0.05
+NEUTRAL_UNDER_BIAS  = 0.05
+NEUTRAL_TEMPO       = 0.50  # 0.5 = neutral (multiplier of 1.0)
+
+
+@router.post("/league-reset-biases")
+def league_reset_biases(
+    league_code: str = None,  # if None, resets ALL leagues
+    db: Session = Depends(get_db),
+):
+    """
+    Resets league bias values to neutral baseline:
+      base_over_bias  = 0.05
+      base_under_bias = 0.05
+      tempo_factor    = 0.50
+
+    Pass ?league_code=ENG-PL to reset a single league.
+    Call without params to reset all leagues at once.
+    """
+    q = db.query(LeagueConfig)
+    if league_code:
+        q = q.filter(LeagueConfig.league_code == league_code)
+
+    rows = q.all()
+    if not rows:
+        return {
+            "message": "No leagues found to reset.",
+            "league_code": league_code,
+        }
+
+    reset = []
+    for row in rows:
+        before = {
+            "base_over_bias":  row.base_over_bias,
+            "base_under_bias": row.base_under_bias,
+            "tempo_factor":    row.tempo_factor,
+        }
+        row.base_over_bias  = NEUTRAL_OVER_BIAS
+        row.base_under_bias = NEUTRAL_UNDER_BIAS
+        row.tempo_factor    = NEUTRAL_TEMPO
+        reset.append({
+            "league_code": row.league_code,
+            "before": before,
+            "after": {
+                "base_over_bias":  NEUTRAL_OVER_BIAS,
+                "base_under_bias": NEUTRAL_UNDER_BIAS,
+                "tempo_factor":    NEUTRAL_TEMPO,
+            }
+        })
+
+    db.commit()
+    return {
+        "message": f"Reset {len(reset)} league(s) to neutral baseline.",
+        "neutral_baseline": {
+            "base_over_bias":  NEUTRAL_OVER_BIAS,
+            "base_under_bias": NEUTRAL_UNDER_BIAS,
+            "tempo_factor":    NEUTRAL_TEMPO,
+        },
+        "reset": reset,
+    }
+
 def league_upsert(payload: UpsertLeaguePayload, db: Session = Depends(get_db)):
     item = (
         db.query(LeagueConfig)
