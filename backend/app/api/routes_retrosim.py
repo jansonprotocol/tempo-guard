@@ -1,51 +1,66 @@
 # backend/app/api/routes_retrosim.py
 from __future__ import annotations
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field
-from typing import Optional
+
 from datetime import date
+
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, Field, validator
+from typing import Optional
 from sqlalchemy.orm import Session
 
 from app.database.db import SessionLocal
 from app.engine.types import MatchRequest
 from app.services.predict import predict_match
-from app.services.data_providers.fbref_base import asof_features
+from app.services.data_providers.fbref_base import asof_features, validate_match_existed
 
 router = APIRouter()
 
-# ── TEMP DEBUG — remove after fix ────────────────────────────────
-@router.get("/retrosim/debug-pipeline")
-def debug_pipeline():
-    from app.engine.pipeline import under_p2p_guard, UNDER_P2P_HARD, _r
-    notes, modules = [], []
-    p2p = 0.62
-    p2p_r = _r(p2p)
-    result = under_p2p_guard(p2p, -0.055, notes, modules)
-    return {
-        "p2p_r": p2p_r,
-        "UNDER_P2P_HARD": UNDER_P2P_HARD,
-        "comparison": p2p_r <= UNDER_P2P_HARD,
-        "under_guard_result": result,
-        "modules": modules,
-    }
-    
+
 class RetroBody(BaseModel):
-    league_code: str = Field(..., example="ENG-PL")
-    home_team: str = Field(..., example="Arsenal")
-    away_team: str = Field(..., example="Chelsea")
-    match_date: date = Field(..., example="2025-10-11")
-    # Optional: if you want to constrain AUTO lookup:
+    league_code: str  = Field(..., example="ENG-PL")
+    home_team:   str  = Field(..., example="Arsenal")
+    away_team:   str  = Field(..., example="Chelsea")
+    match_date:  date = Field(..., example="2025-10-11")
     league_search_hint: Optional[str] = None
+
+    @validator("match_date")
+    def must_be_past(cls, v):
+        if v >= date.today():
+            raise ValueError(
+                "match_date must be a past date for retrosim. "
+                "Use /futurematch for upcoming fixtures."
+            )
+        return v
+
 
 def get_db():
     db = SessionLocal()
-    try: yield db
-    finally: db.close()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 @router.post("/retrosim")
 def post_retrosim(body: RetroBody, db: Session = Depends(get_db)):
     try:
-        metrics = asof_features(body.league_code, body.home_team, body.away_team, body.match_date)
+        # ── Validate the match actually happened ─────────────────────
+        valid, reason = validate_match_existed(
+            body.league_code,
+            body.home_team,
+            body.away_team,
+            body.match_date,
+        )
+        if not valid:
+            raise HTTPException(status_code=422, detail=reason)
+
+        # ── Compute features as-of match date ────────────────────────
+        metrics = asof_features(
+            body.league_code,
+            body.home_team,
+            body.away_team,
+            body.match_date,
+        )
 
         req = MatchRequest(
             league_code=body.league_code,
@@ -57,22 +72,25 @@ def post_retrosim(body: RetroBody, db: Session = Depends(get_db)):
             p_two_plus=metrics.get("p_two_plus"),
             p_home_tt05=metrics.get("p_home_tt05"),
             p_away_tt05=metrics.get("p_away_tt05"),
-            tempo_index=metrics.get("tempo_index")
+            tempo_index=metrics.get("tempo_index"),
         )
+
         pred = predict_match(db, req)
 
         return {
-            "mode": "retrosim",
-            "league_code": pred.league_code,
-            "fixture": pred.fixture,
-            "corridor": {"low": pred.corridor.low, "high": pred.corridor.high, "lean": pred.corridor.lean},
-            "translated_play": {"market": pred.translated_play.market, "confidence": pred.translated_play.confidence},
+            "mode":             "retrosim",
+            "league_code":      pred.league_code,
+            "fixture":          pred.fixture,
+            "corridor":         {"low": pred.corridor.low, "high": pred.corridor.high, "lean": pred.corridor.lean},
+            "translated_play":  {"market": pred.translated_play.market, "confidence": pred.translated_play.confidence},
             "confidence_score": pred.confidence_score,
-            "applied_modules": pred.applied_modules,
-            "safety_flags": pred.safety_flags,
-            "explanations": pred.explanations,
-            "inputs_used": metrics
+            "applied_modules":  pred.applied_modules,
+            "safety_flags":     pred.safety_flags,
+            "explanations":     pred.explanations,
+            "inputs_used":      metrics,
         }
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
