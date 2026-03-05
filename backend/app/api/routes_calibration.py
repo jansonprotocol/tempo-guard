@@ -604,12 +604,40 @@ def calibrate_league(
 
     # ── Apply if requested ────────────────────────────────────────────
     applied = False
+    applied_changes = {}
+
     if apply and cfg:
-        cfg.base_over_bias  = suggestion["base_over_bias"]
-        cfg.base_under_bias = suggestion["base_under_bias"]
-        cfg.tempo_factor    = suggestion["tempo_factor"]
-        db.commit()
-        applied = True
+        before = {
+            "base_over_bias":  current_over,
+            "base_under_bias": current_under,
+            "tempo_factor":    current_tempo,
+        }
+        after = {
+            "base_over_bias":  suggestion["base_over_bias"],
+            "base_under_bias": suggestion["base_under_bias"],
+            "tempo_factor":    suggestion["tempo_factor"],
+        }
+
+        changed = {k: {"before": before[k], "after": after[k]}
+                   for k in before if before[k] != after[k]}
+
+        if changed:
+            cfg.base_over_bias  = after["base_over_bias"]
+            cfg.base_under_bias = after["base_under_bias"]
+            cfg.tempo_factor    = after["tempo_factor"]
+            db.commit()
+            applied = True
+            applied_changes = changed
+            suggestion["notes"].append(
+                f"Applied changes: "
+                + ", ".join(f"{k} {v['before']}→{v['after']}" for k, v in changed.items())
+            )
+        else:
+            suggestion["notes"].append(
+                "apply=true but no changes needed — values already at suggested levels."
+            )
+
+    suggestion["applied_changes"] = applied_changes
 
     return CalibResult(
         league_code=league_code,
