@@ -326,8 +326,10 @@ def evaluate_athena(
     p_away_tt05   = req.p_away_tt05            if req.p_away_tt05            is not None else 0.58
 
     # Apply league calibration adjustments
-    # over_bias/under_bias range: 0.00–0.25, neutral = 0.05 each
-    # tempo_factor: 0.5 = neutral, >0.5 amplifies, <0.5 dampens
+    # over_bias/under_bias range: 0.00–0.13 per side, neutral = 0.05 each
+    # Net shift = (over_bias - under_bias), max ±0.13
+    # Typical raw_support range is ±0.15 — bias should nudge, not dominate
+    # tempo_factor: 0.5 = neutral (multiplier=1.0), <0.5 dampens, >0.5 amplifies
     # Capped at 0.95 to prevent artificial BurstSentinel triggers
     tempo         = max(0.0, min(0.95, raw_tempo * tempo_factor * 2.0))
     support_delta = raw_support + (league_bias_over - league_bias_under)
