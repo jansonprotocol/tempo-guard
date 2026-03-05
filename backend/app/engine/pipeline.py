@@ -272,14 +272,20 @@ def translate_play(
 
     # ── Over lean ────────────────────────────────────────────────────
     if lean == "over":
-        # Negative support delta means under pressure is actually stronger —
+        # Negative or zero support delta means under pressure is equal or stronger —
         # downgrade to O1.75 unless confidence is very high
-        if _r(support_delta) < 0 and conf < 0.72:
-            notes.append("Negative support delta → downgrade to O1.75 (safe floor).")
+        # Note: _r() rounds to 1dp so -0.007 becomes 0.0 — use <= 0 not < 0
+        if _r(support_delta) <= 0 and conf < 0.72:
+            notes.append(f"Support delta {_r(support_delta)} ≤ 0 → downgrade to O1.75.")
             return TranslatedPlay(market="O1.75", confidence="MEDIUM")
         # O2.5: only on very strong signal — high conf AND all addon gates
-        if conf >= 0.82 and _o25_addon_allowed(support_delta, sot_proj_total,
-                                               width, p_home_tt05, p_away_tt05):
+        addon_ok = _o25_addon_allowed(support_delta, sot_proj_total,
+                                      width, p_home_tt05, p_away_tt05)
+        notes.append(
+            f"O2.5 gate check: conf={round(conf,2)} addon_ok={addon_ok} "
+            f"sd={_r(support_delta)} sot={_r(sot_proj_total)}"
+        )
+        if conf >= 0.82 and addon_ok:
             notes.append("Strong over signal + all gates → O2.5.")
             return TranslatedPlay(market="O2.5", confidence="LOW")
         # O2.25: medium signal — conf ≥ 0.68 or p2p ≥ 0.75
