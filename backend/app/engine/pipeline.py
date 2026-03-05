@@ -11,7 +11,7 @@ ROUNDING   = 0.1
 HYSTERESIS = 1.0
 
 # BurstSentinel — raised thresholds so it doesn't fire on every high-tempo match
-BURST_MIN_SUPPORT = 0.10   # was 0.08
+BURST_MIN_SUPPORT = 0.12   # was 0.10 — raised to prevent borderline triggers after rounding
 BURST_MIN_P2P     = 0.80   # was 0.74
 BURST_MIN_TEMPO   = 0.60   # was 0.55
 
