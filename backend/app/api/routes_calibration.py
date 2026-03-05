@@ -250,12 +250,14 @@ def calibrate_league(
                 league_code, home_team, away_team, match_date,
                 min_matches=min_matches_before,
             )
-        except Exception:
+        except Exception as e:
             skipped += 1
+            sample_rows.append({"position": pos, "skipped_reason": f"asof_features: {e}"}) if len(sample_rows) < 5 else None
             continue
 
         if not metrics:
             skipped += 1
+            sample_rows.append({"position": pos, "skipped_reason": "metrics empty"}) if len(sample_rows) < 5 else None
             continue
 
         try:
@@ -272,8 +274,9 @@ def calibrate_league(
                 tempo_index=metrics.get("tempo_index"),
             )
             pred = predict_match(db, req)
-        except Exception:
+        except Exception as e:
             skipped += 1
+            sample_rows.append({"position": pos, "skipped_reason": f"predict_match: {e}"}) if len(sample_rows) < 5 else None
             continue
 
         market = pred.translated_play.market
