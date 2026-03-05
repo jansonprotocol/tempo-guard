@@ -282,8 +282,8 @@ def translate_play(
         addon_ok = _o25_addon_allowed(support_delta, sot_proj_total,
                                       width, p_home_tt05, p_away_tt05)
         notes.append(
-            f"O2.5 gate check: conf={round(conf,2)} addon_ok={addon_ok} "
-            f"sd={_r(support_delta)} sot={_r(sot_proj_total)}"
+            f"O2.5 gate: conf={round(conf,2)} (need 0.82) "
+            f"addon_ok={addon_ok} sd={_r(support_delta)} sot={_r(sot_proj_total)}"
         )
         if conf >= 0.82 and addon_ok:
             notes.append("Strong over signal + all gates → O2.5.")
@@ -326,6 +326,7 @@ def evaluate_athena(
     p_away_tt05   = req.p_away_tt05            if req.p_away_tt05            is not None else 0.58
 
     # Apply league calibration adjustments
+    # over_bias/under_bias range: 0.00–0.25, neutral = 0.05 each
     # tempo_factor: 0.5 = neutral, >0.5 amplifies, <0.5 dampens
     # Capped at 0.95 to prevent artificial BurstSentinel triggers
     tempo         = max(0.0, min(0.95, raw_tempo * tempo_factor * 2.0))
@@ -375,6 +376,12 @@ def evaluate_athena(
     over_score  = _r(over_score)
     under_score = _r(under_score)
     delta       = abs(over_score - under_score)
+
+    notes.append(
+        f"Lean scores: over={over_score} under={under_score} "
+        f"delta={round(delta,2)} tempo={round(tempo,2)} "
+        f"p2p={round(p2p,3)} sd={_r(support_delta)}"
+    )
 
     # ── Lean decision ────────────────────────────────────────────────
     if burst_on:
