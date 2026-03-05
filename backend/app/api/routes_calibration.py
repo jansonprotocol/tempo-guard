@@ -41,7 +41,7 @@ from app.engine.types import MatchRequest
 from app.models.league_config import LeagueConfig
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column
 from app.services.predict import predict_match
-from app.util.asian_lines import evaluate_market
+from app.util.asian_lines import evaluate_market, hit_weight
 
 router = APIRouter()
 
@@ -283,7 +283,8 @@ def calibrate_league(
             continue
 
         market = pred.translated_play.market
-        hit    = evaluate_market(market, hg, ag)
+        result = evaluate_market(market, hg, ag)
+        hw     = hit_weight(result)
 
         if market not in market_tracker:
             market_tracker[market] = {
@@ -291,17 +292,22 @@ def calibrate_league(
                 "raw_hits": 0, "raw_misses": 0,
             }
 
-        if hit is None:
+        if hw < 0:
+            # Unrecognised market — skip
             market_tracker[market]["skipped"] += 1
             skipped += 1
-        elif hit:
-            market_tracker[market]["w_hits"]   += w
-            market_tracker[market]["raw_hits"] += 1
-            w_hits += w
         else:
-            market_tracker[market]["w_misses"]   += w
-            market_tracker[market]["raw_misses"] += 1
-            w_misses += w
+            # hw: 1.0=win, 0.75=half_win, 0.5=push, 0.25=half_loss, 0.0=loss
+            hit_contrib  = hw * w
+            miss_contrib = (1.0 - hw) * w
+            market_tracker[market]["w_hits"]   += hit_contrib
+            market_tracker[market]["w_misses"] += miss_contrib
+            w_hits   += hit_contrib
+            w_misses += miss_contrib
+            if hw >= 0.5:
+                market_tracker[market]["raw_hits"] += 1
+            else:
+                market_tracker[market]["raw_misses"] += 1
 
         if len(sample_rows) < 20:
             sample_rows.append({
@@ -313,7 +319,9 @@ def calibrate_league(
                 "actual":      f"{hg}-{ag}",
                 "total_goals": hg + ag,
                 "market":      market,
-                "hit":         hit,
+                "result":      result,
+                "hit":         hw >= 0.5,
+                "hit_weight":  hw,
                 "confidence":  pred.translated_play.confidence,
                 "corridor":    f"{pred.corridor.low}–{pred.corridor.high}",
                 "lean":        pred.corridor.lean,
