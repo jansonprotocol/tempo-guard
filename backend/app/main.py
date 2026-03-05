@@ -13,6 +13,7 @@ from app.api.routes_predict import router as predict_router
 from app.api.routes_futurematch import router as future_router
 from app.api.routes_retrosim import router as retro_router
 from app.api.routes_calibration import router as calib_router
+from app.api.routes_batch import router as batch_router
 
 # Database & models
 from app.database.base import Base
@@ -65,6 +66,7 @@ app.include_router(predict_router, prefix="/api",      tags=["Predict"])
 app.include_router(future_router,  prefix="/api",      tags=["Futurematch"])
 app.include_router(retro_router,   prefix="/api",      tags=["Retrosim"])
 app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
+app.include_router(batch_router, prefix="/api")
 
 # ------------------------------------------------------------------------------
 # STATIC FRONTEND (served at /app)
