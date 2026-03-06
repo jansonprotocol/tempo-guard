@@ -309,16 +309,31 @@ def scrape_league(league_code: str, current_url: str, prev_url: str) -> None:
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("[scraper] Starting two-season FBref scrape")
-    print("[scraper] Chrome will open and close for each fetch.")
-    print(f"[scraper] Leagues: {list(LEAGUE_MAP.keys())}")
-    print("[scraper] Each league = 2 fetches (current + previous season)\n")
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--league", type=str, default=None,
+        help="Scrape a single league only (e.g. --league MEX-LMX)"
+    )
+    args = parser.parse_args()
 
-    codes = list(LEAGUE_MAP.keys())
-    for i, (code, (cur_url, prev_url)) in enumerate(LEAGUE_MAP.items()):
-        scrape_league(code, cur_url, prev_url)
-        if i < len(codes) - 1:
-            print(f"\n  Waiting {SLEEP_BETWEEN_LEAGUES}s before next league...")
-            time.sleep(SLEEP_BETWEEN_LEAGUES)
+    if args.league:
+        if args.league not in LEAGUE_MAP:
+            print(f"[scraper] Unknown league: {args.league}. Available: {list(LEAGUE_MAP.keys())}")
+        else:
+            cur_url, prev_url = LEAGUE_MAP[args.league]
+            scrape_league(args.league, cur_url, prev_url)
+    else:
+        print("[scraper] Starting two-season FBref scrape")
+        print("[scraper] Chrome will open and close for each fetch.")
+        print(f"[scraper] Leagues: {list(LEAGUE_MAP.keys())}")
+        print("[scraper] Each league = 2 fetches (current + previous season)\n")
+
+        codes = list(LEAGUE_MAP.keys())
+        for i, (code, (cur_url, prev_url)) in enumerate(LEAGUE_MAP.items()):
+            scrape_league(code, cur_url, prev_url)
+            if i < len(codes) - 1:
+                print(f"\n  Waiting {SLEEP_BETWEEN_LEAGUES}s before next league...")
+                time.sleep(SLEEP_BETWEEN_LEAGUES)
 
     print("\n[scraper] Done.")
