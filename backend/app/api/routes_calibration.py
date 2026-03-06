@@ -124,22 +124,30 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
 
     if over_miss_w >= under_miss_w and over_misses:
         # Shift NEGATIVE — reduce over pressure
-        # Each miss needs a shift of at least its lean_gap to flip
-        # Each win has a margin of its lean_gap before it flips
-        flip_thresholds = sorted([r["lean_gap"] for r in over_misses])
-        win_margins     = [r["lean_gap"] for r in over_wins]
-        safest_max      = min(win_margins) if win_margins else MAX_BIAS
+        # Optimize for NET GAIN: misses flipped - wins flipped (weighted)
+        # A shift is worthwhile if it flips more misses than wins overall.
+        all_thresholds = sorted(set(
+            [r["lean_gap"] for r in over_misses] +
+            [r["lean_gap"] for r in over_wins]
+        ))
 
-        best_shift = best_flipped = 0
-        for threshold in flip_thresholds:
-            needed = threshold + 0.001
-            if needed > 0 and needed <= safest_max:
-                flipped = sum(1 for r in over_misses if r["lean_gap"] <= needed)
-                if flipped > best_flipped:
-                    best_flipped = flipped
-                    best_shift   = needed
+        best_shift = best_net = 0
+        best_flipped = best_wins_lost = 0
 
-        wins_at_risk = sum(1 for r in over_wins if r["lean_gap"] <= best_shift)
+        for threshold in all_thresholds:
+            needed       = threshold + 0.001
+            if needed <= 0 or needed > MAX_BIAS:
+                continue
+            misses_flipped = sum(r["weight"] for r in over_misses if r["lean_gap"] <= needed)
+            wins_lost      = sum(r["weight"] for r in over_wins   if r["lean_gap"] <= needed)
+            net            = misses_flipped - wins_lost
+            if net > best_net:
+                best_net         = net
+                best_shift       = needed
+                best_flipped     = int(sum(1 for r in over_misses if r["lean_gap"] <= needed))
+                best_wins_lost   = int(sum(1 for r in over_wins   if r["lean_gap"] <= needed))
+
+        wins_at_risk = best_wins_lost
         result["optimal_bias_shift"]    = round(-best_shift, 4)
         result["over_misses_flippable"] = best_flipped
         result["wins_at_risk"]          = wins_at_risk
@@ -147,25 +155,34 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
             f"Over misses dominate (w={over_miss_w:.1f} vs {under_miss_w:.1f}). "
             f"Optimal shift: -{round(best_shift, 3)} → "
             f"flips {best_flipped}/{len(over_misses)} misses, "
-            f"{wins_at_risk}/{len(over_wins)} wins at risk."
+            f"{wins_at_risk}/{len(over_wins)} wins at risk "
+            f"(net gain: {round(best_net, 2)})."
         )
 
     elif under_misses:
         # Shift POSITIVE — reduce under pressure
-        flip_thresholds = sorted([abs(r["lean_gap"]) for r in under_misses])
-        win_margins     = [abs(r["lean_gap"]) for r in under_wins]
-        safest_max      = min(win_margins) if win_margins else MAX_BIAS
+        all_thresholds = sorted(set(
+            [abs(r["lean_gap"]) for r in under_misses] +
+            [abs(r["lean_gap"]) for r in under_wins]
+        ))
 
-        best_shift = best_flipped = 0
-        for threshold in flip_thresholds:
-            needed = threshold + 0.001
-            if needed > 0 and needed <= safest_max:
-                flipped = sum(1 for r in under_misses if abs(r["lean_gap"]) <= needed)
-                if flipped > best_flipped:
-                    best_flipped = flipped
-                    best_shift   = needed
+        best_shift = best_net = 0
+        best_flipped = best_wins_lost = 0
 
-        wins_at_risk = sum(1 for r in under_wins if abs(r["lean_gap"]) <= best_shift)
+        for threshold in all_thresholds:
+            needed         = threshold + 0.001
+            if needed <= 0 or needed > MAX_BIAS:
+                continue
+            misses_flipped = sum(r["weight"] for r in under_misses if abs(r["lean_gap"]) <= needed)
+            wins_lost      = sum(r["weight"] for r in under_wins   if abs(r["lean_gap"]) <= needed)
+            net            = misses_flipped - wins_lost
+            if net > best_net:
+                best_net       = net
+                best_shift     = needed
+                best_flipped   = int(sum(1 for r in under_misses if abs(r["lean_gap"]) <= needed))
+                best_wins_lost = int(sum(1 for r in under_wins   if abs(r["lean_gap"]) <= needed))
+
+        wins_at_risk = best_wins_lost
         result["optimal_bias_shift"]      = round(best_shift, 4)
         result["under_misses_flippable"]  = best_flipped
         result["wins_at_risk"]            = wins_at_risk
@@ -173,7 +190,8 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
             f"Under misses dominate (w={under_miss_w:.1f} vs {over_miss_w:.1f}). "
             f"Optimal shift: +{round(best_shift, 3)} → "
             f"flips {best_flipped}/{len(under_misses)} misses, "
-            f"{wins_at_risk}/{len(under_wins)} wins at risk."
+            f"{wins_at_risk}/{len(under_wins)} wins at risk "
+            f"(net gain: {round(best_net, 2)})."
         )
 
     # ── Tempo shift (independent of bias) ────────────────────────────
@@ -270,8 +288,8 @@ def _suggest_bias(
         )
     else:
         notes.append(
-            "No safe bias shift found — all flippable misses would also flip wins. "
-            "Try resetting biases to neutral (0.05/0.05/0.50) and recalibrating."
+            "No net-positive bias shift found — flipping any misses would flip equal or more wins. "
+            "Current calibration is already near optimal for this window."
         )
 
     # ── Tempo shift ───────────────────────────────────────────────────
