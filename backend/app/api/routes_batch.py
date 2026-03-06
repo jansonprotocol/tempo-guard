@@ -34,7 +34,7 @@ from app.database.db import engine
 from app.engine.types import MatchRequest
 from app.services.predict import predict_match
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column, _resolve_columns
-from app.util.asian_lines import evaluate_market
+from app.util.asian_lines import evaluate_market, hit_weight
 
 # Auto-create tables if needed
 Base.metadata.create_all(bind=engine)
@@ -206,16 +206,17 @@ def batch_validate(
             voids += 1
         else:
             hg, ag = map(int, actual_score.split("-"))
-            hit = evaluate_market(pred.market, hg, ag)
-            if hit is True:
-                status = "hit"
-                hits += 1
-            elif hit is False:
-                status = "miss"
-                misses += 1
-            else:
+            result = evaluate_market(pred.market, hg, ag)
+            hw = hit_weight(result)
+            if hw < 0:
                 status = "void"
                 voids += 1
+            elif hw >= 0.5:
+                status = "hit"
+                hits += 1
+            else:
+                status = "miss"
+                misses += 1
 
         results.append({
             "league_code":  pred.league_code,
@@ -339,7 +340,7 @@ def get_predictions(
     if league_code:
         q = q.filter(PL.league_code == league_code)
 
-    rows = q.order_by(PL.match_date.desc(), PL.id.desc()).all()
+    rows = q.order_by(PL.match_date.asc(), PL.id.asc()).all()
 
     # Group by date
     grouped: dict = {}
