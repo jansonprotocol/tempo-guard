@@ -30,6 +30,7 @@ from sqlalchemy.orm import Session
 
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
+from app.engine.pipeline import evaluate_athena
 from app.engine.types import MatchRequest
 from app.models.league_config import LeagueConfig
 from app.models.team_config import TeamConfig
@@ -333,6 +334,16 @@ def calibrate_league(
 
     df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
     df = df.dropna(subset=[date_col, "hg", "ag"])
+
+    # Deduplicate — scraper merges current + previous season and may produce
+    # duplicate rows for matches that appear in both. Drop any (date, home, away)
+    # duplicates before processing to prevent double-counting.
+    before_dedup = len(df)
+    df = df.drop_duplicates(subset=[date_col, home_col, away_col])
+    dupes_removed = before_dedup - len(df)
+    if dupes_removed:
+        print(f"[calibration] Removed {dupes_removed} duplicate rows from snapshot before calibration.")
+
     df = df.sort_values(date_col, ascending=False)
     completed     = df.head(limit).copy()
     total_matches = len(completed)
@@ -412,7 +423,18 @@ def calibrate_league(
                 p_away_tt05=metrics.get("p_away_tt05"),
                 tempo_index=metrics.get("tempo_index"),
             )
-            pred = predict_match(db, req)
+            # Call evaluate_athena directly with team_nudge=0.0 — bypassing any
+            # previously-written team nudges. Calibration must evaluate on raw
+            # league-level signals only, otherwise team nudges (which are derived
+            # FROM calibration data) feed back into the very loop that generates them,
+            # causing different results between runs and circular drift.
+            pred = evaluate_athena(
+                req,
+                current_over,
+                current_under,
+                current_tempo,
+                team_nudge=0.0,
+            )
         except Exception as e:
             import traceback
             skipped += 1
