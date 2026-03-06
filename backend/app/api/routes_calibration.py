@@ -32,6 +32,7 @@ from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 from app.engine.types import MatchRequest
 from app.models.league_config import LeagueConfig
+from app.models.team_config import TeamConfig
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column
 from app.services.predict import predict_match
 from app.util.asian_lines import evaluate_market
@@ -356,6 +357,7 @@ def calibrate_league(
         return 0.2
 
     market_tracker: dict = {}
+    team_tracker:   dict = {}   # team → {over_hits, over_total, under_hits, under_total}
     w_hits = w_misses = 0.0
     skipped = 0
     sample_rows: list = []
@@ -468,6 +470,24 @@ def calibrate_league(
             else:
                 market_tracker[market]["raw_misses"] += 1
 
+            # ── Per-team stat accumulation ────────────────────────────
+            # Track each team's hit/miss split separately for over and under calls.
+            # Uses raw counts (not weighted) — we want enough sample to trust the nudge.
+            for team in [home_team, away_team]:
+                if team not in team_tracker:
+                    team_tracker[team] = {
+                        "over_hits": 0, "over_total": 0,
+                        "under_hits": 0, "under_total": 0,
+                    }
+                if is_over_market:
+                    team_tracker[team]["over_total"] += 1
+                    if hw >= 0.5:
+                        team_tracker[team]["over_hits"] += 1
+                else:
+                    team_tracker[team]["under_total"] += 1
+                    if hw >= 0.5:
+                        team_tracker[team]["under_hits"] += 1
+
         total_goals  = hg + ag
         is_half_loss = hw == 0.25
 
@@ -565,6 +585,102 @@ def calibrate_league(
             suggestion["notes"].append(
                 "apply=true but nothing changed — already at suggested values."
             )
+
+        # ── Team-level nudge calibration ──────────────────────────────
+        # For each team with enough samples, compute how their matches
+        # deviate from league average hit rate and write a nudge.
+        #
+        # Nudge formula:
+        #   gap = team_hit_rate - league_hit_rate
+        #   nudge = gap * 0.3, clipped to [-0.05, +0.05]
+        #
+        # Interpretation:
+        #   Team hits 60% on over calls, league avg is 77% → gap=-0.17
+        #   nudge = -0.17 * 0.3 = -0.051 → clipped to -0.05
+        #   → support_delta reduced by 0.05 when this team appears → fewer over calls
+        #
+        MIN_TEAM_SAMPLES = 6   # need at least 6 matches to trust the nudge
+        NUDGE_SCALE      = 0.3
+        NUDGE_MAX        = 0.05
+
+        team_nudges_applied = {}
+
+        for team, stats in team_tracker.items():
+            over_n  = stats["over_total"]
+            under_n = stats["under_total"]
+
+            over_nudge  = 0.0
+            under_nudge = 0.0
+
+            if over_n >= MIN_TEAM_SAMPLES:
+                team_over_rate  = stats["over_hits"] / over_n
+                gap = team_over_rate - (overall_hit_rate / 100.0)
+                over_nudge = round(
+                    max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
+                )
+
+            if under_n >= MIN_TEAM_SAMPLES:
+                team_under_rate = stats["under_hits"] / under_n
+                gap = team_under_rate - (overall_hit_rate / 100.0)
+                under_nudge = round(
+                    max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
+                )
+
+            if over_n < MIN_TEAM_SAMPLES and under_n < MIN_TEAM_SAMPLES:
+                continue  # not enough data — leave neutral
+
+            # Upsert TeamConfig
+            from datetime import datetime as _dt
+            existing = (
+                db.query(TeamConfig)
+                .filter_by(league_code=league_code, team=team)
+                .first()
+            )
+            if existing:
+                existing.over_nudge     = over_nudge
+                existing.under_nudge    = under_nudge
+                existing.over_hit_rate  = round(stats["over_hits"] / over_n, 3) if over_n else None
+                existing.under_hit_rate = round(stats["under_hits"] / under_n, 3) if under_n else None
+                existing.over_matches   = over_n
+                existing.under_matches  = under_n
+                existing.last_calibrated = _dt.utcnow()
+            else:
+                db.add(TeamConfig(
+                    league_code=league_code,
+                    team=team,
+                    over_nudge=over_nudge,
+                    under_nudge=under_nudge,
+                    over_hit_rate=round(stats["over_hits"] / over_n, 3) if over_n else None,
+                    under_hit_rate=round(stats["under_hits"] / under_n, 3) if under_n else None,
+                    over_matches=over_n,
+                    under_matches=under_n,
+                    last_calibrated=_dt.utcnow(),
+                ))
+
+            if abs(over_nudge) > 0.005 or abs(under_nudge) > 0.005:
+                team_nudges_applied[team] = {
+                    "over_nudge":  over_nudge,
+                    "under_nudge": under_nudge,
+                    "over_rate":   round(stats["over_hits"] / over_n, 3) if over_n else None,
+                    "over_n":      over_n,
+                }
+
+        db.commit()
+
+        if team_nudges_applied:
+            suggestion["notes"].append(
+                f"Team nudges applied: {len(team_nudges_applied)} teams adjusted. "
+                f"Notable: " + ", ".join(
+                    f"{t} ({v['over_nudge']:+.3f})"
+                    for t, v in sorted(
+                        team_nudges_applied.items(),
+                        key=lambda x: abs(x[1]["over_nudge"]),
+                        reverse=True
+                    )[:5]
+                )
+            )
+            applied_changes["team_nudges"] = team_nudges_applied
+            applied = True
 
     suggestion["applied_changes"] = applied_changes
 
