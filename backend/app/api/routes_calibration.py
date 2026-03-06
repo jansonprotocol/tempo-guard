@@ -753,21 +753,29 @@ def reset_league_calibration(
     }
 
     # ── 1. Reset LeagueConfig to defaults from league_configs.json ────────────
-    defaults_path = os.path.join(
-        os.path.dirname(__file__), "..", "..", "league_configs.json"
+    # Try multiple path locations — structure differs between local and Render
+    possible_paths = [
+        os.path.join(os.path.dirname(__file__), "..", "seed", "league_configs.json"),
+        "/app/app/seed/league_configs.json",
+    ]
+    defaults_path = next(
+        (p for p in possible_paths if os.path.exists(os.path.normpath(p))), None
     )
     default_over  = 0.03
     default_under = 0.01
     default_tempo = 0.50
 
     try:
-        with open(os.path.normpath(defaults_path)) as f:
-            configs = json.load(f)
-        match = next((c for c in configs if c["league_code"] == league_code), None)
-        if match:
-            default_over  = match.get("base_over_bias",  default_over)
-            default_under = match.get("base_under_bias", default_under)
-            default_tempo = match.get("tempo_factor",    default_tempo)
+        if defaults_path:
+            with open(os.path.normpath(defaults_path)) as f:
+                configs = json.load(f)
+            match = next((c for c in configs if c["league_code"] == league_code), None)
+            if match:
+                default_over  = match.get("base_over_bias",  default_over)
+                default_under = match.get("base_under_bias", default_under)
+                default_tempo = match.get("tempo_factor",    default_tempo)
+        else:
+            result["notes"].append("league_configs.json not found in any expected location — using hardcoded defaults.")
     except Exception as e:
         result["notes"].append(f"Could not load league_configs.json ({e}) — using hardcoded defaults.")
 
