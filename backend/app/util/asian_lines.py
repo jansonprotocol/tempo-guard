@@ -17,11 +17,8 @@ OVER lines:
     ≤2 goals → full loss
 
   O1.75 = half O1.5 + half O2.0
-    2+ goals → full win  (O1.5 wins at 2, O2.0 pushes at 2 → half win at 2... )
-
-  Wait — O1.75:
-    2  goals → O1.5 wins (2>1.5), O2.0 pushes (2==2)  → HALF WIN
-    1  goal  → O1.5 loses, O2.0 loses                  → full loss
+    2  goals → O1.5 wins (2>1.5), O2.0 pushes (2==2) → HALF WIN
+    1  goal  → O1.5 loses, O2.0 loses                 → full loss
 
 UNDER lines:
   U3.75 = half U3.5 + half U4.0
@@ -45,10 +42,6 @@ Return values:
   False       = full loss
   "half_win"  = win half stake, refund half (net positive)
   "half_loss" = lose half stake, refund half (net negative)
-
-For calibration:
-  True / "half_win"  → counted as HIT  (half_win at reduced weight)
-  False / "half_loss"→ counted as MISS (half_loss at reduced weight)
 """
 from __future__ import annotations
 
@@ -98,31 +91,29 @@ def evaluate_market(
 
         if frac == 0.25:
             # e.g. O2.25 = half O2.0 + half O2.5
-            # Split point (floor): total == floor(line) → HALF LOSS
-            floor_line = math.floor(line)   # 2
+            floor_line = math.floor(line)
             if total >= floor_line + 1:     # 3+ → full win
                 return True
-            if total == floor_line:         # exactly 2 → half loss
+            if total == floor_line:         # exactly at floor → half loss
                 return "half_loss"
-            return False                    # ≤1 → full loss
+            return False                    # below floor → full loss
 
         if frac == 0.75:
             # e.g. O2.75 = half O2.5 + half O3.0
-            # Split point (ceil): total == ceil(line) → HALF WIN
-            ceil_line = math.ceil(line)     # 3
-            if total > ceil_line:           # 4+ → full win
+            ceil_line = math.ceil(line)
+            if total > ceil_line:           # above ceil → full win
                 return True
-            if total == ceil_line:          # exactly 3 → half win
+            if total == ceil_line:          # exactly at ceil → half win
                 return "half_win"
-            return False                    # ≤2 → full loss
+            return False                    # below ceil → full loss
 
         if frac == 0.0:
             # Whole line: push at exactly line
             if total == int(line):
-                return "half_win"   # push = refund = treated as half win
+                return "half_win"           # push = refund
             return total > line
 
-        # Half line (.5): no push
+        # Half line (.5): no push possible
         return total > line
 
     # ── Under lines ───────────────────────────────────────────────────
@@ -136,35 +127,30 @@ def evaluate_market(
 
         if frac == 0.75:
             # e.g. U3.75 = half U3.5 + half U4.0
-            # Split point (ceil): total == ceil(line) → HALF LOSS
-            ceil_line = math.ceil(line)     # 4
-            if total < ceil_line - 1:       # ≤3 → actually total < 3.5 → ≤3 → full win
+            lower_half = math.floor(line) + 0.5   # 3.5
+            ceil_line  = math.ceil(line)           # 4
+            if total < lower_half:                 # ≤3 → full win
                 return True
-            # Recalculate properly:
-            # U3.5 wins if total ≤ 3, U4.0 wins if total ≤ 3, pushes at 4
-            lower_half = math.floor(line) + 0.5  # 3.5
-            if total < lower_half:          # ≤3 → both win → full win
-                return True
-            if total == ceil_line:          # exactly 4 → U3.5 loses, U4.0 pushes → half loss
+            if total == ceil_line:                 # exactly 4 → half loss
                 return "half_loss"
-            return False                    # 5+ → full loss
+            return False                           # 5+ → full loss
 
         if frac == 0.25:
             # e.g. U3.25 = half U3.0 + half U3.5
-            # Split point (floor): total == floor(line) → HALF WIN
-            floor_line = math.floor(line)   # 3
-            if total < floor_line:          # ≤2 → both win → full win
+            floor_line = math.floor(line)          # 3
+            if total < floor_line:                 # ≤2 → full win
                 return True
-            if total == floor_line:         # exactly 3 → U3.0 pushes, U3.5 wins → half win
+            if total == floor_line:                # exactly 3 → half win
                 return "half_win"
-            return False                    # 4+ → full loss
+            return False                           # 4+ → full loss
 
         if frac == 0.0:
+            # Whole line: push at exactly line
             if total == int(line):
-                return "half_win"   # push
+                return "half_win"                  # push = refund
             return total < line
 
-        # Half line: no push
+        # Half line (.5): no push possible
         return total < line
 
     return None
@@ -182,17 +168,16 @@ def is_miss(result: MarketResult) -> bool:
 
 def result_weight(result: MarketResult) -> float:
     """
-    Calibration weight for a result:
-      full win   → 1.0
-      half win   → 0.5
-      half loss  → -0.5  (counted as partial miss)
+    Calibration weight for a result (used for EV calculations):
+      full win   →  1.0
+      half win   →  0.5
+      half loss  → -0.5
       full loss  → -1.0
-    Not used directly but useful for EV calculations.
     """
-    if result is True:       return  1.0
-    if result == "half_win": return  0.5
-    if result == "half_loss":return -0.5
-    if result is False:      return -1.0
+    if result is True:        return  1.0
+    if result == "half_win":  return  0.5
+    if result == "half_loss": return -0.5
+    if result is False:       return -1.0
     return 0.0
 
 
@@ -214,8 +199,11 @@ def hit_weight(result: MarketResult) -> float:
     if result == "half_win":  return 1.0   # offset → full win on actual play
     if result == "half_loss": return 0.0   # offset → full loss on actual play
     if result is False:       return 0.0
-    return -1.0  # None = unrecognised
-    """Human-readable description for display/debugging."""
+    return -1.0                            # None = unrecognised market
+
+
+def market_description(market: str) -> str:
+    """Human-readable description of a market for display/debugging."""
     m = market.strip().upper()
     if "/" in m:
         parts = m.split("/")
