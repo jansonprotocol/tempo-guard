@@ -530,7 +530,7 @@ def calibrate_league(
             sample_rows.append({
                 "position":    pos,
                 "weight":      w,
-                "date":        match_date.isoformat(),
+                "date":        match_date.strftime("%d/%m/%Y"),
                 "home":        home_team,
                 "away":        away_team,
                 "actual":      f"{hg}-{ag}",
