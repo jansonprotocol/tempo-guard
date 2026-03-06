@@ -311,6 +311,7 @@ def evaluate_athena(
     league_bias_over: float,
     league_bias_under: float,
     tempo_factor: float,
+    team_nudge: float = 0.0,   # combined home+away team-level calibration nudge
 ) -> Prediction:
     notes:   List[str] = []
     modules: List[str] = []
@@ -334,7 +335,7 @@ def evaluate_athena(
     # tempo_factor: 0.5 = neutral (multiplier=1.0), <0.5 dampens, >0.5 amplifies
     # Capped at 0.95 to prevent artificial BurstSentinel triggers
     tempo         = max(0.0, min(0.95, raw_tempo * tempo_factor * 2.0))
-    support_delta = raw_support + (league_bias_over - league_bias_under)
+    support_delta = raw_support + (league_bias_over - league_bias_under) + team_nudge
 
     # BurstSentinel uses RAW values to prevent bias inflation from
     # pushing borderline matches into forced-over territory
