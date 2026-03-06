@@ -175,13 +175,27 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
     # ── Tempo shift (independent of bias) ────────────────────────────
     tempo_over_misses = [r for r in over_misses if r["raw_tempo"] > 0.75]
     if tempo_over_misses:
-        avg_contrib = sum((r["raw_tempo"] - 0.5) * 0.30 for r in tempo_over_misses) / len(tempo_over_misses)
-        result["optimal_tempo_shift"] = round(-avg_contrib * 0.5, 4)
-        result["analysis"].append(
-            f"{len(tempo_over_misses)} high-tempo over misses — "
-            f"avg tempo lean contribution: {round(avg_contrib, 3)}. "
-            f"Suggested tempo_factor shift: {round(result['optimal_tempo_shift'], 3)}"
-        )
+        avg_contrib  = sum((r["raw_tempo"] - 0.5) * 0.30 for r in tempo_over_misses) / len(tempo_over_misses)
+        avg_lean_gap = sum(abs(r["lean_gap"]) for r in tempo_over_misses) / len(tempo_over_misses)
+        suggested_shift = round(-avg_contrib * 0.5, 4)
+
+        # Only suggest if the average lean_gap is actually closeable by tempo dampening.
+        # Max realistic tempo contribution change ≈ 0.05 per 0.1 tempo_factor shift.
+        # If avg_lean_gap > 0.10, tempo dampening won't flip these misses.
+        if avg_lean_gap <= 0.10:
+            result["optimal_tempo_shift"] = suggested_shift
+            result["analysis"].append(
+                f"{len(tempo_over_misses)} high-tempo over misses — "
+                f"avg tempo lean contribution: {round(avg_contrib, 3)}, "
+                f"avg lean_gap: {round(avg_lean_gap, 3)} (closeable). "
+                f"Suggested tempo_factor shift: {round(suggested_shift, 3)}"
+            )
+        else:
+            result["analysis"].append(
+                f"{len(tempo_over_misses)} high-tempo over misses — "
+                f"avg lean_gap {round(avg_lean_gap, 3)} too large for tempo dampening to close. "
+                f"These are irreducible variance — no tempo change suggested."
+            )
 
     return result
 
