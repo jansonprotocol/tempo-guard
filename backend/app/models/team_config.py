@@ -21,7 +21,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Float, Integer, String, UniqueConstraint
 
-from app.database.db import Base
+from app.database.base import Base
 
 
 class TeamConfig(Base):
