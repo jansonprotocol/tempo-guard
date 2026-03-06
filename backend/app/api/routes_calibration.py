@@ -20,6 +20,8 @@ Lean gap analysis:
 from __future__ import annotations
 
 import io
+import json
+import os
 from typing import List
 
 import pandas as pd
@@ -717,3 +719,99 @@ def calibrate_league(
         applied=applied,
         sample=sample_rows,
     )
+
+
+# ── League reset endpoint ──────────────────────────────────────────────────────
+@router.delete("/calibrate/reset")
+def reset_league_calibration(
+    league_code: str,
+    wipe_snapshot: bool = Query(False),
+    db: Session = Depends(get_db),
+):
+    """
+    Full calibration reset for a league.
+
+    Resets:
+      - LeagueConfig biases back to league_configs.json defaults
+      - All TeamConfig nudges for this league (deleted entirely)
+      - Optionally wipes the FBrefSnapshot (?wipe_snapshot=true)
+
+    Use this when a league has been over-calibrated during testing,
+    or when snapshot data was corrupted/duplicated before fixes were deployed.
+
+    After reset:
+      1. Run scrape_fbref to get a fresh clean snapshot
+      2. Run /calibrate/league?apply=false to review
+      3. Run /calibrate/league?apply=true to seed clean nudges
+    """
+    result = {
+        "league_code":       league_code,
+        "league_config":     None,
+        "team_nudges_wiped": 0,
+        "snapshot_wiped":    False,
+        "notes":             [],
+    }
+
+    # ── 1. Reset LeagueConfig to defaults from league_configs.json ────────────
+    defaults_path = os.path.join(
+        os.path.dirname(__file__), "..", "..", "league_configs.json"
+    )
+    default_over  = 0.03
+    default_under = 0.01
+    default_tempo = 0.50
+
+    try:
+        with open(os.path.normpath(defaults_path)) as f:
+            configs = json.load(f)
+        match = next((c for c in configs if c["league_code"] == league_code), None)
+        if match:
+            default_over  = match.get("base_over_bias",  default_over)
+            default_under = match.get("base_under_bias", default_under)
+            default_tempo = match.get("tempo_factor",    default_tempo)
+    except Exception as e:
+        result["notes"].append(f"Could not load league_configs.json ({e}) — using hardcoded defaults.")
+
+    cfg = db.query(LeagueConfig).filter_by(league_code=league_code).first()
+    if cfg:
+        cfg.base_over_bias  = default_over
+        cfg.base_under_bias = default_under
+        cfg.tempo_factor    = default_tempo
+        db.commit()
+        result["league_config"] = {
+            "base_over_bias":  default_over,
+            "base_under_bias": default_under,
+            "tempo_factor":    default_tempo,
+        }
+        result["notes"].append(
+            f"LeagueConfig reset to defaults: over={default_over} under={default_under} tempo={default_tempo}"
+        )
+    else:
+        result["notes"].append(f"No LeagueConfig found for {league_code} — nothing to reset.")
+
+    # ── 2. Wipe all TeamConfig nudges for this league ─────────────────────────
+    deleted = (
+        db.query(TeamConfig)
+        .filter_by(league_code=league_code)
+        .delete(synchronize_session=False)
+    )
+    db.commit()
+    result["team_nudges_wiped"] = deleted
+    result["notes"].append(f"Wiped {deleted} team nudge(s) for {league_code}.")
+
+    # ── 3. Optionally wipe the FBrefSnapshot ──────────────────────────────────
+    if wipe_snapshot:
+        snap_deleted = (
+            db.query(FBrefSnapshot)
+            .filter_by(league_code=league_code)
+            .delete(synchronize_session=False)
+        )
+        db.commit()
+        result["snapshot_wiped"] = snap_deleted > 0
+        if snap_deleted:
+            result["notes"].append(
+                f"Snapshot wiped — run scrape_fbref before next calibration."
+            )
+        else:
+            result["notes"].append("No snapshot found to wipe.")
+
+    return result
