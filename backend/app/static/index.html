@@ -36,7 +36,6 @@
       overflow-x: hidden;
     }
 
-    /* ── Grid background ─────────────────────────────────────────── */
     body::before {
       content: '';
       position: fixed;
@@ -49,7 +48,6 @@
       z-index: 0;
     }
 
-    /* ── Layout ──────────────────────────────────────────────────── */
     .shell {
       position: relative;
       z-index: 1;
@@ -58,10 +56,7 @@
       padding: 40px 20px 80px;
     }
 
-    /* ── Header ──────────────────────────────────────────────────── */
-    .header {
-      margin-bottom: 48px;
-    }
+    .header { margin-bottom: 48px; }
 
     .header-eyebrow {
       font-family: var(--mono);
@@ -82,9 +77,7 @@
       color: #fff;
     }
 
-    .header-title span {
-      color: var(--cyan);
-    }
+    .header-title span { color: var(--cyan); }
 
     .header-sub {
       margin-top: 10px;
@@ -94,7 +87,6 @@
       letter-spacing: 0.15em;
     }
 
-    /* ── Mode pill ───────────────────────────────────────────────── */
     .mode-row {
       display: flex;
       align-items: center;
@@ -148,7 +140,6 @@
       50% { opacity: 0.3; }
     }
 
-    /* ── Form card ───────────────────────────────────────────────── */
     .form-card {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -166,7 +157,6 @@
       background: linear-gradient(90deg, var(--cyan), transparent);
     }
 
-    /* ── VS row ──────────────────────────────────────────────────── */
     .vs-row {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
@@ -185,7 +175,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* ── Bottom row ──────────────────────────────────────────────── */
     .bottom-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -193,7 +182,6 @@
       margin-bottom: 24px;
     }
 
-    /* ── Field ───────────────────────────────────────────────────── */
     .field {
       display: flex;
       flex-direction: column;
@@ -229,25 +217,12 @@
       box-shadow: 0 0 0 2px rgba(0,212,255,0.08);
     }
 
-    .field-input.resolved {
-      border-color: rgba(0, 230, 118, 0.5);
-    }
-
-    .field-input.unresolved {
-      border-color: rgba(255, 179, 0, 0.4);
-    }
-
+    .field-input.resolved { border-color: rgba(0, 230, 118, 0.5); }
+    .field-input.unresolved { border-color: rgba(255, 179, 0, 0.4); }
     .field-input::placeholder { color: var(--dim); }
+    select.field-input { cursor: pointer; }
+    select.field-input option { background: var(--bg3); }
 
-    select.field-input {
-      cursor: pointer;
-    }
-
-    select.field-input option {
-      background: var(--bg3);
-    }
-
-    /* ── League hint ─────────────────────────────────────────────── */
     .league-hint {
       font-family: var(--mono);
       font-size: 10px;
@@ -259,7 +234,6 @@
     .league-hint.warn  { color: var(--amber); }
     .league-hint.empty { color: transparent; }
 
-    /* ── Submit button ───────────────────────────────────────────── */
     .btn-run {
       width: 100%;
       padding: 14px;
@@ -287,21 +261,11 @@
       transition: transform 0.4s;
     }
 
-    .btn-run:hover {
-      background: rgba(0,212,255,0.06);
-      box-shadow: 0 0 20px rgba(0,212,255,0.1);
-    }
-
+    .btn-run:hover { background: rgba(0,212,255,0.06); box-shadow: 0 0 20px rgba(0,212,255,0.1); }
     .btn-run:hover::before { transform: translateX(100%); }
     .btn-run:active { transform: scale(0.99); }
+    .btn-run:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-    .btn-run:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    /* ── Loading ─────────────────────────────────────────────────── */
     .loading-bar {
       height: 2px;
       background: linear-gradient(90deg, var(--cyan), transparent);
@@ -311,9 +275,7 @@
       border-radius: 1px;
     }
 
-    .loading-bar.active {
-      animation: load 1.5s ease-in-out infinite;
-    }
+    .loading-bar.active { animation: load 1.5s ease-in-out infinite; }
 
     @keyframes load {
       0%   { width: 0%; opacity: 1; margin-left: 0; }
@@ -321,7 +283,6 @@
       100% { width: 100%; opacity: 0; margin-left: 0; }
     }
 
-    /* ── Result card ─────────────────────────────────────────────── */
     .result-card {
       margin-top: 20px;
       background: var(--bg2);
@@ -374,14 +335,9 @@
       border: 1px solid rgba(255, 179, 0, 0.25);
     }
 
-    .result-body {
-      padding: 24px;
-    }
+    .result-body { padding: 24px; }
 
-    /* ── Main play ───────────────────────────────────────────────── */
-    .main-play {
-      margin-bottom: 24px;
-    }
+    .main-play { margin-bottom: 24px; }
 
     .play-eyebrow {
       font-family: var(--mono);
@@ -428,7 +384,6 @@
       color: var(--muted);
     }
 
-    /* ── Stats grid ──────────────────────────────────────────────── */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -463,7 +418,6 @@
     .stat-val.lean-over  { color: var(--green); }
     .stat-val.lean-under { color: var(--amber); }
 
-    /* ── Flags ───────────────────────────────────────────────────── */
     .flags-row {
       display: flex;
       flex-wrap: wrap;
@@ -488,25 +442,19 @@
       border: 1px solid rgba(0, 212, 255, 0.15);
     }
 
-    /* ── Divider ─────────────────────────────────────────────────── */
     .divider {
       height: 1px;
       background: var(--border);
       margin: 20px 0;
     }
 
-    /* ── Inputs used ─────────────────────────────────────────────── */
     .inputs-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
 
-    .input-stat {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
+    .input-stat { display: flex; flex-direction: column; gap: 3px; }
 
     .input-stat-label {
       font-family: var(--mono);
@@ -522,11 +470,8 @@
       color: var(--text);
     }
 
-    .input-stat-val.null-val {
-      color: var(--dim);
-    }
+    .input-stat-val.null-val { color: var(--dim); }
 
-    /* ── Error ───────────────────────────────────────────────────── */
     .error-card {
       margin-top: 20px;
       padding: 16px 20px;
@@ -538,7 +483,6 @@
       color: #ff7070;
     }
 
-    /* ── Footer ──────────────────────────────────────────────────── */
     .footer {
       margin-top: 40px;
       padding-top: 20px;
@@ -548,10 +492,7 @@
       justify-content: space-between;
     }
 
-    .footer-links {
-      display: flex;
-      gap: 20px;
-    }
+    .footer-links { display: flex; gap: 20px; }
 
     .footer-links a {
       font-family: var(--mono);
@@ -572,12 +513,11 @@
       letter-spacing: 0.1em;
     }
 
-    /* ── Hidden ──────────────────────────────────────────────────── */
     .hidden { display: none !important; }
 
-    /* ── Nav ─────────────────────────────────────────────────────── */
     .nav {
-      position: relative;
+      position: sticky;
+      top: 0;
       z-index: 10;
       display: flex;
       align-items: center;
@@ -586,8 +526,6 @@
       background: rgba(8,11,15,0.95);
       backdrop-filter: blur(8px);
       padding: 0 20px;
-      position: sticky;
-      top: 0;
     }
 
     .nav-brand {
@@ -618,17 +556,12 @@
     }
 
     .nav-link:hover { color: var(--text); }
+    .nav-link.active { color: var(--cyan); border-bottom-color: var(--cyan); }
 
-    .nav-link.active {
-      color: var(--cyan);
-      border-bottom-color: var(--cyan);
-    }
-
-    /* ── Pages ───────────────────────────────────────────────────── */
     .page { display: none; }
     .page.active { display: block; }
 
-    /* ── Predictions page ────────────────────────────────────────── */
+    /* ── Predictions page ── */
     .pred-shell {
       position: relative;
       z-index: 1;
@@ -637,9 +570,7 @@
       padding: 40px 20px 80px;
     }
 
-    .pred-header {
-      margin-bottom: 36px;
-    }
+    .pred-header { margin-bottom: 36px; }
 
     .pred-title {
       font-family: var(--cond);
@@ -683,6 +614,29 @@
       color: var(--cyan);
     }
 
+    /* ── League dropdown in toolbar ── */
+    .pred-league-select {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 7px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .pred-league-select:hover,
+    .pred-league-select:focus {
+      border-color: var(--cyan2);
+      color: var(--cyan);
+    }
+
+    .pred-league-select option { background: var(--bg3); color: var(--text); }
+
     .pred-refresh {
       margin-left: auto;
       background: transparent;
@@ -697,14 +651,9 @@
       transition: all 0.2s;
     }
 
-    .pred-refresh:hover {
-      border-color: var(--cyan2);
-      color: var(--cyan);
-    }
+    .pred-refresh:hover { border-color: var(--cyan2); color: var(--cyan); }
 
-    .pred-date-group {
-      margin-bottom: 32px;
-    }
+    .pred-date-group { margin-bottom: 32px; }
 
     .pred-date-label {
       font-family: var(--mono);
@@ -742,10 +691,10 @@
       width: 3px; height: 100%;
     }
 
-    .pred-card.pending::before  { background: var(--amber); }
-    .pred-card.hit::before      { background: var(--green); }
-    .pred-card.miss::before     { background: var(--red); }
-    .pred-card.void::before     { background: var(--muted); }
+    .pred-card.pending::before { background: var(--amber); }
+    .pred-card.hit::before     { background: var(--green); }
+    .pred-card.miss::before    { background: var(--red); }
+    .pred-card.void::before    { background: var(--muted); }
 
     .pred-card-top {
       display: flex;
@@ -796,7 +745,7 @@
       border-radius: 2px;
     }
 
-    .pred-conf-badge.HIGH   { background: rgba(0,230,118,0.1); color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
+    .pred-conf-badge.HIGH   { background: rgba(0,230,118,0.1);  color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
     .pred-conf-badge.MEDIUM { background: rgba(255,179,0,0.1);  color: var(--amber); border: 1px solid rgba(255,179,0,0.25); }
     .pred-conf-badge.LOW    { background: rgba(255,68,68,0.1);   color: var(--red);   border: 1px solid rgba(255,68,68,0.25); }
 
@@ -891,7 +840,6 @@
       letter-spacing: 0.2em;
     }
 
-    /* ── Responsive ──────────────────────────────────────────────── */
     @media (max-width: 520px) {
       .vs-row { grid-template-columns: 1fr; }
       .vs-sep { display: none; }
@@ -904,25 +852,22 @@
 </head>
 <body>
 
-  <!-- Navigation -->
   <nav class="nav">
     <div class="nav-brand">ATH<span>E</span>NA</div>
     <a class="nav-link active" id="nav-home" onclick="showPage('home')">Matchup</a>
     <a class="nav-link" id="nav-predictions" onclick="showPage('predictions')">Predictions</a>
   </nav>
 
-  <!-- Page: Matchup (home) -->
+  <!-- Page: Matchup -->
   <div class="page active" id="page-home">
   <div class="shell">
 
-    <!-- Header -->
     <header class="header">
       <div class="header-eyebrow">Data Control · Prediction Engine</div>
       <h1 class="header-title">ATH<span>E</span>NA</h1>
       <div class="header-sub">TEMPO GUARD · CORRIDOR ANALYSIS · TRANSLATED PLAY</div>
     </header>
 
-    <!-- Mode indicator -->
     <div class="mode-row">
       <span class="mode-label">Mode</span>
       <span class="mode-pill future" id="mode-pill">
@@ -931,26 +876,20 @@
       </span>
     </div>
 
-    <!-- Form -->
     <div class="form-card">
       <form id="athena-form">
-
-        <!-- VS row -->
         <div class="vs-row">
           <div class="field">
             <label class="field-label" for="home-team">Home</label>
-            <input class="field-input" id="home-team" type="text"
-                   placeholder="e.g. Arsenal" autocomplete="off" required/>
+            <input class="field-input" id="home-team" type="text" placeholder="e.g. Arsenal" autocomplete="off" required/>
           </div>
           <div class="vs-sep">VS</div>
           <div class="field">
             <label class="field-label" for="away-team">Away</label>
-            <input class="field-input" id="away-team" type="text"
-                   placeholder="e.g. Chelsea" autocomplete="off" required/>
+            <input class="field-input" id="away-team" type="text" placeholder="e.g. Chelsea" autocomplete="off" required/>
           </div>
         </div>
 
-        <!-- Date + League -->
         <div class="bottom-row">
           <div class="field">
             <label class="field-label" for="match-date">Match Date</label>
@@ -965,38 +904,28 @@
           </div>
         </div>
 
-        <button class="btn-run" type="submit" id="btn-run">
-          RUN ATHENA
-        </button>
+        <button class="btn-run" type="submit" id="btn-run">RUN ATHENA</button>
         <div class="loading-bar" id="loading-bar"></div>
-
       </form>
     </div>
 
-    <!-- Error -->
     <div class="error-card hidden" id="error-card"></div>
 
-    <!-- Result -->
     <div class="result-card hidden" id="result-card">
       <div class="result-header">
         <div class="result-fixture" id="res-fixture">—</div>
         <div class="result-mode-badge future" id="res-mode-badge">Futurematch</div>
       </div>
       <div class="result-body">
-
-        <!-- Main play -->
         <div class="main-play">
           <div class="play-eyebrow">Main Play</div>
           <div class="play-market" id="res-market">—</div>
           <div class="play-conf">
-            <div class="conf-bar-wrap">
-              <div class="conf-bar" id="res-conf-bar" style="width:0%"></div>
-            </div>
+            <div class="conf-bar-wrap"><div class="conf-bar" id="res-conf-bar" style="width:0%"></div></div>
             <span class="conf-label" id="res-conf-label">—</span>
           </div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-grid">
           <div class="stat-box">
             <div class="stat-label">Corridor</div>
@@ -1012,48 +941,26 @@
           </div>
         </div>
 
-        <!-- Flags -->
         <div id="flags-section" class="hidden">
           <div class="play-eyebrow" style="margin-bottom:8px">Flags & Modules</div>
           <div class="flags-row" id="res-flags"></div>
           <div class="divider"></div>
         </div>
 
-        <!-- Inputs used -->
         <div id="inputs-section">
           <div class="play-eyebrow" style="margin-bottom:10px">Data Inputs</div>
           <div class="inputs-grid">
-            <div class="input-stat">
-              <div class="input-stat-label">SoT Proj.</div>
-              <div class="input-stat-val" id="in-sot">—</div>
-            </div>
-            <div class="input-stat">
-              <div class="input-stat-label">Support Δ</div>
-              <div class="input-stat-val" id="in-support">—</div>
-            </div>
-            <div class="input-stat">
-              <div class="input-stat-label">p(Home Score)</div>
-              <div class="input-stat-val" id="in-home-tt">—</div>
-            </div>
-            <div class="input-stat">
-              <div class="input-stat-label">p(Away Score)</div>
-              <div class="input-stat-val" id="in-away-tt">—</div>
-            </div>
-            <div class="input-stat">
-              <div class="input-stat-label">Tempo Index</div>
-              <div class="input-stat-val" id="in-tempo">—</div>
-            </div>
-            <div class="input-stat">
-              <div class="input-stat-label">Confidence</div>
-              <div class="input-stat-val" id="in-conf-score">—</div>
-            </div>
+            <div class="input-stat"><div class="input-stat-label">SoT Proj.</div><div class="input-stat-val" id="in-sot">—</div></div>
+            <div class="input-stat"><div class="input-stat-label">Support Δ</div><div class="input-stat-val" id="in-support">—</div></div>
+            <div class="input-stat"><div class="input-stat-label">p(Home Score)</div><div class="input-stat-val" id="in-home-tt">—</div></div>
+            <div class="input-stat"><div class="input-stat-label">p(Away Score)</div><div class="input-stat-val" id="in-away-tt">—</div></div>
+            <div class="input-stat"><div class="input-stat-label">Tempo Index</div><div class="input-stat-val" id="in-tempo">—</div></div>
+            <div class="input-stat"><div class="input-stat-label">Confidence</div><div class="input-stat-val" id="in-conf-score">—</div></div>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
       <div class="footer-links">
         <a href="/docs" target="_blank">API Docs</a>
@@ -1062,8 +969,8 @@
       <div class="footer-version">ATHENA v2 · Tempo Guard</div>
     </footer>
 
-  </div><!-- /.shell -->
-  </div><!-- /#page-home -->
+  </div>
+  </div>
 
   <!-- Page: Predictions -->
   <div class="page" id="page-predictions">
@@ -1074,54 +981,40 @@
         <div class="pred-sub">ATHENA · BATCH FORECAST · AUTO-VALIDATED AFTER MATCH DAY</div>
       </div>
 
-      <!-- Summary row -->
       <div class="pred-summary" id="pred-summary">
-        <div class="pred-sum-box">
-          <div class="pred-sum-val" id="sum-total">—</div>
-          <div class="pred-sum-label">Total</div>
-        </div>
-        <div class="pred-sum-box">
-          <div class="pred-sum-val green" id="sum-hits">—</div>
-          <div class="pred-sum-label">Hits</div>
-        </div>
-        <div class="pred-sum-box">
-          <div class="pred-sum-val red" id="sum-misses">—</div>
-          <div class="pred-sum-label">Misses</div>
-        </div>
-        <div class="pred-sum-box">
-          <div class="pred-sum-val amber" id="sum-pending">—</div>
-          <div class="pred-sum-label">Pending</div>
-        </div>
-        <div class="pred-sum-box">
-          <div class="pred-sum-val" id="sum-hitrate">—</div>
-          <div class="pred-sum-label">Hit Rate</div>
-        </div>
+        <div class="pred-sum-box"><div class="pred-sum-val" id="sum-total">—</div><div class="pred-sum-label">Total</div></div>
+        <div class="pred-sum-box"><div class="pred-sum-val green" id="sum-hits">—</div><div class="pred-sum-label">Hits</div></div>
+        <div class="pred-sum-box"><div class="pred-sum-val red" id="sum-misses">—</div><div class="pred-sum-label">Misses</div></div>
+        <div class="pred-sum-box"><div class="pred-sum-val amber" id="sum-pending">—</div><div class="pred-sum-label">Pending</div></div>
+        <div class="pred-sum-box"><div class="pred-sum-val" id="sum-hitrate">—</div><div class="pred-sum-label">Hit Rate</div></div>
       </div>
 
-      <!-- Toolbar -->
+      <!-- Toolbar with league filter -->
       <div class="pred-toolbar">
-        <button class="pred-filter active" data-filter="all"    onclick="setPredFilter(this,'all')">All</button>
+        <button class="pred-filter active" data-filter="all"     onclick="setPredFilter(this,'all')">All</button>
         <button class="pred-filter"        data-filter="pending" onclick="setPredFilter(this,'pending')">Pending</button>
         <button class="pred-filter"        data-filter="hit"     onclick="setPredFilter(this,'hit')">Hits</button>
         <button class="pred-filter"        data-filter="miss"    onclick="setPredFilter(this,'miss')">Misses</button>
+
+        <select class="pred-league-select" id="pred-league-select" onchange="renderPredictions()">
+          <option value="all">All Leagues</option>
+        </select>
+
         <button class="pred-refresh" onclick="loadPredictions()">↺ REFRESH</button>
       </div>
 
-      <!-- Predictions list -->
       <div id="pred-list">
         <div class="pred-loading">LOADING PREDICTIONS…</div>
       </div>
 
     </div>
-  </div><!-- /#page-predictions -->
+  </div>
 
   <script>
-    // ── State ───────────────────────────────────────────────────────
     const $ = id => document.getElementById(id);
-    let resolveTimer = null;
+    let resolveTimer  = null;
     let leaguesLoaded = false;
 
-    // ── Set default date = today ────────────────────────────────────
     (function setToday() {
       const now = new Date();
       const y = now.getFullYear();
@@ -1130,15 +1023,12 @@
       $('match-date').value = `${y}-${m}-${d}`;
     })();
 
-    // ── Mode detection based on date ─────────────────────────────────
     function updateModePill() {
       const val = $('match-date').value;
       if (!val) return;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = new Date(); today.setHours(0,0,0,0);
       const picked = new Date(val + 'T00:00:00');
       const isFuture = picked >= today;
-
       const pill = $('mode-pill');
       const text = $('mode-pill-text');
       if (isFuture) {
@@ -1153,21 +1043,16 @@
     $('match-date').addEventListener('change', updateModePill);
     updateModePill();
 
-    // ── Load leagues ────────────────────────────────────────────────
     async function loadLeagues() {
       try {
         const res = await fetch('/api/league-list');
         const leagues = await res.json();
         const sel = $('league');
         sel.innerHTML = '';
-
         const blank = document.createElement('option');
-        blank.value = '';
-        blank.disabled = true;
-        blank.selected = true;
+        blank.value = ''; blank.disabled = true; blank.selected = true;
         blank.textContent = 'Select league…';
         sel.appendChild(blank);
-
         leagues
           .sort((a, b) => (a.name || a.code).localeCompare(b.name || b.code))
           .forEach(({ code, name, flag }) => {
@@ -1176,7 +1061,6 @@
             opt.textContent = flag ? `${flag} ${name}` : name || code;
             sel.appendChild(opt);
           });
-
         leaguesLoaded = true;
       } catch (err) {
         console.error('Failed loading leagues:', err);
@@ -1186,7 +1070,6 @@
 
     document.addEventListener('DOMContentLoaded', loadLeagues);
 
-    // ── Auto-resolve league ──────────────────────────────────────────
     function scheduleResolve() {
       clearTimeout(resolveTimer);
       resolveTimer = setTimeout(resolveLeague, 250);
@@ -1196,14 +1079,11 @@
       const a = $('home-team').value.trim();
       const b = $('away-team').value.trim();
       if (!a || !b) return;
-
       const hint = $('league-hint');
       const sel  = $('league');
-
       try {
         const res  = await fetch(`/api/resolve-league?team_a=${encodeURIComponent(a)}&team_b=${encodeURIComponent(b)}`);
         const data = await res.json();
-
         if (data.resolved && data.league_code) {
           sel.value = data.league_code;
           sel.className = 'field-input resolved';
@@ -1214,62 +1094,41 @@
           hint.textContent = '⚠ League not auto-detected — select manually';
           hint.className = 'league-hint warn';
         }
-      } catch (err) {
-        // Silent fail — user can select manually
-      }
+      } catch (err) { /* silent */ }
     }
 
-    $('home-team').addEventListener('input',  scheduleResolve);
-    $('away-team').addEventListener('input',  scheduleResolve);
-    $('home-team').addEventListener('blur',   scheduleResolve);
-    $('away-team').addEventListener('blur',   scheduleResolve);
+    $('home-team').addEventListener('input', scheduleResolve);
+    $('away-team').addEventListener('input', scheduleResolve);
+    $('home-team').addEventListener('blur',  scheduleResolve);
+    $('away-team').addEventListener('blur',  scheduleResolve);
 
-    // ── Submit ───────────────────────────────────────────────────────
     $('athena-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-
       const homeTeam   = $('home-team').value.trim();
       const awayTeam   = $('away-team').value.trim();
       const matchDate  = $('match-date').value;
       const leagueCode = $('league').value;
-
       if (!homeTeam || !awayTeam || !matchDate || !leagueCode) {
         showError('Please fill in all fields.');
         return;
       }
-
-      // Determine mode
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = new Date(); today.setHours(0,0,0,0);
       const picked = new Date(matchDate + 'T00:00:00');
       const isFuture = picked >= today;
       const endpoint = isFuture ? '/api/futurematch' : '/api/retrosim';
-
-      const payload = {
-        league_code: leagueCode,
-        home_team:   homeTeam,
-        away_team:   awayTeam,
-        match_date:  matchDate,
-      };
-
-      setLoading(true);
-      hideError();
-      hideResult();
-
+      const payload = { league_code: leagueCode, home_team: homeTeam, away_team: awayTeam, match_date: matchDate };
+      setLoading(true); hideError(); hideResult();
       try {
-        const res  = await fetch(endpoint, {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-
         if (!res.ok) {
           const err = await res.json().catch(() => ({ detail: res.statusText }));
           throw new Error(err.detail || `HTTP ${res.status}`);
         }
-
-        const data = await res.json();
-        renderResult(data);
+        renderResult(await res.json());
       } catch (err) {
         showError(err.message || 'Unexpected error. Check the API.');
       } finally {
@@ -1277,41 +1136,26 @@
       }
     });
 
-    // ── Render result ────────────────────────────────────────────────
     function renderResult(d) {
       const isFuture = d.mode === 'futurematch';
-
-      // Header
       $('res-fixture').textContent = d.fixture || '—';
       const badge = $('res-mode-badge');
       badge.textContent = isFuture ? 'Futurematch' : 'Retrosim';
       badge.className = `result-mode-badge ${isFuture ? 'future' : 'retro'}`;
-
-      // Main play
       const tp = d.translated_play || {};
       $('res-market').textContent = tp.market || '—';
-
-      // Confidence bar
       const confMap = { HIGH: 90, MEDIUM: 60, LOW: 30 };
       const confPct = confMap[tp.confidence] || Math.round((d.confidence_score || 0) * 100);
       $('res-conf-bar').style.width = confPct + '%';
       $('res-conf-label').textContent = tp.confidence || (d.confidence_score != null ? (d.confidence_score * 100).toFixed(0) + '%' : '—');
-
-      // Stats
       const cor = d.corridor || {};
-      $('res-corridor').textContent = (cor.low != null && cor.high != null)
-        ? `${cor.low} – ${cor.high}` : '—';
-
+      $('res-corridor').textContent = (cor.low != null && cor.high != null) ? `${cor.low} – ${cor.high}` : '—';
       const lean = (cor.lean || '').toUpperCase();
       const leanEl = $('res-lean');
       leanEl.textContent = lean || '—';
       leanEl.className = `stat-val ${lean === 'OVER' ? 'lean-over' : lean === 'UNDER' ? 'lean-under' : ''}`;
-
       const inp = d.inputs_used || {};
-      $('res-p2plus').textContent = inp.p_two_plus != null
-        ? (inp.p_two_plus * 100).toFixed(1) + '%' : '—';
-
-      // Flags + modules
+      $('res-p2plus').textContent = inp.p_two_plus != null ? (inp.p_two_plus * 100).toFixed(1) + '%' : '—';
       const allFlags = [...(d.safety_flags || []), ...(d.applied_modules || [])];
       const flagsSection = $('flags-section');
       if (allFlags.length > 0) {
@@ -1319,63 +1163,43 @@
         flagsRow.innerHTML = '';
         (d.safety_flags || []).forEach(f => {
           const chip = document.createElement('span');
-          chip.className = 'flag-chip';
-          chip.textContent = f;
-          flagsRow.appendChild(chip);
+          chip.className = 'flag-chip'; chip.textContent = f; flagsRow.appendChild(chip);
         });
         (d.applied_modules || []).forEach(m => {
           const chip = document.createElement('span');
-          chip.className = 'flag-chip module';
-          chip.textContent = m;
-          flagsRow.appendChild(chip);
+          chip.className = 'flag-chip module'; chip.textContent = m; flagsRow.appendChild(chip);
         });
         flagsSection.classList.remove('hidden');
       } else {
         flagsSection.classList.add('hidden');
       }
-
-      // Inputs used
       const fmt = v => v != null ? String(v) : null;
-      setInputStat('in-sot',       fmt(inp.sot_proj_total));
-      setInputStat('in-support',   fmt(inp.support_idx_over_delta));
-      setInputStat('in-home-tt',   inp.p_home_tt05 != null ? (inp.p_home_tt05 * 100).toFixed(1) + '%' : null);
-      setInputStat('in-away-tt',   inp.p_away_tt05 != null ? (inp.p_away_tt05 * 100).toFixed(1) + '%' : null);
-      setInputStat('in-tempo',     fmt(inp.tempo_index));
-      setInputStat('in-conf-score',d.confidence_score != null ? (d.confidence_score * 100).toFixed(0) + '%' : null);
-
+      setInputStat('in-sot',        fmt(inp.sot_proj_total));
+      setInputStat('in-support',    fmt(inp.support_idx_over_delta));
+      setInputStat('in-home-tt',    inp.p_home_tt05 != null ? (inp.p_home_tt05 * 100).toFixed(1) + '%' : null);
+      setInputStat('in-away-tt',    inp.p_away_tt05 != null ? (inp.p_away_tt05 * 100).toFixed(1) + '%' : null);
+      setInputStat('in-tempo',      fmt(inp.tempo_index));
+      setInputStat('in-conf-score', d.confidence_score != null ? (d.confidence_score * 100).toFixed(0) + '%' : null);
       $('result-card').classList.remove('hidden');
       $('result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     function setInputStat(id, val) {
       const el = $(id);
-      if (val != null) {
-        el.textContent = val;
-        el.className = 'input-stat-val';
-      } else {
-        el.textContent = 'n/a';
-        el.className = 'input-stat-val null-val';
-      }
+      if (val != null) { el.textContent = val; el.className = 'input-stat-val'; }
+      else             { el.textContent = 'n/a'; el.className = 'input-stat-val null-val'; }
     }
 
-    // ── UI helpers ───────────────────────────────────────────────────
     function setLoading(on) {
       $('btn-run').disabled = on;
       $('btn-run').textContent = on ? 'RUNNING…' : 'RUN ATHENA';
-      const bar = $('loading-bar');
-      bar.className = on ? 'loading-bar active' : 'loading-bar';
+      $('loading-bar').className = on ? 'loading-bar active' : 'loading-bar';
     }
 
-    function showError(msg) {
-      const el = $('error-card');
-      el.textContent = '⚠ ' + msg;
-      el.classList.remove('hidden');
-    }
+    function showError(msg)  { const el = $('error-card'); el.textContent = '⚠ ' + msg; el.classList.remove('hidden'); }
+    function hideError()     { $('error-card').classList.add('hidden'); }
+    function hideResult()    { $('result-card').classList.add('hidden'); }
 
-    function hideError()  { $('error-card').classList.add('hidden'); }
-    function hideResult() { $('result-card').classList.add('hidden'); }
-
-    // ── Page navigation ───────────────────────────────────────────────
     function showPage(name) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -1384,19 +1208,35 @@
       if (name === 'predictions') loadPredictions();
     }
 
-    // ── Predictions page ──────────────────────────────────────────────
+    // ── Predictions ──────────────────────────────────────────────────
     let predData   = null;
     let predFilter = 'all';
 
     async function loadPredictions() {
       $('pred-list').innerHTML = '<div class="pred-loading">LOADING PREDICTIONS…</div>';
       try {
-        const res  = await fetch('/api/predictions?days=30');
-        predData   = await res.json();
+        const res = await fetch('/api/predictions?days=30');
+        predData  = await res.json();
+        populateLeagueFilter();
         renderPredictions();
       } catch (err) {
         $('pred-list').innerHTML = `<div class="pred-empty">Error loading predictions: ${err.message}</div>`;
       }
+    }
+
+    function populateLeagueFilter() {
+      if (!predData) return;
+      const allPreds = Object.values(predData.by_date || {}).flat();
+      const leagues  = [...new Set(allPreds.map(p => p.league_code).filter(Boolean))].sort();
+      const sel      = $('pred-league-select');
+      const current  = sel.value;
+      sel.innerHTML  = '<option value="all">All Leagues</option>';
+      leagues.forEach(code => {
+        const opt = document.createElement('option');
+        opt.value = code; opt.textContent = code;
+        sel.appendChild(opt);
+      });
+      if (current && leagues.includes(current)) sel.value = current;
     }
 
     function setPredFilter(btn, filter) {
@@ -1409,34 +1249,33 @@
     function renderPredictions() {
       if (!predData) return;
 
-      const byDate   = predData.by_date || {};
-      const allPreds = Object.values(byDate).flat();
+      const byDate       = predData.by_date || {};
+      const leagueFilter = $('pred-league-select').value;
+      const allPreds     = Object.values(byDate).flat();
 
-      // Summary counts
+      // Summary always reflects full dataset
       const hits    = allPreds.filter(p => p.status === 'hit').length;
       const misses  = allPreds.filter(p => p.status === 'miss').length;
       const pending = allPreds.filter(p => p.status === 'pending').length;
-      const hitRate = hits + misses > 0
-        ? (hits / (hits + misses) * 100).toFixed(1) + '%'
-        : '—';
-
+      const hitRate = hits + misses > 0 ? (hits / (hits + misses) * 100).toFixed(1) + '%' : '—';
       $('sum-total').textContent   = allPreds.length;
       $('sum-hits').textContent    = hits;
       $('sum-misses').textContent  = misses;
       $('sum-pending').textContent = pending;
       $('sum-hitrate').textContent = hitRate;
 
-      // Filter
-      const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
+      // Sort dates ascending — soonest first
+      const dates = Object.keys(byDate).sort((a, b) => a.localeCompare(b));
       const list  = $('pred-list');
       list.innerHTML = '';
-
       let totalShown = 0;
 
       dates.forEach(d => {
-        const cards = byDate[d].filter(p =>
-          predFilter === 'all' || p.status === predFilter
-        );
+        const cards = byDate[d].filter(p => {
+          const statusOk = predFilter === 'all' || p.status === predFilter;
+          const leagueOk = leagueFilter === 'all' || p.league_code === leagueFilter;
+          return statusOk && leagueOk;
+        });
         if (!cards.length) return;
         totalShown += cards.length;
 
@@ -1450,27 +1289,22 @@
 
         const grid = document.createElement('div');
         grid.className = 'pred-cards';
-
-        cards.forEach(p => {
-          grid.appendChild(buildPredCard(p));
-        });
-
+        cards.forEach(p => grid.appendChild(buildPredCard(p)));
         group.appendChild(grid);
         list.appendChild(group);
       });
 
       if (totalShown === 0) {
-        list.innerHTML = `<div class="pred-empty">NO ${predFilter === 'all' ? '' : predFilter.toUpperCase() + ' '}PREDICTIONS FOUND</div>`;
+        const suffix = leagueFilter !== 'all' ? ` FOR ${leagueFilter}` : '';
+        list.innerHTML = `<div class="pred-empty">NO ${predFilter === 'all' ? '' : predFilter.toUpperCase() + ' '}PREDICTIONS FOUND${suffix}</div>`;
       }
     }
 
     function buildPredCard(p) {
       const card = document.createElement('div');
       card.className = `pred-card ${p.status}`;
-
       const statusLabels = { pending: '⏳ Pending', hit: '✓ Hit', miss: '✗ Miss', void: '— Void' };
       const leanStr = p.lean ? p.lean.toUpperCase() : '—';
-
       card.innerHTML = `
         <div class="pred-card-top">
           <div class="pred-fixture">${p.home_team}<br><span style="color:var(--muted);font-size:11px">vs</span> ${p.away_team}</div>
@@ -1497,7 +1331,7 @@
     }
 
     function formatPredDate(iso) {
-      const d = new Date(iso + 'T12:00:00');
+      const d     = new Date(iso + 'T12:00:00');
       const today = new Date(); today.setHours(0,0,0,0);
       const tom   = new Date(today); tom.setDate(tom.getDate()+1);
       const dt    = new Date(iso + 'T00:00:00');
