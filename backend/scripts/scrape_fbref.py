@@ -7,7 +7,7 @@ Runs locally only — never on Render.
 
 Usage:
     cd backend
-    venv312\Scripts\activate
+    venv312\\Scripts\\activate
     python -m scripts.scrape_fbref
 
 NOTE: Chrome will open and close for each fetch.
@@ -101,7 +101,7 @@ LEAGUE_MAP = {
     ),
     "MEX-LMX": (
         "https://fbref.com/en/comps/31/schedule/Liga-MX-Scores-and-Fixtures",
-        "https://fbref.com/en/comps/31/2025-2026/schedule/2025-2026-Liga-MX-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/31/2024-2025/schedule/2024-2025-Liga-MX-Scores-and-Fixtures",
     ),
 }
 
@@ -184,7 +184,15 @@ def _normalize_dates(df: pd.DataFrame) -> pd.DataFrame:
 
     raw = df[date_col].astype(str).str.strip()
 
-    parsed = pd.to_datetime(raw, dayfirst=True, errors="coerce")
+    parsed = pd.to_datetime(raw, format="%Y-%m-%d", errors="coerce")
+
+    # For leagues where FBref returns non-ISO formats (DD/MM/YYYY etc.),
+    # re-parse any NaT values with dayfirst=True as fallback
+    mask = parsed.isna() & raw.notna() & (raw != "") & (raw != "nan")
+    if mask.any():
+        fallback = pd.to_datetime(raw[mask], dayfirst=True, errors="coerce")
+        parsed = parsed.copy()
+        parsed[mask] = fallback
 
     # Strip timezone if present
     if hasattr(parsed.dt, "tz") and parsed.dt.tz is not None:
@@ -233,6 +241,16 @@ def _merge_seasons(current: pd.DataFrame | None, previous: pd.DataFrame | None) 
         # Sort chronologically (oldest first — good for asof_features)
         combined[date_col] = pd.to_datetime(combined[date_col], errors="coerce")
         combined = combined.sort_values(date_col, ascending=True).reset_index(drop=True)
+
+        # Strip any matches dated in the future — these are scheduled fixtures
+        # that slipped through the score filter (e.g. Liga MX full-season pages
+        # include upcoming matches). Only keep matches up to and including today.
+        today = pd.Timestamp.now().normalize()
+        before_cutoff = len(combined)
+        combined = combined[combined[date_col] <= today]
+        future_removed = before_cutoff - len(combined)
+        if future_removed:
+            print(f"  Removed {future_removed} future-dated row(s) (after {today.date()})")
 
     print(f"  Combined total: {len(combined)} rows")
     return combined
