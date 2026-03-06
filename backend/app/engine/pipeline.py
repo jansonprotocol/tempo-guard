@@ -7,7 +7,7 @@ from typing import List, Tuple
 from app.engine.types import MatchRequest, Prediction, Corridor, TranslatedPlay
 
 # ── Core constants ────────────────────────────────────────────────────────────
-ROUNDING   = 0.1
+ROUNDING   = 0.01
 HYSTERESIS = 1.0
 
 # BurstSentinel — raised thresholds so it doesn't fire on every high-tempo match
