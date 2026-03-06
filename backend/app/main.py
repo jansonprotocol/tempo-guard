@@ -19,6 +19,7 @@ from app.api.routes_batch import router as batch_router
 from app.database.base import Base
 from app.database.db import engine, SessionLocal
 from app.database.models_fbref import FBrefSnapshot  # registers the new table
+from app.models.team_config import TeamConfig         # registers team_configs table
 
 # Memory loaders
 from app.memory_loader import load_league_configs, load_teams
