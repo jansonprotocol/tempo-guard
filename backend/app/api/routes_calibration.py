@@ -47,11 +47,13 @@ MIN_BIAS        = 0.00
 
 # ── hit_weight helper ──────────────────────────────────────────────
 def hit_weight(result) -> float:
-    if result is True:       return 1.0
-    if result is None:       return 0.75   # half win
-    if result == "half_loss": return 0.25  # half loss
-    if result is False:      return 0.0
-    return -1.0                             # unrecognised
+    # Half-wins = full wins, half-losses = full losses
+    # because bettor always offsets the line before placing.
+    if result is True:        return 1.0
+    if result == "half_win":  return 1.0
+    if result == "half_loss": return 0.0
+    if result is False:       return 0.0
+    return -1.0  # None or unrecognised = skip
 
 
 # ── Response models ────────────────────────────────────────────────
