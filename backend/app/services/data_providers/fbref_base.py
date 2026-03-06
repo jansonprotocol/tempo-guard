@@ -171,6 +171,9 @@ def _resolve_columns(df: pd.DataFrame) -> Dict[str, Optional[str]]:
         "score": col("score", "scores"),
         "soth":  col("home_shots_on_target", "shots_on_target_home", "sot_home"),
         "sota":  col("away_shots_on_target", "shots_on_target_away", "sot_away"),
+        # xG — FBref names home xG "xg" and away xG "xg.1" (pandas duplicate-column suffix)
+        "xhg":   col("xg", "xg_home", "home_xg", "home_expected_goals"),
+        "xag":   col("xg.1", "xg_away", "away_xg", "away_expected_goals", "xg1"),
     }
 
 
@@ -226,6 +229,112 @@ def _find_team_rows(
     )
 
 
+def _compute_xg_matchup_multiplier(
+    H: pd.DataFrame,
+    A: pd.DataFrame,
+    hname: str,
+    aname: str,
+    c: Dict,
+) -> float:
+    """
+    Compute a matchup-aware xG performance multiplier.
+
+    For each team we track two ratios over their last N matches:
+      att_ratio = goals_scored / xG_generated   (finishing quality)
+      def_ratio = goals_conceded / xG_conceded  (defensive solidity)
+
+    The multiplier for the specific matchup:
+      home_expectation = home_att_ratio * away_def_ratio
+      away_expectation = away_att_ratio * home_def_ratio
+      multiplier       = (home_expectation + away_expectation) / 2
+
+    Examples:
+      Clinical home attack (att=1.2) vs leaky away defense (def=1.3)  → home_exp=1.56 → over signal amplified
+      Wasteful home attack (att=0.75) vs solid away defense (def=0.85) → home_exp=0.64 → over signal dampened
+
+    Returns 1.0 (neutral) if xG data is unavailable.
+    Clipped to [0.70, 1.40] to prevent extreme swings.
+    """
+    xhg_col = c.get("xhg")
+    xag_col = c.get("xag")
+    hg_col  = c.get("hg")
+    ag_col  = c.get("ag")
+    ht_col  = c.get("ht")
+
+    if not all([xhg_col, xag_col, hg_col, ag_col, ht_col]):
+        return 1.0  # no xG data available — neutral
+
+    def _xg_ratios(frame: pd.DataFrame, team_lc: str):
+        """
+        Returns (att_ratio, def_ratio) for a team from its recent match frame.
+        att_ratio: goals scored / xG generated
+        def_ratio: goals conceded / xG conceded
+        Both represent real output vs expected — higher means better/worse than expected.
+        """
+        goals_scored  = 0.0
+        goals_conceded= 0.0
+        xg_generated  = 0.0
+        xg_conceded   = 0.0
+
+        for _, r in frame.iterrows():
+            try:
+                is_home = _norm(str(r[ht_col])) == team_lc
+                hg  = float(r[hg_col])  if pd.notnull(r[hg_col])  else 0.0
+                ag  = float(r[ag_col])  if pd.notnull(r[ag_col])  else 0.0
+                xhg = float(r[xhg_col]) if pd.notnull(r[xhg_col]) else None
+                xag = float(r[xag_col]) if pd.notnull(r[xag_col]) else None
+
+                if xhg is None or xag is None:
+                    continue  # skip rows without xG
+
+                if is_home:
+                    goals_scored   += hg
+                    goals_conceded += ag
+                    xg_generated   += xhg
+                    xg_conceded    += xag
+                else:
+                    goals_scored   += ag
+                    goals_conceded += hg
+                    xg_generated   += xag
+                    xg_conceded    += xhg
+            except (ValueError, TypeError):
+                continue
+
+        if xg_generated < 1.0 or xg_conceded < 1.0:
+            return None, None  # insufficient xG data
+
+        att_ratio = goals_scored   / xg_generated
+        def_ratio = goals_conceded / xg_conceded
+        return att_ratio, def_ratio
+
+    h_lc = _norm(hname)
+    a_lc = _norm(aname)
+
+    h_att, h_def = _xg_ratios(H, h_lc)
+    a_att, a_def = _xg_ratios(A, a_lc)
+
+    if None in (h_att, h_def, a_att, a_def):
+        return 1.0  # insufficient xG coverage — neutral
+
+    # Matchup context:
+    # How many goals will home team actually score vs this away defense?
+    # How many goals will away team actually score vs this home defense?
+    home_expectation = h_att * a_def   # home finishing quality vs away defensive generosity
+    away_expectation = a_att * h_def   # away finishing quality vs home defensive generosity
+
+    multiplier = (home_expectation + away_expectation) / 2.0
+
+    clipped = _clip(multiplier, 0.70, 1.40)
+    print(
+        f"[fbref_base] xG matchup: "
+        f"h_att={h_att:.2f} h_def={h_def:.2f} | "
+        f"a_att={a_att:.2f} a_def={a_def:.2f} → "
+        f"multiplier={multiplier:.3f} (clipped={clipped:.3f})"
+    )
+    return clipped
+
+
+
 def _compute_features_from_frames(
     H: pd.DataFrame,
     A: pd.DataFrame,
@@ -278,6 +387,15 @@ def _compute_features_from_frames(
             ratio_sot = _clip(agg["sot"].sum() / agg["goals"].sum(), 2.2, 4.5)
 
     mu_total = max(0.2, gfh + gfa)
+
+    # ── xG matchup multiplier ──────────────────────────────────────────
+    # Adjusts mu_total based on each team's historical finishing quality
+    # vs the opponent's historical defensive solidity.
+    # Returns 1.0 (neutral) if xG columns are absent in the snapshot.
+    xg_c = _resolve_columns(full_df)
+    xg_multiplier = _compute_xg_matchup_multiplier(H, A, hname, aname, xg_c)
+    mu_total = max(0.2, mu_total * xg_multiplier)
+
     p0       = math.exp(-mu_total)
     p1       = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
