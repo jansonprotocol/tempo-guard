@@ -60,6 +60,13 @@ class PredictionLog(Base):
     sot_proj_total  = Column(Float,   nullable=True)
     support_delta   = Column(Float,   nullable=True)
 
+    # Variance flag (set at predict time from latest CalibrationLog hit rate)
+    # "green"  = hit rate >= 80%  (safe)
+    # "orange" = hit rate 70-79%  (medium variance)
+    # "red"    = hit rate 60-69%  (high variance)
+    # None     = no calibration data yet
+    variance_flag   = Column(String,  nullable=True)
+
     # Validation
     status          = Column(String,  default="pending", index=True)
     # pending → awaiting result
@@ -80,3 +87,30 @@ class PredictionLog(Base):
             f"{self.home_team} vs {self.away_team} "
             f"{self.match_date} [{self.status}]>"
         )
+
+
+class CalibrationLog(Base):
+    """
+    Records each calibration run for a league.
+    Used to drive the variance flag on PredictionLog entries.
+    """
+    __tablename__ = "calibration_log"
+
+    id           = Column(Integer,  primary_key=True, autoincrement=True)
+    league_code  = Column(String,   nullable=False, index=True)
+    hit_rate     = Column(Float,    nullable=False)   # 0.0 – 100.0
+    sample_size  = Column(Integer,  nullable=True)    # number of evaluated predictions
+    applied      = Column(Boolean,  default=False)    # was apply=true used?
+    run_at       = Column(DateTime, default=datetime.utcnow)
+
+    @property
+    def variance_flag(self) -> str:
+        if self.hit_rate >= 80:
+            return "green"
+        elif self.hit_rate >= 70:
+            return "orange"
+        else:
+            return "red"
+
+    def __repr__(self):
+        return f"<CalibrationLog {self.league_code} {self.hit_rate:.1f}% [{self.variance_flag}]>"
