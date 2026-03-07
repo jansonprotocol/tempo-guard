@@ -33,6 +33,9 @@ from app.database.models_fbref import FBrefSnapshot
 SLEEP_BETWEEN_FETCHES = 4   # seconds between each browser fetch
 SLEEP_BETWEEN_LEAGUES = 6   # seconds between leagues
 
+# Set to True via --headless flag (used in CI / GitHub Actions)
+HEADLESS = False
+
 # ── League map ─────────────────────────────────────────────────────────────────
 # Each entry: (current_url, prev_url)
 # European leagues run Aug–May  → 2025-2026 current, 2024-2025 previous
@@ -112,9 +115,10 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
     print(f"  Fetching [{label}]: {url}")
     driver = None
     try:
-        driver = Driver(uc=True, headless=False)
+        driver = Driver(uc=True, headless=HEADLESS)
         driver.uc_open_with_reconnect(url, 4)
-        driver.uc_gui_click_captcha()
+        if not HEADLESS:
+            driver.uc_gui_click_captcha()
         time.sleep(3)
         html = driver.get_page_source()
     except Exception as e:
@@ -315,7 +319,15 @@ if __name__ == "__main__":
         "--league", type=str, default=None,
         help="Scrape a single league only (e.g. --league MEX-LMX)"
     )
+    parser.add_argument(
+        "--headless", action="store_true",
+        help="Run Chrome in headless mode (for CI / GitHub Actions)"
+    )
     args = parser.parse_args()
+
+    if args.headless:
+        HEADLESS = True
+        print("[scraper] Running in headless mode (no browser window)")
 
     if args.league:
         if args.league not in LEAGUE_MAP:
