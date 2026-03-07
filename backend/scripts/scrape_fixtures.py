@@ -12,7 +12,7 @@ Run time: ~6-8 minutes for all 16 leagues (vs 15-20 for full scraper)
 
 Usage:
     cd backend
-    venv312\Scripts\activate
+    venv312\\Scripts\\activate
     python -m scripts.scrape_fixtures
 
 NOTE: Chrome opens once per league. Do not click anything.
@@ -44,6 +44,9 @@ Base.metadata.create_all(bind=engine)
 FIXTURE_DAYS        = 5     # how many days ahead to store fixtures
 SLEEP_BETWEEN       = 4     # seconds between leagues
 
+# Set to True via --headless flag (used in CI / GitHub Actions)
+HEADLESS = False
+
 # ── Current season URLs only ───────────────────────────────────────────────────
 LEAGUE_MAP = {
     "ENG-PL":  "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures",
@@ -69,9 +72,10 @@ def _fetch_page(url: str, league_code: str) -> str | None:
     print(f"  Opening Chrome for {league_code}...")
     driver = None
     try:
-        driver = Driver(uc=True, headless=False)
+        driver = Driver(uc=True, headless=HEADLESS)
         driver.uc_open_with_reconnect(url, 4)
-        driver.uc_gui_click_captcha()
+        if not HEADLESS:
+            driver.uc_gui_click_captcha()
         time.sleep(3)
         html = driver.get_page_source()
         print(f"  Page loaded ({len(html)} bytes)")
@@ -267,15 +271,37 @@ def _upsert_fixtures(
 
 
 if __name__ == "__main__":
-    print("[fixtures] Starting daily fixture scrape")
-    print(f"[fixtures] Storing upcoming matches for next {FIXTURE_DAYS} days")
-    print(f"[fixtures] Leagues: {list(LEAGUE_MAP.keys())}\n")
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--league", type=str, default=None,
+        help="Scrape a single league only (e.g. --league MEX-LMX)"
+    )
+    parser.add_argument(
+        "--headless", action="store_true",
+        help="Run Chrome in headless mode (for CI / GitHub Actions)"
+    )
+    args = parser.parse_args()
 
-    codes = list(LEAGUE_MAP.keys())
-    for i, (code, url) in enumerate(LEAGUE_MAP.items()):
-        scrape_league(code, url)
-        if i < len(codes) - 1:
-            print(f"\n  Waiting {SLEEP_BETWEEN}s...")
-            time.sleep(SLEEP_BETWEEN)
+    if args.headless:
+        HEADLESS = True
+        print("[fixtures] Running in headless mode (no browser window)")
+
+    if args.league:
+        if args.league not in LEAGUE_MAP:
+            print(f"[fixtures] Unknown league: {args.league}. Available: {list(LEAGUE_MAP.keys())}")
+        else:
+            scrape_league(args.league, LEAGUE_MAP[args.league])
+    else:
+        print("[fixtures] Starting daily fixture scrape")
+        print(f"[fixtures] Storing upcoming matches for next {FIXTURE_DAYS} days")
+        print(f"[fixtures] Leagues: {list(LEAGUE_MAP.keys())}\n")
+
+        codes = list(LEAGUE_MAP.keys())
+        for i, (code, url) in enumerate(LEAGUE_MAP.items()):
+            scrape_league(code, url)
+            if i < len(codes) - 1:
+                print(f"\n  Waiting {SLEEP_BETWEEN}s...")
+                time.sleep(SLEEP_BETWEEN)
 
     print("\n[fixtures] Done.")
