@@ -89,7 +89,8 @@ def _fetch_via_scraperapi(url: str, league_code: str) -> str | None:
             params={
                 "api_key": SCRAPER_API_KEY,
                 "url": url,
-                "render": "true",   # enables JS rendering
+                "render": "true",
+                "premium": "true",
             },
             timeout=60,
         )
