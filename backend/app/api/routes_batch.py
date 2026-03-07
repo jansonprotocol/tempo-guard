@@ -186,7 +186,7 @@ def batch_validate(
     today = date.today()
 
     pending = db.query(PredictionLog).filter(
-        PredictionLog.status     == "pending",
+        PredictionLog.status.in_(["pending", "void"]),
         PredictionLog.match_date <  today,
     ).order_by(PredictionLog.match_date).all()
 
