@@ -29,7 +29,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.database.db import SessionLocal
-from app.database.models_predictions import FBrefFixture, PredictionLog, Base
+from app.database.models_predictions import FBrefFixture, PredictionLog, CalibrationLog, Base
 from app.database.db import engine
 from app.engine.types import MatchRequest
 from app.services.predict import predict_match
@@ -52,44 +52,88 @@ def get_db():
         db.close()
 
 
+
+def _get_variance_flag(league_code: str, db) -> str | None:
+    """Return variance flag based on latest calibration hit rate for a league."""
+    latest = (
+        db.query(CalibrationLog)
+        .filter(CalibrationLog.league_code == league_code)
+        .order_by(CalibrationLog.run_at.desc())
+        .first()
+    )
+    if not latest:
+        return None
+    if latest.hit_rate >= 80:
+        return "green"
+    elif latest.hit_rate >= 70:
+        return "orange"
+    else:
+        return "red"
+
+
 # ── POST /api/batch-predict ────────────────────────────────────────────────────
 
 @router.post("/batch-predict")
 def batch_predict(
-    days_ahead: int = Query(FIXTURE_DAYS, ge=1, le=14,
+    days_ahead: int = Query(FIXTURE_DAYS, ge=1, le=60,
                             description="How many days ahead to predict"),
     dry_run: bool = Query(False, description="If true, preview without saving"),
+    force: bool = Query(False, description="If true, delete existing pending predictions and re-predict"),
+    league_code: Optional[str] = Query(None, description="Limit to a single league"),
     db: Session = Depends(get_db),
 ):
     """
     Generate ATHENA predictions for all upcoming fixtures.
     Skips fixtures already predicted (pending/hit/miss).
+    Use ?force=true to wipe pending entries and re-predict.
+    Use ?league_code=AUT-BL to target a single league.
     """
     today  = date.today()
     cutoff = today + timedelta(days=days_ahead)
 
-    fixtures = db.query(FBrefFixture).filter(
+    q = db.query(FBrefFixture).filter(
         FBrefFixture.match_date >= today,
         FBrefFixture.match_date <= cutoff,
-    ).order_by(FBrefFixture.match_date).all()
+    )
+    if league_code:
+        q = q.filter(FBrefFixture.league_code == league_code)
+
+    fixtures = q.order_by(FBrefFixture.match_date).all()
 
     if not fixtures:
         return {"message": "No fixtures found in window.", "days_ahead": days_ahead, "predicted": 0}
 
+    # force=true: wipe pending entries so they get re-predicted fresh
+    if force and not dry_run:
+        deleted = 0
+        for fix in fixtures:
+            n = db.query(PredictionLog).filter(
+                PredictionLog.league_code == fix.league_code,
+                PredictionLog.home_team   == fix.home_team,
+                PredictionLog.away_team   == fix.away_team,
+                PredictionLog.match_date  == fix.match_date,
+                PredictionLog.status      == "pending",
+            ).delete()
+            deleted += n
+        db.commit()
+
     predicted = skipped = errors = 0
     results = []
+    skipped_by_league: dict = {}
 
     for fix in fixtures:
-        # Skip if already predicted
+        # Skip if already has a live/settled prediction (void entries get retried)
         existing = db.query(PredictionLog).filter(
             PredictionLog.league_code == fix.league_code,
             PredictionLog.home_team   == fix.home_team,
             PredictionLog.away_team   == fix.away_team,
             PredictionLog.match_date  == fix.match_date,
+            PredictionLog.status.in_(["pending", "hit", "miss"]),
         ).first()
 
         if existing:
             skipped += 1
+            skipped_by_league[fix.league_code] = skipped_by_league.get(fix.league_code, 0) + 1
             continue
 
         try:
@@ -126,6 +170,7 @@ def batch_predict(
                 "corridor_high":  pred.corridor.high,
                 "lean":           pred.corridor.lean,
                 "confidence_score": pred.confidence_score,
+                "variance_flag": _get_variance_flag(fix.league_code, db),
             }
             results.append(entry)
 
@@ -148,6 +193,7 @@ def batch_predict(
                     sot_proj_total=metrics.get("sot_proj_total"),
                     support_delta=metrics.get("support_idx_over_delta"),
                     status="pending",
+                    variance_flag=_get_variance_flag(fix.league_code, db),
                     predicted_at=datetime.utcnow(),
                 )
                 db.add(log)
@@ -155,19 +201,21 @@ def batch_predict(
 
         except Exception as e:
             errors += 1
-            print(f"[batch-predict] Error {fix.home_team} vs {fix.away_team}: {e}")
+            print(f"[batch-predict] Error {fix.league_code} {fix.home_team} vs {fix.away_team}: {e}")
             continue
 
     if not dry_run:
         db.commit()
 
     return {
-        "dry_run":   dry_run,
-        "fixtures_found": len(fixtures),
-        "predicted": predicted,
-        "skipped":   skipped,
-        "errors":    errors,
-        "results":   results if dry_run else [],
+        "dry_run":          dry_run,
+        "fixtures_found":   len(fixtures),
+        "predicted":        predicted,
+        "skipped":          skipped,
+        "skipped_by_league": skipped_by_league,
+        "errors":           errors,
+        "tip": "Use ?force=true to wipe pending and re-predict. Use ?days_ahead=30. Use ?league_code=X to target one league." if skipped == len(fixtures) and skipped > 0 else None,
+        "results":          results if dry_run else [],
     }
 
 
@@ -365,9 +413,73 @@ def get_predictions(
             "tempo_index":    r.tempo_index,
             "predicted_at":   r.predicted_at.isoformat() if r.predicted_at else None,
             "evaluated_at":   r.evaluated_at.isoformat() if r.evaluated_at else None,
+            "variance_flag":  r.variance_flag,
         })
 
     return {
         "total":    len(rows),
         "by_date":  grouped,
+    }
+
+# ── GET /api/fixtures-debug ────────────────────────────────────────────────────
+
+@router.get("/fixtures-debug")
+def fixtures_debug(
+    days_ahead: int = Query(60, ge=1, le=365),
+    db: Session = Depends(get_db),
+):
+    """
+    Shows everything in FBrefFixture — grouped by league with dates.
+    Use this to diagnose why batch-predict isn't seeing new fixtures.
+    """
+    from datetime import date, timedelta
+
+    today  = date.today()
+    cutoff = today + timedelta(days=days_ahead)
+
+    all_fixtures = db.query(FBrefFixture).order_by(
+        FBrefFixture.league_code, FBrefFixture.match_date
+    ).all()
+
+    window_fixtures = [f for f in all_fixtures
+                       if today <= f.match_date <= cutoff]
+
+    # Group all fixtures by league
+    by_league: dict = {}
+    for f in all_fixtures:
+        lc = f.league_code
+        if lc not in by_league:
+            by_league[lc] = []
+        by_league[lc].append(f.match_date.isoformat())
+
+    # Group window fixtures by league
+    window_by_league: dict = {}
+    for f in window_fixtures:
+        lc = f.league_code
+        if lc not in window_by_league:
+            window_by_league[lc] = []
+        window_by_league[lc].append(f.match_date.isoformat())
+
+    # Check which of those have existing predictions
+    skipped_by_league: dict = {}
+    for f in window_fixtures:
+        existing = db.query(PredictionLog).filter(
+            PredictionLog.league_code == f.league_code,
+            PredictionLog.home_team   == f.home_team,
+            PredictionLog.away_team   == f.away_team,
+            PredictionLog.match_date  == f.match_date,
+            PredictionLog.status.in_(["pending", "hit", "miss"]),
+        ).first()
+        if existing:
+            lc = f.league_code
+            skipped_by_league[lc] = skipped_by_league.get(lc, 0) + 1
+
+    return {
+        "today":              today.isoformat(),
+        "window":             f"{today} → {cutoff}",
+        "total_in_db":        len(all_fixtures),
+        "total_in_window":    len(window_fixtures),
+        "all_leagues_in_db":  {lc: len(dates) for lc, dates in by_league.items()},
+        "leagues_in_window":  {lc: dates for lc, dates in window_by_league.items()},
+        "already_predicted":  skipped_by_league,
     }
