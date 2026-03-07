@@ -526,3 +526,55 @@ def migrate_add_variance_flag(db: Session = Depends(get_db)):
         results["calibration_log"] = "already exists"
 
     return {"status": "ok", "migrations": results}
+
+
+# ── POST /api/migrate/backfill-variance-flags ─────────────────────────────────
+
+@router.post("/migrate/backfill-variance-flags")
+def backfill_variance_flags(db: Session = Depends(get_db)):
+    """
+    One-time backfill: stamps variance_flag on all existing PredictionLog rows
+    that currently have variance_flag = NULL, using the latest CalibrationLog
+    hit rate for each league.
+    """
+    from sqlalchemy import text
+
+    # Get latest hit rate per league from calibration_log
+    rows = db.execute(text("""
+        SELECT league_code, hit_rate
+        FROM calibration_log
+        WHERE id IN (
+            SELECT MAX(id) FROM calibration_log GROUP BY league_code
+        )
+    """)).fetchall()
+
+    if not rows:
+        return {"status": "no_calibration_data", "message": "Run POST /api/calibrate/all first, then backfill."}
+
+    league_flags = {}
+    for league_code, hit_rate in rows:
+        if hit_rate >= 80:
+            league_flags[league_code] = "green"
+        elif hit_rate >= 70:
+            league_flags[league_code] = "orange"
+        else:
+            league_flags[league_code] = "red"
+
+    updated = 0
+    for league_code, flag in league_flags.items():
+        result = db.execute(text("""
+            UPDATE prediction_log
+            SET variance_flag = :flag
+            WHERE league_code = :league_code
+            AND (variance_flag IS NULL OR variance_flag = '')
+        """), {"flag": flag, "league_code": league_code})
+        updated += result.rowcount
+
+    db.commit()
+
+    return {
+        "status":        "ok",
+        "leagues_found": len(league_flags),
+        "rows_updated":  updated,
+        "flags_applied": league_flags,
+    }
