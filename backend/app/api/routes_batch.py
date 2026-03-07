@@ -413,7 +413,7 @@ def get_predictions(
             "tempo_index":    r.tempo_index,
             "predicted_at":   r.predicted_at.isoformat() if r.predicted_at else None,
             "evaluated_at":   r.evaluated_at.isoformat() if r.evaluated_at else None,
-            "variance_flag":  r.variance_flag,
+            "variance_flag":  getattr(r, "variance_flag", None),
         })
 
     return {
@@ -483,3 +483,46 @@ def fixtures_debug(
         "leagues_in_window":  {lc: dates for lc, dates in window_by_league.items()},
         "already_predicted":  skipped_by_league,
     }
+
+
+# ── POST /api/migrate/add-variance-flag ───────────────────────────────────────
+
+@router.post("/migrate/add-variance-flag")
+def migrate_add_variance_flag(db: Session = Depends(get_db)):
+    """
+    One-time migration: adds variance_flag and calibration_log table to the DB.
+    Safe to run multiple times — skips if columns/tables already exist.
+    """
+    from sqlalchemy import text, inspect
+
+    results = {}
+    inspector = inspect(db.bind)
+
+    # 1. Add variance_flag to prediction_log if missing
+    existing_cols = [c["name"] for c in inspector.get_columns("prediction_log")]
+    if "variance_flag" not in existing_cols:
+        db.execute(text("ALTER TABLE prediction_log ADD COLUMN variance_flag VARCHAR"))
+        db.commit()
+        results["variance_flag"] = "added"
+    else:
+        results["variance_flag"] = "already exists"
+
+    # 2. Create calibration_log table if missing
+    existing_tables = inspector.get_table_names()
+    if "calibration_log" not in existing_tables:
+        db.execute(text("""
+            CREATE TABLE calibration_log (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                league_code VARCHAR NOT NULL,
+                hit_rate    FLOAT   NOT NULL,
+                sample_size INTEGER,
+                applied     BOOLEAN DEFAULT 0,
+                run_at      DATETIME
+            )
+        """))
+        db.commit()
+        results["calibration_log"] = "created"
+    else:
+        results["calibration_log"] = "already exists"
+
+    return {"status": "ok", "migrations": results}
