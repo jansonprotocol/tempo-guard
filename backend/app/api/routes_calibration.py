@@ -32,6 +32,7 @@ from sqlalchemy.orm import Session
 
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
+from app.database.models_predictions import CalibrationLog
 from app.engine.pipeline import evaluate_athena
 from app.engine.types import MatchRequest
 from app.models.league_config import LeagueConfig
@@ -312,19 +313,17 @@ def _suggest_bias(
     return suggestions
 
 
-# ── Main calibration endpoint ──────────────────────────────────────
-@router.get("/calibrate/league", response_model=CalibResult)
-def calibrate_league(
+# ── Shared calibration core ────────────────────────────────────────
+def _run_calibration(
     league_code: str,
-    limit: int = Query(100, ge=10, le=500),
-    min_matches_before: int = Query(3, ge=2, le=20),
-    apply: bool = Query(False),
-    db: Session = Depends(get_db),
-):
+    limit: int,
+    min_matches_before: int,
+    apply: bool,
+    db: Session,
+) -> CalibResult | JSONResponse:
     """
-    Calibrate ATHENA against historical FBref data.
-    Uses lean gap analysis to find the minimum bias shift that flips
-    misses to wins without affecting winning predictions.
+    Core calibration logic shared by single-league and bulk endpoints.
+    Returns CalibResult on success, JSONResponse on error.
     """
     row = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
     if not row:
@@ -726,6 +725,20 @@ def calibrate_league(
 
     suggestion["applied_changes"] = applied_changes
 
+    # ── Log this calibration run ──────────────────────────────────────────────
+    try:
+        calib_entry = CalibrationLog(
+            league_code = league_code,
+            hit_rate    = overall_hit_rate,
+            sample_size = evaluated,
+            applied     = applied,
+            run_at      = __import__("datetime").datetime.utcnow(),
+        )
+        db.add(calib_entry)
+        db.commit()
+    except Exception as _log_err:
+        print(f"[calibration] Warning: could not save CalibrationLog: {_log_err}")
+
     return CalibResult(
         league_code=league_code,
         total_matches=total_matches,
@@ -737,6 +750,97 @@ def calibrate_league(
         applied=applied,
         sample=sample_rows,
     )
+
+
+# ── Main calibration endpoint ──────────────────────────────────────
+@router.get("/calibrate/league", response_model=CalibResult)
+def calibrate_league(
+    league_code: str,
+    limit: int = Query(100, ge=10, le=500),
+    min_matches_before: int = Query(3, ge=2, le=20),
+    apply: bool = Query(False),
+    db: Session = Depends(get_db),
+):
+    """
+    Calibrate ATHENA for a single league.
+    Use apply=true to write the suggested bias adjustments to the DB.
+    """
+    return _run_calibration(league_code, limit, min_matches_before, apply, db)
+
+
+# ── Bulk calibration endpoint ────────────────────────────────────────────────
+@router.post("/calibrate/all")
+def calibrate_all_leagues(
+    limit: int = Query(100, ge=10, le=500, description="Max matches per league"),
+    min_matches_before: int = Query(3, ge=2, le=20),
+    apply: bool = Query(False, description="Write adjustments to DB for all leagues"),
+    db: Session = Depends(get_db),
+):
+    """
+    Run calibration across ALL leagues with a snapshot in the DB.
+    Same logic as /calibrate/league but iterates every league automatically.
+
+    Returns a summary per league — hit rate, variance flag, and whether
+    adjustments were applied. Leagues with insufficient data are skipped
+    and reported under 'skipped'.
+    """
+    from datetime import datetime as dt
+
+    snapshots = db.query(FBrefSnapshot).all()
+    if not snapshots:
+        return {"message": "No snapshots found. Run the scraper first.", "results": []}
+
+    results   = []
+    skipped   = []
+    applied_n = 0
+
+    for snap in snapshots:
+        lc = snap.league_code
+        result = _run_calibration(lc, limit, min_matches_before, apply, db)
+
+        # JSONResponse means an error (no data / insufficient history)
+        if isinstance(result, JSONResponse):
+            import json as _json
+            body = _json.loads(result.body)
+            skipped.append({"league_code": lc, "reason": body.get("detail", "unknown error")})
+            continue
+
+        if result.hit_rate >= 80:
+            vflag = "green"
+        elif result.hit_rate >= 70:
+            vflag = "orange"
+        else:
+            vflag = "red"
+
+        if result.applied:
+            applied_n += 1
+
+        results.append({
+            "league_code":    lc,
+            "hit_rate":       result.overall_hit_rate,
+            "variance_flag":  vflag,
+            "evaluated":      result.evaluated,
+            "total_matches":  result.total_matches,
+            "applied":        result.applied,
+            "bias_suggestion": result.bias_suggestion,
+        })
+
+    results.sort(key=lambda x: x["hit_rate"])  # worst first so easy to scan
+
+    return {
+        "run_at":        dt.utcnow().isoformat(),
+        "apply":         apply,
+        "leagues_run":   len(results),
+        "leagues_skipped": len(skipped),
+        "applied_count": applied_n,
+        "summary": {
+            "green":  sum(1 for r in results if r["variance_flag"] == "green"),
+            "orange": sum(1 for r in results if r["variance_flag"] == "orange"),
+            "red":    sum(1 for r in results if r["variance_flag"] == "red"),
+        },
+        "results": results,
+        "skipped": skipped,
+    }
 
 
 # ── League reset endpoint ──────────────────────────────────────────────────────
