@@ -143,6 +143,26 @@ LEAGUE_MAP = {
         "https://fbref.com/en/comps/36/schedule/Ekstraklasa-Scores-and-Fixtures",
         "https://fbref.com/en/comps/36/2024-2025/schedule/2024-2025-Ekstraklasa-Scores-and-Fixtures",
     ),
+    "AUT-BL": (
+        "https://fbref.com/en/comps/56/schedule/Austrian-Football-Bundesliga-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/56/2024-2025/schedule/2024-2025-Austrian-Football-Bundesliga-Scores-and-Fixtures",
+    ),
+    "SUI-SL": (
+        "https://fbref.com/en/comps/57/schedule/Swiss-Super-League-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/57/2024-2025/schedule/2024-2025-Swiss-Super-League-Scores-and-Fixtures",
+    ),
+    "CHI-LP": (
+        "https://fbref.com/en/comps/35/schedule/Primera-Division-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/35/2024-2025/schedule/2024-2025-Primera-Division-Scores-and-Fixtures",
+    ),
+    "PER-L1": (
+        "https://fbref.com/en/comps/44/schedule/Liga-1-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/44/2024-2025/schedule/2024-2025-Liga-1-Scores-and-Fixtures",
+    ),
+    "POR-LP": (
+        "https://fbref.com/en/comps/32/schedule/Primeira-Liga-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/32/2024-2025/schedule/2024-2025-Primeira-Liga-Scores-and-Fixtures",
+    ),
     # Cuba (CUB-PD) not on FBref — scraping skipped
 }
 
