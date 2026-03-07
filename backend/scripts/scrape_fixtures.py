@@ -20,6 +20,7 @@ NOTE: Chrome opens once per league. Do not click anything.
 from __future__ import annotations
 
 import io
+import os
 import sys
 import time
 from datetime import date, datetime, timedelta
@@ -29,6 +30,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import pandas as pd
+import requests
 from seleniumbase import Driver
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -46,6 +48,9 @@ SLEEP_BETWEEN       = 4     # seconds between leagues
 
 # Set to True via --headless flag (used in CI / GitHub Actions)
 HEADLESS = False
+
+# Set via --api flag or SCRAPER_API_KEY env var (used in CI to bypass Cloudflare)
+SCRAPER_API_KEY: str | None = os.environ.get("SCRAPER_API_KEY")
 
 # ── Current season URLs only ───────────────────────────────────────────────────
 LEAGUE_MAP = {
@@ -69,6 +74,38 @@ LEAGUE_MAP = {
 
 
 def _fetch_page(url: str, league_code: str) -> str | None:
+    """Fetch page via ScraperAPI (CI) or Selenium (local)."""
+    if SCRAPER_API_KEY:
+        return _fetch_via_scraperapi(url, league_code)
+    return _fetch_via_selenium(url, league_code)
+
+
+def _fetch_via_scraperapi(url: str, league_code: str) -> str | None:
+    """Fetch using ScraperAPI — bypasses Cloudflare in CI."""
+    print(f"  Fetching via ScraperAPI [{league_code}]...")
+    try:
+        resp = requests.get(
+            "http://api.scraperapi.com",
+            params={
+                "api_key": SCRAPER_API_KEY,
+                "url": url,
+                "render": "true",   # enables JS rendering
+            },
+            timeout=60,
+        )
+        if resp.status_code != 200:
+            print(f"  ScraperAPI error: HTTP {resp.status_code}")
+            return None
+        html = resp.text
+        print(f"  Page loaded ({len(html)} bytes)")
+        return html
+    except Exception as e:
+        print(f"  ScraperAPI error: {e}")
+        return None
+
+
+def _fetch_via_selenium(url: str, league_code: str) -> str | None:
+    """Fetch using local Selenium + Chrome."""
     print(f"  Opening Chrome for {league_code}...")
     driver = None
     try:
@@ -281,11 +318,19 @@ if __name__ == "__main__":
         "--headless", action="store_true",
         help="Run Chrome in headless mode (for CI / GitHub Actions)"
     )
+    parser.add_argument(
+        "--api", type=str, default=None, metavar="KEY",
+        help="Use ScraperAPI with this key instead of Selenium"
+    )
     args = parser.parse_args()
 
     if args.headless:
         HEADLESS = True
         print("[fixtures] Running in headless mode (no browser window)")
+
+    if args.api:
+        SCRAPER_API_KEY = args.api
+        print("[fixtures] Using ScraperAPI for fetching")
 
     if args.league:
         if args.league not in LEAGUE_MAP:
