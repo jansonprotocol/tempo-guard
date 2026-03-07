@@ -19,5 +19,14 @@
   {"league_code": "UEL",     "base_over_bias": 0.03, "base_under_bias": 0.02, "tempo_factor": 0.55, "safety_mode": true, "aggression_level": 0.50, "volatility": 0.58, "description": "UEFA Europa League"},
   {"league_code": "UECL",    "base_over_bias": 0.03, "base_under_bias": 0.02, "tempo_factor": 0.54, "safety_mode": true, "aggression_level": 0.50, "volatility": 0.57, "description": "UEFA Europa Conference League"},
   {"league_code": "EC",      "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.53, "safety_mode": true, "aggression_level": 0.45, "volatility": 0.50, "description": "European Championship"},
-  {"league_code": "WC",      "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.55, "safety_mode": true, "aggression_level": 0.48, "volatility": 0.55, "description": "World Cup"}
+  {"league_code": "WC",      "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.55, "safety_mode": true, "aggression_level": 0.48, "volatility": 0.55, "description": "World Cup"},
+  {"league_code": "CHN-CSL", "base_over_bias": 0.03, "base_under_bias": 0.02, "tempo_factor": 0.56, "safety_mode": true, "aggression_level": 0.50, "volatility": 0.55, "description": "Chinese Super League"},
+  {"league_code": "JPN-J1",  "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.55, "safety_mode": true, "aggression_level": 0.48, "volatility": 0.50, "description": "J1 League (Japan)"},
+  {"league_code": "COL-PA",  "base_over_bias": 0.03, "base_under_bias": 0.02, "tempo_factor": 0.54, "safety_mode": true, "aggression_level": 0.50, "volatility": 0.55, "description": "Primera A (Colombia)"},
+  {"league_code": "CUB-PD",  "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.50, "safety_mode": true, "aggression_level": 0.45, "volatility": 0.55, "description": "Primera División (Cuba)"},
+  {"league_code": "ITA-SB",  "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.51, "safety_mode": true, "aggression_level": 0.45, "volatility": 0.48, "description": "Serie B (Italy)"},
+  {"league_code": "FRA-L2",  "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.53, "safety_mode": true, "aggression_level": 0.45, "volatility": 0.50, "description": "Ligue 2 (France)"},
+  {"league_code": "GER-B2",  "base_over_bias": 0.03, "base_under_bias": 0.01, "tempo_factor": 0.59, "safety_mode": true, "aggression_level": 0.52, "volatility": 0.52, "description": "2. Bundesliga (Germany)"},
+  {"league_code": "POL-EK",  "base_over_bias": 0.02, "base_under_bias": 0.02, "tempo_factor": 0.54, "safety_mode": true, "aggression_level": 0.48, "volatility": 0.50, "description": "Ekstraklasa (Poland)"},
+  {"league_code": "BRA-SB",  "base_over_bias": 0.03, "base_under_bias": 0.02, "tempo_factor": 0.53, "safety_mode": true, "aggression_level": 0.48, "volatility": 0.55, "description": "Série B (Brazil)"}
 ]
