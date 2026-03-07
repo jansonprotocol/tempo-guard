@@ -336,14 +336,20 @@ def _run_calibration(
     except Exception as e:
         return JSONResponse(status_code=500, content={"detail": f"Could not read snapshot: {e}"})
 
-    score_col = next((c for c in df.columns if c.lower() in ("score", "scores")), None)
+    score_col = next((c for c in df.columns if str(c).lower() in ("score", "scores")), None)
     if score_col and "hg" not in df.columns:
         df = _parse_score_column(df, score_col)
 
     if "hg" not in df.columns or "ag" not in df.columns:
         return JSONResponse(status_code=422, content={"detail": "No parseable score column."})
 
-    col_map  = {c.lower(): c for c in df.columns}
+    # Flatten tuple columns (some FBref leagues use grouped headers)
+    if len(df.columns) > 0 and isinstance(df.columns[0], tuple):
+        df.columns = [
+            " ".join(str(p) for p in col if not str(p).startswith("Unnamed")).strip() or str(col[-1])
+            for col in df.columns
+        ]
+    col_map  = {str(c).lower(): c for c in df.columns}
     date_col = col_map.get("date")
     home_col = col_map.get("home") or col_map.get("home_team")
     away_col = col_map.get("away") or col_map.get("away_team")
@@ -801,13 +807,13 @@ def calibrate_all_leagues(
         # JSONResponse means an error (no data / insufficient history)
         if isinstance(result, JSONResponse):
             import json as _json
-            body = _json.loads(result.body)
+            body = _json.loads(result.body if isinstance(result.body, str) else result.body.decode("utf-8"))
             skipped.append({"league_code": lc, "reason": body.get("detail", "unknown error")})
             continue
 
-        if result.hit_rate >= 80:
+        if result.overall_hit_rate >= 80:
             vflag = "green"
-        elif result.hit_rate >= 70:
+        elif result.overall_hit_rate >= 70:
             vflag = "orange"
         else:
             vflag = "red"
