@@ -15,6 +15,7 @@ NOTE: Chrome will open and close for each fetch.
 """
 
 import io
+import os
 import sys
 import time
 from datetime import datetime
@@ -24,6 +25,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import pandas as pd
+import requests
 from seleniumbase import Driver
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -35,6 +37,9 @@ SLEEP_BETWEEN_LEAGUES = 6   # seconds between leagues
 
 # Set to True via --headless flag (used in CI / GitHub Actions)
 HEADLESS = False
+
+# Set via --api flag or SCRAPER_API_KEY env var (used in CI to bypass Cloudflare)
+SCRAPER_API_KEY: str | None = os.environ.get("SCRAPER_API_KEY")
 
 # ── League map ─────────────────────────────────────────────────────────────────
 # Each entry: (current_url, prev_url)
@@ -109,10 +114,40 @@ LEAGUE_MAP = {
 }
 
 
-# ── Single URL fetch ──────────────────────────────────────────────────────────
-def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
-    """Fetch one FBref fixtures page, return DataFrame or None."""
-    print(f"  Fetching [{label}]: {url}")
+# ── HTML fetch helpers ────────────────────────────────────────────────────────
+def _get_html(url: str, label: str) -> str | None:
+    """Route to ScraperAPI (CI) or Selenium (local)."""
+    if SCRAPER_API_KEY:
+        return _fetch_via_scraperapi(url, label)
+    return _fetch_via_selenium(url, label)
+
+
+def _fetch_via_scraperapi(url: str, label: str) -> str | None:
+    """Fetch using ScraperAPI — bypasses Cloudflare in CI."""
+    print(f"  [ScraperAPI] {label}")
+    try:
+        resp = requests.get(
+            "http://api.scraperapi.com",
+            params={
+                "api_key": SCRAPER_API_KEY,
+                "url": url,
+                "render": "true",
+            },
+            timeout=60,
+        )
+        if resp.status_code != 200:
+            print(f"  ScraperAPI error: HTTP {resp.status_code}")
+            return None
+        html = resp.text
+        print(f"  Page loaded ({len(html)} bytes)")
+        return html
+    except Exception as e:
+        print(f"  ScraperAPI error: {e}")
+        return None
+
+
+def _fetch_via_selenium(url: str, label: str) -> str | None:
+    """Fetch using local Selenium + Chrome."""
     driver = None
     try:
         driver = Driver(uc=True, headless2=HEADLESS)
@@ -121,6 +156,8 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
             driver.uc_gui_click_captcha()
         time.sleep(3)
         html = driver.get_page_source()
+        print(f"  Page loaded ({len(html)} bytes)")
+        return html
     except Exception as e:
         print(f"  Browser error ({label}): {e}")
         return None
@@ -130,6 +167,15 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
                 driver.quit()
             except Exception:
                 pass
+
+
+# ── Single URL fetch ──────────────────────────────────────────────────────────
+def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
+    """Fetch one FBref fixtures page, return DataFrame or None."""
+    print(f"  Fetching [{label}]: {url}")
+    html = _get_html(url, label)
+    if not html:
+        return None
 
     if "Just a moment" in html or len(html) < 5000:
         print(f"  Still Cloudflare blocked [{label}].")
@@ -323,11 +369,19 @@ if __name__ == "__main__":
         "--headless", action="store_true",
         help="Run Chrome in headless mode (for CI / GitHub Actions)"
     )
+    parser.add_argument(
+        "--api", type=str, default=None, metavar="KEY",
+        help="Use ScraperAPI with this key instead of Selenium"
+    )
     args = parser.parse_args()
 
     if args.headless:
         HEADLESS = True
         print("[scraper] Running in headless mode (no browser window)")
+
+    if args.api:
+        SCRAPER_API_KEY = args.api
+        print("[scraper] Using ScraperAPI for fetching")
 
     if args.league:
         if args.league not in LEAGUE_MAP:
