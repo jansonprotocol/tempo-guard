@@ -667,19 +667,19 @@
     }
 
     .pred-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .pred-card {
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 4px;
-      padding: 16px 18px;
       position: relative;
       overflow: hidden;
       transition: border-color 0.2s;
+      cursor: pointer;
     }
 
     .pred-card:hover { border-color: var(--border2); }
@@ -689,6 +689,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 3px; height: 100%;
+      z-index: 1;
     }
 
     .pred-card.pending::before { background: var(--amber); }
@@ -696,94 +697,87 @@
     .pred-card.miss::before    { background: var(--red); }
     .pred-card.void::before    { background: var(--muted); }
 
-    .pred-card-top {
+    /* ── Collapsed row (always visible) ── */
+    .pred-card-collapsed {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px 10px 16px;
     }
 
-    .pred-fixture {
+    .pred-card-fixture-name {
       font-family: var(--cond);
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 600;
       color: #fff;
-      line-height: 1.2;
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .pred-league-badge {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.1em;
+    .pred-card-fixture-name span {
       color: var(--muted);
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .pred-card-market-inline {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--cyan);
       white-space: nowrap;
     }
 
-    .pred-market-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
+    .pred-card-status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
-    .pred-market {
-      font-family: var(--mono);
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--cyan);
-    }
+    .pred-card.pending .pred-card-status-dot { background: var(--amber); }
+    .pred-card.hit     .pred-card-status-dot { background: var(--green); }
+    .pred-card.miss    .pred-card-status-dot { background: var(--red); }
+    .pred-card.void    .pred-card-status-dot { background: var(--muted); }
 
-    .pred-conf-badge {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      padding: 2px 7px;
-      border-radius: 2px;
-    }
-
-    .pred-conf-badge.HIGH   { background: rgba(0,230,118,0.1);  color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
-    .pred-conf-badge.MEDIUM { background: rgba(255,179,0,0.1);  color: var(--amber); border: 1px solid rgba(255,179,0,0.25); }
-    .pred-conf-badge.LOW    { background: rgba(255,68,68,0.1);   color: var(--red);   border: 1px solid rgba(255,68,68,0.25); }
-
-    .pred-meta {
-      display: flex;
-      gap: 12px;
-      font-family: var(--mono);
+    .pred-card-chevron {
       font-size: 10px;
       color: var(--muted);
+      transition: transform 0.2s;
+      flex-shrink: 0;
     }
 
-    .pred-status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 10px;
-      padding-top: 10px;
+    .pred-card.expanded .pred-card-chevron { transform: rotate(180deg); }
+
+    /* ── Expanded details ── */
+    .pred-card-details {
+      display: none;
+      padding: 0 12px 12px 16px;
       border-top: 1px solid var(--border);
+      margin-top: 0;
     }
 
-    .pred-status {
+    .pred-card.expanded .pred-card-details { display: block; }
+
+    .pred-card-details-inner {
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pred-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-family: var(--mono);
       font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-weight: 600;
     }
 
-    .pred-status.pending { color: var(--amber); }
-    .pred-status.hit     { color: var(--green); }
-    .pred-status.miss    { color: var(--red); }
-    .pred-status.void    { color: var(--muted); }
-
-    .pred-actual {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text);
-    }
+    .pred-detail-label { color: var(--muted); letter-spacing: 0.1em; }
+    .pred-detail-val   { color: var(--text); }
 
     .pred-empty {
       text-align: center;
@@ -1303,30 +1297,55 @@
     function buildPredCard(p) {
       const card = document.createElement('div');
       card.className = `pred-card ${p.status}`;
-      const statusLabels = { pending: '⏳ Pending', hit: '✓ Hit', miss: '✗ Miss', void: '— Void' };
-      const leanStr = p.lean ? p.lean.toUpperCase() : '—';
+
+      const statusLabels = { pending: 'Pending', hit: 'Hit', miss: 'Miss', void: 'Void' };
+      const leanStr  = p.lean ? p.lean.toUpperCase() : '—';
+      const confColor = { HIGH: 'var(--green)', MEDIUM: 'var(--amber)', LOW: 'var(--red)' }[p.confidence] || 'var(--muted)';
+      const actualStr = p.actual_score ? `${p.actual_score} (${p.actual_total}g)` : 'Awaiting';
+
       card.innerHTML = `
-        <div class="pred-card-top">
-          <div class="pred-fixture">${p.home_team}<br><span style="color:var(--muted);font-size:11px">vs</span> ${p.away_team}</div>
-          <div class="pred-league-badge">${p.league_code}</div>
+        <div class="pred-card-collapsed">
+          <div class="pred-card-status-dot"></div>
+          <div class="pred-card-fixture-name">
+            ${p.home_team} <span>vs</span> ${p.away_team}
+          </div>
+          <div class="pred-card-market-inline">${p.market}</div>
+          <div class="pred-card-chevron">▼</div>
         </div>
-        <div class="pred-market-row">
-          <div class="pred-market">${p.market}</div>
-          <div class="pred-conf-badge ${p.confidence}">${p.confidence}</div>
-        </div>
-        <div class="pred-meta">
-          <span>Corridor ${p.corridor}</span>
-          <span>Lean ${leanStr}</span>
-          ${p.p_two_plus != null ? `<span>p2p ${(p.p_two_plus*100).toFixed(0)}%</span>` : ''}
-        </div>
-        <div class="pred-status-row">
-          <div class="pred-status ${p.status}">${statusLabels[p.status] || p.status}</div>
-          ${p.actual_score
-            ? `<div class="pred-actual">${p.actual_score} (${p.actual_total} goals)</div>`
-            : `<div class="pred-actual" style="color:var(--muted)">Awaiting result</div>`
-          }
+        <div class="pred-card-details">
+          <div class="pred-card-details-inner">
+            <div class="pred-detail-row">
+              <span class="pred-detail-label">League</span>
+              <span class="pred-detail-val">${p.league_code}</span>
+            </div>
+            <div class="pred-detail-row">
+              <span class="pred-detail-label">Confidence</span>
+              <span class="pred-detail-val" style="color:${confColor}">${p.confidence}</span>
+            </div>
+            <div class="pred-detail-row">
+              <span class="pred-detail-label">Corridor</span>
+              <span class="pred-detail-val">${p.corridor}</span>
+            </div>
+            <div class="pred-detail-row">
+              <span class="pred-detail-label">Lean</span>
+              <span class="pred-detail-val">${leanStr}</span>
+            </div>
+            ${p.p_two_plus != null ? `
+            <div class="pred-detail-row">
+              <span class="pred-detail-label">p(2+ Goals)</span>
+              <span class="pred-detail-val">${(p.p_two_plus*100).toFixed(0)}%</span>
+            </div>` : ''}
+            <div class="pred-detail-row" style="padding-top:6px;border-top:1px solid var(--border);margin-top:2px">
+              <span class="pred-detail-label" style="color:${p.status === 'hit' ? 'var(--green)' : p.status === 'miss' ? 'var(--red)' : 'var(--muted)'}">
+                ${statusLabels[p.status] || p.status}
+              </span>
+              <span class="pred-detail-val">${actualStr}</span>
+            </div>
+          </div>
         </div>
       `;
+
+      card.addEventListener('click', () => card.classList.toggle('expanded'));
       return card;
     }
 
