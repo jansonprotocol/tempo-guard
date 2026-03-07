@@ -214,6 +214,13 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
     df = max(tables, key=len)
     df = df.dropna(how="all")
 
+    # Flatten multi-level column headers (some FBref leagues return tuple columns)
+    if len(df.columns) > 0 and isinstance(df.columns[0], tuple):
+        df.columns = [
+            " ".join(str(p) for p in col if not str(p).startswith("Unnamed")).strip() or str(col[-1])
+            for col in df.columns
+        ]
+
     score_col = next(
         (c for c in df.columns if str(c).lower() in ("score", "scores")), None
     )
@@ -239,7 +246,14 @@ def _merge_seasons(
 
     combined = pd.concat(frames, ignore_index=True)
 
-    col_map  = {c.lower(): c for c in combined.columns}
+    # FBref sometimes returns multi-level (tuple) column headers — flatten to strings
+    if isinstance(combined.columns[0], tuple):
+        combined.columns = [
+            " ".join(str(p) for p in col if not str(p).startswith("Unnamed")).strip() or str(col[-1])
+            for col in combined.columns
+        ]
+
+    col_map  = {str(c).lower(): c for c in combined.columns}
     date_col = col_map.get("date")
     home_col = col_map.get("home")
     away_col = col_map.get("away")
