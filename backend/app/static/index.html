@@ -776,6 +776,23 @@
     .pred-card.miss    .pred-card-status-dot { background: var(--red); }
     .pred-card.void    .pred-card-status-dot { background: var(--muted); }
 
+    .variance-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 2px 6px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .variance-badge.green  { background: rgba(0,255,136,0.12); color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
+    .variance-badge.orange { background: rgba(255,176,0,0.12);  color: var(--amber); border: 1px solid rgba(255,176,0,0.25); }
+    .variance-badge.red    { background: rgba(255,77,77,0.12);  color: var(--red);   border: 1px solid rgba(255,77,77,0.25); }
+
     .pred-card-chevron {
       font-size: 10px;
       color: var(--muted);
@@ -1421,9 +1438,30 @@
       card.className = `pred-card ${p.status}`;
 
       const statusLabels = { pending: 'Pending', hit: 'Hit', miss: 'Miss', void: 'Void' };
-      const leanStr  = p.lean ? p.lean.toUpperCase() : '—';
+      const leanStr   = p.lean ? p.lean.toUpperCase() : '—';
       const confColor = { HIGH: 'var(--green)', MEDIUM: 'var(--amber)', LOW: 'var(--red)' }[p.confidence] || 'var(--muted)';
       const actualStr = p.actual_score ? `${p.actual_score} (${p.actual_total}g)` : 'Awaiting';
+
+      // Variance badge
+      const varianceLabels = { green: '✓ Safe', orange: '⚠ Med Var', red: '⚡ Hi Var' };
+      const varianceBadge  = p.variance_flag
+        ? `<div class="variance-badge ${p.variance_flag}">${varianceLabels[p.variance_flag]}</div>`
+        : '';
+
+      // Variance detail label
+      const varianceDescriptions = {
+        green:  'Hit rate ≥ 80% — low variance',
+        orange: 'Hit rate 70–79% — medium variance',
+        red:    'Hit rate 60–69% — high variance',
+      };
+      const varianceDetail = p.variance_flag ? `
+            <div class="pred-detail-row">
+              <span class="pred-detail-label">League Variance</span>
+              <span class="pred-detail-val">
+                <span class="variance-badge ${p.variance_flag}">${varianceLabels[p.variance_flag]}</span>
+                <span style="color:var(--muted);font-size:10px;margin-left:6px">${varianceDescriptions[p.variance_flag]}</span>
+              </span>
+            </div>` : '';
 
       card.innerHTML = `
         <div class="pred-card-collapsed">
@@ -1431,6 +1469,7 @@
           <div class="pred-card-fixture-name">
             ${p.home_team} <span>vs</span> ${p.away_team}
           </div>
+          ${varianceBadge}
           <div class="pred-card-market-inline">${p.market}</div>
           <div class="pred-card-chevron">▼</div>
         </div>
@@ -1440,6 +1479,7 @@
               <span class="pred-detail-label">League</span>
               <span class="pred-detail-val">${p.league_code}</span>
             </div>
+            ${varianceDetail}
             <div class="pred-detail-row">
               <span class="pred-detail-label">Confidence</span>
               <span class="pred-detail-val" style="color:${confColor}">${p.confidence}</span>
