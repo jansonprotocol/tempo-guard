@@ -132,6 +132,7 @@ def _fetch_via_scraperapi(url: str, label: str) -> str | None:
                 "api_key": SCRAPER_API_KEY,
                 "url": url,
                 "render": "true",
+                "premium": "true",
             },
             timeout=60,
         )
