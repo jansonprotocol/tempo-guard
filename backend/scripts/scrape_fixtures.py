@@ -72,7 +72,7 @@ def _fetch_page(url: str, league_code: str) -> str | None:
     print(f"  Opening Chrome for {league_code}...")
     driver = None
     try:
-        driver = Driver(uc=True, headless=HEADLESS)
+        driver = Driver(uc=True, headless2=HEADLESS)
         driver.uc_open_with_reconnect(url, 4)
         if not HEADLESS:
             driver.uc_gui_click_captcha()
