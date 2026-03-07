@@ -615,7 +615,12 @@
     }
 
     /* ── League dropdown in toolbar ── */
-    .pred-league-select {
+    .pred-league-dropdown {
+      position: relative;
+      display: inline-block;
+      min-width: 180px;
+    }
+    .pred-league-selected {
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 2px;
@@ -624,18 +629,47 @@
       font-size: 11px;
       padding: 7px 12px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
       transition: all 0.2s;
-      outline: none;
-      -webkit-appearance: none;
+      user-select: none;
+      white-space: nowrap;
     }
-
-    .pred-league-select:hover,
-    .pred-league-select:focus {
-      border-color: var(--cyan2);
-      color: var(--cyan);
+    .pred-league-selected:hover { border-color: var(--cyan2); color: var(--cyan); }
+    .pred-league-chevron { font-size: 10px; opacity: 0.6; }
+    .pred-league-options {
+      position: absolute;
+      top: calc(100% + 2px);
+      left: 0;
+      right: 0;
+      min-width: 220px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      z-index: 999;
+      max-height: 280px;
+      overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
-
-    .pred-league-select option { background: var(--bg3); color: var(--text); }
+    .pred-league-options.hidden { display: none; }
+    .pred-league-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .pred-league-option:hover { background: var(--bg3); color: var(--cyan); }
+    .pred-league-option.active { color: var(--cyan); background: var(--bg3); }
+    .pred-league-option img { width: 18px; height: 13px; object-fit: cover; border-radius: 1px; flex-shrink: 0; }
+    .pred-league-option .league-name { flex: 1; }
 
     .pred-refresh {
       margin-left: auto;
@@ -985,14 +1019,18 @@
 
       <!-- Toolbar with league filter -->
       <div class="pred-toolbar">
-        <button class="pred-filter active" data-filter="all"     onclick="setPredFilter(this,'all')">All</button>
-        <button class="pred-filter"        data-filter="pending" onclick="setPredFilter(this,'pending')">Pending</button>
+        <button class="pred-filter"        data-filter="all"     onclick="setPredFilter(this,'all')">All</button>
+        <button class="pred-filter active" data-filter="pending" onclick="setPredFilter(this,'pending')">Pending</button>
         <button class="pred-filter"        data-filter="hit"     onclick="setPredFilter(this,'hit')">Hits</button>
         <button class="pred-filter"        data-filter="miss"    onclick="setPredFilter(this,'miss')">Misses</button>
 
-        <select class="pred-league-select" id="pred-league-select" onchange="renderPredictions()">
-          <option value="all">All Leagues</option>
-        </select>
+        <div class="pred-league-dropdown" id="pred-league-dropdown">
+          <div class="pred-league-selected" id="pred-league-selected" onclick="toggleLeagueDropdown()">
+            <span id="pred-league-selected-text">&#127758; All Leagues</span>
+            <span class="pred-league-chevron">&#9662;</span>
+          </div>
+          <div class="pred-league-options hidden" id="pred-league-options"></div>
+        </div>
 
         <button class="pred-refresh" onclick="loadPredictions()">↺ REFRESH</button>
       </div>
@@ -1204,7 +1242,7 @@
 
     // ── Predictions ──────────────────────────────────────────────────
     let predData   = null;
-    let predFilter = 'all';
+    let predFilter = 'pending';
 
     async function loadPredictions() {
       $('pred-list').innerHTML = '<div class="pred-loading">LOADING PREDICTIONS…</div>';
@@ -1218,19 +1256,98 @@
       }
     }
 
+    // flagcdn.com 2-letter country codes per league
+    const LEAGUE_META = {
+      "ENG-PL":  { cc: "gb-eng", name: "Premier League" },
+      "ESP-LL":  { cc: "es",     name: "La Liga" },
+      "FRA-L1":  { cc: "fr",     name: "Ligue 1" },
+      "GER-BUN": { cc: "de",     name: "Bundesliga" },
+      "ITA-SA":  { cc: "it",     name: "Serie A" },
+      "NED-ERE": { cc: "nl",     name: "Eredivisie" },
+      "TUR-SL":  { cc: "tr",     name: "\u00dcper Lig" },
+      "BRA-SA":  { cc: "br",     name: "S\u00e9rie A" },
+      "MLS":     { cc: "us",     name: "MLS" },
+      "SAU-SPL": { cc: "sa",     name: "Saudi Pro League" },
+      "DEN-SL":  { cc: "dk",     name: "Superliga" },
+      "ESP-LL2": { cc: "es",     name: "Segunda Divisi\u00f3n" },
+      "BEL-PL":  { cc: "be",     name: "Pro League" },
+      "NOR-EL":  { cc: "no",     name: "Eliteserien" },
+      "SWE-AL":  { cc: "se",     name: "Allsvenskan" },
+      "MEX-LMX": { cc: "mx",     name: "Liga MX" },
+      "CHN-CSL": { cc: "cn",     name: "Chinese Super League" },
+      "JPN-J1":  { cc: "jp",     name: "J1 League" },
+      "COL-PA":  { cc: "co",     name: "Primera A" },
+      "CUB-PD":  { cc: "cu",     name: "Primera Divisi\u00f3n" },
+      "ITA-SB":  { cc: "it",     name: "Serie B" },
+      "FRA-L2":  { cc: "fr",     name: "Ligue 2" },
+      "GER-B2":  { cc: "de",     name: "2. Bundesliga" },
+      "POL-EK":  { cc: "pl",     name: "Ekstraklasa" },
+      "BRA-SB":  { cc: "br",     name: "S\u00e9rie B" },
+    };
+
+    let _leagueFilterValue = 'all';
+
+    function flagImg(cc) {
+      return `<img src="https://flagcdn.com/20x15/${cc}.png" srcset="https://flagcdn.com/40x30/${cc}.png 2x" alt="${cc}">`;
+    }
+
+    function leagueLabel(code) {
+      const m = LEAGUE_META[code];
+      return m ? `${flagImg(m.cc)} <span class="league-name">${m.name}</span>` : `<span class="league-name">${code}</span>`;
+    }
+
+    function toggleLeagueDropdown() {
+      $('pred-league-options').classList.toggle('hidden');
+    }
+
+    function selectLeague(code) {
+      _leagueFilterValue = code;
+      const m = LEAGUE_META[code];
+      const display = code === 'all'
+        ? '&#127758; All Leagues'
+        : `${flagImg(m.cc)} ${m.name}`;
+      $('pred-league-selected-text').innerHTML = display;
+      $('pred-league-options').classList.add('hidden');
+      document.querySelectorAll('.pred-league-option').forEach(o => {
+        o.classList.toggle('active', o.dataset.value === code);
+      });
+      renderPredictions();
+    }
+
+    // close dropdown when clicking outside
+    document.addEventListener('click', e => {
+      const dd = $('pred-league-dropdown');
+      if (dd && !dd.contains(e.target)) {
+        $('pred-league-options').classList.add('hidden');
+      }
+    });
+
     function populateLeagueFilter() {
       if (!predData) return;
       const allPreds = Object.values(predData.by_date || {}).flat();
       const leagues  = [...new Set(allPreds.map(p => p.league_code).filter(Boolean))].sort();
-      const sel      = $('pred-league-select');
-      const current  = sel.value;
-      sel.innerHTML  = '<option value="all">All Leagues</option>';
+      const opts     = $('pred-league-options');
+      opts.innerHTML = '';
+
+      // All Leagues option
+      const allOpt = document.createElement('div');
+      allOpt.className = 'pred-league-option' + (_leagueFilterValue === 'all' ? ' active' : '');
+      allOpt.dataset.value = 'all';
+      allOpt.innerHTML = '<span style="display:inline-block;width:20px;text-align:center">&#127758;</span> <span class="league-name">All Leagues</span>';
+      allOpt.onclick = () => selectLeague('all');
+      opts.appendChild(allOpt);
+
       leagues.forEach(code => {
-        const opt = document.createElement('option');
-        opt.value = code; opt.textContent = code;
-        sel.appendChild(opt);
+        const m = LEAGUE_META[code];
+        const div = document.createElement('div');
+        div.className = 'pred-league-option' + (_leagueFilterValue === code ? ' active' : '');
+        div.dataset.value = code;
+        div.innerHTML = m
+          ? `${flagImg(m.cc)} <span class="league-name">${m.name}</span>`
+          : `<span style="display:inline-block;width:20px"></span><span class="league-name">${code}</span>`;
+        div.onclick = () => selectLeague(code);
+        opts.appendChild(div);
       });
-      if (current && leagues.includes(current)) sel.value = current;
     }
 
     function setPredFilter(btn, filter) {
@@ -1244,7 +1361,7 @@
       if (!predData) return;
 
       const byDate       = predData.by_date || {};
-      const leagueFilter = $('pred-league-select').value;
+      const leagueFilter = _leagueFilterValue;
       const allPreds     = Object.values(byDate).flat();
 
       // Summary always reflects full dataset
