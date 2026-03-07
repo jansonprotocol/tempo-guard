@@ -106,8 +106,44 @@ LEAGUE_MAP = {
     ),
     "MEX-LMX": (
         "https://fbref.com/en/comps/31/schedule/Liga-MX-Scores-and-Fixtures",
-        "https://fbref.com/en/comps/31/2025-2026/schedule/2025-2026-Liga-MX-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/31/2024-2025/schedule/2024-2025-Liga-MX-Scores-and-Fixtures",
     ),
+    # ── New leagues ───────────────────────────────────────────────────────────
+    # Calendar-year leagues (current = 2026, prev = 2025)
+    "CHN-CSL": (
+        "https://fbref.com/en/comps/62/schedule/Chinese-Super-League-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/62/2025/schedule/2025-Chinese-Super-League-Scores-and-Fixtures",
+    ),
+    "JPN-J1": (
+        "https://fbref.com/en/comps/25/schedule/J1-League-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/25/2025/schedule/2025-J1-League-Scores-and-Fixtures",
+    ),
+    "COL-PA": (
+        "https://fbref.com/en/comps/41/schedule/Primera-A-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/41/2025/schedule/2025-Primera-A-Scores-and-Fixtures",
+    ),
+    "BRA-SB": (
+        "https://fbref.com/en/comps/38/schedule/Serie-B-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/38/2025/schedule/2025-Serie-B-Scores-and-Fixtures",
+    ),
+    # Aug–May season leagues (current = 2025-2026, prev = 2024-2025)
+    "ITA-SB": (
+        "https://fbref.com/en/comps/18/schedule/Serie-B-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/18/2024-2025/schedule/2024-2025-Serie-B-Scores-and-Fixtures",
+    ),
+    "FRA-L2": (
+        "https://fbref.com/en/comps/60/schedule/Ligue-2-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/60/2024-2025/schedule/2024-2025-Ligue-2-Scores-and-Fixtures",
+    ),
+    "GER-B2": (
+        "https://fbref.com/en/comps/33/schedule/2-Bundesliga-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/33/2024-2025/schedule/2024-2025-2-Bundesliga-Scores-and-Fixtures",
+    ),
+    "POL-EK": (
+        "https://fbref.com/en/comps/36/schedule/Ekstraklasa-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/36/2024-2025/schedule/2024-2025-Ekstraklasa-Scores-and-Fixtures",
+    ),
+    # Cuba (CUB-PD) not on FBref — scraping skipped
 }
 
 # ── Global state ──────────────────────────────────────────────────────────────
