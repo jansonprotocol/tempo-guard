@@ -23,11 +23,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Chrome
-        run: |
-          sudo apt-get update -q
-          sudo apt-get install -y google-chrome-stable
-
       - name: Install Python dependencies
         run: |
           pip install -r backend/requirements.txt
@@ -35,10 +30,11 @@ jobs:
       - name: Run FBref scraper
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SCRAPER_API_KEY: ${{ secrets.SCRAPER_API_KEY }}
         run: |
           cd backend
           if [ -n "${{ github.event.inputs.league }}" ]; then
-            python -m scripts.scrape_fbref --headless --league ${{ github.event.inputs.league }}
+            python -m scripts.scrape_fbref --league ${{ github.event.inputs.league }}
           else
-            python -m scripts.scrape_fbref --headless
+            python -m scripts.scrape_fbref
           fi
