@@ -43,6 +43,7 @@ class PredictionLog(Base):
     home_team       = Column(String,  nullable=False)
     away_team       = Column(String,  nullable=False)
     match_date      = Column(Date,    nullable=False, index=True)
+    match_time      = Column(String,  nullable=True)    # e.g. "20:45"
 
     # ATHENA prediction
     market          = Column(String,  nullable=False)   # e.g. "O1.5", "U3.5/4.5"
