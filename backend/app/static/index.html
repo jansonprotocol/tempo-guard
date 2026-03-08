@@ -689,6 +689,28 @@
 
     .pred-date-group { margin-bottom: 32px; }
 
+    .pred-time-block { margin-bottom: 18px; }
+    .pred-time-block-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      padding: 4px 0 6px 2px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pred-time-block-label::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border2);
+    }
+
     .pred-date-label {
       font-family: var(--mono);
       font-size: 10px;
@@ -1420,10 +1442,67 @@
         label.textContent = formatPredDate(d) + ` · ${cards.length} prediction${cards.length > 1 ? 's' : ''}`;
         group.appendChild(label);
 
-        const grid = document.createElement('div');
-        grid.className = 'pred-cards';
-        cards.forEach(p => grid.appendChild(buildPredCard(p)));
-        group.appendChild(grid);
+        // Sort cards by match_time (nulls last), then build 2-hour blocks
+        const sorted = [...cards].sort((a, b) => {
+          if (!a.match_time && !b.match_time) return 0;
+          if (!a.match_time) return 1;
+          if (!b.match_time) return -1;
+          return a.match_time.localeCompare(b.match_time);
+        });
+
+        // Group into 2-hour windows
+        const timeBlocks = {};  // key = "HH:00" of block start
+        const noTime = [];
+
+        sorted.forEach(p => {
+          if (!p.match_time) { noTime.push(p); return; }
+          const [hStr, mStr] = p.match_time.split(':');
+          const h = parseInt(hStr, 10);
+          const blockHour = Math.floor(h / 2) * 2;
+          const key = String(blockHour).padStart(2, '0') + ':00';
+          if (!timeBlocks[key]) timeBlocks[key] = [];
+          timeBlocks[key].push(p);
+        });
+
+        const blockKeys = Object.keys(timeBlocks).sort();
+
+        blockKeys.forEach(blockStart => {
+          const bCards = timeBlocks[blockStart];
+          const bH = parseInt(blockStart.split(':')[0], 10);
+          const blockEnd = String(bH + 2).padStart(2, '0') + ':00';
+
+          const block = document.createElement('div');
+          block.className = 'pred-time-block';
+
+          const bLabel = document.createElement('div');
+          bLabel.className = 'pred-time-block-label';
+          bLabel.textContent = `${blockStart} – ${blockEnd}  ·  ${bCards.length} match${bCards.length > 1 ? 'es' : ''}`;
+          block.appendChild(bLabel);
+
+          const grid = document.createElement('div');
+          grid.className = 'pred-cards';
+          bCards.forEach(p => grid.appendChild(buildPredCard(p)));
+          block.appendChild(grid);
+          group.appendChild(block);
+        });
+
+        // Matches with no time at the end
+        if (noTime.length) {
+          const block = document.createElement('div');
+          block.className = 'pred-time-block';
+
+          const bLabel = document.createElement('div');
+          bLabel.className = 'pred-time-block-label';
+          bLabel.textContent = `Time TBD  ·  ${noTime.length} match${noTime.length > 1 ? 'es' : ''}`;
+          block.appendChild(bLabel);
+
+          const grid = document.createElement('div');
+          grid.className = 'pred-cards';
+          noTime.forEach(p => grid.appendChild(buildPredCard(p)));
+          block.appendChild(grid);
+          group.appendChild(block);
+        }
+
         list.appendChild(group);
       });
 
