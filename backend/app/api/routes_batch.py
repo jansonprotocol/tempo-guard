@@ -180,6 +180,7 @@ def batch_predict(
                     home_team=fix.home_team,
                     away_team=fix.away_team,
                     match_date=fix.match_date,
+                    match_time=getattr(fix, "match_time", None),
                     market=pred.translated_play.market,
                     confidence=pred.translated_play.confidence,
                     corridor_low=pred.corridor.low,
@@ -401,6 +402,7 @@ def get_predictions(
             "league_code":    r.league_code,
             "home_team":      r.home_team,
             "away_team":      r.away_team,
+            "match_time":     getattr(r, "match_time", None),
             "market":         r.market,
             "confidence":     r.confidence,
             "corridor":       f"{r.corridor_low}–{r.corridor_high}",
@@ -506,6 +508,13 @@ def migrate_add_variance_flag(db: Session = Depends(get_db)):
         results["variance_flag"] = "added"
     else:
         results["variance_flag"] = "already exists"
+
+    if "match_time" not in existing_cols:
+        db.execute(text("ALTER TABLE prediction_log ADD COLUMN match_time VARCHAR"))
+        db.commit()
+        results["match_time"] = "added"
+    else:
+        results["match_time"] = "already exists"
 
     # 2. Create calibration_log table if missing
     existing_tables = inspector.get_table_names()
