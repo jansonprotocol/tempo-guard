@@ -45,9 +45,9 @@ router = APIRouter()
 
 # ── Constants ──────────────────────────────────────────────────────
 TARGET_HIT_RATE = 0.86
-NUDGE_STEP      = 0.05   # per calibration run — 0.0–1.0 scale gives 20 steps per side
-MAX_BIAS        = 1.00   # upper ceiling for over_bias / under_bias
-MIN_BIAS        = 0.00   # lower floor for over_bias / under_bias
+NUDGE_STEP      = 0.02   # per calibration run — with 0.0–1.0 scale and neutral at 0.5, gives 25 steps to floor
+MAX_BIAS        = 1.00
+MIN_BIAS        = 0.00
 
 
 # ── hit_weight helper ──────────────────────────────────────────────
