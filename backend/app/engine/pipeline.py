@@ -161,6 +161,12 @@ def s_lock(
     return new_lean
 
 
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _clip(x: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, x))
+
+
 # ── DEG/DET/EPS/MFR/BILATERAL modules ────────────────────────────────────────
 
 def deg_degradation(
