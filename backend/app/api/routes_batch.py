@@ -542,6 +542,60 @@ def migrate_add_variance_flag(db: Session = Depends(get_db)):
     return {"status": "ok", "migrations": results}
 
 
+# ── POST /api/migrate/add-module-columns ──────────────────────────────────────
+
+@router.post("/migrate/add-module-columns")
+def migrate_add_module_columns(db: Session = Depends(get_db)):
+    """
+    Migration: adds DEG/DET/EPS sensitivity columns to league_configs,
+    and det_nudge / deg_nudge / avg_det / avg_deg columns to team_configs.
+    Safe to run multiple times — skips columns that already exist.
+    """
+    from sqlalchemy import text, inspect
+
+    results = {}
+    inspector = inspect(db.bind)
+
+    # ── league_configs ────────────────────────────────────────────────
+    league_cols = [c["name"] for c in inspector.get_columns("league_configs")]
+
+    for col, default in [
+        ("deg_sensitivity", 1.0),
+        ("det_sensitivity", 1.0),
+        ("eps_sensitivity", 1.0),
+    ]:
+        if col not in league_cols:
+            db.execute(text(f"ALTER TABLE league_configs ADD COLUMN {col} FLOAT DEFAULT {default}"))
+            db.commit()
+            results[f"league_configs.{col}"] = "added"
+        else:
+            results[f"league_configs.{col}"] = "already exists"
+
+    # ── team_configs ──────────────────────────────────────────────────
+    team_cols = [c["name"] for c in inspector.get_columns("team_configs")]
+
+    for col, default in [
+        ("det_nudge", 0.0),
+        ("deg_nudge", 0.0),
+    ]:
+        if col not in team_cols:
+            db.execute(text(f"ALTER TABLE team_configs ADD COLUMN {col} FLOAT DEFAULT {default}"))
+            db.commit()
+            results[f"team_configs.{col}"] = "added"
+        else:
+            results[f"team_configs.{col}"] = "already exists"
+
+    for col in ["avg_det", "avg_deg"]:
+        if col not in team_cols:
+            db.execute(text(f"ALTER TABLE team_configs ADD COLUMN {col} FLOAT"))
+            db.commit()
+            results[f"team_configs.{col}"] = "added"
+        else:
+            results[f"team_configs.{col}"] = "already exists"
+
+    return {"status": "ok", "migrations": results}
+
+
 # ── POST /api/migrate/backfill-variance-flags ─────────────────────────────────
 
 @router.post("/migrate/backfill-variance-flags")
