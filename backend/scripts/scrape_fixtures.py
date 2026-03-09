@@ -70,7 +70,7 @@ LEAGUE_MAP = {
     "NOR-EL":  "https://fbref.com/en/comps/28/schedule/Eliteserien-Scores-and-Fixtures",
     "SWE-AL":  "https://fbref.com/en/comps/29/schedule/Allsvenskan-Scores-and-Fixtures",
     "MEX-LMX": "https://fbref.com/en/comps/31/schedule/Liga-MX-Scores-and-Fixtures",
-    # ── New leagues ───────────────────────────────────────────────────────────
+    # ── Expanded leagues ─────────────────────────────────────────────────────
     "CHN-CSL": "https://fbref.com/en/comps/62/schedule/Chinese-Super-League-Scores-and-Fixtures",
     "JPN-J1":  "https://fbref.com/en/comps/25/schedule/J1-League-Scores-and-Fixtures",
     "COL-PA":  "https://fbref.com/en/comps/41/schedule/Primera-A-Scores-and-Fixtures",
@@ -85,6 +85,14 @@ LEAGUE_MAP = {
     "PER-L1":  "https://fbref.com/en/comps/44/schedule/Liga-1-Scores-and-Fixtures",
     "POR-LP":  "https://fbref.com/en/comps/32/schedule/Primeira-Liga-Scores-and-Fixtures",
     # Cuba (CUB-PD) not on FBref — scraping skipped
+    # ── UEFA club competitions ────────────────────────────────────────────────
+    # NOTE: FBref stores completed match scores AND upcoming fixtures on these
+    # pages. Team names here are short international forms (e.g. "Man City",
+    # "Atlético Madrid") — fbref_base.py's fuzzy matcher handles the mapping
+    # to domestic snapshot names automatically.
+    "UCL":  "https://fbref.com/en/comps/8/schedule/Champions-League-Scores-and-Fixtures",
+    "UEL":  "https://fbref.com/en/comps/19/schedule/Europa-League-Scores-and-Fixtures",
+    "UECL": "https://fbref.com/en/comps/882/schedule/Conference-League-Scores-and-Fixtures",
 }
 
 
@@ -156,18 +164,42 @@ def _parse_page(html: str) -> pd.DataFrame | None:
         return None
     if not tables:
         return None
-    df = max(tables, key=len)
+
+    # FBref competition pages sometimes have multiple tables (group stage,
+    # knockout rounds, etc.). Merge all valid schedule tables rather than
+    # just taking the largest — this matters for UCL/UEL/UECL.
+    schedule_tables = []
+    for t in tables:
+        cols_lower = [str(c).lower() for c in t.columns]
+        if "home" in cols_lower or "away" in cols_lower:
+            schedule_tables.append(t)
+
+    if not schedule_tables:
+        df = max(tables, key=len)
+    elif len(schedule_tables) == 1:
+        df = schedule_tables[0]
+    else:
+        df = pd.concat(schedule_tables, ignore_index=True)
+
     df = df.dropna(how="all")
     return df
 
 
 def _get_columns(df: pd.DataFrame) -> dict:
-    cols = {c.lower(): c for c in df.columns}
+    # FBref sometimes returns MultiIndex columns — flatten to string
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [
+            " ".join(str(v) for v in col if str(v) != "nan").strip()
+            for col in df.columns
+        ]
+    cols = {str(c).lower(): c for c in df.columns}
+
     def col(*names):
         for n in names:
             if n in cols:
                 return cols[n]
         return None
+
     return {
         "date":  col("date"),
         "home":  col("home"),
@@ -192,7 +224,7 @@ def scrape_league(league_code: str, url: str) -> None:
 
     c = _get_columns(df)
     if not all([c["date"], c["home"], c["away"]]):
-        print("  Missing required columns.")
+        print(f"  Missing required columns. Found: {list(df.columns[:10])}")
         return
 
     # Parse dates
@@ -240,7 +272,7 @@ def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
 
         if snap:
             existing = pd.read_parquet(io.BytesIO(snap.data))
-            col_map  = {c.lower(): c for c in existing.columns}
+            col_map  = {str(c).lower(): c for c in existing.columns}
             date_col = col_map.get("date")
             home_col = col_map.get("home")
             away_col = col_map.get("away")
@@ -329,7 +361,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--league", type=str, default=None,
-        help="Scrape a single league only (e.g. --league MEX-LMX)"
+        help="Scrape a single league only (e.g. --league UCL)"
     )
     parser.add_argument(
         "--headless", action="store_true",
