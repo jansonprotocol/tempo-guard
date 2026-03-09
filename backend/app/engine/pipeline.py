@@ -595,13 +595,18 @@ def evaluate_athena(
     eps      = req.eps_stability  if req.eps_stability   is not None else 0.65
 
     # Apply league calibration adjustments
-    # over_bias/under_bias range: 0.00–0.13 per side, neutral = 0.05 each
-    # Net shift = (over_bias - under_bias), max ±0.13
-    # Typical raw_support range is ±0.15 — bias should nudge, not dominate
+    # over_bias/under_bias scale: 0.0–1.0, neutral = 0.5 each
+    # Net shift on support_delta = (over_bias - under_bias) * BIAS_SCALE
+    # BIAS_SCALE = 0.12 → at full extremes (1.0 vs 0.0) max effect = ±0.12
+    # Typical raw_support range is ±0.15 — bias nudges but never dominates.
+    # With 0.0–1.0 range and 0.05 step size, calibration has 20 steps per side
+    # before hitting a wall, vs only 4–5 steps in the old 0.01–0.10 range.
+    # The neutral point (0.5/0.5) produces zero net shift — mathematically clean.
     # tempo_factor: 0.5 = neutral (multiplier=1.0), <0.5 dampens, >0.5 amplifies
     # Capped at 0.95 to prevent artificial BurstSentinel triggers
+    BIAS_SCALE    = 0.12
     tempo         = max(0.0, min(0.95, raw_tempo * tempo_factor * 2.0))
-    support_delta = raw_support + (league_bias_over - league_bias_under) + team_nudge
+    support_delta = raw_support + (league_bias_over - league_bias_under) * BIAS_SCALE + team_nudge
 
     # BurstSentinel uses RAW values to prevent bias inflation from
     # pushing borderline matches into forced-over territory
