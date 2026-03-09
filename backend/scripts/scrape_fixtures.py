@@ -153,7 +153,7 @@ def _fetch_via_selenium(url: str, league_code: str) -> str | None:
                 pass
 
 
-def _parse_page(html: str) -> pd.DataFrame | None:
+def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
     if "Just a moment" in html or len(html) < 5000:
         print("  Cloudflare blocked.")
         return None
@@ -165,23 +165,63 @@ def _parse_page(html: str) -> pd.DataFrame | None:
     if not tables:
         return None
 
-    # FBref competition pages sometimes have multiple tables (group stage,
-    # knockout rounds, etc.). Merge all valid schedule tables rather than
-    # just taking the largest — this matters for UCL/UEL/UECL.
+    is_intl = league_code in ("UCL", "UEL", "UECL", "EC", "WC")
+
+    if not is_intl:
+        # Domestic leagues: single schedule table, take the largest
+        df = max(tables, key=len)
+        df = df.dropna(how="all")
+        return df
+
+    # ── International competition pages ──────────────────────────────
+    # FBref structures these as multiple tables per round/phase.
+    # We merge them all and tag each row with its round label so
+    # batch-predict and calibration can filter by phase later.
     schedule_tables = []
     for t in tables:
+        # Flatten MultiIndex if present
+        if isinstance(t.columns, pd.MultiIndex):
+            t.columns = [
+                " ".join(str(v) for v in col if str(v) != "nan").strip()
+                for col in t.columns
+            ]
         cols_lower = [str(c).lower() for c in t.columns]
-        if "home" in cols_lower or "away" in cols_lower:
+        if "home" in cols_lower and "away" in cols_lower:
             schedule_tables.append(t)
 
     if not schedule_tables:
+        print("  No schedule tables found — falling back to largest table.")
         df = max(tables, key=len)
-    elif len(schedule_tables) == 1:
-        df = schedule_tables[0]
-    else:
-        df = pd.concat(schedule_tables, ignore_index=True)
+        df = df.dropna(how="all")
+        return df
 
-    df = df.dropna(how="all")
+    merged_parts = []
+    for t in schedule_tables:
+        t = t.dropna(how="all").copy()
+        # Flatten MultiIndex again in case it wasn't caught above
+        if isinstance(t.columns, pd.MultiIndex):
+            t.columns = [
+                " ".join(str(v) for v in col if str(v) != "nan").strip()
+                for col in t.columns
+            ]
+        cols_lower_map = {str(c).lower(): c for c in t.columns}
+
+        # Try to derive a round label from the table's own Round/Wk column,
+        # falling back to a date-based phase classifier.
+        round_col = cols_lower_map.get("round") or cols_lower_map.get("wk")
+        if round_col:
+            # Use the most common non-null value in the column as the label
+            vals = t[round_col].dropna().astype(str)
+            vals = vals[~vals.str.lower().isin(["nan", "", "round", "wk"])]
+            label = vals.mode()[0] if not vals.empty else None
+        else:
+            label = None
+
+        t["_round_raw"] = label
+        merged_parts.append(t)
+
+    df = pd.concat(merged_parts, ignore_index=True)
+    print(f"  Merged {len(schedule_tables)} schedule tables → {len(df)} rows")
     return df
 
 
@@ -201,11 +241,12 @@ def _get_columns(df: pd.DataFrame) -> dict:
         return None
 
     return {
-        "date":  col("date"),
-        "home":  col("home"),
-        "away":  col("away"),
-        "score": col("score", "scores"),
-        "time":  col("time"),
+        "date":       col("date"),
+        "home":       col("home"),
+        "away":       col("away"),
+        "score":      col("score", "scores"),
+        "time":       col("time"),
+        "round_raw":  col("_round_raw"),  # injected by _parse_page for intl comps
     }
 
 
@@ -217,7 +258,7 @@ def scrape_league(league_code: str, url: str) -> None:
     if not html:
         return
 
-    df = _parse_page(html)
+    df = _parse_page(html, league_code)
     if df is None or df.empty:
         print("  No data parsed.")
         return
@@ -307,6 +348,57 @@ def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
         db.close()
 
 
+def _classify_round_type(raw: str | None, match_date: date, league_code: str) -> str | None:
+    """
+    Map a raw round label (from FBref) or match date to a normalised round_type.
+
+    Normalised values:
+        "league_phase"   — UCL/UEL/UECL group/league phase (Sep–Jan)
+        "playoff"        — two-legged playoff rounds (Feb)
+        "round_of_16"
+        "quarter_final"
+        "semi_final"
+        "final"
+        None             — domestic leagues or unknown
+
+    The raw label from FBref varies ("Round of 16", "QF", "Group Stage", etc.)
+    so we normalise via keyword matching, then fall back to date heuristics.
+    """
+    if league_code not in ("UCL", "UEL", "UECL"):
+        return None  # only classify UEFA club comps for now
+
+    label = (raw or "").lower().strip()
+
+    # Keyword normalisation
+    if any(k in label for k in ("league phase", "group", "matchday")):
+        return "league_phase"
+    if "playoff" in label or "play-off" in label:
+        return "playoff"
+    if any(k in label for k in ("round of 16", "r16", "last 16", "ro16")):
+        return "round_of_16"
+    if any(k in label for k in ("quarter", "qf")):
+        return "quarter_final"
+    if any(k in label for k in ("semi", "sf")):
+        return "semi_final"
+    if "final" in label and "semi" not in label and "quarter" not in label:
+        return "final"
+
+    # Date-based fallback for UCL (2024-25 schedule)
+    month = match_date.month
+    if month in (9, 10, 11, 12, 1):   # Sep–Jan
+        return "league_phase"
+    if month == 2:
+        return "playoff"
+    if month == 3:
+        return "round_of_16"
+    if month == 4:
+        return "quarter_final"
+    if month == 5:
+        return "semi_final" if match_date.day < 25 else "final"
+
+    return None
+
+
 def _upsert_fixtures(
     league_code: str, upcoming_df: pd.DataFrame, c: dict
 ) -> None:
@@ -334,12 +426,17 @@ def _upsert_fixtures(
                 if not home or not away or home == "nan" or away == "nan":
                     continue
 
+                # Derive round_type for international competitions
+                raw_round = str(row[c["round_raw"]]).strip() if c["round_raw"] and pd.notnull(row.get(c["round_raw"])) else None
+                round_type = _classify_round_type(raw_round, match_date, league_code)
+
                 fixture = FBrefFixture(
                     league_code=league_code,
                     home_team=home,
                     away_team=away,
                     match_date=match_date,
                     match_time=mtime,
+                    round_type=round_type,
                     scraped_at=datetime.utcnow(),
                 )
                 db.add(fixture)
