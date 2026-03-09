@@ -22,7 +22,6 @@ from datetime import date, datetime, timedelta
 from difflib import get_close_matches
 from typing import Dict, List, Optional, Tuple
 
-import numpy as np
 import pandas as pd
 
 from app.database.db import SessionLocal
@@ -34,6 +33,18 @@ MIN_MATCHES      = 5   # default; calibration can lower this
 FUZZY_CUTOFF     = 0.82
 
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
+
+# Historical average goals/game per competition — used as the baseline for
+# support_idx_over_delta instead of borrowing a domestic league's average.
+# UCL league phase avg ~2.70, drops to ~2.45 in knockouts; we use the
+# league-phase figure and let calibration adjust from there.
+INTL_GOAL_AVERAGES: Dict[str, float] = {
+    "UCL":  2.70,
+    "UEL":  2.50,
+    "UECL": 2.40,
+    "EC":   2.25,  # national team tournaments — defensive, lower scoring
+    "WC":   2.30,
+}
 
 
 # ── Name normalisation ────────────────────────────────────────────────────────
@@ -172,9 +183,6 @@ def _resolve_columns(df: pd.DataFrame) -> Dict[str, Optional[str]]:
         "score": col("score", "scores"),
         "soth":  col("home_shots_on_target", "shots_on_target_home", "sot_home"),
         "sota":  col("away_shots_on_target", "shots_on_target_away", "sot_away"),
-        # xG — FBref names home xG "xg" and away xG "xg.1" (pandas duplicate-column suffix)
-        "xhg":   col("xg", "xg_home", "home_xg", "home_expected_goals"),
-        "xag":   col("xg.1", "xg_away", "away_xg", "away_expected_goals", "xg1"),
     }
 
 
@@ -230,267 +238,23 @@ def _find_team_rows(
     )
 
 
-# ── DEG / DET / EPS helpers ───────────────────────────────────────────────────
-
-def _compute_deg(
-    frame: pd.DataFrame,
-    c_hg: str,
-    c_ag: str,
-    c_ht: str,
-    c_date: str,
-    team_name_lc: str,
-) -> float:
-    """
-    DEG (Degradation Model) — measures structural decline for one team.
-
-    Two signals:
-      scoring_decline  : avg goals scored last-3 vs previous-3  (drop → positive)
-      defense_erosion  : avg goals conceded last-3 vs previous-3 (rise → positive)
-
-    Returns deg_pressure in [0.0, 1.0].
-    0.0 = no decline, 1.0 = severe structural collapse across both dimensions.
-    Requires ≥ 6 rows for the comparison; returns 0.0 otherwise (safe neutral).
-    """
-    if len(frame) < 6 or not all([c_hg, c_ag, c_ht, c_date]):
-        return 0.0
-
-    try:
-        work = frame.copy()
-        work[c_date] = pd.to_datetime(work[c_date], errors="coerce")
-        work = work.sort_values(c_date, ascending=True).tail(10)
-
-        scored    = []
-        conceded  = []
-        for _, r in work.iterrows():
-            is_home = _norm(str(r[c_ht])) == team_name_lc
-            hg = float(r[c_hg]) if pd.notnull(r[c_hg]) else 0.0
-            ag = float(r[c_ag]) if pd.notnull(r[c_ag]) else 0.0
-            scored.append(hg if is_home else ag)
-            conceded.append(ag if is_home else hg)
-
-        if len(scored) < 6:
-            return 0.0
-
-        # Split: recent (last 3) vs earlier (3 before that)
-        recent_scored    = float(np.mean(scored[-3:]))
-        earlier_scored   = float(np.mean(scored[-6:-3]))
-        recent_conceded  = float(np.mean(conceded[-3:]))
-        earlier_conceded = float(np.mean(conceded[-6:-3]))
-
-        # Scoring decline: scored less recently → positive signal
-        score_decline = max(0.0, earlier_scored - recent_scored) / max(0.5, earlier_scored)
-        # Defense erosion: conceding more recently → positive signal
-        def_erosion   = max(0.0, recent_conceded - earlier_conceded) / max(0.5, earlier_conceded)
-
-        deg = _clip(score_decline * 0.55 + def_erosion * 0.45, 0.0, 1.0)
-        return round(deg, 3)
-
-    except Exception as e:
-        print(f"[fbref_base] DEG computation error: {e}")
-        return 0.0
-
-
-def _compute_det(
-    frame: pd.DataFrame,
-    c_hg: str,
-    c_ag: str,
-    c_ht: str,
-    team_name_lc: str,
-) -> float:
-    """
-    DET (Detonation Model) — measures volatility/burst potential for one team.
-
-    Three signals:
-      variance_score    : std-dev of total goals in team's matches (normalized)
-      high_scoring_rate : % of matches ending with 3+ total goals
-      btts_rate         : % of matches where both teams scored ≥ 1
-
-    Returns det_score in [0.0, 1.0].
-    0.0 = completely flat/dead, 1.0 = maximum chaos.
-    Requires ≥ 4 rows; returns 0.30 (neutral baseline) otherwise.
-    """
-    if len(frame) < 4 or not all([c_hg, c_ag, c_ht]):
-        return 0.30
-
-    try:
-        totals = []
-        btts   = []
-        for _, r in frame.iterrows():
-            hg = float(r[c_hg]) if pd.notnull(r[c_hg]) else 0.0
-            ag = float(r[c_ag]) if pd.notnull(r[c_ag]) else 0.0
-            totals.append(hg + ag)
-            btts.append(1.0 if hg >= 1.0 and ag >= 1.0 else 0.0)
-
-        std              = float(np.std(totals))
-        high_score_rate  = sum(1 for t in totals if t >= 3) / len(totals)
-        btts_rate        = float(np.mean(btts))
-
-        # Normalize std: std of 1.5 = ~0.5, std of 2.5+ = 1.0
-        norm_std = _clip(std / 2.5, 0.0, 1.0)
-
-        det = _clip(norm_std * 0.35 + high_score_rate * 0.40 + btts_rate * 0.25, 0.0, 1.0)
-        return round(det, 3)
-
-    except Exception as e:
-        print(f"[fbref_base] DET computation error: {e}")
-        return 0.30
-
-
-def _compute_eps(
-    full_df: pd.DataFrame,
-    c_hg: str,
-    c_ag: str,
-) -> float:
-    """
-    EPS (Expected Phase Stability) — measures league-level goal consistency.
-
-    Uses coefficient of variation (std / mean) on total goals across all
-    matches in the snapshot. Low CV = stable phases. High CV = erratic.
-
-    Returns eps_stability in [0.0, 1.0]:
-      1.0 = perfectly stable (every match same total)
-      0.0 = completely chaotic
-    Returns 0.65 (neutral) if insufficient data.
-    """
-    if not all([c_hg, c_ag]):
-        return 0.65
-
-    try:
-        totals = (full_df[c_hg].fillna(0) + full_df[c_ag].fillna(0)).tolist()
-        totals = [t for t in totals if t > 0]  # exclude 0-0 from league calc
-
-        if len(totals) < 10:
-            return 0.65
-
-        mean = float(np.mean(totals))
-        std  = float(np.std(totals))
-        cv   = std / max(mean, 0.1)
-
-        # cv ~0.5 is typical → stability ~0.75
-        # cv ~0.8 is erratic → stability ~0.40
-        # cv ~0.3 is very stable → stability ~0.85
-        stability = _clip(1.0 - cv * 0.60, 0.10, 0.95)
-        return round(stability, 3)
-
-    except Exception as e:
-        print(f"[fbref_base] EPS computation error: {e}")
-        return 0.65
-
-
-def _compute_xg_matchup_multiplier(
-    H: pd.DataFrame,
-    A: pd.DataFrame,
-    hname: str,
-    aname: str,
-    c: Dict,
-) -> float:
-    """
-    Compute a matchup-aware xG performance multiplier.
-
-    For each team we track two ratios over their last N matches:
-      att_ratio = goals_scored / xG_generated   (finishing quality)
-      def_ratio = goals_conceded / xG_conceded  (defensive solidity)
-
-    The multiplier for the specific matchup:
-      home_expectation = home_att_ratio * away_def_ratio
-      away_expectation = away_att_ratio * home_def_ratio
-      multiplier       = (home_expectation + away_expectation) / 2
-
-    Examples:
-      Clinical home attack (att=1.2) vs leaky away defense (def=1.3)  → home_exp=1.56 → over signal amplified
-      Wasteful home attack (att=0.75) vs solid away defense (def=0.85) → home_exp=0.64 → over signal dampened
-
-    Returns 1.0 (neutral) if xG data is unavailable.
-    Clipped to [0.70, 1.40] to prevent extreme swings.
-    """
-    xhg_col = c.get("xhg")
-    xag_col = c.get("xag")
-    hg_col  = c.get("hg")
-    ag_col  = c.get("ag")
-    ht_col  = c.get("ht")
-
-    if not all([xhg_col, xag_col, hg_col, ag_col, ht_col]):
-        return 1.0  # no xG data available — neutral
-
-    def _xg_ratios(frame: pd.DataFrame, team_lc: str):
-        """
-        Returns (att_ratio, def_ratio) for a team from its recent match frame.
-        att_ratio: goals scored / xG generated
-        def_ratio: goals conceded / xG conceded
-        Both represent real output vs expected — higher means better/worse than expected.
-        """
-        goals_scored  = 0.0
-        goals_conceded= 0.0
-        xg_generated  = 0.0
-        xg_conceded   = 0.0
-
-        for _, r in frame.iterrows():
-            try:
-                is_home = _norm(str(r[ht_col])) == team_lc
-                hg  = float(r[hg_col])  if pd.notnull(r[hg_col])  else 0.0
-                ag  = float(r[ag_col])  if pd.notnull(r[ag_col])  else 0.0
-                xhg = float(r[xhg_col]) if pd.notnull(r[xhg_col]) else None
-                xag = float(r[xag_col]) if pd.notnull(r[xag_col]) else None
-
-                if xhg is None or xag is None:
-                    continue  # skip rows without xG
-
-                if is_home:
-                    goals_scored   += hg
-                    goals_conceded += ag
-                    xg_generated   += xhg
-                    xg_conceded    += xag
-                else:
-                    goals_scored   += ag
-                    goals_conceded += hg
-                    xg_generated   += xag
-                    xg_conceded    += xhg
-            except (ValueError, TypeError):
-                continue
-
-        if xg_generated < 1.0 or xg_conceded < 1.0:
-            return None, None  # insufficient xG data
-
-        att_ratio = goals_scored   / xg_generated
-        def_ratio = goals_conceded / xg_conceded
-        return att_ratio, def_ratio
-
-    h_lc = _norm(hname)
-    a_lc = _norm(aname)
-
-    h_att, h_def = _xg_ratios(H, h_lc)
-    a_att, a_def = _xg_ratios(A, a_lc)
-
-    if None in (h_att, h_def, a_att, a_def):
-        return 1.0  # insufficient xG coverage — neutral
-
-    # Matchup context:
-    # How many goals will home team actually score vs this away defense?
-    # How many goals will away team actually score vs this home defense?
-    home_expectation = h_att * a_def   # home finishing quality vs away defensive generosity
-    away_expectation = a_att * h_def   # away finishing quality vs home defensive generosity
-
-    multiplier = (home_expectation + away_expectation) / 2.0
-
-    clipped = _clip(multiplier, 0.70, 1.40)
-    print(
-        f"[fbref_base] xG matchup: "
-        f"h_att={h_att:.2f} h_def={h_def:.2f} | "
-        f"a_att={a_att:.2f} a_def={a_def:.2f} → "
-        f"multiplier={multiplier:.3f} (clipped={clipped:.3f})"
-    )
-    return clipped
-
-
-
 def _compute_features_from_frames(
     H: pd.DataFrame,
     A: pd.DataFrame,
     hname: str,
     aname: str,
     full_df: pd.DataFrame,
+    league_code: Optional[str] = None,
 ) -> Dict[str, float]:
-    """Core feature computation given last-N match frames."""
+    """Core feature computation given last-N match frames.
+
+    league_code: when supplied and in INTL_LEAGUE_CODES, the support_idx
+    baseline is pinned to INTL_GOAL_AVERAGES instead of being derived from
+    whatever domestic snapshot happened to match each team.  Without this,
+    a Man City vs Real Madrid prediction could use an ENG-PL baseline (2.65)
+    for one team and GER-BUN (3.1) for the other — producing an inconsistent
+    and misleading delta.
+    """
     cols = {c.lower(): c for c in full_df.columns}
 
     def col(*names):
@@ -505,7 +269,6 @@ def _compute_features_from_frames(
     c_ag   = col("ag", "away_goals", "score_away", "goals_away")
     c_soth = col("home_shots_on_target", "shots_on_target_home", "sot_home")
     c_sota = col("away_shots_on_target", "shots_on_target_away", "sot_away")
-    c_date = col("date")
 
     def goals_fa(frame: pd.DataFrame, team_lc: str) -> Tuple[float, float]:
         gf = ga = 0
@@ -536,52 +299,23 @@ def _compute_features_from_frames(
             ratio_sot = _clip(agg["sot"].sum() / agg["goals"].sum(), 2.2, 4.5)
 
     mu_total = max(0.2, gfh + gfa)
-
-    # ── xG matchup multiplier ──────────────────────────────────────────
-    # Adjusts mu_total based on each team's historical finishing quality
-    # vs the opponent's historical defensive solidity.
-    # Returns 1.0 (neutral) if xG columns are absent in the snapshot.
-    xg_c = _resolve_columns(full_df)
-    xg_multiplier = _compute_xg_matchup_multiplier(H, A, hname, aname, xg_c)
-    mu_total = max(0.2, mu_total * xg_multiplier)
-
     p0       = math.exp(-mu_total)
     p1       = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
 
-    league_mu = float(
-        (full_df[c_hg].fillna(0) + full_df[c_ag].fillna(0)).mean() or 2.5
-    ) if c_hg and c_ag else 2.5
-
-    # ── DEG / DET / EPS features ──────────────────────────────────────
-    # Computed per-team then combined.
-    # deg_pressure : structural decline signal  [0.0, 1.0]
-    # home_det / away_det : per-team volatility [0.0, 1.0]
-    # det_boost : combined volatility           [0.0, 1.0]
-    # eps_stability : league phase consistency  [0.0, 1.0]
-    h_lc = _norm(h_matched)
-    a_lc = _norm(a_matched)
-
-    home_deg = _compute_deg(H, c_hg, c_ag, c_ht, c_date, h_lc)
-    away_deg = _compute_deg(A, c_hg, c_ag, c_ht, c_date, a_lc)
-    # Combined DEG: average of both teams' structural decline.
-    # Either team declining suppresses the matchup's over outlook.
-    deg_pressure = round((home_deg + away_deg) / 2.0, 3)
-
-    home_det = _compute_det(H, c_hg, c_ag, c_ht, h_lc)
-    away_det = _compute_det(A, c_hg, c_ag, c_ht, a_lc)
-    # Combined DET: min(home, away) for bilateral chaos check,
-    # average for overall volatility signal.
-    det_boost = round((home_det + away_det) / 2.0, 3)
-
-    eps_stab = _compute_eps(full_df, c_hg, c_ag)
-
-    print(
-        f"[fbref_base] DEG/DET/EPS: "
-        f"home_deg={home_deg} away_deg={away_deg} → deg_pressure={deg_pressure} | "
-        f"home_det={home_det} away_det={away_det} → det_boost={det_boost} | "
-        f"eps_stability={eps_stab}"
-    )
+    # Baseline for support_idx_over_delta.
+    # For domestic leagues: derive from the snapshot itself (reflects real
+    # league average at the point of the match).
+    # For international competitions: use a hardcoded historical average so
+    # the delta is consistent regardless of which domestic snapshot supplied
+    # the team's form data.
+    if league_code and league_code in INTL_GOAL_AVERAGES:
+        league_mu = INTL_GOAL_AVERAGES[league_code]
+        print(f"[fbref_base] Using intl goal baseline for {league_code}: {league_mu}")
+    else:
+        league_mu = float(
+            (full_df[c_hg].fillna(0) + full_df[c_ag].fillna(0)).mean() or 2.5
+        ) if c_hg and c_ag else 2.5
 
     return {
         "p_two_plus":             round(float(p_two_plus), 3),
@@ -590,12 +324,6 @@ def _compute_features_from_frames(
         "tempo_index":            round(_clip(mu_total / 3.0, 0.2, 0.9), 3),
         "sot_proj_total":         round(_clip(mu_total * ratio_sot, 6.0, 16.0), 2),
         "support_idx_over_delta": round(_clip((mu_total - league_mu) * 0.12, -0.15, 0.15), 3),
-        # New: DEG/DET/EPS
-        "deg_pressure":           deg_pressure,
-        "home_det":               home_det,
-        "away_det":               away_det,
-        "det_boost":              det_boost,
-        "eps_stability":          eps_stab,
     }
 
 
@@ -604,6 +332,7 @@ def _asof_features_intl(
     home_team: str,
     away_team: str,
     match_date: date,
+    league_code: str,
     min_matches: int = MIN_MATCHES,
 ) -> Dict[str, float]:
     snapshots = _load_all_snapshots()
@@ -640,7 +369,7 @@ def _asof_features_intl(
     print(f"[fbref_base] Intl fallback OK — "
           f"{home_team} ({len(H)} rows), {away_team} ({len(A)} rows)")
 
-    return _compute_features_from_frames(H, A, home_team, away_team, full_H)
+    return _compute_features_from_frames(H, A, home_team, away_team, full_H, league_code=league_code)
 
 
 # ── Match existence validator ─────────────────────────────────────────────────
@@ -731,7 +460,7 @@ def asof_features(
     """
     if league_code in INTL_LEAGUE_CODES:
         print(f"[fbref_base] Intl competition ({league_code}) — using domestic fallback.")
-        return _asof_features_intl(home_team, away_team, match_date, min_matches)
+        return _asof_features_intl(home_team, away_team, match_date, league_code, min_matches)
 
     df = _load_snapshot(league_code)
     if df is None or df.empty:
@@ -768,4 +497,4 @@ def asof_features(
     print(f"[fbref_base] Computing features: "
           f"{home_team} ({len(H)} rows), {away_team} ({len(A)} rows)")
 
-    return _compute_features_from_frames(H, A, home_team, away_team, work)
+    return _compute_features_from_frames(H, A, home_team, away_team, work, league_code=league_code)
