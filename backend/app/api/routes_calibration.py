@@ -45,9 +45,9 @@ router = APIRouter()
 
 # ── Constants ──────────────────────────────────────────────────────
 TARGET_HIT_RATE = 0.86
-NUDGE_STEP      = 0.02
-MAX_BIAS        = 0.13
-MIN_BIAS        = 0.00
+NUDGE_STEP      = 0.05   # per calibration run — 0.0–1.0 scale gives 20 steps per side
+MAX_BIAS        = 1.00   # upper ceiling for over_bias / under_bias
+MIN_BIAS        = 0.00   # lower floor for over_bias / under_bias
 
 
 # ── hit_weight helper ──────────────────────────────────────────────
@@ -519,8 +519,8 @@ def _run_calibration(
         })
 
     cfg           = db.query(LeagueConfig).filter_by(league_code=league_code).first()
-    current_over  = float(cfg.base_over_bias  or 0.05) if cfg else 0.05
-    current_under = float(cfg.base_under_bias or 0.05) if cfg else 0.05
+    current_over  = float(cfg.base_over_bias  or 0.5) if cfg else 0.5
+    current_under = float(cfg.base_under_bias or 0.5) if cfg else 0.5
     current_tempo = float(cfg.tempo_factor    or 0.50) if cfg else 0.50
     # DEG/DET/EPS current sensitivities (default 1.0 = neutral)
     current_deg_sens = float(cfg.deg_sensitivity or 1.0) if cfg else 1.0
@@ -1162,8 +1162,10 @@ def reset_league_calibration(
     # league_configs.json holds opinionated seed values for first insert only.
     # Resetting to those leaves calibration with almost no room to move.
     # Neutral midpoints give calibration full headroom in both directions.
-    NEUTRAL_OVER        = 0.05
-    NEUTRAL_UNDER       = 0.05
+    # Scale is 0.0–1.0 with 0.5 as the true zero-effect midpoint.
+    # At 0.5/0.5 the net bias shift on support_delta = 0.0 exactly.
+    NEUTRAL_OVER        = 0.5
+    NEUTRAL_UNDER       = 0.5
     NEUTRAL_TEMPO       = 0.50
     NEUTRAL_SENSITIVITY = 1.0
 
