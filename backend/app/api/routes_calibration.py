@@ -1157,46 +1157,37 @@ def reset_league_calibration(
         "notes":             [],
     }
 
-    # ── 1. Reset LeagueConfig to defaults from league_configs.json ────────────
-    # Try multiple path locations — structure differs between local and Render
-    possible_paths = [
-        os.path.join(os.path.dirname(__file__), "..", "seed", "league_configs.json"),
-        "/app/app/seed/league_configs.json",
-    ]
-    defaults_path = next(
-        (p for p in possible_paths if os.path.exists(os.path.normpath(p))), None
-    )
-    default_over  = 0.03
-    default_under = 0.01
-    default_tempo = 0.50
-
-    try:
-        if defaults_path:
-            with open(os.path.normpath(defaults_path)) as f:
-                configs = json.load(f)
-            match = next((c for c in configs if c["league_code"] == league_code), None)
-            if match:
-                default_over  = match.get("base_over_bias",  default_over)
-                default_under = match.get("base_under_bias", default_under)
-                default_tempo = match.get("tempo_factor",    default_tempo)
-        else:
-            result["notes"].append("league_configs.json not found in any expected location — using hardcoded defaults.")
-    except Exception as e:
-        result["notes"].append(f"Could not load league_configs.json ({e}) — using hardcoded defaults.")
+    # ── 1. Reset LeagueConfig to neutral calibration midpoints ───────────────
+    # Reset goes to neutral ground, NOT to league_configs.json values.
+    # league_configs.json holds opinionated seed values for first insert only.
+    # Resetting to those leaves calibration with almost no room to move.
+    # Neutral midpoints give calibration full headroom in both directions.
+    NEUTRAL_OVER        = 0.05
+    NEUTRAL_UNDER       = 0.05
+    NEUTRAL_TEMPO       = 0.50
+    NEUTRAL_SENSITIVITY = 1.0
 
     cfg = db.query(LeagueConfig).filter_by(league_code=league_code).first()
     if cfg:
-        cfg.base_over_bias  = default_over
-        cfg.base_under_bias = default_under
-        cfg.tempo_factor    = default_tempo
+        cfg.base_over_bias  = NEUTRAL_OVER
+        cfg.base_under_bias = NEUTRAL_UNDER
+        cfg.tempo_factor    = NEUTRAL_TEMPO
+        cfg.deg_sensitivity = NEUTRAL_SENSITIVITY
+        cfg.det_sensitivity = NEUTRAL_SENSITIVITY
+        cfg.eps_sensitivity = NEUTRAL_SENSITIVITY
         db.commit()
         result["league_config"] = {
-            "base_over_bias":  default_over,
-            "base_under_bias": default_under,
-            "tempo_factor":    default_tempo,
+            "base_over_bias":  NEUTRAL_OVER,
+            "base_under_bias": NEUTRAL_UNDER,
+            "tempo_factor":    NEUTRAL_TEMPO,
+            "deg_sensitivity": NEUTRAL_SENSITIVITY,
+            "det_sensitivity": NEUTRAL_SENSITIVITY,
+            "eps_sensitivity": NEUTRAL_SENSITIVITY,
         }
         result["notes"].append(
-            f"LeagueConfig reset to defaults: over={default_over} under={default_under} tempo={default_tempo}"
+            f"LeagueConfig reset to neutral midpoints: "
+            f"over={NEUTRAL_OVER} under={NEUTRAL_UNDER} tempo={NEUTRAL_TEMPO} "
+            f"(sensitivities reset to 1.0). Run calibrate?apply=true to let data decide."
         )
     else:
         result["notes"].append(f"No LeagueConfig found for {league_code} — nothing to reset.")
