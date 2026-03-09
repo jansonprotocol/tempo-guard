@@ -1,23 +1,42 @@
+# backend/app/models/league_config.py
 from sqlalchemy import Column, Integer, String, Float, Boolean
 from app.database.base import Base
+
 
 class LeagueConfig(Base):
     __tablename__ = "league_configs"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id              = Column(Integer, primary_key=True, index=True)
+    league_code     = Column(String,  unique=True, nullable=False)
+    base_over_bias  = Column(Float,   default=0.0)
+    base_under_bias = Column(Float,   default=0.0)
+    tempo_factor    = Column(Float,   default=1.0)
+    safety_mode     = Column(Boolean, default=True)
+    aggression_level= Column(Float,   default=0.5)
+    volatility      = Column(Float,   default=0.5)
+    description     = Column(String,  default="")
 
-    league_code = Column(String, unique=True, nullable=False)
+    # Display / UI
+    display_name    = Column(String,  default="")
+    country_code    = Column(String,  default="")
 
-    base_over_bias = Column(Float, default=0.0)
-    base_under_bias = Column(Float, default=0.0)
-    tempo_factor = Column(Float, default=1.0)
-    safety_mode = Column(Boolean, default=True)
-
-    aggression_level = Column(Float, default=0.5)
-    volatility = Column(Float, default=0.5)
-
-    description = Column(String, default="")
-
-    # NEW:
-    display_name = Column(String, default="")
-    country_code = Column(String, default="")
+    # ── DEG / DET / EPS sensitivity multipliers ──────────────────────
+    # Applied to raw feature values before they enter the pipeline.
+    # 1.0 = neutral (no amplification/dampening).
+    # > 1.0 = amplify the signal for this league.
+    # < 1.0 = dampen the signal for this league.
+    #
+    # deg_sensitivity: how strongly structural decline pressure is felt
+    #   e.g. ITA-SA = 1.4 → DEG pressure 40% stronger than baseline
+    #
+    # det_sensitivity: how strongly volatility/burst signals are amplified
+    #   e.g. BRA-SA = 1.6 → DET chaos escalation amplified for this league
+    #
+    # eps_sensitivity: how aggressively the EPS ceiling taper is applied
+    #   e.g. TUR-SL = 1.3 → unstable phases cause a larger ceiling reduction
+    #
+    # Calibration writes these from miss-pattern analysis automatically.
+    # Manual overrides are also valid — use admin panel or direct DB edit.
+    deg_sensitivity = Column(Float, default=1.0)
+    det_sensitivity = Column(Float, default=1.0)
+    eps_sensitivity = Column(Float, default=1.0)
