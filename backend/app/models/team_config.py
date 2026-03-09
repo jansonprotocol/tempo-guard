@@ -8,9 +8,31 @@ over_nudge  / under_nudge:
   Range: -0.05 to +0.05
   Positive = push toward over, Negative = push toward under.
 
+det_nudge:
+  Per-team adjustment to the raw DET (Detonation) score.
+  Applied individually to home_det and away_det before the pipeline runs.
+  Range: -0.15 to +0.15
+  Positive = this team is more volatile than the model computes (e.g. Man City,
+             Liverpool — top attackers, high variance output). Pushing det up
+             makes BILATERAL_CHAOS_ESCALATOR fire more easily when they meet
+             other volatile teams.
+  Negative = this team suppresses volatility (e.g. low-block, structured teams).
+
+deg_nudge:
+  Per-team adjustment to the raw DEG (Degradation) pressure.
+  Applied to the combined deg_pressure before the pipeline runs.
+  Range: -0.10 to +0.10
+  Positive = this team's decline is more severe than rolling averages show
+             (often needed for newly relegated sides, rotation-heavy squads).
+  Negative = this team is more resilient than short-term form suggests.
+
 Example:
-  Man City  over_nudge=-0.04 (strong defense, tends to suppress goals)
-  Burnley   over_nudge=+0.03 (leaky defense, tends toward high-scoring)
+  Man City  over_nudge=-0.04  det_nudge=+0.12  deg_nudge=-0.05
+    → Tends to suppress total goals (strong defense) but is individually volatile.
+    → When paired with another high-det team, bilateral chaos fires.
+
+  Burnley   over_nudge=+0.03  det_nudge=+0.04  deg_nudge=+0.06
+    → Leaky defense, consistent structural decline across seasons.
 
 These are derived purely from ATHENA's historical miss/hit patterns,
 NOT from subjective team quality — calibration only.
@@ -27,19 +49,25 @@ from app.database.base import Base
 class TeamConfig(Base):
     __tablename__ = "team_configs"
 
-    id             = Column(Integer, primary_key=True, autoincrement=True)
-    league_code    = Column(String,  nullable=False, index=True)
-    team           = Column(String,  nullable=False, index=True)
+    id          = Column(Integer, primary_key=True, autoincrement=True)
+    league_code = Column(String,  nullable=False, index=True)
+    team        = Column(String,  nullable=False, index=True)
 
-    # Calibration nudges — additive on support_delta
-    over_nudge     = Column(Float, default=0.0)   # when called over
-    under_nudge    = Column(Float, default=0.0)   # when called under
+    # ── Support delta nudges (existing) ───────────────────────────────
+    over_nudge  = Column(Float, default=0.0)   # additive on support_delta (over calls)
+    under_nudge = Column(Float, default=0.0)   # additive on support_delta (under calls)
 
-    # Diagnostics
-    over_hit_rate  = Column(Float, default=None)  # team's over hit rate in window
-    under_hit_rate = Column(Float, default=None)  # team's under hit rate in window
-    over_matches   = Column(Integer, default=0)   # sample size for over nudge
-    under_matches  = Column(Integer, default=0)   # sample size for under nudge
+    # ── Module-level nudges (new) ─────────────────────────────────────
+    det_nudge   = Column(Float, default=0.0)   # adjustment to this team's DET score
+    deg_nudge   = Column(Float, default=0.0)   # adjustment to this team's DEG pressure
+
+    # ── Diagnostics ───────────────────────────────────────────────────
+    over_hit_rate   = Column(Float,   default=None)
+    under_hit_rate  = Column(Float,   default=None)
+    over_matches    = Column(Integer, default=0)
+    under_matches   = Column(Integer, default=0)
+    avg_det         = Column(Float,   default=None)  # team's historical avg DET
+    avg_deg         = Column(Float,   default=None)  # team's historical avg DEG
 
     last_calibrated = Column(DateTime, default=datetime.utcnow)
 
@@ -50,5 +78,6 @@ class TeamConfig(Base):
     def __repr__(self):
         return (
             f"<TeamConfig {self.league_code}/{self.team} "
-            f"over={self.over_nudge:+.3f} under={self.under_nudge:+.3f}>"
+            f"over={self.over_nudge:+.3f} under={self.under_nudge:+.3f} "
+            f"det={self.det_nudge:+.3f} deg={self.deg_nudge:+.3f}>"
         )
