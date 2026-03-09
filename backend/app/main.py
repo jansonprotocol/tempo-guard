@@ -1,9 +1,7 @@
 # backend/app/main.py
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
 # Routers
 from app.api.routes_health import router as health_router
 from app.api.routes_auth import router as auth_router
@@ -14,16 +12,13 @@ from app.api.routes_futurematch import router as future_router
 from app.api.routes_retrosim import router as retro_router
 from app.api.routes_calibration import router as calib_router
 from app.api.routes_batch import router as batch_router
-
 # Database & models
 from app.database.base import Base
 from app.database.db import engine, SessionLocal
 from app.database.models_fbref import FBrefSnapshot  # registers the new table
 from app.models.team_config import TeamConfig         # registers team_configs table
-
 # Memory loaders
 from app.memory_loader import load_league_configs, load_teams
-
 
 app = FastAPI(
     title="ATHENA: Tempo Guard",
@@ -36,25 +31,102 @@ app = FastAPI(
 # ------------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # restrict to your frontend domain when ready
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # ------------------------------------------------------------------------------
-# STARTUP: create tables + load seeds
+# SAFE COLUMN MIGRATIONS
+# Each entry: (table, column, sql_type, default_clause_or_None)
+# Runs before create_all so the app never crashes on a missing column.
+# Add new columns here whenever the model grows — never remove old entries.
+# ------------------------------------------------------------------------------
+_COLUMN_MIGRATIONS = [
+    # prediction_log
+    ("prediction_log", "variance_flag", "VARCHAR",  None),
+    ("prediction_log", "match_time",    "VARCHAR",  None),
+    # league_configs — DEG/DET/EPS sensitivity multipliers
+    ("league_configs", "deg_sensitivity", "FLOAT",  "1.0"),
+    ("league_configs", "det_sensitivity", "FLOAT",  "1.0"),
+    ("league_configs", "eps_sensitivity", "FLOAT",  "1.0"),
+    # league_configs — display fields (older, kept for safety)
+    ("league_configs", "display_name",   "VARCHAR", "''"),
+    ("league_configs", "country_code",   "VARCHAR", "''"),
+    # team_configs — module nudges + diagnostics
+    ("team_configs",   "det_nudge",      "FLOAT",   "0.0"),
+    ("team_configs",   "deg_nudge",      "FLOAT",   "0.0"),
+    ("team_configs",   "avg_det",        "FLOAT",   None),
+    ("team_configs",   "avg_deg",        "FLOAT",   None),
+]
+
+
+def _safe_migrate(db):
+    """
+    Idempotent column migrations — runs on every startup.
+    Uses sqlalchemy inspect to check existing columns before issuing ALTER TABLE,
+    so it's safe to re-run indefinitely without errors or data loss.
+    """
+    from sqlalchemy import text, inspect as sa_inspect
+
+    inspector = sa_inspect(db.bind)
+    existing_tables = set(inspector.get_table_names())
+
+    for table, column, sql_type, default in _COLUMN_MIGRATIONS:
+        if table not in existing_tables:
+            continue  # table doesn't exist yet — create_all will handle it
+        existing_cols = {c["name"] for c in inspector.get_columns(table)}
+        if column in existing_cols:
+            continue  # already present — nothing to do
+        try:
+            default_clause = f" DEFAULT {default}" if default is not None else ""
+            db.execute(text(
+                f"ALTER TABLE {table} ADD COLUMN {column} {sql_type}{default_clause}"
+            ))
+            db.commit()
+            print(f"[startup] Migration: added {table}.{column} ({sql_type}{default_clause})")
+        except Exception as e:
+            db.rollback()
+            print(f"[startup] Migration warning — {table}.{column}: {e}")
+
+    # calibration_log table (created via raw SQL because it's not a SQLAlchemy model)
+    if "calibration_log" not in existing_tables:
+        try:
+            db.execute(text("""
+                CREATE TABLE calibration_log (
+                    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                    league_code VARCHAR NOT NULL,
+                    hit_rate    FLOAT   NOT NULL,
+                    sample_size INTEGER,
+                    applied     BOOLEAN DEFAULT 0,
+                    run_at      DATETIME
+                )
+            """))
+            db.commit()
+            print("[startup] Migration: created calibration_log table")
+        except Exception as e:
+            db.rollback()
+            print(f"[startup] Migration warning — calibration_log: {e}")
+
+
+# ------------------------------------------------------------------------------
+# STARTUP: migrate → create tables → load seeds
 # ------------------------------------------------------------------------------
 @app.on_event("startup")
 def startup_event():
-    Base.metadata.create_all(bind=engine)   # also creates fbref_snapshots table
-
     db = SessionLocal()
     try:
+        # 1. Safe column migrations FIRST — before anything queries the models
+        _safe_migrate(db)
+        # 2. Create any fully new tables defined in SQLAlchemy models
+        Base.metadata.create_all(bind=engine)
+        # 3. Seed league configs + teams from JSON
         load_league_configs(db)
         load_teams(db)
     finally:
         db.close()
+
 
 # ------------------------------------------------------------------------------
 # ROUTERS
@@ -67,7 +139,8 @@ app.include_router(predict_router, prefix="/api",      tags=["Predict"])
 app.include_router(future_router,  prefix="/api",      tags=["Futurematch"])
 app.include_router(retro_router,   prefix="/api",      tags=["Retrosim"])
 app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
-app.include_router(batch_router, prefix="/api")
+app.include_router(batch_router,   prefix="/api")
+
 
 # ------------------------------------------------------------------------------
 # STATIC FRONTEND (served at /app)
