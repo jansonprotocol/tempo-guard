@@ -223,6 +223,142 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
     return result
 
 
+# ── Sensitivity suggestion ─────────────────────────────────────────
+def _suggest_sensitivities(
+    deg_det_records: list,
+    current_deg_sens: float,
+    current_det_sens: float,
+    current_eps_sens: float,
+) -> dict:
+    """
+    Analyse per-match DEG/DET/EPS values vs hit/miss outcomes and suggest
+    sensitivity multiplier adjustments for this league.
+
+    Logic:
+      DEG sensitivity:
+        If over-misses cluster disproportionately at HIGH deg_pressure
+        → DEG is genuinely predictive in this league → amplify (>1.0)
+        If high-DEG matches don't miss more than baseline → dampen (<1.0)
+
+      DET sensitivity:
+        If under-misses cluster disproportionately at HIGH det_boost
+        → DET correctly signals chaos that tips the game over → amplify
+        If high-DET under-misses are no worse than baseline → dampen
+
+      EPS sensitivity:
+        If under-misses cluster at LOW eps_stability (unstable phases)
+        → EPS ceiling taper is correctly predicting volatile outcomes → amplify
+        If low-EPS matches don't produce more under-misses → dampen
+
+    Requires MIN_RECORDS per side for each analysis to be valid.
+    Returns dict with suggested values. None = insufficient data (no change).
+    """
+    MIN_RECORDS      = 10   # minimum total records for analysis
+    MIN_SIGNAL_RECS  = 5    # minimum high-signal records for lift calculation
+    SCALE            = 3.0  # how aggressively to translate lift to sensitivity
+    SENS_CAP_LOW     = 0.50
+    SENS_CAP_HIGH    = 2.00
+    SENS_STEP        = 0.10  # max change per calibration run (prevents overcorrection)
+
+    from app.engine.pipeline import DEG_TRIGGER, DET_TRIGGER, EPS_STABLE
+
+    result: dict = {}
+
+    over_records  = [r for r in deg_det_records if r["is_over"]]
+    under_records = [r for r in deg_det_records if not r["is_over"]]
+
+    # ── DEG sensitivity ───────────────────────────────────────────────
+    if len(over_records) >= MIN_RECORDS:
+        high_deg = [r for r in over_records if r["deg_pressure"] >= DEG_TRIGGER]
+        if len(high_deg) >= MIN_SIGNAL_RECS:
+            miss_rate_high = sum(r["is_miss"] for r in high_deg) / len(high_deg)
+            miss_rate_base = sum(r["is_miss"] for r in over_records) / len(over_records)
+            lift = miss_rate_high - miss_rate_base
+            # lift > 0: DEG correctly predicts misses → amplify sensitivity
+            # lift < 0: DEG is noisy in this league → dampen
+            raw_suggested  = 1.0 + lift * SCALE
+            capped         = max(SENS_CAP_LOW, min(SENS_CAP_HIGH, raw_suggested))
+            # Apply step cap to prevent large jumps
+            stepped        = round(max(
+                current_deg_sens - SENS_STEP,
+                min(current_deg_sens + SENS_STEP, capped)
+            ), 2)
+            result["deg_sensitivity"] = stepped
+            result["deg_analysis"] = (
+                f"{len(high_deg)} high-DEG over matches: "
+                f"miss_rate={round(miss_rate_high,3)} vs baseline={round(miss_rate_base,3)} "
+                f"(lift={round(lift,3)}) → suggested={stepped}"
+            )
+        else:
+            result["deg_analysis"] = (
+                f"Insufficient high-DEG over matches ({len(high_deg)} < {MIN_SIGNAL_RECS}) "
+                f"— DEG sensitivity unchanged."
+            )
+    else:
+        result["deg_analysis"] = f"Insufficient over records ({len(over_records)}) for DEG analysis."
+
+    # ── DET sensitivity ───────────────────────────────────────────────
+    DET_HIGH_THRESHOLD = 0.45  # above this = high-chaos match
+    if len(under_records) >= MIN_RECORDS:
+        high_det = [r for r in under_records if r["det_boost"] >= DET_HIGH_THRESHOLD]
+        if len(high_det) >= MIN_SIGNAL_RECS:
+            miss_rate_high = sum(r["is_miss"] for r in high_det) / len(high_det)
+            miss_rate_base = sum(r["is_miss"] for r in under_records) / len(under_records)
+            lift = miss_rate_high - miss_rate_base
+            raw_suggested  = 1.0 + lift * SCALE
+            capped         = max(SENS_CAP_LOW, min(SENS_CAP_HIGH, raw_suggested))
+            stepped        = round(max(
+                current_det_sens - SENS_STEP,
+                min(current_det_sens + SENS_STEP, capped)
+            ), 2)
+            result["det_sensitivity"] = stepped
+            result["det_analysis"] = (
+                f"{len(high_det)} high-DET under matches: "
+                f"miss_rate={round(miss_rate_high,3)} vs baseline={round(miss_rate_base,3)} "
+                f"(lift={round(lift,3)}) → suggested={stepped}"
+            )
+        else:
+            result["det_analysis"] = (
+                f"Insufficient high-DET under matches ({len(high_det)} < {MIN_SIGNAL_RECS}) "
+                f"— DET sensitivity unchanged."
+            )
+    else:
+        result["det_analysis"] = f"Insufficient under records ({len(under_records)}) for DET analysis."
+
+    # ── EPS sensitivity ───────────────────────────────────────────────
+    if len(under_records) >= MIN_RECORDS:
+        low_eps = [r for r in under_records if r["eps_stability"] < EPS_STABLE]
+        if len(low_eps) >= MIN_SIGNAL_RECS:
+            miss_rate_high = sum(r["is_miss"] for r in low_eps) / len(low_eps)
+            miss_rate_base = sum(r["is_miss"] for r in under_records) / len(under_records)
+            lift = miss_rate_high - miss_rate_base
+            raw_suggested  = 1.0 + lift * SCALE
+            capped         = max(SENS_CAP_LOW, min(SENS_CAP_HIGH, raw_suggested))
+            stepped        = round(max(
+                current_eps_sens - SENS_STEP,
+                min(current_eps_sens + SENS_STEP, capped)
+            ), 2)
+            result["eps_sensitivity"] = stepped
+            result["eps_analysis"] = (
+                f"{len(low_eps)} low-EPS under matches: "
+                f"miss_rate={round(miss_rate_high,3)} vs baseline={round(miss_rate_base,3)} "
+                f"(lift={round(lift,3)}) → suggested={stepped}"
+            )
+        else:
+            result["eps_analysis"] = (
+                f"Insufficient low-EPS under matches ({len(low_eps)} < {MIN_SIGNAL_RECS}) "
+                f"— EPS sensitivity unchanged."
+            )
+    else:
+        result["eps_analysis"] = f"Insufficient under records ({len(under_records)}) for EPS analysis."
+
+    if len(deg_det_records) < MIN_RECORDS:
+        result["insufficient_data"] = True
+        result["note"] = f"Only {len(deg_det_records)} records total (need {MIN_RECORDS})"
+
+    return result
+
+
 # ── Bias suggestion ────────────────────────────────────────────────
 def _suggest_bias(
     over_hits: float, over_total: float,
@@ -386,6 +522,10 @@ def _run_calibration(
     current_over  = float(cfg.base_over_bias  or 0.05) if cfg else 0.05
     current_under = float(cfg.base_under_bias or 0.05) if cfg else 0.05
     current_tempo = float(cfg.tempo_factor    or 0.50) if cfg else 0.50
+    # DEG/DET/EPS current sensitivities (default 1.0 = neutral)
+    current_deg_sens = float(cfg.deg_sensitivity or 1.0) if cfg else 1.0
+    current_det_sens = float(cfg.det_sensitivity or 1.0) if cfg else 1.0
+    current_eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
 
     def _weight(pos: int) -> float:
         if pos <= 10: return 1.0
@@ -393,11 +533,12 @@ def _run_calibration(
         return 0.2
 
     market_tracker: dict = {}
-    team_tracker:   dict = {}   # team → {over_hits, over_total, under_hits, under_total}
+    team_tracker:   dict = {}   # team → {over_hits, over_total, under_hits, under_total, ...}
     w_hits = w_misses = 0.0
     skipped = 0
     sample_rows: list = []
     lean_records: list = []
+    deg_det_records: list = []  # per-match DEG/DET/EPS values + outcome
 
     miss_patterns = {
         "over_miss_low_goals":   0,
@@ -530,6 +671,10 @@ def _run_calibration(
                     team_tracker[team] = {
                         "over_hits": 0, "over_total": 0,
                         "under_hits": 0, "under_total": 0,
+                        "det_values": [],  # raw det_boost values across all matches
+                        "deg_values": [],  # raw deg_pressure values across all matches
+                        "over_miss_det": [],  # det when over was called and missed
+                        "under_miss_det": [], # det when under was called and missed
                     }
                 if is_over_market:
                     team_tracker[team]["over_total"] += 1
@@ -539,6 +684,26 @@ def _run_calibration(
                     team_tracker[team]["under_total"] += 1
                     if hw >= 0.5:
                         team_tracker[team]["under_hits"] += 1
+
+                # Always track DEG/DET context for this team's matches
+                raw_det = metrics.get("det_boost") or 0.30
+                raw_deg = metrics.get("deg_pressure") or 0.0
+                team_tracker[team]["det_values"].append(raw_det)
+                team_tracker[team]["deg_values"].append(raw_deg)
+                if is_over_market and is_full_miss:
+                    team_tracker[team]["over_miss_det"].append(raw_det)
+                if not is_over_market and is_full_miss:
+                    team_tracker[team]["under_miss_det"].append(raw_det)
+
+            # ── DEG/DET/EPS per-match record ──────────────────────────
+            deg_det_records.append({
+                "deg_pressure":  metrics.get("deg_pressure")  or 0.0,
+                "det_boost":     metrics.get("det_boost")     or 0.30,
+                "eps_stability": metrics.get("eps_stability") or 0.65,
+                "is_over":       is_over_market,
+                "is_miss":       is_full_miss,
+                "total_goals":   hg + ag,
+            })
 
         total_goals  = hg + ag
         is_half_loss = hw == 0.25
@@ -603,6 +768,13 @@ def _run_calibration(
         overall_hit_rate, miss_patterns, lean_records,
     )
 
+    # ── DEG/DET/EPS sensitivity analysis ─────────────────────────────
+    sensitivity_suggestion = _suggest_sensitivities(
+        deg_det_records,
+        current_deg_sens, current_det_sens, current_eps_sens,
+    )
+    suggestion["sensitivity"] = sensitivity_suggestion
+
     applied = False
     applied_changes = {}
 
@@ -636,6 +808,41 @@ def _run_calibration(
         else:
             suggestion["notes"].append(
                 "apply=true but nothing changed — already at suggested values."
+            )
+
+        # ── Sensitivity write ─────────────────────────────────────────
+        # Write DEG/DET/EPS sensitivities when calibration data is sufficient.
+        # Only updates when the suggested value differs meaningfully (>0.05).
+        sens = sensitivity_suggestion
+        sens_changed = {}
+        SENS_MIN_CHANGE = 0.05
+
+        for field, current, key in [
+            ("deg_sensitivity", current_deg_sens, "deg_sensitivity"),
+            ("det_sensitivity", current_det_sens, "det_sensitivity"),
+            ("eps_sensitivity", current_eps_sens, "eps_sensitivity"),
+        ]:
+            suggested = sens.get(key)
+            if suggested is not None and abs(suggested - current) >= SENS_MIN_CHANGE:
+                setattr(cfg, field, suggested)
+                sens_changed[field] = {"before": current, "after": suggested}
+
+        if sens_changed:
+            db.commit()
+            applied = True
+            applied_changes.update(sens_changed)
+            suggestion["notes"].append(
+                "Sensitivities updated: " + ", ".join(
+                    f"{k} {v['before']}→{v['after']}" for k, v in sens_changed.items()
+                )
+            )
+        elif sens.get("insufficient_data"):
+            suggestion["notes"].append(
+                f"Sensitivity analysis: insufficient data ({sens.get('note', '')})."
+            )
+        else:
+            suggestion["notes"].append(
+                "Sensitivities: already at suggested values — no change."
             )
 
         # ── Team-level nudge calibration ──────────────────────────────
@@ -681,6 +888,59 @@ def _run_calibration(
             if over_n < MIN_TEAM_SAMPLES and under_n < MIN_TEAM_SAMPLES:
                 continue  # not enough data — leave neutral
 
+            # ── DET nudge ─────────────────────────────────────────────
+            # det_nudge = how much this team's average DET deviates from
+            # the league average DET. Positive = more volatile than average.
+            # Applied per-team to home_det/away_det before bilateral check.
+            # Scale: 0.5 × deviation, clipped [-0.15, +0.15].
+            DET_NUDGE_MAX   = 0.15
+            DET_NUDGE_SCALE = 0.50
+            det_values = stats["det_values"]
+            det_nudge  = 0.0
+            team_avg_det = None
+            if len(det_values) >= MIN_TEAM_SAMPLES:
+                league_avg_det = (
+                    sum(
+                        v for s in team_tracker.values()
+                        for v in s["det_values"]
+                    ) / max(1, sum(len(s["det_values"]) for s in team_tracker.values()))
+                )
+                team_avg_det = round(sum(det_values) / len(det_values), 3)
+                det_deviation = team_avg_det - league_avg_det
+                det_nudge = round(
+                    max(-DET_NUDGE_MAX, min(DET_NUDGE_MAX, det_deviation * DET_NUDGE_SCALE)), 4
+                )
+
+            # ── DEG nudge ─────────────────────────────────────────────
+            # deg_nudge = how often this team generates over misses when
+            # DEG was low (model didn't detect the decline but it existed).
+            # Positive → team has hidden structural decline → push DEG up.
+            # Scale: 0.4 × excess miss rate, clipped [-0.10, +0.10].
+            DEG_NUDGE_MAX   = 0.10
+            DEG_NUDGE_SCALE = 0.40
+            from app.engine.pipeline import DEG_TRIGGER as _DEG_TRIGGER
+            deg_nudge    = 0.0
+            team_avg_deg = None
+            deg_values   = stats["deg_values"]
+            if len(deg_values) >= MIN_TEAM_SAMPLES:
+                team_avg_deg = round(sum(deg_values) / len(deg_values), 3)
+
+            over_miss_det  = stats["over_miss_det"]
+            if over_n >= MIN_TEAM_SAMPLES and over_miss_det:
+                # Misses where DEG was below trigger (model said fine, game went under)
+                low_deg_misses = sum(1 for d in over_miss_det if d < _DEG_TRIGGER)
+                all_low_deg_over = sum(
+                    1 for d in (stats["det_values"])
+                    if d < _DEG_TRIGGER  # rough proxy using det values
+                )
+                if all_low_deg_over >= 4:
+                    team_low_deg_miss_rate = low_deg_misses / all_low_deg_over
+                    baseline = 1.0 - (overall_hit_rate / 100.0)
+                    excess_miss = team_low_deg_miss_rate - baseline
+                    deg_nudge = round(
+                        max(-DEG_NUDGE_MAX, min(DEG_NUDGE_MAX, excess_miss * DEG_NUDGE_SCALE)), 4
+                    )
+
             # Upsert TeamConfig
             from datetime import datetime as _dt
             existing = (
@@ -689,12 +949,16 @@ def _run_calibration(
                 .first()
             )
             if existing:
-                existing.over_nudge     = over_nudge
-                existing.under_nudge    = under_nudge
-                existing.over_hit_rate  = round(stats["over_hits"] / over_n, 3) if over_n else None
-                existing.under_hit_rate = round(stats["under_hits"] / under_n, 3) if under_n else None
-                existing.over_matches   = over_n
-                existing.under_matches  = under_n
+                existing.over_nudge      = over_nudge
+                existing.under_nudge     = under_nudge
+                existing.det_nudge       = det_nudge
+                existing.deg_nudge       = deg_nudge
+                existing.avg_det         = team_avg_det
+                existing.avg_deg         = team_avg_deg
+                existing.over_hit_rate   = round(stats["over_hits"] / over_n, 3) if over_n else None
+                existing.under_hit_rate  = round(stats["under_hits"] / under_n, 3) if under_n else None
+                existing.over_matches    = over_n
+                existing.under_matches   = under_n
                 existing.last_calibrated = _dt.utcnow()
             else:
                 db.add(TeamConfig(
@@ -702,6 +966,10 @@ def _run_calibration(
                     team=team,
                     over_nudge=over_nudge,
                     under_nudge=under_nudge,
+                    det_nudge=det_nudge,
+                    deg_nudge=deg_nudge,
+                    avg_det=team_avg_det,
+                    avg_deg=team_avg_deg,
                     over_hit_rate=round(stats["over_hits"] / over_n, 3) if over_n else None,
                     under_hit_rate=round(stats["under_hits"] / under_n, 3) if under_n else None,
                     over_matches=over_n,
@@ -709,12 +977,16 @@ def _run_calibration(
                     last_calibrated=_dt.utcnow(),
                 ))
 
-            if abs(over_nudge) > 0.005 or abs(under_nudge) > 0.005:
+            if abs(over_nudge) > 0.005 or abs(under_nudge) > 0.005 \
+               or abs(det_nudge) > 0.01 or abs(deg_nudge) > 0.01:
                 team_nudges_applied[team] = {
                     "over_nudge":  over_nudge,
                     "under_nudge": under_nudge,
+                    "det_nudge":   det_nudge,
+                    "deg_nudge":   deg_nudge,
                     "over_rate":   round(stats["over_hits"] / over_n, 3) if over_n else None,
                     "over_n":      over_n,
+                    "avg_det":     team_avg_det,
                 }
 
         db.commit()
