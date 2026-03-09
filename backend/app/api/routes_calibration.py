@@ -447,6 +447,11 @@ def _run_calibration(
                 p_home_tt05=metrics.get("p_home_tt05"),
                 p_away_tt05=metrics.get("p_away_tt05"),
                 tempo_index=metrics.get("tempo_index"),
+                deg_pressure=metrics.get("deg_pressure"),
+                det_boost=metrics.get("det_boost"),
+                home_det=metrics.get("home_det"),
+                away_det=metrics.get("away_det"),
+                eps_stability=metrics.get("eps_stability"),
             )
             # Call evaluate_athena directly with team_nudge=0.0 — bypassing any
             # previously-written team nudges. Calibration must evaluate on raw
