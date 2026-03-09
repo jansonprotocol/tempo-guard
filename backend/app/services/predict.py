@@ -37,8 +37,8 @@ def _get_league_bias(db: Session, league_code: str) -> tuple[float, float, float
         return 0.05, 0.05, 0.50  # neutral defaults
 
     return (
-        float(cfg.base_over_bias  or 0.05),
-        float(cfg.base_under_bias or 0.05),
+        float(cfg.base_over_bias  or 0.5),
+        float(cfg.base_under_bias or 0.5),
         float(cfg.tempo_factor    or 0.50),
     )
 
