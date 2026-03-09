@@ -155,6 +155,11 @@ def batch_predict(
                 p_home_tt05=metrics.get("p_home_tt05"),
                 p_away_tt05=metrics.get("p_away_tt05"),
                 tempo_index=metrics.get("tempo_index"),
+                deg_pressure=metrics.get("deg_pressure"),
+                det_boost=metrics.get("det_boost"),
+                home_det=metrics.get("home_det"),
+                away_det=metrics.get("away_det"),
+                eps_stability=metrics.get("eps_stability"),
             )
 
             pred = predict_match(db, req)
@@ -586,4 +591,60 @@ def backfill_variance_flags(db: Session = Depends(get_db)):
         "leagues_found": len(league_flags),
         "rows_updated":  updated,
         "flags_applied": league_flags,
+    }
+
+
+# ── POST /api/patch-prediction-metadata ───────────────────────────────────────
+
+@router.post("/patch-prediction-metadata")
+def patch_prediction_metadata(
+    league_code: Optional[str] = Query(None, description="Limit to one league, or omit for all"),
+    db: Session = Depends(get_db),
+):
+    """
+    Patches match_time and variance_flag on existing PredictionLog rows
+    WITHOUT re-running the model or touching market/confidence/corridor/lean.
+
+    Use this instead of force=true when you only need to backfill metadata.
+    """
+    q = db.query(PredictionLog)
+    if league_code:
+        q = q.filter(PredictionLog.league_code == league_code)
+    predictions = q.all()
+
+    time_updated  = 0
+    flag_updated  = 0
+
+    for pred in predictions:
+        changed = False
+
+        # Patch match_time from FBrefFixture if missing
+        if not getattr(pred, "match_time", None):
+            fix = db.query(FBrefFixture).filter(
+                FBrefFixture.league_code == pred.league_code,
+                FBrefFixture.home_team   == pred.home_team,
+                FBrefFixture.away_team   == pred.away_team,
+                FBrefFixture.match_date  == pred.match_date,
+            ).first()
+            if fix and getattr(fix, "match_time", None):
+                pred.match_time = fix.match_time
+                time_updated += 1
+                changed = True
+
+        # Patch variance_flag if missing
+        if not getattr(pred, "variance_flag", None):
+            flag = _get_variance_flag(pred.league_code, db)
+            if flag:
+                pred.variance_flag = flag
+                flag_updated += 1
+                changed = True
+
+    db.commit()
+
+    return {
+        "status":        "ok",
+        "league_code":   league_code or "all",
+        "rows_scanned":  len(predictions),
+        "time_updated":  time_updated,
+        "flag_updated":  flag_updated,
     }
