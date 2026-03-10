@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import io
 import os
+import re
 import sys
 import time
 from datetime import date, datetime, timedelta
@@ -415,12 +416,26 @@ def _upsert_fixtures(
             FBrefFixture.match_date  >= today,
         ).delete()
 
+        # Deduplicate by date+home+away (multi-table merge can produce dupes)
+        upcoming_df = upcoming_df.drop_duplicates(
+            subset=[c["date"], c["home"], c["away"]]
+        ).copy()
+
         added = 0
         for _, row in upcoming_df.iterrows():
             try:
                 match_date = row[c["date"]].date()
                 home = str(row[c["home"]]).strip()
                 away = str(row[c["away"]]).strip()
+
+                # Strip leading/trailing 2-3 letter country codes injected by
+                # FBref on international competition pages (e.g. "eng Liverpool",
+                # "Newcastle United eng", "es Barcelona")
+                home = re.sub(r'(?i)^[a-z]{2,3}\s+', '', home).strip()
+                home = re.sub(r'(?i)\s+[a-z]{2,3}$', '', home).strip()
+                away = re.sub(r'(?i)^[a-z]{2,3}\s+', '', away).strip()
+                away = re.sub(r'(?i)\s+[a-z]{2,3}$', '', away).strip()
+
                 mtime = str(row[c["time"]]).strip() if c["time"] and pd.notnull(row.get(c["time"])) else None
 
                 if not home or not away or home == "nan" or away == "nan":
