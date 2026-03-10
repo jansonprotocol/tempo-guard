@@ -16,6 +16,7 @@ NOTE: Chrome will open and close for each fetch.
 
 import io
 import os
+import re
 import sys
 import time
 from datetime import datetime
@@ -50,6 +51,10 @@ LEAGUE_MAP = {
     "ENG-PL": (
         "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures",
         "https://fbref.com/en/comps/9/2024-2025/schedule/2024-2025-Premier-League-Scores-and-Fixtures",
+    ),
+    "ENG-CH": (
+        "https://fbref.com/en/comps/10/schedule/Championship-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/10/2024-2025/schedule/2024-2025-Championship-Scores-and-Fixtures",
     ),
     "ESP-LL": (
         "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
@@ -167,6 +172,19 @@ LEAGUE_MAP = {
         "https://fbref.com/en/comps/32/2024-2025/schedule/2024-2025-Primeira-Liga-Scores-and-Fixtures",
     ),
     # Cuba (CUB-PD) is NOT on FBref — scraping skipped, add manually if needed
+    # ── UEFA club competitions ────────────────────────────────────────────────
+    "UCL": (
+        "https://fbref.com/en/comps/8/schedule/Champions-League-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/8/2024-2025/schedule/2024-2025-Champions-League-Scores-and-Fixtures",
+    ),
+    "UEL": (
+        "https://fbref.com/en/comps/19/schedule/Europa-League-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/19/2024-2025/schedule/2024-2025-Europa-League-Scores-and-Fixtures",
+    ),
+    "UECL": (
+        "https://fbref.com/en/comps/882/schedule/Conference-League-Scores-and-Fixtures",
+        "https://fbref.com/en/comps/882/2024-2025/schedule/2024-2025-Conference-League-Scores-and-Fixtures",
+    ),
 }
 
 
@@ -248,8 +266,33 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
         print(f"  No tables found [{label}].")
         return None
 
-    df = max(tables, key=len)
-    df = df.dropna(how="all")
+    # ── International comps (UCL/UEL/UECL): merge all schedule tables ────────
+    # FBref splits these into one table per round — "largest table" misses most.
+    schedule_tables = []
+    for t in tables:
+        if isinstance(t.columns, pd.MultiIndex):
+            t.columns = [
+                " ".join(str(v) for v in col if str(v) != "nan").strip()
+                for col in t.columns
+            ]
+        cols_lower = [str(c).lower() for c in t.columns]
+        if "home" in cols_lower and "away" in cols_lower:
+            schedule_tables.append(t)
+
+    if len(schedule_tables) > 1:
+        df = pd.concat(schedule_tables, ignore_index=True)
+        df = df.dropna(how="all")
+        print(f"  [{label}] merged {len(schedule_tables)} schedule tables → {len(df)} rows")
+    else:
+        df = max(tables, key=len)
+        df = df.dropna(how="all")
+
+    # Flatten any remaining MultiIndex columns
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = [
+            " ".join(str(v) for v in col if str(v) != "nan").strip()
+            for col in df.columns
+        ]
 
     # Keep only completed matches (score column contains digits with dash/en-dash)
     score_col = next(
@@ -259,6 +302,19 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
         df = df[df[score_col].astype(str).str.contains(r"\d[–\-]\d", na=False)]
 
     print(f"  [{label}] completed rows: {len(df)}")
+
+    # Strip leading/trailing 2-3 letter country codes from team names on
+    # international competition pages (e.g. "eng Liverpool", "es Barcelona")
+    for col_name in df.columns:
+        if str(col_name).lower() in ("home", "away"):
+            df[col_name] = (
+                df[col_name].astype(str)
+                .str.strip()
+                .str.replace(r'(?i)^[a-z]{2,3}\s+', '', regex=True)
+                .str.replace(r'(?i)\s+[a-z]{2,3}$', '', regex=True)
+                .str.strip()
+            )
+
     return df if not df.empty else None
 
 
