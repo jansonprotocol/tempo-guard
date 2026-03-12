@@ -40,3 +40,18 @@ class LeagueConfig(Base):
     deg_sensitivity = Column(Float, default=1.0)
     det_sensitivity = Column(Float, default=1.0)
     eps_sensitivity = Column(Float, default=1.0)
+
+    # ── v2.0: Cross-league strength coefficient ──────────────────────
+    # Multiplier applied to player power scores when comparing teams
+    # across different leagues (UCL/UEL/UECL predictions).
+    #
+    # Seeded from UEFA country coefficients, normalised to 0.70–1.30 range.
+    # 1.0 = neutral (default for all leagues until manually seeded).
+    #
+    # Example usage:
+    #   ENG-PL  = 1.25 → PL player with power 75 treated as 93.75 globally
+    #   NED-ERE = 0.90 → Eredivisie player with power 75 treated as 67.5
+    #
+    # Only used when both teams come from different leagues (intl matches).
+    # For domestic predictions, this field has no effect.
+    strength_coefficient = Column(Float, default=1.0)
