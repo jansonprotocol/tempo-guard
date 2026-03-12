@@ -1125,6 +1125,286 @@
       .inputs-grid { grid-template-columns: repeat(2, 1fr); }
       .form-card { padding: 20px; }
     }
+    /* ── Squad Intel page ── */
+    .squad-shell {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .squad-header {
+      margin-bottom: 28px;
+    }
+
+    .squad-title {
+      font-family: var(--cond);
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .squad-title span { color: var(--cyan); }
+
+    .squad-sub {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .squad-loading {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      padding: 40px 0;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+
+    .squad-stats-bar {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .squad-stats-bar em {
+      font-style: normal;
+      color: var(--cyan);
+    }
+
+    /* League accordion */
+    .league-group {
+      margin-bottom: 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--bg2);
+    }
+
+    .league-group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .league-group-header:hover {
+      background: rgba(0,212,255,0.03);
+    }
+
+    .league-group-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .league-group-chevron {
+      font-size: 10px;
+      color: var(--muted);
+      transition: transform 0.2s;
+      width: 16px;
+      text-align: center;
+    }
+
+    .league-group.open .league-group-chevron {
+      transform: rotate(90deg);
+    }
+
+    .league-group-name {
+      font-family: var(--cond);
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .league-group-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .league-group-coeff {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      letter-spacing: 0.05em;
+    }
+
+    .league-group-body {
+      display: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .league-group.open .league-group-body {
+      display: block;
+    }
+
+    /* Team row */
+    .team-row {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .team-row:last-child {
+      border-bottom: none;
+    }
+
+    .team-row-header {
+      display: grid;
+      grid-template-columns: 1fr 70px 70px 70px 70px 70px;
+      align-items: center;
+      padding: 10px 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.12s;
+      gap: 4px;
+    }
+
+    .team-row-header:hover {
+      background: rgba(0,212,255,0.02);
+    }
+
+    .team-row-name {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .team-row-rank {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--dim);
+      width: 22px;
+      flex-shrink: 0;
+    }
+
+    .team-row-chevron {
+      font-size: 9px;
+      color: var(--dim);
+      transition: transform 0.2s;
+    }
+
+    .team-row.open .team-row-chevron {
+      transform: rotate(90deg);
+    }
+
+    .team-power-cell {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      padding: 3px 0;
+      border-radius: 3px;
+    }
+
+    .team-power-cell.squad {
+      font-family: var(--cond);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .team-power-cell.tier-elite  { color: var(--green); background: rgba(0,230,118,0.08); }
+    .team-power-cell.tier-strong { color: var(--cyan);  background: rgba(0,212,255,0.06); }
+    .team-power-cell.tier-avg    { color: var(--text);  background: transparent; }
+    .team-power-cell.tier-weak   { color: var(--amber); background: rgba(255,179,0,0.06); }
+    .team-power-cell.tier-poor   { color: var(--red);   background: rgba(255,68,68,0.06); }
+
+    /* Column headers */
+    .team-col-headers {
+      display: grid;
+      grid-template-columns: 1fr 70px 70px 70px 70px 70px;
+      padding: 8px 20px 4px;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .team-col-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-align: center;
+    }
+
+    .team-col-label:first-child { text-align: left; }
+
+    /* Expanded detail */
+    .team-detail {
+      display: none;
+      padding: 12px 20px 16px 50px;
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+    }
+
+    .team-row.open .team-detail {
+      display: block;
+    }
+
+    .zone-bar-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .zone-bar-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      width: 32px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .zone-bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .zone-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .zone-bar-value {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      width: 36px;
+      text-align: right;
+    }
+
+    @media (max-width: 600px) {
+      .team-row-header {
+        grid-template-columns: 1fr 55px 55px 55px 55px 55px;
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+      .team-col-headers {
+        grid-template-columns: 1fr 55px 55px 55px 55px 55px;
+        padding: 8px 12px 4px;
+      }
+      .team-power-cell { font-size: 11px; }
+      .team-power-cell.squad { font-size: 14px; }
+    }
   </style>
 </head>
 <body>
@@ -1133,6 +1413,7 @@
     <div class="nav-brand">TEMPO<span>GUARD</span></div>
     <a class="nav-link active" id="nav-home" onclick="showPage('home')">Matchup</a>
     <a class="nav-link" id="nav-predictions" onclick="showPage('predictions')">Predictions</a>
+    <a class="nav-link" id="nav-squad" onclick="showPage('squad')">Squad Intel</a>
   </nav>
 
   <!-- ══════════════════════════════════════════════════ Page: Matchup -->
@@ -1334,6 +1615,20 @@
         <div class="pred-loading">LOADING PREDICTIONS…</div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ Page: Squad Intel -->
+  <div class="page" id="page-squad">
+    <div class="squad-shell">
+      <header class="squad-header">
+        <h2 class="squad-title">SQUAD <span>INTEL</span></h2>
+        <div class="squad-sub">ATHENA v2.0 · Player-Derived Team Power Index</div>
+      </header>
+      <div class="squad-stats-bar" id="squad-stats-bar"></div>
+      <div id="squad-content">
+        <div class="squad-loading">LOADING SQUAD DATA…</div>
+      </div>
     </div>
   </div>
 
@@ -1568,6 +1863,7 @@
       $(`page-${name}`).classList.add('active');
       $(`nav-${name}`).classList.add('active');
       if (name === 'predictions') loadPredictions();
+      if (name === 'squad') loadSquadData();
     }
 
     // ════════════════════════════════════════════════════════════════
@@ -1937,6 +2233,161 @@
       if (dt.toDateString() === today.toDateString()) return 'TODAY';
       if (dt.toDateString() === tom.toDateString())   return 'TOMORROW';
       return d.toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' }).toUpperCase();
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // SQUAD INTEL PAGE
+    // ════════════════════════════════════════════════════════════════
+    let squadDataLoaded = false;
+
+    async function loadSquadData() {
+      if (squadDataLoaded) return;
+      const content = $('squad-content');
+
+      try {
+        const resp = await fetch('/api/player-power/squads');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        if (!data.leagues || data.leagues.length === 0) {
+          content.innerHTML = '<div class="squad-loading">NO SQUAD DATA AVAILABLE — RUN SCRAPE_PLAYERS FIRST</div>';
+          return;
+        }
+
+        // Stats bar
+        const statsBar = $('squad-stats-bar');
+        statsBar.innerHTML = `
+          <span><em>${data.total_leagues}</em> leagues</span>
+          <span><em>${data.total_teams}</em> teams indexed</span>
+        `;
+
+        // Render leagues
+        content.innerHTML = '';
+        data.leagues.forEach(league => {
+          content.appendChild(buildLeagueGroup(league));
+        });
+
+        squadDataLoaded = true;
+      } catch (e) {
+        content.innerHTML = `<div class="squad-loading">ERROR: ${e.message}</div>`;
+      }
+    }
+
+    function powerTier(val) {
+      if (val == null) return 'tier-avg';
+      if (val >= 62) return 'tier-elite';
+      if (val >= 55) return 'tier-strong';
+      if (val >= 45) return 'tier-avg';
+      if (val >= 38) return 'tier-weak';
+      return 'tier-poor';
+    }
+
+    function powerColor(val) {
+      if (val == null) return 'var(--dim)';
+      if (val >= 62) return 'var(--green)';
+      if (val >= 55) return 'var(--cyan)';
+      if (val >= 45) return 'var(--text)';
+      if (val >= 38) return 'var(--amber)';
+      return 'var(--red)';
+    }
+
+    function buildLeagueGroup(league) {
+      const group = document.createElement('div');
+      group.className = 'league-group';
+
+      const header = document.createElement('div');
+      header.className = 'league-group-header';
+      header.innerHTML = `
+        <div class="league-group-left">
+          <span class="league-group-chevron">▶</span>
+          <span class="league-group-name">${league.display_name}</span>
+          <span class="league-group-count">${league.teams.length} teams</span>
+        </div>
+        <span class="league-group-coeff">COEFF ${league.strength_coefficient.toFixed(2)}</span>
+      `;
+      header.onclick = () => group.classList.toggle('open');
+
+      const body = document.createElement('div');
+      body.className = 'league-group-body';
+
+      // Column headers
+      const colHeaders = document.createElement('div');
+      colHeaders.className = 'team-col-headers';
+      colHeaders.innerHTML = `
+        <span class="team-col-label">Team</span>
+        <span class="team-col-label">Squad</span>
+        <span class="team-col-label">ATK</span>
+        <span class="team-col-label">MID</span>
+        <span class="team-col-label">DEF</span>
+        <span class="team-col-label">GK</span>
+      `;
+      body.appendChild(colHeaders);
+
+      // Team rows
+      league.teams.forEach((team, i) => {
+        body.appendChild(buildTeamRow(team, i + 1));
+      });
+
+      group.appendChild(header);
+      group.appendChild(body);
+      return group;
+    }
+
+    function buildTeamRow(team, rank) {
+      const row = document.createElement('div');
+      row.className = 'team-row';
+
+      const header = document.createElement('div');
+      header.className = 'team-row-header';
+
+      const sp = team.squad_power;
+      const at = team.atk_power;
+      const mi = team.mid_power;
+      const de = team.def_power;
+      const gk = team.gk_power;
+
+      header.innerHTML = `
+        <div class="team-row-name">
+          <span class="team-row-rank">${rank}.</span>
+          ${team.team}
+          <span class="team-row-chevron">▶</span>
+        </div>
+        <div class="team-power-cell squad ${powerTier(sp)}">${sp != null ? sp.toFixed(1) : '—'}</div>
+        <div class="team-power-cell ${powerTier(at)}">${at != null ? at.toFixed(1) : '—'}</div>
+        <div class="team-power-cell ${powerTier(mi)}">${mi != null ? mi.toFixed(1) : '—'}</div>
+        <div class="team-power-cell ${powerTier(de)}">${de != null ? de.toFixed(1) : '—'}</div>
+        <div class="team-power-cell ${powerTier(gk)}">${gk != null ? gk.toFixed(1) : '—'}</div>
+      `;
+      header.onclick = () => row.classList.toggle('open');
+
+      // Detail view with bars
+      const detail = document.createElement('div');
+      detail.className = 'team-detail';
+
+      const zones = [
+        { label: 'ATK', val: at },
+        { label: 'MID', val: mi },
+        { label: 'DEF', val: de },
+        { label: 'GK',  val: gk },
+      ];
+
+      detail.innerHTML = zones.map(z => {
+        const pct = z.val != null ? Math.min(100, z.val) : 0;
+        const col = powerColor(z.val);
+        return `
+          <div class="zone-bar-group">
+            <span class="zone-bar-label">${z.label}</span>
+            <div class="zone-bar-track">
+              <div class="zone-bar-fill" style="width:${pct}%;background:${col}"></div>
+            </div>
+            <span class="zone-bar-value" style="color:${col}">${z.val != null ? z.val.toFixed(1) : '—'}</span>
+          </div>
+        `;
+      }).join('');
+
+      row.appendChild(header);
+      row.appendChild(detail);
+      return row;
     }
   </script>
 </body>
