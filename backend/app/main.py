@@ -17,13 +17,15 @@ from app.database.base import Base
 from app.database.db import engine, SessionLocal
 from app.database.models_fbref import FBrefSnapshot  # registers the new table
 from app.models.team_config import TeamConfig         # registers team_configs table
+# v2.0 — player-level models (import registers tables with Base.metadata)
+from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot  # noqa: F401
 # Memory loaders
 from app.memory_loader import load_league_configs, load_teams
 
 app = FastAPI(
     title="ATHENA: Tempo Guard",
     description="Tempo-aware predictive engine (MVP).",
-    version="0.2.0",
+    version="0.3.0",
 )
 
 # ------------------------------------------------------------------------------
@@ -54,11 +56,19 @@ _COLUMN_MIGRATIONS = [
     # league_configs — display fields (older, kept for safety)
     ("league_configs", "display_name",   "VARCHAR", "''"),
     ("league_configs", "country_code",   "VARCHAR", "''"),
+    # league_configs — v2.0 cross-league strength coefficient
+    ("league_configs", "strength_coefficient", "FLOAT", "1.0"),
     # team_configs — module nudges + diagnostics
     ("team_configs",   "det_nudge",      "FLOAT",   "0.0"),
     ("team_configs",   "deg_nudge",      "FLOAT",   "0.0"),
     ("team_configs",   "avg_det",        "FLOAT",   None),
     ("team_configs",   "avg_deg",        "FLOAT",   None),
+    # team_configs — v2.0 player-derived squad power scores
+    ("team_configs",   "squad_power",    "FLOAT",   None),
+    ("team_configs",   "atk_power",      "FLOAT",   None),
+    ("team_configs",   "mid_power",      "FLOAT",   None),
+    ("team_configs",   "def_power",      "FLOAT",   None),
+    ("team_configs",   "gk_power",       "FLOAT",   None),
 ]
 
 
@@ -120,6 +130,7 @@ def startup_event():
         # 1. Safe column migrations FIRST — before anything queries the models
         _safe_migrate(db)
         # 2. Create any fully new tables defined in SQLAlchemy models
+        #    This now includes: players, player_season_stats, squad_snapshots
         Base.metadata.create_all(bind=engine)
         # 3. Seed league configs + teams from JSON
         load_league_configs(db)
