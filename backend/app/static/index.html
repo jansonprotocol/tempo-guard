@@ -1625,7 +1625,14 @@
         <h2 class="squad-title">SQUAD <span>INTEL</span></h2>
         <div class="squad-sub">ATHENA v2.0 · Player-Derived Team Power Index</div>
       </header>
-      <div class="squad-stats-bar" id="squad-stats-bar"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div class="squad-stats-bar" id="squad-stats-bar"></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">View:</span>
+          <button id="btn-global" class="mode-pill future" style="cursor:pointer;font-size:10px;padding:4px 10px" onclick="setSquadView('global')">Global</button>
+          <button id="btn-raw" class="mode-pill retro" style="cursor:pointer;font-size:10px;padding:4px 10px;opacity:0.4" onclick="setSquadView('raw')">League-Relative</button>
+        </div>
+      </div>
       <div id="squad-content">
         <div class="squad-loading">LOADING SQUAD DATA…</div>
       </div>
@@ -2239,6 +2246,15 @@
     // SQUAD INTEL PAGE
     // ════════════════════════════════════════════════════════════════
     let squadDataLoaded = false;
+    let squadRawData = null;
+    let squadViewMode = 'global'; // 'global' or 'raw'
+
+    function setSquadView(mode) {
+      squadViewMode = mode;
+      $('btn-global').style.opacity = mode === 'global' ? '1' : '0.4';
+      $('btn-raw').style.opacity    = mode === 'raw'    ? '1' : '0.4';
+      if (squadRawData) renderSquadData(squadRawData);
+    }
 
     async function loadSquadData() {
       if (squadDataLoaded) return;
@@ -2254,6 +2270,8 @@
           return;
         }
 
+        squadRawData = data;
+
         // Stats bar
         const statsBar = $('squad-stats-bar');
         statsBar.innerHTML = `
@@ -2261,16 +2279,34 @@
           <span><em>${data.total_teams}</em> teams indexed</span>
         `;
 
-        // Render leagues
-        content.innerHTML = '';
-        data.leagues.forEach(league => {
-          content.appendChild(buildLeagueGroup(league));
-        });
-
+        renderSquadData(data);
         squadDataLoaded = true;
       } catch (e) {
         content.innerHTML = `<div class="squad-loading">ERROR: ${e.message}</div>`;
       }
+    }
+
+    function renderSquadData(data) {
+      const content = $('squad-content');
+      content.innerHTML = '';
+      data.leagues.forEach(league => {
+        content.appendChild(buildLeagueGroup(league));
+      });
+    }
+
+    function getVal(team, zone) {
+      // Returns global or raw value based on current view mode
+      if (squadViewMode === 'global') {
+        return team[`global_${zone}`] != null ? team[`global_${zone}`] : team[`${zone}_power`];
+      }
+      return team[`${zone}_power`];
+    }
+
+    function getSquadVal(team) {
+      if (squadViewMode === 'global') {
+        return team.global_squad != null ? team.global_squad : team.squad_power;
+      }
+      return team.squad_power;
     }
 
     function powerTier(val) {
@@ -2303,7 +2339,7 @@
           <span class="league-group-name">${league.display_name}</span>
           <span class="league-group-count">${league.teams.length} teams</span>
         </div>
-        <span class="league-group-coeff">COEFF ${league.strength_coefficient.toFixed(2)}</span>
+        <span class="league-group-coeff">×${league.strength_coefficient.toFixed(2)}</span>
       `;
       header.onclick = () => group.classList.toggle('open');
 
@@ -2323,8 +2359,12 @@
       `;
       body.appendChild(colHeaders);
 
-      // Team rows
-      league.teams.forEach((team, i) => {
+      // Sort by current view's squad power
+      const sorted = [...league.teams].sort((a, b) => {
+        return (getSquadVal(b) || 0) - (getSquadVal(a) || 0);
+      });
+
+      sorted.forEach((team, i) => {
         body.appendChild(buildTeamRow(team, i + 1));
       });
 
@@ -2340,11 +2380,13 @@
       const header = document.createElement('div');
       header.className = 'team-row-header';
 
-      const sp = team.squad_power;
-      const at = team.atk_power;
-      const mi = team.mid_power;
-      const de = team.def_power;
-      const gk = team.gk_power;
+      const sp = getSquadVal(team);
+      const at = getVal(team, 'atk');
+      const mi = getVal(team, 'mid');
+      const de = getVal(team, 'def');
+      const gk = getVal(team, 'gk');
+
+      const fmt = v => v != null ? v.toFixed(1) : '—';
 
       header.innerHTML = `
         <div class="team-row-name">
@@ -2352,11 +2394,11 @@
           ${team.team}
           <span class="team-row-chevron">▶</span>
         </div>
-        <div class="team-power-cell squad ${powerTier(sp)}">${sp != null ? sp.toFixed(1) : '—'}</div>
-        <div class="team-power-cell ${powerTier(at)}">${at != null ? at.toFixed(1) : '—'}</div>
-        <div class="team-power-cell ${powerTier(mi)}">${mi != null ? mi.toFixed(1) : '—'}</div>
-        <div class="team-power-cell ${powerTier(de)}">${de != null ? de.toFixed(1) : '—'}</div>
-        <div class="team-power-cell ${powerTier(gk)}">${gk != null ? gk.toFixed(1) : '—'}</div>
+        <div class="team-power-cell squad ${powerTier(sp)}">${fmt(sp)}</div>
+        <div class="team-power-cell ${powerTier(at)}">${fmt(at)}</div>
+        <div class="team-power-cell ${powerTier(mi)}">${fmt(mi)}</div>
+        <div class="team-power-cell ${powerTier(de)}">${fmt(de)}</div>
+        <div class="team-power-cell ${powerTier(gk)}">${fmt(gk)}</div>
       `;
       header.onclick = () => row.classList.toggle('open');
 
@@ -2371,7 +2413,14 @@
         { label: 'GK',  val: gk },
       ];
 
-      detail.innerHTML = zones.map(z => {
+      // Show coefficient info in detail when in global mode
+      const coeffNote = squadViewMode === 'global'
+        ? `<div style="font-family:var(--mono);font-size:10px;color:var(--dim);margin-bottom:8px;letter-spacing:0.05em">
+             Raw scores × league coefficient applied
+           </div>`
+        : '';
+
+      detail.innerHTML = coeffNote + zones.map(z => {
         const pct = z.val != null ? Math.min(100, z.val) : 0;
         const col = powerColor(z.val);
         return `
