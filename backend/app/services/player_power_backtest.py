@@ -48,7 +48,13 @@ def get_historical_squad_power(
 
     Returns squad_power (0–100) or None if no snapshot exists.
     Uses the snapshot with the largest snapshot_date <= match_date.
+
+    Fallback: if no historical snapshot predates the match, use the
+    most recent snapshot available (current squad assessment).
+    This allows A/B testing before historical snapshots accumulate.
+    Once you have months of snapshots, the fallback rarely triggers.
     """
+    # Primary: point-in-time (snapshot before match)
     snap = (
         db.query(SquadSnapshot)
         .filter(
@@ -62,6 +68,22 @@ def get_historical_squad_power(
     )
     if snap:
         return float(snap.squad_power)
+
+    # Fallback: use most recent snapshot regardless of date
+    # This lets the sweep/evaluate work before history accumulates
+    fallback = (
+        db.query(SquadSnapshot)
+        .filter(
+            SquadSnapshot.team == team,
+            SquadSnapshot.league_code == league_code,
+            SquadSnapshot.squad_power.isnot(None),
+        )
+        .order_by(SquadSnapshot.snapshot_date.desc())
+        .first()
+    )
+    if fallback:
+        return float(fallback.squad_power)
+
     return None
 
 
