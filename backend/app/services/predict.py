@@ -9,6 +9,26 @@ from app.models.league_config import LeagueConfig
 from app.models.team_config import TeamConfig
 
 
+# ── v2.0: Player power blend weight ─────────────────────────────────────────
+# Controls how much player-derived squad power influences support_delta.
+# 0.0 = player power has no effect (v1.x behaviour)
+# 0.3 = 30% influence (recommended starting point)
+# 1.0 = player power fully replaces macro team_nudge (not recommended)
+#
+# This is deliberately conservative. The macro signals (goals, SOT, tempo)
+# have been battle-tested through calibration. Player power is new and
+# unvalidated. Starting at 30% lets it influence predictions without
+# dominating until calibration confirms its accuracy.
+PLAYER_POWER_BLEND = 0.30
+
+# Maximum effect player power delta can have on support_delta.
+# Prevents a single massive squad imbalance from overwhelming the model.
+PLAYER_POWER_MAX_EFFECT = 0.08
+
+# International league codes — used for cross-league normalisation
+INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
+
+
 def _clip(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, x))
 
@@ -89,6 +109,79 @@ def _get_team_nudge(
     return (home_nudge + away_nudge) / 2.0
 
 
+def _get_player_power_nudge(
+    db: Session,
+    league_code: str,
+    home_team: str,
+    away_team: str,
+) -> float:
+    """
+    v2.0 — Compute a support_delta adjustment from player-derived squad power.
+
+    Reads squad_power from TeamConfig for both teams and computes:
+      power_delta = (home_squad_power - away_squad_power) / 100
+
+    This delta is then scaled by PLAYER_POWER_BLEND and clipped to
+    ±PLAYER_POWER_MAX_EFFECT.
+
+    For international competitions (UCL/UEL/UECL), the raw squad_power
+    values are normalised by each team's home league strength_coefficient
+    before computing the delta. This ensures a "75" in the Eredivisie
+    is correctly treated as weaker than a "75" in the Premier League.
+
+    Returns 0.0 in any of these cases:
+      - Either team has no squad_power yet (player data not scraped)
+      - PLAYER_POWER_BLEND is 0.0
+      - Both teams have identical squad power
+    """
+    if PLAYER_POWER_BLEND <= 0.0:
+        return 0.0
+
+    home_cfg, away_cfg = _get_team_configs(db, league_code, home_team, away_team)
+
+    home_power = float(home_cfg.squad_power) if home_cfg and home_cfg.squad_power is not None else None
+    away_power = float(away_cfg.squad_power) if away_cfg and away_cfg.squad_power is not None else None
+
+    # Both teams need power scores — graceful fallback to 0.0 otherwise
+    if home_power is None or away_power is None:
+        return 0.0
+
+    # ── Cross-league normalisation for international competitions ─────
+    # If this is a UCL/UEL/UECL match, the two teams may come from
+    # different leagues with different quality baselines.
+    # Multiply each team's power by their home league's strength_coefficient.
+    if league_code in INTL_LEAGUE_CODES:
+        home_league = home_cfg.league_code if home_cfg else None
+        away_league = away_cfg.league_code if away_cfg else None
+
+        if home_league:
+            home_league_cfg = _get_league_config(db, home_league)
+            if home_league_cfg and home_league_cfg.strength_coefficient:
+                home_power *= float(home_league_cfg.strength_coefficient)
+
+        if away_league:
+            away_league_cfg = _get_league_config(db, away_league)
+            if away_league_cfg and away_league_cfg.strength_coefficient:
+                away_power *= float(away_league_cfg.strength_coefficient)
+
+    # power_delta: positive = home stronger, negative = away stronger
+    # Normalise to a small range (squad powers are 0–100)
+    power_delta = (home_power - away_power) / 100.0
+
+    # Apply blend weight and clip
+    nudge = power_delta * PLAYER_POWER_BLEND
+    nudge = _clip(nudge, -PLAYER_POWER_MAX_EFFECT, PLAYER_POWER_MAX_EFFECT)
+
+    if abs(nudge) > 0.005:
+        print(
+            f"[predict] Player power: {home_team}={home_power:.1f} vs "
+            f"{away_team}={away_power:.1f} → delta={power_delta:.3f} "
+            f"→ nudge={nudge:+.4f} (blend={PLAYER_POWER_BLEND})"
+        )
+
+    return round(nudge, 4)
+
+
 def _apply_module_adjustments(
     req: MatchRequest,
     db: Session,
@@ -137,24 +230,14 @@ def _apply_module_adjustments(
     raw_eps      = req.eps_stability if req.eps_stability  is not None else 0.65
 
     # ── Apply DEG adjustments ─────────────────────────────────────────
-    # deg_sensitivity amplifies the structural decline signal league-wide.
-    # avg_deg_nudge adds team-specific decline correction.
-    # Result is clipped to [0, 1].
     adj_deg = _clip(raw_deg * deg_sens + avg_deg_nudge, 0.0, 1.0)
 
     # ── Apply DET adjustments ─────────────────────────────────────────
-    # det_sensitivity amplifies league-wide volatility.
-    # Team nudges applied individually to home_det/away_det for bilateral check,
-    # and averaged into det_boost for the overall DET module signal.
     adj_home_det = _clip(raw_home_det * det_sens + home_det_n, 0.0, 1.0)
     adj_away_det = _clip(raw_away_det * det_sens + away_det_n, 0.0, 1.0)
     adj_det      = _clip(raw_det * det_sens + avg_det_nudge,   0.0, 1.0)
 
     # ── Apply EPS adjustments ─────────────────────────────────────────
-    # EPS stability: 1.0 = perfectly stable, 0.0 = chaotic.
-    # To amplify instability: increase the deviation from stability.
-    # eps_sensitivity > 1.0 makes the ceiling taper more aggressive.
-    # eps_sensitivity < 1.0 softens the taper.
     raw_instability = 1.0 - raw_eps
     adj_instability = _clip(raw_instability * eps_sens, 0.0, 0.90)
     adj_eps = 1.0 - adj_instability
@@ -170,8 +253,6 @@ def _apply_module_adjustments(
             f"eps {raw_eps:.3f}→{adj_eps:.3f} (×{eps_sens})"
         )
 
-    # Return a new MatchRequest with adjusted feature values.
-    # All other fields (core features, identity) are unchanged.
     return req.model_copy(update={
         "deg_pressure":  round(adj_deg,      3),
         "det_boost":     round(adj_det,      3),
@@ -188,18 +269,24 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
     Pipeline:
       1. Load league calibration biases + sensitivities
       2. Load team over/under nudges (support_delta shift)
-      3. Apply DEG/DET/EPS sensitivity and team module nudges to MatchRequest
-      4. Run evaluate_athena with adjusted features
+      3. v2.0: Compute player power nudge (squad strength delta)
+      4. Apply DEG/DET/EPS sensitivity and team module nudges to MatchRequest
+      5. Run evaluate_athena with combined nudges
     """
     over_bias, under_bias, tempo_factor = _get_league_bias(db, req.league_code)
     team_nudge = _get_team_nudge(
         db, req.league_code, req.home_team, req.away_team
     )
 
+    # v2.0: Player power contribution to support_delta.
+    # This is ADDITIVE on top of the calibration-derived team_nudge.
+    # If player data doesn't exist for either team, returns 0.0 (no effect).
+    player_nudge = _get_player_power_nudge(
+        db, req.league_code, req.home_team, req.away_team
+    )
+    combined_nudge = team_nudge + player_nudge
+
     # Apply league sensitivities + team module nudges to DEG/DET/EPS features.
-    # This is where Man City + Liverpool can override the league's Under guard —
-    # their det_nudges push home_det and away_det above BILATERAL_MIN_DET,
-    # the escalator fires, and the corridor ceiling expands into Over territory.
     adjusted_req = _apply_module_adjustments(req, db)
 
-    return evaluate_athena(adjusted_req, over_bias, under_bias, tempo_factor, team_nudge)
+    return evaluate_athena(adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge)

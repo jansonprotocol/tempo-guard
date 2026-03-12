@@ -10,7 +10,8 @@
     "description": "Premier League (England)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.25
   },
   {
     "league_code": "ESP-LL",
@@ -23,7 +24,8 @@
     "description": "LaLiga (Spain)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.22
   },
   {
     "league_code": "FRA-L1",
@@ -36,7 +38,8 @@
     "description": "Ligue 1 (France)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.1
   },
   {
     "league_code": "GER-BUN",
@@ -49,7 +52,8 @@
     "description": "Bundesliga (Germany)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.16
   },
   {
     "league_code": "ITA-SA",
@@ -62,7 +66,8 @@
     "description": "Serie A (Italy)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.18
   },
   {
     "league_code": "NED-ERE",
@@ -75,7 +80,8 @@
     "description": "Eredivisie (Netherlands)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.92
   },
   {
     "league_code": "TUR-SL",
@@ -85,10 +91,11 @@
     "safety_mode": true,
     "aggression_level": 0.55,
     "volatility": 0.55,
-    "description": "S\u00fcper Lig (Turkey)",
+    "description": "Süper Lig (Turkey)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.86
   },
   {
     "league_code": "BRA-SA",
@@ -98,10 +105,11 @@
     "safety_mode": true,
     "aggression_level": 0.5,
     "volatility": 0.55,
-    "description": "S\u00e9rie A (Brazil)",
+    "description": "Série A (Brazil)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.95
   },
   {
     "league_code": "MLS",
@@ -114,7 +122,8 @@
     "description": "Major League Soccer (USA)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.82
   },
   {
     "league_code": "SAU-SPL",
@@ -127,7 +136,8 @@
     "description": "Saudi Pro League",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.8
   },
   {
     "league_code": "DEN-SL",
@@ -140,7 +150,8 @@
     "description": "Superliga (Denmark)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.8
   },
   {
     "league_code": "ESP-LL2",
@@ -150,10 +161,11 @@
     "safety_mode": true,
     "aggression_level": 0.48,
     "volatility": 0.5,
-    "description": "Segunda Divisi\u00f3n (Spain)",
+    "description": "Segunda División (Spain)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.85
   },
   {
     "league_code": "BEL-PL",
@@ -166,7 +178,8 @@
     "description": "Pro League (Belgium)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.88
   },
   {
     "league_code": "NOR-EL",
@@ -179,7 +192,8 @@
     "description": "Eliteserien (Norway)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.76
   },
   {
     "league_code": "SWE-AL",
@@ -192,7 +206,8 @@
     "description": "Allsvenskan (Sweden)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.76
   },
   {
     "league_code": "MEX-LMX",
@@ -205,7 +220,8 @@
     "description": "Liga MX (Mexico)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.85
   },
   {
     "league_code": "UCL",
@@ -218,7 +234,8 @@
     "description": "UEFA Champions League",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.0
   },
   {
     "league_code": "UEL",
@@ -231,7 +248,8 @@
     "description": "UEFA Europa League",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.0
   },
   {
     "league_code": "UECL",
@@ -244,7 +262,8 @@
     "description": "UEFA Europa Conference League",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.0
   },
   {
     "league_code": "EC",
@@ -257,7 +276,8 @@
     "description": "European Championship",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.0
   },
   {
     "league_code": "WC",
@@ -270,7 +290,8 @@
     "description": "World Cup",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.0
   },
   {
     "league_code": "CHN-CSL",
@@ -283,7 +304,8 @@
     "description": "Chinese Super League",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.74
   },
   {
     "league_code": "JPN-J1",
@@ -296,7 +318,8 @@
     "description": "J1 League (Japan)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.78
   },
   {
     "league_code": "COL-PA",
@@ -309,7 +332,8 @@
     "description": "Primera A (Colombia)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.76
   },
   {
     "league_code": "CUB-PD",
@@ -319,10 +343,11 @@
     "safety_mode": true,
     "aggression_level": 0.45,
     "volatility": 0.55,
-    "description": "Primera Divisi\u00f3n (Cuba)",
+    "description": "Primera División (Cuba)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.0
   },
   {
     "league_code": "ITA-SB",
@@ -335,7 +360,8 @@
     "description": "Serie B (Italy)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.82
   },
   {
     "league_code": "FRA-L2",
@@ -348,7 +374,8 @@
     "description": "Ligue 2 (France)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.78
   },
   {
     "league_code": "GER-B2",
@@ -361,7 +388,8 @@
     "description": "2. Bundesliga (Germany)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.85
   },
   {
     "league_code": "POL-EK",
@@ -374,7 +402,8 @@
     "description": "Ekstraklasa (Poland)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.78
   },
   {
     "league_code": "BRA-SB",
@@ -384,10 +413,11 @@
     "safety_mode": true,
     "aggression_level": 0.48,
     "volatility": 0.55,
-    "description": "S\u00e9rie B (Brazil)",
+    "description": "Série B (Brazil)",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.8
   },
   {
     "league_code": "AUT-BL",
@@ -400,7 +430,8 @@
     "description": "Austria Bundesliga",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.84
   },
   {
     "league_code": "SUI-SL",
@@ -413,7 +444,8 @@
     "description": "Switzerland Super League",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.82
   },
   {
     "league_code": "CHI-LP",
@@ -426,7 +458,8 @@
     "description": "Chile Liga de Primera",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.74
   },
   {
     "league_code": "PER-L1",
@@ -439,7 +472,8 @@
     "description": "Peru Liga 1",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 0.72
   },
   {
     "league_code": "POR-LP",
@@ -452,6 +486,7 @@
     "description": "Portugal Liga Portugal",
     "deg_sensitivity": 1.0,
     "det_sensitivity": 1.0,
-    "eps_sensitivity": 1.0
+    "eps_sensitivity": 1.0,
+    "strength_coefficient": 1.08
   }
 ]

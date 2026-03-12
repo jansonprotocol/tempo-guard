@@ -37,6 +37,7 @@ from app.models.league_config import LeagueConfig
 from app.models.team_config import TeamConfig
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column
 from app.services.predict import predict_match
+from app.services.player_power_backtest import get_historical_player_nudge
 from app.util.asian_lines import evaluate_market
 router = APIRouter()
 # ── Constants ──────────────────────────────────────────────────────
@@ -489,12 +490,16 @@ def _run_calibration(
                 away_det=metrics.get("away_det"),
                 eps_stability=metrics.get("eps_stability"),
             )
+            # v2.0: compute player power nudge from point-in-time snapshot
+            player_nudge = get_historical_player_nudge(
+                db, league_code, home_team, away_team, match_date,
+            )
             pred = evaluate_athena(
                 req,
                 current_over,
                 current_under,
                 current_tempo,
-                team_nudge=0.0,
+                team_nudge=player_nudge,
             )
         except Exception as e:
             import traceback
@@ -611,6 +616,7 @@ def _run_calibration(
                 "corridor":    f"{pred.corridor.low}–{pred.corridor.high}",
                 "lean":        pred.corridor.lean,
                 "inputs":      metrics,
+              "player_nudge":  player_nudge,
             })
     evaluated        = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
     overall_hit_rate = round(w_hits / max(0.001, w_hits + w_misses) * 100, 1)
