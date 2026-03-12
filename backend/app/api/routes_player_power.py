@@ -491,3 +491,78 @@ def sweep_blend_weights(
         "improvement_pp": round(best["hit_rate"] - baseline["hit_rate"], 1) if best and baseline else None,
         "sweep": sweep_results,
     }
+
+
+@router.get("/player-power/squads")
+def squad_power_overview(
+    db: Session = Depends(get_db),
+):
+    """
+    Returns all teams with zonal power scores, grouped by league.
+    Used by the Squad Intel frontend page.
+    """
+    # Get all teams that have squad_power computed
+    teams = (
+        db.query(TeamConfig)
+        .filter(TeamConfig.squad_power.isnot(None))
+        .order_by(TeamConfig.league_code, TeamConfig.team)
+        .all()
+    )
+
+    # Get league display names
+    league_cfgs = {
+        lc.league_code: {
+            "description": lc.description or lc.league_code,
+            "strength_coefficient": float(lc.strength_coefficient or 1.0),
+        }
+        for lc in db.query(LeagueConfig).all()
+    }
+
+    # Group by league
+    leagues: dict = {}
+    for t in teams:
+        lc = t.league_code
+        if lc not in leagues:
+            lc_info = league_cfgs.get(lc, {})
+            leagues[lc] = {
+                "league_code": lc,
+                "display_name": lc_info.get("description", lc),
+                "strength_coefficient": lc_info.get("strength_coefficient", 1.0),
+                "teams": [],
+            }
+
+        coeff = leagues[lc]["strength_coefficient"]
+
+        raw_squad = round(float(t.squad_power), 1) if t.squad_power else None
+        raw_atk   = round(float(t.atk_power), 1)   if t.atk_power else None
+        raw_mid   = round(float(t.mid_power), 1)    if t.mid_power else None
+        raw_def   = round(float(t.def_power), 1)    if t.def_power else None
+        raw_gk    = round(float(t.gk_power), 1)     if t.gk_power else None
+
+        leagues[lc]["teams"].append({
+            "team": t.team,
+            # Raw league-relative scores
+            "squad_power": raw_squad,
+            "atk_power": raw_atk,
+            "mid_power": raw_mid,
+            "def_power": raw_def,
+            "gk_power": raw_gk,
+            # Global scores (coefficient-adjusted) — comparable across leagues
+            "global_squad": round(raw_squad * coeff, 1) if raw_squad else None,
+            "global_atk":   round(raw_atk * coeff, 1)   if raw_atk else None,
+            "global_mid":   round(raw_mid * coeff, 1)    if raw_mid else None,
+            "global_def":   round(raw_def * coeff, 1)    if raw_def else None,
+            "global_gk":    round(raw_gk * coeff, 1)     if raw_gk else None,
+        })
+
+    # Sort teams within each league by squad_power descending
+    for lc_data in leagues.values():
+        lc_data["teams"].sort(
+            key=lambda t: t["squad_power"] or 0, reverse=True
+        )
+
+    return {
+        "leagues": list(leagues.values()),
+        "total_leagues": len(leagues),
+        "total_teams": len(teams),
+    }

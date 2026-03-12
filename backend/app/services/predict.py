@@ -7,6 +7,7 @@ from app.engine.types import MatchRequest, Prediction
 from app.engine.pipeline import evaluate_athena
 from app.models.league_config import LeagueConfig
 from app.models.team_config import TeamConfig
+from app.services.squad_availability import auto_deg_from_depth
 
 
 # ── v2.0: Player power blend weight ─────────────────────────────────────────
@@ -27,6 +28,21 @@ PLAYER_POWER_MAX_EFFECT = 0.08
 
 # International league codes — used for cross-league normalisation
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
+
+# Calendar-year leagues use "2026", Aug–May leagues use "2025-2026"
+_CALENDAR_YEAR_PREFIXES = {"BRA", "MLS", "NOR", "SWE", "CHN", "JPN", "COL"}
+
+
+def _current_season(league_code: str) -> str:
+    """
+    Derive the current season label from a league code.
+    Calendar-year leagues (BRA-SA, MLS, NOR-EL, etc.) → "2026"
+    Aug–May leagues (ENG-PL, ESP-LL, etc.) → "2025-2026"
+    """
+    prefix = league_code.split("-")[0] if "-" in league_code else league_code
+    if prefix in _CALENDAR_YEAR_PREFIXES:
+        return "2026"
+    return "2025-2026"
 
 
 def _clip(x: float, lo: float, hi: float) -> float:
@@ -270,8 +286,9 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
       1. Load league calibration biases + sensitivities
       2. Load team over/under nudges (support_delta shift)
       3. v2.0: Compute player power nudge (squad strength delta)
-      4. Apply DEG/DET/EPS sensitivity and team module nudges to MatchRequest
-      5. Run evaluate_athena with combined nudges
+      4. v2.0: Compute squad depth vulnerability → auto DEG adjustment
+      5. Apply DEG/DET/EPS sensitivity and team module nudges to MatchRequest
+      6. Run evaluate_athena with combined nudges
     """
     over_bias, under_bias, tempo_factor = _get_league_bias(db, req.league_code)
     team_nudge = _get_team_nudge(
@@ -285,6 +302,20 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
         db, req.league_code, req.home_team, req.away_team
     )
     combined_nudge = team_nudge + player_nudge
+
+    # v2.0: Squad depth vulnerability → auto DEG boost.
+    # If either team has large XI-to-bench power gaps in any zone,
+    # this adds a small positive nudge to deg_pressure (max +0.06).
+    # Returns 0.0 if player data is unavailable or no vulnerability.
+    season = _current_season(req.league_code)
+    depth_deg = auto_deg_from_depth(
+        db, req.league_code, req.home_team, req.away_team, season
+    )
+    if depth_deg > 0:
+        current_deg = req.deg_pressure if req.deg_pressure is not None else 0.0
+        req = req.model_copy(update={
+            "deg_pressure": round(current_deg + depth_deg, 3),
+        })
 
     # Apply league sensitivities + team module nudges to DEG/DET/EPS features.
     adjusted_req = _apply_module_adjustments(req, db)
