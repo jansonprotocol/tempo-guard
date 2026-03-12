@@ -26,6 +26,20 @@ deg_nudge:
              (often needed for newly relegated sides, rotation-heavy squads).
   Negative = this team is more resilient than short-term form suggests.
 
+squad_power / atk_power / mid_power / def_power / gk_power:
+  (v2.0) Player-derived zonal strength scores on a 0–100 scale.
+  Written by player_index.py after scrape_players.py populates
+  PlayerSeasonStats. These are the CURRENT squad assessment —
+  historical values live in SquadSnapshot for backtesting.
+
+  squad_power = weighted blend: ATK×0.30 + MID×0.25 + DEF×0.30 + GK×0.15
+
+  Used in fbref_base.py to compute player_power_composite, which feeds
+  into support_delta at a configurable blend weight (default 30%).
+
+  None = not yet computed (player data not scraped for this team).
+  When None, the pipeline falls back to macro-only features (v1.x behaviour).
+
 Example:
   Man City  over_nudge=-0.04  det_nudge=+0.12  deg_nudge=-0.05
     → Tends to suppress total goals (strong defense) but is individually volatile.
@@ -57,17 +71,26 @@ class TeamConfig(Base):
     over_nudge  = Column(Float, default=0.0)   # additive on support_delta (over calls)
     under_nudge = Column(Float, default=0.0)   # additive on support_delta (under calls)
 
-    # ── Module-level nudges (new) ─────────────────────────────────────
+    # ── Module-level nudges (existing) ────────────────────────────────
     det_nudge   = Column(Float, default=0.0)   # adjustment to this team's DET score
     deg_nudge   = Column(Float, default=0.0)   # adjustment to this team's DEG pressure
 
-    # ── Diagnostics ───────────────────────────────────────────────────
+    # ── Diagnostics (existing) ────────────────────────────────────────
     over_hit_rate   = Column(Float,   default=None)
     under_hit_rate  = Column(Float,   default=None)
     over_matches    = Column(Integer, default=0)
     under_matches   = Column(Integer, default=0)
     avg_det         = Column(Float,   default=None)  # team's historical avg DET
     avg_deg         = Column(Float,   default=None)  # team's historical avg DEG
+
+    # ── v2.0: Player-derived squad power scores (0–100) ──────────────
+    # Written by player_index.py after player data is scraped.
+    # None = not yet computed → pipeline uses macro-only features.
+    squad_power     = Column(Float, default=None)
+    atk_power       = Column(Float, default=None)
+    mid_power       = Column(Float, default=None)
+    def_power       = Column(Float, default=None)
+    gk_power        = Column(Float, default=None)
 
     last_calibrated = Column(DateTime, default=datetime.utcnow)
 
@@ -79,5 +102,6 @@ class TeamConfig(Base):
         return (
             f"<TeamConfig {self.league_code}/{self.team} "
             f"over={self.over_nudge:+.3f} under={self.under_nudge:+.3f} "
-            f"det={self.det_nudge:+.3f} deg={self.deg_nudge:+.3f}>"
+            f"det={self.det_nudge:+.3f} deg={self.deg_nudge:+.3f} "
+            f"squad={self.squad_power}>"
         )
