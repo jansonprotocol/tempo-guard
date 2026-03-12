@@ -12,6 +12,7 @@ from app.api.routes_futurematch import router as future_router
 from app.api.routes_retrosim import router as retro_router
 from app.api.routes_calibration import router as calib_router
 from app.api.routes_batch import router as batch_router
+from app.api.routes_player_power import router as player_power_router
 # Database & models
 from app.database.base import Base
 from app.database.db import engine, SessionLocal
@@ -151,6 +152,7 @@ app.include_router(future_router,  prefix="/api",      tags=["Futurematch"])
 app.include_router(retro_router,   prefix="/api",      tags=["Retrosim"])
 app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
 app.include_router(batch_router,   prefix="/api")
+app.include_router(player_power_router, prefix="/api", tags=["PlayerPower"])
 
 
 # ------------------------------------------------------------------------------
