@@ -531,13 +531,28 @@ def squad_power_overview(
                 "teams": [],
             }
 
+        coeff = leagues[lc]["strength_coefficient"]
+
+        raw_squad = round(float(t.squad_power), 1) if t.squad_power else None
+        raw_atk   = round(float(t.atk_power), 1)   if t.atk_power else None
+        raw_mid   = round(float(t.mid_power), 1)    if t.mid_power else None
+        raw_def   = round(float(t.def_power), 1)    if t.def_power else None
+        raw_gk    = round(float(t.gk_power), 1)     if t.gk_power else None
+
         leagues[lc]["teams"].append({
             "team": t.team,
-            "squad_power": round(float(t.squad_power), 1) if t.squad_power else None,
-            "atk_power": round(float(t.atk_power), 1) if t.atk_power else None,
-            "mid_power": round(float(t.mid_power), 1) if t.mid_power else None,
-            "def_power": round(float(t.def_power), 1) if t.def_power else None,
-            "gk_power": round(float(t.gk_power), 1) if t.gk_power else None,
+            # Raw league-relative scores
+            "squad_power": raw_squad,
+            "atk_power": raw_atk,
+            "mid_power": raw_mid,
+            "def_power": raw_def,
+            "gk_power": raw_gk,
+            # Global scores (coefficient-adjusted) — comparable across leagues
+            "global_squad": round(raw_squad * coeff, 1) if raw_squad else None,
+            "global_atk":   round(raw_atk * coeff, 1)   if raw_atk else None,
+            "global_mid":   round(raw_mid * coeff, 1)    if raw_mid else None,
+            "global_def":   round(raw_def * coeff, 1)    if raw_def else None,
+            "global_gk":    round(raw_gk * coeff, 1)     if raw_gk else None,
         })
 
     # Sort teams within each league by squad_power descending
