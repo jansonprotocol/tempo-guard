@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import io
 import os
+import re
 import sys
 import time
 from datetime import date, datetime, timedelta
@@ -305,6 +306,15 @@ def scrape_league(league_code: str, url: str) -> None:
         _upsert_fixtures(league_code, upcoming_df, c)
 
 
+def _safe_to_parquet(df: pd.DataFrame) -> bytes:
+    """Serialize DataFrame to parquet, coercing mixed-type object columns to string."""
+    df = df.copy()
+    for col in df.columns:
+        if df[col].dtype == object:
+            df[col] = df[col].astype(str)
+    return df.to_parquet(index=True)
+
+
 def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
     """Merge new completed rows into existing snapshot."""
     db = SessionLocal()
@@ -325,16 +335,16 @@ def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
                 )
                 combined[date_col] = pd.to_datetime(combined[date_col], errors="coerce")
                 combined = combined.sort_values(date_col).reset_index(drop=True)
-                snap.data = combined.to_parquet(index=True)
+                snap.data = _safe_to_parquet(combined)
             else:
-                snap.data = completed_df.to_parquet(index=True)
+                snap.data = _safe_to_parquet(completed_df)
 
             snap.fetched_at = datetime.utcnow()
             action = "Updated"
         else:
             new_snap = FBrefSnapshot(
                 league_code=league_code,
-                data=completed_df.to_parquet(index=True),
+                data=_safe_to_parquet(completed_df),
                 fetched_at=datetime.utcnow(),
             )
             db.add(new_snap)
@@ -415,12 +425,26 @@ def _upsert_fixtures(
             FBrefFixture.match_date  >= today,
         ).delete()
 
+        # Deduplicate by date+home+away (multi-table merge can produce dupes)
+        upcoming_df = upcoming_df.drop_duplicates(
+            subset=[c["date"], c["home"], c["away"]]
+        ).copy()
+
         added = 0
         for _, row in upcoming_df.iterrows():
             try:
                 match_date = row[c["date"]].date()
                 home = str(row[c["home"]]).strip()
                 away = str(row[c["away"]]).strip()
+
+                # Strip leading/trailing 2-3 letter country codes injected by
+                # FBref on international competition pages (e.g. "eng Liverpool",
+                # "Newcastle United eng", "es Barcelona")
+                home = re.sub(r'(?i)^[a-z]{2,3}\s+', '', home).strip()
+                home = re.sub(r'(?i)\s+[a-z]{2,3}$', '', home).strip()
+                away = re.sub(r'(?i)^[a-z]{2,3}\s+', '', away).strip()
+                away = re.sub(r'(?i)\s+[a-z]{2,3}$', '', away).strip()
+
                 mtime = str(row[c["time"]]).strip() if c["time"] and pd.notnull(row.get(c["time"])) else None
 
                 if not home or not away or home == "nan" or away == "nan":

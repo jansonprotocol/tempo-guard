@@ -27,6 +27,7 @@ class FBrefFixture(Base):
     away_team   = Column(String,  nullable=False)
     match_date  = Column(Date,    nullable=False, index=True)
     match_time  = Column(String,  nullable=True)   # e.g. "20:45" if available
+    round_type  = Column(String,  nullable=True)   # e.g. "league_phase", "quarter_final"
     scraped_at  = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self):
