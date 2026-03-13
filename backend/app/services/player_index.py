@@ -335,3 +335,31 @@ def compute_all_leagues(db: Session, season_map: dict[str, str]) -> list[dict]:
             print(f"[player_index] Error for {league_code}: {e}")
             results.append({"league_code": league_code, "error": str(e)})
     return results
+
+def apply_performance_ratings(db: Session, league_code: str):
+    """
+    Calculates how much a player is over/underperforming 
+    relative to their specific team's quality.
+    """
+    from app.models.team_config import TeamConfig
+    from app.models.models_players import PlayerSeasonStats
+    
+    # 1. Get all teams in this league
+    teams = db.query(TeamConfig).filter_by(league_code=league_code).all()
+    
+    for t_cfg in teams:
+        if not t_cfg.squad_power: 
+            continue
+        
+        # 2. Find all players belonging to this team
+        players = db.query(PlayerSeasonStats).filter_by(
+            team=t_cfg.team, 
+            league_code=league_code
+        ).all()
+        
+        for p in players:
+            if p.power_index is not None:
+                # 3. Calculate the difference (Player Power - Team Average)
+                p.performance_delta = round(p.power_index - t_cfg.squad_power, 2)
+            
+    db.commit()
