@@ -23,6 +23,8 @@ from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot  
 # Memory loaders
 from app.memory_loader import load_league_configs, load_teams
 
+from app.admin import setup_admin
+
 app = FastAPI(
     title="ATHENA: Tempo Guard",
     description="Tempo-aware predictive engine (MVP).",
@@ -167,3 +169,4 @@ def root():
     return RedirectResponse(url="/app")
 
 app.mount("/app", StaticFiles(directory="app/static", html=True), name="app")
+setup_admin(app)
