@@ -629,3 +629,18 @@ def form_delta_all(
             print(f"[form_delta] Error for {lc}: {e}")
 
     return {"leagues": results, "total_leagues": len(results)}
+
+
+@router.get("/player-power/match-tags")
+def match_performance_tags(
+    league_code: str = Query(...),
+    home_team: str = Query(...),
+    away_team: str = Query(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Generate performance tags for a matchup.
+    Returns matchup headline + per-team zone tags.
+    """
+    from app.services.performance_tags import generate_match_tags_with_delta
+    return generate_match_tags_with_delta(db, league_code, home_team, away_team)
