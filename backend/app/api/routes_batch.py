@@ -380,28 +380,59 @@ def get_predictions(
     days: int = Query(30, ge=1, le=365, description="How many days back to include"),
     db: Session = Depends(get_db),
 ):
-    """
+    \"\"\"
     Returns predictions for the frontend Predictions page.
     Sorted by date descending (most recent first).
-    """
+    Now includes v2.0 performance tags per match.
+    \"\"\"
     from app.database.models_predictions import PredictionLog as PL
-
+ 
     cutoff = date.today() - timedelta(days=days)
     q = db.query(PL).filter(PL.match_date >= cutoff)
-
+ 
     if status:
         q = q.filter(PL.status == status)
     if league_code:
         q = q.filter(PL.league_code == league_code)
-
+ 
     rows = q.order_by(PL.match_date.asc(), PL.id.asc()).all()
-
+ 
+    # v2.0: Pre-compute performance tags per unique league (cached per request)
+    _league_tag_cache: dict = {}  # league_code → {form_deltas, league_avgs}
+ 
+    def _get_league_cache(lc: str) -> dict:
+        if lc in _league_tag_cache:
+            return _league_tag_cache[lc]
+        cache = {"form_deltas": {}, "league_avgs": {"atk": 50.0, "mid": 50.0, "def": 50.0, "gk": 50.0}}
+        try:
+            from app.services.performance_tags import _compute_league_zone_avgs
+            cache["league_avgs"] = _compute_league_zone_avgs(db, lc)
+            from app.services.form_delta import compute_form_delta
+            delta_data = compute_form_delta(db, lc)
+            if delta_data and delta_data.get("teams"):
+                cache["form_deltas"] = {t["team"]: t["form_delta"] for t in delta_data["teams"]}
+        except Exception:
+            pass
+        _league_tag_cache[lc] = cache
+        return cache
+ 
+    def _match_tags(lc: str, home: str, away: str) -> dict:
+        try:
+            from app.services.performance_tags import generate_match_tags
+            cache = _get_league_cache(lc)
+            return generate_match_tags(db, lc, home, away, cache["form_deltas"])
+        except Exception:
+            return {}
+ 
     # Group by date
     grouped: dict = {}
     for r in rows:
         d = r.match_date.isoformat()
         if d not in grouped:
             grouped[d] = []
+ 
+        tags = _match_tags(r.league_code, r.home_team, r.away_team)
+ 
         grouped[d].append({
             "id":             r.id,
             "league_code":    r.league_code,
@@ -421,8 +452,9 @@ def get_predictions(
             "predicted_at":   r.predicted_at.isoformat() if r.predicted_at else None,
             "evaluated_at":   r.evaluated_at.isoformat() if r.evaluated_at else None,
             "variance_flag":  getattr(r, "variance_flag", None),
+            "performance_tags": tags,
         })
-
+ 
     return {
         "total":    len(rows),
         "by_date":  grouped,
