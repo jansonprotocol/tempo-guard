@@ -52,3 +52,49 @@ def resolve_and_learn(db: Session, raw_name: str, league_code: str) -> str:
             return master_team.team_key
 
     return normalized_key
+    
+def resolve_league_for_match(db: Session, home_team: str, away_team: str) -> dict:
+    """
+    Determines the correct league_code for a matchup between two teams.
+    Used by the prediction and validation routes.
+    """
+    from app.util.text_norm import normalize_team
+    
+    h_key = normalize_team(home_team)
+    a_key = normalize_team(away_team)
+
+    h_teams = _find_team_ids_by_key_or_alias(db, h_key)
+    a_teams = _find_team_ids_by_key_or_alias(db, a_key)
+
+    suggestions = {
+        "team_a": [] if h_teams else _fuzzy_candidates(db, h_key),
+        "team_b": [] if a_teams else _fuzzy_candidates(db, a_key),
+    }
+
+    if h_teams and a_teams:
+        leagues_h = set(t.league_code for t in h_teams)
+        leagues_a = set(t.league_code for t in a_teams)
+
+        # 1. Check for standard league match (both in same league)
+        intersection = leagues_h.intersection(leagues_a)
+        if intersection:
+            # Pick the first common league found
+            return {
+                "resolved": True, 
+                "league_code": list(intersection)[0], 
+                "suggestions": suggestions
+            }
+
+        # 2. If different leagues, treat as International Club (UCL/UEL)
+        return {
+            "resolved": True, 
+            "league_code": "INTERNATIONAL_CLUB", 
+            "suggestions": suggestions
+        }
+
+    # 3. Unresolved
+    return {
+        "resolved": False, 
+        "league_code": None, 
+        "suggestions": suggestions
+    }
