@@ -70,6 +70,8 @@ _COLUMN_MIGRATIONS = [
     ("team_configs",   "mid_power",      "FLOAT",   None),
     ("team_configs",   "def_power",      "FLOAT",   None),
     ("team_configs",   "gk_power",       "FLOAT",   None),
+    # player_season_stats — v2.0 performance delta
+    ("player_season_stats", "performance_delta", "FLOAT", None),
 ]
 
 
