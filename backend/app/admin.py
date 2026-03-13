@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from sqladmin import Admin, ModelView
-from sqladmin.filters import ColumnFilter
+from sqladmin.filters import OperationColumnFilter  # Changed from ColumnFilter
 from app.database.db import engine
 from app.models.league_config import LeagueConfig
 from app.models.team import Team, TeamAlias
@@ -33,13 +33,13 @@ class TeamAdmin(ModelView, model=Team):
 class TeamAliasAdmin(ModelView, model=TeamAlias):
     column_list = ["id", "alias_key", "team"]
     column_searchable_list = ["alias_key"]
-    # Fixed: Use ColumnFilter for relationship filtering
+    # Fixed: Use OperationColumnFilter for relationship filtering
     column_filters = [
-        "alias_key",  # simple column filter
-        ColumnFilter(
+        "alias_key",
+        OperationColumnFilter(
             column=TeamAlias.team,
             name="team__league_code",
-            options={"field": Team.league_code}
+            options={"field": Team.league_code.name}  # Use .name to get column name string
         )
     ]
     column_default_sort = [("alias_key", False)]
