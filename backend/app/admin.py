@@ -20,6 +20,52 @@ class TeamAdmin(ModelView, model=Team):
     can_edit = True
     can_delete = True
 
+from sqladmin.actions import Action
+from sqlalchemy import text
+
+class TeamAdmin(ModelView, model=Team):
+    # ... existing config ...
+
+    async def merge_teams(self, request):
+        """Custom action to merge selected teams."""
+        pks = request.query_params.get("pks", "").split(",")
+        if len(pks) != 2:
+            return JSONResponse({"error": "Select exactly two teams to merge"}, status_code=400)
+
+        team_a, team_b = await self.get_objects(pks)
+        # Determine master (e.g., shorter name)
+        master = team_a if len(team_a.display_name) <= len(team_b.display_name) else team_b
+        variant = team_b if master == team_a else team_a
+
+        # Perform merge in all tables (similar to your fix_duplicates.py)
+        async with self.session as db:
+            # Update players
+            await db.execute(
+                text("UPDATE players SET current_team = :master WHERE current_team = :variant AND league_code = :league"),
+                {"master": master.team_key, "variant": variant.team_key, "league": master.league_code}
+            )
+            # Update fixtures
+            await db.execute(
+                text("UPDATE fbref_fixtures SET home_team = :master WHERE home_team = :variant AND league_code = :league"),
+                {"master": master.team_key, "variant": variant.team_key, "league": master.league_code}
+            )
+            # ... similar for away_team, team_configs, squad_snapshots ...
+
+            # Delete the variant team
+            await db.delete(variant)
+            await db.commit()
+
+        return JSONResponse({"success": f"Merged {variant.display_name} into {master.display_name}"})
+
+    # Register the action
+    actions = [Action(
+        name="merge_teams",
+        label="Merge Selected Teams",
+        add_in_list=True,
+        callback=merge_teams,
+        confirmation="Merge the two selected teams? This cannot be undone."
+    )]
+
 class TeamAliasAdmin(ModelView, model=TeamAlias):
     column_list = ["id", "alias_key", "team_id"]
     can_create = True
