@@ -306,6 +306,8 @@ def compute_league_power(
                 snap.def_power   = zonal_scores.get("DEF")
                 snap.gk_power    = zonal_scores.get("GK")
 
+    apply_performance_ratings(db, league_code)
+
     db.commit()
 
     print(f"\n  [player_index] {league_code}: {len(team_results)} teams updated")
