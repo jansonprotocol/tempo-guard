@@ -1,110 +1,46 @@
 """
-backend/scripts/scrape_fixtures.py
+backend/scripts/fix_duplicates.py
 
-Lightweight DAILY scraper — much faster than the weekly full scrape.
-
-What it does per league (single browser fetch):
-  1. Fetches current season fixtures page
-  2. Completed rows   → updates FBrefSnapshot with latest scores
-  3. Upcoming rows    → writes to FBrefFixtures table (next FIXTURE_DAYS days)
-
-Run time: ~6-8 minutes for all 16 leagues (vs 15-20 for full scraper)
+Scans the database for team name duplicates within each league and
+proposes merges. Interactive — asks for confirmation before writing.
 
 Usage:
     cd backend
-    venv312\\Scripts\\activate
-    python -m scripts.scrape_fixtures
-
-NOTE: Chrome opens once per league. Do not click anything.
+    python -m scripts.fix_duplicates
 """
-from app.util.team_resolver import resolve_and_learn
-from __future__ import annotations
-
-import io
-import os
-import re
 import sys
-import time
-from datetime import date, datetime, timedelta
 from pathlib import Path
+from rapidfuzz import fuzz
+from sqlalchemy import text
+
+path_root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(path_root))
 
 from dotenv import load_dotenv
 load_dotenv()
 
-import pandas as pd
-import requests
-from seleniumbase import Driver
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
 from app.database.db import SessionLocal
-from app.database.models_fbref import FBrefSnapshot
-from app.database.models_predictions import FBrefFixture, Base
-from app.database.db import engine
 
-# Auto-create new tables if they don't exist yet
-Base.metadata.create_all(bind=engine)
-
-FIXTURE_DAYS        = 5     # how many days ahead to store fixtures
-SLEEP_BETWEEN       = 4     # seconds between leagues
-
-# Set to True via --headless flag (used in CI / GitHub Actions)
-HEADLESS = False
-
-# Set via --api flag or SCRAPER_API_KEY env var (used in CI to bypass Cloudflare)
-SCRAPER_API_KEY: str | None = os.environ.get("SCRAPER_API_KEY")
-
-# ── Current season URLs only ───────────────────────────────────────────────────
-LEAGUE_MAP = {
-    "ENG-PL":  "https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures",
-    "ESP-LL":  "https://fbref.com/en/comps/12/schedule/La-Liga-Scores-and-Fixtures",
-    "FRA-L1":  "https://fbref.com/en/comps/13/schedule/Ligue-1-Scores-and-Fixtures",
-    "GER-BUN": "https://fbref.com/en/comps/20/schedule/Bundesliga-Scores-and-Fixtures",
-    "ITA-SA":  "https://fbref.com/en/comps/11/schedule/Serie-A-Scores-and-Fixtures",
-    "NED-ERE": "https://fbref.com/en/comps/23/schedule/Eredivisie-Scores-and-Fixtures",
-    "TUR-SL":  "https://fbref.com/en/comps/26/schedule/Super-Lig-Scores-and-Fixtures",
-    "BRA-SA":  "https://fbref.com/en/comps/24/schedule/Serie-A-Scores-and-Fixtures",
-    "MLS":     "https://fbref.com/en/comps/22/schedule/Major-League-Soccer-Scores-and-Fixtures",
-    "SAU-SPL": "https://fbref.com/en/comps/70/schedule/Saudi-Pro-League-Scores-and-Fixtures",
-    "DEN-SL":  "https://fbref.com/en/comps/50/schedule/Danish-Superliga-Scores-and-Fixtures",
-    "ESP-LL2": "https://fbref.com/en/comps/17/schedule/Segunda-Division-Scores-and-Fixtures",
-    "BEL-PL":  "https://fbref.com/en/comps/37/schedule/Belgian-Pro-League-Scores-and-Fixtures",
-    "NOR-EL":  "https://fbref.com/en/comps/28/schedule/Eliteserien-Scores-and-Fixtures",
-    "SWE-AL":  "https://fbref.com/en/comps/29/schedule/Allsvenskan-Scores-and-Fixtures",
-    "MEX-LMX": "https://fbref.com/en/comps/31/schedule/Liga-MX-Scores-and-Fixtures",
-    # ── Expanded leagues ─────────────────────────────────────────────────────
-    "CHN-CSL": "https://fbref.com/en/comps/62/schedule/Chinese-Super-League-Scores-and-Fixtures",
-    "JPN-J1":  "https://fbref.com/en/comps/25/schedule/J1-League-Scores-and-Fixtures",
-    "COL-PA":  "https://fbref.com/en/comps/41/schedule/Primera-A-Scores-and-Fixtures",
-    "BRA-SB":  "https://fbref.com/en/comps/38/schedule/Serie-B-Scores-and-Fixtures",
-    "ITA-SB":  "https://fbref.com/en/comps/18/schedule/Serie-B-Scores-and-Fixtures",
-    "FRA-L2":  "https://fbref.com/en/comps/60/schedule/Ligue-2-Scores-and-Fixtures",
-    "GER-B2":  "https://fbref.com/en/comps/33/schedule/2-Bundesliga-Scores-and-Fixtures",
-    "POL-EK":  "https://fbref.com/en/comps/36/schedule/Ekstraklasa-Scores-and-Fixtures",
-    "AUT-BL":  "https://fbref.com/en/comps/56/schedule/Austrian-Football-Bundesliga-Scores-and-Fixtures",
-    "SUI-SL":  "https://fbref.com/en/comps/57/schedule/Swiss-Super-League-Scores-and-Fixtures",
-    "CHI-LP":  "https://fbref.com/en/comps/35/schedule/Primera-Division-Scores-and-Fixtures",
-    "PER-L1":  "https://fbref.com/en/comps/44/schedule/Liga-1-Scores-and-Fixtures",
-    "POR-LP":  "https://fbref.com/en/comps/32/schedule/Primeira-Liga-Scores-and-Fixtures",
-    # Cuba (CUB-PD) not on FBref — scraping skipped
-    # ── UEFA club competitions ────────────────────────────────────────────────
-    # NOTE: FBref stores completed match scores AND upcoming fixtures on these
-    # pages. Team names here are short international forms (e.g. "Man City",
-    # "Atlético Madrid") — fbref_base.py's fuzzy matcher handles the mapping
-    # to domestic snapshot names automatically.
-    "UCL":  "https://fbref.com/en/comps/8/schedule/Champions-League-Scores-and-Fixtures",
-    "UEL":  "https://fbref.com/en/comps/19/schedule/Europa-League-Scores-and-Fixtures",
-    "UECL": "https://fbref.com/en/comps/882/schedule/Conference-League-Scores-and-Fixtures",
-}
+# Words that, if mismatched, should NEVER be merged automatically
+FORBIDDEN_PAIRS = [
+    ("City", "United"), ("City", "Utd"),
+    ("United", "Wednesday"), ("Utd", "Weds"),
+    ("Real", "Atletico"), ("Inter", "Milan"),
+    ("Benfica", "Sporting"), ("Feyenoord", "Feyen"),
+]
 
 
-def _fetch_page(url: str, league_code: str) -> str | None:
-    """Fetch page via ScraperAPI (CI) or Selenium (local)."""
-    if SCRAPER_API_KEY:
-        return _fetch_via_scraperapi(url, league_code)
-    return _fetch_via_selenium(url, league_code)
+def is_safe(name_a, name_b):
+    """Returns False if the names are known rivals or distinct entities."""
+    a, b = name_a.lower(), name_b.lower()
+    for word1, word2 in FORBIDDEN_PAIRS:
+        w1, w2 = word1.lower(), word2.lower()
+        if (w1 in a and w2 in b) or (w1 in b and w2 in a):
+            return False
+    return True
 
 
+<<<<<<< HEAD
 def _fetch_via_scraperapi(url: str, league_code: str) -> str | None:
     """Fetch using ScraperAPI — bypasses Cloudflare in CI."""
     print(f"  Fetching via ScraperAPI [{league_code}]...")
@@ -340,10 +276,19 @@ def _safe_to_parquet(df: pd.DataFrame) -> bytes:
 
 def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
     """Merge new completed rows into existing snapshot."""
+=======
+def run_smart_clean():
+>>>>>>> 4ec1c78a27c52480251c0dda1361f6947d010e81
     db = SessionLocal()
-    try:
-        snap = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
+    print("Scanning database for potential team duplicates...")
 
+    try:
+        # Get unique teams from players table
+        rows = db.execute(text(
+            "SELECT DISTINCT current_team, league_code FROM players WHERE current_team IS NOT NULL"
+        )).fetchall()
+
+<<<<<<< HEAD
         if snap:
             existing = pd.read_parquet(io.BytesIO(snap.data))
             col_map  = {str(c).lower(): c for c in existing.columns}
@@ -490,17 +435,86 @@ def _upsert_fixtures(
                 added += 1
             except Exception as e:
                 print(f"  Row error: {e}")
+=======
+        leagues = {}
+        for team, league in rows:
+            if not team:
+>>>>>>> 4ec1c78a27c52480251c0dda1361f6947d010e81
                 continue
+            leagues.setdefault(league, []).append(team)
 
-        db.commit()
-        print(f"  Fixtures: {added} upcoming matches saved for {league_code}")
+        proposals = []
+
+        # Compare within leagues
+        for league, teams in leagues.items():
+            for i, name_a in enumerate(teams):
+                for name_b in teams[i + 1:]:
+                    score = fuzz.token_set_ratio(name_a, name_b)
+
+                    if score >= 88 and is_safe(name_a, name_b):
+                        # Shorter name is usually the master
+                        master = name_a if len(name_a) <= len(name_b) else name_b
+                        variant = name_b if master == name_a else name_a
+                        proposals.append((variant, master, league, score))
+
+        if not proposals:
+            print("No duplicates found.")
+            return
+
+        print(f"\nFound {len(proposals)} potential matches:")
+        print("-" * 60)
+        for v, m, l, s in proposals:
+            print(f"  [{l}] '{v}' ---> '{m}' ({s}% match)")
+        print("-" * 60)
+
+        confirm = input("\nProceed with these changes? (type 'yes' to commit): ")
+
+        if confirm.lower() == 'yes':
+            for variant, master, league, _ in proposals:
+                # Update Players
+                db.execute(text(
+                    "UPDATE players SET current_team = :m "
+                    "WHERE current_team = :v AND league_code = :l"
+                ), {"m": master, "v": variant, "l": league})
+
+                # Update Fixtures
+                db.execute(text(
+                    "UPDATE fbref_fixtures SET home_team = :m "
+                    "WHERE home_team = :v AND league_code = :l"
+                ), {"m": master, "v": variant, "l": league})
+                db.execute(text(
+                    "UPDATE fbref_fixtures SET away_team = :m "
+                    "WHERE away_team = :v AND league_code = :l"
+                ), {"m": master, "v": variant, "l": league})
+
+                # Update TeamConfig
+                db.execute(text(
+                    "UPDATE team_configs SET team = :m "
+                    "WHERE team = :v AND league_code = :l"
+                ), {"m": master, "v": variant, "l": league})
+
+                # Update SquadSnapshots
+                db.execute(text(
+                    "UPDATE squad_snapshots SET team = :m "
+                    "WHERE team = :v AND league_code = :l"
+                ), {"m": master, "v": variant, "l": league})
+
+                print(f"  Merged '{variant}' -> '{master}' [{league}]")
+
+            db.commit()
+            print("\nDatabase cleaned successfully!")
+        else:
+            print("\nCancelled. No changes made.")
+
     except Exception as e:
-        print(f"  Fixture DB error: {e}")
+        db.rollback()
+        print(f"Error: {e}")
     finally:
         db.close()
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -543,3 +557,6 @@ if __name__ == "__main__":
                 time.sleep(SLEEP_BETWEEN)
 
     print("\n[fixtures] Done.")
+=======
+    run_smart_clean()
+>>>>>>> 4ec1c78a27c52480251c0dda1361f6947d010e81
