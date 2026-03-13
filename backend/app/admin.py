@@ -33,13 +33,16 @@ class TeamAdmin(ModelView, model=Team):
 class TeamAliasAdmin(ModelView, model=TeamAlias):
     column_list = ["id", "alias_key", "team"]
     column_searchable_list = ["alias_key"]
-    # Fixed: Use OperationColumnFilter for relationship filtering
+    # Fixed: Use proper OperationColumnFilter syntax
     column_filters = [
         "alias_key",
         OperationColumnFilter(
             column=TeamAlias.team,
-            name="team__league_code",
-            options={"field": Team.league_code.name}  # Use .name to get column name string
+            operation="contains",  # or "exact", "ilike", etc.
+            options={
+                "field": Team.league_code.name,
+                "label": "Team League Code"
+            }
         )
     ]
     column_default_sort = [("alias_key", False)]
