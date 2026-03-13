@@ -17,8 +17,8 @@ Usage:
 
 NOTE: Chrome opens once per league. Do not click anything.
 """
-from app.util.team_resolver import resolve_and_learn
 from __future__ import annotations
+from app.engine.team_resolver import resolve_and_learn
 
 import io
 import os
@@ -329,6 +329,15 @@ def scrape_league(league_code: str, url: str) -> None:
 
             # ... (the rest of your existing logic for db.merge or db.add)
 
+def _safe_to_parquet(df: pd.DataFrame) -> bytes:
+    """Serialize DataFrame to parquet, coercing mixed-type object columns to string."""
+    df = df.copy()
+    for col in df.columns:
+        if df[col].dtype == object:
+            df[col] = df[col].astype(str)
+    return df.to_parquet(index=True)
+
+
 def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
     """Merge new completed rows into existing snapshot."""
     db = SessionLocal()
@@ -349,16 +358,16 @@ def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
                 )
                 combined[date_col] = pd.to_datetime(combined[date_col], errors="coerce")
                 combined = combined.sort_values(date_col).reset_index(drop=True)
-                snap.data = combined.to_parquet(index=True)
+                snap.data = _safe_to_parquet(combined)
             else:
-                snap.data = completed_df.to_parquet(index=True)
+                snap.data = _safe_to_parquet(completed_df)
 
             snap.fetched_at = datetime.utcnow()
             action = "Updated"
         else:
             new_snap = FBrefSnapshot(
                 league_code=league_code,
-                data=completed_df.to_parquet(index=True),
+                data=_safe_to_parquet(completed_df),
                 fetched_at=datetime.utcnow(),
             )
             db.add(new_snap)
