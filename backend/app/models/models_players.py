@@ -123,6 +123,7 @@ class PlayerSeasonStats(Base):
 
     # ── Computed power index (written by player_index.py) ─────────────
     power_index    = Column(Float, default=None)   # 0–100, None = not yet computed
+    performance_delta = Column(Float, default=None)
 
     # ── Meta ──────────────────────────────────────────────────────────
     last_updated   = Column(DateTime, default=datetime.utcnow)
