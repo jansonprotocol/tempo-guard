@@ -1,100 +1,54 @@
-from typing import List, Dict
+from typing import List, Optional
 from sqlalchemy.orm import Session
-from difflib import get_close_matches
+from rapidfuzz import process, fuzz
 from app.models.team import Team, TeamAlias
 from app.util.text_norm import normalize_team
 
+# Threshold: 90/100 confidence is safe for autopilot
+AUTO_MAP_THRESHOLD = 90 
 
-INTERNATIONAL_CLUB = "INTERNATIONAL_CLUB"
-INTERNATIONAL_NATIONS = "INTERNATIONAL_NATIONS"
+def resolve_and_learn(db: Session, raw_name: str, league_code: str) -> str:
+    """
+    Resolves a raw name to a master team_key.
+    Autopilot: If it finds a 90%+ match, it creates a permanent Alias in the DB.
+    """
+    if not raw_name:
+        return raw_name
+        
+    normalized_key = normalize_team(raw_name)
 
+    # 1. Check if we already know this name (Direct or Alias)
+    # Check Team table
+    t = db.query(Team).filter(Team.team_key == normalized_key, Team.league_code == league_code).first()
+    if t: return t.team_key
+    
+    # Check Alias table
+    alias = db.query(TeamAlias).join(Team).filter(
+        TeamAlias.alias_key == normalized_key, 
+        Team.league_code == league_code
+    ).first()
+    if alias: return alias.team.team_key
 
-def _find_team_ids_by_key_or_alias(db: Session, key: str) -> List[Team]:
-    # Exact match by team_key
-    t = db.query(Team).filter(Team.team_key == key).all()
-    if t:
-        return t
-    # Or alias match
-    alias_rows = db.query(TeamAlias).filter(TeamAlias.alias_key == key).all()
-    if not alias_rows:
-        return []
-    team_ids = [a.team_id for a in alias_rows]
-    return db.query(Team).filter(Team.id.in_(team_ids)).all()
+    # 2. Autopilot: Fuzzy Match against known teams in this league
+    known_teams = db.query(Team).filter(Team.league_code == league_code).all()
+    if not known_teams:
+        return normalized_key
 
+    choices = {t.team_key: t for t in known_teams}
+    # find best match among keys
+    best_match, score, _ = process.extractOne(normalized_key, list(choices.keys()), scorer=fuzz.WRatio)
 
-def _fuzzy_candidates(db: Session, key: str, n: int = 5) -> List[Dict]:
-    keys = [t.team_key for t in db.query(Team).all()]
-    alias_keys = [a.alias_key for a in db.query(TeamAlias).all()]
-    universe = list(set(keys + alias_keys))
-    close = get_close_matches(key, universe, n=n, cutoff=0.8)
+    if score >= AUTO_MAP_THRESHOLD:
+        master_team = choices[best_match]
+        # Create the alias record so we 'learn' this for the future
+        try:
+            new_alias = TeamAlias(team_id=master_team.id, alias_key=normalized_key)
+            db.add(new_alias)
+            db.commit()
+            print(f"  [Autopilot] Linked variant '{raw_name}' to master '{master_team.team_key}' (Score: {score:.1f})")
+            return master_team.team_key
+        except Exception:
+            db.rollback()
+            return master_team.team_key
 
-    out = []
-    for ck in close:
-        teams = _find_team_ids_by_key_or_alias(db, ck)
-        for team in teams:
-            out.append({
-                "team_key": team.team_key,
-                "display_name": team.display_name,
-                "league_code": team.league_code
-            })
-    return out
-
-
-def resolve_league_for_match(db: Session, team_a: str, team_b: str) -> Dict:
-    a_key = normalize_team(team_a)
-    b_key = normalize_team(team_b)
-
-    # Fetch teams
-    a_teams = _find_team_ids_by_key_or_alias(db, a_key)
-    b_teams = _find_team_ids_by_key_or_alias(db, b_key)
-
-    # Suggestions
-    suggestions = {
-        "team_a": [] if a_teams else _fuzzy_candidates(db, a_key),
-        "team_b": [] if b_teams else _fuzzy_candidates(db, b_key),
-    }
-
-    # If both sides found exact teams:
-    if a_teams and b_teams:
-        leagues_a = set(t.league_code for t in a_teams)
-        leagues_b = set(t.league_code for t in b_teams)
-
-        # CASE: National teams → INTERNATIONAL_NATIONS
-        if all(lc == "NATIONAL" for lc in leagues_a.union(leagues_b)):
-            return {
-                "resolved": True,
-                "league_code": INTERNATIONAL_NATIONS,
-                "suggestions": suggestions
-            }
-
-        # CASE: Same club league
-        intersection = leagues_a.intersection(leagues_b)
-        if len(intersection) == 1:
-            return {
-                "resolved": True,
-                "league_code": list(intersection)[0],
-                "suggestions": suggestions
-            }
-
-        # CASE: Teams exist but different leagues → INTERNATIONAL CLUB
-        return {
-            "resolved": True,
-            "league_code": INTERNATIONAL_CLUB,
-            "suggestions": suggestions
-        }
-
-    # Only one team found → unresolved
-    if a_teams or b_teams:
-        detected = list(set([t.league_code for t in (a_teams + b_teams)]))
-        return {
-            "resolved": False,
-            "leagues": detected,
-            "suggestions": suggestions
-        }
-
-    # Nothing found
-    return {
-        "resolved": False,
-        "leagues": [],
-        "suggestions": suggestions
-    }
+    return normalized_key
