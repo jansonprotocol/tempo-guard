@@ -17,6 +17,7 @@ Usage:
 
 NOTE: Chrome opens once per league. Do not click anything.
 """
+from app.util.team_resolver import resolve_and_learn
 from __future__ import annotations
 
 import io
