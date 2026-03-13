@@ -35,6 +35,7 @@ NOTE: Chrome opens once per page fetch. ~45 min for all leagues.
       Run AFTER scrape_fbref.py (needs league snapshots for context).
       Run AFTER discover_team_ids.py (needs fbref_team_id in teams.json).
 """
+from app.util.team_resolver import resolve_and_learn
 from __future__ import annotations
 
 import io
