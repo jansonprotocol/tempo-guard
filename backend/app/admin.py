@@ -1,12 +1,50 @@
 from fastapi import FastAPI
 from sqladmin import Admin, ModelView
+from sqladmin.fields import Select2TagsField  # Use this instead of Select2TagsWidget
+from wtforms import Field
 from app.database.db import engine
 from app.models.league_config import LeagueConfig
 from app.models.team import Team, TeamAlias
 from app.models.team_config import TeamConfig
 from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot
 from app.database.models_predictions import FBrefFixture, PredictionLog
-from sqladmin.widgets import Select2TagsWidget  # Add this import at the top
+
+
+class TeamAdmin(ModelView, model=Team):
+    column_list = ["id", "team_key", "display_name", "league_code", "country", "alias_list"]
+    column_searchable_list = ["team_key", "display_name", "league_code", "country"]
+    column_filters = ["league_code", "country"]
+    column_default_sort = [("team_key", False)]
+    
+    # Show aliases as a comma-separated list
+    async def alias_list(self, instance):
+        if instance.aliases:
+            return ", ".join([a.alias_key for a in instance.aliases][:5]) + ("..." if len(instance.aliases) > 5 else "")
+        return "-"
+    
+    # Form configuration
+    form_columns = ["team_key", "display_name", "league_code", "country"]
+    
+    can_create = True
+    can_edit = True
+    can_delete = True
+
+
+class TeamAliasAdmin(ModelView, model=TeamAlias):
+    column_list = ["id", "alias_key", "team"]
+    column_searchable_list = ["alias_key", "team__display_name", "team__league_code"]
+    column_filters = ["team__league_code"]
+    column_default_sort = [("alias_key", False)]
+    
+    # Form configuration for easy alias creation
+    form_columns = ["alias_key", "team"]
+    
+    can_create = True
+    can_edit = True
+    can_delete = True
+
+
+# ... (rest of your admin classes remain the same)
 
 
 class LeagueConfigAdmin(ModelView, model=LeagueConfig):
@@ -18,54 +56,6 @@ class LeagueConfigAdmin(ModelView, model=LeagueConfig):
     can_edit = True
     can_delete = True
     can_view_details = True
-
-class TeamAdmin(ModelView, model=Team):
-    column_list = ["id", "team_key", "display_name", "league_code", "country", "alias_count"]
-    column_searchable_list = ["team_key", "display_name", "league_code", "country"]
-    column_filters = ["league_code", "country"]
-    column_default_sort = [("team_key", False)]
-    
-    # Add a custom column to show alias count
-    async def alias_count(self, instance):
-        return len(instance.aliases) if instance.aliases else 0
-    alias_count.column_labels = "Aliases"
-    
-    # Form configuration for editing
-    form_columns = ["team_key", "display_name", "league_code", "country", "aliases"]
-    
-    # Use a better widget for aliases - searchable multi-select
-    form_overrides = {
-        "aliases": Select2TagsWidget  # This makes aliases searchable
-    }
-    
-    # Allow adding new aliases directly in the form
-    form_args = {
-        "aliases": {
-            "render_kw": {
-                "placeholder": "Type to search or add new aliases...",
-                "data-tags": "true",  # Allow creating new tags
-                "data-token-separators": "[',']"  # Separate by comma
-            }
-        }
-    }
-    
-    can_create = True
-    can_edit = True
-    can_delete = True
-    
-    # Inline view for aliases (alternative approach)
-    inline_models = [TeamAlias]
-
-
-
-class TeamAliasAdmin(ModelView, model=TeamAlias):
-    column_list = ["id", "alias_key", "team_id"]
-    column_searchable_list = ["alias_key"]
-    column_filters = []  # Empty for now
-    column_default_sort = [("alias_key", False)]
-    can_create = True
-    can_edit = True
-    can_delete = True
 
 
 class TeamConfigAdmin(ModelView, model=TeamConfig):
