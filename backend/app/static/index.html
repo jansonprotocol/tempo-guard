@@ -1068,6 +1068,9 @@
 
     .pred-card.expanded .pred-card-chevron { transform: rotate(180deg); }
 
+    /* Hide collapsed variance badge when expanded — it's shown inside the details */
+    .pred-card.expanded .pred-card-collapsed .variance-badge { display: none; }
+
     .pred-card-details {
       display: none;
       padding: 0 12px 12px 16px;
@@ -1236,7 +1239,7 @@
     .league-group-coeff {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--dim);
+      color: var(--muted);
       letter-spacing: 0.05em;
     }
 
@@ -1286,14 +1289,14 @@
     .team-row-rank {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--dim);
+      color: var(--muted);
       width: 22px;
       flex-shrink: 0;
     }
 
     .team-row-chevron {
       font-size: 9px;
-      color: var(--dim);
+      color: var(--muted);
       transition: transform 0.2s;
     }
 
@@ -1336,7 +1339,7 @@
       font-size: 9px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--dim);
+      color: var(--muted);
       text-align: center;
     }
 
@@ -1404,6 +1407,31 @@
       }
       .team-power-cell { font-size: 11px; }
       .team-power-cell.squad { font-size: 14px; }
+
+      /* Make the team table horizontally scrollable on narrow screens */
+      .league-group-body {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .team-col-headers,
+      .team-row-header {
+        min-width: 520px;
+      }
+      .team-detail {
+        min-width: 520px;
+      }
+
+      /* Pred cards: fixture name wraps instead of truncating */
+      .pred-card-fixture-name {
+        white-space: normal;
+        font-size: 12px;
+      }
+      .pred-card-collapsed {
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      /* Hide kickoff in collapsed on very small screens — shown inside */
+      .pred-card-kickoff { display: none; }
     }
   </style>
 </head>
@@ -1647,30 +1675,57 @@
     // ── Timezone conversion ──────────────────────────────────────────
     // Backend stores match_time as local league time (no TZ info).
     // EU leagues are already CET/CEST; non-EU need converting.
+    // Non-EU league UTC offsets: [winter_offset, summer_offset]
+    // Summer = DST active for that region
+    // FBref stores match times in the league's local time
     const NON_EU_UTC_OFFSETS = {
-      'MLS':     -5,   // US Eastern (ET)
-      'MEX-LMX': -6,   // Mexico City (CST)
-      'BRA-SA':  -3,   // Brazil (BRT)
-      'BRA-SB':  -3,
-      'COL-PA':  -5,   // Colombia (COT)
-      'CHI-LP':  -3,   // Chile (CLT)
-      'PER-L1':  -5,   // Peru (PET)
-      'JPN-J1':  +9,   // Japan (JST)
-      'CHN-CSL': +8,   // China (CST)
-      'SAU-SPL': +3,   // Saudi Arabia (AST)
+      'MLS':     [-5, -4],   // US Eastern: EST/EDT
+      'MEX-LMX': [-6, -6],  // Mexico City: CST (no DST since 2022)
+      'BRA-SA':  [-3, -3],  // Brazil: BRT (no DST since 2019)
+      'BRA-SB':  [-3, -3],
+      'COL-PA':  [-5, -5],  // Colombia: COT (no DST)
+      'CHI-LP':  [-3, -4],  // Chile: CLST/CLT (southern hemisphere — reversed)
+      'PER-L1':  [-5, -5],  // Peru: PET (no DST)
+      'JPN-J1':  [+9, +9],  // Japan: JST (no DST)
+      'CHN-CSL': [+8, +8],  // China: CST (no DST)
+      'SAU-SPL': [+3, +3],  // Saudi: AST (no DST)
     };
+
+    // US DST: 2nd Sunday March → 1st Sunday November
+    // EU DST: last Sunday March → last Sunday October
+    // Southern hemisphere (Chile): 1st Saturday April → 1st Saturday September (reversed)
+    function isNorthDST(dateStr) {
+      const d = new Date(dateStr + 'T12:00:00');
+      const m = d.getMonth() + 1; // 1–12
+      if (m >= 4 && m <= 10) return true;
+      if (m === 3) return d.getDate() >= 10; // approximate
+      if (m === 11) return d.getDate() < 3;  // approximate
+      return false;
+    }
+
+    function isSouthDST(dateStr) {
+      // Southern hemisphere summer = Oct–Mar
+      const m = new Date(dateStr + 'T12:00:00').getMonth() + 1;
+      return m >= 10 || m <= 3;
+    }
 
     function toAmsterdamTime(matchDate, matchTime, leagueCode) {
       if (!matchTime) return null;
-      const leagueUtcOffset = NON_EU_UTC_OFFSETS[leagueCode];
-      if (leagueUtcOffset === undefined) return matchTime; // already CET-based
+      const offsets = NON_EU_UTC_OFFSETS[leagueCode];
+      if (!offsets) return matchTime; // EU leagues — already CET-based
+
+      // Source league offset (winter vs summer)
+      const isSouthern = ['CHI-LP'].includes(leagueCode);
+      const srcDST = isSouthern ? isSouthDST(matchDate) : isNorthDST(matchDate);
+      const srcOffset = srcDST ? offsets[1] : offsets[0];
 
       const [h, m] = matchTime.split(':').map(Number);
-      // Convert local league time → UTC
-      const utcHour = h - leagueUtcOffset;
-      // Amsterdam offset: UTC+1 winter (Nov–Mar), UTC+2 summer (Apr–Oct)
-      const month = new Date(matchDate + 'T12:00:00').getMonth() + 1; // 1–12
-      const amsOffset = (month >= 4 && month <= 10) ? 2 : 1;
+      // Local league time → UTC
+      const utcHour = h - srcOffset;
+
+      // Amsterdam: CET (UTC+1) winter, CEST (UTC+2) summer
+      const euMonth = new Date(matchDate + 'T12:00:00').getMonth() + 1;
+      const amsOffset = (euMonth >= 4 && euMonth <= 10) ? 2 : 1;
       const amsHour = ((utcHour + amsOffset) % 24 + 24) % 24;
       return String(amsHour).padStart(2, '0') + ':' + String(m).padStart(2, '0');
     }
