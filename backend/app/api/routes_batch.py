@@ -380,11 +380,11 @@ def get_predictions(
     days: int = Query(30, ge=1, le=365, description="How many days back to include"),
     db: Session = Depends(get_db),
 ):
-    \"\"\"
+    """
     Returns predictions for the frontend Predictions page.
     Sorted by date descending (most recent first).
     Now includes v2.0 performance tags per match.
-    \"\"\"
+    """
     from app.database.models_predictions import PredictionLog as PL
  
     cutoff = date.today() - timedelta(days=days)
