@@ -9,6 +9,8 @@ from app.database.models_predictions import FBrefFixture, PredictionLog
 
 class LeagueConfigAdmin(ModelView, model=LeagueConfig):
     column_list = ["id", "league_code", "base_over_bias", "base_under_bias", "tempo_factor"]
+    column_searchable_list = ["id", "league_code", "base_over_bias", "base_under_bias", "tempo_factor"]
+    column_default_sort = [("league_code", False)]
     can_create = True
     can_edit = True
     can_delete = True
@@ -16,15 +18,14 @@ class LeagueConfigAdmin(ModelView, model=LeagueConfig):
 
 class TeamAdmin(ModelView, model=Team):
     column_list = ["id", "team_key", "display_name", "league_code", "country"]
+    column_searchable_list = ["id", "team_key", "display_name", "league_code", "country"]
+    column_default_sort = [("league_code", False)]
     can_create = True
     can_edit = True
     can_delete = True
 
 from sqladmin.actions import Action
 from sqlalchemy import text
-
-class TeamAdmin(ModelView, model=Team):
-    # ... existing config ...
 
     async def merge_teams(self, request):
         """Custom action to merge selected teams."""
@@ -67,19 +68,25 @@ class TeamAdmin(ModelView, model=Team):
     )]
 
 class TeamAliasAdmin(ModelView, model=TeamAlias):
-    column_list = ["id", "alias_key", "team_id"]
+    column_list = ["id", "alias_key", "team_key", "team_id"]
+    column_searchable_list = ["id", "alias_key", "team_id"]
+    column_default_sort = [("team_key", False)]
     can_create = True
     can_edit = True
     can_delete = True
 
 class TeamConfigAdmin(ModelView, model=TeamConfig):
     column_list = ["id", "league_code", "team", "over_nudge", "under_nudge", "squad_power"]
+    column_searchable_list = ["id", "league_code", "team", "over_nudge", "under_nudge", "squad_power"]
+    column_default_sort = [("team", False)]
     can_create = True
     can_edit = True
     can_delete = True
 
 class PlayerAdmin(ModelView, model=Player):
     column_list = ["id", "name", "current_team", "league_code", "position"]
+    column_searchable_list = ["id", "name", "current_team", "league_code", "position"]
+    column_default_sort = [("current_team", False)]
     can_create = True
     can_edit = True
     can_delete = True
@@ -98,6 +105,8 @@ class SquadSnapshotAdmin(ModelView, model=SquadSnapshot):
 
 class FBrefFixtureAdmin(ModelView, model=FBrefFixture):
     column_list = ["id", "league_code", "home_team", "away_team", "match_date", "match_time"]
+    column_searchable_list = ["league_code", "home_team", "away_team", "match_date", "match_time"]
+    column_default_sort = [("match_date", True)]
     can_create = True
     can_edit = True
     can_delete = True
