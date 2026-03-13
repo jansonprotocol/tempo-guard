@@ -6,6 +6,7 @@ from app.models.team import Team, TeamAlias
 from app.models.team_config import TeamConfig
 from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot
 from app.database.models_predictions import FBrefFixture, PredictionLog
+from sqladmin.widgets import Select2TagsWidget  # Add this import at the top
 
 
 class LeagueConfigAdmin(ModelView, model=LeagueConfig):
@@ -18,15 +19,43 @@ class LeagueConfigAdmin(ModelView, model=LeagueConfig):
     can_delete = True
     can_view_details = True
 
-
 class TeamAdmin(ModelView, model=Team):
-    column_list = ["id", "team_key", "display_name", "league_code", "country"]
-    column_searchable_list = ["team_key", "display_name", "league_code"]
-    column_filters = []  # Empty for now
+    column_list = ["id", "team_key", "display_name", "league_code", "country", "alias_count"]
+    column_searchable_list = ["team_key", "display_name", "league_code", "country"]
+    column_filters = ["league_code", "country"]
     column_default_sort = [("team_key", False)]
+    
+    # Add a custom column to show alias count
+    async def alias_count(self, instance):
+        return len(instance.aliases) if instance.aliases else 0
+    alias_count.column_labels = "Aliases"
+    
+    # Form configuration for editing
+    form_columns = ["team_key", "display_name", "league_code", "country", "aliases"]
+    
+    # Use a better widget for aliases - searchable multi-select
+    form_overrides = {
+        "aliases": Select2TagsWidget  # This makes aliases searchable
+    }
+    
+    # Allow adding new aliases directly in the form
+    form_args = {
+        "aliases": {
+            "render_kw": {
+                "placeholder": "Type to search or add new aliases...",
+                "data-tags": "true",  # Allow creating new tags
+                "data-token-separators": "[',']"  # Separate by comma
+            }
+        }
+    }
+    
     can_create = True
     can_edit = True
     can_delete = True
+    
+    # Inline view for aliases (alternative approach)
+    inline_models = [TeamAlias]
+
 
 
 class TeamAliasAdmin(ModelView, model=TeamAlias):
