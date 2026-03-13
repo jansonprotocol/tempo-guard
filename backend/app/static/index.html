@@ -455,6 +455,76 @@
       border: 1px solid rgba(0, 212, 255, 0.15);
     }
 
+    /* ── Performance Tags ── */
+    .perf-section {
+      margin-bottom: 16px;
+    }
+
+    .perf-matchup-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      text-align: center;
+    }
+
+    .perf-team-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .perf-team-name {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .perf-team-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .perf-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      padding: 2px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .perf-tag.positive { background: rgba(0,230,118,0.10); color: var(--green); border: 1px solid rgba(0,230,118,0.20); }
+    .perf-tag.negative { background: rgba(255,68,68,0.10);  color: var(--red);   border: 1px solid rgba(255,68,68,0.20); }
+    .perf-tag.neutral  { background: rgba(205,214,224,0.06); color: var(--muted); border: 1px solid var(--border); }
+    .perf-tag.status   { font-weight: 700; }
+
+    /* Inline perf hint on prediction cards (collapsed) */
+    .pred-perf-hint {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+      flex-shrink: 1;
+    }
+
+    @media (max-width: 600px) {
+      .pred-perf-hint { display: none; }
+    }
+
     .divider {
       height: 1px;
       background: var(--border);
@@ -1068,6 +1138,9 @@
 
     .pred-card.expanded .pred-card-chevron { transform: rotate(180deg); }
 
+    /* Hide collapsed variance badge when expanded — it's shown inside the details */
+    .pred-card.expanded .pred-card-collapsed .variance-badge { display: none; }
+
     .pred-card-details {
       display: none;
       padding: 0 12px 12px 16px;
@@ -1236,7 +1309,7 @@
     .league-group-coeff {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--dim);
+      color: var(--muted);
       letter-spacing: 0.05em;
     }
 
@@ -1286,14 +1359,14 @@
     .team-row-rank {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--dim);
+      color: var(--muted);
       width: 22px;
       flex-shrink: 0;
     }
 
     .team-row-chevron {
       font-size: 9px;
-      color: var(--dim);
+      color: var(--muted);
       transition: transform 0.2s;
     }
 
@@ -1336,7 +1409,7 @@
       font-size: 9px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--dim);
+      color: var(--muted);
       text-align: center;
     }
 
@@ -1404,6 +1477,196 @@
       }
       .team-power-cell { font-size: 11px; }
       .team-power-cell.squad { font-size: 14px; }
+
+      /* Make the team table horizontally scrollable on narrow screens */
+      .league-group-body {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .team-col-headers,
+      .team-row-header {
+        min-width: 520px;
+      }
+      .team-detail {
+        min-width: 520px;
+      }
+
+      /* Pred cards: fixture name wraps instead of truncating */
+      .pred-card-fixture-name {
+        white-space: normal;
+        font-size: 12px;
+      }
+      .pred-card-collapsed {
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      /* Hide kickoff in collapsed on very small screens — shown inside */
+      .pred-card-kickoff { display: none; }
+    }
+
+    /* ── Form Delta ── */
+    .delta-league-select {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .delta-league-btn {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .delta-league-btn:hover { border-color: var(--border2); color: var(--text); }
+    .delta-league-btn.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,0.06); }
+
+    .delta-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .delta-table th {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg2);
+    }
+
+    .delta-table th.num { text-align: center; }
+
+    .delta-table td {
+      font-family: var(--sans);
+      font-size: 13px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .delta-table td.num { text-align: center; font-family: var(--mono); font-size: 12px; }
+
+    .delta-table tr:hover { background: rgba(0,212,255,0.02); }
+
+    .delta-table .delta-row.expanded { background: var(--bg3); }
+
+    .delta-val {
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .delta-val.pos { color: var(--green); }
+    .delta-val.neg { color: var(--red); }
+    .delta-val.neutral { color: var(--muted); }
+
+    .delta-status {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      padding: 2px 6px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .delta-status.overperforming   { background: rgba(0,230,118,0.1); color: var(--green); }
+    .delta-status.slightly_over    { background: rgba(0,230,118,0.06); color: var(--green); opacity: 0.7; }
+    .delta-status.on_track         { background: rgba(205,214,224,0.06); color: var(--muted); }
+    .delta-status.slightly_under   { background: rgba(255,179,0,0.06); color: var(--amber); opacity: 0.7; }
+    .delta-status.underperforming  { background: rgba(255,68,68,0.1); color: var(--red); }
+
+    .delta-zone-row {
+      display: none;
+    }
+
+    .delta-row.expanded + .delta-zone-row { display: table-row; }
+
+    .delta-zone-cell {
+      padding: 10px 10px 14px 30px;
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .delta-zone-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .delta-zone-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .delta-zone-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .delta-zone-power {
+      font-family: var(--cond);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .delta-zone-gap {
+      font-family: var(--mono);
+      font-size: 10px;
+      margin-top: 2px;
+    }
+
+    .delta-zone-gap.above { color: var(--green); }
+    .delta-zone-gap.below { color: var(--red); }
+    .delta-zone-gap.at    { color: var(--muted); }
+
+    .delta-weakness-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      background: rgba(255,68,68,0.1);
+      color: var(--red);
+      border: 1px solid rgba(255,68,68,0.2);
+    }
+
+    .delta-strength-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      background: rgba(0,230,118,0.1);
+      color: var(--green);
+      border: 1px solid rgba(0,230,118,0.2);
+    }
+
+    @media (max-width: 600px) {
+      .delta-table { font-size: 12px; }
+      .delta-zone-grid { grid-template-columns: repeat(2, 1fr); }
+      .delta-table th, .delta-table td { padding: 6px 6px; }
+      .delta-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     }
   </style>
 </head>
@@ -1501,6 +1764,13 @@
         <div id="flags-section" class="hidden">
           <div class="play-eyebrow" style="margin-bottom:8px">Flags &amp; Modules</div>
           <div class="flags-row" id="res-flags"></div>
+          <div class="divider"></div>
+        </div>
+        <div id="perf-section" class="perf-section hidden">
+          <div class="play-eyebrow" style="margin-bottom:8px">Performance Context</div>
+          <div id="perf-matchup" class="perf-matchup-tag"></div>
+          <div id="perf-home-row" class="perf-team-row"></div>
+          <div id="perf-away-row" class="perf-team-row"></div>
           <div class="divider"></div>
         </div>
         <div id="inputs-section">
@@ -1627,15 +1897,17 @@
       </header>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
         <div class="squad-stats-bar" id="squad-stats-bar"></div>
-        <div style="display:flex;align-items:center;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <span style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">View:</span>
           <button id="btn-global" class="mode-pill future" style="cursor:pointer;font-size:10px;padding:4px 10px" onclick="setSquadView('global')">Global</button>
           <button id="btn-raw" class="mode-pill retro" style="cursor:pointer;font-size:10px;padding:4px 10px;opacity:0.4" onclick="setSquadView('raw')">League-Relative</button>
+          <button id="btn-delta" class="mode-pill" style="cursor:pointer;font-size:10px;padding:4px 10px;opacity:0.4;background:rgba(0,212,255,0.08);color:var(--cyan);border:1px solid rgba(0,212,255,0.25)" onclick="showFormDelta()">Form Delta</button>
         </div>
       </div>
       <div id="squad-content">
         <div class="squad-loading">LOADING SQUAD DATA…</div>
       </div>
+      <div id="delta-content" class="hidden"></div>
     </div>
   </div>
 
@@ -1647,30 +1919,57 @@
     // ── Timezone conversion ──────────────────────────────────────────
     // Backend stores match_time as local league time (no TZ info).
     // EU leagues are already CET/CEST; non-EU need converting.
+    // Non-EU league UTC offsets: [winter_offset, summer_offset]
+    // Summer = DST active for that region
+    // FBref stores match times in the league's local time
     const NON_EU_UTC_OFFSETS = {
-      'MLS':     -5,   // US Eastern (ET)
-      'MEX-LMX': -6,   // Mexico City (CST)
-      'BRA-SA':  -3,   // Brazil (BRT)
-      'BRA-SB':  -3,
-      'COL-PA':  -5,   // Colombia (COT)
-      'CHI-LP':  -3,   // Chile (CLT)
-      'PER-L1':  -5,   // Peru (PET)
-      'JPN-J1':  +9,   // Japan (JST)
-      'CHN-CSL': +8,   // China (CST)
-      'SAU-SPL': +3,   // Saudi Arabia (AST)
+      'MLS':     [-5, -4],   // US Eastern: EST/EDT
+      'MEX-LMX': [-6, -6],  // Mexico City: CST (no DST since 2022)
+      'BRA-SA':  [-3, -3],  // Brazil: BRT (no DST since 2019)
+      'BRA-SB':  [-3, -3],
+      'COL-PA':  [-5, -5],  // Colombia: COT (no DST)
+      'CHI-LP':  [-3, -4],  // Chile: CLST/CLT (southern hemisphere — reversed)
+      'PER-L1':  [-5, -5],  // Peru: PET (no DST)
+      'JPN-J1':  [+9, +9],  // Japan: JST (no DST)
+      'CHN-CSL': [+8, +8],  // China: CST (no DST)
+      'SAU-SPL': [+3, +3],  // Saudi: AST (no DST)
     };
+
+    // US DST: 2nd Sunday March → 1st Sunday November
+    // EU DST: last Sunday March → last Sunday October
+    // Southern hemisphere (Chile): 1st Saturday April → 1st Saturday September (reversed)
+    function isNorthDST(dateStr) {
+      const d = new Date(dateStr + 'T12:00:00');
+      const m = d.getMonth() + 1; // 1–12
+      if (m >= 4 && m <= 10) return true;
+      if (m === 3) return d.getDate() >= 10; // approximate
+      if (m === 11) return d.getDate() < 3;  // approximate
+      return false;
+    }
+
+    function isSouthDST(dateStr) {
+      // Southern hemisphere summer = Oct–Mar
+      const m = new Date(dateStr + 'T12:00:00').getMonth() + 1;
+      return m >= 10 || m <= 3;
+    }
 
     function toAmsterdamTime(matchDate, matchTime, leagueCode) {
       if (!matchTime) return null;
-      const leagueUtcOffset = NON_EU_UTC_OFFSETS[leagueCode];
-      if (leagueUtcOffset === undefined) return matchTime; // already CET-based
+      const offsets = NON_EU_UTC_OFFSETS[leagueCode];
+      if (!offsets) return matchTime; // EU leagues — already CET-based
+
+      // Source league offset (winter vs summer)
+      const isSouthern = ['CHI-LP'].includes(leagueCode);
+      const srcDST = isSouthern ? isSouthDST(matchDate) : isNorthDST(matchDate);
+      const srcOffset = srcDST ? offsets[1] : offsets[0];
 
       const [h, m] = matchTime.split(':').map(Number);
-      // Convert local league time → UTC
-      const utcHour = h - leagueUtcOffset;
-      // Amsterdam offset: UTC+1 winter (Nov–Mar), UTC+2 summer (Apr–Oct)
-      const month = new Date(matchDate + 'T12:00:00').getMonth() + 1; // 1–12
-      const amsOffset = (month >= 4 && month <= 10) ? 2 : 1;
+      // Local league time → UTC
+      const utcHour = h - srcOffset;
+
+      // Amsterdam: CET (UTC+1) winter, CEST (UTC+2) summer
+      const euMonth = new Date(matchDate + 'T12:00:00').getMonth() + 1;
+      const amsOffset = (euMonth >= 4 && euMonth <= 10) ? 2 : 1;
       const amsHour = ((utcHour + amsOffset) % 24 + 24) % 24;
       return String(amsHour).padStart(2, '0') + ':' + String(m).padStart(2, '0');
     }
@@ -1837,6 +2136,17 @@
       } else {
         flagsSection.classList.add('hidden');
       }
+      // v2.0: Performance context tags
+      const perfSection = $('perf-section');
+      const pt = d.performance_tags || {};
+      if (pt.matchup_tag && pt.home && pt.away) {
+        $('perf-matchup').textContent = pt.matchup_tag;
+        $('perf-home-row').innerHTML = _buildPerfTeamRow(d.fixture ? d.fixture.split(' vs ')[0] : 'Home', pt.home);
+        $('perf-away-row').innerHTML = _buildPerfTeamRow(d.fixture ? d.fixture.split(' vs ')[1] : 'Away', pt.away);
+        perfSection.classList.remove('hidden');
+      } else {
+        perfSection.classList.add('hidden');
+      }
       const fmt = v => v != null ? String(v) : null;
       setInputStat('in-sot',        fmt(inp.sot_proj_total));
       setInputStat('in-support',    fmt(inp.support_idx_over_delta));
@@ -1852,6 +2162,40 @@
       const el = $(id);
       if (val != null) { el.textContent = val; el.className = 'input-stat-val'; }
       else             { el.textContent = 'n/a'; el.className = 'input-stat-val null-val'; }
+    }
+
+    // ── Performance tag helpers ───────────────────────────────────────
+    function _perfTagClass(tag) {
+      const neg = ['Defense Leaking','Defense Collapsing','Blunt Attack','Attack Broken',
+                   'Midfield Imbalanced','Midfield Collapse','Weak in Goal','GK Liability',
+                   'Underperformer','In Crisis'];
+      const pos = ['Solid Defense','Fortress Defense','Strong Attack','Elite Attack',
+                   'Strong Midfield','Midfield Dominant','Strong in Goal','Elite Keeper',
+                   'Overperformer','Surging'];
+      if (neg.some(n => tag.includes(n))) return 'negative';
+      if (pos.some(p => tag.includes(p))) return 'positive';
+      return 'neutral';
+    }
+
+    function _buildPerfTeamRow(teamName, teamData) {
+      if (!teamData) return '';
+      const statusClass = _perfTagClass(teamData.status || '');
+      let html = `<div class="perf-team-name">${teamName}</div><div class="perf-team-tags">`;
+      html += `<span class="perf-tag status ${statusClass}">${teamData.status}</span>`;
+      (teamData.zone_tags || []).forEach(zt => {
+        html += `<span class="perf-tag ${_perfTagClass(zt)}">${zt}</span>`;
+      });
+      if (teamData.primary_issue) {
+        html += `<span class="perf-tag negative">${teamData.primary_issue} ↓</span>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    function _buildPerfHint(tags) {
+      // Short inline hint for prediction cards
+      if (!tags || !tags.matchup_tag) return '';
+      return tags.matchup_tag;
     }
 
     function setLoading(on) {
@@ -2177,6 +2521,37 @@
           </span>
         </div>` : '';
 
+      // v2.0: Performance tags
+      const pt = p.performance_tags || {};
+      const perfHint = pt.matchup_tag ? `<div class="pred-perf-hint">${pt.matchup_tag}</div>` : '';
+
+      let perfDetail = '';
+      if (pt.home || pt.away) {
+        const buildTeamTags = (label, t) => {
+          if (!t) return '';
+          const statusCls = _perfTagClass(t.status || '');
+          let tags = `<span class="perf-tag status ${statusCls}">${t.status}</span>`;
+          (t.zone_tags || []).forEach(zt => {
+            tags += `<span class="perf-tag ${_perfTagClass(zt)}">${zt}</span>`;
+          });
+          return `
+            <div class="pred-detail-row" style="align-items:flex-start">
+              <span class="pred-detail-label" style="min-width:60px">${label}</span>
+              <span class="pred-detail-val"><div class="perf-team-tags" style="justify-content:flex-end">${tags}</div></span>
+            </div>`;
+        };
+
+        perfDetail = `
+          <div style="padding-top:6px;border-top:1px solid var(--border);margin-top:4px;margin-bottom:4px">
+            <div class="pred-detail-row">
+              <span class="pred-detail-label">Form Context</span>
+              <span class="pred-detail-val" style="font-family:var(--mono);font-size:11px">${pt.matchup_tag || ''}</span>
+            </div>
+            ${buildTeamTags(p.home_team, pt.home)}
+            ${buildTeamTags(p.away_team, pt.away)}
+          </div>`;
+      }
+
       card.innerHTML = `
         <div class="pred-card-collapsed">
           <div class="pred-card-status-dot"></div>
@@ -2184,6 +2559,7 @@
             ${p.home_team} <span>vs</span> ${p.away_team}
           </div>
           ${kickoffStr ? `<div class="pred-card-kickoff">${kickoffStr}</div>` : ''}
+          ${perfHint}
           ${varianceBadge}
           <div class="pred-card-market-inline">${p.market}</div>
           <div class="pred-card-chevron">▼</div>
@@ -2217,6 +2593,7 @@
               <span class="pred-detail-label">p(2+ Goals)</span>
               <span class="pred-detail-val">${(p.p_two_plus*100).toFixed(0)}%</span>
             </div>` : ''}
+            ${perfDetail}
             <div class="pred-detail-row" style="padding-top:6px;border-top:1px solid var(--border);margin-top:2px">
               <span class="pred-detail-label" style="color:${p.status === 'hit' ? 'var(--green)' : p.status === 'miss' ? 'var(--red)' : 'var(--muted)'}">
                 ${statusLabels[p.status] || p.status}
@@ -2248,13 +2625,6 @@
     let squadDataLoaded = false;
     let squadRawData = null;
     let squadViewMode = 'global'; // 'global' or 'raw'
-
-    function setSquadView(mode) {
-      squadViewMode = mode;
-      $('btn-global').style.opacity = mode === 'global' ? '1' : '0.4';
-      $('btn-raw').style.opacity    = mode === 'raw'    ? '1' : '0.4';
-      if (squadRawData) renderSquadData(squadRawData);
-    }
 
     async function loadSquadData() {
       if (squadDataLoaded) return;
@@ -2437,6 +2807,228 @@
       row.appendChild(header);
       row.appendChild(detail);
       return row;
+    }
+
+    // ════════════════════════════════════════════════════════════════
+    // FORM DELTA
+    // ════════════════════════════════════════════════════════════════
+    let deltaDataCache = {};
+    let deltaCurrentLeague = null;
+
+    function showFormDelta() {
+      $('btn-global').style.opacity = '0.4';
+      $('btn-raw').style.opacity = '0.4';
+      $('btn-delta').style.opacity = '1';
+      $('squad-content').classList.add('hidden');
+      $('delta-content').classList.remove('hidden');
+
+      if (!deltaCurrentLeague) {
+        loadDeltaOverview();
+      }
+    }
+
+    function setSquadView(mode) {
+      squadViewMode = mode;
+      $('btn-global').style.opacity = mode === 'global' ? '1' : '0.4';
+      $('btn-raw').style.opacity    = mode === 'raw'    ? '1' : '0.4';
+      $('btn-delta').style.opacity  = '0.4';
+      $('squad-content').classList.remove('hidden');
+      $('delta-content').classList.add('hidden');
+      if (squadRawData) renderSquadData(squadRawData);
+    }
+
+    async function loadDeltaOverview() {
+      const content = $('delta-content');
+      content.innerHTML = '<div class="squad-loading">LOADING FORM DELTA DATA…</div>';
+
+      try {
+        const resp = await fetch('/api/player-power/form-delta/all');
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        if (!data.leagues || data.leagues.length === 0) {
+          content.innerHTML = '<div class="squad-loading">NO FORM DELTA DATA AVAILABLE</div>';
+          return;
+        }
+
+        content.innerHTML = '';
+
+        // League selector buttons
+        const selector = document.createElement('div');
+        selector.className = 'delta-league-select';
+        data.leagues.forEach(l => {
+          const btn = document.createElement('button');
+          btn.className = 'delta-league-btn';
+          btn.textContent = l.league_code;
+          btn.title = l.display_name;
+          // Show indicator for interesting leagues
+          const hasOver = l.overperformers.length > 0;
+          const hasUnder = l.underperformers.length > 0;
+          if (hasOver || hasUnder) {
+            btn.style.borderColor = 'var(--border2)';
+            btn.style.color = 'var(--text)';
+          }
+          btn.onclick = () => loadDeltaLeague(l.league_code, selector);
+          selector.appendChild(btn);
+        });
+        content.appendChild(selector);
+
+        // Summary of most notable deltas
+        const summary = document.createElement('div');
+        summary.style.cssText = 'margin-bottom:20px';
+
+        const notable = [];
+        data.leagues.forEach(l => {
+          l.overperformers.forEach(t => notable.push({...t, league: l.league_code, type: 'over'}));
+          l.underperformers.forEach(t => notable.push({...t, league: l.league_code, type: 'under'}));
+        });
+        notable.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+
+        if (notable.length > 0) {
+          summary.innerHTML = `
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:10px">
+              NOTABLE FORM DELTAS
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              ${notable.slice(0, 12).map(n => {
+                const col = n.type === 'over' ? 'var(--green)' : 'var(--red)';
+                const sign = n.delta > 0 ? '+' : '';
+                const weak = n.weakness ? ` · ${n.weakness}↓` : '';
+                return `<div style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:3px;border:1px solid var(--border);background:var(--bg2);cursor:pointer" onclick="loadDeltaLeague('${n.league}', document.querySelector('.delta-league-select'))">
+                  <span style="color:#fff">${n.team}</span>
+                  <span style="color:var(--muted)">${n.league}</span>
+                  <span style="color:${col};font-weight:700">${sign}${n.delta}</span>
+                  <span style="color:var(--muted);font-size:9px">${n.expected}→${n.actual}${weak}</span>
+                </div>`;
+              }).join('')}
+            </div>
+          `;
+          content.appendChild(summary);
+        }
+
+        // Detail table placeholder
+        const tableWrap = document.createElement('div');
+        tableWrap.id = 'delta-table-wrap';
+        tableWrap.innerHTML = '<div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:20px 0;text-align:center">SELECT A LEAGUE ABOVE</div>';
+        content.appendChild(tableWrap);
+
+      } catch (e) {
+        content.innerHTML = `<div class="squad-loading">ERROR: ${e.message}</div>`;
+      }
+    }
+
+    async function loadDeltaLeague(leagueCode, selectorEl) {
+      // Update active button
+      if (selectorEl) {
+        selectorEl.querySelectorAll('.delta-league-btn').forEach(b => b.classList.remove('active'));
+        const activeBtn = [...selectorEl.querySelectorAll('.delta-league-btn')].find(b => b.textContent === leagueCode);
+        if (activeBtn) activeBtn.classList.add('active');
+      }
+
+      deltaCurrentLeague = leagueCode;
+      const wrap = $('delta-table-wrap');
+      if (!wrap) return;
+
+      wrap.innerHTML = '<div class="squad-loading">LOADING…</div>';
+
+      // Use cache if available
+      if (deltaDataCache[leagueCode]) {
+        renderDeltaTable(deltaDataCache[leagueCode], wrap);
+        return;
+      }
+
+      try {
+        const resp = await fetch(`/api/player-power/form-delta?league_code=${leagueCode}`);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        if (data.error) {
+          wrap.innerHTML = `<div class="squad-loading">${data.error}</div>`;
+          return;
+        }
+
+        deltaDataCache[leagueCode] = data;
+        renderDeltaTable(data, wrap);
+      } catch (e) {
+        wrap.innerHTML = `<div class="squad-loading">ERROR: ${e.message}</div>`;
+      }
+    }
+
+    function renderDeltaTable(data, wrap) {
+      const teams = data.teams || [];
+      if (!teams.length) {
+        wrap.innerHTML = '<div class="squad-loading">NO DATA</div>';
+        return;
+      }
+
+      // Sort by actual position for the table
+      const sorted = [...teams].sort((a, b) => a.actual_pos - b.actual_pos);
+
+      let html = `
+        <div style="font-family:var(--cond);font-size:18px;color:#fff;font-weight:600;margin-bottom:4px">${data.display_name}</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:14px;letter-spacing:0.08em">
+          Tiers: ${data.tier_boundaries.top} top · ${data.tier_boundaries.mid} mid · ${data.tier_boundaries.bottom} bottom
+        </div>
+        <table class="delta-table">
+          <thead><tr>
+            <th class="num">#</th>
+            <th>Team</th>
+            <th class="num">Exp</th>
+            <th class="num">Δ</th>
+            <th>Status</th>
+            <th class="num">Pts</th>
+            <th class="num">P</th>
+            <th class="num">GD</th>
+            <th>Issue</th>
+          </tr></thead>
+          <tbody>
+      `;
+
+      sorted.forEach(t => {
+        const sign = t.form_delta > 0 ? '+' : '';
+        const deltaClass = t.form_delta >= 3 ? 'pos' : t.form_delta <= -3 ? 'neg' : 'neutral';
+        const issue = t.primary_weakness
+          ? `<span class="delta-weakness-tag">${t.primary_weakness} ↓</span>`
+          : t.primary_strength
+          ? `<span class="delta-strength-tag">${t.primary_strength} ↑</span>`
+          : '';
+
+        html += `
+          <tr class="delta-row" onclick="this.classList.toggle('expanded')">
+            <td class="num">${t.actual_pos}</td>
+            <td style="font-weight:500;color:#fff">${t.team}</td>
+            <td class="num" style="color:var(--muted)">${t.expected_pos}</td>
+            <td class="num"><span class="delta-val ${deltaClass}">${sign}${t.form_delta}</span></td>
+            <td><span class="delta-status ${t.status}">${t.status.replace('_', ' ')}</span></td>
+            <td class="num">${t.current_pts}</td>
+            <td class="num" style="color:var(--muted)">${t.current_played}</td>
+            <td class="num" style="color:${t.current_gd >= 0 ? 'var(--green)' : 'var(--red)'}">${t.current_gd >= 0 ? '+' : ''}${t.current_gd}</td>
+            <td>${issue}</td>
+          </tr>
+          <tr class="delta-zone-row">
+            <td colspan="9" class="delta-zone-cell">
+              <div class="delta-zone-grid">
+                ${['atk', 'mid', 'def', 'gk'].map(z => {
+                  const zone = t.zones[z];
+                  if (!zone) return '';
+                  const gapClass = zone.verdict === 'above_tier' ? 'above' : zone.verdict === 'below_tier' ? 'below' : 'at';
+                  const gapSign = zone.gap >= 0 ? '+' : '';
+                  return `
+                    <div class="delta-zone-box">
+                      <div class="delta-zone-label">${z.toUpperCase()}</div>
+                      <div class="delta-zone-power" style="color:${powerColor(zone.power)}">${zone.power}</div>
+                      <div class="delta-zone-gap ${gapClass}">${gapSign}${zone.gap} vs tier avg ${zone.tier_avg}</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
     }
   </script>
 </body>

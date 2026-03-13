@@ -17,6 +17,7 @@ Usage:
 
 NOTE: Chrome opens once per league. Do not click anything.
 """
+from app.util.team_resolver import resolve_and_learn
 from __future__ import annotations
 
 import io
@@ -302,9 +303,31 @@ def scrape_league(league_code: str, url: str) -> None:
         _update_snapshot(league_code, completed_df)
 
     # ── Write upcoming fixtures to FBrefFixtures ──────────────────────
-    if not upcoming_df.empty:
-        _upsert_fixtures(league_code, upcoming_df, c)
+    # ... (inside scrape_league, find the upcoming matches loop)
+    
+    if not df_upcoming.empty:
+        print(f"  [fixtures] Processing {len(df_upcoming)} upcoming matches...")
+        for _, row in df_upcoming.iterrows():
+            # 1. CAPTURE RAW NAMES FROM ROW
+            home_raw = str(row['home_team']).strip()
+            away_raw = str(row['away_team']).strip()
 
+            # 2. RESOLVE NAMES USING THE AUTOPILOT
+            # This links "FC Fredericia" to "Fredericia" automatically
+            home_resolved = resolve_and_learn(db, home_raw, league_code)
+            away_resolved = resolve_and_learn(db, away_raw, league_code)
+
+            # 3. USE RESOLVED NAMES TO CREATE THE FIXTURE
+            fix = FBrefFixture(
+                league_code=league_code,
+                match_date=row['date'],
+                match_time=row['time'] if 'time' in row else None,
+                home_team=home_resolved,  # Use home_resolved here
+                away_team=away_resolved,  # Use away_resolved here
+                gameweek=row['week'] if 'week' in row else None
+            )
+
+            # ... (the rest of your existing logic for db.merge or db.add)
 
 def _safe_to_parquet(df: pd.DataFrame) -> bytes:
     """Serialize DataFrame to parquet, coercing mixed-type object columns to string."""

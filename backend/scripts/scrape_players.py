@@ -35,6 +35,7 @@ NOTE: Chrome opens once per page fetch. ~45 min for all leagues.
       Run AFTER scrape_fbref.py (needs league snapshots for context).
       Run AFTER discover_team_ids.py (needs fbref_team_id in teams.json).
 """
+from app.util.team_resolver import resolve_and_learn
 from __future__ import annotations
 
 import io
@@ -455,11 +456,16 @@ def _extract_keepers(df: pd.DataFrame) -> dict[str, pd.Series]:
 
 def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: str, position: str) -> Player:
     """Find existing player by fbref_id or create new."""
+    
+    # --- ADDED FOR AUTOPILOT ---
+    resolved_team = resolve_and_learn(db, team, league_code)
+    # ---------------------------
+
     player = db.query(Player).filter_by(fbref_id=fbref_id).first()
     if player:
-        # Update current team/league if changed (transfers)
-        if player.current_team != team or player.league_code != league_code:
-            player.current_team = team
+        # Use resolved_team here
+        if player.current_team != resolved_team or player.league_code != league_code:
+            player.current_team = resolved_team
             player.league_code = league_code
         player.position = position
         player.last_scraped = datetime.utcnow()
@@ -468,15 +474,14 @@ def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: 
     player = Player(
         fbref_id=fbref_id,
         name=name,
-        current_team=team,
+        current_team=resolved_team, # Use resolved_team
         league_code=league_code,
         position=position,
         last_scraped=datetime.utcnow(),
     )
     db.add(player)
-    db.flush()  # get the id
+    db.flush() 
     return player
-
 
 def _update_season_stats(
     db, player: Player, season: str, league_code: str,

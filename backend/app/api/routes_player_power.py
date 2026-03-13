@@ -566,3 +566,81 @@ def squad_power_overview(
         "total_leagues": len(leagues),
         "total_teams": len(teams),
     }
+
+
+@router.get("/player-power/form-delta")
+def form_delta_endpoint(
+    league_code: str = Query(..., description="League to analyse"),
+    db: Session = Depends(get_db),
+):
+    """
+    Compute Form Delta for a league: actual vs expected league position
+    based on previous season standings, with zonal breakdown of why.
+    """
+    from app.services.form_delta import compute_form_delta
+    return compute_form_delta(db, league_code)
+
+
+@router.get("/player-power/form-delta/all")
+def form_delta_all(
+    db: Session = Depends(get_db),
+):
+    """
+    Compute Form Delta for ALL leagues with snapshot data.
+    Returns a summary per league (top overperformers and underperformers).
+    """
+    from app.services.form_delta import compute_form_delta
+
+    snapshots = db.query(FBrefSnapshot.league_code).distinct().all()
+    league_codes = sorted([s[0] for s in snapshots])
+
+    # Skip international competitions — no league standings
+    skip = {"UCL", "UEL", "UECL", "EC", "WC"}
+    league_codes = [lc for lc in league_codes if lc not in skip]
+
+    results = []
+    for lc in league_codes:
+        try:
+            data = compute_form_delta(db, lc)
+            if data.get("error") or not data.get("teams"):
+                continue
+
+            teams = data["teams"]
+            top_over = [t for t in teams if t["form_delta"] >= 3][:3]
+            top_under = [t for t in teams if t["form_delta"] <= -3][:3]
+
+            results.append({
+                "league_code": lc,
+                "display_name": data["display_name"],
+                "total_teams": data["total_teams"],
+                "overperformers": [
+                    {"team": t["team"], "delta": t["form_delta"],
+                     "actual": t["actual_pos"], "expected": t["expected_pos"]}
+                    for t in top_over
+                ],
+                "underperformers": [
+                    {"team": t["team"], "delta": t["form_delta"],
+                     "actual": t["actual_pos"], "expected": t["expected_pos"],
+                     "weakness": t.get("primary_weakness")}
+                    for t in top_under
+                ],
+            })
+        except Exception as e:
+            print(f"[form_delta] Error for {lc}: {e}")
+
+    return {"leagues": results, "total_leagues": len(results)}
+
+
+@router.get("/player-power/match-tags")
+def match_performance_tags(
+    league_code: str = Query(...),
+    home_team: str = Query(...),
+    away_team: str = Query(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Generate performance tags for a matchup.
+    Returns matchup headline + per-team zone tags.
+    """
+    from app.services.performance_tags import generate_match_tags_with_delta
+    return generate_match_tags_with_delta(db, league_code, home_team, away_team)

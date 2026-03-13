@@ -76,6 +76,7 @@ def load_league_configs(db: Session):
                 aggression_level=float(entry.get("aggression_level", 0.5)),
                 volatility=float(entry.get("volatility", 0.5)),
                 description=(entry.get("description") or "").strip(),
+                strength_coefficient=float(entry.get("strength_coefficient", 1.0)),
             )
             db.add(item)
             created += 1
@@ -89,6 +90,8 @@ def load_league_configs(db: Session):
             existing.aggression_level = float(entry.get("aggression_level", existing.aggression_level))
             existing.volatility = float(entry.get("volatility", existing.volatility))
             existing.description = (entry.get("description") or existing.description or "").strip()
+            existing.description = (entry.get("description") or existing.description or "").strip()
+            existing.strength_coefficient = float(entry.get("strength_coefficient", existing.strength_coefficient or 1.0))
             updated += 1
 
     db.commit()
