@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from sqladmin import Admin, ModelView
-from sqladmin.filters import OperationColumnFilter  # Changed from ColumnFilter
 from app.database.db import engine
 from app.models.league_config import LeagueConfig
 from app.models.team import Team, TeamAlias
@@ -31,20 +30,10 @@ class TeamAdmin(ModelView, model=Team):
 
 
 class TeamAliasAdmin(ModelView, model=TeamAlias):
-    column_list = ["id", "alias_key", "team"]
+    column_list = ["id", "alias_key", "team_id"]  # Using team_id instead of relationship
     column_searchable_list = ["alias_key"]
-    # Fixed: Use proper OperationColumnFilter syntax
-    column_filters = [
-        "alias_key",
-        OperationColumnFilter(
-            column=TeamAlias.team,
-            operation="contains",  # or "exact", "ilike", etc.
-            options={
-                "field": Team.league_code.name,
-                "label": "Team League Code"
-            }
-        )
-    ]
+    # Simple filters only
+    column_filters = ["alias_key"]
     column_default_sort = [("alias_key", False)]
     can_create = True
     can_edit = True
