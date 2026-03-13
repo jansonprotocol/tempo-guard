@@ -1,33 +1,60 @@
+import sys
+import os
+from pathlib import Path
+from thefuzz import fuzz # You might need to pip install thefuzz
+
+# Path setup
+path_root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(path_root))
+
 from app.database.db import SessionLocal
-from app.database.models_fbref import FBrefSnapshot
+from sqlalchemy import text
 
-def merge_teams(master_name, variant_name, league):
+def smart_sweep(threshold=80):
     db = SessionLocal()
+    print(f"🕵️ Starting Smart Sweep (Similarity Threshold: {threshold}%)")
+    
     try:
-        # Update the snapshots where the 'wrong' name was used
-        updated = db.query(FBrefSnapshot).filter(
-            FBrefSnapshot.league_code == league,
-            FBrefSnapshot.home_team == variant_name
-        ).update({"home_team": master_name})
+        # 1. Get all unique team names from the players table
+        result = db.execute(text("SELECT DISTINCT current_team, league_code FROM players")).fetchall()
+        
+        # Organize by league
+        leagues = {}
+        for team, league in result:
+            if league not in leagues: leagues[league] = []
+            leagues[league].append(team)
 
-        updated += db.query(FBrefSnapshot).filter(
-            FBrefSnapshot.league_code == league,
-            FBrefSnapshot.away_team == variant_name
-        ).update({"away_team": master_name})
+        for league, teams in leagues.items():
+            # Compare every team with every other team in the same league
+            for i, name_a in enumerate(teams):
+                for name_b in teams[i+1:]:
+                    score = fuzz.token_set_ratio(name_a, name_b)
+                    
+                    if score >= threshold:
+                        # Logic: Usually the shorter name is our 'Master' name
+                        master = name_a if len(name_a) < len(name_b) else name_b
+                        variant = name_b if master == name_a else name_a
+                        
+                        print(f"🔗 Match Found ({score}%): '{variant}' -> '{master}'")
+                        
+                        # Apply the fix (using our previous SQL logic)
+                        db.execute(text("UPDATE players SET current_team = :m WHERE current_team = :v AND league_code = :l"),
+                                   {"m": master, "v": variant, "l": league})
+                        
+                        db.execute(text("UPDATE fbref_fixtures SET home_team = :m WHERE home_team = :v AND league_code = :l"),
+                                   {"m": master, "v": variant, "l": league})
+                        
+                        db.execute(text("UPDATE fbref_fixtures SET away_team = :m WHERE away_team = :v AND league_code = :l"),
+                                   {"m": master, "v": variant, "l": league})
 
         db.commit()
-        if updated > 0:
-            print(f"✅ Success: Merged '{variant_name}' into '{master_name}' ({updated} rows updated)")
-        else:
-            print(f"ℹ️ No rows found for '{variant_name}' in {league}")
-            
+        print("\n✅ Sweep Complete. Database is synchronized.")
+        
     except Exception as e:
         db.rollback()
-        print(f"❌ Error: {e}")
+        print(f"❌ Sweep Failed: {e}")
     finally:
         db.close()
 
 if __name__ == "__main__":
-    # Add any teams here that are showing up twice in your dropdowns
-    merge_teams("Fredericia", "FC Fredericia", "DEN-SL")
-    merge_teams("Ajax", "Ajax Amsterdam", "NED-ERE")
+    smart_sweep()
