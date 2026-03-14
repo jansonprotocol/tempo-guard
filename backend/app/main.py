@@ -160,6 +160,11 @@ app.include_router(player_power_router, prefix="/api", tags=["PlayerPower"])
 
 
 # ------------------------------------------------------------------------------
+# ADMIN DASHBOARD (must be before static mount)
+# ------------------------------------------------------------------------------
+setup_admin(app)
+
+# ------------------------------------------------------------------------------
 # STATIC FRONTEND (served at /app)
 # ------------------------------------------------------------------------------
 from fastapi.responses import RedirectResponse
@@ -169,4 +174,3 @@ def root():
     return RedirectResponse(url="/app")
 
 app.mount("/app", StaticFiles(directory="app/static", html=True), name="app")
-setup_admin(app)
