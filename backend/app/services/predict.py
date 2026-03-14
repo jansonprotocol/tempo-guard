@@ -283,6 +283,7 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
     Main entry point for generating ATHENA predictions.
 
     Pipeline:
+      0. v2.0: Resolve team names through Team/Alias tables
       1. Load league calibration biases + sensitivities
       2. Load team over/under nudges (support_delta shift)
       3. v2.0: Compute player power nudge (squad strength delta)
@@ -290,6 +291,21 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
       5. Apply DEG/DET/EPS sensitivity and team module nudges to MatchRequest
       6. Run evaluate_athena with combined nudges
     """
+    # v2.0: Resolve team names so all downstream lookups (TeamConfig, squad power,
+    # performance tags) use the canonical name from the Team table.
+    # This ensures "FC Fredericia" finds the same TeamConfig as "Fredericia".
+    try:
+        from app.services.resolve_team import resolve_team_name
+        home_resolved = resolve_team_name(db, req.home_team, req.league_code)
+        away_resolved = resolve_team_name(db, req.away_team, req.league_code)
+        if home_resolved != req.home_team or away_resolved != req.away_team:
+            req = req.model_copy(update={
+                "home_team": home_resolved,
+                "away_team": away_resolved,
+            })
+    except Exception:
+        pass  # resolver not available — proceed with original names
+
     over_bias, under_bias, tempo_factor = _get_league_bias(db, req.league_code)
     team_nudge = _get_team_nudge(
         db, req.league_code, req.home_team, req.away_team
