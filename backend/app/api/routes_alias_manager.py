@@ -98,10 +98,10 @@ def api_delete_alias(alias_id: int):
         db.rollback()
         return {"error": str(e)}
     finally:
-        db.close()
+         db.close()
 
 @router.post("/alias-api/backfill-missing-teams")
-async def backfill_missing_teams(request: Request):
+async def backfill_missing_teams():
     """
     Creates Team records for any team name found in players.current_team
     that does not already exist in the teams table.
@@ -113,14 +113,6 @@ async def backfill_missing_teams(request: Request):
 
     db = SessionLocal()
     try:
-        # Optional: simple auth check (you can replace with proper auth)
-        auth_header = request.headers.get("Authorization")
-        if not auth_header or not auth_header.startswith("Bearer "):
-            return {"error": "Unauthorized - admin token required"}
-        # You could validate a secret token here, e.g.:
-        # if auth_header.split(" ")[1] != os.getenv("ADMIN_SECRET"):
-        #     return {"error": "Invalid token"}
-
         # Get all distinct current_team values from players
         team_names = db.query(Player.current_team).distinct().all()
         team_names = [t[0] for t in team_names if t[0] and t[0].strip()]
