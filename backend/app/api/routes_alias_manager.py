@@ -100,7 +100,68 @@ def api_delete_alias(alias_id: int):
     finally:
         db.close()
 
+@router.post("/alias-api/backfill-missing-teams")
+async def backfill_missing_teams(request: Request):
+    """
+    Creates Team records for any team name found in players.current_team
+    that does not already exist in the teams table.
+    """
+    from app.models.team import Team
+    from app.models.models_players import Player
+    from app.util.text_norm import normalize_team
+    from sqlalchemy import func
 
+    db = SessionLocal()
+    try:
+        # Optional: simple auth check (you can replace with proper auth)
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return {"error": "Unauthorized - admin token required"}
+        # You could validate a secret token here, e.g.:
+        # if auth_header.split(" ")[1] != os.getenv("ADMIN_SECRET"):
+        #     return {"error": "Invalid token"}
+
+        # Get all distinct current_team values from players
+        team_names = db.query(Player.current_team).distinct().all()
+        team_names = [t[0] for t in team_names if t[0] and t[0].strip()]
+
+        # Get existing team_keys
+        existing_keys = set(t[0] for t in db.query(Team.team_key).all())
+
+        created = 0
+        results = []
+        for raw_name in team_names:
+            team_key = normalize_team(raw_name)
+            if team_key in existing_keys:
+                continue
+
+            # Determine most common league_code for this team
+            league_code = db.query(Player.league_code).filter(
+                Player.current_team == raw_name
+            ).group_by(Player.league_code).order_by(
+                func.count().desc()
+            ).first()
+            league_code = league_code[0] if league_code else "UNKNOWN"
+
+            team = Team(
+                team_key=team_key,
+                display_name=raw_name,
+                league_code=league_code,
+                country=""
+            )
+            db.add(team)
+            existing_keys.add(team_key)
+            created += 1
+            results.append(f"{team_key} ({raw_name}) in {league_code}")
+
+        db.commit()
+        return {"ok": True, "created": created, "teams": results}
+    except Exception as e:
+        db.rollback()
+        return {"error": str(e)}
+    finally:
+        db.close()
+        
 ALIAS_PAGE_HTML = """
 <!DOCTYPE html>
 <html>
