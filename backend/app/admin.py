@@ -70,10 +70,13 @@ class TeamAdmin(ModelView, model=Team):
     column_sortable_list = [Team.team_key, Team.league_code, Team.display_name]
     column_default_sort = ("league_code", False)
 
+    # Detail view shows aliases — use this to verify
     column_details_list = [
         "id", "team_key", "display_name", "league_code", "country", "aliases",
     ]
 
+    # Edit form includes aliases for inline management
+    # Click Edit → scroll to Aliases → add/remove aliases directly
     form_columns = ["team_key", "display_name", "league_code", "country", "aliases"]
 
     can_create = True
@@ -82,9 +85,16 @@ class TeamAdmin(ModelView, model=Team):
     can_view_details = True
 
 
-# ── Team Alias ───────────────────────────────────────────────────────────────
-
 class TeamAliasAdmin(ModelView, model=TeamAlias):
+    """
+    Manage team name aliases here. To add an alias:
+    1. Click 'Create'
+    2. Type the alias_key (normalised name, e.g. 'fc fredericia')
+    3. Select the team it belongs to
+    4. Save
+
+    This is the correct place to manage aliases — NOT the Team edit page.
+    """
     name = "Team Alias"
     name_plural = "Team Aliases"
     icon = "fa-solid fa-tags"
