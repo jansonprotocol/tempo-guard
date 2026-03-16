@@ -37,6 +37,7 @@ from sqlalchemy.orm import Session
 from app.database.models_fbref import FBrefSnapshot
 from app.models.team_config import TeamConfig
 from app.models.league_config import LeagueConfig
+from app.util.team_resolver import resolve_team_name  # NEW IMPORT
 
 
 # Season boundary: matches before this date are "previous season"
@@ -57,22 +58,39 @@ def _season_cutoff(league_code: str) -> str:
     return _CALENDAR_CUTOFF if _is_calendar_league(league_code) else _AUG_MAY_CUTOFF
 
 
-def _compute_standings(df: pd.DataFrame, home_col: str, away_col: str) -> list[dict]:
+def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: str) -> list[dict]:
     """
-    Compute league standings from match results.
-    Returns list of dicts sorted by points desc, GD desc, GF desc.
+    Compute league standings from match results, using alias resolution
+    to unify team names.
     """
     teams: dict[str, dict] = {}
 
     for _, row in df.iterrows():
-        ht = str(row[home_col]).strip()
-        at = str(row[away_col]).strip()
+        # Get raw names from the snapshot
+        ht_raw = str(row[home_col]).strip()
+        at_raw = str(row[away_col]).strip()
+        
+        # Resolve to canonical names using the alias system
+        ht = resolve_team_name(db, ht_raw)
+        at = resolve_team_name(db, at_raw)
+        
         hg = int(row["hg"])
         ag = int(row["ag"])
 
+        # Initialize teams if not exists
         for team in [ht, at]:
             if team not in teams:
-                teams[team] = {"team": team, "p": 0, "w": 0, "d": 0, "l": 0, "gf": 0, "ga": 0, "pts": 0}
+                teams[team] = {
+                    "team": team,
+                    "raw_names": set(),  # Track variants for debugging
+                    "p": 0, "w": 0, "d": 0, "l": 0,
+                    "gf": 0, "ga": 0, "pts": 0
+                }
+            # Store raw name for reference
+            if ht == team:
+                teams[team]["raw_names"].add(ht_raw)
+            if at == team:
+                teams[team]["raw_names"].add(at_raw)
 
         # Home team
         teams[ht]["p"] += 1
@@ -100,13 +118,20 @@ def _compute_standings(df: pd.DataFrame, home_col: str, away_col: str) -> list[d
         else:
             teams[at]["l"] += 1
 
+    # Convert to list and sort
+    standings = []
+    for team_data in teams.values():
+        # Convert raw_names set to list for JSON serialization
+        team_data["raw_names"] = list(team_data["raw_names"])
+        standings.append(team_data)
+
     # Sort: points desc → GD desc → GF desc
-    standings = sorted(
-        teams.values(),
+    standings.sort(
         key=lambda t: (t["pts"], t["gf"] - t["ga"], t["gf"]),
         reverse=True,
     )
 
+    # Add positions
     for i, t in enumerate(standings):
         t["pos"] = i + 1
         t["gd"] = t["gf"] - t["ga"]
@@ -194,12 +219,12 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     if curr_df is None or curr_df.empty:
         return {"league_code": league_code, "error": "No current season data", "teams": []}
 
-    # Current standings
-    current_standings = _compute_standings(curr_df, home_col, away_col)
+    # Current standings (NOW USING ALIAS RESOLUTION)
+    current_standings = _compute_standings(db, curr_df, home_col, away_col)
 
     # Previous season standings (for expected position)
     if prev_df is not None and not prev_df.empty and len(prev_df) >= 30:
-        prev_standings = _compute_standings(prev_df, home_col, away_col)
+        prev_standings = _compute_standings(db, prev_df, home_col, away_col)
         prev_pos_map = {t["team"]: t["pos"] for t in prev_standings}
     else:
         prev_pos_map = {}
