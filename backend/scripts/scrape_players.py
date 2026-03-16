@@ -297,6 +297,8 @@ def _parse_stats_table(html: str, category: str) -> pd.DataFrame | None:
 
     best = _flatten_columns(best)
 
+     best.columns = best.columns.astype(str)
+
     # Remove header repeat rows and summary rows
     player_col = _find_col(list(best.columns), "player")
     if player_col:
