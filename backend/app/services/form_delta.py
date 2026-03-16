@@ -2,6 +2,7 @@
 """
 ATHENA v2.0 — Form Delta: Over/Under Performance Rating.
 Uses batch resolution for lightning-fast team name unification.
+Now with display_name and fixed zone analysis.
 """
 from __future__ import annotations
 
@@ -15,6 +16,7 @@ from sqlalchemy.orm import Session
 from app.database.models_fbref import FBrefSnapshot
 from app.models.team_config import TeamConfig
 from app.models.league_config import LeagueConfig
+from app.models.team import Team  # ADDED for display_name lookup
 from app.util.team_resolver import batch_resolve_team_names
 
 
@@ -48,18 +50,15 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
         all_raw_names.add(str(row[away_col]).strip())
     
     # Step 2: Batch resolve ALL names with a single set of database queries
-    # This is the performance magic - 2 queries total, regardless of match count
     resolved_names = batch_resolve_team_names(db, list(all_raw_names))
     
-    # Step 3: Process all matches with pre-resolved names (no per-row DB queries!)
+    # Step 3: Process all matches with pre-resolved names
     teams: Dict[str, dict] = {}
 
     for _, row in df.iterrows():
-        # Get raw names
         ht_raw = str(row[home_col]).strip()
         at_raw = str(row[away_col]).strip()
         
-        # Use pre-resolved canonical names (fast dictionary lookup)
         ht = resolved_names.get(ht_raw, ht_raw)
         at = resolved_names.get(at_raw, at_raw)
         
@@ -70,12 +69,11 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
         for team in [ht, at]:
             if team not in teams:
                 teams[team] = {
-                    "team": team,
-                    "raw_names": set(),  # Track variants for debugging
+                    "team_key": team,  # keep for lookup
+                    "raw_names": set(),
                     "p": 0, "w": 0, "d": 0, "l": 0,
                     "gf": 0, "ga": 0, "pts": 0
                 }
-            # Store raw name for reference (useful for debugging)
             if ht == team:
                 teams[team]["raw_names"].add(ht_raw)
             if at == team:
@@ -110,7 +108,6 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
     # Convert to list and sort
     standings = []
     for team_data in teams.values():
-        # Convert raw_names set to list for JSON serialization
         team_data["raw_names"] = list(team_data["raw_names"])
         standings.append(team_data)
 
@@ -176,22 +173,21 @@ def _load_and_split_snapshot(
 def compute_form_delta(db: Session, league_code: str) -> dict:
     """
     Compute Form Delta for all teams in a league using BATCH RESOLUTION.
-    Now lightning fast even for leagues with thousands of matches.
+    Now includes display_name and robust expected position logic.
     """
     prev_df, curr_df, home_col, away_col = _load_and_split_snapshot(db, league_code)
 
     if curr_df is None or curr_df.empty:
         return {"league_code": league_code, "error": "No current season data", "teams": []}
 
-    # Current standings - now with batch resolution (super fast!)
+    # Current standings
     current_standings = _compute_standings(db, curr_df, home_col, away_col)
 
     # Previous season standings (for expected position)
+    prev_pos_map = {}
     if prev_df is not None and not prev_df.empty and len(prev_df) >= 30:
         prev_standings = _compute_standings(db, prev_df, home_col, away_col)
-        prev_pos_map = {t["team"]: t["pos"] for t in prev_standings}
-    else:
-        prev_pos_map = {}
+        prev_pos_map = {t["team_key"]: t["pos"] for t in prev_standings}  # use team_key
 
     # Load team power data
     team_configs = {
@@ -199,27 +195,22 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
         for tc in db.query(TeamConfig).filter_by(league_code=league_code).all()
     }
 
+    # Load team display names
+    teams_db = {
+        t.team_key: t.display_name
+        for t in db.query(Team).filter_by(league_code=league_code).all()
+    }
+
     # Load league info
     league_cfg = db.query(LeagueConfig).filter_by(league_code=league_code).first()
     display_name = league_cfg.description if league_cfg else league_code
 
-    # Build expected position:
-    # Primary: previous season final position
-    # Fallback: rank by squad_power (if no prev season data for this team)
-    power_ranked = sorted(
-        [(t, tc.squad_power or 50.0) for t, tc in team_configs.items()],
-        key=lambda x: x[1], reverse=True,
-    )
-    power_pos_map = {t: i + 1 for i, (t, _) in enumerate(power_ranked)}
-
     n_teams = len(current_standings)
 
     # Tier boundaries for zone comparison
-    # Top tier: top 25%, mid tier: middle 50%, bottom tier: bottom 25%
     top_cutoff = max(1, n_teams // 4)
     bottom_cutoff = n_teams - top_cutoff
 
-    # Compute tier averages per zone
     zone_keys = ["atk_power", "mid_power", "def_power", "gk_power"]
     zone_labels = ["atk", "mid", "def", "gk"]
 
@@ -230,30 +221,54 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
             return "bottom"
         return "mid"
 
-    # Collect power values per tier
+    # Build expected position for each team
+    team_expected: dict[str, int] = {}
+    for standing in current_standings:
+        team_key = standing["team_key"]
+        # Priority: previous season position
+        if team_key in prev_pos_map:
+            exp = prev_pos_map[team_key]
+        else:
+            # Fallback: rank by squad_power if available
+            tc = team_configs.get(team_key)
+            if tc and tc.squad_power is not None:
+                # We'll compute power ranking later
+                exp = None  # Will fill after power ranking
+            else:
+                exp = standing["pos"]  # fallback to current position
+        team_expected[team_key] = exp
+
+    # Compute power ranking for teams without previous season data
+    power_ranking = []
+    for team_key, exp in team_expected.items():
+        if exp is None:
+            tc = team_configs.get(team_key)
+            if tc and tc.squad_power is not None:
+                power_ranking.append((team_key, tc.squad_power))
+    power_ranking.sort(key=lambda x: x[1], reverse=True)
+    power_pos_map = {team: i+1 for i, (team, _) in enumerate(power_ranking)}
+
+    # Fill missing expected positions
+    for team_key in list(team_expected.keys()):
+        if team_expected[team_key] is None:
+            team_expected[team_key] = power_pos_map.get(team_key, current_standings_dict[team_key]["pos"])
+
+    # Clamp to league size
+    for team_key in team_expected:
+        team_expected[team_key] = min(team_expected[team_key], n_teams)
+
+    # Build lookup for current standings by team_key
+    current_by_key = {s["team_key"]: s for s in current_standings}
+
+    # Compute tier averages per zone
     tier_powers: dict[str, dict[str, list[float]]] = {
         "top": {z: [] for z in zone_labels},
         "mid": {z: [] for z in zone_labels},
         "bottom": {z: [] for z in zone_labels},
     }
 
-    # First pass: assign expected positions
-    team_expected: dict[str, int] = {}
-    for t in current_standings:
-        team_name = t["team"]
-        # Priority: previous season position > squad power rank
-        if team_name in prev_pos_map:
-            exp = prev_pos_map[team_name]
-        elif team_name in power_pos_map:
-            exp = power_pos_map[team_name]
-        else:
-            exp = t["pos"]  # fallback to current position
-        # Clamp to league size
-        team_expected[team_name] = min(exp, n_teams)
-
-    # Collect tier power values
-    for team_name, exp_pos in team_expected.items():
-        tc = team_configs.get(team_name)
+    for team_key, exp_pos in team_expected.items():
+        tc = team_configs.get(team_key)
         if not tc:
             continue
         tier = tier_label(exp_pos)
@@ -270,13 +285,12 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
             vals = tier_powers[tier][zl]
             tier_avgs[tier][zl] = round(sum(vals) / len(vals), 1) if vals else 50.0
 
-    # Second pass: build results
+    # Build results
     results = []
-    for standing in current_standings:
-        team_name = standing["team"]
+    for team_key, standing in current_by_key.items():
         actual_pos = standing["pos"]
-        expected_pos = team_expected.get(team_name, actual_pos)
-        delta = expected_pos - actual_pos  # positive = overperforming
+        expected_pos = team_expected.get(team_key, actual_pos)
+        delta = expected_pos - actual_pos
 
         if delta >= 3:
             status = "overperforming"
@@ -290,11 +304,12 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
             status = "on_track"
 
         # Zone analysis
-        tc = team_configs.get(team_name)
+        tc = team_configs.get(team_key)
         tier = tier_label(expected_pos)
         zones = {}
         worst_gap = 0.0
         primary_weakness = None
+        primary_strength = None
 
         for zk, zl in zip(zone_keys, zone_labels):
             team_val = float(getattr(tc, zk, None) or 50.0) if tc else 50.0
@@ -303,8 +318,13 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
 
             if gap >= 3:
                 verdict = "above_tier"
+                if not primary_strength or gap > worst_gap:  # track strongest positive gap
+                    primary_strength = zl.upper()
             elif gap <= -3:
                 verdict = "below_tier"
+                if gap < worst_gap:  # track most negative gap
+                    worst_gap = gap
+                    primary_weakness = zl.upper()
             else:
                 verdict = "at_tier"
 
@@ -315,13 +335,9 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
                 "verdict": verdict,
             }
 
-            # Track worst zone
-            if gap < worst_gap:
-                worst_gap = gap
-                primary_weakness = zl.upper()
-
         results.append({
-            "team": team_name,
+            "team": team_key,
+            "display_name": teams_db.get(team_key, team_key),  # ADDED display_name
             "actual_pos": actual_pos,
             "expected_pos": expected_pos,
             "form_delta": delta,
@@ -329,13 +345,13 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
             "current_pts": standing["pts"],
             "current_played": standing["p"],
             "current_gd": standing["gd"],
-            "prev_season_pos": prev_pos_map.get(team_name),
+            "prev_season_pos": prev_pos_map.get(team_key),
             "zones": zones,
             "primary_weakness": primary_weakness if delta < 0 else None,
-            "primary_strength": primary_weakness if delta > 0 else None,
+            "primary_strength": primary_strength if delta > 0 else None,
         })
 
-    # Sort by form_delta descending (most overperforming first)
+    # Sort by form_delta descending
     results.sort(key=lambda t: t["form_delta"], reverse=True)
 
     return {
