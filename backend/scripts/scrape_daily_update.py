@@ -14,10 +14,11 @@ Usage:
     python -m scripts.scrape_daily_update --days-back 14
 """
 
+
 import sys
+import time
+from datetime import datetime, date, timedelta
 from pathlib import Path
-from datetime import date, timedelta, datetime  # <-- added datetime
-from typing import Set
 
 path_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(path_root))
