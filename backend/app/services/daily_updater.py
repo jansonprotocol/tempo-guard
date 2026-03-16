@@ -1,4 +1,10 @@
 # backend/app/services/daily_updater.py
+"""
+Daily lightweight updater – determines which leagues/teams have new matches
+and updates only those. Integrates with the stats fetch cache to avoid
+unnecessary player stats scraping if data is recent.
+"""
+
 from datetime import datetime, date, timedelta
 from typing import Set
 
@@ -6,6 +12,8 @@ from app.database.db import SessionLocal
 from app.database.models_predictions import FBrefFixture
 from app.services.scrapers.fixture_scraper import update_fixtures_for_league
 from app.services.scrapers.player_scraper import update_player_stats_for_teams
+from scripts.scrape_players import SEASON_MAP
+
 
 def update_league_daily(
     league_code: str,
@@ -16,9 +24,22 @@ def update_league_daily(
 ) -> dict:
     """
     Daily update for a single league:
-    1. Fetch new fixtures/results
-    2. Update player stats for teams that played
-    3. Recompute power indices if needed
+
+    1. Fetch new fixtures/results (via `update_fixtures_for_league`)
+    2. Update player stats for teams that played recently
+       (uses `update_player_stats_for_teams`, which respects the
+        stats fetch cache; pass `force=True` to bypass)
+    3. If any player stats were updated, recompute power indices for the league.
+
+    Args:
+        league_code: e.g. "ENG-PL"
+        days_back: number of days to look back for recent matches
+        days_ahead: number of days ahead to fetch upcoming fixtures
+        headless: run Chrome in headless mode (used by Selenium scrapers)
+        force: if True, ignore the stats fetch cache and force a full player stats refresh
+
+    Returns:
+        dict with summary information
     """
     print(f"\n🔄 Daily update for {league_code}")
 
@@ -51,14 +72,13 @@ def update_league_daily(
         update_player_stats_for_teams(
             league_code,
             affected_teams,
-            force=force_player_update,
+            force=force,      # <-- MUST BE force=force
             headless=headless
         )
 
-        # Step 4: Recompute power indices
+        # Step 4: Recompute power indices (only if player stats changed)
         print("\n⚡ Recomputing power indices...")
         from app.services.player_index import compute_league_power
-        from scripts.scrape_players import SEASON_MAP
         db = SessionLocal()
         try:
             season = SEASON_MAP.get(league_code, "2025-2026")
