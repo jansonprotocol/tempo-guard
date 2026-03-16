@@ -31,7 +31,7 @@ Usage:
     python -m scripts.scrape_players --league ENG-PL    # single league
     python -m scripts.scrape_players --force            # ignore 10-match interval
 
-NOTE: Chrome opens once per page fetch. ~45 min for all leagues.
+NOTE: Chrome now opens once per league (for all 5 fetches) instead of once per page.
       Run AFTER scrape_fbref.py (needs league snapshots for context).
       Run AFTER discover_team_ids.py (needs fbref_team_id in teams.json).
 """
@@ -65,6 +65,7 @@ from app.services.data_providers.fbref_urls import (
     STAT_CATEGORIES,
 )
 from app.util.team_resolver import resolve_and_learn
+
 # ── Config ───────────────────────────────────────────────────────────────────
 SLEEP_BETWEEN_PAGES   = 15   # seconds between fetches (FBref rate limit)
 SLEEP_BETWEEN_LEAGUES = 8    # extra wait between leagues
@@ -138,9 +139,13 @@ SCHEDULE_URLS = {
 
 # ── HTML fetch helpers (shared with other scrapers) ──────────────────────────
 
-def _get_html(url: str, label: str) -> str | None:
+def _get_html(url: str, label: str, driver=None) -> str | None:
+    """Fetch HTML. If API key is set, use ScraperAPI.
+       If a Selenium driver is provided, reuse it; otherwise create a new one."""
     if SCRAPER_API_KEY:
         return _fetch_api(url, label)
+    if driver:
+        return _fetch_with_driver(driver, url, label)
     return _fetch_selenium(url, label)
 
 
@@ -163,6 +168,7 @@ def _fetch_api(url: str, label: str) -> str | None:
 
 
 def _fetch_selenium(url: str, label: str) -> str | None:
+    """Fallback: open a new browser, fetch, then quit."""
     driver = None
     try:
         driver = Driver(uc=True, headless2=HEADLESS)
@@ -182,6 +188,19 @@ def _fetch_selenium(url: str, label: str) -> str | None:
                 driver.quit()
             except Exception:
                 pass
+
+
+def _fetch_with_driver(driver, url: str, label: str) -> str | None:
+    """Use an existing Selenium driver to fetch a page (reuse browser)."""
+    try:
+        driver.get(url)
+        time.sleep(3)  # Allow page to load
+        html = driver.page_source
+        print(f"    {len(html)} bytes")
+        return html
+    except Exception as e:
+        print(f"    Browser error ({label}): {e}")
+        return None
 
 
 # ── Position normalisation ───────────────────────────────────────────────────
@@ -294,9 +313,8 @@ def _parse_stats_table(html: str, category: str) -> pd.DataFrame | None:
 
     best = _flatten_columns(best)
 
-    # --- FIX: Ensure column names are strings ---
+    # Ensure column names are strings
     best.columns = best.columns.astype(str)
-    # -------------------------------------------
 
     # Remove header repeat rows and summary rows
     player_col = _find_col(list(best.columns), "player")
@@ -572,20 +590,36 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
     comp_id, slug = comp_info
     season = SEASON_MAP.get(league_code, "2025-2026")
 
+    # ── Create a shared Selenium driver if not using API ─────────────
+    shared_driver = None
+    if not SCRAPER_API_KEY:
+        from seleniumbase import Driver
+        shared_driver = Driver(uc=True, headless2=HEADLESS)
+        # Prime the driver with a blank page (optional)
+        shared_driver.uc_open_with_reconnect("about:blank", 1)
+
     # ── Fetch all 5 stat category pages ──────────────────────────────
     raw_pages: dict[str, str] = {}
-    for cat in STAT_CATEGORIES:
-        url = league_stats_url(comp_id, slug, cat)
-        print(f"\n  Fetching {cat}: {url}")
-        html = _get_html(url, f"{league_code}/{cat}")
+    try:
+        for cat in STAT_CATEGORIES:
+            url = league_stats_url(comp_id, slug, cat)
+            print(f"\n  Fetching {cat}: {url}")
+            html = _get_html(url, f"{league_code}/{cat}", driver=shared_driver)
 
-        if html and "Just a moment" not in html and len(html) > 5000:
-            raw_pages[cat] = html
-        else:
-            print(f"    ⚠ Failed or blocked for {cat}")
+            if html and "Just a moment" not in html and len(html) > 5000:
+                raw_pages[cat] = html
+            else:
+                print(f"    ⚠ Failed or blocked for {cat}")
 
-        if cat != STAT_CATEGORIES[-1]:
-            time.sleep(SLEEP_BETWEEN_PAGES)
+            if cat != STAT_CATEGORIES[-1]:
+                time.sleep(SLEEP_BETWEEN_PAGES)
+    finally:
+        # Close the shared driver after all fetches
+        if shared_driver:
+            try:
+                shared_driver.quit()
+            except Exception:
+                pass
 
     if "stats" not in raw_pages:
         print(f"  Cannot proceed without standard stats page — skipping {league_code}")
