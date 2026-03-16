@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.database.db import get_db
 from app.models.team import Team, TeamAlias
 from app.util.text_norm import normalize_team
-from app.engine.team_resolver import resolve_league_for_match
+from app.util.team_resolver import resolve_league_for_match
 
 router = APIRouter()
 
