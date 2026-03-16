@@ -1,17 +1,51 @@
-# # backend/app/api/routes_player_power.py
+# backend/app/api/routes_player_power.py
 """
 ATHENA v2.0 — Player Power Calibration Tuning Endpoints.
-...
+
+Two endpoints:
+  GET /api/player-power/status
+    Reports current player data coverage per league:
+    how many players, teams with squad_power, snapshot count.
+
+  GET /api/player-power/evaluate
+    Runs an A/B comparison for a league:
+      A) Calibration WITHOUT player power (v1 behaviour)
+      B) Calibration WITH player power at configurable blend weight
+    Reports hit rate difference, identifies which matches flipped,
+    and suggests optimal blend weight.
+
+This is the Session 11 tuning tool — run it AFTER:
+  1. scrape_players has populated PlayerSeasonStats
+  2. player_index.py has computed power indices
+  3. At least one SquadSnapshot exists per team
 """
 from __future__ import annotations
 import sys
 import os
 from pathlib import Path
 
-# Add the project root (one level above 'app') to sys.path so that 'scripts' can be imported
-# This must be done before any local imports.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # goes to /app
-sys.path.insert(0, str(PROJECT_ROOT))
+# Dynamically locate the scripts folder
+current_file = Path(__file__).resolve()
+# Possible locations: /app/scripts or /app/backend/scripts
+possible_scripts = [
+    current_file.parent.parent.parent / "scripts",      # /app/scripts
+    current_file.parent.parent.parent / "backend" / "scripts",  # /app/backend/scripts
+]
+scripts_path = None
+for p in possible_scripts:
+    if p.exists():
+        scripts_path = p
+        break
+if scripts_path is None:
+    raise RuntimeError(
+        "Cannot locate scripts folder. Checked: " + ", ".join(str(p) for p in possible_scripts)
+    )
+sys.path.insert(0, str(scripts_path))
+
+# Now import scrape_players and get its constants
+import scrape_players
+SEASON_MAP = scrape_players.SEASON_MAP
+SCHEDULE_URLS = scrape_players.SCHEDULE_URLS  # Not used in this file but kept for completeness
 
 import io
 from typing import Optional
@@ -622,6 +656,7 @@ def form_delta_all(
 
     return {"leagues": results, "total_leagues": len(results)}
 
+
 @router.post("/player-power/reindex")
 def reindex_player_power(
     league_code: str = Query(None, description="Single league code, or omit for all leagues"),
@@ -633,12 +668,10 @@ def reindex_player_power(
     Updates TeamConfig (squad_power, atk_power, etc.) and player power_index.
     """
     from app.services.player_index import compute_league_power
-    from scripts.scrape_players import SEASON_MAP, SCHEDULE_URLS
 
     if league_code:
         leagues = [league_code]
     else:
-        # All leagues that have a snapshot (or you could use SCHEDULE_URLS)
         snapshots = db.query(FBrefSnapshot.league_code).distinct().all()
         leagues = [s[0] for s in snapshots]
 
@@ -661,6 +694,7 @@ def reindex_player_power(
             })
 
     return {"reindex_results": results}
+
 
 @router.get("/player-power/match-tags")
 def match_performance_tags(
