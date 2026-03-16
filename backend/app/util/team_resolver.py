@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Set
 from sqlalchemy.orm import Session
 from rapidfuzz import process, fuzz
 from app.models.team import Team, TeamAlias
@@ -6,6 +6,7 @@ from app.util.text_norm import normalize_team
 
 # Threshold: 90/100 confidence is safe for autopilot
 AUTO_MAP_THRESHOLD = 90 
+
 
 def resolve_and_learn(db: Session, raw_name: str, league_code: str) -> str:
     """
@@ -56,14 +57,21 @@ def resolve_and_learn(db: Session, raw_name: str, league_code: str) -> str:
 
 def resolve_team_name(db: Session, raw_name: str) -> str:
     """
-    Resolve a raw team name to its canonical team_key using the alias system.
-    Returns the canonical key, or the normalized raw name if not found.
-    This is used by form_delta.py to unify team names when computing standings.
+    Resolve a single raw team name to its canonical team_key using the alias system.
+    Uses request-level cache to avoid repeated database queries.
     """
     if not raw_name:
         return raw_name
         
     normalized = normalize_team(raw_name)
+    
+    # Use a request-level cache dictionary attached to the session
+    if not hasattr(db, "_team_resolver_cache"):
+        db._team_resolver_cache = {}
+    
+    cache = db._team_resolver_cache
+    if normalized in cache:
+        return cache[normalized]
     
     # Check if this normalized key is an alias
     alias = db.query(TeamAlias).filter(
@@ -71,7 +79,9 @@ def resolve_team_name(db: Session, raw_name: str) -> str:
     ).first()
     
     if alias and alias.team:
-        return alias.team.team_key
+        result = alias.team.team_key
+        cache[normalized] = result
+        return result
     
     # Check if it's a direct team key
     team = db.query(Team).filter(
@@ -79,10 +89,83 @@ def resolve_team_name(db: Session, raw_name: str) -> str:
     ).first()
     
     if team:
-        return team.team_key
+        result = team.team_key
+        cache[normalized] = result
+        return result
     
     # Not found in alias system, return normalized raw name
+    cache[normalized] = normalized
     return normalized
+
+
+def batch_resolve_team_names(db: Session, raw_names: List[str]) -> Dict[str, str]:
+    """
+    Resolve multiple team names in a single batch query.
+    Returns dict of {raw_name: canonical_name}
+    This is MUCH faster than resolving names one by one.
+    """
+    if not raw_names:
+        return {}
+    
+    # Use request-level cache
+    if not hasattr(db, "_team_resolver_cache"):
+        db._team_resolver_cache = {}
+    cache = db._team_resolver_cache
+    
+    # Separate names that are already cached vs need resolution
+    to_resolve = []
+    result = {}
+    
+    for raw_name in raw_names:
+        if not raw_name:
+            result[raw_name] = raw_name
+            continue
+            
+        normalized = normalize_team(raw_name)
+        if normalized in cache:
+            result[raw_name] = cache[normalized]
+        else:
+            to_resolve.append((raw_name, normalized))
+    
+    if not to_resolve:
+        return result
+    
+    # Get all normalized names that need resolution
+    norm_names = [norm for _, norm in to_resolve]
+    
+    # Batch query 1: Find all matching aliases
+    aliases = db.query(TeamAlias).filter(
+        TeamAlias.alias_key.in_(norm_names)
+    ).all()
+    
+    # Build alias lookup
+    alias_to_team = {}
+    for alias in aliases:
+        if alias.team:
+            alias_to_team[alias.alias_key] = alias.team.team_key
+    
+    # Batch query 2: Find direct team matches for remaining names
+    remaining_norms = [n for n in norm_names if n not in alias_to_team]
+    teams = {}
+    if remaining_norms:
+        team_results = db.query(Team).filter(
+            Team.team_key.in_(remaining_norms)
+        ).all()
+        teams = {t.team_key: t.team_key for t in team_results}
+    
+    # Resolve all names and update cache
+    for raw_name, norm in to_resolve:
+        if norm in alias_to_team:
+            canonical = alias_to_team[norm]
+        elif norm in teams:
+            canonical = teams[norm]
+        else:
+            canonical = norm
+        
+        cache[norm] = canonical
+        result[raw_name] = canonical
+    
+    return result
 
 
 def resolve_league_for_match(db: Session, home_team: str, away_team: str) -> dict:
