@@ -2,7 +2,9 @@
 """ATHENA Admin Dashboard — sqladmin views only."""
 from fastapi import FastAPI
 from sqladmin import Admin, ModelView
+from sqlalchemy import Column, Integer, String, DateTime
 from app.database.db import engine
+from app.database.base import Base
 from app.models.league_config import LeagueConfig
 from app.models.team import Team, TeamAlias
 from app.models.team_config import TeamConfig
@@ -10,6 +12,15 @@ from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot
 from app.database.models_predictions import FBrefFixture, PredictionLog
 
 
+# --- Model for the stats fetch cache table (created in main.py migration) ---
+class StatsFetchCache(Base):
+    __tablename__ = "stats_fetch_cache"
+    league_code = Column(String, primary_key=True)
+    last_fetched = Column(DateTime, nullable=False)
+    created_at = Column(DateTime)
+
+
+# --- Admin Views ---
 class LeagueConfigAdmin(ModelView, model=LeagueConfig):
     name = "League Config"
     name_plural = "League Configs"
@@ -157,6 +168,19 @@ class PredictionLogAdmin(ModelView, model=PredictionLog):
     page_size = 50
 
 
+class StatsFetchCacheAdmin(ModelView, model=StatsFetchCache):
+    name = "Stats Fetch Cache"
+    name_plural = "Stats Fetch Cache"
+    icon = "fa-solid fa-clock"
+    column_list = [StatsFetchCache.league_code, StatsFetchCache.last_fetched, StatsFetchCache.created_at]
+    column_searchable_list = [StatsFetchCache.league_code]
+    column_default_sort = ("last_fetched", True)
+    can_create = False
+    can_edit = False
+    can_delete = True
+    can_view_details = True
+
+
 def setup_admin(app: FastAPI):
     admin = Admin(app, engine, title="ATHENA Admin")
     admin.add_view(LeagueConfigAdmin)
@@ -168,4 +192,5 @@ def setup_admin(app: FastAPI):
     admin.add_view(SquadSnapshotAdmin)
     admin.add_view(FBrefFixtureAdmin)
     admin.add_view(PredictionLogAdmin)
+    admin.add_view(StatsFetchCacheAdmin)   # <-- new cache view
     return admin
