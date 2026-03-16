@@ -1,24 +1,18 @@
-"""
-backend/app/services/daily_updater.py
-
-Core logic for daily lightweight updates.
-"""
-
+# backend/app/services/daily_updater.py
 from datetime import date, timedelta
 from typing import Set
 
 from app.database.db import SessionLocal
 from app.database.models_predictions import FBrefFixture
-from app.database.models_fbref import FBrefSnapshot
 from app.services.scrapers.fixture_scraper import update_fixtures_for_league
 from app.services.scrapers.player_scraper import update_player_stats_for_teams
-from app.services.player_index import compute_league_power
 
 def update_league_daily(
     league_code: str,
     days_back: int = 7,
     days_ahead: int = 14,
-    headless: bool = False
+    headless: bool = False,
+    force_player_update: bool = False
 ) -> dict:
     """
     Daily update for a single league:
@@ -49,23 +43,31 @@ def update_league_daily(
 
     # Step 2: Update fixtures (get new results + upcoming)
     print("\n📋 Updating fixtures...")
-    # Call your fixture update logic
+    update_fixtures_for_league(league_code, headless=headless)
 
     # Step 3: Update player stats for affected teams
     if affected_teams:
         print("\n👤 Updating player stats...")
-        # Call player update logic for these specific teams
+        update_player_stats_for_teams(
+            league_code,
+            affected_teams,
+            force=force_player_update,
+            headless=headless
+        )
 
         # Step 4: Recompute power indices
         print("\n⚡ Recomputing power indices...")
+        from app.services.player_index import compute_league_power
+        from scripts.scrape_players import SEASON_MAP
         db = SessionLocal()
         try:
-            from scripts.scrape_players import SEASON_MAP
             season = SEASON_MAP.get(league_code, "2025-2026")
             result = compute_league_power(db, league_code, season)
-            print(f"   → Power indices updated")
+            print(f"   → Power indices updated for {league_code}")
         finally:
             db.close()
+    else:
+        print("\n👤 No teams played – skipping player update.")
 
     return {
         "league_code": league_code,
