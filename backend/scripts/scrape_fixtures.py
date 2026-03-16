@@ -148,45 +148,70 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
 
     is_intl = league_code in ("UCL", "UEL", "UECL", "EC", "WC")
 
-    def is_schedule_table(df):
-        # Flatten MultiIndex if present
+    # Helper to detect schedule by column names
+    def has_schedule_columns(df):
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = [
                 " ".join(str(v) for v in col if str(v) != "nan").strip()
                 for col in df.columns
             ]
         cols_lower = [str(c).lower() for c in df.columns]
-        # For debugging, print column names
-        print(f"    Table columns: {cols_lower}")
-        # Must have date, home, away columns (score is optional for upcoming)
-        has_date = any('date' in c for c in cols_lower)
-        has_home = any('home' in c for c in cols_lower)
-        has_away = any('away' in c for c in cols_lower)
-        return has_date and has_home and has_away
+        return any('date' in c for c in cols_lower) and any('home' in c for c in cols_lower) and any('away' in c for c in cols_lower)
 
+    # Helper to detect schedule by looking at row values (date pattern)
+    def contains_dates(df, sample_rows=5):
+        # Flatten columns if MultiIndex
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [
+                " ".join(str(v) for v in col if str(v) != "nan").strip()
+                for col in df.columns
+            ]
+        # Sample first few rows (skip any header rows that might be in data)
+        sample = df.head(sample_rows).astype(str)
+        for _, row in sample.iterrows():
+            for val in row:
+                if re.search(r'\d{4}-\d{2}-\d{2}', val) or re.search(r'\d{2}/\d{2}/\d{4}', val):
+                    return True
+        return False
+
+    # If not international, try to find schedule
     if not is_intl:
-        # Domestic leagues: find the first table that looks like a schedule
-        for idx, df in enumerate(tables):
-            print(f"  Checking table {idx+1}/{len(tables)}...")
-            if is_schedule_table(df):
+        # First pass: look for table with date/home/away columns
+        for df in tables:
+            if has_schedule_columns(df):
                 df = df.dropna(how="all")
-                print(f"  ✅ Found schedule table with {len(df)} rows")
+                print(f"  Found schedule table by column names with {len(df)} rows")
                 return df
-        # Fallback: largest table (as before)
-        print("  ⚠️ No schedule table found – using largest table")
+
+        # Second pass: look for tables containing date strings
+        candidates = []
+        for idx, df in enumerate(tables):
+            # Only consider tables with at least 3 columns (likely schedule)
+            if df.shape[1] >= 3:
+                if contains_dates(df):
+                    print(f"  Table {idx+1} contains dates – candidate schedule table")
+                    candidates.append(df)
+
+        if candidates:
+            # Pick the largest candidate (by rows)
+            best = max(candidates, key=len)
+            best = best.dropna(how="all")
+            print(f"  Selected candidate schedule table with {len(best)} rows")
+            return best
+
+        # Fallback: largest table
+        print("  No schedule table found – using largest table")
         df = max(tables, key=len)
         df = df.dropna(how="all")
-        # Still check if it has required columns, otherwise error
-        cols_lower = [str(c).lower() for c in df.columns]
-        if not (any('date' in c for c in cols_lower) and any('home' in c for c in cols_lower) and any('away' in c for c in cols_lower)):
-            print(f"  ❌ Largest table missing required columns. Found: {list(df.columns[:10])}")
-            return None
+        # Check if it at least contains dates, else warn
+        if not contains_dates(df):
+            print(f"  ⚠️ Largest table does not appear to contain dates. Columns: {list(df.columns[:10])}")
         return df
 
     # International competitions: merge all schedule tables and tag with round info
     schedule_tables = []
     for t in tables:
-        if is_schedule_table(t):
+        if has_schedule_columns(t) or contains_dates(t):
             if isinstance(t.columns, pd.MultiIndex):
                 t.columns = [
                     " ".join(str(v) for v in col if str(v) != "nan").strip()
