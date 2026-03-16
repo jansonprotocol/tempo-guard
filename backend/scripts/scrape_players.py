@@ -29,7 +29,7 @@ Usage:
     venv312\\Scripts\\activate
     python -m scripts.scrape_players                    # all leagues
     python -m scripts.scrape_players --league ENG-PL    # single league
-    python -m scripts.scrape_players --force            # ignore 10-match interval
+    python -m scripts.scrape_players --force            # ignore 10-match interval and cache
 
 NOTE: Chrome now opens once per league (for all 5 fetches) instead of once per page.
       Run AFTER scrape_fbref.py (needs league snapshots for context).
@@ -44,7 +44,7 @@ import re
 import sys
 import time
 import unicodedata
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from difflib import get_close_matches
 from pathlib import Path
 
@@ -54,6 +54,7 @@ load_dotenv()
 import pandas as pd
 import requests
 from seleniumbase import Driver
+from sqlalchemy import text
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -72,6 +73,10 @@ SLEEP_BETWEEN_LEAGUES = 8    # extra wait between leagues
 MATCH_INTERVAL        = 10   # only rewrite stats when MP delta >= this
 HEADLESS = False
 SCRAPER_API_KEY: str | None = os.environ.get("SCRAPER_API_KEY")
+
+# Cache settings
+CACHE_TABLE = "stats_fetch_cache"
+CACHE_TTL_HOURS = 24
 
 # ── Current season labels (update these each season) ─────────────────────────
 # Aug–May leagues use "2025-2026", calendar-year leagues use "2026"
@@ -201,6 +206,45 @@ def _fetch_with_driver(driver, url: str, label: str) -> str | None:
     except Exception as e:
         print(f"    Browser error ({label}): {e}")
         return None
+
+
+# ── Cache helpers ────────────────────────────────────────────────────────────
+
+def _should_fetch_league(db, league_code: str, force: bool = False) -> bool:
+    """Check if we should fetch stats for this league based on cache."""
+    if force:
+        return True
+    try:
+        row = db.execute(
+            text(f"SELECT last_fetched FROM {CACHE_TABLE} WHERE league_code = :code"),
+            {"code": league_code}
+        ).fetchone()
+        if row:
+            last = row[0]
+            if datetime.utcnow() - last < timedelta(hours=CACHE_TTL_HOURS):
+                print(f"  ⏱️  Skipping {league_code} – last fetched {last.strftime('%Y-%m-%d %H:%M')}")
+                return False
+    except Exception as e:
+        # Table might not exist yet – fall back to fetch
+        print(f"  Cache check warning: {e}")
+    return True
+
+
+def _update_fetch_cache(db, league_code: str):
+    """Update the cache with current timestamp."""
+    try:
+        db.execute(
+            text(f"""
+                INSERT INTO {CACHE_TABLE} (league_code, last_fetched)
+                VALUES (:code, :now)
+                ON CONFLICT (league_code) DO UPDATE SET last_fetched = :now
+            """),
+            {"code": league_code, "now": datetime.utcnow()}
+        )
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"  Cache update warning: {e}")
 
 
 # ── Position normalisation ───────────────────────────────────────────────────
@@ -501,56 +545,6 @@ def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: 
     db.flush() 
     return player
 
-def _update_season_stats(
-    db, player: Player, season: str, league_code: str,
-    mp: int, minutes: int, stats: dict[str, float],
-    force: bool = False,
-) -> bool:
-    """
-    Update PlayerSeasonStats with 10-match interval logic.
-    Returns True if stats were written, False if skipped.
-    """
-    existing = (
-        db.query(PlayerSeasonStats)
-        .filter_by(player_id=player.id, season=season, league_code=league_code)
-        .first()
-    )
-
-    if existing:
-        mp_delta = mp - (existing.last_match_count or 0)
-
-        # Always update appearance counts
-        existing.matches_played = mp
-        existing.minutes = minutes
-
-        # Only rewrite stat columns on interval (or --force)
-        if mp_delta < MATCH_INTERVAL and not force:
-            return False
-
-        # Rewrite all stat columns
-        for field, value in stats.items():
-            if hasattr(existing, field):
-                setattr(existing, field, round(value, 3))
-        existing.last_match_count = mp
-        existing.last_updated = datetime.utcnow()
-        return True
-    else:
-        # New record — always write
-        row = PlayerSeasonStats(
-            player_id=player.id,
-            season=season,
-            league_code=league_code,
-            matches_played=mp,
-            minutes=minutes,
-            last_match_count=mp,
-            last_updated=datetime.utcnow(),
-        )
-        for field, value in stats.items():
-            if hasattr(row, field):
-                setattr(row, field, round(value, 3))
-        db.add(row)
-        return True
-
 
 def _write_squad_snapshot(db, league_code: str, team_players: dict[str, list[int]]):
     """Write a SquadSnapshot per team with today's player IDs."""
@@ -581,6 +575,14 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
     """Scrape all player stats for one league."""
     print(f"\n{'='*60}")
     print(f"[players] {league_code}")
+
+    # ── Cache check ─────────────────────────────────────────────────
+    db_check = SessionLocal()
+    try:
+        if not _should_fetch_league(db_check, league_code, force):
+            return
+    finally:
+        db_check.close()
 
     comp_info = extract_comp_info(schedule_url)
     if not comp_info:
@@ -677,6 +679,15 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
     # ── Write to DB ──────────────────────────────────────────────────
     db = SessionLocal()
     try:
+        # Load existing season stats for this league (for quick lookup)
+        existing_stats_map = {}
+        existing_stats_rows = db.query(PlayerSeasonStats).filter_by(
+            league_code=league_code,
+            season=season
+        ).all()
+        for stat in existing_stats_rows:
+            existing_stats_map[stat.player_id] = stat
+
         stats_written = 0
         stats_skipped = 0
         players_created = 0
@@ -721,14 +732,43 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
                 if name in lookup:
                     all_stats.update(lookup[name])
 
-            # Write with interval check
-            written = _update_season_stats(
-                db, player, season, league_code, mp, minutes, all_stats, force
-            )
-            if written:
-                stats_written += 1
-            else:
+            # Check existing stats
+            existing = existing_stats_map.get(player.id)
+            mp_delta = mp - (existing.last_match_count if existing else 0)
+
+            if existing and mp_delta < MATCH_INTERVAL and not force:
+                # Skip writing stats, but still update appearance counts
+                existing.matches_played = mp
+                existing.minutes = minutes
+                existing.last_updated = datetime.utcnow()
                 stats_skipped += 1
+            else:
+                if existing:
+                    # Update existing record
+                    existing.matches_played = mp
+                    existing.minutes = minutes
+                    existing.last_match_count = mp
+                    for field, value in all_stats.items():
+                        if hasattr(existing, field):
+                            setattr(existing, field, round(value, 3))
+                    existing.last_updated = datetime.utcnow()
+                else:
+                    # Create new record
+                    new_stat = PlayerSeasonStats(
+                        player_id=player.id,
+                        season=season,
+                        league_code=league_code,
+                        matches_played=mp,
+                        minutes=minutes,
+                        last_match_count=mp,
+                        last_updated=datetime.utcnow(),
+                    )
+                    for field, value in all_stats.items():
+                        if hasattr(new_stat, field):
+                            setattr(new_stat, field, round(value, 3))
+                    db.add(new_stat)
+                    existing_stats_map[player.id] = new_stat  # add to map for consistency
+                stats_written += 1
 
         # Write squad snapshots
         _write_squad_snapshot(db, league_code, team_players)
@@ -739,6 +779,9 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
         print(f"    Stats written:     {stats_written}")
         print(f"    Stats skipped:     {stats_skipped} (below {MATCH_INTERVAL}-match interval)")
         print(f"    Teams with squads: {len(team_players)}")
+
+        # Update fetch cache after successful processing
+        _update_fetch_cache(db, league_code)
 
     except Exception as e:
         db.rollback()
@@ -757,7 +800,7 @@ if __name__ == "__main__":
     parser.add_argument("--league", type=str, default=None, help="Single league")
     parser.add_argument("--headless", action="store_true", help="Headless Chrome")
     parser.add_argument("--api", type=str, default=None, metavar="KEY", help="ScraperAPI key")
-    parser.add_argument("--force", action="store_true", help="Ignore 10-match interval")
+    parser.add_argument("--force", action="store_true", help="Ignore 10-match interval and cache")
     args = parser.parse_args()
 
     if args.headless:
