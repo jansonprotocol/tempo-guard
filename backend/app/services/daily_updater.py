@@ -12,7 +12,7 @@ def update_league_daily(
     days_back: int = 7,
     days_ahead: int = 14,
     headless: bool = False,
-    force_player_update: bool = False
+    force: bool = False
 ) -> dict:
     """
     Daily update for a single league:
