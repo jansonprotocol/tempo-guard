@@ -1,79 +1,132 @@
-# backend/app/services/full_history_loader.py
 """
-Complete historical data loader – orchestrates fixture + player scraping,
-then recomputes power and form delta.
-"""
-import sys
-from pathlib import Path
-from typing import Optional
+backend/scripts/scrape_full_history.py
 
-path_root = Path(__file__).resolve().parents[2]  # to backend/
+ATHENA Complete Historical Data Loader.
+
+Run this ONCE per league when:
+- Adding a new league to the system
+- Doing a complete data reset
+- Backfilling after schema changes
+
+Fetches:
+- All fixtures (current + previous seasons)
+- All player stats for all teams in the league
+- Computes league standings
+- Builds squad power indices
+
+Usage:
+    python -m scripts.scrape_full_history --league ENG-PL
+    python -m scripts.scrape_full_history --all              # all leagues
+    python -m scripts.scrape_full_history --league ENG-PL --force   # force full refresh
+"""
+
+import sys
+import os
+import time
+from datetime import datetime
+from pathlib import Path
+
+# ----------------------------------------------------------------------
+# 1. Load environment variables EARLY – before any app imports
+# ----------------------------------------------------------------------
+from dotenv import load_dotenv
+
+env_path = Path(__file__).parent.parent / ".env"   # backend/.env
+print(f"Looking for .env at: {env_path}")
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path, override=True)
+    print("✅ .env file loaded.")
+else:
+    print("⚠️  No .env file found, relying on system environment variables.")
+
+# ----------------------------------------------------------------------
+# 2. Verify DATABASE_URL is set
+# ----------------------------------------------------------------------
+db_url = os.getenv("DATABASE_URL")
+if not db_url:
+    print("\n❌ ERROR: DATABASE_URL environment variable is not set.")
+    print("   Please create a .env file in the backend folder with:")
+    print('   DATABASE_URL=postgresql://user:pass@host:port/dbname?sslmode=require')
+    print("   Or set it manually before running the script.")
+    sys.exit(1)
+
+# Print masked version for debugging
+if "@" in db_url:
+    userpass, rest = db_url.split("@", 1)
+    if ":" in userpass:
+        user, _ = userpass.split(":", 1)
+        masked = f"{user}:****@{rest}"
+    else:
+        masked = db_url
+else:
+    masked = db_url
+print(f"✅ Using database: {masked}")
+
+# ----------------------------------------------------------------------
+# 3. Now it's safe to import app modules
+# ----------------------------------------------------------------------
+path_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(path_root))
 
 from app.database.db import SessionLocal
-from app.services.scrapers.fixture_scraper import update_fixtures_for_league  # CORRECT function name
-from app.services.scrapers.player_scraper import update_player_stats_for_teams  # CORRECT function name
-from app.services.player_index import compute_league_power
-from app.services.form_delta import compute_form_delta
-from scripts.scrape_players import SEASON_MAP
+from app.services.full_history_loader import load_league_full_history
 
-def load_league_full_history(league_code: str, headless: bool = False, force: bool = False) -> dict:
-    """
-    Step 1: Scrape all fixtures (current + previous) – uses update_fixtures_for_league
-    Step 2: Scrape all player stats – uses update_player_stats_for_teams (with all teams)
-    Step 3: Compute player power indices
-    Step 4: Compute form delta / standings
-    """
-    print(f"\n🔨 Full history load for {league_code}")
+# Constants
+SLEEP_BETWEEN_LEAGUES = 30  # seconds to be kind to FBref
 
-    # 1. Fixtures
-    print("  📋 Step 1/4: Scraping fixtures...")
-    try:
-        update_fixtures_for_league(league_code, headless=headless)
-    except Exception as e:
-        return {"league_code": league_code, "error": f"Fixture scraping failed: {e}"}
+# All leagues we support
+ALL_LEAGUES = [
+    "ENG-PL", "ENG-CH", "ESP-LL", "ESP-LL2", "FRA-L1", "FRA-L2",
+    "GER-BUN", "GER-B2", "ITA-SA", "ITA-SB", "NED-ERE", "TUR-SL",
+    "BRA-SA", "BRA-SB", "MLS", "SAU-SPL", "DEN-SL", "BEL-PL",
+    "NOR-EL", "SWE-AL", "MEX-LMX", "CHN-CSL", "JPN-J1", "COL-PA",
+    "AUT-BL", "SUI-SL", "CHI-LP", "PER-L1", "POR-LP",
+    "UCL", "UEL", "UECL"
+]
 
-    # 2. Player stats – we need to scrape for ALL teams in the league.
-    #    Pass an empty set to indicate "all teams" (the scraper will fetch the whole league page)
-    print("  👤 Step 2/4: Scraping player stats...")
-    try:
-        update_player_stats_for_teams(
-            league_code,
-            set(),  # empty set = all teams
-            force=force,
-            headless=headless
-        )
-    except Exception as e:
-        return {"league_code": league_code, "error": f"Player scraping failed: {e}"}
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Complete historical data loader")
+    parser.add_argument("--league", type=str, help="Single league code")
+    parser.add_argument("--all", action="store_true", help="Load all leagues")
+    parser.add_argument("--headless", action="store_true", help="Headless Chrome")
+    parser.add_argument("--api", type=str, help="ScraperAPI key")
+    parser.add_argument("--force", action="store_true", help="Force full refresh (ignore cache)")
+    args = parser.parse_args()
 
-    # 3. Compute power indices
-    print("  ⚡ Step 3/4: Computing player power indices...")
-    db = SessionLocal()
-    try:
-        season = SEASON_MAP.get(league_code, "2025-2026")
-        power_result = compute_league_power(db, league_code, season)
-        print(f"     → {power_result.get('players_indexed', 0)} players indexed")
-        print(f"     → {power_result.get('teams_updated', 0)} teams updated")
-    except Exception as e:
-        db.close()
-        return {"league_code": league_code, "error": f"Power computation failed: {e}"}
-    db.close()
+    if args.api:
+        os.environ["SCRAPER_API_KEY"] = args.api
 
-    # 4. Compute form delta
-    print("  📊 Step 4/4: Computing league standings...")
-    db = SessionLocal()
-    try:
-        delta_result = compute_form_delta(db, league_code)
-        teams = delta_result.get('teams', [])
-        print(f"     → {len(teams)} teams in standings")
-    except Exception as e:
-        db.close()
-        return {"league_code": league_code, "error": f"Form delta failed: {e}"}
-    db.close()
+    leagues_to_process = []
+    if args.all:
+        leagues_to_process = ALL_LEAGUES
+    elif args.league:
+        leagues_to_process = [args.league]
+    else:
+        print("Please specify --league or --all")
+        return
 
-    return {
-        "league_code": league_code,
-        "status": "success",
-        "players_indexed": power_result.get('players_indexed', 0),
-        "teams_updated": power_result.get('teams_updated', 0)
-    }
+    for i, league in enumerate(leagues_to_process):
+        print(f"\n{'='*70}")
+        print(f"📊 Processing {league} ({i+1}/{len(leagues_to_process)})")
+        print(f"{'='*70}")
+
+        try:
+            load_league_full_history(
+                league,
+                headless=args.headless,
+                force=args.force
+            )
+        except Exception as e:
+            print(f"❌ Error processing {league}: {e}")
+            import traceback
+            traceback.print_exc()
+
+        if i < len(leagues_to_process) - 1:
+            print(f"\n😴 Waiting {SLEEP_BETWEEN_LEAGUES}s before next league...")
+            time.sleep(SLEEP_BETWEEN_LEAGUES)
+
+    print("\n✅ Full history load complete!")
+
+if __name__ == "__main__":
+    main()
