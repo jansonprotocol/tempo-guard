@@ -125,6 +125,22 @@ def _safe_migrate(db):
             db.rollback()
             print(f"[startup] Migration warning — calibration_log: {e}")
 
+    # stats_fetch_cache table (for player stats fetch cache)
+    if "stats_fetch_cache" not in existing_tables:
+        try:
+            db.execute(text("""
+                CREATE TABLE stats_fetch_cache (
+                    league_code VARCHAR PRIMARY KEY,
+                    last_fetched TIMESTAMP NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """))
+            db.commit()
+            print("[startup] Migration: created stats_fetch_cache table")
+        except Exception as e:
+            db.rollback()
+            print(f"[startup] Migration warning — stats_fetch_cache: {e}")
+
 
 # ------------------------------------------------------------------------------
 # STARTUP: migrate → create tables → load seeds
