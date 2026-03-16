@@ -41,6 +41,12 @@ class LeagueConfig(Base):
     det_sensitivity = Column(Float, default=1.0)
     eps_sensitivity = Column(Float, default=1.0)
 
+    # ── v2.x: Form delta sensitivity multiplier ──────────────────────
+    # Adjusts how strongly the form delta (over/underperformance vs expected)
+    # influences the prediction. 0.0 = no effect, >0.0 amplifies the signal.
+    # Calibration will suggest updates based on miss patterns.
+    form_delta_sensitivity = Column(Float, default=0.0)
+
     # ── v2.0: Cross-league strength coefficient ──────────────────────
     # Multiplier applied to player power scores when comparing teams
     # across different leagues (UCL/UEL/UECL predictions).
