@@ -54,13 +54,14 @@ def get_historical_form_delta(
     if df.empty:
         return None
 
-    # Compute standings as of that date
+    # Compute standings as of that date – using the same function as form_delta.py
     standings = _compute_standings(db, df, home_col, away_col)
 
     # Find team's actual position
     actual_pos = None
     for entry in standings:
-        if entry["team"] == team:
+        # _compute_standings returns dict with key "team_key" (from form_delta.py)
+        if entry.get("team_key") == team:  # FIXED: use team_key instead of team
             actual_pos = entry["pos"]
             break
     if actual_pos is None:
@@ -80,7 +81,7 @@ def get_historical_form_delta(
     if not prev_df.empty and len(prev_df) >= 30:
         prev_standings = _compute_standings(db, prev_df, home_col, away_col)
         for entry in prev_standings:
-            if entry["team"] == team:
+            if entry.get("team_key") == team:  # FIXED: use team_key
                 expected_pos = entry["pos"]
                 break
 
