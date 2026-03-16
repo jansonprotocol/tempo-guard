@@ -148,7 +148,6 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
 
     is_intl = league_code in ("UCL", "UEL", "UECL", "EC", "WC")
 
-    # Helper to check if a table has the required schedule columns
     def is_schedule_table(df):
         # Flatten MultiIndex if present
         if isinstance(df.columns, pd.MultiIndex):
@@ -157,6 +156,8 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
                 for col in df.columns
             ]
         cols_lower = [str(c).lower() for c in df.columns]
+        # For debugging, print column names
+        print(f"    Table columns: {cols_lower}")
         # Must have date, home, away columns (score is optional for upcoming)
         has_date = any('date' in c for c in cols_lower)
         has_home = any('home' in c for c in cols_lower)
@@ -165,22 +166,27 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
 
     if not is_intl:
         # Domestic leagues: find the first table that looks like a schedule
-        for df in tables:
+        for idx, df in enumerate(tables):
+            print(f"  Checking table {idx+1}/{len(tables)}...")
             if is_schedule_table(df):
                 df = df.dropna(how="all")
-                print(f"  Found schedule table with {len(df)} rows")
+                print(f"  ✅ Found schedule table with {len(df)} rows")
                 return df
         # Fallback: largest table (as before)
-        print("  No schedule table found – using largest table")
+        print("  ⚠️ No schedule table found – using largest table")
         df = max(tables, key=len)
         df = df.dropna(how="all")
+        # Still check if it has required columns, otherwise error
+        cols_lower = [str(c).lower() for c in df.columns]
+        if not (any('date' in c for c in cols_lower) and any('home' in c for c in cols_lower) and any('away' in c for c in cols_lower)):
+            print(f"  ❌ Largest table missing required columns. Found: {list(df.columns[:10])}")
+            return None
         return df
 
     # International competitions: merge all schedule tables and tag with round info
     schedule_tables = []
     for t in tables:
         if is_schedule_table(t):
-            # Ensure flattened for merging
             if isinstance(t.columns, pd.MultiIndex):
                 t.columns = [
                     " ".join(str(v) for v in col if str(v) != "nan").strip()
@@ -197,7 +203,6 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
     merged_parts = []
     for t in schedule_tables:
         t = t.dropna(how="all").copy()
-        # Flatten again in case
         if isinstance(t.columns, pd.MultiIndex):
             t.columns = [
                 " ".join(str(v) for v in col if str(v) != "nan").strip()
@@ -205,7 +210,6 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
             ]
         cols_lower_map = {str(c).lower(): c for c in t.columns}
 
-        # Try to get round label
         round_col = cols_lower_map.get("round") or cols_lower_map.get("wk")
         if round_col:
             vals = t[round_col].dropna().astype(str)
