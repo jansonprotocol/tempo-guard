@@ -1,28 +1,17 @@
-# backend/app/api/routes_player_power.py
+# # backend/app/api/routes_player_power.py
 """
 ATHENA v2.0 — Player Power Calibration Tuning Endpoints.
-
-Two endpoints:
-  GET /api/player-power/status
-    Reports current player data coverage per league:
-    how many players, teams with squad_power, snapshot count.
-
-  GET /api/player-power/evaluate
-    Runs an A/B comparison for a league:
-      A) Calibration WITHOUT player power (v1 behaviour)
-      B) Calibration WITH player power at configurable blend weight
-    Reports hit rate difference, identifies which matches flipped,
-    and suggests optimal blend weight.
-
-This is the Session 11 tuning tool — run it AFTER:
-  1. scrape_players has populated PlayerSeasonStats
-  2. player_index.py has computed power indices
-  3. At least one SquadSnapshot exists per team
+...
 """
 from __future__ import annotations
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from pathlib import Path
+
+# Add the project root (one level above 'app') to sys.path so that 'scripts' can be imported
+# This must be done before any local imports.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # goes to /app
+sys.path.insert(0, str(PROJECT_ROOT))
 
 import io
 from typing import Optional
