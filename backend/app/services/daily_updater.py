@@ -1,5 +1,5 @@
 # backend/app/services/daily_updater.py
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from typing import Set
 
 from app.database.db import SessionLocal
