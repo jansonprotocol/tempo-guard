@@ -1,65 +1,79 @@
+# backend/app/services/full_history_loader.py
 """
-backend/app/services/full_history_loader.py
-
-Core logic for loading complete historical data for a league.
+Complete historical data loader – orchestrates fixture + player scraping,
+then recomputes power and form delta.
 """
-
-import time
-from datetime import datetime
+import sys
+from pathlib import Path
 from typing import Optional
 
+path_root = Path(__file__).resolve().parents[2]  # to backend/
+sys.path.insert(0, str(path_root))
+
 from app.database.db import SessionLocal
-from app.services.data_providers.fbref_urls import extract_comp_info
-from app.services.scrapers.fixture_scraper import scrape_fixtures_for_league
-from app.services.scrapers.player_scraper import scrape_player_stats_for_league
+from app.services.scrapers.fixture_scraper import update_fixtures_for_league  # <-- CORRECT
+from app.services.scrapers.player_scraper import update_player_stats_for_teams
 from app.services.player_index import compute_league_power
 from app.services.form_delta import compute_form_delta
-from app.util.team_resolver import ensure_team_exists
+from scripts.scrape_players import SEASON_MAP
 
-# Reuse your existing scraper functions, but orchestrate them
-
-def load_league_full_history(league_code: str, headless: bool = False) -> dict:
+def load_league_full_history(league_code: str, headless: bool = False, force: bool = False) -> dict:
     """
-    Load complete historical data for a league:
-    1. Fixtures (current + previous seasons)
-    2. Player stats for all teams
-    3. Compute power indices
-    4. Compute form delta/standings
+    Step 1: Scrape all fixtures (current + previous) – uses update_fixtures_for_league
+    Step 2: Scrape all player stats – uses update_player_stats_for_teams (with all teams)
+    Step 3: Compute player power indices
+    Step 4: Compute form delta / standings
     """
     print(f"\n🔨 Full history load for {league_code}")
 
-    # Step 1: Scrape all fixtures (current + previous seasons)
-    print("\n📋 Step 1/4: Scraping fixtures...")
-    from scripts.scrape_fbref import scrape_league as scrape_fbref_league
-    # (You'll need to adapt this to call your existing scraper functions)
+    # 1. Fixtures
+    print("  📋 Step 1/4: Scraping fixtures...")
+    try:
+        update_fixtures_for_league(league_code, headless=headless)
+    except Exception as e:
+        return {"league_code": league_code, "error": f"Fixture scraping failed: {e}"}
 
-    # Step 2: Scrape all player stats
-    print("\n👤 Step 2/4: Scraping player stats...")
-    from scripts.scrape_players import scrape_league_players
+    # 2. Player stats – we need to scrape for ALL teams in the league.
+    #    Pass an empty set to indicate "all teams" (the scraper will fetch the whole league page)
+    print("  👤 Step 2/4: Scraping player stats...")
+    try:
+        update_player_stats_for_teams(
+            league_code,
+            set(),  # empty set = all teams
+            force=force,
+            headless=headless
+        )
+    except Exception as e:
+        return {"league_code": league_code, "error": f"Player scraping failed: {e}"}
 
-    # Step 3: Compute squad power indices
-    print("\n⚡ Step 3/4: Computing player power indices...")
+    # 3. Compute power indices
+    print("  ⚡ Step 3/4: Computing player power indices...")
     db = SessionLocal()
     try:
-        from scripts.scrape_players import SEASON_MAP
         season = SEASON_MAP.get(league_code, "2025-2026")
-        result = compute_league_power(db, league_code, season)
-        print(f"   → {result.get('players_indexed', 0)} players indexed")
-        print(f"   → {result.get('teams_updated', 0)} teams updated")
-    finally:
+        power_result = compute_league_power(db, league_code, season)
+        print(f"     → {power_result.get('players_indexed', 0)} players indexed")
+        print(f"     → {power_result.get('teams_updated', 0)} teams updated")
+    except Exception as e:
         db.close()
+        return {"league_code": league_code, "error": f"Power computation failed: {e}"}
+    db.close()
 
-    # Step 4: Compute standings/form delta
-    print("\n📊 Step 4/4: Computing league standings...")
+    # 4. Compute form delta
+    print("  📊 Step 4/4: Computing league standings...")
     db = SessionLocal()
     try:
-        form_delta = compute_form_delta(db, league_code)
-        print(f"   → {len(form_delta.get('teams', []))} teams in standings")
-    finally:
+        delta_result = compute_form_delta(db, league_code)
+        teams = delta_result.get('teams', [])
+        print(f"     → {len(teams)} teams in standings")
+    except Exception as e:
         db.close()
+        return {"league_code": league_code, "error": f"Form delta failed: {e}"}
+    db.close()
 
     return {
         "league_code": league_code,
         "status": "success",
-        "timestamp": datetime.utcnow().isoformat()
+        "players_indexed": power_result.get('players_indexed', 0),
+        "teams_updated": power_result.get('teams_updated', 0)
     }
