@@ -39,7 +39,20 @@ class LeagueConfigAdmin(ModelView, model=LeagueConfig):
     can_edit = True
     can_delete = False
     can_view_details = True
-
+    
+class LeagueConfigAdmin(ModelView, model=LeagueConfig):
+    # ... existing code ...
+    column_list = [LeagueConfig.id, LeagueConfig.league_code, LeagueConfig.description,
+                   LeagueConfig.base_over_bias, LeagueConfig.base_under_bias,
+                   LeagueConfig.tempo_factor, LeagueConfig.strength_coefficient,
+                   LeagueConfig.form_delta_sensitivity]  # <-- ADD
+    # ...
+    form_columns = ["league_code", "description", "display_name", "country_code",
+                    "base_over_bias", "base_under_bias", "tempo_factor",
+                    "safety_mode", "aggression_level", "volatility",
+                    "deg_sensitivity", "det_sensitivity", "eps_sensitivity",
+                    "form_delta_sensitivity",  # <-- ADD
+                    "strength_coefficient"]
 
 class TeamAdmin(ModelView, model=Team):
     name = "Team"
