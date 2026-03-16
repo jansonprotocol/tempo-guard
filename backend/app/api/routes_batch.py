@@ -20,7 +20,6 @@ from __future__ import annotations
 
 import io
 import json
-import unicodedata
 from datetime import date, datetime, timedelta
 from typing import Optional
 
@@ -37,7 +36,7 @@ from app.services.data_providers.fbref_base import asof_features, _parse_score_c
 from app.util.asian_lines import evaluate_market, hit_weight
 from app.services.resolve_team import resolve_team_name, clear_resolve_cache
 
-# Auto-create tables if needed
+# Auto-create tables if needed (optional, handled in main.py)
 Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
