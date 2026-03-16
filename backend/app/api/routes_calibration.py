@@ -38,6 +38,7 @@ from app.models.team_config import TeamConfig
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column
 from app.services.predict import predict_match
 from app.services.player_power_backtest import get_historical_player_nudge
+from app.services.form_delta_history import get_historical_form_delta  # <-- NEW
 from app.util.asian_lines import evaluate_market
 router = APIRouter()
 # ── Constants ──────────────────────────────────────────────────────
@@ -290,6 +291,63 @@ def _suggest_sensitivities(
         result["insufficient_data"] = True
         result["note"] = f"Only {len(deg_det_records)} records total (need {MIN_RECORDS})"
     return result
+
+# ── NEW: Form delta sensitivity suggestion ─────────────────────────
+def _suggest_form_delta(
+    deg_det_records: list,
+    current_form_sens: float,
+) -> dict:
+    """
+    Analyse miss patterns based on form delta of home and away teams.
+    Suggests a form_delta_sensitivity multiplier.
+    """
+    MIN_RECORDS = 10
+    MIN_SIGNAL_RECS = 5
+    SCALE = 2.0
+    SENS_CAP_LOW = 0.0
+    SENS_CAP_HIGH = 2.0
+    SENS_STEP = 0.1
+
+    result = {
+        "form_delta_sensitivity": current_form_sens,
+        "form_delta_analysis": "Insufficient data",
+    }
+
+    # Filter records that have both form deltas
+    valid = [r for r in deg_det_records if r.get("home_form_delta") is not None and r.get("away_form_delta") is not None]
+    if len(valid) < MIN_RECORDS:
+        result["form_delta_analysis"] = f"Insufficient records with form delta ({len(valid)} < {MIN_RECORDS})"
+        return result
+
+    # Define "extreme form delta" – e.g., abs(delta) >= 3
+    extreme_threshold = 3
+    high_form_matches = [r for r in valid if abs(r["home_form_delta"]) >= extreme_threshold or abs(r["away_form_delta"]) >= extreme_threshold]
+
+    if len(high_form_matches) < MIN_SIGNAL_RECS:
+        result["form_delta_analysis"] = f"Not enough matches with extreme form delta ({len(high_form_matches)} < {MIN_SIGNAL_RECS})"
+        return result
+
+    # Compute miss rate for extreme form matches vs baseline
+    miss_rate_high = sum(1 for r in high_form_matches if r["is_miss"]) / len(high_form_matches)
+    miss_rate_base = sum(1 for r in valid if r["is_miss"]) / len(valid)
+    lift = miss_rate_high - miss_rate_base
+
+    # Suggest sensitivity: if lift positive (more misses when form extreme), increase sensitivity (amplify form effect)
+    # If negative, decrease sensitivity.
+    raw_suggested = 1.0 + lift * SCALE
+    capped = max(SENS_CAP_LOW, min(SENS_CAP_HIGH, raw_suggested))
+    stepped = round(max(
+        current_form_sens - SENS_STEP,
+        min(current_form_sens + SENS_STEP, capped)
+    ), 2)
+
+    result["form_delta_sensitivity"] = stepped
+    result["form_delta_analysis"] = (
+        f"{len(high_form_matches)} matches with extreme form delta (≥{extreme_threshold}): "
+        f"miss_rate={round(miss_rate_high,3)} vs baseline={round(miss_rate_base,3)} "
+        f"(lift={round(lift,3)}) → suggested sensitivity={stepped}"
+    )
+    return result
 # ── Bias suggestion ────────────────────────────────────────────────
 def _suggest_bias(
     over_hits: float, over_total: float,
@@ -429,6 +487,8 @@ def _run_calibration(
     current_deg_sens = float(cfg.deg_sensitivity or 1.0) if cfg else 1.0
     current_det_sens = float(cfg.det_sensitivity or 1.0) if cfg else 1.0
     current_eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
+    current_form_sens = float(cfg.form_delta_sensitivity or 0.0) if cfg else 0.0  # <-- NEW (default 0.0 means no effect)
+
     def _weight(pos: int) -> float:
         if pos <= 10: return 1.0
         if pos <= 30: return 0.5
@@ -576,6 +636,12 @@ def _run_calibration(
                     team_tracker[team]["over_miss_det"].append(raw_det)
                 if not is_over_market and is_full_miss:
                     team_tracker[team]["under_miss_det"].append(raw_det)
+
+            # --- NEW: Compute historical form delta for both teams ---
+            home_form_delta = get_historical_form_delta(db, home_team, league_code, match_date)
+            away_form_delta = get_historical_form_delta(db, away_team, league_code, match_date)
+            # ---------------------------------------------------------
+
             deg_det_records.append({
                 "deg_pressure":  metrics.get("deg_pressure")  or 0.0,
                 "det_boost":     metrics.get("det_boost")     or 0.30,
@@ -583,6 +649,8 @@ def _run_calibration(
                 "is_over":       is_over_market,
                 "is_miss":       is_full_miss,
                 "total_goals":   hg + ag,
+                "home_form_delta": home_form_delta,   # <-- NEW
+                "away_form_delta": away_form_delta,   # <-- NEW
             })
         total_goals  = hg + ag
         is_half_loss = hw == 0.25
@@ -616,7 +684,9 @@ def _run_calibration(
                 "corridor":    f"{pred.corridor.low}–{pred.corridor.high}",
                 "lean":        pred.corridor.lean,
                 "inputs":      metrics,
-              "player_nudge":  player_nudge,
+                "player_nudge":  player_nudge,
+                "home_form_delta": home_form_delta,   # <-- NEW (for sample)
+                "away_form_delta": away_form_delta,   # <-- NEW
             })
     evaluated        = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
     overall_hit_rate = round(w_hits / max(0.001, w_hits + w_misses) * 100, 1)
@@ -645,7 +715,12 @@ def _run_calibration(
         deg_det_records,
         current_deg_sens, current_det_sens, current_eps_sens,
     )
+    form_delta_suggestion = _suggest_form_delta(      # <-- NEW
+        deg_det_records,
+        current_form_sens,
+    )
     suggestion["sensitivity"] = sensitivity_suggestion
+    suggestion["form_delta"] = form_delta_suggestion   # <-- NEW
     applied = False
     applied_changes = {}
     if apply and cfg:
@@ -691,6 +766,11 @@ def _run_calibration(
             if suggested is not None and abs(suggested - current) >= SENS_MIN_CHANGE:
                 setattr(cfg, field, suggested)
                 sens_changed[field] = {"before": current, "after": suggested}
+        # NEW: apply form_delta_sensitivity if changed
+        form_sens_suggested = form_delta_suggestion.get("form_delta_sensitivity")
+        if form_sens_suggested is not None and abs(form_sens_suggested - current_form_sens) >= SENS_MIN_CHANGE:
+            cfg.form_delta_sensitivity = form_sens_suggested
+            sens_changed["form_delta_sensitivity"] = {"before": current_form_sens, "after": form_sens_suggested}
         if sens_changed:
             db.commit()
             applied = True
@@ -1119,6 +1199,7 @@ def reset_league_calibration(
         cfg.deg_sensitivity = NEUTRAL_SENSITIVITY
         cfg.det_sensitivity = NEUTRAL_SENSITIVITY
         cfg.eps_sensitivity = NEUTRAL_SENSITIVITY
+        cfg.form_delta_sensitivity = 0.0   # <-- NEW
         db.commit()
         result["league_config"] = {
             "base_over_bias":  NEUTRAL_OVER,
@@ -1127,11 +1208,13 @@ def reset_league_calibration(
             "deg_sensitivity": NEUTRAL_SENSITIVITY,
             "det_sensitivity": NEUTRAL_SENSITIVITY,
             "eps_sensitivity": NEUTRAL_SENSITIVITY,
+            "form_delta_sensitivity": 0.0,
         }
         result["notes"].append(
             f"LeagueConfig reset to neutral midpoints: "
             f"over={NEUTRAL_OVER} under={NEUTRAL_UNDER} tempo={NEUTRAL_TEMPO} "
-            f"(sensitivities reset to 1.0). Run calibrate?apply=true to let data decide."
+            f"(sensitivities reset to 1.0, form_delta_sensitivity to 0.0). "
+            f"Run calibrate?apply=true to let data decide."
         )
     else:
         result["notes"].append(f"No LeagueConfig found for {league_code} — nothing to reset.")
