@@ -17,6 +17,7 @@ Fetches:
 Usage:
     python -m scripts.scrape_full_history --league ENG-PL
     python -m scripts.scrape_full_history --all              # all leagues
+    python -m scripts.scrape_full_history --league ENG-PL --force   # force full refresh (ignore cache)
 """
 
 import sys
@@ -31,10 +32,6 @@ sys.path.insert(0, str(path_root))
 from dotenv import load_dotenv
 load_dotenv()
 
-from app.database.db import SessionLocal
-from app.services.full_history_loader import load_league_full_history
-
-# Import the consolidated loader
 from app.services.full_history_loader import load_league_full_history
 
 # Constants
@@ -57,6 +54,7 @@ def main():
     parser.add_argument("--all", action="store_true", help="Load all leagues")
     parser.add_argument("--headless", action="store_true", help="Headless Chrome")
     parser.add_argument("--api", type=str, help="ScraperAPI key")
+    parser.add_argument("--force", action="store_true", help="Force full refresh (ignore cache)")
     args = parser.parse_args()
 
     if args.api:
@@ -77,7 +75,11 @@ def main():
         print(f"{'='*70}")
 
         try:
-            load_league_full_history(league, headless=args.headless)
+            load_league_full_history(
+                league,
+                headless=args.headless,
+                force=args.force          # pass force down
+            )
         except Exception as e:
             print(f"❌ Error processing {league}: {e}")
             import traceback
