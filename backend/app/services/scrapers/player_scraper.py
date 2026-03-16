@@ -4,7 +4,12 @@ Temporary wrapper for the old player scraper.
 """
 from scripts.scrape_players import scrape_league_players, SCHEDULE_URLS
 
-def update_player_stats_for_teams(league_code: str, teams: set, force: bool = False, headless: bool = False) -> None:
+def update_player_stats_for_teams(
+    league_code: str,
+    teams: set,
+    force: bool = False,
+    headless: bool = False
+) -> None:
     """
     Update player stats for a league. If teams is provided, it still scrapes
     the entire league page (FBref doesn't have per-team stats pages), but
