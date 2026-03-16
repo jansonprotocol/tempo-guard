@@ -20,6 +20,9 @@ This is the Session 11 tuning tool — run it AFTER:
   3. At least one SquadSnapshot exists per team
 """
 from __future__ import annotations
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import io
 from typing import Optional
