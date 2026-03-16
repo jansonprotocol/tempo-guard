@@ -132,9 +132,6 @@ def _fetch_via_selenium(url: str, label: str) -> str | None:
             except Exception:
                 pass
 
-# ---------------------------------------------------------------------------
-# Page parsing
-# ---------------------------------------------------------------------------
 def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
     if "Just a moment" in html or len(html) < 5000:
         print("  Cloudflare blocked.")
@@ -151,8 +148,30 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
 
     is_intl = league_code in ("UCL", "UEL", "UECL", "EC", "WC")
 
+    # Helper to check if a table has the required schedule columns
+    def is_schedule_table(df):
+        # Flatten MultiIndex if present
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [
+                " ".join(str(v) for v in col if str(v) != "nan").strip()
+                for col in df.columns
+            ]
+        cols_lower = [str(c).lower() for c in df.columns]
+        # Must have date, home, away columns (score is optional for upcoming)
+        has_date = any('date' in c for c in cols_lower)
+        has_home = any('home' in c for c in cols_lower)
+        has_away = any('away' in c for c in cols_lower)
+        return has_date and has_home and has_away
+
     if not is_intl:
-        # Domestic leagues: single schedule table, take the largest
+        # Domestic leagues: find the first table that looks like a schedule
+        for df in tables:
+            if is_schedule_table(df):
+                df = df.dropna(how="all")
+                print(f"  Found schedule table with {len(df)} rows")
+                return df
+        # Fallback: largest table (as before)
+        print("  No schedule table found – using largest table")
         df = max(tables, key=len)
         df = df.dropna(how="all")
         return df
@@ -160,14 +179,13 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
     # International competitions: merge all schedule tables and tag with round info
     schedule_tables = []
     for t in tables:
-        # Flatten MultiIndex
-        if isinstance(t.columns, pd.MultiIndex):
-            t.columns = [
-                " ".join(str(v) for v in col if str(v) != "nan").strip()
-                for col in t.columns
-            ]
-        cols_lower = [str(c).lower() for c in t.columns]
-        if "home" in cols_lower and "away" in cols_lower:
+        if is_schedule_table(t):
+            # Ensure flattened for merging
+            if isinstance(t.columns, pd.MultiIndex):
+                t.columns = [
+                    " ".join(str(v) for v in col if str(v) != "nan").strip()
+                    for col in t.columns
+                ]
             schedule_tables.append(t)
 
     if not schedule_tables:
@@ -179,6 +197,7 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
     merged_parts = []
     for t in schedule_tables:
         t = t.dropna(how="all").copy()
+        # Flatten again in case
         if isinstance(t.columns, pd.MultiIndex):
             t.columns = [
                 " ".join(str(v) for v in col if str(v) != "nan").strip()
