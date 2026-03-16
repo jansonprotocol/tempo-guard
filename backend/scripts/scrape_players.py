@@ -187,15 +187,8 @@ def _fetch_selenium(url: str, label: str) -> str | None:
 # ── Position normalisation ───────────────────────────────────────────────────
 
 def _norm_position(pos_str: str | None) -> str:
-    """
-    Normalise FBref position strings to GK/DEF/MID/FWD.
-
-    FBref uses: GK, DF, MF, FW, and combinations like "FW,MF", "DF,MF".
-    For combined positions, take the FIRST listed (primary role).
-    """
-    if not pos_str or pd.isna(pos_str):
-        return "MID"  # safe default — midfield has the broadest stat mix
-
+    if pos_str is None or pd.isna(pos_str) or isinstance(pos_str, (int, float)):
+        return "MID"  # Default for missing/numeric positions
     primary = str(pos_str).split(",")[0].strip().upper()
     return {
         "GK": "GK", "DF": "DEF", "MF": "MID", "FW": "FWD",
@@ -218,7 +211,7 @@ def _extract_player_ids(html: str) -> dict[str, str]:
     players: dict[str, str] = {}
     for m in pattern.finditer(html):
         fbref_id = m.group(1)
-        name = m.group(2).strip()
+        name = str(m.group(2)).strip() 
         if name and fbref_id and name not in players:
             players[name] = fbref_id
     return players
