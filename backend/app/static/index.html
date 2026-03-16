@@ -2894,8 +2894,10 @@
                 const col = n.type === 'over' ? 'var(--green)' : 'var(--red)';
                 const sign = n.delta > 0 ? '+' : '';
                 const weak = n.weakness ? ` · ${n.weakness}↓` : '';
+                // Note: backend may not return display_name for notable cards yet – update backend to include it.
+                const displayName = n.display_name || n.team;
                 return `<div style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:3px;border:1px solid var(--border);background:var(--bg2);cursor:pointer" onclick="loadDeltaLeague('${n.league}', document.querySelector('.delta-league-select'))">
-                  <span style="color:#fff">${n.team}</span>
+                  <span style="color:#fff">${displayName}</span>
                   <span style="color:var(--muted)">${n.league}</span>
                   <span style="color:${col};font-weight:700">${sign}${n.delta}</span>
                   <span style="color:var(--muted);font-size:9px">${n.expected}→${n.actual}${weak}</span>
@@ -2996,7 +2998,7 @@
         html += `
           <tr class="delta-row" onclick="this.classList.toggle('expanded')">
             <td class="num">${t.actual_pos}</td>
-            <td style="font-weight:500;color:#fff">${t.team}</td>
+            <td style="font-weight:500;color:#fff">${t.display_name || t.team}</td>  <!-- FIXED: use display_name if available -->
             <td class="num" style="color:var(--muted)">${t.expected_pos}</td>
             <td class="num"><span class="delta-val ${deltaClass}">${sign}${t.form_delta}</span></td>
             <td><span class="delta-status ${t.status}">${t.status.replace('_', ' ')}</span></td>
