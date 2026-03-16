@@ -1,35 +1,13 @@
 # backend/app/services/form_delta.py
 """
 ATHENA v2.0 — Form Delta: Over/Under Performance Rating.
-
-Compares each team's CURRENT league position against their HISTORICAL
-natural position (derived from previous season final standings).
-
-Example:
-  Ajax historically finishes top 3 (expected_pos ≈ 2)
-  This season they sit 5th (actual_pos = 5)
-  form_delta = expected_pos - actual_pos = 2 - 5 = -3  → UNDERPERFORMING
-
-  NEC historically finishes mid-table (expected_pos ≈ 9)
-  This season they sit 3rd (actual_pos = 3)
-  form_delta = 9 - 3 = +6  → OVERPERFORMING
-
-The zonal breakdown then identifies WHERE the performance gap originates:
-  - Compare team's ATK/MID/DEF/GK power vs the average power of teams
-    at their expected tier (top-3, mid-table, bottom-5).
-  - If Ajax's DEF power is 47 but top-3 average DEF is 56, the defense
-    is dragging them down.
-
-Data sources:
-  - FBref snapshots (current + previous season match data) → standings
-  - TeamConfig (squad_power, zonal power) → power context
-  - No new tables needed — everything is derived at query time
+Uses batch resolution for lightning-fast team name unification.
 """
 from __future__ import annotations
 
 import io
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, Dict, Set
 
 import pandas as pd
 from sqlalchemy.orm import Session
@@ -37,7 +15,7 @@ from sqlalchemy.orm import Session
 from app.database.models_fbref import FBrefSnapshot
 from app.models.team_config import TeamConfig
 from app.models.league_config import LeagueConfig
-from app.util.team_resolver import resolve_team_name  # NEW IMPORT
+from app.util.team_resolver import batch_resolve_team_names
 
 
 # Season boundary: matches before this date are "previous season"
@@ -58,21 +36,32 @@ def _season_cutoff(league_code: str) -> str:
     return _CALENDAR_CUTOFF if _is_calendar_league(league_code) else _AUG_MAY_CUTOFF
 
 
-def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: str) -> list[dict]:
+def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: str) -> List[dict]:
     """
-    Compute league standings from match results, using alias resolution
-    to unify team names.
+    Compute league standings from match results using BATCH RESOLUTION
+    to unify team names with maximum performance.
     """
-    teams: dict[str, dict] = {}
+    # Step 1: Collect ALL unique team names from the dataframe in one pass
+    all_raw_names: Set[str] = set()
+    for _, row in df.iterrows():
+        all_raw_names.add(str(row[home_col]).strip())
+        all_raw_names.add(str(row[away_col]).strip())
+    
+    # Step 2: Batch resolve ALL names with a single set of database queries
+    # This is the performance magic - 2 queries total, regardless of match count
+    resolved_names = batch_resolve_team_names(db, list(all_raw_names))
+    
+    # Step 3: Process all matches with pre-resolved names (no per-row DB queries!)
+    teams: Dict[str, dict] = {}
 
     for _, row in df.iterrows():
-        # Get raw names from the snapshot
+        # Get raw names
         ht_raw = str(row[home_col]).strip()
         at_raw = str(row[away_col]).strip()
         
-        # Resolve to canonical names using the alias system
-        ht = resolve_team_name(db, ht_raw)
-        at = resolve_team_name(db, at_raw)
+        # Use pre-resolved canonical names (fast dictionary lookup)
+        ht = resolved_names.get(ht_raw, ht_raw)
+        at = resolved_names.get(at_raw, at_raw)
         
         hg = int(row["hg"])
         ag = int(row["ag"])
@@ -86,7 +75,7 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
                     "p": 0, "w": 0, "d": 0, "l": 0,
                     "gf": 0, "ga": 0, "pts": 0
                 }
-            # Store raw name for reference
+            # Store raw name for reference (useful for debugging)
             if ht == team:
                 teams[team]["raw_names"].add(ht_raw)
             if at == team:
@@ -186,40 +175,15 @@ def _load_and_split_snapshot(
 
 def compute_form_delta(db: Session, league_code: str) -> dict:
     """
-    Compute Form Delta for all teams in a league.
-
-    Returns:
-      {
-        "league_code": "NED-ERE",
-        "display_name": "Eredivisie (Netherlands)",
-        "teams": [
-          {
-            "team": "Ajax",
-            "actual_pos": 5,
-            "expected_pos": 2,
-            "form_delta": -3,
-            "status": "underperforming",
-            "current_pts": 42,
-            "current_played": 25,
-            "prev_season_pos": 2,
-            "zones": {
-              "atk": {"power": 58.2, "tier_avg": 62.1, "gap": -3.9, "verdict": "below_tier"},
-              "mid": {"power": 53.1, "tier_avg": 55.0, "gap": -1.9, "verdict": "at_tier"},
-              "def": {"power": 47.0, "tier_avg": 56.3, "gap": -9.3, "verdict": "below_tier"},
-              "gk":  {"power": 52.0, "tier_avg": 54.0, "gap": -2.0, "verdict": "at_tier"},
-            },
-            "primary_weakness": "DEF",
-          },
-          ...
-        ]
-      }
+    Compute Form Delta for all teams in a league using BATCH RESOLUTION.
+    Now lightning fast even for leagues with thousands of matches.
     """
     prev_df, curr_df, home_col, away_col = _load_and_split_snapshot(db, league_code)
 
     if curr_df is None or curr_df.empty:
         return {"league_code": league_code, "error": "No current season data", "teams": []}
 
-    # Current standings (NOW USING ALIAS RESOLUTION)
+    # Current standings - now with batch resolution (super fast!)
     current_standings = _compute_standings(db, curr_df, home_col, away_col)
 
     # Previous season standings (for expected position)
