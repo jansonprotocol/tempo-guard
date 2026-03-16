@@ -30,7 +30,6 @@
     overflow-x: hidden;
   }
 
-  /* ── grid bg ── */
   body::before {
     content: '';
     position: fixed;
@@ -51,7 +50,6 @@
     padding: 40px 24px 80px;
   }
 
-  /* ── header ── */
   header {
     display: flex;
     align-items: flex-end;
@@ -105,7 +103,6 @@
     50%      { opacity: .5; }
   }
 
-  /* ── section label ── */
   .section-label {
     font-family: 'Share Tech Mono', monospace;
     font-size: 10px;
@@ -115,10 +112,9 @@
     margin-bottom: 14px;
   }
 
-  /* ── league grid ── */
   .leagues-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 10px;
     margin-bottom: 32px;
   }
@@ -176,21 +172,32 @@
     line-height: 1.6;
   }
 
+  .badge-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
   .lc-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     font-size: 9px;
     padding: 2px 6px;
     border-radius: 2px;
     letter-spacing: 1px;
-    margin-top: 6px;
     font-family: 'Share Tech Mono', monospace;
   }
 
-  .badge-ok     { background: rgba(0,255,136,.12); color: var(--green); }
+  .badge-fresh  { background: rgba(0,255,136,.12); color: var(--green); }
   .badge-stale  { background: rgba(255,170,0,.12);  color: var(--amber); }
   .badge-none   { background: rgba(255,68,102,.1);  color: var(--red); }
 
-  /* ── controls row ── */
+  .badge-icon {
+    font-size: 11px;
+  }
+
   .controls {
     display: flex;
     gap: 12px;
@@ -245,7 +252,6 @@
     margin-left: auto;
   }
 
-  /* ── log terminal ── */
   .terminal {
     background: #050810;
     border: 1px solid var(--border);
@@ -276,7 +282,6 @@
     letter-spacing: 2px;
   }
 
-  /* ── cursor blink ── */
   .cursor {
     display: inline-block;
     width: 8px;
@@ -289,7 +294,6 @@
 
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* ── snapshot summary ── */
   .summary-bar {
     display: flex;
     gap: 24px;
@@ -338,15 +342,11 @@
 
   <!-- League selection -->
   <div class="section-label">Select Leagues to Scrape</div>
-  <div class="leagues-grid" id="leagueGrid">
-    <!-- populated by JS -->
-  </div>
+  <div class="leagues-grid" id="leagueGrid"></div>
 
   <!-- Controls -->
   <div class="controls">
-    <button class="btn btn-primary" id="scrapeBtn" onclick="startScrape()">
-      ▶ Run Scrape
-    </button>
+    <button class="btn btn-primary" id="scrapeBtn" onclick="startScrape()">▶ Run Scrape</button>
     <button class="btn btn-ghost" onclick="selectAll()">Select All</button>
     <button class="btn btn-ghost" onclick="selectNone()">Clear</button>
     <span class="select-info" id="selectInfo">0 leagues selected</span>
@@ -366,18 +366,18 @@
     </div>
     <div class="stat">
       <span class="stat-val green" id="statFresh">—</span>
-      <span class="stat-label">Fresh ( &lt; 7 days )</span>
+      <span class="stat-label">Fresh Fixtures</span>
     </div>
     <div class="stat">
       <span class="stat-val amber" id="statStale">—</span>
-      <span class="stat-label">Stale ( &gt; 7 days )</span>
+      <span class="stat-label">Stale Fixtures</span>
     </div>
     <div class="stat">
       <span class="stat-val" id="statNone">—</span>
-      <span class="stat-label">No Snapshot</span>
+      <span class="stat-label">No Fixtures</span>
     </div>
   </div>
-
+  <!-- Optional second row for stats freshness? We'll keep it simple for now. -->
 </div>
 
 <script>
@@ -415,43 +415,58 @@
   };
 
   let selected = new Set(Object.keys(LEAGUE_NAMES));
-  let snapshots = {};
+  let snapshots = {};          // expected structure: { league_code: { fixture_fetched_at, stats_fetched_at } }
   let eventSource = null;
+
+  // Helper to format relative time
+  function timeAgo(date) {
+    if (!date) return 'never';
+    const now = new Date();
+    const diffMs = now - new Date(date);
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    if (diffDays === 0) return 'today';
+    if (diffDays === 1) return '1 day ago';
+    return `${diffDays} days ago`;
+  }
+
+  function getBadgeClass(date) {
+    if (!date) return 'badge-none';
+    const age = new Date() - new Date(date);
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    return age > sevenDays ? 'badge-stale' : 'badge-fresh';
+  }
 
   // ── Render league cards ──────────────────────────────────────────────────
   function renderGrid() {
     const grid = document.getElementById('leagueGrid');
     grid.innerHTML = '';
 
-    const now = new Date();
-    const sevenDays = 7 * 24 * 60 * 60 * 1000;
-
     Object.entries(LEAGUE_NAMES).forEach(([code, name]) => {
-      const snap = snapshots[code];
+      const snap = snapshots[code] || {};
+      const fixtureDate = snap.fixture_fetched_at ? new Date(snap.fixture_fetched_at + 'Z') : null;
+      const statsDate   = snap.stats_fetched_at   ? new Date(snap.stats_fetched_at + 'Z') : null;
+
+      const fixtureBadgeClass = getBadgeClass(fixtureDate);
+      const statsBadgeClass   = getBadgeClass(statsDate);
+
+      const fixtureLabel = fixtureDate ? `F: ${timeAgo(fixtureDate)}` : 'F: never';
+      const statsLabel   = statsDate   ? `S: ${timeAgo(statsDate)}`   : 'S: never';
+
       const card = document.createElement('div');
       card.className = 'league-card' + (selected.has(code) ? ' selected' : '');
       card.onclick = () => toggleLeague(code);
 
-      let badgeHtml = '<span class="lc-badge badge-none">No snapshot</span>';
-      let metaHtml  = '<span style="color:var(--red)">Not yet scraped</span>';
-
-      if (snap) {
-        const fetchedAt = new Date(snap.fetched_at + 'Z');
-        const age = now - fetchedAt;
-        const isStale = age > sevenDays;
-        const daysAgo = Math.floor(age / (24*60*60*1000));
-        const label = daysAgo === 0 ? 'today' : daysAgo === 1 ? '1 day ago' : `${daysAgo} days ago`;
-        badgeHtml = isStale
-          ? `<span class="lc-badge badge-stale">Stale</span>`
-          : `<span class="lc-badge badge-ok">Fresh</span>`;
-        metaHtml = `Updated ${label}<br/>${snap.seasons || ''}`;
-      }
-
       card.innerHTML = `
         <div class="lc-code">${code}</div>
         <div class="lc-name">${name}</div>
-        <div class="lc-meta">${metaHtml}</div>
-        ${badgeHtml}
+        <div class="lc-meta">
+          <div>${fixtureLabel}</div>
+          <div>${statsLabel}</div>
+        </div>
+        <div class="badge-row">
+          <span class="lc-badge ${fixtureBadgeClass}"><span class="badge-icon">📅</span> Fixtures</span>
+          <span class="lc-badge ${statsBadgeClass}"><span class="badge-icon">⚡</span> Stats</span>
+        </div>
       `;
       grid.appendChild(card);
     });
@@ -459,12 +474,13 @@
     document.getElementById('selectInfo').textContent =
       `${selected.size} of ${Object.keys(LEAGUE_NAMES).length} selected`;
 
-    // Update stats
+    // Update stats bar (based on fixtures only, to keep original style)
     let fresh = 0, stale = 0, none = 0;
     Object.keys(LEAGUE_NAMES).forEach(code => {
       const snap = snapshots[code];
-      if (!snap) { none++; return; }
-      const age = now - new Date(snap.fetched_at + 'Z');
+      if (!snap || !snap.fixture_fetched_at) { none++; return; }
+      const age = new Date() - new Date(snap.fixture_fetched_at + 'Z');
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
       age > sevenDays ? stale++ : fresh++;
     });
 
@@ -514,6 +530,10 @@
     eventSource.onmessage = e => {
       if (e.data && e.data.trim()) logLine(e.data);
     };
+    eventSource.onerror = () => {
+      // If SSE fails, fallback to polling? We'll just log.
+      logLine('[warn] Log stream disconnected');
+    };
   }
 
   // ── Start scrape ──────────────────────────────────────────────────────────
@@ -539,18 +559,26 @@
       logLine(`[error] ${data.reason}`);
       setStatus(false);
       document.getElementById('scrapeBtn').disabled = false;
+      if (eventSource) eventSource.close();
+      return;
     }
 
     // Poll until done
     const poll = setInterval(async () => {
-      const s = await fetch('/api/status').then(r => r.json());
-      snapshots = s.snapshots || {};
-      if (!s.is_running) {
-        clearInterval(poll);
-        setStatus(false);
-        document.getElementById('scrapeBtn').disabled = false;
-        renderGrid();
-        if (eventSource) eventSource.close();
+      try {
+        const s = await fetch('/api/status').then(r => r.json());
+        snapshots = s.snapshots || {};
+        if (!s.is_running) {
+          clearInterval(poll);
+          setStatus(false);
+          document.getElementById('scrapeBtn').disabled = false;
+          renderGrid();
+          if (eventSource) eventSource.close();
+        } else {
+          // Optionally update grid in real-time? Could be heavy, leave as is.
+        }
+      } catch (err) {
+        // ignore
       }
     }, 2000);
   }
@@ -568,12 +596,17 @@
 
   // ── Initial load ──────────────────────────────────────────────────────────
   async function init() {
-    const s = await fetch('/api/status').then(r => r.json());
-    snapshots = s.snapshots || {};
-    if (s.is_running) {
-      setStatus(true);
-      document.getElementById('scrapeBtn').disabled = true;
-      startLogStream();
+    try {
+      const s = await fetch('/api/status').then(r => r.json());
+      snapshots = s.snapshots || {};
+      if (s.is_running) {
+        setStatus(true);
+        document.getElementById('scrapeBtn').disabled = true;
+        startLogStream();
+      }
+    } catch (err) {
+      console.error('Failed to load status', err);
+      // fallback: empty snapshots
     }
     renderGrid();
   }
