@@ -12,10 +12,11 @@ Run this EVERY DAY (via cron/Render scheduler) to:
 Usage:
     python -m scripts.scrape_daily_update
     python -m scripts.scrape_daily_update --days-back 14
+    python -m scripts.scrape_daily_update --force      # ignore cache, force full refresh
 """
 
-
 import sys
+import os
 import time
 from datetime import datetime, date, timedelta
 from pathlib import Path
@@ -55,6 +56,7 @@ def main():
     parser.add_argument("--league", type=str, help="Single league to update")
     parser.add_argument("--headless", action="store_true", help="Headless Chrome")
     parser.add_argument("--api", type=str, help="ScraperAPI key")
+    parser.add_argument("--force", action="store_true", help="Ignore cache and force full refresh")
     args = parser.parse_args()
 
     if args.api:
@@ -71,7 +73,9 @@ def main():
         return
 
     print(f"\n🔄 Daily update starting for {len(leagues)} leagues")
-    print(f"   Looking back {args.days_back} days\n")
+    print(f"   Looking back {args.days_back} days")
+    if args.force:
+        print("   ⚡ Force mode enabled – will ignore stats fetch cache")
 
     for i, league in enumerate(leagues):
         print(f"\n{'='*60}")
@@ -83,7 +87,8 @@ def main():
                 league,
                 days_back=args.days_back,
                 days_ahead=DAYS_AHEAD_DEFAULT,
-                headless=args.headless
+                headless=args.headless,
+                force=args.force          # pass force down
             )
         except Exception as e:
             print(f"❌ Error updating {league}: {e}")
