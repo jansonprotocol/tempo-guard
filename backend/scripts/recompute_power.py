@@ -8,7 +8,11 @@ Usage:
 """
 
 import sys
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env
 
 path_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(path_root))
