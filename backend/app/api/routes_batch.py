@@ -5,13 +5,12 @@ Batch prediction and validation endpoints.
 POST /api/batch-predict
     Loops over all FBrefFixtures in the next FIXTURE_DAYS days,
     runs ATHENA predict_match on each, stores in PredictionLog.
-    Skip fixtures that already have a pending/hit/miss prediction.
+    Deduplicates fixtures by normalised team name before predicting.
 
 POST /api/batch-validate
     Loops over all PredictionLog entries with status=pending
     whose match_date has passed.
     Looks up actual score from FBrefSnapshot, evaluates hit/miss.
-    Run this after your daily scrape.
 
 GET /api/predictions
     Returns PredictionLog entries for the frontend Predictions page.
@@ -21,6 +20,7 @@ from __future__ import annotations
 
 import io
 import json
+import unicodedata
 from datetime import date, datetime, timedelta
 from typing import Optional
 
@@ -33,8 +33,9 @@ from app.database.models_predictions import FBrefFixture, PredictionLog, Calibra
 from app.database.db import engine
 from app.engine.types import MatchRequest
 from app.services.predict import predict_match
-from app.services.data_providers.fbref_base import asof_features, _parse_score_column, _resolve_columns
+from app.services.data_providers.fbref_base import asof_features, _parse_score_column, _resolve_columns, _match_team, _norm
 from app.util.asian_lines import evaluate_market, hit_weight
+from app.services.resolve_team import resolve_team_name, clear_resolve_cache
 
 # Auto-create tables if needed
 Base.metadata.create_all(bind=engine)
@@ -50,7 +51,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
 
 
 def _get_variance_flag(league_code: str, db) -> str | None:
@@ -71,6 +71,59 @@ def _get_variance_flag(league_code: str, db) -> str | None:
         return "red"
 
 
+def _dedup_key(league_code: str, home: str, away: str, match_date) -> str:
+    """
+    Build a normalised dedup key for a fixture.
+    Strips accents, lowercases, and trims — so "FC Fredericia" and
+    "Fredericia" produce the same key.
+    """
+    h = _norm(home)
+    a = _norm(away)
+    return f"{league_code}|{match_date}|{h}|{a}"
+
+
+def _has_existing_prediction(
+    db: Session,
+    league_code: str,
+    home_team: str,
+    away_team: str,
+    match_date,
+) -> bool:
+    """
+    Check if a prediction already exists for this fixture, using
+    normalised name matching to prevent duplicates from name variants.
+
+    Checks both exact match AND normalised match against existing predictions.
+    """
+    # Fast path: exact match
+    exact = db.query(PredictionLog).filter(
+        PredictionLog.league_code == league_code,
+        PredictionLog.home_team == home_team,
+        PredictionLog.away_team == away_team,
+        PredictionLog.match_date == match_date,
+        PredictionLog.status.in_(["pending", "hit", "miss"]),
+    ).first()
+
+    if exact:
+        return True
+
+    # Slow path: check all predictions on this date+league with normalised names
+    h_norm = _norm(home_team)
+    a_norm = _norm(away_team)
+
+    day_preds = db.query(PredictionLog).filter(
+        PredictionLog.league_code == league_code,
+        PredictionLog.match_date == match_date,
+        PredictionLog.status.in_(["pending", "hit", "miss"]),
+    ).all()
+
+    for pred in day_preds:
+        if _norm(pred.home_team) == h_norm and _norm(pred.away_team) == a_norm:
+            return True
+
+    return False
+
+
 # ── POST /api/batch-predict ────────────────────────────────────────────────────
 
 @router.post("/batch-predict")
@@ -84,9 +137,8 @@ def batch_predict(
 ):
     """
     Generate ATHENA predictions for all upcoming fixtures.
-    Skips fixtures already predicted (pending/hit/miss).
+    Deduplicates fixtures by normalised team name before predicting.
     Use ?force=true to wipe pending entries and re-predict.
-    Use ?league_code=AUT-BL to target a single league.
     """
     today  = date.today()
     cutoff = today + timedelta(days=days_ahead)
@@ -98,45 +150,80 @@ def batch_predict(
     if league_code:
         q = q.filter(FBrefFixture.league_code == league_code)
 
-    fixtures = q.order_by(FBrefFixture.match_date).all()
+    raw_fixtures = q.order_by(FBrefFixture.match_date).all()
 
-    if not fixtures:
+    if not raw_fixtures:
         return {"message": "No fixtures found in window.", "days_ahead": days_ahead, "predicted": 0}
+
+    # ── Resolve team names through Team/Alias tables ─────────────────
+    # "FC Fredericia" → looks up TeamAlias → finds "Fredericia" → uses that.
+    # This happens BEFORE dedup so all variants collapse to the same name.
+    clear_resolve_cache()
+
+    resolved_fixtures = []
+    for fix in raw_fixtures:
+        r_home = resolve_team_name(db, fix.home_team, fix.league_code)
+        r_away = resolve_team_name(db, fix.away_team, fix.league_code)
+        resolved_fixtures.append({
+            "fix": fix,
+            "home": r_home,
+            "away": r_away,
+        })
+
+    # ── Deduplicate by resolved name ─────────────────────────────────
+    seen_keys: set = set()
+    fixtures = []
+    deduped = 0
+
+    for rf in resolved_fixtures:
+        key = _dedup_key(rf["fix"].league_code, rf["home"], rf["away"], rf["fix"].match_date)
+        if key in seen_keys:
+            deduped += 1
+            continue
+        seen_keys.add(key)
+        fixtures.append(rf)
+
+    if deduped:
+        print(f"[batch-predict] Deduped {deduped} fixture variants from {len(raw_fixtures)} raw fixtures")
 
     # force=true: wipe pending entries so they get re-predicted fresh
     if force and not dry_run:
         deleted = 0
-        for fix in fixtures:
-            n = db.query(PredictionLog).filter(
+        for rf in fixtures:
+            fix = rf["fix"]
+            h_norm = _norm(rf["home"])
+            a_norm = _norm(rf["away"])
+            day_pending = db.query(PredictionLog).filter(
                 PredictionLog.league_code == fix.league_code,
-                PredictionLog.home_team   == fix.home_team,
-                PredictionLog.away_team   == fix.away_team,
-                PredictionLog.match_date  == fix.match_date,
-                PredictionLog.status      == "pending",
-            ).delete()
-            deleted += n
+                PredictionLog.match_date == fix.match_date,
+                PredictionLog.status == "pending",
+            ).all()
+            for pred in day_pending:
+                if _norm(pred.home_team) == h_norm and _norm(pred.away_team) == a_norm:
+                    db.delete(pred)
+                    deleted += 1
+
         db.commit()
+        if deleted:
+            print(f"[batch-predict] Force-deleted {deleted} pending predictions")
 
     predicted = skipped = errors = 0
     results = []
     skipped_by_league: dict = {}
 
-    for fix in fixtures:
-        # Skip if already has a live/settled prediction (void entries get retried)
-        existing = db.query(PredictionLog).filter(
-            PredictionLog.league_code == fix.league_code,
-            PredictionLog.home_team   == fix.home_team,
-            PredictionLog.away_team   == fix.away_team,
-            PredictionLog.match_date  == fix.match_date,
-            PredictionLog.status.in_(["pending", "hit", "miss"]),
-        ).first()
+    for rf in fixtures:
+        fix = rf["fix"]
+        home_resolved = rf["home"]
+        away_resolved = rf["away"]
 
-        if existing:
+        # Skip if already has a prediction (uses resolved + normalised matching)
+        if _has_existing_prediction(db, fix.league_code, home_resolved, away_resolved, fix.match_date):
             skipped += 1
             skipped_by_league[fix.league_code] = skipped_by_league.get(fix.league_code, 0) + 1
             continue
 
         try:
+            # Use ORIGINAL fixture names for asof_features (they match FBref snapshot data)
             metrics = asof_features(
                 fix.league_code,
                 fix.home_team,
@@ -144,10 +231,11 @@ def batch_predict(
                 fix.match_date,
             )
 
+            # Use RESOLVED names for the prediction request + storage
             req = MatchRequest(
                 league_code=fix.league_code,
-                home_team=fix.home_team,
-                away_team=fix.away_team,
+                home_team=home_resolved,
+                away_team=away_resolved,
                 match_date=fix.match_date,
                 sot_proj_total=metrics.get("sot_proj_total"),
                 support_idx_over_delta=metrics.get("support_idx_over_delta"),
@@ -166,8 +254,8 @@ def batch_predict(
 
             entry = {
                 "league_code":    fix.league_code,
-                "home_team":      fix.home_team,
-                "away_team":      fix.away_team,
+                "home_team":      home_resolved,
+                "away_team":      away_resolved,
                 "match_date":     fix.match_date.isoformat(),
                 "market":         pred.translated_play.market,
                 "confidence":     pred.translated_play.confidence,
@@ -182,8 +270,8 @@ def batch_predict(
             if not dry_run:
                 log = PredictionLog(
                     league_code=fix.league_code,
-                    home_team=fix.home_team,
-                    away_team=fix.away_team,
+                    home_team=home_resolved,
+                    away_team=away_resolved,
                     match_date=fix.match_date,
                     match_time=getattr(fix, "match_time", None),
                     market=pred.translated_play.market,
@@ -215,12 +303,13 @@ def batch_predict(
 
     return {
         "dry_run":          dry_run,
-        "fixtures_found":   len(fixtures),
+        "fixtures_found":   len(raw_fixtures),
+        "fixtures_deduped": deduped,
         "predicted":        predicted,
         "skipped":          skipped,
         "skipped_by_league": skipped_by_league,
         "errors":           errors,
-        "tip": "Use ?force=true to wipe pending and re-predict. Use ?days_ahead=30. Use ?league_code=X to target one league." if skipped == len(fixtures) and skipped > 0 else None,
+        "tip": "Use ?force=true to wipe pending and re-predict." if skipped == len(fixtures) and skipped > 0 else None,
         "results":          results if dry_run else [],
     }
 
@@ -316,9 +405,9 @@ def _lookup_actual_score(
     """
     Look up actual score from FBrefSnapshot.
     Returns ("2-1", 3) or (None, None) if not found.
+    Uses fuzzy matching to handle team name variants.
     """
     from app.database.models_fbref import FBrefSnapshot
-    from app.services.data_providers.fbref_base import _match_team, _norm
 
     snap = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
     if not snap:
@@ -333,7 +422,6 @@ def _lookup_actual_score(
     if not all([c["date"], c["ht"], c["at"]]):
         return None, None
 
-    # Parse score if needed
     if not c["hg"] and c["score"]:
         df = _parse_score_column(df, c["score"])
         c  = _resolve_columns(df)
@@ -382,24 +470,23 @@ def get_predictions(
 ):
     """
     Returns predictions for the frontend Predictions page.
-    Sorted by date descending (most recent first).
     Now includes v2.0 performance tags per match.
     """
     from app.database.models_predictions import PredictionLog as PL
- 
+
     cutoff = date.today() - timedelta(days=days)
     q = db.query(PL).filter(PL.match_date >= cutoff)
- 
+
     if status:
         q = q.filter(PL.status == status)
     if league_code:
         q = q.filter(PL.league_code == league_code)
- 
+
     rows = q.order_by(PL.match_date.asc(), PL.id.asc()).all()
- 
-    # v2.0: Pre-compute performance tags per unique league (cached per request)
-    _league_tag_cache: dict = {}  # league_code → {form_deltas, league_avgs}
- 
+
+    # v2.0: Performance tags cached per league
+    _league_tag_cache: dict = {}
+
     def _get_league_cache(lc: str) -> dict:
         if lc in _league_tag_cache:
             return _league_tag_cache[lc]
@@ -415,24 +502,23 @@ def get_predictions(
             pass
         _league_tag_cache[lc] = cache
         return cache
- 
-    def _match_tags(lc: str, home: str, away: str) -> dict:
+
+    def _match_tags_safe(lc: str, home: str, away: str) -> dict:
         try:
             from app.services.performance_tags import generate_match_tags
             cache = _get_league_cache(lc)
             return generate_match_tags(db, lc, home, away, cache["form_deltas"])
         except Exception:
             return {}
- 
-    # Group by date
+
     grouped: dict = {}
     for r in rows:
         d = r.match_date.isoformat()
         if d not in grouped:
             grouped[d] = []
- 
-        tags = _match_tags(r.league_code, r.home_team, r.away_team)
- 
+
+        tags = _match_tags_safe(r.league_code, r.home_team, r.away_team)
+
         grouped[d].append({
             "id":             r.id,
             "league_code":    r.league_code,
@@ -454,11 +540,55 @@ def get_predictions(
             "variance_flag":  getattr(r, "variance_flag", None),
             "performance_tags": tags,
         })
- 
+
     return {
         "total":    len(rows),
         "by_date":  grouped,
     }
+
+
+# ── POST /api/cleanup-duplicate-predictions ───────────────────────────────────
+
+@router.post("/cleanup-duplicate-predictions")
+def cleanup_duplicate_predictions(
+    dry_run: bool = Query(True, description="Preview only — set false to actually delete"),
+    db: Session = Depends(get_db),
+):
+    """
+    Find and remove duplicate predictions caused by team name variants.
+    Keeps the oldest prediction per normalised (league, date, home, away) group.
+    """
+    all_preds = db.query(PredictionLog).order_by(PredictionLog.id.asc()).all()
+
+    seen: dict = {}  # dedup_key → first PredictionLog.id
+    duplicates = []
+
+    for pred in all_preds:
+        key = _dedup_key(pred.league_code, pred.home_team, pred.away_team, pred.match_date)
+        if key in seen:
+            duplicates.append({
+                "id": pred.id,
+                "match": f"{pred.home_team} vs {pred.away_team}",
+                "date": pred.match_date.isoformat(),
+                "league": pred.league_code,
+                "status": pred.status,
+                "kept_id": seen[key],
+            })
+            if not dry_run:
+                db.delete(pred)
+        else:
+            seen[key] = pred.id
+
+    if not dry_run and duplicates:
+        db.commit()
+
+    return {
+        "dry_run": dry_run,
+        "total_predictions": len(all_preds),
+        "duplicates_found": len(duplicates),
+        "duplicates": duplicates[:50],  # cap output
+    }
+
 
 # ── GET /api/fixtures-debug ────────────────────────────────────────────────────
 
@@ -467,10 +597,6 @@ def fixtures_debug(
     days_ahead: int = Query(60, ge=1, le=365),
     db: Session = Depends(get_db),
 ):
-    """
-    Shows everything in FBrefFixture — grouped by league with dates.
-    Use this to diagnose why batch-predict isn't seeing new fixtures.
-    """
     from datetime import date, timedelta
 
     today  = date.today()
@@ -483,7 +609,6 @@ def fixtures_debug(
     window_fixtures = [f for f in all_fixtures
                        if today <= f.match_date <= cutoff]
 
-    # Group all fixtures by league
     by_league: dict = {}
     for f in all_fixtures:
         lc = f.league_code
@@ -491,7 +616,6 @@ def fixtures_debug(
             by_league[lc] = []
         by_league[lc].append(f.match_date.isoformat())
 
-    # Group window fixtures by league
     window_by_league: dict = {}
     for f in window_fixtures:
         lc = f.league_code
@@ -499,17 +623,9 @@ def fixtures_debug(
             window_by_league[lc] = []
         window_by_league[lc].append(f.match_date.isoformat())
 
-    # Check which of those have existing predictions
     skipped_by_league: dict = {}
     for f in window_fixtures:
-        existing = db.query(PredictionLog).filter(
-            PredictionLog.league_code == f.league_code,
-            PredictionLog.home_team   == f.home_team,
-            PredictionLog.away_team   == f.away_team,
-            PredictionLog.match_date  == f.match_date,
-            PredictionLog.status.in_(["pending", "hit", "miss"]),
-        ).first()
-        if existing:
+        if _has_existing_prediction(db, f.league_code, f.home_team, f.away_team, f.match_date):
             lc = f.league_code
             skipped_by_league[lc] = skipped_by_league.get(lc, 0) + 1
 
@@ -524,20 +640,13 @@ def fixtures_debug(
     }
 
 
-# ── POST /api/migrate/add-variance-flag ───────────────────────────────────────
+# ── Migration endpoints (kept from original) ─────────────────────────────────
 
 @router.post("/migrate/add-variance-flag")
 def migrate_add_variance_flag(db: Session = Depends(get_db)):
-    """
-    One-time migration: adds variance_flag and calibration_log table to the DB.
-    Safe to run multiple times — skips if columns/tables already exist.
-    """
     from sqlalchemy import text, inspect
-
     results = {}
     inspector = inspect(db.bind)
-
-    # 1. Add variance_flag to prediction_log if missing
     existing_cols = [c["name"] for c in inspector.get_columns("prediction_log")]
     if "variance_flag" not in existing_cols:
         db.execute(text("ALTER TABLE prediction_log ADD COLUMN variance_flag VARCHAR"))
@@ -545,78 +654,52 @@ def migrate_add_variance_flag(db: Session = Depends(get_db)):
         results["variance_flag"] = "added"
     else:
         results["variance_flag"] = "already exists"
-
     if "match_time" not in existing_cols:
         db.execute(text("ALTER TABLE prediction_log ADD COLUMN match_time VARCHAR"))
         db.commit()
         results["match_time"] = "added"
     else:
         results["match_time"] = "already exists"
-
-    # 2. Create calibration_log table if missing
     existing_tables = inspector.get_table_names()
     if "calibration_log" not in existing_tables:
         db.execute(text("""
             CREATE TABLE calibration_log (
-                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 league_code VARCHAR NOT NULL,
-                hit_rate    FLOAT   NOT NULL,
+                hit_rate FLOAT NOT NULL,
                 sample_size INTEGER,
-                applied     BOOLEAN DEFAULT 0,
-                run_at      DATETIME
+                applied BOOLEAN DEFAULT false,
+                run_at TIMESTAMP
             )
         """))
         db.commit()
         results["calibration_log"] = "created"
     else:
         results["calibration_log"] = "already exists"
-
     return {"status": "ok", "migrations": results}
 
 
-# ── POST /api/migrate/add-module-columns ──────────────────────────────────────
-
 @router.post("/migrate/add-module-columns")
 def migrate_add_module_columns(db: Session = Depends(get_db)):
-    """
-    Migration: adds DEG/DET/EPS sensitivity columns to league_configs,
-    and det_nudge / deg_nudge / avg_det / avg_deg columns to team_configs.
-    Safe to run multiple times — skips columns that already exist.
-    """
     from sqlalchemy import text, inspect
-
     results = {}
     inspector = inspect(db.bind)
-
-    # ── league_configs ────────────────────────────────────────────────
     league_cols = [c["name"] for c in inspector.get_columns("league_configs")]
-
-    for col, default in [
-        ("deg_sensitivity", 1.0),
-        ("det_sensitivity", 1.0),
-        ("eps_sensitivity", 1.0),
-    ]:
+    for col, default in [("deg_sensitivity", 1.0), ("det_sensitivity", 1.0), ("eps_sensitivity", 1.0)]:
         if col not in league_cols:
             db.execute(text(f"ALTER TABLE league_configs ADD COLUMN {col} FLOAT DEFAULT {default}"))
             db.commit()
             results[f"league_configs.{col}"] = "added"
         else:
             results[f"league_configs.{col}"] = "already exists"
-
-    # ── team_configs ──────────────────────────────────────────────────
     team_cols = [c["name"] for c in inspector.get_columns("team_configs")]
-
-    for col, default in [
-        ("det_nudge", 0.0),
-        ("deg_nudge", 0.0),
-    ]:
+    for col, default in [("det_nudge", 0.0), ("deg_nudge", 0.0)]:
         if col not in team_cols:
             db.execute(text(f"ALTER TABLE team_configs ADD COLUMN {col} FLOAT DEFAULT {default}"))
             db.commit()
             results[f"team_configs.{col}"] = "added"
         else:
             results[f"team_configs.{col}"] = "already exists"
-
     for col in ["avg_det", "avg_deg"]:
         if col not in team_cols:
             db.execute(text(f"ALTER TABLE team_configs ADD COLUMN {col} FLOAT"))
@@ -624,113 +707,57 @@ def migrate_add_module_columns(db: Session = Depends(get_db)):
             results[f"team_configs.{col}"] = "added"
         else:
             results[f"team_configs.{col}"] = "already exists"
-
     return {"status": "ok", "migrations": results}
 
 
-# ── POST /api/migrate/backfill-variance-flags ─────────────────────────────────
-
 @router.post("/migrate/backfill-variance-flags")
 def backfill_variance_flags(db: Session = Depends(get_db)):
-    """
-    One-time backfill: stamps variance_flag on all existing PredictionLog rows
-    that currently have variance_flag = NULL, using the latest CalibrationLog
-    hit rate for each league.
-    """
     from sqlalchemy import text
-
-    # Get latest hit rate per league from calibration_log
     rows = db.execute(text("""
-        SELECT league_code, hit_rate
-        FROM calibration_log
-        WHERE id IN (
-            SELECT MAX(id) FROM calibration_log GROUP BY league_code
-        )
+        SELECT league_code, hit_rate FROM calibration_log
+        WHERE id IN (SELECT MAX(id) FROM calibration_log GROUP BY league_code)
     """)).fetchall()
-
     if not rows:
-        return {"status": "no_calibration_data", "message": "Run POST /api/calibrate/all first, then backfill."}
-
+        return {"status": "no_calibration_data"}
     league_flags = {}
     for league_code, hit_rate in rows:
-        if hit_rate >= 80:
-            league_flags[league_code] = "green"
-        elif hit_rate >= 70:
-            league_flags[league_code] = "orange"
-        else:
-            league_flags[league_code] = "red"
-
+        league_flags[league_code] = "green" if hit_rate >= 80 else "orange" if hit_rate >= 70 else "red"
     updated = 0
     for league_code, flag in league_flags.items():
         result = db.execute(text("""
-            UPDATE prediction_log
-            SET variance_flag = :flag
-            WHERE league_code = :league_code
-            AND (variance_flag IS NULL OR variance_flag = '')
-        """), {"flag": flag, "league_code": league_code})
+            UPDATE prediction_log SET variance_flag = :flag
+            WHERE league_code = :lc AND (variance_flag IS NULL OR variance_flag = '')
+        """), {"flag": flag, "lc": league_code})
         updated += result.rowcount
-
     db.commit()
+    return {"status": "ok", "rows_updated": updated, "flags": league_flags}
 
-    return {
-        "status":        "ok",
-        "leagues_found": len(league_flags),
-        "rows_updated":  updated,
-        "flags_applied": league_flags,
-    }
-
-
-# ── POST /api/patch-prediction-metadata ───────────────────────────────────────
 
 @router.post("/patch-prediction-metadata")
 def patch_prediction_metadata(
-    league_code: Optional[str] = Query(None, description="Limit to one league, or omit for all"),
+    league_code: Optional[str] = Query(None),
     db: Session = Depends(get_db),
 ):
-    """
-    Patches match_time and variance_flag on existing PredictionLog rows
-    WITHOUT re-running the model or touching market/confidence/corridor/lean.
-
-    Use this instead of force=true when you only need to backfill metadata.
-    """
     q = db.query(PredictionLog)
     if league_code:
         q = q.filter(PredictionLog.league_code == league_code)
     predictions = q.all()
-
-    time_updated  = 0
-    flag_updated  = 0
-
+    time_updated = flag_updated = 0
     for pred in predictions:
-        changed = False
-
-        # Patch match_time from FBrefFixture if missing
         if not getattr(pred, "match_time", None):
             fix = db.query(FBrefFixture).filter(
                 FBrefFixture.league_code == pred.league_code,
-                FBrefFixture.home_team   == pred.home_team,
-                FBrefFixture.away_team   == pred.away_team,
-                FBrefFixture.match_date  == pred.match_date,
+                FBrefFixture.home_team == pred.home_team,
+                FBrefFixture.away_team == pred.away_team,
+                FBrefFixture.match_date == pred.match_date,
             ).first()
             if fix and getattr(fix, "match_time", None):
                 pred.match_time = fix.match_time
                 time_updated += 1
-                changed = True
-
-        # Patch variance_flag if missing
         if not getattr(pred, "variance_flag", None):
             flag = _get_variance_flag(pred.league_code, db)
             if flag:
                 pred.variance_flag = flag
                 flag_updated += 1
-                changed = True
-
     db.commit()
-
-    return {
-        "status":        "ok",
-        "league_code":   league_code or "all",
-        "rows_scanned":  len(predictions),
-        "time_updated":  time_updated,
-        "flag_updated":  flag_updated,
-    }
+    return {"status": "ok", "time_updated": time_updated, "flag_updated": flag_updated}

@@ -13,12 +13,14 @@ class Team(Base):
 
     aliases = relationship("TeamAlias", back_populates="team", cascade="all, delete-orphan")
 
-
 class TeamAlias(Base):
     __tablename__ = "team_aliases"
 
     id = Column(Integer, primary_key=True)
-    team_id = Column(Integer, ForeignKey("teams.id", ondelete="CASCADE"))
-    alias_key = Column(String, index=True, nullable=False)  # normalized alias
+    team_id = Column(Integer, ForeignKey("teams.id"))
+    alias_key = Column(String, nullable=False, unique=True)
 
     team = relationship("Team", back_populates="aliases")
+
+    def __str__(self):
+        return self.alias_key   # or any other descriptive field

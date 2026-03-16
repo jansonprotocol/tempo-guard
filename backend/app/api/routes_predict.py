@@ -7,6 +7,7 @@ from app.database.db import SessionLocal
 from sqlalchemy.orm import Session
 from app.engine.types import MatchRequest
 from app.services.predict import predict_match
+from app.services.resolve_team import resolve_team_name
 
 router = APIRouter()
 
@@ -32,7 +33,14 @@ def get_db():
 @router.post("/predict")
 def post_predict(body: PredictBody, db: Session = Depends(get_db)):
     try:
-        req = MatchRequest(**body.model_dump())
+        # Resolve team names through Team/Alias tables
+        home_resolved = resolve_team_name(db, body.home_team, body.league_code)
+        away_resolved = resolve_team_name(db, body.away_team, body.league_code)
+
+        data = body.model_dump()
+        data["home_team"] = home_resolved
+        data["away_team"] = away_resolved
+        req = MatchRequest(**data)
         pred = predict_match(db, req)
 
         # v2.0: Generate performance tags (graceful — returns empty if no player data)
@@ -53,7 +61,7 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
                 pass
 
             perf_tags = generate_match_tags(
-                db, body.league_code, body.home_team, body.away_team, form_deltas
+                db, body.league_code, home_resolved, away_resolved, form_deltas
             )
         except Exception:
             pass
