@@ -52,7 +52,39 @@ def resolve_and_learn(db: Session, raw_name: str, league_code: str) -> str:
             return master_team.team_key
 
     return normalized_key
+
+
+def resolve_team_name(db: Session, raw_name: str) -> str:
+    """
+    Resolve a raw team name to its canonical team_key using the alias system.
+    Returns the canonical key, or the normalized raw name if not found.
+    This is used by form_delta.py to unify team names when computing standings.
+    """
+    if not raw_name:
+        return raw_name
+        
+    normalized = normalize_team(raw_name)
     
+    # Check if this normalized key is an alias
+    alias = db.query(TeamAlias).filter(
+        TeamAlias.alias_key == normalized
+    ).first()
+    
+    if alias and alias.team:
+        return alias.team.team_key
+    
+    # Check if it's a direct team key
+    team = db.query(Team).filter(
+        Team.team_key == normalized
+    ).first()
+    
+    if team:
+        return team.team_key
+    
+    # Not found in alias system, return normalized raw name
+    return normalized
+
+
 def resolve_league_for_match(db: Session, home_team: str, away_team: str) -> dict:
     """
     Determines the correct league_code for a matchup between two teams.
@@ -98,3 +130,41 @@ def resolve_league_for_match(db: Session, home_team: str, away_team: str) -> dic
         "league_code": None, 
         "suggestions": suggestions
     }
+
+
+# Helper functions needed for resolve_league_for_match
+def _find_team_ids_by_key_or_alias(db: Session, team_key: str) -> List[Team]:
+    """Find teams matching a key either directly or via alias."""
+    # Direct match
+    teams = db.query(Team).filter(Team.team_key == team_key).all()
+    if teams:
+        return teams
+    
+    # Via alias
+    alias = db.query(TeamAlias).filter(TeamAlias.alias_key == team_key).first()
+    if alias:
+        return [alias.team]
+    
+    return []
+
+
+def _fuzzy_candidates(db: Session, team_key: str, limit: int = 5) -> List[dict]:
+    """Return fuzzy matching suggestions for an unresolved team."""
+    all_teams = db.query(Team).all()
+    choices = {t.team_key: t for t in all_teams}
+    
+    matches = process.extract(
+        team_key, 
+        list(choices.keys()), 
+        scorer=fuzz.WRatio,
+        limit=limit
+    )
+    
+    return [
+        {
+            "team_key": m[0],
+            "score": m[1],
+            "league_code": choices[m[0]].league_code
+        }
+        for m in matches if m[1] >= 70
+    ]
