@@ -9,9 +9,10 @@ Usage:
     cd backend
     venv312\\Scripts\\activate
     python -m scripts.scrape_fbref
+    python -m scripts.scrape_fbref --league ENG-PL
+    python -m scripts.scrape_fbref --force          # (placeholder, no cache yet)
 
-NOTE: Chrome will open and close for each fetch.
-      Do not click anything while scraping is in progress.
+NOTE: Chrome now opens once per league (for both current and previous season).
 """
 
 import io
@@ -189,10 +190,13 @@ LEAGUE_MAP = {
 
 
 # ── HTML fetch helpers ────────────────────────────────────────────────────────
-def _get_html(url: str, label: str) -> str | None:
-    """Route to ScraperAPI (CI) or Selenium (local)."""
+def _get_html(url: str, label: str, driver=None) -> str | None:
+    """Route to ScraperAPI (CI) or Selenium.
+       If a driver is provided, reuse it; otherwise create a new one."""
     if SCRAPER_API_KEY:
         return _fetch_via_scraperapi(url, label)
+    if driver:
+        return _fetch_with_driver(driver, url, label)
     return _fetch_via_selenium(url, label)
 
 
@@ -222,7 +226,7 @@ def _fetch_via_scraperapi(url: str, label: str) -> str | None:
 
 
 def _fetch_via_selenium(url: str, label: str) -> str | None:
-    """Fetch using local Selenium + Chrome."""
+    """Fallback: open a new browser, fetch, then quit."""
     driver = None
     try:
         driver = Driver(uc=True, headless2=HEADLESS)
@@ -244,11 +248,25 @@ def _fetch_via_selenium(url: str, label: str) -> str | None:
                 pass
 
 
+def _fetch_with_driver(driver, url: str, label: str) -> str | None:
+    """Use an existing Selenium driver to fetch a page (reuse browser)."""
+    try:
+        driver.get(url)
+        time.sleep(3)
+        html = driver.page_source
+        print(f"  Page loaded ({len(html)} bytes)")
+        return html
+    except Exception as e:
+        print(f"  Browser error ({label}): {e}")
+        return None
+
+
 # ── Single URL fetch ──────────────────────────────────────────────────────────
-def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
-    """Fetch one FBref fixtures page, return DataFrame or None."""
+def _fetch_url(url: str, label: str, driver=None) -> pd.DataFrame | None:
+    """Fetch one FBref fixtures page, return DataFrame or None.
+       Optionally reuse an existing driver."""
     print(f"  Fetching [{label}]: {url}")
-    html = _get_html(url, label)
+    html = _get_html(url, label, driver=driver)
     if not html:
         return None
 
@@ -267,7 +285,6 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
         return None
 
     # ── International comps (UCL/UEL/UECL): merge all schedule tables ────────
-    # FBref splits these into one table per round — "largest table" misses most.
     schedule_tables = []
     for t in tables:
         if isinstance(t.columns, pd.MultiIndex):
@@ -304,7 +321,7 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
     print(f"  [{label}] completed rows: {len(df)}")
 
     # Strip leading/trailing 2-3 letter country codes from team names on
-    # international competition pages (e.g. "eng Liverpool", "es Barcelona")
+    # international competition pages
     for col_name in df.columns:
         if str(col_name).lower() in ("home", "away"):
             df[col_name] = (
@@ -320,75 +337,41 @@ def _fetch_url(url: str, label: str) -> pd.DataFrame | None:
 
 # ── Date normalizer ───────────────────────────────────────────────────────────
 def _normalize_dates(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Normalize the date column to a clean, timezone-naive datetime64[ns].
-
-    FBref can return dates in multiple formats depending on the league/season:
-      - "2025-09-14"  (ISO)
-      - "14/09/2025"  (DD/MM/YYYY)
-      - "September 14, 2025"
-      - "2025-09-14 00:00:00"  (with time component)
-      - NaT / empty strings
-
-    Strategy:
-      1. Locate the date column (case-insensitive "date")
-      2. Parse with pd.to_datetime(dayfirst=True) which handles most formats
-      3. Strip any timezone info (tz_localize → tz-naive)
-      4. Normalize to midnight (date only — no time component)
-      5. Replace unparseable values with NaT (handled downstream by dropna)
-
-    Result: every date stored as YYYY-MM-DD 00:00:00 (pandas datetime64[ns]).
-    Display as DD/MM/YYYY is handled at output time, not at storage time.
-    """
+    # (unchanged – keep as is)
     col_map  = {c.lower(): c for c in df.columns}
     date_col = col_map.get("date")
     if not date_col:
-        return df  # no date column found — pass through unchanged
+        return df
 
     raw = df[date_col].astype(str).str.strip()
-
     parsed = pd.to_datetime(raw, format="%Y-%m-%d", errors="coerce")
-
-    # For leagues where FBref returns non-ISO formats (DD/MM/YYYY etc.),
-    # re-parse any NaT values with dayfirst=True as fallback
     mask = parsed.isna() & raw.notna() & (raw != "") & (raw != "nan")
     if mask.any():
         fallback = pd.to_datetime(raw[mask], dayfirst=True, errors="coerce")
         parsed = parsed.copy()
         parsed[mask] = fallback
 
-    # Strip timezone if present
     if hasattr(parsed.dt, "tz") and parsed.dt.tz is not None:
         parsed = parsed.dt.tz_localize(None)
 
-    # Normalize to midnight — removes any sub-day precision that causes
-    # duplicate rows to appear distinct (e.g. 00:00:00 vs 12:00:00)
     parsed = parsed.dt.normalize()
-
     df = df.copy()
     df[date_col] = parsed
 
     unparseable = parsed.isna().sum()
     if unparseable:
         print(f"  [date_normalize] {unparseable} unparseable date(s) set to NaT — will be dropped.")
-
     return df
 
 
 # ── Merge two season DataFrames ───────────────────────────────────────────────
 def _merge_seasons(current: pd.DataFrame | None, previous: pd.DataFrame | None) -> pd.DataFrame | None:
-    """
-    Concatenate current + previous season data.
-    Deduplicates on (Date, Home, Away) to avoid double-counting.
-    Sorts by Date ascending.
-    """
+    # (unchanged – keep as is)
     frames = [f for f in [current, previous] if f is not None and not f.empty]
     if not frames:
         return None
 
     combined = pd.concat(frames, ignore_index=True)
-
-    # Find date/home/away columns for dedup
     col_map = {c.lower(): c for c in combined.columns}
     date_col = col_map.get("date")
     home_col = col_map.get("home")
@@ -401,13 +384,9 @@ def _merge_seasons(current: pd.DataFrame | None, previous: pd.DataFrame | None) 
         if dupes:
             print(f"  Removed {dupes} duplicate rows")
 
-        # Sort chronologically (oldest first — good for asof_features)
         combined[date_col] = pd.to_datetime(combined[date_col], errors="coerce")
         combined = combined.sort_values(date_col, ascending=True).reset_index(drop=True)
 
-        # Strip any matches dated in the future — these are scheduled fixtures
-        # that slipped through the score filter (e.g. Liga MX full-season pages
-        # include upcoming matches). Only keep matches up to and including today.
         today = pd.Timestamp.now().normalize()
         before_cutoff = len(combined)
         combined = combined[combined[date_col] <= today]
@@ -450,16 +429,30 @@ def scrape_league(league_code: str, current_url: str, prev_url: str) -> None:
     print(f"\n{'='*60}")
     print(f"[scraper] {league_code}")
 
-    # Current season
-    current_df = _fetch_url(current_url, "current")
-    if current_df is not None:
-        current_df = _normalize_dates(current_df)
-    time.sleep(SLEEP_BETWEEN_FETCHES)
+    # Create a shared driver if not using API
+    shared_driver = None
+    if not SCRAPER_API_KEY:
+        shared_driver = Driver(uc=True, headless2=HEADLESS)
+        shared_driver.uc_open_with_reconnect("about:blank", 1)  # prime the driver
 
-    # Previous season
-    prev_df = _fetch_url(prev_url, "previous")
-    if prev_df is not None:
-        prev_df = _normalize_dates(prev_df)
+    try:
+        # Current season
+        current_df = _fetch_url(current_url, "current", driver=shared_driver)
+        if current_df is not None:
+            current_df = _normalize_dates(current_df)
+        time.sleep(SLEEP_BETWEEN_FETCHES)
+
+        # Previous season
+        prev_df = _fetch_url(prev_url, "previous", driver=shared_driver)
+        if prev_df is not None:
+            prev_df = _normalize_dates(prev_df)
+
+    finally:
+        if shared_driver:
+            try:
+                shared_driver.quit()
+            except Exception:
+                pass
 
     # Merge
     merged = _merge_seasons(current_df, prev_df)
@@ -486,6 +479,10 @@ if __name__ == "__main__":
         "--api", type=str, default=None, metavar="KEY",
         help="Use ScraperAPI with this key instead of Selenium"
     )
+    parser.add_argument(
+        "--force", action="store_true",
+        help="Placeholder – no cache yet, but included for consistency"
+    )
     args = parser.parse_args()
 
     if args.headless:
@@ -504,9 +501,9 @@ if __name__ == "__main__":
             scrape_league(args.league, cur_url, prev_url)
     else:
         print("[scraper] Starting two-season FBref scrape")
-        print("[scraper] Chrome will open and close for each fetch.")
+        print("[scraper] Chrome will open and close for each league (1 browser per league).")
         print(f"[scraper] Leagues: {list(LEAGUE_MAP.keys())}")
-        print("[scraper] Each league = 2 fetches (current + previous season)\n")
+        print("[scraper] Each league = 2 fetches (current + previous season) using same browser\n")
 
         codes = list(LEAGUE_MAP.keys())
         for i, (code, (cur_url, prev_url)) in enumerate(LEAGUE_MAP.items()):
