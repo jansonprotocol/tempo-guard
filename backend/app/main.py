@@ -57,6 +57,8 @@ _COLUMN_MIGRATIONS = [
     ("league_configs", "deg_sensitivity", "FLOAT",  "1.0"),
     ("league_configs", "det_sensitivity", "FLOAT",  "1.0"),
     ("league_configs", "eps_sensitivity", "FLOAT",  "1.0"),
+    # NEW: form delta sensitivity multiplier
+    ("league_configs", "form_delta_sensitivity", "FLOAT", "0.0"),
     # league_configs — display fields (older, kept for safety)
     ("league_configs", "display_name",   "VARCHAR", "''"),
     ("league_configs", "country_code",   "VARCHAR", "''"),
