@@ -630,6 +630,45 @@ def form_delta_all(
 
     return {"leagues": results, "total_leagues": len(results)}
 
+@router.post("/player-power/reindex")
+def reindex_player_power(
+    league_code: str = Query(None, description="Single league code, or omit for all leagues"),
+    season: str = Query(None, description="Season label (e.g. '2025-2026' or '2026'). Auto-detected if omitted."),
+    db: Session = Depends(get_db)
+):
+    """
+    Manually trigger player power index recomputation for one or all leagues.
+    Updates TeamConfig (squad_power, atk_power, etc.) and player power_index.
+    """
+    from app.services.player_index import compute_league_power
+    from scripts.scrape_players import SEASON_MAP, SCHEDULE_URLS
+
+    if league_code:
+        leagues = [league_code]
+    else:
+        # All leagues that have a snapshot (or you could use SCHEDULE_URLS)
+        snapshots = db.query(FBrefSnapshot.league_code).distinct().all()
+        leagues = [s[0] for s in snapshots]
+
+    results = []
+    for lc in leagues:
+        try:
+            # Determine season if not provided
+            if not season:
+                season = SEASON_MAP.get(lc, "2025-2026")
+            result = compute_league_power(db, lc, season)
+            results.append({
+                "league_code": lc,
+                "players_indexed": result.get("players_indexed", 0),
+                "teams_updated": result.get("teams_updated", 0)
+            })
+        except Exception as e:
+            results.append({
+                "league_code": lc,
+                "error": str(e)
+            })
+
+    return {"reindex_results": results}
 
 @router.get("/player-power/match-tags")
 def match_performance_tags(
