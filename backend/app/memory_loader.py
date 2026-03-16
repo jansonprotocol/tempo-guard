@@ -106,7 +106,7 @@ def load_teams(db: Session):
             alias_key = normalize_team(alias_raw)
             if not alias_key or alias_key == team_key:
                 return
-            # Check if alias already exists for ANY team
+            # Check if alias already exists for ANY team (including those pending deletion)
             existing_alias = db.query(TeamAlias).filter_by(alias_key=alias_key).first()
             if existing_alias:
                 print(f"[memory_loader] Alias '{alias_key}' already exists for team {existing_alias.team_id}, skipping.")
@@ -132,8 +132,12 @@ def load_teams(db: Session):
             if entry.get("country") is not None:
                 existing.country = (entry.get("country") or "").strip()
 
-            # Replace aliases: clear existing ones, then add new ones (with uniqueness check)
-            existing.aliases.clear()
+            # ---- FIX: Delete existing aliases at the database level first ----
+            db.query(TeamAlias).filter(TeamAlias.team_id == existing.id).delete()
+            db.flush()  # Make the delete visible to subsequent queries
+            # -----------------------------------------------------------------
+
+            # Now add new aliases (uniqueness check will see the database after delete)
             for alias in entry.get("aliases", []):
                 add_alias_if_unique(existing, alias)
             updated += 1
