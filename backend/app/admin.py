@@ -21,25 +21,7 @@ class StatsFetchCache(Base):
 
 
 # --- Admin Views ---
-class LeagueConfigAdmin(ModelView, model=LeagueConfig):
-    name = "League Config"
-    name_plural = "League Configs"
-    icon = "fa-solid fa-globe"
-    column_list = [LeagueConfig.id, LeagueConfig.league_code, LeagueConfig.description,
-                   LeagueConfig.base_over_bias, LeagueConfig.base_under_bias,
-                   LeagueConfig.tempo_factor, LeagueConfig.strength_coefficient]
-    column_searchable_list = [LeagueConfig.league_code, LeagueConfig.description]
-    column_default_sort = ("league_code", False)
-    form_columns = ["league_code", "description", "display_name", "country_code",
-                    "base_over_bias", "base_under_bias", "tempo_factor",
-                    "safety_mode", "aggression_level", "volatility",
-                    "deg_sensitivity", "det_sensitivity", "eps_sensitivity",
-                    "strength_coefficient"]
-    can_create = True
-    can_edit = True
-    can_delete = False
-    can_view_details = True
-    
+   
 class LeagueConfigAdmin(ModelView, model=LeagueConfig):
     # ... existing code ...
     column_list = [LeagueConfig.id, LeagueConfig.league_code, LeagueConfig.description,
