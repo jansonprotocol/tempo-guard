@@ -231,6 +231,8 @@ def _flatten_columns(df: pd.DataFrame) -> pd.DataFrame:
 
 def _find_col(cols: list[str], *patterns: str) -> str | None:
     """Find first column whose name contains any of the patterns (case-insensitive)."""
+    # Ensure all column names are strings
+    cols = [str(c) if not isinstance(c, str) else c for c in cols]
     cols_lower = [(c, c.lower()) for c in cols]
     for pattern in patterns:
         p = pattern.lower()
@@ -242,6 +244,8 @@ def _find_col(cols: list[str], *patterns: str) -> str | None:
 
 def _find_col_exact(cols: list[str], *patterns: str) -> str | None:
     """Find column where the last word matches the pattern exactly."""
+    # Ensure all column names are strings
+    cols = [str(c) if not isinstance(c, str) else c for c in cols]
     cols_parts = [(c, c.lower().split()) for c in cols]
     for pattern in patterns:
         p = pattern.lower()
