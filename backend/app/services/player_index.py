@@ -5,6 +5,7 @@ ATHENA v2.0 — Player Power Index Engine.
 Converts raw per-90 stats into a 0–100 power index per player,
 then aggregates into zonal team scores (ATK/MID/DEF/GK).
 """
+from app.services.resolve_team import resolve_team_name
 from __future__ import annotations
 
 import json
