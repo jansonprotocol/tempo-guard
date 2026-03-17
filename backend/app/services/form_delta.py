@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 from app.database.models_fbref import FBrefSnapshot
 from app.models.team_config import TeamConfig
 from app.models.league_config import LeagueConfig
-from app.models.team import Team  # ADDED for display_name lookup
+from app.models.team import Team  # for display_name lookup
 from app.util.team_resolver import batch_resolve_team_names
 
 
@@ -43,25 +43,25 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
     Compute league standings from match results using BATCH RESOLUTION
     to unify team names with maximum performance.
     """
-    # Step 1: Collect ALL unique team names from the dataframe in one pass
+    # Collect ALL unique team names from the dataframe in one pass
     all_raw_names: Set[str] = set()
     for _, row in df.iterrows():
         all_raw_names.add(str(row[home_col]).strip())
         all_raw_names.add(str(row[away_col]).strip())
-    
-    # Step 2: Batch resolve ALL names with a single set of database queries
+
+    # Batch resolve ALL names with a single set of database queries
     resolved_names = batch_resolve_team_names(db, list(all_raw_names))
-    
-    # Step 3: Process all matches with pre-resolved names
+
+    # Process all matches with pre-resolved names
     teams: Dict[str, dict] = {}
 
     for _, row in df.iterrows():
         ht_raw = str(row[home_col]).strip()
         at_raw = str(row[away_col]).strip()
-        
+
         ht = resolved_names.get(ht_raw, ht_raw)
         at = resolved_names.get(at_raw, at_raw)
-        
+
         hg = int(row["hg"])
         ag = int(row["ag"])
 
@@ -69,7 +69,7 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
         for team in [ht, at]:
             if team not in teams:
                 teams[team] = {
-                    "team_key": team,  # keep for lookup
+                    "team_key": team,
                     "raw_names": set(),
                     "p": 0, "w": 0, "d": 0, "l": 0,
                     "gf": 0, "ga": 0, "pts": 0
@@ -187,7 +187,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     prev_pos_map = {}
     if prev_df is not None and not prev_df.empty and len(prev_df) >= 30:
         prev_standings = _compute_standings(db, prev_df, home_col, away_col)
-        prev_pos_map = {t["team_key"]: t["pos"] for t in prev_standings}  # use team_key
+        prev_pos_map = {t["team_key"]: t["pos"] for t in prev_standings}
 
     # Load team power data
     team_configs = {
@@ -233,7 +233,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
             tc = team_configs.get(team_key)
             if tc and tc.squad_power is not None:
                 # We'll compute power ranking later
-                exp = None  # Will fill after power ranking
+                exp = None
             else:
                 exp = standing["pos"]  # fallback to current position
         team_expected[team_key] = exp
@@ -251,7 +251,10 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     # Fill missing expected positions
     for team_key in list(team_expected.keys()):
         if team_expected[team_key] is None:
-            team_expected[team_key] = power_pos_map.get(team_key, current_standings_dict[team_key]["pos"])
+            # Use power rank if available, else current position
+            team_expected[team_key] = power_pos_map.get(team_key, next(
+                (s["pos"] for s in current_standings if s["team_key"] == team_key), n_teams
+            ))
 
     # Clamp to league size
     for team_key in team_expected:
@@ -290,7 +293,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     for team_key, standing in current_by_key.items():
         actual_pos = standing["pos"]
         expected_pos = team_expected.get(team_key, actual_pos)
-        delta = expected_pos - actual_pos
+        delta = expected_pos - actual_pos  # positive = overperforming
 
         if delta >= 3:
             status = "overperforming"
@@ -318,11 +321,11 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
 
             if gap >= 3:
                 verdict = "above_tier"
-                if not primary_strength or gap > worst_gap:  # track strongest positive gap
+                if not primary_strength or gap > worst_gap:
                     primary_strength = zl.upper()
             elif gap <= -3:
                 verdict = "below_tier"
-                if gap < worst_gap:  # track most negative gap
+                if gap < worst_gap:
                     worst_gap = gap
                     primary_weakness = zl.upper()
             else:
@@ -337,7 +340,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
 
         results.append({
             "team": team_key,
-            "display_name": teams_db.get(team_key, team_key),  # ADDED display_name
+            "display_name": teams_db.get(team_key, team_key),
             "actual_pos": actual_pos,
             "expected_pos": expected_pos,
             "form_delta": delta,
@@ -351,7 +354,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
             "primary_strength": primary_strength if delta > 0 else None,
         })
 
-    # Sort by form_delta descending
+    # Sort by form_delta descending (most overperforming first)
     results.sort(key=lambda t: t["form_delta"], reverse=True)
 
     return {
