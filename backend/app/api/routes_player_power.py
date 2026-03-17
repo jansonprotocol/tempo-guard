@@ -53,7 +53,10 @@ def get_db():
     finally:
         db.close()
 
-
+@router.get("/debug/season-map")
+def debug_season_map():
+    return SEASON_MAP
+  
 @router.get("/player-power/status")
 def player_power_status(
     league_code: Optional[str] = Query(None, description="Filter to a single league"),
