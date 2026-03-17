@@ -1,4 +1,5 @@
 # backend/app/api/routes_player_power.py
+# backend/app/api/routes_player_power.py
 """
 ATHENA v2.0 — Player Power Calibration Tuning Endpoints.
 ...
@@ -8,21 +9,33 @@ import sys
 import os
 from pathlib import Path
 
-# Compute the absolute path to the scripts folder
-# Current file: /app/app/api/routes_player_power.py
-# Go up three levels to /app, then into backend/scripts
-scripts_path = Path(__file__).resolve().parent.parent.parent / "backend" / "scripts"
-if not scripts_path.exists():
+# Try multiple possible locations for the scripts folder
+current_file = Path(__file__).resolve()
+possible_paths = [
+    current_file.parent.parent.parent / "scripts",          # /app/scripts
+    current_file.parent.parent.parent / "backend" / "scripts",  # /app/backend/scripts
+    current_file.parent.parent / "scripts",                 # /app/app/scripts (if scripts inside app)
+    Path("/app/scripts"),                                   # absolute just in case
+    Path("/app/backend/scripts"),
+]
+
+scripts_path = None
+for p in possible_paths:
+    if p.exists():
+        scripts_path = p
+        break
+
+if scripts_path is None:
     raise RuntimeError(
-        f"Scripts folder not found at {scripts_path}. "
-        "Make sure the 'scripts' directory exists and is deployed."
+        "Cannot locate scripts folder. Tried:\n" + "\n".join(f"  {p}" for p in possible_paths)
     )
+
 sys.path.insert(0, str(scripts_path))
 
 # Now import scrape_players and get its constants
 import scrape_players
 SEASON_MAP = scrape_players.SEASON_MAP
-SCHEDULE_URLS = scrape_players.SCHEDULE_URLS  # Not used in this file but kept for completeness
+SCHEDULE_URLS = scrape_players.SCHEDULE_URLS  # Not used but kept for completeness
 
 import io
 from typing import Optional
