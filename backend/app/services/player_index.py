@@ -138,9 +138,10 @@ def compute_league_power(
         player = players.get(row.player_id)
         if not player or not player.current_team:
             continue
-        team = player.current_team
+        # Resolve the raw team name to its canonical key
+        resolved_team = resolve_team_name(db, player.current_team, league_code)
         pos = player.position or "MID"
-        team_groups.setdefault(team, {}).setdefault(pos, []).append((row, player))
+        team_groups.setdefault(resolved_team, {}).setdefault(pos, []).append((row, player))
 
     team_results = {}
 
@@ -175,7 +176,7 @@ def compute_league_power(
             "gk_power":  zonal_scores.get("GK"),
         }
 
-        # Write to TeamConfig
+        # Write to TeamConfig (use resolved team name)
         tc = db.query(TeamConfig).filter_by(league_code=league_code, team=team).first()
         if tc:
             tc.squad_power = squad_power
@@ -183,8 +184,20 @@ def compute_league_power(
             tc.mid_power   = zonal_scores.get("MID")
             tc.def_power   = zonal_scores.get("DEF")
             tc.gk_power    = zonal_scores.get("GK")
+        else:
+            # Create if not exists
+            tc = TeamConfig(
+                league_code=league_code,
+                team=team,
+                squad_power=squad_power,
+                atk_power=zonal_scores.get("FWD"),
+                mid_power=zonal_scores.get("MID"),
+                def_power=zonal_scores.get("DEF"),
+                gk_power=zonal_scores.get("GK"),
+            )
+            db.add(tc)
 
-        # Write SquadSnapshot zonal scores
+        # Write SquadSnapshot zonal scores (use resolved team name)
         if write_snapshots:
             today = date.today()
             snap = db.query(SquadSnapshot).filter_by(
@@ -196,6 +209,19 @@ def compute_league_power(
                 snap.mid_power   = zonal_scores.get("MID")
                 snap.def_power   = zonal_scores.get("DEF")
                 snap.gk_power    = zonal_scores.get("GK")
+            else:
+                snap = SquadSnapshot(
+                    team=team,
+                    league_code=league_code,
+                    snapshot_date=today,
+                    squad_power=squad_power,
+                    atk_power=zonal_scores.get("FWD"),
+                    mid_power=zonal_scores.get("MID"),
+                    def_power=zonal_scores.get("DEF"),
+                    gk_power=zonal_scores.get("GK"),
+                    player_ids="[]"  # empty list, can be filled later
+                )
+                db.add(snap)
 
     # ── Performance ratings (player vs team average) ─────────────────
     _apply_performance_ratings(db, league_code, qualified, players, team_results)
@@ -210,7 +236,6 @@ def compute_league_power(
         "teams_updated": len(team_results),
         "teams": team_results,
     }
-
 
 def _apply_performance_ratings(
     db: Session,
