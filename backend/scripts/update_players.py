@@ -41,7 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.database.db import SessionLocal
 from app.database.models_predictions import FBrefFixture
-
+from app.core.constants import SEASON_MAP, SCHEDULE_URLS
 
 def get_affected_leagues(days: int = 3) -> dict[str, set[str]]:
     """
