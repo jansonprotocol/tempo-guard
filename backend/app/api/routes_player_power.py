@@ -639,7 +639,7 @@ def form_delta_all(
 @router.post("/player-power/reindex")
 def reindex_player_power(
     league_code: str = Query(None, description="Single league code, or omit for all leagues"),
-    season: str = Query(None, description="Season label (e.g. '2025-2026' or '2026'). Auto-detected if omitted."),
+    season_override: str = Query(None, description="Season label (e.g. '2025-2026' or '2026'). Auto-detected if omitted."),
     db: Session = Depends(get_db)
 ):
     """
@@ -657,8 +657,12 @@ def reindex_player_power(
     results = []
     for lc in leagues:
         try:
-            # Determine season if not provided
-            if not season:
+            # Determine season for this league
+            if season_override is not None:
+                # If a season override is provided, use it for all leagues
+                season = season_override
+            else:
+                # Auto-detect based on league code
                 season = SEASON_MAP.get(lc, "2025-2026")
             result = compute_league_power(db, lc, season)
             results.append({
