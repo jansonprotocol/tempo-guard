@@ -1,41 +1,25 @@
 # backend/app/api/routes_player_power.py
-# backend/app/api/routes_player_power.py
 """
 ATHENA v2.0 — Player Power Calibration Tuning Endpoints.
-...
+
+Two endpoints:
+  GET /api/player-power/status
+    Reports current player data coverage per league:
+    how many players, teams with squad_power, snapshot count.
+
+  GET /api/player-power/evaluate
+    Runs an A/B comparison for a league:
+      A) Calibration WITHOUT player power (v1 behaviour)
+      B) Calibration WITH player power at configurable blend weight
+    Reports hit rate difference, identifies which matches flipped,
+    and suggests optimal blend weight.
+
+This is the Session 11 tuning tool — run it AFTER:
+  1. scrape_players has populated PlayerSeasonStats
+  2. player_index.py has computed power indices
+  3. At least one SquadSnapshot exists per team
 """
 from __future__ import annotations
-import sys
-import os
-from pathlib import Path
-
-# Try multiple possible locations for the scripts folder
-current_file = Path(__file__).resolve()
-possible_paths = [
-    current_file.parent.parent.parent / "scripts",          # /app/scripts
-    current_file.parent.parent.parent / "backend" / "scripts",  # /app/backend/scripts
-    current_file.parent.parent / "scripts",                 # /app/app/scripts (if scripts inside app)
-    Path("/app/scripts"),                                   # absolute just in case
-    Path("/app/backend/scripts"),
-]
-
-scripts_path = None
-for p in possible_paths:
-    if p.exists():
-        scripts_path = p
-        break
-
-if scripts_path is None:
-    raise RuntimeError(
-        "Cannot locate scripts folder. Tried:\n" + "\n".join(f"  {p}" for p in possible_paths)
-    )
-
-sys.path.insert(0, str(scripts_path))
-
-# Now import scrape_players and get its constants
-import scrape_players
-SEASON_MAP = scrape_players.SEASON_MAP
-SCHEDULE_URLS = scrape_players.SCHEDULE_URLS  # Not used but kept for completeness
 
 import io
 from typing import Optional
@@ -57,6 +41,7 @@ from app.services.player_power_backtest import (
     has_any_snapshots,
 )
 from app.util.asian_lines import evaluate_market, hit_weight
+from app.core.constants import SEASON_MAP  # <-- import from shared constants
 
 router = APIRouter()
 
