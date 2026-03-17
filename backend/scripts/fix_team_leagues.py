@@ -8,6 +8,11 @@ For each team, finds the most common league among its players and updates the te
 import sys
 from pathlib import Path
 from collections import Counter
+from dotenv import load_dotenv  # <-- ADDED
+
+# Load environment variables from .env file in the backend folder
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
 
 path_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(path_root))
