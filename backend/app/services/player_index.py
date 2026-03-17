@@ -1,12 +1,5 @@
 # backend/app/services/player_index.py
-"""
-ATHENA v2.0 — Player Power Index Engine.
-
-Converts raw per-90 stats into a 0–100 power index per player,
-then aggregates into zonal team scores (ATK/MID/DEF/GK).
-"""
-from app.services.resolve_team import resolve_team_name
-from __future__ import annotations
+from __future__ import annotations  # <-- MUST BE FIRST
 
 import json
 from datetime import datetime, date
@@ -17,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot
 from app.models.team_config import TeamConfig
+from app.services.resolve_team import resolve_team_name  
 
 
 ROLE_WEIGHTS: dict[str, dict[str, float]] = {
