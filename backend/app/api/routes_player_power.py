@@ -1,44 +1,21 @@
 # backend/app/api/routes_player_power.py
 """
 ATHENA v2.0 — Player Power Calibration Tuning Endpoints.
-
-Two endpoints:
-  GET /api/player-power/status
-    Reports current player data coverage per league:
-    how many players, teams with squad_power, snapshot count.
-
-  GET /api/player-power/evaluate
-    Runs an A/B comparison for a league:
-      A) Calibration WITHOUT player power (v1 behaviour)
-      B) Calibration WITH player power at configurable blend weight
-    Reports hit rate difference, identifies which matches flipped,
-    and suggests optimal blend weight.
-
-This is the Session 11 tuning tool — run it AFTER:
-  1. scrape_players has populated PlayerSeasonStats
-  2. player_index.py has computed power indices
-  3. At least one SquadSnapshot exists per team
+...
 """
 from __future__ import annotations
 import sys
 import os
 from pathlib import Path
 
-# Dynamically locate the scripts folder
-current_file = Path(__file__).resolve()
-# Possible locations: /app/scripts or /app/backend/scripts
-possible_scripts = [
-    current_file.parent.parent.parent / "scripts",      # /app/scripts
-    current_file.parent.parent.parent / "backend" / "scripts",  # /app/backend/scripts
-]
-scripts_path = None
-for p in possible_scripts:
-    if p.exists():
-        scripts_path = p
-        break
-if scripts_path is None:
+# Compute the absolute path to the scripts folder
+# Current file: /app/app/api/routes_player_power.py
+# Go up three levels to /app, then into backend/scripts
+scripts_path = Path(__file__).resolve().parent.parent.parent / "backend" / "scripts"
+if not scripts_path.exists():
     raise RuntimeError(
-        "Cannot locate scripts folder. Checked: " + ", ".join(str(p) for p in possible_scripts)
+        f"Scripts folder not found at {scripts_path}. "
+        "Make sure the 'scripts' directory exists and is deployed."
     )
 sys.path.insert(0, str(scripts_path))
 
