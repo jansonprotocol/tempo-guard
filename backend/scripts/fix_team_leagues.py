@@ -6,7 +6,7 @@ For each team, finds the most common league among its players and updates the te
 """
 
 import sys
-from pathlib Path
+from pathlib import Path
 from collections import Counter
 
 path_root = Path(__file__).resolve().parents[1]
