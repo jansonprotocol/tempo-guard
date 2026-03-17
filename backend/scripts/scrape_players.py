@@ -65,8 +65,7 @@ from app.services.data_providers.fbref_urls import (
     league_stats_url,
     STAT_CATEGORIES,
 )
-
-from app.core.constants import SEASON_MAP, SCHEDULE_URLS
+from app.core.constants import SEASON_MAP, SCHEDULE_URLS  # <-- imported from shared constants
 from app.util.team_resolver import resolve_and_learn
 
 # ── Config ───────────────────────────────────────────────────────────────────
@@ -79,36 +78,6 @@ SCRAPER_API_KEY: str | None = os.environ.get("SCRAPER_API_KEY")
 # Cache settings
 CACHE_TABLE = "stats_fetch_cache"
 CACHE_TTL_HOURS = 24
-
-# ── Current season labels (update these each season) ─────────────────────────
-# Aug–May leagues use "2025-2026", calendar-year leagues use "2026"
-SEASON_MAP = {
-    # Aug–May
-    "ENG-PL": "2025-2026", "ENG-CH": "2025-2026",
-    "ESP-LL": "2025-2026", "ESP-LL2": "2025-2026",
-    "FRA-L1": "2025-2026", "FRA-L2": "2025-2026",
-    "GER-BUN": "2025-2026", "GER-B2": "2025-2026",
-    "ITA-SA": "2025-2026", "ITA-SB": "2025-2026",
-    "NED-ERE": "2025-2026",
-    "TUR-SL": "2025-2026",
-    "SAU-SPL": "2025-2026",
-    "DEN-SL": "2025-2026",
-    "BEL-PL": "2025-2026",
-    "MEX-LMX": "2025-2026",
-    "POL-EK": "2025-2026",
-    "AUT-BL": "2025-2026",
-    "SUI-SL": "2025-2026",
-    "CHI-LP": "2025-2026",
-    "PER-L1": "2025-2026",
-    "POR-LP": "2025-2026",
-    # Calendar year
-    "BRA-SA": "2026", "BRA-SB": "2026",
-    "MLS": "2026",
-    "NOR-EL": "2026", "SWE-AL": "2026",
-    "CHN-CSL": "2026", "JPN-J1": "2026",
-    "COL-PA": "2026",
-}
-
 
 # ── HTML fetch helpers (shared with other scrapers) ──────────────────────────
 
