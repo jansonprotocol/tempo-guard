@@ -7,6 +7,8 @@ Run this once to fix cross‑league contamination.
 
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 path_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(path_root))
