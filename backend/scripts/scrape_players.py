@@ -454,33 +454,31 @@ def _extract_keepers(df: pd.DataFrame) -> dict[str, pd.Series]:
 # ── DB operations ────────────────────────────────────────────────────────────
 
 def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: str, position: str) -> Player:
-    """Find existing player by fbref_id or create new."""
-    
-    # --- ADDED FOR AUTOPILOT ---
     resolved_team = resolve_and_learn(db, team, league_code)
-    # ---------------------------
+    # Get the actual team record to find its league
+    team_record = db.query(Team).filter_by(team_key=resolved_team).first()
+    actual_league = team_record.league_code if team_record else league_code  # fallback to scraped league if team not found
 
     player = db.query(Player).filter_by(fbref_id=fbref_id).first()
     if player:
-        # Use resolved_team here
-        if player.current_team != resolved_team or player.league_code != league_code:
+        if player.current_team != resolved_team or player.league_code != actual_league:
             player.current_team = resolved_team
-            player.league_code = league_code
+            player.league_code = actual_league
         player.position = position
         player.last_scraped = datetime.utcnow()
         return player
-
-    player = Player(
-        fbref_id=fbref_id,
-        name=name,
-        current_team=resolved_team, # Use resolved_team
-        league_code=league_code,
-        position=position,
-        last_scraped=datetime.utcnow(),
-    )
-    db.add(player)
-    db.flush() 
-    return player
+    else:
+        player = Player(
+            fbref_id=fbref_id,
+            name=name,
+            current_team=resolved_team,
+            league_code=actual_league,
+            position=position,
+            last_scraped=datetime.utcnow(),
+        )
+        db.add(player)
+        db.flush()
+        return player
 
 
 def _write_squad_snapshot(db, league_code: str, team_players: dict[str, list[int]]):
