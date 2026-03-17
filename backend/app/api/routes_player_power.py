@@ -53,9 +53,10 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/debug/season-map")
-def debug_season_map():
-    return SEASON_MAP
+@router.get("/debug/snapshots")
+def debug_snapshots(db: Session = Depends(get_db)):
+    snapshots = db.query(FBrefSnapshot.league_code).distinct().all()
+    return [s[0] for s in snapshots]
   
 @router.get("/player-power/status")
 def player_power_status(
