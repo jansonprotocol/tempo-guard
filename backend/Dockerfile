@@ -1,24 +1,32 @@
 # syntax=docker/dockerfile:1
 FROM python:3.12-slim
 
+# Install Chrome and ChromeDriver
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    gnupg \
+    unzip \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list \
+    && apt-get update && apt-get install -y --no-install-recommends \
+    google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# System deps — cached by BuildKit, only reruns if this layer changes
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && apt-get install -y --no-install-recommends \
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential libpq-dev libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Pip deps — cached by BuildKit, only reruns if requirements.txt changes
+# Install Python dependencies
 COPY backend/requirements.txt .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# App code — only this layer reruns on normal code deploys
+# Copy application code
 COPY backend/app ./app
 
-# Proxy env vars
+# Set environment variables
 ENV HTTP_PROXY="" \
     HTTPS_PROXY="" \
     ALL_PROXY="" \
@@ -27,5 +35,5 @@ ENV HTTP_PROXY="" \
     all_proxy="" \
     NO_PROXY="*"
 
-# Use the PORT environment variable (set by Render) with a fallback to 8000
+# Use Render's PORT environment variable
 CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
