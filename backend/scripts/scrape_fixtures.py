@@ -3,6 +3,7 @@ backend/scripts/scrape_fixtures.py
 
 Scrapes FBref schedule pages for completed scores and upcoming fixtures.
 Stores completed matches in FBrefSnapshot, upcoming matches in FBrefFixtures.
+Also scrapes player-level match statistics for completed matches.
 
 Usage:
     cd backend
@@ -31,14 +32,18 @@ from seleniumbase import Driver
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 from app.database.models_predictions import FBrefFixture
+from app.models.models_players import Player, PlayerMatchStats
 from app.util.team_resolver import resolve_and_learn
+from app.services.resolve_team import resolve_team_name
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 SLEEP_BETWEEN_FETCHES = 4      # seconds between each browser fetch
 SLEEP_BETWEEN_LEAGUES = 6       # seconds between leagues
+SLEEP_BETWEEN_MATCH_STATS = 2   # seconds between match stats requests
 FIXTURE_DAYS = 5                 # how many days ahead to store fixtures
+SCRAPE_MATCH_STATS = True        # whether to scrape detailed match stats
 
 HEADLESS = False                 # set True via --headless
 SCRAPER_API_KEY: str | None = os.environ.get("SCRAPER_API_KEY")
@@ -132,6 +137,18 @@ def _fetch_via_selenium(url: str, label: str) -> str | None:
             except Exception:
                 pass
 
+def _fetch_with_driver(driver, url: str, label: str) -> str | None:
+    """Use an existing Selenium driver to fetch a page (reuse browser)."""
+    try:
+        driver.get(url)
+        time.sleep(3)
+        html = driver.get_page_source()
+        print(f"    {len(html)} bytes")
+        return html
+    except Exception as e:
+        print(f"    Browser error ({label}): {e}")
+        return None
+
 def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
     if "Just a moment" in html or len(html) < 5000:
         print("  Cloudflare blocked.")
@@ -160,13 +177,11 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
 
     # Helper to detect schedule by looking at row values (date pattern)
     def contains_dates(df, sample_rows=5):
-        # Flatten columns if MultiIndex
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = [
                 " ".join(str(v) for v in col if str(v) != "nan").strip()
                 for col in df.columns
             ]
-        # Sample first few rows (skip any header rows that might be in data)
         sample = df.head(sample_rows).astype(str)
         for _, row in sample.iterrows():
             for val in row:
@@ -174,7 +189,6 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
                     return True
         return False
 
-    # If not international, try to find schedule
     if not is_intl:
         # First pass: look for table with date/home/away columns
         for df in tables:
@@ -186,24 +200,19 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
         # Second pass: look for tables containing date strings
         candidates = []
         for idx, df in enumerate(tables):
-            # Only consider tables with at least 3 columns (likely schedule)
-            if df.shape[1] >= 3:
-                if contains_dates(df):
-                    print(f"  Table {idx+1} contains dates – candidate schedule table")
-                    candidates.append(df)
+            if df.shape[1] >= 3 and contains_dates(df):
+                print(f"  Table {idx+1} contains dates – candidate schedule table")
+                candidates.append(df)
 
         if candidates:
-            # Pick the largest candidate (by rows)
             best = max(candidates, key=len)
             best = best.dropna(how="all")
             print(f"  Selected candidate schedule table with {len(best)} rows")
             return best
 
-        # Fallback: largest table
         print("  No schedule table found – using largest table")
         df = max(tables, key=len)
         df = df.dropna(how="all")
-        # Check if it at least contains dates, else warn
         if not contains_dates(df):
             print(f"  ⚠️ Largest table does not appear to contain dates. Columns: {list(df.columns[:10])}")
         return df
@@ -251,7 +260,6 @@ def _parse_page(html: str, league_code: str = "") -> pd.DataFrame | None:
     return df
 
 def _get_columns(df: pd.DataFrame) -> dict:
-    # Flatten any remaining MultiIndex
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = [
             " ".join(str(v) for v in col if str(v) != "nan").strip()
@@ -272,6 +280,7 @@ def _get_columns(df: pd.DataFrame) -> dict:
         "score":      col("score", "scores"),
         "time":       col("time"),
         "round_raw":  col("_round_raw"),
+        "match_report": col("match report", "matchreport"),  # FBref sometimes includes match links
     }
 
 def _safe_to_parquet(df: pd.DataFrame) -> bytes:
@@ -299,7 +308,6 @@ def _classify_round_type(raw: str | None, match_date: date, league_code: str) ->
         return "semi_final"
     if "final" in label and "semi" not in label and "quarter" not in label:
         return "final"
-    # Date fallback
     month = match_date.month
     if month in (9, 10, 11, 12, 1):
         return "league_phase"
@@ -312,6 +320,154 @@ def _classify_round_type(raw: str | None, match_date: date, league_code: str) ->
     if month == 5:
         return "semi_final" if match_date.day < 25 else "final"
     return None
+
+# ---------------------------------------------------------------------------
+# Match-level player stats scraping
+# ---------------------------------------------------------------------------
+def _scrape_match_player_stats(
+    match_url: str,
+    league_code: str,
+    match_date: date,
+    home_team: str,
+    away_team: str,
+    driver: Driver | None = None
+) -> list[dict]:
+    """
+    Scrape player statistics for a single match from FBref.
+    Returns list of player stat dictionaries.
+    """
+    print(f"    [match_stats] Fetching {home_team} vs {away_team}")
+    
+    close_driver = False
+    if not driver:
+        driver = Driver(uc=True, headless2=HEADLESS)
+        close_driver = True
+    
+    try:
+        html = _fetch_with_driver(driver, match_url, f"{league_code} match")
+        if not html:
+            return []
+        
+        tables = pd.read_html(io.StringIO(html))
+        
+        player_stats = []
+        
+        # FBref match pages have separate tables for home and away teams
+        # We need to identify which table belongs to which team
+        for df in tables:
+            # Look for tables with player names and stats
+            if "Player" in df.columns or " player" in str(df.columns).lower():
+                # Determine which team this table belongs to
+                # Often the team name appears in a header or in the data
+                table_text = df.to_string().lower()
+                
+                is_home = home_team.lower() in table_text
+                is_away = away_team.lower() in table_text
+                
+                if not (is_home or is_away):
+                    continue
+                
+                for _, row in df.iterrows():
+                    if pd.isna(row.get("Player")):
+                        continue
+                    
+                    # Basic stats - adjust column names based on FBref's actual columns
+                    stat = {
+                        "player_name": str(row.get("Player", "")),
+                        "minutes": _safe_int(row.get("Min", 0)),
+                        "goals": _safe_int(row.get("Gls", 0)),
+                        "assists": _safe_int(row.get("Ast", 0)),
+                        "shots": _safe_int(row.get("Sh", 0)),
+                        "shots_on_target": _safe_int(row.get("SoT", 0)),
+                        "passes_completed": _safe_int(row.get("Cmp", 0)),
+                        "passes_attempted": _safe_int(row.get("Att", 0)),
+                        "tackles": _safe_int(row.get("Tkl", 0)),
+                        "interceptions": _safe_int(row.get("Int", 0)),
+                        "blocks": _safe_int(row.get("Blocks", 0)),
+                        "saves": _safe_int(row.get("Saves", 0)),
+                        "xg": _safe_float(row.get("xG", 0.0)),
+                        "xa": _safe_float(row.get("xA", 0.0)),
+                        "is_home": is_home,
+                        "opponent": away_team if is_home else home_team,
+                    }
+                    player_stats.append(stat)
+        
+        print(f"    [match_stats] Found {len(player_stats)} player entries")
+        return player_stats
+        
+    except Exception as e:
+        print(f"    [match_stats] Error: {e}")
+        return []
+    finally:
+        if close_driver and driver:
+            try:
+                driver.quit()
+            except Exception:
+                pass
+
+def _safe_int(val) -> int:
+    try:
+        return int(float(val)) if pd.notna(val) else 0
+    except (ValueError, TypeError):
+        return 0
+
+def _safe_float(val) -> float:
+    try:
+        return float(val) if pd.notna(val) else 0.0
+    except (ValueError, TypeError):
+        return 0.0
+
+def _store_match_stats(db, player_stats: list[dict], match_date: date, league_code: str):
+    """Store player match statistics in the database."""
+    from app.models.models_players import Player, PlayerMatchStats
+    from app.services.resolve_team import resolve_team_name
+    
+    stored = 0
+    for stat in player_stats:
+        player_name = stat.pop("player_name")
+        
+        # Find player by name (case-insensitive match)
+        player = db.query(Player).filter(
+            Player.name.ilike(f"%{player_name}%"),
+            Player.league_code == league_code
+        ).first()
+        
+        if not player:
+            # Try without league restriction as fallback
+            player = db.query(Player).filter(
+                Player.name.ilike(f"%{player_name}%")
+            ).first()
+        
+        if not player:
+            continue
+        
+        # Check if this match stat already exists
+        existing = db.query(PlayerMatchStats).filter_by(
+            player_id=player.id,
+            match_date=match_date,
+            league_code=league_code
+        ).first()
+        
+        if existing:
+            # Update existing record
+            for key, value in stat.items():
+                if hasattr(existing, key):
+                    setattr(existing, key, value)
+        else:
+            # Create new record
+            match_stats = PlayerMatchStats(
+                player_id=player.id,
+                match_date=match_date,
+                league_code=league_code,
+                **stat
+            )
+            db.add(match_stats)
+        
+        stored += 1
+    
+    if stored:
+        db.commit()
+        print(f"    [match_stats] Stored/updated {stored} player records")
 
 # ---------------------------------------------------------------------------
 # Database operations
@@ -410,6 +566,42 @@ def _upsert_fixtures(league_code: str, upcoming_df: pd.DataFrame, c: dict) -> No
     finally:
         db.close()
 
+def _process_completed_match(
+    db: Session,
+    league_code: str,
+    match_row: pd.Series,
+    c: dict,
+    driver: Driver | None = None
+) -> None:
+    """
+    Process a completed match - update snapshot and scrape player stats.
+    """
+    match_date = match_row[c["date"]].date()
+    home_raw = str(match_row[c["home"]]).strip()
+    away_raw = str(match_row[c["away"]]).strip()
+    
+    # Resolve team names
+    home = resolve_team_name(db, home_raw, league_code)
+    away = resolve_team_name(db, away_raw, league_code)
+    
+    # Get match URL if available
+    match_url = None
+    if c.get("match_report"):
+        match_url = str(match_row.get(c["match_report"], ""))
+        if match_url and not match_url.startswith("http"):
+            # FBref often has relative URLs
+            match_url = "https://fbref.com" + match_url if match_url.startswith("/") else None
+    
+    if match_url and SCRAPE_MATCH_STATS:
+        # Scrape player stats for this match
+        player_stats = _scrape_match_player_stats(
+            match_url, league_code, match_date, home, away, driver
+        )
+        if player_stats:
+            _store_match_stats(db, player_stats, match_date, league_code)
+            # Be nice to FBref
+            time.sleep(SLEEP_BETWEEN_MATCH_STATS)
+
 # ---------------------------------------------------------------------------
 # Main per‑league scraping function
 # ---------------------------------------------------------------------------
@@ -457,9 +649,31 @@ def scrape_league(league_code: str, url: str) -> None:
     print(f"  Completed rows: {len(completed_df)}")
     print(f"  Upcoming rows (next {FIXTURE_DAYS} days): {len(upcoming_df)}")
 
+    # Update snapshot with completed matches
     if not completed_df.empty:
         _update_snapshot(league_code, completed_df)
+        
+        # If match stats scraping is enabled, process each completed match
+        if SCRAPE_MATCH_STATS:
+            print(f"  Scraping player stats for {len(completed_df)} completed matches...")
+            db = SessionLocal()
+            driver = None
+            try:
+                # Create a shared driver for all matches in this league
+                if not SCRAPER_API_KEY:
+                    driver = Driver(uc=True, headless2=HEADLESS)
+                
+                for _, match_row in completed_df.iterrows():
+                    _process_completed_match(db, league_code, match_row, c, driver)
+            finally:
+                if driver:
+                    try:
+                        driver.quit()
+                    except Exception:
+                        pass
+                db.close()
 
+    # Update upcoming fixtures
     if not upcoming_df.empty:
         _upsert_fixtures(league_code, upcoming_df, c)
 
@@ -473,6 +687,7 @@ if __name__ == "__main__":
     parser.add_argument("--league", type=str, default=None, help="Single league code")
     parser.add_argument("--headless", action="store_true", help="Run Chrome headless")
     parser.add_argument("--api", type=str, default=None, metavar="KEY", help="ScraperAPI key")
+    parser.add_argument("--no-match-stats", action="store_true", help="Skip scraping match-level player stats")
     args = parser.parse_args()
 
     if args.headless:
@@ -481,6 +696,9 @@ if __name__ == "__main__":
     if args.api:
         SCRAPER_API_KEY = args.api
         print("[fixtures] Using ScraperAPI")
+    if args.no_match_stats:
+        SCRAPE_MATCH_STATS = False
+        print("[fixtures] Skipping match-level player stats")
 
     if args.league:
         if args.league not in LEAGUE_MAP:
