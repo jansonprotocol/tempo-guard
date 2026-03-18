@@ -514,11 +514,17 @@ def _run_calibration(
     }
     for pos, (_, match_row) in enumerate(completed.iterrows(), start=1):
         match_date = match_row[date_col].date()
-        home_team  = str(match_row[home_col])
-        away_team  = str(match_row[away_col])
+        # Get raw team names from snapshot
+        home_team_raw = str(match_row[home_col])
+        away_team_raw = str(match_row[away_col])
         hg = int(match_row["hg"])
         ag = int(match_row["ag"])
         w  = _weight(pos)
+
+        # Resolve team names to canonical keys
+        home_team = resolve_team_name(db, home_team_raw, league_code)
+        away_team = resolve_team_name(db, away_team_raw, league_code)
+
         try:
             metrics = asof_features(
                 league_code, home_team, away_team, match_date,
