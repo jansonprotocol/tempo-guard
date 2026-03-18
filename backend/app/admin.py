@@ -113,6 +113,38 @@ class PlayerAdmin(ModelView, model=Player):
     can_view_details = True
     page_size = 50
 
+class PlayerMatchStatsAdmin(ModelView, model=PlayerMatchStats):
+    name = "Player Match Stats"
+    name_plural = "Player Match Stats"
+    icon = "fa-solid fa-clock"
+    column_list = [
+        PlayerMatchStats.id,
+        "player_name",  # we'll define this as a custom column
+        PlayerMatchStats.match_date,
+        PlayerMatchStats.league_code,
+        PlayerMatchStats.opponent,
+        PlayerMatchStats.minutes,
+        PlayerMatchStats.goals,
+        PlayerMatchStats.assists,
+        PlayerMatchStats.xg,
+        PlayerMatchStats.xa,
+    ]
+    column_searchable_list = [
+        PlayerMatchStats.league_code,
+        PlayerMatchStats.opponent,
+    ]
+    column_default_sort = ("match_date", True)
+    can_create = False
+    can_edit = False
+    can_delete = True
+    can_view_details = True
+    page_size = 50
+
+    async def player_name(self, instance):
+        # Retrieve player name from the Player table
+        db = self.session
+        player = db.query(Player).filter(Player.id == instance.player_id).first()
+        return player.name if player else "-"
 
 class PlayerSeasonStatsAdmin(ModelView, model=PlayerSeasonStats):
     name = "Player Stats"
