@@ -4,6 +4,14 @@ API endpoints for running maintenance scripts as background tasks.
 """
 from __future__ import annotations
 
+import sys
+import os
+from pathlib import Path
+
+# Add project root to sys.path so that 'scripts' can be imported
+project_root = Path(__file__).resolve().parent.parent.parent  # goes to /app
+sys.path.insert(0, str(project_root))
+
 import asyncio
 import uuid
 from datetime import date, datetime
@@ -24,6 +32,7 @@ class BackfillJobStatus(BaseModel):
     status: str  # "queued", "running", "done", "error"
     progress: Optional[int] = None
     total: Optional[int] = None
+    current_league: Optional[str] = None
     message: Optional[str] = None
     error: Optional[str] = None
 
@@ -37,6 +46,7 @@ def _run_backfill_in_background(
     """
     Background task that actually runs the backfill.
     """
+    # Now that project root is in sys.path, we can import from scripts
     from scripts.backfill_match_stats import backfill_league
     from seleniumbase import Driver
     import time
@@ -65,65 +75,9 @@ def _run_backfill_in_background(
             _backfill_jobs[job_id]["current_league"] = lc
             _backfill_jobs[job_id]["message"] = f"Processing {lc} ({idx+1}/{total_leagues})"
 
-            # Call the core backfill function (adapted from the script)
-            # We need to import the function here to avoid circular imports
-            from scripts.backfill_match_stats import backfill_league as original_backfill
-            # But original_backfill expects its own driver and db session.
-            # We'll need to adapt it. For simplicity, we'll reimplement a simplified version here.
-            # Alternatively, we can modify the original script to expose a function that accepts driver and db.
-            # Given time, we'll integrate the core logic here.
-
-            # Simplified backfill logic (copy‑pasted and adapted from the script)
-            from app.database.models_fbref import FBrefSnapshot
-            from app.services.data_providers.fbref_base import _parse_score_column, _resolve_columns
-            from app.services.scrapers.match_stats_scraper import scrape_match_player_stats, _store_match_stats
-            import pandas as pd
-            import io
-
-            snap = db.query(FBrefSnapshot).filter_by(league_code=lc).first()
-            if not snap:
-                _backfill_jobs[job_id]["message"] = f"No snapshot for {lc}, skipping"
-                continue
-
-            df = pd.read_parquet(io.BytesIO(snap.data))
-            score_col = next((c for c in df.columns if str(c).lower() in ("score", "scores")), None)
-            if score_col and "hg" not in df.columns:
-                df = _parse_score_column(df, score_col)
-            c = _resolve_columns(df)
-
-            # Filter by date if provided
-            if start_date:
-                df = df[df[c["date"]] >= pd.Timestamp(start_date)]
-            if end_date:
-                df = df[df[c["date"]] <= pd.Timestamp(end_date)]
-
-            # Only completed matches
-            df = df[df[c["score"]].notna()]
-
-            total_matches = len(df)
-            for i, (_, row) in enumerate(df.iterrows()):
-                match_date = row[c["date"]].date()
-                home_raw = str(row[c["ht"]]).strip()
-                away_raw = str(row[c["at"]]).strip()
-
-                from app.services.resolve_team import resolve_team_name
-                home = resolve_team_name(db, home_raw, lc)
-                away = resolve_team_name(db, away_raw, lc)
-
-                match_url = row.get("Match Report", "") if "Match Report" in row else None
-                if not match_url or not match_url.startswith("http"):
-                    continue
-
-                player_stats = scrape_match_player_stats(
-                    match_url, lc, match_date, home, away, driver
-                )
-                if player_stats:
-                    _store_match_stats(db, player_stats, match_date, lc)
-
-                _backfill_jobs[job_id]["message"] = f"{lc}: {i+1}/{total_matches} matches"
-
-                # Be nice to FBref
-                time.sleep(2)
+            # Call the original backfill function (it will use its own driver and db session)
+            # We pass the existing driver to avoid creating a new one for each league.
+            backfill_league(lc, start_date, end_date, driver=driver)
 
         _backfill_jobs[job_id]["status"] = "done"
         _backfill_jobs[job_id]["message"] = "Backfill completed successfully."
@@ -168,6 +122,7 @@ async def start_backfill_match_stats(
         "status": "queued",
         "progress": 0,
         "total": None,
+        "current_league": None,
         "message": "Job queued, waiting to start...",
         "error": None,
     }
