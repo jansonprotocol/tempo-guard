@@ -1,12 +1,8 @@
-"""
-backend/app/services/scrapers/match_stats_scraper.py
+# backend/app/services/scrapers/match_stats_scraper.py
 
-Scrapes player-level match statistics from FBref match pages.
-"""
-
+from datetime import date  # <-- ADD THIS
 import re
 import time
-from datetime import datetime
 from typing import Dict, List, Optional
 import pandas as pd
 from seleniumbase import Driver
