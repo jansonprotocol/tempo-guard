@@ -8,7 +8,7 @@ from app.database.base import Base
 from app.models.league_config import LeagueConfig
 from app.models.team import Team, TeamAlias
 from app.models.team_config import TeamConfig
-from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot
+from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot, PlayerMatchStats
 from app.database.models_predictions import FBrefFixture, PredictionLog
 
 
@@ -113,13 +113,43 @@ class PlayerAdmin(ModelView, model=Player):
     can_view_details = True
     page_size = 50
 
+
+class PlayerSeasonStatsAdmin(ModelView, model=PlayerSeasonStats):
+    name = "Player Stats"
+    name_plural = "Player Stats"
+    icon = "fa-solid fa-chart-line"
+    
+    async def player_name(self, instance):
+        db = self.session
+        player = db.query(Player).filter(Player.id == instance.player_id).first()
+        return player.name if player else "-"
+    
+    column_list = [
+        PlayerSeasonStats.id,
+        "player_name",
+        PlayerSeasonStats.season,
+        PlayerSeasonStats.league_code,
+        PlayerSeasonStats.matches_played,
+        PlayerSeasonStats.minutes,
+        PlayerSeasonStats.power_index,
+        PlayerSeasonStats.performance_delta,
+    ]
+    column_searchable_list = [PlayerSeasonStats.league_code, PlayerSeasonStats.season]
+    column_default_sort = ("power_index", True)
+    can_create = False
+    can_edit = False
+    can_delete = True
+    can_view_details = True
+    page_size = 50
+
+
 class PlayerMatchStatsAdmin(ModelView, model=PlayerMatchStats):
     name = "Player Match Stats"
     name_plural = "Player Match Stats"
     icon = "fa-solid fa-clock"
     column_list = [
         PlayerMatchStats.id,
-        "player_name",  # we'll define this as a custom column
+        "player_name",
         PlayerMatchStats.match_date,
         PlayerMatchStats.league_code,
         PlayerMatchStats.opponent,
@@ -141,44 +171,9 @@ class PlayerMatchStatsAdmin(ModelView, model=PlayerMatchStats):
     page_size = 50
 
     async def player_name(self, instance):
-        # Retrieve player name from the Player table
         db = self.session
         player = db.query(Player).filter(Player.id == instance.player_id).first()
         return player.name if player else "-"
-
-class PlayerSeasonStatsAdmin(ModelView, model=PlayerSeasonStats):
-    name = "Player Stats"
-    name_plural = "Player Stats"
-    icon = "fa-solid fa-chart-line"
-    
-    async def player_name(self, instance):
-        # Retrieve player name from relationship (assuming a 'player' relationship exists)
-        # If not, fallback to query. We'll use a direct query for reliability.
-        db = self.session
-        player = db.query(Player).filter(Player.id == instance.player_id).first()
-        return player.name if player else "-"
-    
-    column_list = [
-        PlayerSeasonStats.id,
-        "player_name",  # custom column
-        PlayerSeasonStats.season,
-        PlayerSeasonStats.league_code,
-        PlayerSeasonStats.matches_played,
-        PlayerSeasonStats.minutes,
-        PlayerSeasonStats.power_index,
-        PlayerSeasonStats.performance_delta,
-    ]
-    column_searchable_list = [
-        PlayerSeasonStats.league_code,
-        PlayerSeasonStats.season,
-        # Note: can't directly search custom column, but you could add a filter later
-    ]
-    column_default_sort = ("power_index", True)
-    can_create = False
-    can_edit = False
-    can_delete = True
-    can_view_details = True
-    page_size = 50
 
 
 class SquadSnapshotAdmin(ModelView, model=SquadSnapshot):
@@ -251,6 +246,7 @@ def setup_admin(app: FastAPI):
     admin.add_view(TeamConfigAdmin)
     admin.add_view(PlayerAdmin)
     admin.add_view(PlayerSeasonStatsAdmin)
+    admin.add_view(PlayerMatchStatsAdmin)   # <-- new
     admin.add_view(SquadSnapshotAdmin)
     admin.add_view(FBrefFixtureAdmin)
     admin.add_view(PredictionLogAdmin)
