@@ -487,7 +487,7 @@ def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: 
         )
         db.add(player)
         db.flush()
-        return playerr
+        return player
 
 
 def _write_squad_snapshot(db, league_code: str, team_players: dict[str, list[int]]):
