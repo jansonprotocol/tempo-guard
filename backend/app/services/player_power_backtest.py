@@ -45,23 +45,15 @@ def get_historical_squad_power(
 ) -> Optional[float]:
     """
     Find the most recent SquadSnapshot for a team BEFORE match_date.
-    Now with debug logging.
-
-    Returns squad_power (0–100) or None if no snapshot exists.
-    Uses the snapshot with the largest snapshot_date <= match_date.
-
-    Fallback: if no historical snapshot predates the match, use the
-    most recent snapshot available (current squad assessment).
-    This allows A/B testing before historical snapshots accumulate.
-    Once you have months of snapshots, the fallback rarely triggers.
+    Uses case‑insensitive matching on team name.
     """
     print(f"[DEBUG]   get_historical_squad_power: {team} in {league_code} as of {match_date}")
 
-    # Primary: point-in-time (snapshot before match)
+    # Primary: point‑in‑time snapshot with non‑null power, case‑insensitive
     snap = (
         db.query(SquadSnapshot)
         .filter(
-            SquadSnapshot.team == team,
+            SquadSnapshot.team.ilike(team),  # case‑insensitive match
             SquadSnapshot.league_code == league_code,
             SquadSnapshot.snapshot_date <= match_date,
             SquadSnapshot.squad_power.isnot(None),
@@ -73,12 +65,12 @@ def get_historical_squad_power(
         print(f"[DEBUG]     found snapshot on {snap.snapshot_date} with power {snap.squad_power}")
         return float(snap.squad_power)
 
-    # Fallback: use most recent snapshot regardless of date
-    print(f"[DEBUG]     no snapshot before match_date, trying most recent")
+    # Fallback: most recent snapshot with non‑null power (ignore date), case‑insensitive
+    print(f"[DEBUG]     no snapshot before match_date with power, trying most recent")
     fallback = (
         db.query(SquadSnapshot)
         .filter(
-            SquadSnapshot.team == team,
+            SquadSnapshot.team.ilike(team),
             SquadSnapshot.league_code == league_code,
             SquadSnapshot.squad_power.isnot(None),
         )
@@ -89,7 +81,7 @@ def get_historical_squad_power(
         print(f"[DEBUG]     found most recent snapshot on {fallback.snapshot_date} with power {fallback.squad_power}")
         return float(fallback.squad_power)
 
-    print(f"[DEBUG]     no snapshot found at all")
+    print(f"[DEBUG]     no snapshot with power found at all")
     return None
 
 
