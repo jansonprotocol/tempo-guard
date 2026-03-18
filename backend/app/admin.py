@@ -23,18 +23,26 @@ class StatsFetchCache(Base):
 # --- Admin Views ---
    
 class LeagueConfigAdmin(ModelView, model=LeagueConfig):
-    # ... existing code ...
+    name = "League Config"
+    name_plural = "League Configs"
+    icon = "fa-solid fa-globe"
     column_list = [LeagueConfig.id, LeagueConfig.league_code, LeagueConfig.description,
                    LeagueConfig.base_over_bias, LeagueConfig.base_under_bias,
                    LeagueConfig.tempo_factor, LeagueConfig.strength_coefficient,
-                   LeagueConfig.form_delta_sensitivity]  # <-- ADD
-    # ...
+                   LeagueConfig.form_delta_sensitivity]
+    column_searchable_list = [LeagueConfig.league_code, LeagueConfig.description]
+    column_default_sort = ("league_code", False)
     form_columns = ["league_code", "description", "display_name", "country_code",
                     "base_over_bias", "base_under_bias", "tempo_factor",
                     "safety_mode", "aggression_level", "volatility",
                     "deg_sensitivity", "det_sensitivity", "eps_sensitivity",
-                    "form_delta_sensitivity",  # <-- ADD
+                    "form_delta_sensitivity",
                     "strength_coefficient"]
+    can_create = True
+    can_edit = True
+    can_delete = False
+    can_view_details = True
+
 
 class TeamAdmin(ModelView, model=Team):
     name = "Team"
@@ -68,14 +76,23 @@ class TeamConfigAdmin(ModelView, model=TeamConfig):
     name = "Team Config"
     name_plural = "Team Configs"
     icon = "fa-solid fa-sliders"
-    column_list = [TeamConfig.id, TeamConfig.league_code, TeamConfig.team,
-                   TeamConfig.squad_power, TeamConfig.atk_power, TeamConfig.mid_power,
-                   TeamConfig.def_power, TeamConfig.gk_power,
-                   TeamConfig.over_nudge, TeamConfig.under_nudge]
+    column_list = [
+        TeamConfig.id, TeamConfig.league_code, TeamConfig.team,
+        TeamConfig.squad_power, TeamConfig.atk_power, TeamConfig.mid_power,
+        TeamConfig.def_power, TeamConfig.gk_power,
+        TeamConfig.over_nudge, TeamConfig.under_nudge,
+        TeamConfig.det_nudge, TeamConfig.deg_nudge,
+        TeamConfig.good_form_nudge, TeamConfig.neutral_form_nudge, TeamConfig.poor_form_nudge,
+    ]
     column_searchable_list = [TeamConfig.league_code, TeamConfig.team]
     column_default_sort = [("league_code", False), ("team", False)]
-    form_columns = ["league_code", "team", "over_nudge", "under_nudge", "det_nudge", "deg_nudge",
-                    "squad_power", "atk_power", "mid_power", "def_power", "gk_power"]
+    form_columns = [
+        "league_code", "team",
+        "over_nudge", "under_nudge", "det_nudge", "deg_nudge",
+        "good_form_nudge", "neutral_form_nudge", "poor_form_nudge",
+        "form_good_threshold", "form_poor_threshold",
+        "squad_power", "atk_power", "mid_power", "def_power", "gk_power",
+    ]
     can_create = True
     can_edit = True
     can_delete = True
@@ -101,11 +118,29 @@ class PlayerSeasonStatsAdmin(ModelView, model=PlayerSeasonStats):
     name = "Player Stats"
     name_plural = "Player Stats"
     icon = "fa-solid fa-chart-line"
-    column_list = [PlayerSeasonStats.id, PlayerSeasonStats.player_id,
-                   PlayerSeasonStats.season, PlayerSeasonStats.league_code,
-                   PlayerSeasonStats.matches_played, PlayerSeasonStats.minutes,
-                   PlayerSeasonStats.power_index, PlayerSeasonStats.performance_delta]
-    column_searchable_list = [PlayerSeasonStats.league_code, PlayerSeasonStats.season]
+    
+    async def player_name(self, instance):
+        # Retrieve player name from relationship (assuming a 'player' relationship exists)
+        # If not, fallback to query. We'll use a direct query for reliability.
+        db = self.session
+        player = db.query(Player).filter(Player.id == instance.player_id).first()
+        return player.name if player else "-"
+    
+    column_list = [
+        PlayerSeasonStats.id,
+        "player_name",  # custom column
+        PlayerSeasonStats.season,
+        PlayerSeasonStats.league_code,
+        PlayerSeasonStats.matches_played,
+        PlayerSeasonStats.minutes,
+        PlayerSeasonStats.power_index,
+        PlayerSeasonStats.performance_delta,
+    ]
+    column_searchable_list = [
+        PlayerSeasonStats.league_code,
+        PlayerSeasonStats.season,
+        # Note: can't directly search custom column, but you could add a filter later
+    ]
     column_default_sort = ("power_index", True)
     can_create = False
     can_edit = False
@@ -187,5 +222,5 @@ def setup_admin(app: FastAPI):
     admin.add_view(SquadSnapshotAdmin)
     admin.add_view(FBrefFixtureAdmin)
     admin.add_view(PredictionLogAdmin)
-    admin.add_view(StatsFetchCacheAdmin)   # <-- new cache view
+    admin.add_view(StatsFetchCacheAdmin)
     return admin
