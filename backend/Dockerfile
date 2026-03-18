@@ -27,4 +27,5 @@ ENV HTTP_PROXY="" \
     all_proxy="" \
     NO_PROXY="*"
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use the PORT environment variable (set by Render) with a fallback to 8000
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
