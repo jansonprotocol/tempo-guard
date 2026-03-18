@@ -40,13 +40,22 @@ squad_power / atk_power / mid_power / def_power / gk_power:
   None = not yet computed (player data not scraped for this team).
   When None, the pipeline falls back to macro-only features (v1.x behaviour).
 
-Example:
-  Man City  over_nudge=-0.04  det_nudge=+0.12  deg_nudge=-0.05
-    → Tends to suppress total goals (strong defense) but is individually volatile.
-    → When paired with another high-det team, bilateral chaos fires.
+# ── v2.1: Form‑based nudges ──────────────────────────────────────────
+good_form_nudge / neutral_form_nudge / poor_form_nudge:
+  Per-team adjustments applied based on the team's current form delta.
+  - good_form_nudge  : used when form_delta >= form_good_threshold
+  - poor_form_nudge  : used when form_delta <= form_poor_threshold
+  - neutral_form_nudge: used otherwise
+  Range: -0.05 to +0.05 (same as over/under nudges)
+  These are additive to support_delta, stacked on top of over_nudge/under_nudge.
 
-  Burnley   over_nudge=+0.03  det_nudge=+0.04  deg_nudge=+0.06
-    → Leaky defense, consistent structural decline across seasons.
+form_good_threshold / form_poor_threshold:
+  Configurable thresholds that define "good" and "poor" form.
+  Defaults: good = 3, poor = -3 (meaning 3 positions above/below expected).
+
+Example:
+  A team that historically overperforms when in good form might get
+  good_form_nudge = +0.02, meaning an extra push toward over when they are hot.
 
 These are derived purely from ATHENA's historical miss/hit patterns,
 NOT from subjective team quality — calibration only.
@@ -75,6 +84,16 @@ class TeamConfig(Base):
     det_nudge   = Column(Float, default=0.0)   # adjustment to this team's DET score
     deg_nudge   = Column(Float, default=0.0)   # adjustment to this team's DEG pressure
 
+    # ── v2.1: Form‑based nudges ───────────────────────────────────────
+    # Applied based on the team's form delta at match time.
+    good_form_nudge   = Column(Float, default=0.0)
+    neutral_form_nudge = Column(Float, default=0.0)
+    poor_form_nudge   = Column(Float, default=0.0)
+
+    # Thresholds that define "good" and "poor" form (can be overridden per team)
+    form_good_threshold = Column(Integer, default=3)
+    form_poor_threshold = Column(Integer, default=-3)
+
     # ── Diagnostics (existing) ────────────────────────────────────────
     over_hit_rate   = Column(Float,   default=None)
     under_hit_rate  = Column(Float,   default=None)
@@ -99,9 +118,20 @@ class TeamConfig(Base):
     )
 
     def __repr__(self):
-        return (
+        base = (
             f"<TeamConfig {self.league_code}/{self.team} "
             f"over={self.over_nudge:+.3f} under={self.under_nudge:+.3f} "
             f"det={self.det_nudge:+.3f} deg={self.deg_nudge:+.3f} "
-            f"squad={self.squad_power}>"
+            f"squad={self.squad_power}"
         )
+        # Add form nudges if any are non‑zero (to keep repr tidy)
+        form_parts = []
+        if self.good_form_nudge:
+            form_parts.append(f"good={self.good_form_nudge:+.3f}")
+        if self.neutral_form_nudge:
+            form_parts.append(f"neutral={self.neutral_form_nudge:+.3f}")
+        if self.poor_form_nudge:
+            form_parts.append(f"poor={self.poor_form_nudge:+.3f}")
+        if form_parts:
+            base += " " + " ".join(form_parts)
+        return base + ">"
