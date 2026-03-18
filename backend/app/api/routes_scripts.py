@@ -8,9 +8,20 @@ import sys
 import os
 from pathlib import Path
 
-# Add project root to sys.path so that 'scripts' can be imported
-project_root = Path(__file__).resolve().parent.parent.parent  # goes to /app
-sys.path.insert(0, str(project_root))
+# Dynamically locate the scripts folder by walking up the directory tree
+def find_scripts_folder() -> Path:
+    current = Path(__file__).resolve()
+    # Check current directory and all parents
+    for parent in [current] + list(current.parents):
+        scripts_path = parent / "scripts"
+        if scripts_path.is_dir():
+            return parent  # return the directory that contains 'scripts'
+    raise RuntimeError("Could not locate 'scripts' folder. Tried walking up from: " + str(current))
+
+scripts_root = find_scripts_folder()
+sys.path.insert(0, str(scripts_root))
+# Now we can import from scripts
+from scripts.backfill_match_stats import backfill_league
 
 import asyncio
 import uuid
@@ -46,8 +57,6 @@ def _run_backfill_in_background(
     """
     Background task that actually runs the backfill.
     """
-    # Now that project root is in sys.path, we can import from scripts
-    from scripts.backfill_match_stats import backfill_league
     from seleniumbase import Driver
     import time
 
@@ -75,8 +84,7 @@ def _run_backfill_in_background(
             _backfill_jobs[job_id]["current_league"] = lc
             _backfill_jobs[job_id]["message"] = f"Processing {lc} ({idx+1}/{total_leagues})"
 
-            # Call the original backfill function (it will use its own driver and db session)
-            # We pass the existing driver to avoid creating a new one for each league.
+            # Call the backfill function, passing the shared driver
             backfill_league(lc, start_date, end_date, driver=driver)
 
         _backfill_jobs[job_id]["status"] = "done"
