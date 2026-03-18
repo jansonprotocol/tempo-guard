@@ -8,7 +8,7 @@ from datetime import datetime
 
 from sqlalchemy import (
     Column, DateTime, Date, Float, Integer, String, Text,
-    UniqueConstraint, ForeignKey,
+    UniqueConstraint, ForeignKey, Boolean
 )
 
 from app.database.base import Base
@@ -102,3 +102,46 @@ class SquadSnapshot(Base):
 
     def __repr__(self):
         return f"<SquadSnapshot {self.league_code}/{self.team} {self.snapshot_date} squad={self.squad_power}>"
+
+
+# ── NEW: PlayerMatchStats model for point-in-time reconstruction ──────────────
+
+class PlayerMatchStats(Base):
+    __tablename__ = "player_match_stats"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    player_id = Column(Integer, ForeignKey("players.id", ondelete="CASCADE"), nullable=False, index=True)
+    match_date = Column(Date, nullable=False, index=True)
+    league_code = Column(String, nullable=False, index=True)
+    opponent = Column(String, nullable=True)
+    is_home = Column(Boolean, default=True)
+    
+    # Match stats
+    minutes = Column(Integer, default=0)
+    goals = Column(Integer, default=0)
+    assists = Column(Integer, default=0)
+    shots = Column(Integer, default=0)
+    shots_on_target = Column(Integer, default=0)
+    passes_completed = Column(Integer, default=0)
+    passes_attempted = Column(Integer, default=0)
+    tackles = Column(Integer, default=0)
+    interceptions = Column(Integer, default=0)
+    blocks = Column(Integer, default=0)
+    saves = Column(Integer, default=0)
+    clean_sheet = Column(Boolean, default=False)
+    yellow_cards = Column(Integer, default=0)
+    red_cards = Column(Integer, default=0)
+    
+    # Advanced stats
+    xg = Column(Float, default=0.0)
+    xa = Column(Float, default=0.0)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    __table_args__ = (
+        UniqueConstraint("player_id", "match_date", "league_code", name="uq_player_match"),
+    )
+    
+    def __repr__(self):
+        return (f"<PlayerMatchStats player={self.player_id} {self.match_date} "
+                f"{self.league_code} mins={self.minutes}>")
