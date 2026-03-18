@@ -60,6 +60,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.database.db import SessionLocal
 from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot
+from app.models.team import Team
 from app.services.data_providers.fbref_urls import (
     extract_comp_info,
     league_stats_url,
