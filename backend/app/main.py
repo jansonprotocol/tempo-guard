@@ -14,6 +14,7 @@ from app.api.routes_calibration import router as calib_router
 from app.api.routes_batch import router as batch_router
 from app.api.routes_player_power import router as player_power_router
 from app.api.routes_alias_manager import router as alias_router
+from app.api.routes_scripts import router as scripts_router
 # Database & models
 from app.database.base import Base
 from app.database.db import engine, SessionLocal
@@ -182,6 +183,7 @@ app.include_router(retro_router,   prefix="/api",      tags=["Retrosim"])
 app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
 app.include_router(batch_router,   prefix="/api")
 app.include_router(player_power_router, prefix="/api", tags=["PlayerPower"])
+app.include_router(scripts_router, prefix="/api")
 app.include_router(alias_router, tags=["AliasManager"])
 
 
