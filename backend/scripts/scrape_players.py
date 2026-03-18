@@ -455,10 +455,18 @@ def _extract_keepers(df: pd.DataFrame) -> dict[str, pd.Series]:
 # ── DB operations ────────────────────────────────────────────────────────────
 
 def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: str, position: str) -> Player:
-    resolved_team = resolve_and_learn(db, team, league_code)
+    # Resolve team name WITHOUT league restriction to find canonical team
+    from app.services.resolve_team import resolve_team_name
+    resolved_team = resolve_team_name(db, team)  # no league_code = search all leagues
+
     # Get the actual team record to find its league
     team_record = db.query(Team).filter_by(team_key=resolved_team).first()
-    actual_league = team_record.league_code if team_record else league_code  # fallback to scraped league if team not found
+    if team_record:
+        actual_league = team_record.league_code
+    else:
+        # Team not found – fall back to scraped league (should not happen if teams are seeded)
+        actual_league = league_code
+        print(f"Warning: Team '{resolved_team}' not found for player {name}")
 
     player = db.query(Player).filter_by(fbref_id=fbref_id).first()
     if player:
@@ -479,7 +487,7 @@ def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: 
         )
         db.add(player)
         db.flush()
-        return player
+        return playerr
 
 
 def _write_squad_snapshot(db, league_code: str, team_players: dict[str, list[int]]):
