@@ -69,6 +69,12 @@ _COLUMN_MIGRATIONS = [
     ("team_configs",   "deg_nudge",      "FLOAT",   "0.0"),
     ("team_configs",   "avg_det",        "FLOAT",   None),
     ("team_configs",   "avg_deg",        "FLOAT",   None),
+    # In _COLUMN_MIGRATIONS, add:
+("team_configs", "good_form_nudge",    "FLOAT", "0.0"),
+("team_configs", "poor_form_nudge",    "FLOAT", "0.0"),
+("team_configs", "neutral_form_nudge", "FLOAT", "0.0"),
+("team_configs", "form_good_threshold", "INTEGER", "3"),
+("team_configs", "form_poor_threshold", "INTEGER", "-3"),
     # team_configs — v2.0 player-derived squad power scores
     ("team_configs",   "squad_power",    "FLOAT",   None),
     ("team_configs",   "atk_power",      "FLOAT",   None),
