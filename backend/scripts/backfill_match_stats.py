@@ -23,7 +23,8 @@ from seleniumbase import Driver
 
 SLEEP_BETWEEN_REQUESTS = 3
 
-def backfill_league(league_code: str, start_date: Optional[date] = None, end_date: Optional[date] = None):
+def backfill_league(league_code: str, start_date: Optional[date] = None, end_date: Optional[date] = None, driver: Optional[Driver] = None):
+    # ... function body
     """Backfill match stats for a league."""
     print(f"\n{'='*60}")
     print(f"Backfilling {league_code}")
