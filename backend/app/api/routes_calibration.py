@@ -21,6 +21,7 @@ import json
 import os
 import threading
 import uuid
+
 from datetime import datetime as dt
 from typing import List
 import pandas as pd
@@ -31,6 +32,7 @@ from sqlalchemy.orm import Session
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 from app.database.models_predictions import CalibrationLog
+from app.services.resolve_team import resolve_team_name
 from app.engine.pipeline import evaluate_athena
 from app.engine.types import MatchRequest
 from app.models.league_config import LeagueConfig
