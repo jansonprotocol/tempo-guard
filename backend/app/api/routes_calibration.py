@@ -40,18 +40,22 @@ from app.models.team_config import TeamConfig
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column
 from app.services.predict import predict_match
 from app.services.player_power_backtest import get_historical_player_nudge
-from app.services.form_delta_history import get_historical_form_delta  # <-- NEW
+from app.services.form_delta_history import get_historical_form_delta
 from app.util.asian_lines import evaluate_market
+
 router = APIRouter()
+
 # ── Constants ──────────────────────────────────────────────────────
 TARGET_HIT_RATE = 0.86
 NUDGE_STEP      = 0.02   # per calibration run — with 0.0–1.0 scale and neutral at 0.5, gives 25 steps to floor
 MAX_BIAS        = 1.00
 MIN_BIAS        = 0.00
+
 # ── Background job store (in-memory, survives within a single dyno) ──
 # Key: job_id → { status, progress, total, results, skipped, error, ... }
 _calibration_jobs: dict = {}
 _jobs_lock = threading.Lock()
+
 
 # ── hit_weight helper ──────────────────────────────────────────────
 def hit_weight(result) -> float:
@@ -62,6 +66,8 @@ def hit_weight(result) -> float:
     if result == "half_loss": return 0.0
     if result is False:       return 0.0
     return -1.0  # None or unrecognised = skip
+
+
 # ── Response models ────────────────────────────────────────────────
 class MarketStats(BaseModel):
     market:   str
@@ -69,6 +75,8 @@ class MarketStats(BaseModel):
     misses:   int
     skipped:  int
     hit_rate: float
+
+
 class CalibResult(BaseModel):
     league_code:      str
     total_matches:    int
@@ -79,12 +87,66 @@ class CalibResult(BaseModel):
     bias_suggestion:  dict
     applied:          bool
     sample:           List[dict]
+
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+
+# ── Form state classification helper ──────────────────────────────
+def _classify_form(delta: int | None, good_thresh: int, poor_thresh: int) -> str:
+    if delta is None:
+        return "neutral"
+    if delta >= good_thresh:
+        return "good"
+    if delta <= poor_thresh:
+        return "poor"
+    return "neutral"
+
+
+# ── Form‑based nudges calculator ───────────────────────────────────
+def _compute_form_nudges(
+    team_stats: dict,
+    overall_hit_rate: float,
+) -> dict:
+    """
+    Compute form‑specific nudges for a team based on historical performance
+    in different form states.
+    Returns a dict with keys 'good', 'neutral', 'poor' and their nudge values.
+    """
+    result = {"good": 0.0, "neutral": 0.0, "poor": 0.0}
+    form_records = team_stats.get("form_records", [])
+    if not form_records:
+        return result
+
+    MIN_SAMPLES = 5
+    NUDGE_SCALE = 0.3
+    NUDGE_MAX = 0.05
+
+    for state in ["good", "neutral", "poor"]:
+        records = [r for r in form_records if r["state"] == state]
+        if len(records) < MIN_SAMPLES:
+            continue
+
+        # Calculate hit rate in this state
+        weighted_hits = sum(r["weight"] for r in records if not r["is_miss"])
+        weighted_total = sum(r["weight"] for r in records)
+        if weighted_total == 0:
+            continue
+        state_hit_rate = weighted_hits / weighted_total
+
+        # Gap vs overall hit rate
+        gap = state_hit_rate - (overall_hit_rate / 100.0)
+        nudge = round(max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4)
+        result[state] = nudge
+
+    return result
+
+
 # ── Lean gap optimal nudge finder ─────────────────────────────────
 def _find_optimal_bias_shift(lean_records: list) -> dict:
     """
@@ -100,6 +162,7 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
     under_misses = [r for r in lean_records if r["is_miss"] and not r["is_over"]]
     over_wins    = [r for r in lean_records if not r["is_miss"] and r["is_over"]]
     under_wins   = [r for r in lean_records if not r["is_miss"] and not r["is_over"]]
+
     result = {
         "optimal_bias_shift":     0.0,
         "optimal_tempo_shift":    0.0,
@@ -108,10 +171,13 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
         "wins_at_risk":           0,
         "analysis":               [],
     }
+
     if not lean_records:
         return result
+
     over_miss_w  = sum(r["weight"] for r in over_misses)
     under_miss_w = sum(r["weight"] for r in under_misses)
+
     if over_miss_w >= under_miss_w and over_misses:
         all_thresholds = sorted(set(
             [r["lean_gap"] for r in over_misses] +
@@ -172,6 +238,7 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
             f"{wins_at_risk}/{len(under_wins)} wins at risk "
             f"(net gain: {round(best_net, 2)})."
         )
+
     # ── Tempo shift (independent of bias) ────────────────────────────
     tempo_over_misses = [r for r in over_misses if r["raw_tempo"] > 0.75]
     if tempo_over_misses:
@@ -193,6 +260,8 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
                 f"These are irreducible variance — no tempo change suggested."
             )
     return result
+
+
 # ── Sensitivity suggestion ─────────────────────────────────────────
 def _suggest_sensitivities(
     deg_det_records: list,
@@ -207,9 +276,11 @@ def _suggest_sensitivities(
     SENS_CAP_HIGH    = 2.00
     SENS_STEP        = 0.10
     from app.engine.pipeline import DEG_TRIGGER, DET_TRIGGER, EPS_STABLE
+
     result: dict = {}
     over_records  = [r for r in deg_det_records if r["is_over"]]
     under_records = [r for r in deg_det_records if not r["is_over"]]
+
     # ── DEG sensitivity ───────────────────────────────────────────────
     if len(over_records) >= MIN_RECORDS:
         high_deg = [r for r in over_records if r["deg_pressure"] >= DEG_TRIGGER]
@@ -236,6 +307,7 @@ def _suggest_sensitivities(
             )
     else:
         result["deg_analysis"] = f"Insufficient over records ({len(over_records)}) for DEG analysis."
+
     # ── DET sensitivity ───────────────────────────────────────────────
     DET_HIGH_THRESHOLD = 0.45
     if len(under_records) >= MIN_RECORDS:
@@ -263,6 +335,7 @@ def _suggest_sensitivities(
             )
     else:
         result["det_analysis"] = f"Insufficient under records ({len(under_records)}) for DET analysis."
+
     # ── EPS sensitivity ───────────────────────────────────────────────
     if len(under_records) >= MIN_RECORDS:
         low_eps = [r for r in under_records if r["eps_stability"] < EPS_STABLE]
@@ -289,12 +362,15 @@ def _suggest_sensitivities(
             )
     else:
         result["eps_analysis"] = f"Insufficient under records ({len(under_records)}) for EPS analysis."
+
     if len(deg_det_records) < MIN_RECORDS:
         result["insufficient_data"] = True
         result["note"] = f"Only {len(deg_det_records)} records total (need {MIN_RECORDS})"
+
     return result
 
-# ── NEW: Form delta sensitivity suggestion ─────────────────────────
+
+# ── Form delta sensitivity suggestion ───────────────────────────────
 def _suggest_form_delta(
     deg_det_records: list,
     current_form_sens: float,
@@ -334,8 +410,7 @@ def _suggest_form_delta(
     miss_rate_base = sum(1 for r in valid if r["is_miss"]) / len(valid)
     lift = miss_rate_high - miss_rate_base
 
-    # Suggest sensitivity: if lift positive (more misses when form extreme), increase sensitivity (amplify form effect)
-    # If negative, decrease sensitivity.
+    # Suggest sensitivity: if lift positive (more misses when form extreme), increase sensitivity
     raw_suggested = 1.0 + lift * SCALE
     capped = max(SENS_CAP_LOW, min(SENS_CAP_HIGH, raw_suggested))
     stepped = round(max(
@@ -350,6 +425,8 @@ def _suggest_form_delta(
         f"(lift={round(lift,3)}) → suggested sensitivity={stepped}"
     )
     return result
+
+
 # ── Bias suggestion ────────────────────────────────────────────────
 def _suggest_bias(
     over_hits: float, over_total: float,
@@ -377,16 +454,19 @@ def _suggest_bias(
         "lean_analysis":    optimal,
         "applied_changes":  {},
     }
+
     if overall_hit_rate >= TARGET_HIT_RATE * 100:
         notes.append(
             f"Hit rate {overall_hit_rate:.1f}% meets target "
             f"{TARGET_HIT_RATE * 100:.0f}% — no adjustment needed."
         )
         return suggestions
+
     notes.append(
         f"Hit rate {overall_hit_rate:.1f}% below target {TARGET_HIT_RATE * 100:.0f}% "
         f"(gap: {(TARGET_HIT_RATE - overall_hit_rate / 100) * 100:.1f}pp)."
     )
+
     bias_shift = max(-NUDGE_STEP, min(NUDGE_STEP, optimal["optimal_bias_shift"]))
     if bias_shift < 0:
         new_over  = round(max(current_over  + bias_shift, MIN_BIAS), 3)
@@ -413,21 +493,26 @@ def _suggest_bias(
             "No net-positive bias shift found — flipping any misses would flip equal or more wins. "
             "Current calibration is already near optimal for this window."
         )
+
     tempo_shift = max(-NUDGE_STEP, min(NUDGE_STEP, optimal["optimal_tempo_shift"]))
     if abs(tempo_shift) > 0.005:
         new_tempo = round(max(0.40, min(0.80, current_tempo + tempo_shift)), 3)
         notes.append(
             f"Dampen tempo influence: tempo_factor {current_tempo}→{new_tempo}"
         )
+
     if miss_patterns.get("half_loss_count", 0) > 0:
         notes.append(
             f"Note: {miss_patterns['half_loss_count']} half-losses — "
             f"acceptable, bettor recovers half stake."
         )
+
     suggestions["base_over_bias"]  = new_over
     suggestions["base_under_bias"] = new_under
     suggestions["tempo_factor"]    = new_tempo
     return suggestions
+
+
 # ── Shared calibration core ────────────────────────────────────────
 def _run_calibration(
     league_code: str,
@@ -445,56 +530,68 @@ def _run_calibration(
         return JSONResponse(status_code=404, content={
             "detail": f"No snapshot for {league_code}. Run the scraper first."
         })
+
     try:
         df = pd.read_parquet(io.BytesIO(row.data))
     except Exception as e:
         return JSONResponse(status_code=500, content={"detail": f"Could not read snapshot: {e}"})
+
     score_col = next((c for c in df.columns if str(c).lower() in ("score", "scores")), None)
     if score_col and "hg" not in df.columns:
         df = _parse_score_column(df, score_col)
     if "hg" not in df.columns or "ag" not in df.columns:
         return JSONResponse(status_code=422, content={"detail": "No parseable score column."})
+
     if len(df.columns) > 0 and isinstance(df.columns[0], tuple):
         df.columns = [
             " ".join(str(p) for p in col if not str(p).startswith("Unnamed")).strip() or str(col[-1])
             for col in df.columns
         ]
+
     col_map  = {str(c).lower(): c for c in df.columns}
     date_col = col_map.get("date")
     home_col = col_map.get("home") or col_map.get("home_team")
     away_col = col_map.get("away") or col_map.get("away_team")
+
     if not all([date_col, home_col, away_col]):
         return JSONResponse(status_code=422, content={"detail": "Missing Date/Home/Away columns."})
+
     df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
     df = df.dropna(subset=[date_col, "hg", "ag"])
+
     before_dedup = len(df)
     df = df.drop_duplicates(subset=[date_col, home_col, away_col])
     dupes_removed = before_dedup - len(df)
     if dupes_removed:
         print(f"[calibration] Removed {dupes_removed} duplicate rows from snapshot before calibration.")
+
     df = df.sort_values(date_col, ascending=False)
     completed     = df.head(limit).copy()
     total_matches = len(completed)
+
     if total_matches == 0:
         return JSONResponse(status_code=422, content={"detail": "No completed matches."})
+
     date_range = (completed[date_col].max() - completed[date_col].min()).days
     if date_range < 14 and total_matches < 50:
         return JSONResponse(status_code=422, content={
             "detail": f"Insufficient history — {total_matches} matches over {date_range} days."
         })
-    cfg           = db.query(LeagueConfig).filter_by(league_code=league_code).first()
+
+    cfg = db.query(LeagueConfig).filter_by(league_code=league_code).first()
     current_over  = float(cfg.base_over_bias  or 0.5) if cfg else 0.5
     current_under = float(cfg.base_under_bias or 0.5) if cfg else 0.5
     current_tempo = float(cfg.tempo_factor    or 0.50) if cfg else 0.50
     current_deg_sens = float(cfg.deg_sensitivity or 1.0) if cfg else 1.0
     current_det_sens = float(cfg.det_sensitivity or 1.0) if cfg else 1.0
     current_eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
-    current_form_sens = float(cfg.form_delta_sensitivity or 0.0) if cfg else 0.0  # <-- NEW (default 0.0 means no effect)
+    current_form_sens = float(cfg.form_delta_sensitivity or 0.0) if cfg else 0.0
 
     def _weight(pos: int) -> float:
         if pos <= 10: return 1.0
         if pos <= 30: return 0.5
         return 0.2
+
     market_tracker: dict = {}
     team_tracker:   dict = {}
     w_hits = w_misses = 0.0
@@ -512,9 +609,9 @@ def _run_calibration(
         "total_over_misses":     0,
         "total_under_misses":    0,
     }
+
     for pos, (_, match_row) in enumerate(completed.iterrows(), start=1):
         match_date = match_row[date_col].date()
-        # Get raw team names from snapshot
         home_team_raw = str(match_row[home_col])
         away_team_raw = str(match_row[away_col])
         hg = int(match_row["hg"])
@@ -535,11 +632,13 @@ def _run_calibration(
             if len(sample_rows) < 5:
                 sample_rows.append({"position": pos, "skipped_reason": f"asof_features: {e}"})
             continue
+
         if not metrics:
             skipped += 1
             if len(sample_rows) < 5:
                 sample_rows.append({"position": pos, "skipped_reason": "metrics empty"})
             continue
+
         try:
             req = MatchRequest(
                 league_code=league_code,
@@ -558,7 +657,7 @@ def _run_calibration(
                 away_det=metrics.get("away_det"),
                 eps_stability=metrics.get("eps_stability"),
             )
-            # v2.0: compute player power nudge from point-in-time snapshot
+
             player_nudge = get_historical_player_nudge(
                 db, league_code, home_team, away_team, match_date,
             )
@@ -579,12 +678,15 @@ def _run_calibration(
                     "traceback": traceback.format_exc(),
                 })
             continue
+
         market = pred.translated_play.market
         result = evaluate_market(market, hg, ag)
-        hw     = hit_weight(result)
+        hw = hit_weight(result)
+
         raw_sd    = metrics.get("support_idx_over_delta") or 0.0
         raw_tempo = metrics.get("tempo_index") or 0.55
         raw_p2p   = metrics.get("p_two_plus") or 0.68
+
         adj_tempo = max(0.0, min(0.95, raw_tempo * current_tempo * 2.0))
         adj_sd    = raw_sd + (current_over - current_under)
         _over_s   = adj_sd + (adj_tempo - 0.5) * 0.30
@@ -592,6 +694,7 @@ def _run_calibration(
         lean_gap  = round(_over_s - _under_s, 4)
         is_over_market = market.startswith("O")
         is_full_miss   = hw == 0.0
+
         lean_records.append({
             "lean_gap":  lean_gap,
             "is_miss":   is_full_miss,
@@ -601,11 +704,13 @@ def _run_calibration(
             "raw_tempo": raw_tempo,
             "raw_p2p":   raw_p2p,
         })
+
         if market not in market_tracker:
             market_tracker[market] = {
                 "w_hits": 0.0, "w_misses": 0.0, "skipped": 0,
                 "raw_hits": 0, "raw_misses": 0,
             }
+
         if hw < 0:
             market_tracker[market]["skipped"] += 1
             skipped += 1
@@ -614,11 +719,26 @@ def _run_calibration(
             market_tracker[market]["w_misses"] += (1.0 - hw) * w
             w_hits   += hw * w
             w_misses += (1.0 - hw) * w
+
             if hw >= 0.5:
                 market_tracker[market]["raw_hits"] += 1
             else:
                 market_tracker[market]["raw_misses"] += 1
-            for team in [home_team, away_team]:
+
+            # Compute historical form delta for both teams
+            home_form_delta = get_historical_form_delta(db, home_team, league_code, match_date)
+            away_form_delta = get_historical_form_delta(db, away_team, league_code, match_date)
+
+            # Determine form state using per‑team thresholds (or defaults)
+            # We'll fetch team config later, but for now use defaults (good=3, poor=-3)
+            # In a future enhancement, we could store thresholds per team.
+            good_thresh = 3
+            poor_thresh = -3
+            home_form_state = _classify_form(home_form_delta, good_thresh, poor_thresh)
+            away_form_state = _classify_form(away_form_delta, good_thresh, poor_thresh)
+
+            # Initialize team_tracker entries if needed
+            for team, form_state in [(home_team, home_form_state), (away_team, away_form_state)]:
                 if team not in team_tracker:
                     team_tracker[team] = {
                         "over_hits": 0, "over_total": 0,
@@ -627,7 +747,17 @@ def _run_calibration(
                         "deg_values": [],
                         "over_miss_det": [],
                         "under_miss_det": [],
+                        "form_records": [],  # new: list of (state, is_miss, weight)
                     }
+
+                # Update form records
+                team_tracker[team]["form_records"].append({
+                    "state": form_state,
+                    "is_miss": is_full_miss,
+                    "weight": w,
+                })
+
+                # Update market‑specific stats
                 if is_over_market:
                     team_tracker[team]["over_total"] += 1
                     if hw >= 0.5:
@@ -636,19 +766,16 @@ def _run_calibration(
                     team_tracker[team]["under_total"] += 1
                     if hw >= 0.5:
                         team_tracker[team]["under_hits"] += 1
+
                 raw_det = metrics.get("det_boost") or 0.30
                 raw_deg = metrics.get("deg_pressure") or 0.0
                 team_tracker[team]["det_values"].append(raw_det)
                 team_tracker[team]["deg_values"].append(raw_deg)
+
                 if is_over_market and is_full_miss:
                     team_tracker[team]["over_miss_det"].append(raw_det)
                 if not is_over_market and is_full_miss:
                     team_tracker[team]["under_miss_det"].append(raw_det)
-
-            # --- NEW: Compute historical form delta for both teams ---
-            home_form_delta = get_historical_form_delta(db, home_team, league_code, match_date)
-            away_form_delta = get_historical_form_delta(db, away_team, league_code, match_date)
-            # ---------------------------------------------------------
 
             deg_det_records.append({
                 "deg_pressure":  metrics.get("deg_pressure")  or 0.0,
@@ -657,9 +784,10 @@ def _run_calibration(
                 "is_over":       is_over_market,
                 "is_miss":       is_full_miss,
                 "total_goals":   hg + ag,
-                "home_form_delta": home_form_delta,   # <-- NEW
-                "away_form_delta": away_form_delta,   # <-- NEW
+                "home_form_delta": home_form_delta,
+                "away_form_delta": away_form_delta,
             })
+
         total_goals  = hg + ag
         is_half_loss = hw == 0.25
         if is_half_loss:
@@ -674,6 +802,7 @@ def _run_calibration(
             miss_patterns["total_under_misses"] += 1
             if total_goals >= 4:  miss_patterns["under_miss_high_goals"] += 1
             if raw_p2p > 0.72:    miss_patterns["under_miss_high_p2p"] += 1
+
         if len(sample_rows) < 20:
             sample_rows.append({
                 "position":    pos,
@@ -693,11 +822,13 @@ def _run_calibration(
                 "lean":        pred.corridor.lean,
                 "inputs":      metrics,
                 "player_nudge":  player_nudge,
-                "home_form_delta": home_form_delta,   # <-- NEW (for sample)
-                "away_form_delta": away_form_delta,   # <-- NEW
+                "home_form_delta": home_form_delta,
+                "away_form_delta": away_form_delta,
             })
-    evaluated        = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
+
+    evaluated = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
     overall_hit_rate = round(w_hits / max(0.001, w_hits + w_misses) * 100, 1)
+
     by_market = []
     over_w_hits = over_w_total = under_w_hits = under_w_total = 0.0
     for market, stats in sorted(market_tracker.items()):
@@ -713,24 +844,30 @@ def _run_calibration(
             over_w_hits  += wh; over_w_total += wh + wm
         elif market.startswith("U"):
             under_w_hits += wh; under_w_total += wh + wm
+
     suggestion = _suggest_bias(
         over_w_hits, over_w_total,
         under_w_hits, under_w_total,
         current_over, current_under, current_tempo,
         overall_hit_rate, miss_patterns, lean_records,
     )
+
     sensitivity_suggestion = _suggest_sensitivities(
         deg_det_records,
         current_deg_sens, current_det_sens, current_eps_sens,
     )
-    form_delta_suggestion = _suggest_form_delta(      # <-- NEW
+
+    form_delta_suggestion = _suggest_form_delta(
         deg_det_records,
         current_form_sens,
     )
+
     suggestion["sensitivity"] = sensitivity_suggestion
-    suggestion["form_delta"] = form_delta_suggestion   # <-- NEW
+    suggestion["form_delta"] = form_delta_suggestion
+
     applied = False
     applied_changes = {}
+
     if apply and cfg:
         before = {
             "base_over_bias":  current_over,
@@ -762,6 +899,8 @@ def _run_calibration(
             suggestion["notes"].append(
                 "apply=true but nothing changed — already at suggested values."
             )
+
+        # Update sensitivity multipliers
         sens = sensitivity_suggestion
         sens_changed = {}
         SENS_MIN_CHANGE = 0.05
@@ -774,11 +913,12 @@ def _run_calibration(
             if suggested is not None and abs(suggested - current) >= SENS_MIN_CHANGE:
                 setattr(cfg, field, suggested)
                 sens_changed[field] = {"before": current, "after": suggested}
-        # NEW: apply form_delta_sensitivity if changed
+
         form_sens_suggested = form_delta_suggestion.get("form_delta_sensitivity")
         if form_sens_suggested is not None and abs(form_sens_suggested - current_form_sens) >= SENS_MIN_CHANGE:
             cfg.form_delta_sensitivity = form_sens_suggested
             sens_changed["form_delta_sensitivity"] = {"before": current_form_sens, "after": form_sens_suggested}
+
         if sens_changed:
             db.commit()
             applied = True
@@ -796,29 +936,38 @@ def _run_calibration(
             suggestion["notes"].append(
                 "Sensitivities: already at suggested values — no change."
             )
+
+        # Update team‑level nudges, including form‑based ones
         MIN_TEAM_SAMPLES = 6
         NUDGE_SCALE      = 0.3
         NUDGE_MAX        = 0.05
         team_nudges_applied = {}
+
         for team, stats in team_tracker.items():
             over_n  = stats["over_total"]
             under_n = stats["under_total"]
             over_nudge  = 0.0
             under_nudge = 0.0
+
             if over_n >= MIN_TEAM_SAMPLES:
                 team_over_rate  = stats["over_hits"] / over_n
                 gap = team_over_rate - (overall_hit_rate / 100.0)
                 over_nudge = round(
                     max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
                 )
+
             if under_n >= MIN_TEAM_SAMPLES:
                 team_under_rate = stats["under_hits"] / under_n
                 gap = team_under_rate - (overall_hit_rate / 100.0)
                 under_nudge = round(
                     max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
                 )
+
             if over_n < MIN_TEAM_SAMPLES and under_n < MIN_TEAM_SAMPLES:
-                continue
+                # Skip if no data, but still allow form nudges? We'll compute form nudges anyway.
+                pass
+
+            # DET nudge
             DET_NUDGE_MAX   = 0.15
             DET_NUDGE_SCALE = 0.50
             det_values = stats["det_values"]
@@ -836,6 +985,8 @@ def _run_calibration(
                 det_nudge = round(
                     max(-DET_NUDGE_MAX, min(DET_NUDGE_MAX, det_deviation * DET_NUDGE_SCALE)), 4
                 )
+
+            # DEG nudge
             DEG_NUDGE_MAX   = 0.10
             DEG_NUDGE_SCALE = 0.40
             from app.engine.pipeline import DEG_TRIGGER as _DEG_TRIGGER
@@ -844,6 +995,7 @@ def _run_calibration(
             deg_values   = stats["deg_values"]
             if len(deg_values) >= MIN_TEAM_SAMPLES:
                 team_avg_deg = round(sum(deg_values) / len(deg_values), 3)
+
             over_miss_det  = stats["over_miss_det"]
             if over_n >= MIN_TEAM_SAMPLES and over_miss_det:
                 low_deg_misses = sum(1 for d in over_miss_det if d < _DEG_TRIGGER)
@@ -858,17 +1010,35 @@ def _run_calibration(
                     deg_nudge = round(
                         max(-DEG_NUDGE_MAX, min(DEG_NUDGE_MAX, excess_miss * DEG_NUDGE_SCALE)), 4
                     )
+
+            # Compute form‑based nudges
+            form_nudges = _compute_form_nudges(stats, overall_hit_rate)
+            good_form_nudge = form_nudges["good"]
+            neutral_form_nudge = form_nudges["neutral"]
+            poor_form_nudge = form_nudges["poor"]
+
+            # Default thresholds (can be overridden later per team)
+            form_good_threshold = 3
+            form_poor_threshold = -3
+
+            # Update or create TeamConfig
             from datetime import datetime as _dt
             existing = (
                 db.query(TeamConfig)
                 .filter_by(league_code=league_code, team=team)
                 .first()
             )
+
             if existing:
                 existing.over_nudge      = over_nudge
                 existing.under_nudge     = under_nudge
                 existing.det_nudge       = det_nudge
                 existing.deg_nudge       = deg_nudge
+                existing.good_form_nudge = good_form_nudge
+                existing.neutral_form_nudge = neutral_form_nudge
+                existing.poor_form_nudge = poor_form_nudge
+                existing.form_good_threshold = form_good_threshold
+                existing.form_poor_threshold = form_poor_threshold
                 existing.avg_det         = team_avg_det
                 existing.avg_deg         = team_avg_deg
                 existing.over_hit_rate   = round(stats["over_hits"] / over_n, 3) if over_n else None
@@ -884,6 +1054,11 @@ def _run_calibration(
                     under_nudge=under_nudge,
                     det_nudge=det_nudge,
                     deg_nudge=deg_nudge,
+                    good_form_nudge=good_form_nudge,
+                    neutral_form_nudge=neutral_form_nudge,
+                    poor_form_nudge=poor_form_nudge,
+                    form_good_threshold=form_good_threshold,
+                    form_poor_threshold=form_poor_threshold,
                     avg_det=team_avg_det,
                     avg_deg=team_avg_deg,
                     over_hit_rate=round(stats["over_hits"] / over_n, 3) if over_n else None,
@@ -892,23 +1067,31 @@ def _run_calibration(
                     under_matches=under_n,
                     last_calibrated=_dt.utcnow(),
                 ))
+
+            # Track if any significant nudge was applied (for summary)
             if abs(over_nudge) > 0.005 or abs(under_nudge) > 0.005 \
-               or abs(det_nudge) > 0.01 or abs(deg_nudge) > 0.01:
+               or abs(det_nudge) > 0.01 or abs(deg_nudge) > 0.01 \
+               or abs(good_form_nudge) > 0.005 or abs(poor_form_nudge) > 0.005:
                 team_nudges_applied[team] = {
                     "over_nudge":  over_nudge,
                     "under_nudge": under_nudge,
                     "det_nudge":   det_nudge,
                     "deg_nudge":   deg_nudge,
+                    "good_form_nudge": good_form_nudge,
+                    "neutral_form_nudge": neutral_form_nudge,
+                    "poor_form_nudge": poor_form_nudge,
                     "over_rate":   round(stats["over_hits"] / over_n, 3) if over_n else None,
                     "over_n":      over_n,
                     "avg_det":     team_avg_det,
                 }
+
         db.commit()
+
         if team_nudges_applied:
             suggestion["notes"].append(
                 f"Team nudges applied: {len(team_nudges_applied)} teams adjusted. "
                 f"Notable: " + ", ".join(
-                    f"{t} ({v['over_nudge']:+.3f})"
+                    f"{t} (over={v['over_nudge']:+.3f}, good={v.get('good_form_nudge',0):+.3f})"
                     for t, v in sorted(
                         team_nudges_applied.items(),
                         key=lambda x: abs(x[1]["over_nudge"]),
@@ -918,7 +1101,9 @@ def _run_calibration(
             )
             applied_changes["team_nudges"] = team_nudges_applied
             applied = True
+
     suggestion["applied_changes"] = applied_changes
+
     try:
         calib_entry = CalibrationLog(
             league_code = league_code,
@@ -931,6 +1116,7 @@ def _run_calibration(
         db.commit()
     except Exception as _log_err:
         print(f"[calibration] Warning: could not save CalibrationLog: {_log_err}")
+
     return CalibResult(
         league_code=league_code,
         total_matches=total_matches,
@@ -942,7 +1128,9 @@ def _run_calibration(
         applied=applied,
         sample=sample_rows,
     )
-# ── Main calibration endpoint (single league — unchanged) ──────────
+
+
+# ── Main calibration endpoint (single league) ──────────────────────
 @router.get("/calibrate/league", response_model=CalibResult)
 def calibrate_league(
     league_code: str,
@@ -989,7 +1177,6 @@ def _calibrate_all_background(
         for idx, snap in enumerate(snapshots):
             lc = snap.league_code
 
-            # Update progress before starting this league
             with _jobs_lock:
                 _calibration_jobs[job_id]["progress"] = idx
                 _calibration_jobs[job_id]["current_league"] = lc
@@ -1075,14 +1262,7 @@ def calibrate_all_leagues(
 ):
     """
     Kick off bulk calibration as a background job.
-
-    Returns immediately with a job_id. Poll GET /calibrate/all/status?job_id=...
-    to track progress and retrieve results when done.
-
-    This prevents Render's 30s request timeout from killing long-running
-    calibration across many leagues.
     """
-    # Check there are actually snapshots before starting
     count = db.query(FBrefSnapshot).count()
     if count == 0:
         return {"message": "No snapshots found. Run the scraper first.", "results": []}
@@ -1119,15 +1299,6 @@ def calibrate_all_leagues(
 def calibrate_all_status(
     job_id: str = Query(..., description="Job ID from POST /calibrate/all"),
 ):
-    """
-    Poll the status of a bulk calibration job.
-
-    Returns:
-      - status: queued | running | done | error
-      - progress / total: how many leagues processed so far
-      - current_league: which league is being processed right now
-      - result: full results payload (only when status=done)
-    """
     with _jobs_lock:
         job = _calibration_jobs.get(job_id)
 
@@ -1158,10 +1329,6 @@ def calibrate_all_status(
 
 @router.get("/calibrate/all/jobs")
 def list_calibration_jobs():
-    """
-    List all known calibration jobs (in-memory, current dyno only).
-    Useful for finding your job_id if you lost it.
-    """
     with _jobs_lock:
         return {
             "jobs": [
@@ -1199,6 +1366,7 @@ def reset_league_calibration(
     NEUTRAL_UNDER       = 0.5
     NEUTRAL_TEMPO       = 0.50
     NEUTRAL_SENSITIVITY = 1.0
+
     cfg = db.query(LeagueConfig).filter_by(league_code=league_code).first()
     if cfg:
         cfg.base_over_bias  = NEUTRAL_OVER
@@ -1207,7 +1375,7 @@ def reset_league_calibration(
         cfg.deg_sensitivity = NEUTRAL_SENSITIVITY
         cfg.det_sensitivity = NEUTRAL_SENSITIVITY
         cfg.eps_sensitivity = NEUTRAL_SENSITIVITY
-        cfg.form_delta_sensitivity = 0.0   # <-- NEW
+        cfg.form_delta_sensitivity = 0.0
         db.commit()
         result["league_config"] = {
             "base_over_bias":  NEUTRAL_OVER,
@@ -1226,6 +1394,7 @@ def reset_league_calibration(
         )
     else:
         result["notes"].append(f"No LeagueConfig found for {league_code} — nothing to reset.")
+
     deleted = (
         db.query(TeamConfig)
         .filter_by(league_code=league_code)
@@ -1234,6 +1403,7 @@ def reset_league_calibration(
     db.commit()
     result["team_nudges_wiped"] = deleted
     result["notes"].append(f"Wiped {deleted} team nudge(s) for {league_code}.")
+
     if wipe_snapshot:
         snap_deleted = (
             db.query(FBrefSnapshot)
@@ -1248,4 +1418,5 @@ def reset_league_calibration(
             )
         else:
             result["notes"].append("No snapshot found to wipe.")
+
     return result
