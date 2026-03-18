@@ -63,3 +63,6 @@ LEAGUE_MAP = {
     "UEL":     "https://fbref.com/en/comps/19/schedule/Europa-League-Scores-and-Fixtures",
     "UECL":    "https://fbref.com/en/comps/882/schedule/Conference-League-Scores-and-Fixtures",
 }
+
+# Alias for player scraper
+SCHEDULE_URLS = LEAGUE_MAP
