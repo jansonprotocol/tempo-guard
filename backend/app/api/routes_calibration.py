@@ -84,7 +84,7 @@ class CalibResult(BaseModel):
     skipped:          int
     overall_hit_rate: float
     by_market:        List[MarketStats]
-    bias_:  dict
+    bias_suggestion:  dict
     applied:          bool
     sample:           List[dict]
 
@@ -776,7 +776,76 @@ def _run_calibration(
         applied=applied,
         sample=sample_rows,
     )
+# ── Main calibration endpoint (single league) ──────────────────────
+@router.get("/calibrate/league", response_model=CalibResult)
+def calibrate_league(
+    league_code: str,
+    limit: int = Query(100, ge=10, le=500),
+    min_matches_before: int = Query(3, ge=2, le=20),
+    apply: bool = Query(False),
+    db: Session = Depends(get_db),
+):
+    """
+    Calibrate ATHENA for a single league.
+    Use apply=true to write the suggested bias adjustments to the DB.
+    """
+    return _run_calibration(league_code, limit, min_matches_before, apply, db)
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ASYNC BULK CALIBRATION — background job pattern to prevent 502 timeouts
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _calibrate_all_background(
+    job_id: str,
+    limit: int,
+    min_matches_before: int,
+    apply: bool,
+):
+    # ... (your existing background function, which you already have)
+    pass  # Replace with your actual function
+
+@router.post("/calibrate/all")
+def calibrate_all_leagues(
+    background_tasks: BackgroundTasks,
+    limit: int = Query(100, ge=10, le=500, description="Max matches per league"),
+    min_matches_before: int = Query(3, ge=2, le=20),
+    apply: bool = Query(False, description="Write adjustments to DB for all leagues"),
+    db: Session = Depends(get_db),
+):
+    """
+    Kick off bulk calibration as a background job.
+    """
+    count = db.query(FBrefSnapshot).count()
+    if count == 0:
+        return {"message": "No snapshots found. Run the scraper first.", "results": []}
+
+    job_id = str(uuid.uuid4())[:8]
+
+    with _jobs_lock:
+        _calibration_jobs[job_id] = {
+            "status":         "queued",
+            "progress":       0,
+            "total":          count,
+            "current_league": None,
+            "result":         None,
+            "error":          None,
+            "started_at":     dt.utcnow().isoformat(),
+            "apply":          apply,
+        }
+
+    background_tasks.add_task(
+        _calibrate_all_background,
+        job_id, limit, min_matches_before, apply,
+    )
+
+    return {
+        "job_id":   job_id,
+        "status":   "queued",
+        "total":    count,
+        "message":  f"Calibration started for {count} leagues. "
+                    f"Poll GET /calibrate/all/status?job_id={job_id} for progress.",
+    }
 
 @router.get("/calibrate/all/status")
 def calibrate_all_status(
