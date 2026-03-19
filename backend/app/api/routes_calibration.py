@@ -485,14 +485,14 @@ def _run_calibration(
                 "away_form_delta": away_form_delta,
             })
 
-    evaluated = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
+        evaluated = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
     overall_hit_rate = round(w_hits / max(0.001, w_hits + w_misses) * 100, 1)
 
     by_market = []
     over_w_hits = over_w_total = under_w_hits = under_w_total = 0.0
     for market, stats in sorted(market_tracker.items()):
-        wh   = stats["w_hits"]
-        wm   = stats["w_misses"]
+        wh = stats["w_hits"]
+        wm = stats["w_misses"]
         rate = round(wh / max(0.001, wh + wm) * 100, 1)
         by_market.append(MarketStats(
             market=market, hits=stats["raw_hits"],
@@ -500,31 +500,33 @@ def _run_calibration(
             hit_rate=rate,
         ))
         if market.startswith("O"):
-            over_w_hits  += wh; over_w_total += wh + wm
+            over_w_hits += wh
+            over_w_total += wh + wm
         elif market.startswith("U"):
-            under_w_hits += wh; under_w_total += wh + wm
+            under_w_hits += wh
+            under_w_total += wh + wm
 
+    # ---- Build suggestions ----
     suggestion = _suggest_bias(
         over_w_hits, over_w_total,
         under_w_hits, under_w_total,
         current_over, current_under, current_tempo,
         overall_hit_rate, miss_patterns, lean_records,
     )
-  
-if suggestion is None:
-    print("[calibration] ERROR: _suggest_bias returned None!")
-    suggestion = {
-        "base_over_bias": current_over,
-        "base_under_bias": current_under,
-        "tempo_factor": current_tempo,
-        "notes": ["Fallback due to None return"],
-        "target_hit_rate": TARGET_HIT_RATE,
-        "current_hit_rate": round(overall_hit_rate / 100, 3),
-        "gap_to_target": round(TARGET_HIT_RATE - overall_hit_rate / 100, 3),
-        "miss_patterns": miss_patterns,
-        "lean_analysis": {"analysis": []},
-        "applied_changes": {},
-    }
+    if suggestion is None:
+        print("[calibration] ERROR: _suggest_bias returned None!")
+        suggestion = {
+            "base_over_bias": current_over,
+            "base_under_bias": current_under,
+            "tempo_factor": current_tempo,
+            "notes": ["Fallback due to None return"],
+            "target_hit_rate": TARGET_HIT_RATE,
+            "current_hit_rate": round(overall_hit_rate / 100, 3),
+            "gap_to_target": round(TARGET_HIT_RATE - overall_hit_rate / 100, 3),
+            "miss_patterns": miss_patterns,
+            "lean_analysis": {"analysis": []},
+            "applied_changes": {},
+        }
 
     sensitivity_suggestion = _suggest_sensitivities(
         deg_det_records,
@@ -774,171 +776,6 @@ if suggestion is None:
         applied=applied,
         sample=sample_rows,
     )
-
-
-# ── Main calibration endpoint (single league) ──────────────────────
-@router.get("/calibrate/league", response_model=CalibResult)
-def calibrate_league(
-    league_code: str,
-    limit: int = Query(100, ge=10, le=500),
-    min_matches_before: int = Query(3, ge=2, le=20),
-    apply: bool = Query(False),
-    db: Session = Depends(get_db),
-):
-    """
-    Calibrate ATHENA for a single league.
-    Use apply=true to write the suggested bias adjustments to the DB.
-    """
-    return _run_calibration(league_code, limit, min_matches_before, apply, db)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# ASYNC BULK CALIBRATION — background job pattern to prevent 502 timeouts
-# ══════════════════════════════════════════════════════════════════════════════
-
-def _calibrate_all_background(
-    job_id: str,
-    limit: int,
-    min_matches_before: int,
-    apply: bool,
-):
-    """
-    Background worker: iterates all leagues one by one, updating job
-    status in the in-memory store after each league completes.
-    Uses its own DB session (not FastAPI's request-scoped one).
-    """
-    db = SessionLocal()
-    try:
-        snapshots = db.query(FBrefSnapshot).all()
-        total = len(snapshots)
-
-        with _jobs_lock:
-            _calibration_jobs[job_id]["total"] = total
-            _calibration_jobs[job_id]["status"] = "running"
-
-        results  = []
-        skipped  = []
-        applied_n = 0
-
-        for idx, snap in enumerate(snapshots):
-            lc = snap.league_code
-
-            with _jobs_lock:
-                _calibration_jobs[job_id]["progress"] = idx
-                _calibration_jobs[job_id]["current_league"] = lc
-
-            try:
-                result = _run_calibration(lc, limit, min_matches_before, apply, db)
-            except Exception as exc:
-                skipped.append({"league_code": lc, "reason": f"Exception: {exc}"})
-                continue
-
-            if isinstance(result, JSONResponse):
-                import json as _json
-                body = _json.loads(
-                    result.body if isinstance(result.body, str)
-                    else result.body.decode("utf-8")
-                )
-                skipped.append({
-                    "league_code": lc,
-                    "reason": body.get("detail", "unknown error"),
-                })
-                continue
-
-            if result.overall_hit_rate >= 80:
-                vflag = "green"
-            elif result.overall_hit_rate >= 70:
-                vflag = "orange"
-            else:
-                vflag = "red"
-
-            if result.applied:
-                applied_n += 1
-
-            results.append({
-                "league_code":     lc,
-                "hit_rate":        result.overall_hit_rate,
-                "variance_flag":   vflag,
-                "evaluated":       result.evaluated,
-                "total_matches":   result.total_matches,
-                "applied":         result.applied,
-                "bias_suggestion": result.bias_suggestion,
-            })
-
-        results.sort(key=lambda x: x["hit_rate"])
-
-        final = {
-            "run_at":          dt.utcnow().isoformat(),
-            "apply":           apply,
-            "leagues_run":     len(results),
-            "leagues_skipped": len(skipped),
-            "applied_count":   applied_n,
-            "summary": {
-                "green":  sum(1 for r in results if r["variance_flag"] == "green"),
-                "orange": sum(1 for r in results if r["variance_flag"] == "orange"),
-                "red":    sum(1 for r in results if r["variance_flag"] == "red"),
-            },
-            "results": results,
-            "skipped": skipped,
-        }
-
-        with _jobs_lock:
-            _calibration_jobs[job_id]["status"]   = "done"
-            _calibration_jobs[job_id]["progress"] = total
-            _calibration_jobs[job_id]["current_league"] = None
-            _calibration_jobs[job_id]["result"]   = final
-
-    except Exception as exc:
-        import traceback
-        with _jobs_lock:
-            _calibration_jobs[job_id]["status"] = "error"
-            _calibration_jobs[job_id]["error"]  = str(exc)
-            _calibration_jobs[job_id]["traceback"] = traceback.format_exc()
-    finally:
-        db.close()
-
-
-@router.post("/calibrate/all")
-def calibrate_all_leagues(
-    background_tasks: BackgroundTasks,
-    limit: int = Query(100, ge=10, le=500, description="Max matches per league"),
-    min_matches_before: int = Query(3, ge=2, le=20),
-    apply: bool = Query(False, description="Write adjustments to DB for all leagues"),
-    db: Session = Depends(get_db),
-):
-    """
-    Kick off bulk calibration as a background job.
-    """
-    count = db.query(FBrefSnapshot).count()
-    if count == 0:
-        return {"message": "No snapshots found. Run the scraper first.", "results": []}
-
-    job_id = str(uuid.uuid4())[:8]
-
-    with _jobs_lock:
-        _calibration_jobs[job_id] = {
-            "status":         "queued",
-            "progress":       0,
-            "total":          count,
-            "current_league": None,
-            "result":         None,
-            "error":          None,
-            "started_at":     dt.utcnow().isoformat(),
-            "apply":          apply,
-        }
-
-    background_tasks.add_task(
-        _calibrate_all_background,
-        job_id, limit, min_matches_before, apply,
-    )
-
-    return {
-        "job_id":   job_id,
-        "status":   "queued",
-        "total":    count,
-        "message":  f"Calibration started for {count} leagues. "
-                    f"Poll GET /calibrate/all/status?job_id={job_id} for progress.",
-    }
 
 
 @router.get("/calibrate/all/status")
