@@ -25,6 +25,7 @@ load_dotenv(override=True)
 import pandas as pd
 import requests
 from seleniumbase import Driver
+from sqlalchemy.orm import Session 
 
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
