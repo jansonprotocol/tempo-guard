@@ -5,21 +5,31 @@ Shared between the CLI script and the API endpoint.
 """
 
 import os
+import sys
 from pathlib import Path
+from typing import Optional, List, Dict, Any
+from datetime import datetime, date, timedelta
+
 from dotenv import load_dotenv
 
+# Load environment variables
 env_path = Path(__file__).parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
 
 import pandas as pd
-from datetime import datetime, timedelta
-from seleniumbase import Driver
+import numpy as np
+from sqlalchemy.orm import Session
+from sqlalchemy import func, and_
 
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
-from app.services.data_providers.fbref_base import _parse_score_column, _resolve_columns
-from app.services.scrapers.match_stats_scraper import scrape_match_player_stats, _store_match_stats
-from app.services.resolve_team import resolve_team_name
+from app.database.models_predictions import FBrefFixture, PredictionLog
+from app.models.team_config import TeamConfig
+from app.models.league_config import LeagueConfig
+from app.services.data_providers.fbref_base import asof_features, _parse_score_column, _resolve_columns
+from app.services.predict import predict_match
+from app.engine.types import MatchRequest
+from app.util.asian_lines import evaluate_market, hit_weight
 
 def backfill_league(
     league_code: str,
