@@ -11,6 +11,7 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime, date, timedelta
 
 from dotenv import load_dotenv
+from seleniumbase import Driver  # <-- ADD THIS
 
 # Load environment variables
 env_path = Path(__file__).parent.parent / ".env"
