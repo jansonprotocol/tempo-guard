@@ -10,7 +10,7 @@ class Team(Base):
     display_name = Column(String, nullable=False)  # what you want to show in UI
     league_code = Column(String, index=True, nullable=False)  # e.g., NL-EDIV
     country = Column(String, default="")  # optional metadata
-
+    current_position = Column(Integer, nullable=True) 
     aliases = relationship("TeamAlias", back_populates="team", cascade="all, delete-orphan")
 
 class TeamAlias(Base):
