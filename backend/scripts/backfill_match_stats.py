@@ -1,16 +1,24 @@
-# backend/scripts/backfill_match_stats.py
 """
-CLI wrapper for backfilling player match statistics.
-"""
-import argparse
-import sys
-from datetime import date
-from pathlib import Path
+backend/scripts/backfill_match_stats.py
 
-# Add project root to path so that app can be imported
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+Backfill match statistics for a league or all leagues.
+"""
+
+import os
+import sys
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
+# Add project root to path
+path_root = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(path_root))
 
 from app.services.backfill_service import backfill_league
+import argparse
 from app.core.constants import LEAGUE_MAP
 
 def main():
