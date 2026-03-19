@@ -528,10 +528,22 @@ def _run_calibration(
             "applied_changes": {},
         }
 
-    sensitivity_suggestion = _suggest_sensitivities(
-        deg_det_records,
-        current_deg_sens, current_det_sens, current_eps_sens,
-    )
+    # ... (previous code)
+sensitivity_suggestion = _suggest_sensitivities(
+    deg_det_records,
+    current_deg_sens, current_det_sens, current_eps_sens,
+)
+
+# ---------- INSERT THE FALLBACK HERE ----------
+if sensitivity_suggestion is None:
+    sensitivity_suggestion = {
+        "deg_sensitivity": current_deg_sens,
+        "det_sensitivity": current_det_sens,
+        "eps_sensitivity": current_eps_sens,
+        "insufficient_data": True,
+        "note": "No sensitivity suggestion returned (likely insufficient data)"
+    }
+# ------------------------------------------------
 
     form_delta_suggestion = _suggest_form_delta(
         deg_det_records,
