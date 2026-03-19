@@ -485,7 +485,7 @@ def _run_calibration(
                 "away_form_delta": away_form_delta,
             })
 
-        evaluated = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
+    evaluated = sum(s["raw_hits"] + s["raw_misses"] for s in market_tracker.values())
     overall_hit_rate = round(w_hits / max(0.001, w_hits + w_misses) * 100, 1)
 
     by_market = []
@@ -507,45 +507,45 @@ def _run_calibration(
             under_w_total += wh + wm
 
     # ---- Build suggestions ----
-suggestion = _suggest_bias(
-    over_w_hits, over_w_total,
-    under_w_hits, under_w_total,
-    current_over, current_under, current_tempo,
-    overall_hit_rate, miss_patterns, lean_records,
-)
-if suggestion is None:
-    print("[calibration] ERROR: _suggest_bias returned None!")
-    suggestion = {
-        "base_over_bias": current_over,
-        "base_under_bias": current_under,
-        "tempo_factor": current_tempo,
-        "notes": ["Fallback due to None return"],
-        "target_hit_rate": TARGET_HIT_RATE,
-        "current_hit_rate": round(overall_hit_rate / 100, 3),
-        "gap_to_target": round(TARGET_HIT_RATE - overall_hit_rate / 100, 3),
-        "miss_patterns": miss_patterns,
-        "lean_analysis": {"analysis": []},
-        "applied_changes": {},
-    }
+    suggestion = _suggest_bias(
+        over_w_hits, over_w_total,
+        under_w_hits, under_w_total,
+        current_over, current_under, current_tempo,
+        overall_hit_rate, miss_patterns, lean_records,
+    )
+    if suggestion is None:
+        print("[calibration] ERROR: _suggest_bias returned None!")
+        suggestion = {
+            "base_over_bias": current_over,
+            "base_under_bias": current_under,
+            "tempo_factor": current_tempo,
+            "notes": ["Fallback due to None return"],
+            "target_hit_rate": TARGET_HIT_RATE,
+            "current_hit_rate": round(overall_hit_rate / 100, 3),
+            "gap_to_target": round(TARGET_HIT_RATE - overall_hit_rate / 100, 3),
+            "miss_patterns": miss_patterns,
+            "lean_analysis": {"analysis": []},
+            "applied_changes": {},
+        }
 
-# Sensitivity suggestion
-sensitivity_suggestion = _suggest_sensitivities(
-    deg_det_records,
-    current_deg_sens, current_det_sens, current_eps_sens,
-)
+    # Sensitivity suggestion
+    sensitivity_suggestion = _suggest_sensitivities(
+        deg_det_records,
+        current_deg_sens, current_det_sens, current_eps_sens,
+    )
 
-# ---------- FALLBACK FOR None ----------
-if sensitivity_suggestion is None:
-    sensitivity_suggestion = {
-        "deg_sensitivity": current_deg_sens,
-        "det_sensitivity": current_det_sens,
-        "eps_sensitivity": current_eps_sens,
-        "insufficient_data": True,
-        "note": "No sensitivity suggestion returned (likely insufficient data)"
-    }
-# ---------------------------------------
+    # ---------- FALLBACK FOR None ----------
+    if sensitivity_suggestion is None:
+        sensitivity_suggestion = {
+            "deg_sensitivity": current_deg_sens,
+            "det_sensitivity": current_det_sens,
+            "eps_sensitivity": current_eps_sens,
+            "insufficient_data": True,
+            "note": "No sensitivity suggestion returned (likely insufficient data)"
+        }
+    # ---------------------------------------
 
- form_delta_suggestion = _suggest_form_delta(
+    form_delta_suggestion = _suggest_form_delta(
         deg_det_records,
         current_form_sens,
     )
@@ -556,10 +556,7 @@ if sensitivity_suggestion is None:
     applied = False
     applied_changes = {}
 
-    # Now the line 'if apply and cfg:' should be at the same indentation level:
     if apply and cfg:
-
-      
         before = {
             "base_over_bias":  current_over,
             "base_under_bias": current_under,
