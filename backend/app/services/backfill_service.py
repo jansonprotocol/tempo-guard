@@ -30,6 +30,7 @@ from app.models.team_config import TeamConfig
 from app.models.league_config import LeagueConfig
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column, _resolve_columns
 from app.services.predict import predict_match
+from app.services.resolve_team import resolve_team_name 
 from app.engine.types import MatchRequest
 from app.util.asian_lines import evaluate_market, hit_weight
 
