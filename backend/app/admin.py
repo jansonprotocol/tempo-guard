@@ -48,10 +48,16 @@ class TeamAdmin(ModelView, model=Team):
     name = "Team"
     name_plural = "Teams"
     icon = "fa-solid fa-shield-halved"
-    column_list = [Team.id, Team.team_key, Team.display_name, Team.league_code, Team.country]
+    column_list = [
+        Team.id, Team.team_key, Team.display_name, 
+        Team.league_code, Team.country, Team.current_position  # <-- ADDED
+    ]
     column_searchable_list = [Team.team_key, Team.display_name, Team.league_code]
     column_default_sort = ("league_code", False)
-    column_details_list = ["id", "team_key", "display_name", "league_code", "country", "aliases"]
+    column_details_list = [
+        "id", "team_key", "display_name", "league_code", 
+        "country", "current_position", "aliases"  # <-- ADDED
+    ]
     form_columns = ["team_key", "display_name", "league_code", "country"]
     can_create = True
     can_edit = True
@@ -147,6 +153,12 @@ class PlayerMatchStatsAdmin(ModelView, model=PlayerMatchStats):
     name = "Player Match Stats"
     name_plural = "Player Match Stats"
     icon = "fa-solid fa-clock"
+    
+    async def player_name(self, instance):
+        db = self.session
+        player = db.query(Player).filter(Player.id == instance.player_id).first()
+        return player.name if player else "-"
+    
     column_list = [
         PlayerMatchStats.id,
         "player_name",
@@ -169,11 +181,6 @@ class PlayerMatchStatsAdmin(ModelView, model=PlayerMatchStats):
     can_delete = True
     can_view_details = True
     page_size = 50
-
-    async def player_name(self, instance):
-        db = self.session
-        player = db.query(Player).filter(Player.id == instance.player_id).first()
-        return player.name if player else "-"
 
 
 class SquadSnapshotAdmin(ModelView, model=SquadSnapshot):
@@ -246,7 +253,7 @@ def setup_admin(app: FastAPI):
     admin.add_view(TeamConfigAdmin)
     admin.add_view(PlayerAdmin)
     admin.add_view(PlayerSeasonStatsAdmin)
-    admin.add_view(PlayerMatchStatsAdmin)   # <-- new
+    admin.add_view(PlayerMatchStatsAdmin)
     admin.add_view(SquadSnapshotAdmin)
     admin.add_view(FBrefFixtureAdmin)
     admin.add_view(PredictionLogAdmin)
