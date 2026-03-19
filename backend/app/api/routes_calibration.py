@@ -84,7 +84,7 @@ class CalibResult(BaseModel):
     skipped:          int
     overall_hit_rate: float
     by_market:        List[MarketStats]
-    bias_suggestion:  dict
+    bias_:  dict
     applied:          bool
     sample:           List[dict]
 
@@ -106,7 +106,7 @@ def _find_optimal_bias_shift(lean_records: list) -> dict:
     pass
 
 
-# ── Sensitivity suggestion ─────────────────────────────────────────
+# ── Sensitivity  ─────────────────────────────────────────
 def _suggest_sensitivities(
     deg_det_records: list,
     current_deg_sens: float,
@@ -117,7 +117,7 @@ def _suggest_sensitivities(
     pass
 
 
-# ── Form delta sensitivity suggestion ───────────────────────────────
+# ── Form delta sensitivity  ───────────────────────────────
 def _suggest_form_delta(
     deg_det_records: list,
     current_form_sens: float,
@@ -174,7 +174,7 @@ def _suggest_form_delta(
     return result
 
 
-# ── Bias suggestion ────────────────────────────────────────────────
+# ── Bias  ────────────────────────────────────────────────
 def _suggest_bias(
     over_hits: float, over_total: float,
     under_hits: float, under_total: float,
@@ -504,12 +504,21 @@ def _run_calibration(
         elif market.startswith("U"):
             under_w_hits += wh; under_w_total += wh + wm
 
-    suggestion = _suggest_bias(
-        over_w_hits, over_w_total,
-        under_w_hits, under_w_total,
-        current_over, current_under, current_tempo,
-        overall_hit_rate, miss_patterns, lean_records,
-    )
+suggestion = _suggest_bias(...)
+if suggestion is None:
+    print("[calibration] ERROR: _suggest_bias returned None!")
+    suggestion = {
+        "base_over_bias": current_over,
+        "base_under_bias": current_under,
+        "tempo_factor": current_tempo,
+        "notes": ["Fallback due to None return"],
+        "target_hit_rate": TARGET_HIT_RATE,
+        "current_hit_rate": round(overall_hit_rate / 100, 3),
+        "gap_to_target": round(TARGET_HIT_RATE - overall_hit_rate / 100, 3),
+        "miss_patterns": miss_patterns,
+        "lean_analysis": {"analysis": []},
+        "applied_changes": {},
+    }
 
     sensitivity_suggestion = _suggest_sensitivities(
         deg_det_records,
