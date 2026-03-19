@@ -6,6 +6,7 @@ Shared between the CLI script and the API endpoint.
 
 import os
 import sys
+import io
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date, timedelta
