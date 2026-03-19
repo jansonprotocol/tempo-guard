@@ -4,11 +4,15 @@ Core logic for backfilling player match statistics.
 Shared between the CLI script and the API endpoint.
 """
 
-from datetime import date
-from typing import Optional
-import time
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path)
+
 import pandas as pd
-import io
+from datetime import datetime, timedelta
 from seleniumbase import Driver
 
 from app.database.db import SessionLocal
