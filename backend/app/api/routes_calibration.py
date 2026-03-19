@@ -545,18 +545,21 @@ if sensitivity_suggestion is None:
     }
 # ---------------------------------------
 
-form_delta_suggestion = _suggest_form_delta(
-    deg_det_records,
-    current_form_sens,
-)
+ form_delta_suggestion = _suggest_form_delta(
+        deg_det_records,
+        current_form_sens,
+    )
 
-suggestion["sensitivity"] = sensitivity_suggestion
-suggestion["form_delta"] = form_delta_suggestion
+    suggestion["sensitivity"] = sensitivity_suggestion
+    suggestion["form_delta"] = form_delta_suggestion
 
-applied = False
-applied_changes = {}
-# ... (rest of the function remains unchanged)
+    applied = False
+    applied_changes = {}
+
+    # Now the line 'if apply and cfg:' should be at the same indentation level:
     if apply and cfg:
+
+      
         before = {
             "base_over_bias":  current_over,
             "base_under_bias": current_under,
