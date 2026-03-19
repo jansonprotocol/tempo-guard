@@ -2,6 +2,7 @@
 backend/scripts/scrape_fixtures.py
 
 Scrapes FBref schedule pages for completed scores and upcoming fixtures.
+Also extracts current league standings and updates teams table.
 Stores completed matches in FBrefSnapshot, upcoming matches in FBrefFixtures.
 """
 
@@ -28,8 +29,9 @@ from seleniumbase import Driver
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
 from app.database.models_predictions import FBrefFixture
+from app.models.team import Team
 from app.util.team_resolver import resolve_and_learn
-from app.core.constants import LEAGUE_MAP  # <-- IMPORT FROM CONSTANTS
+from app.core.constants import LEAGUE_MAP
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -105,31 +107,52 @@ def _fetch_with_driver(driver, url: str, label: str) -> Optional[str]:
         print(f"    Browser error ({label}): {e}")
         return None
 
-def _parse_page(html: str, league_code: str = "") -> Optional[pd.DataFrame]:
+def _parse_page(html: str, league_code: str = "") -> tuple[Optional[pd.DataFrame], Optional[pd.DataFrame]]:
+    """
+    Parse FBref page, returns (schedule_df, standings_df).
+    Both may be None if not found.
+    """
     if "Just a moment" in html or len(html) < 5000:
         print("  Cloudflare blocked.")
-        return None
+        return None, None
 
     try:
         tables = pd.read_html(io.StringIO(html))
     except Exception as e:
         print(f"  Parse error: {e}")
-        return None
+        return None, None
 
     if not tables:
-        return None
+        return None, None
 
     is_intl = league_code in ("UCL", "UEL", "UECL", "EC", "WC")
 
-    # Helper to detect schedule by column names
-    def has_schedule_columns(df):
+    # Helper to check if a table is a schedule (has date, home, away columns)
+    def is_schedule_table(df):
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = [
                 " ".join(str(v) for v in col if str(v) != "nan").strip()
                 for col in df.columns
             ]
         cols_lower = [str(c).lower() for c in df.columns]
-        return any('date' in c for c in cols_lower) and any('home' in c for c in cols_lower) and any('away' in c for c in cols_lower)
+        has_date = any('date' in c for c in cols_lower)
+        has_home = any('home' in c for c in cols_lower)
+        has_away = any('away' in c for c in cols_lower)
+        return has_date and has_home and has_away
+
+    # Helper to check if a table is a standings table
+    def is_standings_table(df):
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [
+                " ".join(str(v) for v in col if str(v) != "nan").strip()
+                for col in df.columns
+            ]
+        cols_lower = [str(c).lower() for c in df.columns]
+        # Standings tables typically have 'rk', 'squad', 'pts', etc.
+        has_rk = any(c in ['rk', 'rank'] for c in cols_lower)
+        has_squad = any(c in ['squad', 'team'] for c in cols_lower)
+        has_pts = any(c in ['pts', 'points'] for c in cols_lower)
+        return has_rk and has_squad and has_pts
 
     # Helper to detect schedule by looking at row values (date pattern)
     def contains_dates(df, sample_rows=5):
@@ -145,75 +168,89 @@ def _parse_page(html: str, league_code: str = "") -> Optional[pd.DataFrame]:
                     return True
         return False
 
+    schedule_df = None
+    standings_df = None
+
     if not is_intl:
-        # First pass: look for table with date/home/away columns
+        # Find schedule table
         for df in tables:
-            if has_schedule_columns(df):
-                df = df.dropna(how="all")
-                print(f"  Found schedule table by column names with {len(df)} rows")
-                return df
+            if is_schedule_table(df):
+                schedule_df = df.dropna(how="all")
+                print(f"  Found schedule table by column names with {len(schedule_df)} rows")
+                break
 
-        # Second pass: look for tables containing date strings
-        candidates = []
-        for idx, df in enumerate(tables):
-            if df.shape[1] >= 3 and contains_dates(df):
-                print(f"  Table {idx+1} contains dates – candidate schedule table")
-                candidates.append(df)
+        if schedule_df is None:
+            # Second pass: look for tables containing date strings
+            candidates = []
+            for idx, df in enumerate(tables):
+                if is_standings_table(df):
+                    # This is standings, save it
+                    standings_df = df.dropna(how="all")
+                    print(f"  Found standings table with {len(standings_df)} rows")
+                    continue
+                if df.shape[1] >= 3 and contains_dates(df):
+                    print(f"  Table {idx+1} contains dates – candidate schedule table")
+                    candidates.append(df)
 
-        if candidates:
-            best = max(candidates, key=len)
-            best = best.dropna(how="all")
-            print(f"  Selected candidate schedule table with {len(best)} rows")
-            return best
+            if candidates:
+                schedule_df = max(candidates, key=len)
+                schedule_df = schedule_df.dropna(how="all")
+                print(f"  Selected candidate schedule table with {len(schedule_df)} rows")
 
-        print("  No schedule table found – using largest table")
-        df = max(tables, key=len)
-        df = df.dropna(how="all")
-        if not contains_dates(df):
-            print(f"  ⚠️ Largest table does not appear to contain dates. Columns: {list(df.columns[:10])}")
-        return df
+        if schedule_df is None:
+            print("  No schedule table found – using largest non-standings table")
+            non_standings = [df for df in tables if not is_standings_table(df)]
+            if non_standings:
+                schedule_df = max(non_standings, key=len)
+                schedule_df = schedule_df.dropna(how="all")
+                print(f"  Selected largest non-standings table with {len(schedule_df)} rows")
+            else:
+                schedule_df = max(tables, key=len)
+                schedule_df = schedule_df.dropna(how="all")
+                print(f"  Falling back to largest table with {len(schedule_df)} rows")
 
-    # International competitions: merge all schedule tables and tag with round info
-    schedule_tables = []
-    for t in tables:
-        if has_schedule_columns(t) or contains_dates(t):
-            if isinstance(t.columns, pd.MultiIndex):
-                t.columns = [
-                    " ".join(str(v) for v in col if str(v) != "nan").strip()
-                    for col in t.columns
-                ]
-            schedule_tables.append(t)
+    else:
+        # International competitions: merge all schedule tables
+        schedule_tables = []
+        for t in tables:
+            if is_schedule_table(t):
+                if isinstance(t.columns, pd.MultiIndex):
+                    t.columns = [
+                        " ".join(str(v) for v in col if str(v) != "nan").strip()
+                        for col in t.columns
+                    ]
+                schedule_tables.append(t)
 
-    if not schedule_tables:
-        print("  No schedule tables found – falling back to largest table.")
-        df = max(tables, key=len)
-        df = df.dropna(how="all")
-        return df
+        if schedule_tables:
+            merged_parts = []
+            for t in schedule_tables:
+                t = t.dropna(how="all").copy()
+                if isinstance(t.columns, pd.MultiIndex):
+                    t.columns = [
+                        " ".join(str(v) for v in col if str(v) != "nan").strip()
+                        for col in t.columns
+                    ]
+                cols_lower_map = {str(c).lower(): c for c in t.columns}
 
-    merged_parts = []
-    for t in schedule_tables:
-        t = t.dropna(how="all").copy()
-        if isinstance(t.columns, pd.MultiIndex):
-            t.columns = [
-                " ".join(str(v) for v in col if str(v) != "nan").strip()
-                for col in t.columns
-            ]
-        cols_lower_map = {str(c).lower(): c for c in t.columns}
+                round_col = cols_lower_map.get("round") or cols_lower_map.get("wk")
+                if round_col:
+                    vals = t[round_col].dropna().astype(str)
+                    vals = vals[~vals.str.lower().isin(["nan", "", "round", "wk"])]
+                    label = vals.mode()[0] if not vals.empty else None
+                else:
+                    label = None
 
-        round_col = cols_lower_map.get("round") or cols_lower_map.get("wk")
-        if round_col:
-            vals = t[round_col].dropna().astype(str)
-            vals = vals[~vals.str.lower().isin(["nan", "", "round", "wk"])]
-            label = vals.mode()[0] if not vals.empty else None
+                t["_round_raw"] = label
+                merged_parts.append(t)
+
+            schedule_df = pd.concat(merged_parts, ignore_index=True)
+            print(f"  Merged {len(schedule_tables)} schedule tables → {len(schedule_df)} rows")
         else:
-            label = None
+            schedule_df = max(tables, key=len)
+            schedule_df = schedule_df.dropna(how="all")
+            print(f"  No schedule tables – using largest table with {len(schedule_df)} rows")
 
-        t["_round_raw"] = label
-        merged_parts.append(t)
-
-    df = pd.concat(merged_parts, ignore_index=True)
-    print(f"  Merged {len(schedule_tables)} schedule tables → {len(df)} rows")
-    return df
+    return schedule_df, standings_df
 
 def _get_columns(df: pd.DataFrame) -> dict:
     if isinstance(df.columns, pd.MultiIndex):
@@ -275,6 +312,73 @@ def _classify_round_type(raw: Optional[str], match_date: date, league_code: str)
     if month == 5:
         return "semi_final" if match_date.day < 25 else "final"
     return None
+
+# ---------------------------------------------------------------------------
+# Standings processing
+# ---------------------------------------------------------------------------
+def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame) -> None:
+    """
+    Parse standings table and update teams.current_position.
+    """
+    if standings_df is None or standings_df.empty:
+        return
+
+    # Flatten columns if MultiIndex
+    if isinstance(standings_df.columns, pd.MultiIndex):
+        standings_df.columns = [
+            " ".join(str(v) for v in col if str(v) != "nan").strip()
+            for col in standings_df.columns
+        ]
+
+    # Find the relevant columns
+    cols_lower = {str(c).lower(): c for c in standings_df.columns}
+    
+    # Find position column (usually 'rk' or 'rank')
+    pos_col = None
+    for key in ['rk', 'rank', 'pos', 'position']:
+        if key in cols_lower:
+            pos_col = cols_lower[key]
+            break
+    
+    # Find team name column
+    team_col = None
+    for key in ['squad', 'team', 'club']:
+        if key in cols_lower:
+            team_col = cols_lower[key]
+            break
+    
+    if not pos_col or not team_col:
+        print(f"  Could not find position/team columns in standings")
+        return
+
+    # Process each row
+    updated = 0
+    for _, row in standings_df.iterrows():
+        try:
+            position = int(row[pos_col])
+            team_name_raw = str(row[team_col]).strip()
+            
+            if pd.isna(team_name_raw) or team_name_raw in ['', 'nan']:
+                continue
+            
+            # Resolve team name to canonical key
+            from app.services.resolve_team import resolve_team_name
+            team_key = resolve_team_name(db, team_name_raw, league_code)
+            
+            # Find and update team
+            team = db.query(Team).filter_by(team_key=team_key, league_code=league_code).first()
+            if team:
+                team.current_position = position
+                updated += 1
+            else:
+                print(f"  Team not found: {team_name_raw} -> {team_key}")
+        except Exception as e:
+            print(f"  Error processing standings row: {e}")
+            continue
+    
+    if updated:
+        db.commit()
+        print(f"  Updated positions for {updated} teams in {league_code}")
 
 # ---------------------------------------------------------------------------
 # Database operations
@@ -384,18 +488,28 @@ def scrape_league(league_code: str, url: str) -> None:
     if not html:
         return
 
-    df = _parse_page(html, league_code)
-    if df is None or df.empty:
-        print("  No data parsed.")
+    schedule_df, standings_df = _parse_page(html, league_code)
+
+    # Process standings if found
+    if standings_df is not None and not standings_df.empty:
+        db = SessionLocal()
+        try:
+            _process_standings(db, league_code, standings_df)
+        finally:
+            db.close()
+
+    # Process schedule
+    if schedule_df is None or schedule_df.empty:
+        print("  No schedule data parsed.")
         return
 
-    c = _get_columns(df)
+    c = _get_columns(schedule_df)
     if not all([c["date"], c["home"], c["away"]]):
-        print(f"  Missing required columns. Found: {list(df.columns[:10])}")
+        print(f"  Missing required columns. Found: {list(schedule_df.columns[:10])}")
         return
 
-    df[c["date"]] = pd.to_datetime(df[c["date"]], errors="coerce")
-    df = df.dropna(subset=[c["date"]])
+    schedule_df[c["date"]] = pd.to_datetime(schedule_df[c["date"]], errors="coerce")
+    schedule_df = schedule_df.dropna(subset=[c["date"]])
 
     today = date.today()
     cutoff = today + timedelta(days=FIXTURE_DAYS)
@@ -403,18 +517,18 @@ def scrape_league(league_code: str, url: str) -> None:
     # Split into completed and upcoming
     score_col = c["score"]
     if score_col:
-        has_score = df[score_col].astype(str).str.contains(r"\d[–\-]\d", na=False)
-        completed_df = df[has_score].copy()
-        upcoming_df = df[
+        has_score = schedule_df[score_col].astype(str).str.contains(r"\d[–\-]\d", na=False)
+        completed_df = schedule_df[has_score].copy()
+        upcoming_df = schedule_df[
             ~has_score &
-            (df[c["date"]].dt.date >= today) &
-            (df[c["date"]].dt.date <= cutoff)
+            (schedule_df[c["date"]].dt.date >= today) &
+            (schedule_df[c["date"]].dt.date <= cutoff)
         ].copy()
     else:
         completed_df = pd.DataFrame()
-        upcoming_df = df[
-            (df[c["date"]].dt.date >= today) &
-            (df[c["date"]].dt.date <= cutoff)
+        upcoming_df = schedule_df[
+            (schedule_df[c["date"]].dt.date >= today) &
+            (schedule_df[c["date"]].dt.date <= cutoff)
         ].copy()
 
     print(f"  Completed rows: {len(completed_df)}")
