@@ -504,7 +504,13 @@ def _run_calibration(
         elif market.startswith("U"):
             under_w_hits += wh; under_w_total += wh + wm
 
-suggestion = _suggest_bias(...)
+    suggestion = _suggest_bias(
+        over_w_hits, over_w_total,
+        under_w_hits, under_w_total,
+        current_over, current_under, current_tempo,
+        overall_hit_rate, miss_patterns, lean_records,
+    )
+  
 if suggestion is None:
     print("[calibration] ERROR: _suggest_bias returned None!")
     suggestion = {
