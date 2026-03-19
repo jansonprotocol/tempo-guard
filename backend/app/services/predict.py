@@ -9,7 +9,7 @@ from app.engine.pipeline import evaluate_athena
 from app.models.league_config import LeagueConfig
 from app.models.team_config import TeamConfig
 from app.services.squad_availability import auto_deg_from_depth
-from app.services.form_delta_history import get_historical_form_delta  # NEW import
+from app.services.form_delta_history import get_historical_form_delta
 
 
 # ── v2.0: Player power blend weight ─────────────────────────────────────────
@@ -77,36 +77,15 @@ def _get_team_nudge(
     league_code: str,
     home_team: str,
     away_team: str,
-    match_date: date | None = None,  # NEW: used for form‑based nudges
 ) -> float:
     """
-    Look up per-team calibration nudges, including base over_nudge and
-    form‑based nudges (good/neutral/poor). Returns combined nudge as
-    (home_total + away_total) / 2.
+    Look up per-team calibration nudges from TeamConfig.
+    Returns the average of home_nudge and away_nudge.
     """
     home_cfg, away_cfg = _get_team_configs(db, league_code, home_team, away_team)
-
-    def _team_total(cfg: TeamConfig | None, team: str) -> float:
-        if not cfg:
-            return 0.0
-        base = float(cfg.over_nudge or 0.0)
-        form_extra = 0.0
-        if match_date is not None:
-            delta = get_historical_form_delta(db, team, league_code, match_date)
-            if delta is not None:
-                good_thresh = cfg.form_good_threshold if cfg.form_good_threshold is not None else 3
-                poor_thresh = cfg.form_poor_threshold if cfg.form_poor_threshold is not None else -3
-                if delta >= good_thresh:
-                    form_extra = float(cfg.good_form_nudge or 0.0)
-                elif delta <= poor_thresh:
-                    form_extra = float(cfg.poor_form_nudge or 0.0)
-                else:
-                    form_extra = float(cfg.neutral_form_nudge or 0.0)
-        return base + form_extra
-
-    home_total = _team_total(home_cfg, home_team)
-    away_total = _team_total(away_cfg, away_team)
-    return (home_total + away_total) / 2.0
+    home_nudge = float(home_cfg.over_nudge or 0.0) if home_cfg else 0.0
+    away_nudge = float(away_cfg.over_nudge or 0.0) if away_cfg else 0.0
+    return (home_nudge + away_nudge) / 2.0
 
 
 def _get_player_power_nudge(
@@ -245,7 +224,7 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
     Pipeline:
       0. Resolve team names to canonical keys.
       1. Load league biases and sensitivities.
-      2. Compute team nudge (base over_nudge + form‑based nudge per team).
+      2. Compute team nudge (base over_nudge from TeamConfig).
       3. Compute player power nudge.
       4. Compute form delta nudge (league‑level).
       5. Apply squad depth adjustment (auto DEG).
@@ -267,9 +246,9 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
 
     over_bias, under_bias, tempo_factor = _get_league_bias(db, req.league_code)
 
-    # Team nudge (includes base over_nudge + form‑based per team)
+    # Team nudge (base over_nudge only)
     team_nudge = _get_team_nudge(
-        db, req.league_code, req.home_team, req.away_team, req.match_date
+        db, req.league_code, req.home_team, req.away_team
     )
 
     # Player power nudge
