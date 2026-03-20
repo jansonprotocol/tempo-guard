@@ -35,6 +35,8 @@ from app.services.predict import predict_match
 from app.services.data_providers.fbref_base import asof_features, _parse_score_column, _resolve_columns, _match_team, _norm
 from app.util.asian_lines import evaluate_market, hit_weight
 from app.services.resolve_team import resolve_team_name, clear_resolve_cache
+from app.services.weather_service import get_match_weather, get_stadium_coords, match_hour_utc
+from app.services.confidence_calibrator import calibrate_confidence
 
 # Auto-create tables if needed (optional, handled in main.py)
 Base.metadata.create_all(bind=engine)
@@ -230,6 +232,32 @@ def batch_predict(
                 fix.match_date,
             )
 
+            # ── Weather adjustment ───────────────────────────────────
+            # Fetch weather for this fixture if we have stadium coords.
+            # weather_impact is an additive adjustment to deg_pressure.
+            weather_tag    = None
+            weather_impact = 0.0
+            try:
+                coords = get_stadium_coords(home_resolved)
+                if coords:
+                    hour = match_hour_utc(getattr(fix, "match_time", None))
+                    w = get_match_weather(coords[0], coords[1], fix.match_date, hour_utc=hour)
+                    if w:
+                        weather_tag    = w["weather_tag"]
+                        weather_impact = w["weather_impact"]
+                        if weather_impact != 0.0:
+                            current_deg = metrics.get("deg_pressure") or 0.0
+                            metrics["deg_pressure"] = round(
+                                min(1.0, max(0.0, current_deg + weather_impact)), 3
+                            )
+                            print(
+                                f"[batch-predict] Weather {fix.league_code} "
+                                f"{home_resolved}: {weather_tag} "
+                                f"→ deg {current_deg:.3f}→{metrics['deg_pressure']:.3f}"
+                            )
+            except Exception as _we:
+                print(f"[batch-predict] Weather lookup failed for {home_resolved}: {_we}")
+
             # Use RESOLVED names for the prediction request + storage
             req = MatchRequest(
                 league_code=fix.league_code,
@@ -251,18 +279,30 @@ def batch_predict(
 
             pred = predict_match(db, req)
 
+            # ── Calibrated probability ───────────────────────────────
+            cal_prob = None
+            try:
+                cal_prob = calibrate_confidence(
+                    db, pred.confidence_score, league_code=fix.league_code
+                )
+            except Exception:
+                pass
+
             entry = {
-                "league_code":    fix.league_code,
-                "home_team":      home_resolved,
-                "away_team":      away_resolved,
-                "match_date":     fix.match_date.isoformat(),
-                "market":         pred.translated_play.market,
-                "confidence":     pred.translated_play.confidence,
-                "corridor_low":   pred.corridor.low,
-                "corridor_high":  pred.corridor.high,
-                "lean":           pred.corridor.lean,
-                "confidence_score": pred.confidence_score,
-                "variance_flag": _get_variance_flag(fix.league_code, db),
+                "league_code":           fix.league_code,
+                "home_team":             home_resolved,
+                "away_team":             away_resolved,
+                "match_date":            fix.match_date.isoformat(),
+                "market":                pred.translated_play.market,
+                "confidence":            pred.translated_play.confidence,
+                "corridor_low":          pred.corridor.low,
+                "corridor_high":         pred.corridor.high,
+                "lean":                  pred.corridor.lean,
+                "confidence_score":      pred.confidence_score,
+                "calibrated_probability": cal_prob,
+                "variance_flag":         _get_variance_flag(fix.league_code, db),
+                "weather_tag":           weather_tag,
+                "weather_impact":        weather_impact if weather_impact != 0.0 else None,
             }
             results.append(entry)
 
@@ -288,6 +328,7 @@ def batch_predict(
                     status="pending",
                     variance_flag=_get_variance_flag(fix.league_code, db),
                     predicted_at=datetime.utcnow(),
+                    weather_tag=weather_tag,
                 )
                 db.add(log)
             predicted += 1
@@ -518,26 +559,37 @@ def get_predictions(
 
         tags = _match_tags_safe(r.league_code, r.home_team, r.away_team)
 
+        # Calibrated probability (null if calibration not yet fitted)
+        cal_prob = None
+        try:
+            cal_prob = calibrate_confidence(
+                db, r.confidence_score, league_code=r.league_code
+            )
+        except Exception:
+            pass
+
         grouped[d].append({
-            "id":             r.id,
-            "league_code":    r.league_code,
-            "home_team":      r.home_team,
-            "away_team":      r.away_team,
-            "match_time":     getattr(r, "match_time", None),
-            "market":         r.market,
-            "confidence":     r.confidence,
-            "corridor":       f"{r.corridor_low}–{r.corridor_high}",
-            "lean":           r.lean,
-            "confidence_score": r.confidence_score,
-            "status":         r.status,
-            "actual_score":   r.actual_score,
-            "actual_total":   r.actual_total,
-            "p_two_plus":     r.p_two_plus,
-            "tempo_index":    r.tempo_index,
-            "predicted_at":   r.predicted_at.isoformat() if r.predicted_at else None,
-            "evaluated_at":   r.evaluated_at.isoformat() if r.evaluated_at else None,
-            "variance_flag":  getattr(r, "variance_flag", None),
-            "performance_tags": tags,
+            "id":                    r.id,
+            "league_code":           r.league_code,
+            "home_team":             r.home_team,
+            "away_team":             r.away_team,
+            "match_time":            getattr(r, "match_time", None),
+            "market":                r.market,
+            "confidence":            r.confidence,
+            "corridor":              f"{r.corridor_low}–{r.corridor_high}",
+            "lean":                  r.lean,
+            "confidence_score":      r.confidence_score,
+            "calibrated_probability": cal_prob,
+            "status":                r.status,
+            "actual_score":          r.actual_score,
+            "actual_total":          r.actual_total,
+            "p_two_plus":            r.p_two_plus,
+            "tempo_index":           r.tempo_index,
+            "predicted_at":          r.predicted_at.isoformat() if r.predicted_at else None,
+            "evaluated_at":          r.evaluated_at.isoformat() if r.evaluated_at else None,
+            "variance_flag":         getattr(r, "variance_flag", None),
+            "weather_tag":           getattr(r, "weather_tag", None),
+            "performance_tags":      tags,
         })
 
     return {
@@ -663,11 +715,11 @@ def migrate_add_variance_flag(db: Session = Depends(get_db)):
     if "calibration_log" not in existing_tables:
         db.execute(text("""
             CREATE TABLE calibration_log (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 league_code VARCHAR NOT NULL,
                 hit_rate FLOAT NOT NULL,
                 sample_size INTEGER,
-                applied BOOLEAN DEFAULT 0,
+                applied BOOLEAN DEFAULT false,
                 run_at TIMESTAMP
             )
         """))
