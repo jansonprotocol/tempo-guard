@@ -79,13 +79,72 @@ def _get_team_nudge(
     away_team: str,
 ) -> float:
     """
-    Look up per-team calibration nudges from TeamConfig.
-    Returns the average of home_nudge and away_nudge.
+    Look up per-team base calibration nudges from TeamConfig.
+    Returns the average of home over_nudge and away over_nudge.
     """
     home_cfg, away_cfg = _get_team_configs(db, league_code, home_team, away_team)
     home_nudge = float(home_cfg.over_nudge or 0.0) if home_cfg else 0.0
     away_nudge = float(away_cfg.over_nudge or 0.0) if away_cfg else 0.0
     return (home_nudge + away_nudge) / 2.0
+
+
+def _get_team_form_nudge(
+    db: Session,
+    league_code: str,
+    home_team: str,
+    away_team: str,
+    match_date: date | None,
+) -> float:
+    """
+    v2.1: Apply per-team form-based calibration nudges from TeamConfig.
+
+    For each team, looks up its current form delta and selects the appropriate
+    nudge (good / neutral / poor) based on configured thresholds.
+    Returns the average of home and away form nudges.
+
+    Short-circuits to 0.0 if neither team has any form nudges configured,
+    avoiding unnecessary form_delta DB lookups in the common case.
+    """
+    home_cfg, away_cfg = _get_team_configs(db, league_code, home_team, away_team)
+    target_date = match_date if match_date is not None else date.today()
+
+    def _nudge_for(cfg: TeamConfig | None, team_name: str) -> float:
+        if cfg is None:
+            return 0.0
+        good    = float(cfg.good_form_nudge    or 0.0)
+        neutral = float(cfg.neutral_form_nudge or 0.0)
+        poor    = float(cfg.poor_form_nudge    or 0.0)
+        # Skip the DB lookup entirely when no form nudges are set for this team
+        if good == 0.0 and neutral == 0.0 and poor == 0.0:
+            return 0.0
+
+        form_delta = get_historical_form_delta(db, team_name, league_code, target_date)
+        if form_delta is None:
+            return neutral  # no data — fall back to neutral nudge
+
+        good_thr = int(cfg.form_good_threshold if cfg.form_good_threshold is not None else 3)
+        poor_thr = int(cfg.form_poor_threshold if cfg.form_poor_threshold is not None else -3)
+
+        if form_delta >= good_thr:
+            selected = good
+            bucket = "good"
+        elif form_delta <= poor_thr:
+            selected = poor
+            bucket = "poor"
+        else:
+            selected = neutral
+            bucket = "neutral"
+
+        if abs(selected) > 0.001:
+            print(
+                f"[predict] Form nudge ({bucket}): {team_name} "
+                f"form_delta={form_delta} → nudge={selected:+.4f}"
+            )
+        return selected
+
+    home_nudge = _nudge_for(home_cfg, home_team)
+    away_nudge = _nudge_for(away_cfg, away_team)
+    return round((home_nudge + away_nudge) / 2.0, 4)
 
 
 def _get_player_power_nudge(
@@ -226,10 +285,11 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
       1. Load league biases and sensitivities.
       2. Compute team nudge (base over_nudge from TeamConfig).
       3. Compute player power nudge.
-      4. Compute form delta nudge (league‑level).
-      5. Apply squad depth adjustment (auto DEG).
-      6. Apply DEG/DET/EPS module adjustments.
-      7. Run evaluate_athena with combined nudges.
+      4. Compute league-level form delta nudge.
+      5. Compute per-team form nudges (v2.1 — good/neutral/poor buckets).
+      6. Apply squad depth adjustment (auto DEG).
+      7. Apply DEG/DET/EPS module adjustments.
+      8. Run evaluate_athena with combined nudges.
     """
     # Resolve team names
     try:
@@ -246,22 +306,27 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
 
     over_bias, under_bias, tempo_factor = _get_league_bias(db, req.league_code)
 
-    # Team nudge (base over_nudge only)
+    # Base team calibration nudge (over_nudge)
     team_nudge = _get_team_nudge(
         db, req.league_code, req.home_team, req.away_team
     )
 
-    # Player power nudge
+    # Player power nudge (squad strength delta)
     player_nudge = _get_player_power_nudge(
         db, req.league_code, req.home_team, req.away_team
     )
 
-    # Form delta nudge (league‑level)
+    # League-level form delta nudge (relative form difference × sensitivity)
     form_nudge = _get_form_delta_nudge(
         db, req.league_code, req.home_team, req.away_team, req.match_date
     )
 
-    combined_nudge = team_nudge + player_nudge + form_nudge
+    # Per-team form state nudge (v2.1 — good/neutral/poor buckets per TeamConfig)
+    team_form_nudge = _get_team_form_nudge(
+        db, req.league_code, req.home_team, req.away_team, req.match_date
+    )
+
+    combined_nudge = team_nudge + player_nudge + form_nudge + team_form_nudge
 
     # Squad depth vulnerability → auto DEG boost
     season = _current_season(req.league_code)
@@ -274,7 +339,7 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
             "deg_pressure": round(current_deg + depth_deg, 3),
         })
 
-    # Apply league sensitivities and team module nudges
+    # Apply league sensitivities and team module nudges (DEG/DET/EPS)
     adjusted_req = _apply_module_adjustments(req, db)
 
     return evaluate_athena(adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge)
