@@ -125,37 +125,47 @@ def load_teams(db: Session):
         ).first()
 
         if existing is None:
-            # CREATE
+            # CREATE — flush immediately so team.id is assigned before
+            # aliases are inserted. Without this, SQLAlchemy batches all
+            # alias INSERTs across every team into one statement, which
+            # blows past SQLite's 999 bind-parameter limit on startup.
             team = Team(
                 team_key=team_key,
                 display_name=display_name,
                 league_code=league_code,
                 country=(entry.get("country") or "").strip(),
             )
+            db.add(team)
+            db.flush()  # assigns team.id
 
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
                 if alias_key and alias_key != team_key:
-                    team.aliases.append(TeamAlias(alias_key=alias_key))
+                    db.add(TeamAlias(team_id=team.id, alias_key=alias_key))
 
-            db.add(team)
+            db.flush()  # write this team's aliases before moving to next
             created += 1
 
         else:
-            # UPDATE
+            # UPDATE — delete old aliases explicitly then re-insert one
+            # by one, staying well within SQLite's per-statement param limit.
             existing.display_name = display_name
             existing.league_code = league_code
 
             if entry.get("country") is not None:
                 existing.country = (entry.get("country") or "").strip()
 
-            # Replace aliases
-            existing.aliases.clear()
+            db.query(TeamAlias).filter(
+                TeamAlias.team_id == existing.id
+            ).delete(synchronize_session=False)
+            db.flush()
+
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
                 if alias_key and alias_key != team_key:
-                    existing.aliases.append(TeamAlias(alias_key=alias_key))
+                    db.add(TeamAlias(team_id=existing.id, alias_key=alias_key))
 
+            db.flush()
             updated += 1
 
     db.commit()
