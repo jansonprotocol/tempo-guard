@@ -190,11 +190,27 @@ def startup_event():
         # 1. Safe column migrations FIRST — before anything queries the models
         _safe_migrate(db)
         # 2. Create any fully new tables defined in SQLAlchemy models
-        #    This now includes: players, player_season_stats, squad_snapshots
         Base.metadata.create_all(bind=engine)
         # 3. Seed league configs + teams from JSON
         load_league_configs(db)
         load_teams(db)
+        # 4. Pre-warm feature cache for all leagues that have snapshots
+        #    so calibration and batch-predict never pay the cold-start
+        #    parquet read cost — even on the very first request after deploy.
+        try:
+            from app.services.feature_cache import warm_snapshot_cache
+            from app.database.models_fbref import FBrefSnapshot
+            league_codes = [
+                r[0] for r in db.query(FBrefSnapshot.league_code).distinct().all()
+            ]
+            print(f"[startup] Pre-warming feature cache for {len(league_codes)} leagues...")
+            warmed = 0
+            for lc in league_codes:
+                if warm_snapshot_cache(db, lc):
+                    warmed += 1
+            print(f"[startup] Feature cache warmed: {warmed}/{len(league_codes)} leagues")
+        except Exception as e:
+            print(f"[startup] Feature cache warm skipped: {e}")
     finally:
         db.close()
 
