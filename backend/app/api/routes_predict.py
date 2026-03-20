@@ -66,6 +66,18 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
         except Exception:
             pass
 
+        # Calibrated probability — converts raw confidence_score to a true
+        # hit-rate estimate using isotonic regression on historical results.
+        # Falls back to normalised raw score if no calibration data exists yet.
+        calibrated_probability = None
+        try:
+            from app.services.confidence_calibrator import calibrate_confidence
+            calibrated_probability = calibrate_confidence(
+                db, pred.confidence_score, league_code=body.league_code
+            )
+        except Exception:
+            pass
+
         return {
             "league_code": pred.league_code,
             "fixture": pred.fixture,
@@ -79,6 +91,7 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
                 "confidence": pred.translated_play.confidence,
             },
             "confidence_score": pred.confidence_score,
+            "calibrated_probability": calibrated_probability,
             "applied_modules": pred.applied_modules,
             "safety_flags": pred.safety_flags,
             "explanations": pred.explanations,
