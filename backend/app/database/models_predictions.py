@@ -68,7 +68,15 @@ class PredictionLog(Base):
     # "red"    = hit rate 60-69%  (high variance)
     # None     = no calibration data yet
     variance_flag   = Column(String,  nullable=True)
-weather_tag   = Column(String, default=None)
+
+    # Weather conditions at match time (v2.2 — from Open-Meteo)
+    weather_tag     = Column(String,  nullable=True)
+
+    # Closing odds / edge tracking (v2.2 — logged post-prediction)
+    closing_odds    = Column(Float,   nullable=True)
+    market_prob     = Column(Float,   nullable=True)
+    edge            = Column(Float,   nullable=True)
+
     # Validation
     status          = Column(String,  default="pending", index=True)
     # pending → awaiting result
