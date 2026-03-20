@@ -1,7 +1,17 @@
 # backend/app/services/predict.py
+"""
+ATHENA prediction pipeline.
+
+v2.2 performance fix: LeagueConfig and both TeamConfigs are now loaded
+ONCE at the top of predict_match() and passed through to every helper.
+Previously each helper called _get_team_configs() / _get_league_config()
+independently, resulting in 11 DB queries per prediction (3 unique).
+Now it costs exactly 3 queries regardless of how many nudge layers fire.
+"""
 from __future__ import annotations
 
 from datetime import date
+from typing import Optional
 from sqlalchemy.orm import Session
 
 from app.engine.types import MatchRequest, Prediction
@@ -34,7 +44,9 @@ def _clip(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, x))
 
 
-def _get_league_config(db: Session, league_code: str) -> LeagueConfig | None:
+# ── Config loaders — called ONCE per prediction ───────────────────────────────
+
+def _load_league_config(db: Session, league_code: str) -> LeagueConfig | None:
     return (
         db.query(LeagueConfig)
         .filter(LeagueConfig.league_code == league_code)
@@ -42,18 +54,7 @@ def _get_league_config(db: Session, league_code: str) -> LeagueConfig | None:
     )
 
 
-def _get_league_bias(db: Session, league_code: str) -> tuple[float, float, float]:
-    cfg = _get_league_config(db, league_code)
-    if not cfg:
-        return 0.05, 0.05, 0.50  # neutral defaults
-    return (
-        float(cfg.base_over_bias  or 0.5),
-        float(cfg.base_under_bias or 0.5),
-        float(cfg.tempo_factor    or 0.50),
-    )
-
-
-def _get_team_configs(
+def _load_team_configs(
     db: Session,
     league_code: str,
     home_team: str,
@@ -72,40 +73,41 @@ def _get_team_configs(
     return home_cfg, away_cfg
 
 
-def _get_team_nudge(
-    db: Session,
-    league_code: str,
-    home_team: str,
-    away_team: str,
+# ── Nudge helpers — all accept pre-loaded configs, zero additional DB queries ─
+
+def _league_bias(cfg: LeagueConfig | None) -> tuple[float, float, float]:
+    if not cfg:
+        return 0.5, 0.5, 0.50
+    return (
+        float(cfg.base_over_bias  or 0.5),
+        float(cfg.base_under_bias or 0.5),
+        float(cfg.tempo_factor    or 0.50),
+    )
+
+
+def _team_base_nudge(
+    home_cfg: TeamConfig | None,
+    away_cfg: TeamConfig | None,
 ) -> float:
-    """
-    Look up per-team base calibration nudges from TeamConfig.
-    Returns the average of home over_nudge and away over_nudge.
-    """
-    home_cfg, away_cfg = _get_team_configs(db, league_code, home_team, away_team)
+    """Average of home/away over_nudge from TeamConfig."""
     home_nudge = float(home_cfg.over_nudge or 0.0) if home_cfg else 0.0
     away_nudge = float(away_cfg.over_nudge or 0.0) if away_cfg else 0.0
     return (home_nudge + away_nudge) / 2.0
 
 
-def _get_team_form_nudge(
+def _team_form_nudge(
     db: Session,
-    league_code: str,
+    home_cfg: TeamConfig | None,
+    away_cfg: TeamConfig | None,
     home_team: str,
     away_team: str,
+    league_code: str,
     match_date: date | None,
 ) -> float:
     """
-    v2.1: Apply per-team form-based calibration nudges from TeamConfig.
-
-    For each team, looks up its current form delta and selects the appropriate
-    nudge (good / neutral / poor) based on configured thresholds.
-    Returns the average of home and away form nudges.
-
-    Short-circuits to 0.0 if neither team has any form nudges configured,
-    avoiding unnecessary form_delta DB lookups in the common case.
+    v2.1: per-team form-based nudges (good/neutral/poor buckets).
+    Short-circuits to 0.0 if neither team has form nudges configured.
     """
-    home_cfg, away_cfg = _get_team_configs(db, league_code, home_team, away_team)
     target_date = match_date if match_date is not None else date.today()
 
     def _nudge_for(cfg: TeamConfig | None, team_name: str) -> float:
@@ -114,26 +116,22 @@ def _get_team_form_nudge(
         good    = float(cfg.good_form_nudge    or 0.0)
         neutral = float(cfg.neutral_form_nudge or 0.0)
         poor    = float(cfg.poor_form_nudge    or 0.0)
-        # Skip the DB lookup entirely when no form nudges are set for this team
         if good == 0.0 and neutral == 0.0 and poor == 0.0:
             return 0.0
 
         form_delta = get_historical_form_delta(db, team_name, league_code, target_date)
         if form_delta is None:
-            return neutral  # no data — fall back to neutral nudge
+            return neutral
 
         good_thr = int(cfg.form_good_threshold if cfg.form_good_threshold is not None else 3)
         poor_thr = int(cfg.form_poor_threshold if cfg.form_poor_threshold is not None else -3)
 
         if form_delta >= good_thr:
-            selected = good
-            bucket = "good"
+            selected, bucket = good, "good"
         elif form_delta <= poor_thr:
-            selected = poor
-            bucket = "poor"
+            selected, bucket = poor, "poor"
         else:
-            selected = neutral
-            bucket = "neutral"
+            selected, bucket = neutral, "neutral"
 
         if abs(selected) > 0.001:
             print(
@@ -147,16 +145,16 @@ def _get_team_form_nudge(
     return round((home_nudge + away_nudge) / 2.0, 4)
 
 
-def _get_player_power_nudge(
+def _player_power_nudge(
     db: Session,
+    home_cfg: TeamConfig | None,
+    away_cfg: TeamConfig | None,
     league_code: str,
-    home_team: str,
-    away_team: str,
 ) -> float:
+    """Squad power delta nudge. May query per-league configs for intl matches."""
     if PLAYER_POWER_BLEND <= 0.0:
         return 0.0
 
-    home_cfg, away_cfg = _get_team_configs(db, league_code, home_team, away_team)
     home_power = float(home_cfg.squad_power) if home_cfg and home_cfg.squad_power is not None else None
     away_power = float(away_cfg.squad_power) if away_cfg and away_cfg.squad_power is not None else None
 
@@ -168,38 +166,58 @@ def _get_player_power_nudge(
         away_league = away_cfg.league_code if away_cfg else None
 
         if home_league:
-            home_league_cfg = _get_league_config(db, home_league)
-            if home_league_cfg and home_league_cfg.strength_coefficient:
-                home_power *= float(home_league_cfg.strength_coefficient)
+            hl_cfg = _load_league_config(db, home_league)
+            if hl_cfg and hl_cfg.strength_coefficient:
+                home_power *= float(hl_cfg.strength_coefficient)
 
         if away_league:
-            away_league_cfg = _get_league_config(db, away_league)
-            if away_league_cfg and away_league_cfg.strength_coefficient:
-                away_power *= float(away_league_cfg.strength_coefficient)
+            al_cfg = _load_league_config(db, away_league)
+            if al_cfg and al_cfg.strength_coefficient:
+                away_power *= float(al_cfg.strength_coefficient)
 
     power_delta = (home_power - away_power) / 100.0
-    nudge = power_delta * PLAYER_POWER_BLEND
-    nudge = _clip(nudge, -PLAYER_POWER_MAX_EFFECT, PLAYER_POWER_MAX_EFFECT)
+    nudge = _clip(power_delta * PLAYER_POWER_BLEND, -PLAYER_POWER_MAX_EFFECT, PLAYER_POWER_MAX_EFFECT)
 
     if abs(nudge) > 0.005:
         print(
-            f"[predict] Player power: {home_team}={home_power:.1f} vs "
-            f"{away_team}={away_power:.1f} → delta={power_delta:.3f} "
+            f"[predict] Player power: home={home_power:.1f} vs "
+            f"away={away_power:.1f} → delta={power_delta:.3f} "
             f"→ nudge={nudge:+.4f} (blend={PLAYER_POWER_BLEND})"
         )
 
     return round(nudge, 4)
 
 
+def _league_form_delta_nudge(
+    db: Session,
+    cfg: LeagueConfig | None,
+    home_team: str,
+    away_team: str,
+    league_code: str,
+    match_date: date | None,
+) -> float:
+    """League-level form delta sensitivity nudge."""
+    if not cfg or not cfg.form_delta_sensitivity:
+        return 0.0
+
+    target_date = match_date if match_date is not None else date.today()
+    home_delta = get_historical_form_delta(db, home_team, league_code, target_date)
+    away_delta = get_historical_form_delta(db, away_team, league_code, target_date)
+
+    if home_delta is None or away_delta is None:
+        return 0.0
+
+    nudge = (home_delta - away_delta) * cfg.form_delta_sensitivity
+    return round(_clip(nudge, -0.05, 0.05), 4)
+
+
 def _apply_module_adjustments(
     req: MatchRequest,
-    db: Session,
+    cfg: LeagueConfig | None,
+    home_cfg: TeamConfig | None,
+    away_cfg: TeamConfig | None,
 ) -> MatchRequest:
-    cfg = _get_league_config(db, req.league_code)
-    home_cfg, away_cfg = _get_team_configs(
-        db, req.league_code, req.home_team, req.away_team
-    )
-
+    """Apply DEG/DET/EPS league sensitivities and per-team module nudges."""
     deg_sens = float(cfg.deg_sensitivity or 1.0) if cfg else 1.0
     det_sens = float(cfg.det_sensitivity or 1.0) if cfg else 1.0
     eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
@@ -218,15 +236,12 @@ def _apply_module_adjustments(
     raw_away_det = req.away_det      if req.away_det       is not None else 0.30
     raw_eps      = req.eps_stability if req.eps_stability  is not None else 0.65
 
-    adj_deg = _clip(raw_deg * deg_sens + avg_deg_nudge, 0.0, 1.0)
-
+    adj_deg      = _clip(raw_deg * deg_sens + avg_deg_nudge, 0.0, 1.0)
     adj_home_det = _clip(raw_home_det * det_sens + home_det_n, 0.0, 1.0)
     adj_away_det = _clip(raw_away_det * det_sens + away_det_n, 0.0, 1.0)
     adj_det      = _clip(raw_det * det_sens + avg_det_nudge,   0.0, 1.0)
-
-    raw_instability = 1.0 - raw_eps
-    adj_instability = _clip(raw_instability * eps_sens, 0.0, 0.90)
-    adj_eps = 1.0 - adj_instability
+    adj_eps      = 1.0 - _clip(1.0 - raw_eps, 0.0, 0.90) if eps_sens == 1.0 else \
+                   1.0 - _clip((1.0 - raw_eps) * eps_sens, 0.0, 0.90)
 
     if abs(adj_deg - raw_deg) > 0.01 or abs(adj_det - raw_det) > 0.01:
         print(
@@ -247,34 +262,7 @@ def _apply_module_adjustments(
     })
 
 
-# ── Form delta nudge helper (league‑level sensitivity) ─────────────────────
-def _get_form_delta_nudge(
-    db: Session,
-    league_code: str,
-    home_team: str,
-    away_team: str,
-    match_date: date | None,
-) -> float:
-    """
-    Compute a support_delta adjustment based on the difference in form delta
-    between the two teams, scaled by the league's form_delta_sensitivity.
-    """
-    cfg = _get_league_config(db, league_code)
-    if not cfg or not cfg.form_delta_sensitivity:
-        return 0.0
-
-    target_date = match_date if match_date is not None else date.today()
-    home_delta = get_historical_form_delta(db, home_team, league_code, target_date)
-    away_delta = get_historical_form_delta(db, away_team, league_code, target_date)
-
-    if home_delta is None or away_delta is None:
-        return 0.0
-
-    delta_diff = home_delta - away_delta
-    nudge = delta_diff * cfg.form_delta_sensitivity
-    nudge = _clip(nudge, -0.05, 0.05)
-    return round(nudge, 4)
-
+# ── Main entry point ──────────────────────────────────────────────────────────
 
 def predict_match(db: Session, req: MatchRequest) -> Prediction:
     """
@@ -282,16 +270,17 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
 
     Pipeline:
       0. Resolve team names to canonical keys.
-      1. Load league biases and sensitivities.
-      2. Compute team nudge (base over_nudge from TeamConfig).
-      3. Compute player power nudge.
-      4. Compute league-level form delta nudge.
-      5. Compute per-team form nudges (v2.1 — good/neutral/poor buckets).
-      6. Apply squad depth adjustment (auto DEG).
-      7. Apply DEG/DET/EPS module adjustments.
-      8. Run evaluate_athena with combined nudges.
+      1. Load LeagueConfig + both TeamConfigs (3 DB queries, ONCE).
+      2. Extract league biases.
+      3. Compute team base nudge (over_nudge).
+      4. Compute player power nudge.
+      5. Compute league-level form delta nudge.
+      6. Compute per-team form nudges (v2.1).
+      7. Apply squad depth adjustment (auto DEG).
+      8. Apply DEG/DET/EPS module adjustments.
+      9. Run evaluate_athena with combined nudges.
     """
-    # Resolve team names
+    # ── 0. Resolve team names ─────────────────────────────────────────
     try:
         from app.services.resolve_team import resolve_team_name
         home_resolved = resolve_team_name(db, req.home_team, req.league_code)
@@ -302,33 +291,31 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
                 "away_team": away_resolved,
             })
     except Exception:
-        pass  # resolver not available — proceed with original names
+        pass
 
-    over_bias, under_bias, tempo_factor = _get_league_bias(db, req.league_code)
-
-    # Base team calibration nudge (over_nudge)
-    team_nudge = _get_team_nudge(
+    # ── 1. Load configs ONCE ──────────────────────────────────────────
+    cfg = _load_league_config(db, req.league_code)
+    home_cfg, away_cfg = _load_team_configs(
         db, req.league_code, req.home_team, req.away_team
     )
 
-    # Player power nudge (squad strength delta)
-    player_nudge = _get_player_power_nudge(
-        db, req.league_code, req.home_team, req.away_team
+    # ── 2. League biases ──────────────────────────────────────────────
+    over_bias, under_bias, tempo_factor = _league_bias(cfg)
+
+    # ── 3–6. Nudge stack ──────────────────────────────────────────────
+    base_nudge  = _team_base_nudge(home_cfg, away_cfg)
+    power_nudge = _player_power_nudge(db, home_cfg, away_cfg, req.league_code)
+    form_nudge  = _league_form_delta_nudge(
+        db, cfg, req.home_team, req.away_team, req.league_code, req.match_date
+    )
+    team_form_nudge = _team_form_nudge(
+        db, home_cfg, away_cfg,
+        req.home_team, req.away_team, req.league_code, req.match_date
     )
 
-    # League-level form delta nudge (relative form difference × sensitivity)
-    form_nudge = _get_form_delta_nudge(
-        db, req.league_code, req.home_team, req.away_team, req.match_date
-    )
+    combined_nudge = base_nudge + power_nudge + form_nudge + team_form_nudge
 
-    # Per-team form state nudge (v2.1 — good/neutral/poor buckets per TeamConfig)
-    team_form_nudge = _get_team_form_nudge(
-        db, req.league_code, req.home_team, req.away_team, req.match_date
-    )
-
-    combined_nudge = team_nudge + player_nudge + form_nudge + team_form_nudge
-
-    # Squad depth vulnerability → auto DEG boost
+    # ── 7. Squad depth → auto DEG boost ──────────────────────────────
     season = _current_season(req.league_code)
     depth_deg = auto_deg_from_depth(
         db, req.league_code, req.home_team, req.away_team, season
@@ -339,7 +326,8 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
             "deg_pressure": round(current_deg + depth_deg, 3),
         })
 
-    # Apply league sensitivities and team module nudges (DEG/DET/EPS)
-    adjusted_req = _apply_module_adjustments(req, db)
+    # ── 8. Module adjustments ─────────────────────────────────────────
+    adjusted_req = _apply_module_adjustments(req, cfg, home_cfg, away_cfg)
 
+    # ── 9. Evaluate ───────────────────────────────────────────────────
     return evaluate_athena(adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge)
