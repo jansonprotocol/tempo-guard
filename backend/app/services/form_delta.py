@@ -38,10 +38,12 @@ def _season_cutoff(league_code: str) -> str:
     return _CALENDAR_CUTOFF if _is_calendar_league(league_code) else _AUG_MAY_CUTOFF
 
 
-def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: str) -> List[dict]:
+def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: str, league_code: str = None) -> List[dict]:
     """
     Compute league standings from match results using BATCH RESOLUTION
     to unify team names with maximum performance.
+    league_code: when provided, resolution is scoped to that league to prevent
+    cross-league alias contamination (e.g. "Paris" → PSG in FRA-L2 context).
     """
     # Collect ALL unique team names from the dataframe in one pass
     all_raw_names: Set[str] = set()
@@ -50,7 +52,7 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
         all_raw_names.add(str(row[away_col]).strip())
 
     # Batch resolve ALL names with a single set of database queries
-    resolved_names = batch_resolve_team_names(db, list(all_raw_names))
+    resolved_names = batch_resolve_team_names(db, list(all_raw_names), league_code=league_code)
 
     # Process all matches with pre-resolved names
     teams: Dict[str, dict] = {}
@@ -181,12 +183,12 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
         return {"league_code": league_code, "error": "No current season data", "teams": []}
 
     # Current standings
-    current_standings = _compute_standings(db, curr_df, home_col, away_col)
+    current_standings = _compute_standings(db, curr_df, home_col, away_col, league_code=league_code)
 
     # Previous season standings (for expected position)
     prev_pos_map = {}
     if prev_df is not None and not prev_df.empty and len(prev_df) >= 30:
-        prev_standings = _compute_standings(db, prev_df, home_col, away_col)
+        prev_standings = _compute_standings(db, prev_df, home_col, away_col, league_code=league_code)
         prev_pos_map = {t["team_key"]: t["pos"] for t in prev_standings}
 
     # Load team power data
