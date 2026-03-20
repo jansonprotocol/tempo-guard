@@ -523,6 +523,14 @@ def squad_power_overview(
         for lc in db.query(LeagueConfig).all()
     }
 
+    # Build a lookup of team_key → display_name from the Team table
+    from app.models.team import Team as TeamModel
+    team_display_names: dict = {
+        row.team_key: row.display_name
+        for row in db.query(TeamModel).all()
+        if row.display_name
+    }
+
     # Group by league
     leagues: dict = {}
     for t in teams:
@@ -546,6 +554,7 @@ def squad_power_overview(
 
         leagues[lc]["teams"].append({
             "team": t.team,
+            "display_name": team_display_names.get(t.team, t.team),
             # Raw league-relative scores
             "squad_power": raw_squad,
             "atk_power": raw_atk,
