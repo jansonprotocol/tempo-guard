@@ -14,6 +14,14 @@ router = APIRouter()
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
 # ── Matchup validation endpoint ───────────────────────────────────────────────
 
 @router.get("/validate-matchup")
@@ -110,14 +118,6 @@ class PredictBody(BaseModel):
     home_det:      Optional[float] = Field(None, example=0.40)
     away_det:      Optional[float] = Field(None, example=0.30)
     eps_stability: Optional[float] = Field(None, example=0.72)
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/predict")
