@@ -138,17 +138,20 @@ def load_teams(db: Session):
             db.add(team)
             db.flush()  # assigns team.id
 
+            seen_aliases: set = set()
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
-                if alias_key and alias_key != team_key:
+                if alias_key and alias_key != team_key and alias_key not in seen_aliases:
+                    seen_aliases.add(alias_key)
                     db.add(TeamAlias(team_id=team.id, alias_key=alias_key))
 
             db.flush()  # write this team's aliases before moving to next
             created += 1
 
         else:
-            # UPDATE — delete old aliases explicitly then re-insert one
-            # by one, staying well within SQLite's per-statement param limit.
+            # UPDATE — delete old aliases explicitly then re-insert,
+            # deduplicating to avoid unique constraint violations from
+            # duplicate entries in teams.json seed data.
             existing.display_name = display_name
             existing.league_code = league_code
 
@@ -160,9 +163,11 @@ def load_teams(db: Session):
             ).delete(synchronize_session=False)
             db.flush()
 
+            seen_aliases: set = set()
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
-                if alias_key and alias_key != team_key:
+                if alias_key and alias_key != team_key and alias_key not in seen_aliases:
+                    seen_aliases.add(alias_key)
                     db.add(TeamAlias(team_id=existing.id, alias_key=alias_key))
 
             db.flush()
