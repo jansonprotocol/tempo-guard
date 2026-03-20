@@ -12,6 +12,19 @@ Team name matching:
 International competitions (UCL, UEL, UECL, EC, WC):
     No dedicated snapshot is scraped. ATHENA searches all domestic snapshots
     for each team's recent club form.
+
+v2.2 additions:
+  - _SNAPSHOT_OVERRIDE: dict injected by feature_cache.py to eliminate
+    repeated parquet reads during calibration loops (Level 1 speedup).
+  - Home/away venue splits: gfh blends home team's home-game scoring rate;
+    gfa blends away team's away-game scoring rate. More accurate than using
+    all games equally.
+  - DEG/DET/EPS now computed from rolling data instead of returning None:
+    deg_pressure  — recent defensive deterioration trend (last 3 vs last 10)
+    home_det      — home team volatility (std dev of total goals in their matches)
+    away_det      — away team volatility
+    det_boost     — combined match volatility
+    eps_stability — combined consistency (inverse of coefficient of variation)
 """
 from __future__ import annotations
 
@@ -34,22 +47,26 @@ FUZZY_CUTOFF     = 0.82
 
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
-# Historical average goals/game per competition — used as the baseline for
-# support_idx_over_delta instead of borrowing a domestic league's average.
-# UCL league phase avg ~2.70, drops to ~2.45 in knockouts; we use the
-# league-phase figure and let calibration adjust from there.
+# Historical average goals/game per competition — used as baseline for
+# support_idx_over_delta when the league code is international.
 INTL_GOAL_AVERAGES: Dict[str, float] = {
     "UCL":  2.70,
     "UEL":  2.50,
     "UECL": 2.40,
-    "EC":   2.25,  # national team tournaments — defensive, lower scoring
+    "EC":   2.25,
     "WC":   2.30,
 }
+
+# ── Feature cache injection ───────────────────────────────────────────────────
+# Set by feature_cache.warm_snapshot_cache() before a calibration loop.
+# Maps league_code → pre-loaded pd.DataFrame, skipping the DB read inside
+# asof_features for every call in that loop (Level 1 speedup).
+# Do not modify this directly — use feature_cache.py's public API.
+_SNAPSHOT_OVERRIDE: dict = {}
 
 
 # ── Name normalisation ────────────────────────────────────────────────────────
 def _strip_accents(s: str) -> str:
-    """Remove diacritics: Atlético → atletico, São Paulo → sao paulo."""
     return "".join(
         c for c in unicodedata.normalize("NFD", s)
         if unicodedata.category(c) != "Mn"
@@ -57,46 +74,28 @@ def _strip_accents(s: str) -> str:
 
 
 def _norm(s: Optional[str]) -> str:
-    """Primary normaliser: lowercase + strip whitespace."""
     return (s or "").strip().lower()
 
 
 def _norm_accent(s: Optional[str]) -> str:
-    """Secondary normaliser: lowercase + strip accents."""
     return _strip_accents(_norm(s or ""))
 
 
 def _match_team(target: str, candidates: List[str]) -> Optional[str]:
-    """
-    Find the best matching candidate for target using three layers:
-      1. Exact normalised match
-      2. Accent-stripped match
-      3. Fuzzy match (difflib, cutoff=FUZZY_CUTOFF)
-
-    Returns the original (un-normalised) candidate string on match, or None.
-    """
     t_norm   = _norm(target)
     t_accent = _norm_accent(target)
-
-    # Build lookup maps
     norm_map   = {_norm(c): c for c in candidates}
     accent_map = {_norm_accent(c): c for c in candidates}
 
-    # Layer 1: exact
     if t_norm in norm_map:
         return norm_map[t_norm]
-
-    # Layer 2: accent-stripped
     if t_accent in accent_map:
-        matched = accent_map[t_accent]
-        return matched
+        return accent_map[t_accent]
 
-    # Layer 3: fuzzy on accent-stripped keys
     accent_keys = list(accent_map.keys())
     close = get_close_matches(t_accent, accent_keys, n=1, cutoff=FUZZY_CUTOFF)
     if close:
-        matched = accent_map[close[0]]
-        return matched
+        return accent_map[close[0]]
 
     return None
 
@@ -111,6 +110,10 @@ def _poisson_p0(mu: float) -> float:
 
 
 def _load_snapshot(league_code: str) -> Optional[pd.DataFrame]:
+    # Check in-memory override first (injected by feature_cache)
+    if league_code in _SNAPSHOT_OVERRIDE:
+        return _SNAPSHOT_OVERRIDE[league_code].copy()
+
     db = SessionLocal()
     try:
         row = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
@@ -146,18 +149,12 @@ def _load_all_snapshots() -> list[pd.DataFrame]:
 
 
 def _parse_score_column(df: pd.DataFrame, score_col: str) -> pd.DataFrame:
-    """
-    FBref stores scores as '2–1' or '2-1' in a single column.
-    Split into hg (home goals) and ag (away goals) integer columns.
-    """
     df = df.copy()
     df["_score_clean"] = df[score_col].astype(str).str.replace("–", "-", regex=False)
     mask = df["_score_clean"].str.match(r"^\d+\s*-\s*\d+$", na=False)
     df   = df[mask].copy()
-
     if df.empty:
         return df
-
     split = df["_score_clean"].str.split("-", expand=True)
     df["hg"] = pd.to_numeric(split[0].str.strip(), errors="coerce").fillna(0).astype(int)
     df["ag"] = pd.to_numeric(split[1].str.strip(), errors="coerce").fillna(0).astype(int)
@@ -206,10 +203,7 @@ def _find_team_rows(
     cutoff: datetime,
     c: Dict,
 ) -> pd.DataFrame:
-    """
-    Find all matches for `team` before `cutoff`.
-    Uses fuzzy + accent matching on the Home/Away columns.
-    """
+    """Find last ROLLING_MATCHES for team (home OR away) before cutoff."""
     if not all([c["date"], c["ht"], c["at"]]):
         return pd.DataFrame()
 
@@ -217,13 +211,11 @@ def _find_team_rows(
     work[c["date"]] = pd.to_datetime(work[c["date"]], errors="coerce")
     work = work[work[c["date"]] < cutoff]
 
-    # Build candidate lists
-    home_teams = work[c["ht"]].astype(str).tolist()
-    away_teams = work[c["at"]].astype(str).tolist()
-    all_teams  = list(set(home_teams + away_teams))
-
+    all_teams = list(set(
+        work[c["ht"]].astype(str).tolist() +
+        work[c["at"]].astype(str).tolist()
+    ))
     matched = _match_team(team, all_teams)
-
     if matched is None:
         return pd.DataFrame()
 
@@ -238,6 +230,173 @@ def _find_team_rows(
     )
 
 
+def _find_venue_rows(
+    df: pd.DataFrame,
+    team: str,
+    cutoff: datetime,
+    c: Dict,
+    venue: str,   # "home" or "away"
+    n: int = ROLLING_MATCHES,
+) -> pd.DataFrame:
+    """
+    Find last N matches for team in a specific venue context before cutoff.
+
+    venue="home" → rows where team is the home side.
+    venue="away" → rows where team is the away side.
+    Returns empty DataFrame if fewer than 2 venue-specific matches found.
+    """
+    if not all([c["date"], c["ht"], c["at"]]):
+        return pd.DataFrame()
+
+    work = df.copy()
+    work[c["date"]] = pd.to_datetime(work[c["date"]], errors="coerce")
+    work = work[work[c["date"]] < cutoff]
+
+    all_teams = list(set(
+        work[c["ht"]].astype(str).tolist() +
+        work[c["at"]].astype(str).tolist()
+    ))
+    matched = _match_team(team, all_teams)
+    if matched is None:
+        return pd.DataFrame()
+
+    matched_norm = _norm(matched)
+    col_key = c["ht"] if venue == "home" else c["at"]
+    rows = work[work[col_key].astype(str).apply(_norm) == matched_norm]
+    return rows.sort_values(c["date"], ascending=False).head(n)
+
+
+# ── Rolling metric helpers ────────────────────────────────────────────────────
+
+def _goals_per_game(
+    rows: pd.DataFrame,
+    team_norm: str,
+    c_ht: str,
+    c_hg: str,
+    c_ag: str,
+    metric: str = "scored",
+) -> float:
+    """
+    Compute goals scored or conceded per game for a team from a match frame.
+    metric: "scored" or "conceded"
+    """
+    if rows.empty:
+        return 0.0
+    total = 0
+    for _, r in rows.iterrows():
+        is_home = _norm(str(r[c_ht])) == team_norm
+        hg = int(r[c_hg]) if pd.notnull(r[c_hg]) else 0
+        ag = int(r[c_ag]) if pd.notnull(r[c_ag]) else 0
+        if metric == "scored":
+            total += hg if is_home else ag
+        else:
+            total += ag if is_home else hg
+    return total / len(rows)
+
+
+def _compute_deg_pressure(
+    h_rows: pd.DataFrame,
+    a_rows: pd.DataFrame,
+    h_norm: str,
+    a_norm: str,
+    c_ht: str,
+    c_hg: str,
+    c_ag: str,
+    n_recent: int = 3,
+) -> float:
+    """
+    DEG pressure: measures recent defensive deterioration for both teams.
+
+    Computed as the average of each team's trend in goals conceded:
+    trend = (last n_recent conceded/game) − (rolling 10 conceded/game)
+
+    Positive result means both teams are conceding more recently → elevated
+    degradation pressure → higher probability of goals.
+    Range: 0.0–0.80 (clipped).
+    """
+    def trend(rows: pd.DataFrame, norm: str) -> float:
+        if len(rows) < n_recent + 1:
+            return 0.0
+        ga_recent  = _goals_per_game(rows.head(n_recent), norm, c_ht, c_hg, c_ag, "conceded")
+        ga_rolling = _goals_per_game(rows, norm, c_ht, c_hg, c_ag, "conceded")
+        return ga_recent - ga_rolling
+
+    h_trend = trend(h_rows, h_norm)
+    a_trend = trend(a_rows, a_norm)
+
+    # Average trend, weighted towards positive (degradation) signal
+    combined = (h_trend + a_trend) / 2.0
+    return round(_clip(combined * 0.6, 0.0, 0.80), 3)
+
+
+def _compute_team_det(
+    rows: pd.DataFrame,
+    c_hg: str,
+    c_ag: str,
+) -> float:
+    """
+    DET (Detonation) for a single team: normalised std dev of total goals
+    in their recent matches.  Higher = more volatile/chaotic matches.
+    Range: 0.10–0.80.
+    """
+    if len(rows) < 4:
+        return 0.30
+
+    totals = []
+    for _, r in rows.iterrows():
+        hg = int(r[c_hg]) if pd.notnull(r[c_hg]) else 0
+        ag = int(r[c_ag]) if pd.notnull(r[c_ag]) else 0
+        totals.append(hg + ag)
+
+    if not totals:
+        return 0.30
+
+    mean_g  = sum(totals) / len(totals)
+    std_dev = (sum((x - mean_g) ** 2 for x in totals) / len(totals)) ** 0.5
+
+    # Typical std_dev for football total goals ≈ 1.0–2.0
+    return round(_clip(std_dev / 2.5, 0.10, 0.80), 3)
+
+
+def _compute_eps_stability(
+    h_rows: pd.DataFrame,
+    a_rows: pd.DataFrame,
+    c_hg: str,
+    c_ag: str,
+) -> float:
+    """
+    EPS (Epsilon) stability: combined consistency of both teams' matches.
+    Derived from the coefficient of variation (std/mean) of total goals.
+    Low CV → high stability (high EPS). High CV → low stability (low EPS).
+    Range: 0.35–0.95.
+    """
+    all_rows = pd.concat([h_rows, a_rows]).drop_duplicates()
+    if len(all_rows) < 4:
+        return 0.65
+
+    totals = []
+    for _, r in all_rows.iterrows():
+        hg = int(r[c_hg]) if pd.notnull(r[c_hg]) else 0
+        ag = int(r[c_ag]) if pd.notnull(r[c_ag]) else 0
+        totals.append(hg + ag)
+
+    if not totals:
+        return 0.65
+
+    mean_g = sum(totals) / len(totals)
+    if mean_g < 0.5:
+        return 0.65
+
+    std_dev = (sum((x - mean_g) ** 2 for x in totals) / len(totals)) ** 0.5
+    cv      = std_dev / mean_g  # coefficient of variation
+
+    # CV ≈ 0.6 is typical for football. Low CV = more predictable.
+    eps = 1.0 - _clip(cv * 0.55, 0.05, 0.60)
+    return round(_clip(eps, 0.35, 0.95), 3)
+
+
+# ── Core feature computation ──────────────────────────────────────────────────
+
 def _compute_features_from_frames(
     H: pd.DataFrame,
     A: pd.DataFrame,
@@ -245,15 +404,21 @@ def _compute_features_from_frames(
     aname: str,
     full_df: pd.DataFrame,
     league_code: Optional[str] = None,
+    H_home: Optional[pd.DataFrame] = None,
+    A_away: Optional[pd.DataFrame] = None,
 ) -> Dict[str, float]:
-    """Core feature computation given last-N match frames.
+    """
+    Core feature computation given last-N match frames.
 
-    league_code: when supplied and in INTL_LEAGUE_CODES, the support_idx
-    baseline is pinned to INTL_GOAL_AVERAGES instead of being derived from
-    whatever domestic snapshot happened to match each team.  Without this,
-    a Man City vs Real Madrid prediction could use an ENG-PL baseline (2.65)
-    for one team and GER-BUN (3.1) for the other — producing an inconsistent
-    and misleading delta.
+    H, A:        all recent matches (home+away) for each team.
+    H_home:      home team's recent HOME games specifically (optional).
+    A_away:      away team's recent AWAY games specifically (optional).
+    full_df:     full snapshot used to derive league averages.
+    league_code: when in INTL_LEAGUE_CODES pins the goal baseline.
+
+    v2.2: home/away venue splits blend venue-specific scoring rates into
+    gfh/gfa for better tempo and support delta accuracy.
+    v2.2: DEG/DET/EPS computed from rolling data, no longer returning None.
     """
     cols = {c.lower(): c for c in full_df.columns}
 
@@ -270,27 +435,41 @@ def _compute_features_from_frames(
     c_soth = col("home_shots_on_target", "shots_on_target_home", "sot_home")
     c_sota = col("away_shots_on_target", "shots_on_target_away", "sot_away")
 
-    def goals_fa(frame: pd.DataFrame, team_lc: str) -> Tuple[float, float]:
-        gf = ga = 0
-        for _, r in frame.iterrows():
-            is_home = _norm(str(r[c_ht])) == team_lc
-            hg = int(r[c_hg]) if pd.notnull(r[c_hg]) else 0
-            ag = int(r[c_ag]) if pd.notnull(r[c_ag]) else 0
-            gf += hg if is_home else ag
-            ga += ag if is_home else hg
-        n = len(frame)
-        return (gf / n, ga / n) if n else (0.0, 0.0)
+    if not all([c_ht, c_at, c_hg, c_ag]):
+        return {}
 
-    # Use accent-stripped names for matching within frames
-    all_home = list(set(H[c_ht].astype(str).tolist() + A[c_ht].astype(str).tolist()))
+    # ── Find resolved team names in the frame ─────────────────────────
+    all_home = list(set(
+        H[c_ht].astype(str).tolist() + H[c_at].astype(str).tolist() +
+        A[c_ht].astype(str).tolist() + A[c_at].astype(str).tolist()
+    ))
     h_matched = _match_team(hname, all_home) or hname
     a_matched = _match_team(aname, all_home) or aname
+    h_norm = _norm(h_matched)
+    a_norm = _norm(a_matched)
 
-    gfh, _ = goals_fa(H, _norm(h_matched))
-    gfa, _ = goals_fa(A, _norm(a_matched))
+    # ── All-game scoring rates ─────────────────────────────────────────
+    gfh = _goals_per_game(H, h_norm, c_ht, c_hg, c_ag, "scored")
+    gfa = _goals_per_game(A, a_norm, c_ht, c_hg, c_ag, "scored")
 
+    # ── Venue-specific blend (v2.2) ────────────────────────────────────
+    # The home team's attack is more accurately reflected by their HOME
+    # game scoring rate; the away team's by their AWAY rate.
+    # Blend 65% all-game + 35% venue-specific when enough venue data exists.
+    VENUE_BLEND  = 0.35
+    VENUE_MIN    = 3     # minimum venue-specific games to activate blend
+
+    if H_home is not None and len(H_home) >= VENUE_MIN:
+        gfh_home = _goals_per_game(H_home, h_norm, c_ht, c_hg, c_ag, "scored")
+        gfh = gfh * (1 - VENUE_BLEND) + gfh_home * VENUE_BLEND
+
+    if A_away is not None and len(A_away) >= VENUE_MIN:
+        gfa_away = _goals_per_game(A_away, a_norm, c_ht, c_hg, c_ag, "scored")
+        gfa = gfa * (1 - VENUE_BLEND) + gfa_away * VENUE_BLEND
+
+    # ── SoT ratio ─────────────────────────────────────────────────────
     ratio_sot = 3.2
-    if c_soth and c_sota and c_hg and c_ag:
+    if c_soth and c_sota:
         tmp = full_df[[c_hg, c_ag, c_soth, c_sota]].copy()
         tmp["goals"] = tmp[c_hg].fillna(0) + tmp[c_ag].fillna(0)
         tmp["sot"]   = tmp[c_soth].fillna(0) + tmp[c_sota].fillna(0)
@@ -298,32 +477,43 @@ def _compute_features_from_frames(
         if not agg.empty and agg["goals"].sum() > 0:
             ratio_sot = _clip(agg["sot"].sum() / agg["goals"].sum(), 2.2, 4.5)
 
-    mu_total = max(0.2, gfh + gfa)
-    p0       = math.exp(-mu_total)
-    p1       = mu_total * p0
+    # ── Core match features ────────────────────────────────────────────
+    mu_total   = max(0.2, gfh + gfa)
+    p0         = math.exp(-mu_total)
+    p1         = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
 
-    # Baseline for support_idx_over_delta.
-    # For domestic leagues: derive from the snapshot itself (reflects real
-    # league average at the point of the match).
-    # For international competitions: use a hardcoded historical average so
-    # the delta is consistent regardless of which domestic snapshot supplied
-    # the team's form data.
     if league_code and league_code in INTL_GOAL_AVERAGES:
         league_mu = INTL_GOAL_AVERAGES[league_code]
-        print(f"[fbref_base] Using intl goal baseline for {league_code}: {league_mu}")
     else:
         league_mu = float(
             (full_df[c_hg].fillna(0) + full_df[c_ag].fillna(0)).mean() or 2.5
-        ) if c_hg and c_ag else 2.5
+        )
+
+    # ── DEG / DET / EPS from rolling data (v2.2) ──────────────────────
+    deg_pressure  = _compute_deg_pressure(H, A, h_norm, a_norm, c_ht, c_hg, c_ag)
+    home_det      = _compute_team_det(H, c_hg, c_ag)
+    away_det      = _compute_team_det(A, c_hg, c_ag)
+    det_boost     = round((home_det + away_det) / 2.0, 3)
+    eps_stability = _compute_eps_stability(H, A, c_hg, c_ag)
 
     return {
+        # Core features
         "p_two_plus":             round(float(p_two_plus), 3),
         "p_home_tt05":            round(float(1.0 - _poisson_p0(gfh)), 3),
         "p_away_tt05":            round(float(1.0 - _poisson_p0(gfa)), 3),
         "tempo_index":            round(_clip(mu_total / 3.0, 0.2, 0.9), 3),
         "sot_proj_total":         round(_clip(mu_total * ratio_sot, 6.0, 16.0), 2),
         "support_idx_over_delta": round(_clip((mu_total - league_mu) * 0.12, -0.15, 0.15), 3),
+        # v2.2: module features now computed from rolling data
+        "deg_pressure":           deg_pressure,
+        "home_det":               home_det,
+        "away_det":               away_det,
+        "det_boost":              det_boost,
+        "eps_stability":          eps_stability,
+        # Diagnostic/optional: raw scoring rates for transparency
+        "h_scoring_rate":         round(gfh, 3),
+        "a_scoring_rate":         round(gfa, 3),
     }
 
 
@@ -369,28 +559,20 @@ def _asof_features_intl(
     print(f"[fbref_base] Intl fallback OK — "
           f"{home_team} ({len(H)} rows), {away_team} ({len(A)} rows)")
 
-    return _compute_features_from_frames(H, A, home_team, away_team, full_H, league_code=league_code)
+    # Venue frames not computed for intl (cross-snapshot complexity)
+    return _compute_features_from_frames(
+        H, A, home_team, away_team, full_H, league_code=league_code,
+    )
 
 
 # ── Match existence validator ─────────────────────────────────────────────────
-
 def validate_match_existed(
     league_code: str,
     home_team: str,
     away_team: str,
     match_date: date,
 ) -> Tuple[bool, Optional[str]]:
-    """
-    Check whether a completed match between these two teams
-    exists in the snapshot on the given date.
-
-    Returns:
-        (True, None)          — match found, proceed
-        (False, reason_str)   — match not found, reason explains why
-    """
     if league_code in INTL_LEAGUE_CODES:
-        # Can't validate international fixtures from domestic snapshots
-        # Allow through — futurematch handles these
         return True, None
 
     df = _load_snapshot(league_code)
@@ -407,15 +589,11 @@ def validate_match_existed(
         return False, "Snapshot missing required columns."
 
     df[c["date"]] = pd.to_datetime(df[c["date"]], errors="coerce")
-
-    # Find all matches on that exact date
-    target = pd.Timestamp(match_date)
     day_matches = df[df[c["date"]].dt.date == match_date]
 
     if day_matches.empty:
         return False, f"No matches found in {league_code} on {match_date}. Check the date."
 
-    # Get all team names on that day for fuzzy matching
     all_teams = list(set(
         day_matches[c["ht"]].astype(str).tolist() +
         day_matches[c["at"]].astype(str).tolist()
@@ -429,7 +607,6 @@ def validate_match_existed(
     if not matched_away:
         return False, f"{away_team} did not play in {league_code} on {match_date}."
 
-    # Check they played each other specifically
     h_norm = _norm(matched_home)
     a_norm = _norm(matched_away)
 
@@ -445,6 +622,9 @@ def validate_match_existed(
         )
 
     return True, None
+
+
+# ── Main entry point ──────────────────────────────────────────────────────────
 def asof_features(
     league_code: str,
     home_team: str,
@@ -457,6 +637,10 @@ def asof_features(
     Returns {} if data unavailable — callers handle gracefully.
 
     min_matches: lower this for calibration runs to reduce early-season skips.
+
+    v2.2: checks _SNAPSHOT_OVERRIDE before hitting the DB (Level 1 cache),
+    computes venue-specific scoring rate blends, and returns DEG/DET/EPS
+    from rolling data instead of returning None/defaults.
     """
     if league_code in INTL_LEAGUE_CODES:
         print(f"[fbref_base] Intl competition ({league_code}) — using domestic fallback.")
@@ -472,7 +656,6 @@ def asof_features(
         return {}
 
     c = _resolve_columns(df)
-
     if not all([c["date"], c["ht"], c["at"], c["hg"], c["ag"]]):
         print("[fbref_base] Still missing essential columns after prepare.")
         return {}
@@ -494,7 +677,19 @@ def asof_features(
               f"{home_team}={len(H)}, {away_team}={len(A)}")
         return {}
 
-    print(f"[fbref_base] Computing features: "
-          f"{home_team} ({len(H)} rows), {away_team} ({len(A)} rows)")
+    # ── Venue-specific frames (v2.2) ──────────────────────────────────
+    # Find home team's recent home games and away team's recent away games.
+    # Used to blend venue-specific scoring rates into gfh/gfa.
+    H_home = _find_venue_rows(df, home_team, cutoff, c, venue="home")
+    A_away = _find_venue_rows(df, away_team, cutoff, c, venue="away")
 
-    return _compute_features_from_frames(H, A, home_team, away_team, work, league_code=league_code)
+    print(f"[fbref_base] Computing features: "
+          f"{home_team} ({len(H)} all, {len(H_home)} home), "
+          f"{away_team} ({len(A)} all, {len(A_away)} away)")
+
+    return _compute_features_from_frames(
+        H, A, home_team, away_team, work,
+        league_code=league_code,
+        H_home=H_home,
+        A_away=A_away,
+    )
