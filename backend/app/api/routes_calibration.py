@@ -277,7 +277,7 @@ def _run_calibration(
     # "[fbref_base] Parsing Score column" path.
     try:
         from app.services.data_providers.fbref_base import (
-            _SNAPSHOT_OVERRIDE, _parse_score_column
+            _SNAPSHOT_OVERRIDE, _parse_score_column as _fbref_parse_score
         )
         if league_code in _SNAPSHOT_OVERRIDE:
             _snap_df = _SNAPSHOT_OVERRIDE[league_code]
@@ -287,7 +287,7 @@ def _run_calibration(
                 None
             )
             if _score_col and "hg" not in _cols_lower:
-                _SNAPSHOT_OVERRIDE[league_code] = _parse_score_column(_snap_df, _score_col)
+                _SNAPSHOT_OVERRIDE[league_code] = _fbref_parse_score(_snap_df, _score_col)
     except Exception:
         pass
 
