@@ -588,14 +588,11 @@ def _run_calibration(
             applied = True
             applied_changes = changed
             suggestion["notes"].append(
-                "Applied: " + ", ".join(
+                "Biases updated: " + ", ".join(
                     f"{k} {v['before']}→{v['after']}" for k, v in changed.items()
                 )
             )
-        else:
-            suggestion["notes"].append(
-                "apply=true but nothing changed — already at suggested values."
-            )
+        # Note: "nothing changed" is deferred until after all checks complete
 
         # Update sensitivity multipliers
         sens = sensitivity_suggestion
@@ -773,6 +770,30 @@ def _run_calibration(
 
     suggestion["applied_changes"] = applied_changes
 
+    # ── Deferred summary note ─────────────────────────────────────────
+    # Now that all change blocks have run we can give an honest summary.
+    if apply and cfg:
+        total_changes = len(applied_changes)
+        if total_changes == 0:
+            suggestion["notes"].append(
+                "apply=true — no changes made. All values already at suggested levels."
+            )
+        else:
+            change_summary = []
+            if "base_over_bias" in applied_changes or "base_under_bias" in applied_changes or "tempo_factor" in applied_changes:
+                bias_parts = [k for k in ("base_over_bias", "base_under_bias", "tempo_factor") if k in applied_changes]
+                change_summary.append(f"Biases: {', '.join(bias_parts)}")
+            sens_keys = [k for k in applied_changes if k.endswith("_sensitivity")]
+            if sens_keys:
+                change_summary.append(f"Sensitivities: {', '.join(sens_keys)}")
+            if "team_nudges" in applied_changes:
+                change_summary.append(f"Team nudges: {len(applied_changes['team_nudges'])} teams")
+            suggestion["notes"].append(
+                f"Summary: {len(total_changes if isinstance(total_changes, dict) else applied_changes)} parameter group(s) updated — "
+                + " | ".join(change_summary)
+            )
+
+    # ── Write CalibrationLog ──────────────────────────────────────────
     try:
         calib_entry = CalibrationLog(
             league_code = league_code,
@@ -786,8 +807,61 @@ def _run_calibration(
     except Exception as _log_err:
         print(f"[calibration] Warning: could not save CalibrationLog: {_log_err}")
 
+    # ── Backfill variance flags on pending predictions ────────────────
+    # When apply=true, the hit rate has been recorded. Update the
+    # variance_flag on all pending predictions for this league so the
+    # frontend reflects the current calibration quality immediately.
+    if apply:
+        try:
+            from app.database.models_predictions import PredictionLog
+            new_flag = (
+                "green"  if overall_hit_rate >= 80 else
+                "orange" if overall_hit_rate >= 70 else
+                "red"
+            )
+            updated_flags = (
+                db.query(PredictionLog)
+                .filter(
+                    PredictionLog.league_code == league_code,
+                    PredictionLog.status == "pending",
+                )
+                .all()
+            )
+            for pred in updated_flags:
+                pred.variance_flag = new_flag
+            if updated_flags:
+                db.commit()
+                print(f"[calibration] Updated variance_flag to '{new_flag}' "
+                      f"for {len(updated_flags)} pending predictions in {league_code}")
+        except Exception as _flag_err:
+            print(f"[calibration] Warning: could not update variance flags: {_flag_err}")
+
     # Release the snapshot DataFrame from memory now that this league is done
     clear_feature_cache(league_code)
+
+    # ── Top-level summary (readable at a glance) ─────────────────────
+    # Condenses the most important findings so you don't have to read
+    # through the full bias_suggestion dict to understand what happened.
+    top_summary = {
+        "hit_rate":        overall_hit_rate,
+        "target":          round(TARGET_HIT_RATE * 100, 1),
+        "gap_to_target":   round(TARGET_HIT_RATE * 100 - overall_hit_rate, 1),
+        "evaluated":       evaluated,
+        "skipped":         skipped,
+        "applied":         applied,
+        "changes_made":    list(applied_changes.keys()) if applied_changes else [],
+        "best_market":     max(by_market, key=lambda m: m.hit_rate).market if by_market else None,
+        "worst_market":    min(by_market, key=lambda m: m.hit_rate).market if by_market else None,
+        "over_misses":     miss_patterns["total_over_misses"],
+        "under_misses":    miss_patterns["total_under_misses"],
+        "variance_flag":   (
+            "green"  if overall_hit_rate >= 80 else
+            "orange" if overall_hit_rate >= 70 else
+            "red"
+        ),
+    }
+    # Inject at top of suggestion so it appears first in the JSON
+    suggestion = {"summary": top_summary, **suggestion}
 
     return CalibResult(
         league_code=league_code,
