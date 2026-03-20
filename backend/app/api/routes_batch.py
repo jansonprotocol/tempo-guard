@@ -663,11 +663,11 @@ def migrate_add_variance_flag(db: Session = Depends(get_db)):
     if "calibration_log" not in existing_tables:
         db.execute(text("""
             CREATE TABLE calibration_log (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 league_code VARCHAR NOT NULL,
                 hit_rate FLOAT NOT NULL,
                 sample_size INTEGER,
-                applied BOOLEAN DEFAULT false,
+                applied BOOLEAN DEFAULT 0,
                 run_at TIMESTAMP
             )
         """))
