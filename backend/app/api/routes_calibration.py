@@ -271,11 +271,58 @@ def _run_calibration(
     # get_historical_form_delta, and player nudge all skip DB reads.
     warm_snapshot_cache(db, league_code)
 
+    # ── Pre-parse the warmed snapshot ────────────────────────────────
+    # The warmed DataFrame may still have a raw Score column. Pre-parse
+    # it once here so cached_asof_features never triggers the per-call
+    # "[fbref_base] Parsing Score column" path.
+    try:
+        from app.services.data_providers.fbref_base import (
+            _SNAPSHOT_OVERRIDE, _parse_score_column
+        )
+        if league_code in _SNAPSHOT_OVERRIDE:
+            _snap_df = _SNAPSHOT_OVERRIDE[league_code]
+            _cols_lower = [str(c).lower() for c in _snap_df.columns]
+            _score_col = next(
+                (c for c in _snap_df.columns if str(c).lower() in ("score", "scores")),
+                None
+            )
+            if _score_col and "hg" not in _cols_lower:
+                _SNAPSHOT_OVERRIDE[league_code] = _parse_score_column(_snap_df, _score_col)
+    except Exception:
+        pass
+
+    # ── Pre-load squad power for all teams in this league ────────────
+    # get_historical_player_nudge calls get_historical_squad_power twice
+    # per match (home + away). Each call issues 2-3 DB queries to find
+    # SquadSnapshot, fails to find a historical one, and falls back to
+    # the most recent snapshot — querying the same rows every match.
+    # Pre-loading all team power values once into a dict gives O(1)
+    # lookup with zero DB queries inside the loop.
+    from app.models.models_players import SquadSnapshot
+    _squad_power_map: dict[str, float] = {}
+    try:
+        # Load the most recent snapshot per team for this league
+        from sqlalchemy import func as _sa_func
+        latest_snaps = (
+            db.query(SquadSnapshot)
+            .filter(
+                SquadSnapshot.league_code == league_code,
+                SquadSnapshot.squad_power.isnot(None),
+            )
+            .order_by(SquadSnapshot.team, SquadSnapshot.snapshot_date.desc())
+            .all()
+        )
+        seen_teams: set = set()
+        for snap in latest_snaps:
+            if snap.team not in seen_teams:
+                _squad_power_map[snap.team] = float(snap.squad_power)
+                seen_teams.add(snap.team)
+        print(f"[calibration] Pre-loaded squad power for "
+              f"{len(_squad_power_map)} teams in {league_code}")
+    except Exception as _sp_err:
+        print(f"[calibration] Squad power pre-load skipped: {_sp_err}")
+
     # ── Per-match memoization caches ─────────────────────────────────
-    # get_historical_form_delta parses the full snapshot + computes
-    # standings on every call. Same (team, date) pair appears many times
-    # across 100 matches (e.g. a team appearing in 10 fixtures = 10 calls).
-    # Cache keyed by (team, date) cuts 200 calls down to ~40 unique ones.
     _form_delta_cache: dict = {}
 
     def _cached_form_delta(team: str, lc: str, mdate) -> Optional[int]:
@@ -284,15 +331,19 @@ def _run_calibration(
             _form_delta_cache[key] = get_historical_form_delta(db, team, lc, mdate)
         return _form_delta_cache[key]
 
-    # get_historical_player_nudge queries SquadSnapshot per match pair.
-    # Cache keyed by (home, away, date) eliminates all repeat lookups.
-    _player_nudge_cache: dict = {}
-
+    # Player nudge using pre-loaded squad power — zero DB queries
     def _cached_player_nudge(lc: str, home: str, away: str, mdate) -> float:
-        key = (home, away, mdate)
-        if key not in _player_nudge_cache:
-            _player_nudge_cache[key] = get_historical_player_nudge(db, lc, home, away, mdate)
-        return _player_nudge_cache[key]
+        if not _squad_power_map:
+            # Fall back to original if pre-load failed
+            return get_historical_player_nudge(db, lc, home, away, mdate)
+        home_power = _squad_power_map.get(home)
+        away_power = _squad_power_map.get(away)
+        if home_power is None or away_power is None:
+            return 0.0
+        from app.services.predict import PLAYER_POWER_BLEND, PLAYER_POWER_MAX_EFFECT
+        power_delta = (home_power - away_power) / 100.0
+        nudge = power_delta * PLAYER_POWER_BLEND
+        return round(max(-PLAYER_POWER_MAX_EFFECT, min(PLAYER_POWER_MAX_EFFECT, nudge)), 4)
 
     def _weight(pos: int) -> float:
         if pos <= 10: return 1.0
