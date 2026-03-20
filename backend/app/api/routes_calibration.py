@@ -267,9 +267,32 @@ def _run_calibration(
     current_form_sens = float(cfg.form_delta_sensitivity or 0.0) if cfg else 0.0
 
     # ── Pre-warm feature cache for this league ───────────────────────
-    # Loads the snapshot DataFrame into memory once so asof_features
-    # skips its own DB read on every iteration of the match loop below.
+    # Loads the snapshot DataFrame into memory once so asof_features,
+    # get_historical_form_delta, and player nudge all skip DB reads.
     warm_snapshot_cache(db, league_code)
+
+    # ── Per-match memoization caches ─────────────────────────────────
+    # get_historical_form_delta parses the full snapshot + computes
+    # standings on every call. Same (team, date) pair appears many times
+    # across 100 matches (e.g. a team appearing in 10 fixtures = 10 calls).
+    # Cache keyed by (team, date) cuts 200 calls down to ~40 unique ones.
+    _form_delta_cache: dict = {}
+
+    def _cached_form_delta(team: str, lc: str, mdate) -> Optional[int]:
+        key = (team, mdate)
+        if key not in _form_delta_cache:
+            _form_delta_cache[key] = get_historical_form_delta(db, team, lc, mdate)
+        return _form_delta_cache[key]
+
+    # get_historical_player_nudge queries SquadSnapshot per match pair.
+    # Cache keyed by (home, away, date) eliminates all repeat lookups.
+    _player_nudge_cache: dict = {}
+
+    def _cached_player_nudge(lc: str, home: str, away: str, mdate) -> float:
+        key = (home, away, mdate)
+        if key not in _player_nudge_cache:
+            _player_nudge_cache[key] = get_historical_player_nudge(db, lc, home, away, mdate)
+        return _player_nudge_cache[key]
 
     def _weight(pos: int) -> float:
         if pos <= 10: return 1.0
@@ -342,8 +365,8 @@ def _run_calibration(
                 eps_stability=metrics.get("eps_stability"),
             )
 
-            player_nudge = get_historical_player_nudge(
-                db, league_code, home_team, away_team, match_date,
+            player_nudge = _cached_player_nudge(
+                league_code, home_team, away_team, match_date,
             )
             pred = evaluate_athena(
                 req,
@@ -409,9 +432,9 @@ def _run_calibration(
             else:
                 market_tracker[market]["raw_misses"] += 1
 
-            # Compute historical form delta for both teams
-            home_form_delta = get_historical_form_delta(db, home_team, league_code, match_date)
-            away_form_delta = get_historical_form_delta(db, away_team, league_code, match_date)
+            # Compute historical form delta — uses memoization cache
+            home_form_delta = _cached_form_delta(home_team, league_code, match_date)
+            away_form_delta = _cached_form_delta(away_team, league_code, match_date)
 
             # Initialize team_tracker entries if needed
             for team in [home_team, away_team]:
