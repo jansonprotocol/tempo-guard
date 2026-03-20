@@ -19,6 +19,15 @@ from app.models.league_config import LeagueConfig
 from app.models.team import Team  # for display_name lookup
 from app.util.team_resolver import batch_resolve_team_names
 
+# ── Process-level TTL cache for compute_form_delta ────────────────────────────
+# compute_form_delta reads + parses a full parquet snapshot and computes
+# standings twice per call. Called from form_delta_all (30 leagues), GET
+# /predictions (per-league), and calibration. Caching for 15 minutes
+# eliminates all repeat parquet reads within a request burst.
+import time as _time
+_FORM_DELTA_CACHE: dict = {}          # league_code → (result, timestamp)
+_FORM_DELTA_TTL_SECONDS = 900         # 15 minutes
+
 
 # Season boundary: matches before this date are "previous season"
 # Aug–May leagues: previous season ended ~June 2025
@@ -38,12 +47,10 @@ def _season_cutoff(league_code: str) -> str:
     return _CALENDAR_CUTOFF if _is_calendar_league(league_code) else _AUG_MAY_CUTOFF
 
 
-def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: str, league_code: str = None) -> List[dict]:
+def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: str) -> List[dict]:
     """
     Compute league standings from match results using BATCH RESOLUTION
     to unify team names with maximum performance.
-    league_code: when provided, resolution is scoped to that league to prevent
-    cross-league alias contamination (e.g. "Paris" → PSG in FRA-L2 context).
     """
     # Collect ALL unique team names from the dataframe in one pass
     all_raw_names: Set[str] = set()
@@ -52,7 +59,7 @@ def _compute_standings(db: Session, df: pd.DataFrame, home_col: str, away_col: s
         all_raw_names.add(str(row[away_col]).strip())
 
     # Batch resolve ALL names with a single set of database queries
-    resolved_names = batch_resolve_team_names(db, list(all_raw_names), league_code=league_code)
+    resolved_names = batch_resolve_team_names(db, list(all_raw_names))
 
     # Process all matches with pre-resolved names
     teams: Dict[str, dict] = {}
@@ -176,19 +183,27 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     """
     Compute Form Delta for all teams in a league using BATCH RESOLUTION.
     Now includes display_name and robust expected position logic.
+    Results are cached for 15 minutes to avoid repeated parquet reads.
     """
+    # Check cache first
+    cached = _FORM_DELTA_CACHE.get(league_code)
+    if cached:
+        result, ts = cached
+        if _time.time() - ts < _FORM_DELTA_TTL_SECONDS:
+            return result
+
     prev_df, curr_df, home_col, away_col = _load_and_split_snapshot(db, league_code)
 
     if curr_df is None or curr_df.empty:
         return {"league_code": league_code, "error": "No current season data", "teams": []}
 
     # Current standings
-    current_standings = _compute_standings(db, curr_df, home_col, away_col, league_code=league_code)
+    current_standings = _compute_standings(db, curr_df, home_col, away_col)
 
     # Previous season standings (for expected position)
     prev_pos_map = {}
     if prev_df is not None and not prev_df.empty and len(prev_df) >= 30:
-        prev_standings = _compute_standings(db, prev_df, home_col, away_col, league_code=league_code)
+        prev_standings = _compute_standings(db, prev_df, home_col, away_col)
         prev_pos_map = {t["team_key"]: t["pos"] for t in prev_standings}
 
     # Load team power data
@@ -359,7 +374,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     # Sort by form_delta descending (most overperforming first)
     results.sort(key=lambda t: t["form_delta"], reverse=True)
 
-    return {
+    final = {
         "league_code": league_code,
         "display_name": display_name,
         "total_teams": n_teams,
@@ -370,3 +385,5 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
         },
         "teams": results,
     }
+    _FORM_DELTA_CACHE[league_code] = (final, _time.time())
+    return final
