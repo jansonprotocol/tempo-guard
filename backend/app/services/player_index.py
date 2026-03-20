@@ -245,8 +245,10 @@ def _apply_performance_ratings(
     Positive delta = player is stronger than team average (carrying the team)
     Negative delta = player is weaker than team average (dragging the team down)
 
-    Uses the Player → current_team join to find which team each player belongs to,
-    then compares their power_index against that team's squad_power.
+    FIX (v2.2): team_results is keyed by RESOLVED team names, so we must
+    resolve player.current_team through the alias system before looking up.
+    Previously this always returned None because the raw scraper name (e.g.
+    "Man City") never matched the resolved key ("manchester-city").
     """
     for row in qualified:
         if row.power_index is None:
@@ -256,7 +258,14 @@ def _apply_performance_ratings(
         if not player or not player.current_team:
             continue
 
-        team_data = team_results.get(player.current_team)
+        # Resolve to canonical key to match team_results dict
+        resolved_team = resolve_team_name(db, player.current_team, league_code)
+        team_data = team_results.get(resolved_team)
+
+        # Fallback: try the raw name (handles edge cases where resolve returns unchanged)
+        if team_data is None and resolved_team != player.current_team:
+            team_data = team_results.get(player.current_team)
+
         if not team_data or team_data.get("squad_power") is None:
             continue
 
