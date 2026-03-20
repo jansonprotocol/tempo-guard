@@ -42,6 +42,10 @@ from app.services.predict import predict_match
 from app.services.player_power_backtest import get_historical_player_nudge
 from app.services.form_delta_history import get_historical_form_delta
 from app.util.asian_lines import evaluate_market
+# v2.2: feature cache (eliminates repeated parquet reads during calibration loops)
+from app.services.feature_cache import warm_snapshot_cache, cached_asof_features, clear_feature_cache, cache_stats
+# v2.2: confidence calibrator (isotonic regression on historical hit/miss data)
+from app.services.confidence_calibrator import fit_calibration, calibration_status
 
 router = APIRouter()
 
@@ -262,6 +266,11 @@ def _run_calibration(
     current_eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
     current_form_sens = float(cfg.form_delta_sensitivity or 0.0) if cfg else 0.0
 
+    # ── Pre-warm feature cache for this league ───────────────────────
+    # Loads the snapshot DataFrame into memory once so asof_features
+    # skips its own DB read on every iteration of the match loop below.
+    warm_snapshot_cache(db, league_code)
+
     def _weight(pos: int) -> float:
         if pos <= 10: return 1.0
         if pos <= 30: return 0.5
@@ -298,7 +307,7 @@ def _run_calibration(
         away_team = resolve_team_name(db, away_team_raw, league_code)
 
         try:
-            metrics = asof_features(
+            metrics = cached_asof_features(
                 league_code, home_team, away_team, match_date,
                 min_matches=min_matches_before,
             )
@@ -777,6 +786,9 @@ def _run_calibration(
     except Exception as _log_err:
         print(f"[calibration] Warning: could not save CalibrationLog: {_log_err}")
 
+    # Release the snapshot DataFrame from memory now that this league is done
+    clear_feature_cache(league_code)
+
     return CalibResult(
         league_code=league_code,
         total_matches=total_matches,
@@ -1043,3 +1055,101 @@ def reset_league_calibration(
             result["notes"].append("No snapshot found to wipe.")
 
     return result
+
+
+# ── Confidence calibration endpoints ───────────────────────────────────────────
+
+@router.post("/calibrate/confidence")
+def calibrate_confidence_scores(
+    league_code: str = Query(None, description="Single league, or omit for global fit"),
+    min_samples: int = Query(30, ge=10, le=500,
+                             description="Minimum hit+miss predictions required"),
+    fit_global: bool = Query(True,
+                             description="Also fit a global calibration across all leagues"),
+    db: Session = Depends(get_db),
+):
+    """
+    Fit isotonic regression calibration on historical prediction outcomes.
+
+    Reads (confidence_score, hit/miss) pairs from PredictionLog and fits
+    a monotone calibration curve so that confidence_score values correspond
+    to actual historical hit rates.
+
+    The calibrated_probability field in /predict responses uses this mapping.
+
+    Recommended workflow:
+      1. Run calibration for individual leagues once you have 30+ predictions each.
+      2. Run with fit_global=true to also build a cross-league global calibration
+         (used as fallback for leagues with insufficient data).
+      3. Re-run weekly or after a significant number of new results are in.
+    """
+    results = []
+
+    # League-specific fit
+    if league_code:
+        result = fit_calibration(db, league_code=league_code, min_samples=min_samples)
+        results.append(result)
+    else:
+        # Fit per-league for all leagues that have predictions
+        from app.database.models_predictions import PredictionLog
+        from sqlalchemy import func as sa_func
+        league_counts = (
+            db.query(PredictionLog.league_code, sa_func.count(PredictionLog.id))
+            .filter(
+                PredictionLog.status.in_(["hit", "miss"]),
+                PredictionLog.confidence_score.isnot(None),
+            )
+            .group_by(PredictionLog.league_code)
+            .all()
+        )
+        for lc, count in sorted(league_counts):
+            if count >= min_samples:
+                result = fit_calibration(db, league_code=lc, min_samples=min_samples)
+                results.append(result)
+            else:
+                results.append({
+                    "success": False,
+                    "league_code": lc,
+                    "reason": f"Only {count} samples (need {min_samples})",
+                    "n_samples": count,
+                })
+
+    # Global fit (uses all leagues combined)
+    global_result = None
+    if fit_global:
+        global_result = fit_calibration(db, league_code=None, min_samples=min_samples)
+
+    successful = [r for r in results if r.get("success")]
+    failed     = [r for r in results if not r.get("success")]
+
+    return {
+        "leagues_fitted":   len(successful),
+        "leagues_skipped":  len(failed),
+        "global":           global_result,
+        "results":          results,
+        "tip": (
+            "calibrated_probability now appears in /predict responses. "
+            "Re-run this endpoint weekly or after batch-validate adds new results."
+        ),
+    }
+
+
+@router.get("/calibrate/confidence/status")
+def confidence_calibration_status(
+    db: Session = Depends(get_db),
+):
+    """
+    Show current state of all stored confidence calibrations.
+    Reports sample count, Brier score, and improvement vs uncalibrated baseline.
+    """
+    from app.services.feature_cache import cache_stats as feature_cache_stats
+    status = calibration_status(db)
+    return {
+        "calibrations":  status,
+        "total":         len(status),
+        "feature_cache": feature_cache_stats(),
+        "tip": (
+            "Run POST /calibrate/confidence to fit or refresh calibrations. "
+            "Brier score: lower is better. improvement = raw_brier - calibrated_brier."
+        ),
+    }
