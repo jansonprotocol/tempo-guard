@@ -628,12 +628,16 @@ def form_delta_all(
                 "display_name": data["display_name"],
                 "total_teams": data["total_teams"],
                 "overperformers": [
-                    {"team": t["team"], "delta": t["form_delta"],
+                    {"team": t["team"],
+                     "display_name": t.get("display_name") or t["team"],
+                     "delta": t["form_delta"],
                      "actual": t["actual_pos"], "expected": t["expected_pos"]}
                     for t in top_over
                 ],
                 "underperformers": [
-                    {"team": t["team"], "delta": t["form_delta"],
+                    {"team": t["team"],
+                     "display_name": t.get("display_name") or t["team"],
+                     "delta": t["form_delta"],
                      "actual": t["actual_pos"], "expected": t["expected_pos"],
                      "weakness": t.get("primary_weakness")}
                     for t in top_under
