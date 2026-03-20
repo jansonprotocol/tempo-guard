@@ -254,7 +254,7 @@ def batch_predict(
     # per-fixture score parsing path.
     try:
         from app.services.data_providers.fbref_base import (
-            _SNAPSHOT_OVERRIDE, _parse_score_column as _psc
+            _SNAPSHOT_OVERRIDE, _parse_score_column as _fbref_parse_score
         )
         for lc in warmed_leagues:
             if lc in _SNAPSHOT_OVERRIDE:
@@ -265,7 +265,7 @@ def batch_predict(
                     None
                 )
                 if _sc and "hg" not in _cols:
-                    _SNAPSHOT_OVERRIDE[lc] = _psc(_df, _sc)
+                    _SNAPSHOT_OVERRIDE[lc] = _fbref_parse_score(_df, _sc)
     except Exception:
         pass
 
