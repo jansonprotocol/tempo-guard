@@ -1,29 +1,37 @@
 import os
 import json
 from sqlalchemy.orm import Session
-from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from app.models.league_config import LeagueConfig
 from app.models.team import Team, TeamAlias
 from app.util.text_norm import normalize_team
 
 # ---------------------------------------------------------------------------
-# PATH HANDLING
+# PATH HANDLING — 100% SAFE FOR YOUR STRUCTURE (/backend/app)
 # ---------------------------------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SEED_DIR = os.path.join(BASE_DIR, "seed")
+
+# This file lives in: /app/backend/app/memory_loader.py  (Render)
+# Or locally:         /backend/app/memory_loader.py
+# So the seed folder is ALWAYS located at: /backend/app/seed/ (same level)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # → /backend/app
+SEED_DIR = os.path.join(BASE_DIR, "seed")               # → /backend/app/seed
 
 def _seed_path(filename: str) -> str:
+    """
+    Build an absolute path to a JSON seed file located in /backend/app/seed.
+    """
     return os.path.join(SEED_DIR, filename)
 
 
 # ---------------------------------------------------------------------------
 # JSON LOADER HELPERS
 # ---------------------------------------------------------------------------
+
 def _read_json(path: str):
     if not os.path.exists(path):
         print(f"[memory_loader] ERROR: Seed file not found → {path}")
         return None
+
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -37,21 +45,28 @@ def _read_json(path: str):
 # ---------------------------------------------------------------------------
 # LEAGUE CONFIG LOADER
 # ---------------------------------------------------------------------------
+
 def load_league_configs(db: Session):
     path = _seed_path("league_configs.json")
     data = _read_json(path)
+
     if not data:
         print("[memory_loader] No league configs loaded.")
         return
 
     created, updated = 0, 0
+
     for entry in data:
         code = entry.get("league_code")
         if not code:
             continue
 
-        existing = db.query(LeagueConfig).filter(LeagueConfig.league_code == code).first()
+        existing = db.query(LeagueConfig).filter(
+            LeagueConfig.league_code == code
+        ).first()
+
         if existing is None:
+            # CREATE
             item = LeagueConfig(
                 league_code=code,
                 base_over_bias=float(entry.get("base_over_bias", 0.0)),
@@ -65,7 +80,9 @@ def load_league_configs(db: Session):
             )
             db.add(item)
             created += 1
+
         else:
+            # UPDATE
             existing.base_over_bias = float(entry.get("base_over_bias", existing.base_over_bias))
             existing.base_under_bias = float(entry.get("base_under_bias", existing.base_under_bias))
             existing.tempo_factor = float(entry.get("tempo_factor", existing.tempo_factor))
@@ -81,11 +98,13 @@ def load_league_configs(db: Session):
 
 
 # ---------------------------------------------------------------------------
-# TEAM LOADER (with ON CONFLICT for aliases)
+# TEAM LOADER
 # ---------------------------------------------------------------------------
+
 def load_teams(db: Session):
     path = _seed_path("teams.json")
     data = _read_json(path)
+
     if not data:
         print("[memory_loader] No teams loaded.")
         return
@@ -95,54 +114,47 @@ def load_teams(db: Session):
     for entry in data:
         display_name = (entry.get("display_name") or "").strip()
         league_code = (entry.get("league_code") or "").strip()
+
         if not display_name or not league_code:
             continue
 
         team_key = normalize_team(display_name)
-        existing = db.query(Team).filter(Team.team_key == team_key).first()
+
+        existing = db.query(Team).filter(
+            Team.team_key == team_key
+        ).first()
 
         if existing is None:
-            # CREATE new team
+            # CREATE
             team = Team(
                 team_key=team_key,
                 display_name=display_name,
                 league_code=league_code,
                 country=(entry.get("country") or "").strip(),
             )
-            db.add(team)
-            db.flush()  # get team.id
 
-            # Insert aliases with ON CONFLICT DO NOTHING
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
                 if alias_key and alias_key != team_key:
-                    stmt = pg_insert(TeamAlias).values(
-                        team_id=team.id,
-                        alias_key=alias_key
-                    ).on_conflict_do_nothing(index_elements=['alias_key'])
-                    db.execute(stmt)
+                    team.aliases.append(TeamAlias(alias_key=alias_key))
 
+            db.add(team)
             created += 1
+
         else:
-            # UPDATE existing team
+            # UPDATE
             existing.display_name = display_name
             existing.league_code = league_code
+
             if entry.get("country") is not None:
                 existing.country = (entry.get("country") or "").strip()
 
-            # Delete all existing aliases for this team (they will be replaced)
-            db.query(TeamAlias).filter(TeamAlias.team_id == existing.id).delete()
-            db.flush()
-
-            # Insert new aliases with ON CONFLICT DO NOTHING
+            # Replace aliases
+            existing.aliases.clear()
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
                 if alias_key and alias_key != team_key:
-                    stmt = pg_insert(TeamAlias).values(
-                        team_id=existing.id,
-                        alias_key=alias_key
-                    ).on_conflict_do_nothing(index_elements=['alias_key'])
-                    db.execute(stmt)
+                    existing.aliases.append(TeamAlias(alias_key=alias_key))
 
             updated += 1
 
