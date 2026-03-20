@@ -2,12 +2,25 @@
 backend/scripts/scrape_fixtures.py
 
 Scrapes FBref schedule pages for completed scores and upcoming fixtures.
-Also extracts current league standings and updates teams table.
+Also fetches current league standings from the FBref stats page and updates
+teams.current_position.
+
+Standings are fetched from a SEPARATE page:
+  Schedule:  /en/comps/{id}/schedule/{Name}-Scores-and-Fixtures
+  Standings: /en/comps/{id}/{Name}-Stats
+
+  The schedule page rarely embeds a full standings table — the stats page
+  is the reliable source. Both are fetched per league.
+
 Stores completed matches in FBrefSnapshot, upcoming matches in FBrefFixtures.
 
 Usage:
     cd backend
     python -m scripts.scrape_fixtures [--league LEAGUE] [--headless] [--api KEY]
+
+Public callable (used by daily updater and full-history loader):
+    from scripts.scrape_fixtures import scrape_league_standings
+    scrape_league_standings("ENG-PL")
 """
 
 import sys
@@ -19,7 +32,6 @@ from datetime import datetime, date, timedelta
 from pathlib import Path
 from typing import Optional, Tuple
 
-# Ensure we can import from app
 path_root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(path_root))
 
@@ -42,21 +54,46 @@ from app.services.resolve_team import resolve_team_name
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-SLEEP_BETWEEN_FETCHES = 4      # seconds between each browser fetch
-SLEEP_BETWEEN_LEAGUES = 6       # seconds between leagues
-FIXTURE_DAYS = 5                 # how many days ahead to store fixtures
+SLEEP_BETWEEN_FETCHES = 4
+SLEEP_BETWEEN_LEAGUES = 6
+FIXTURE_DAYS = 5
 
-HEADLESS = False                 # set True via --headless
+HEADLESS = False
 SCRAPER_API_KEY: Optional[str] = os.environ.get("SCRAPER_API_KEY")
+
+# International competitions — no simple league table, standings skipped.
+INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
+
+
+# ---------------------------------------------------------------------------
+# URL helpers
+# ---------------------------------------------------------------------------
+def _standings_url_from_schedule(schedule_url: str) -> Optional[str]:
+    """
+    Derive the FBref stats/standings page URL from the schedule URL.
+
+    Schedule:  https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures
+    Standings: https://fbref.com/en/comps/9/Premier-League-Stats
+
+    Returns None if the URL doesn't match the expected pattern.
+    """
+    m = re.match(
+        r"(https://fbref\.com/en/comps/\d+)/schedule/(.+?)-Scores-and-Fixtures",
+        schedule_url,
+    )
+    if m:
+        return f"{m.group(1)}/{m.group(2)}-Stats"
+    return None
+
 
 # ---------------------------------------------------------------------------
 # Fetch helpers (ScraperAPI or Selenium)
 # ---------------------------------------------------------------------------
 def _fetch_page(url: str, label: str) -> Optional[str]:
-    """Route to ScraperAPI (if key present) or Selenium."""
     if SCRAPER_API_KEY:
         return _fetch_via_scraperapi(url, label)
     return _fetch_via_selenium(url, label)
+
 
 def _fetch_via_scraperapi(url: str, label: str) -> Optional[str]:
     print(f"  [ScraperAPI] {label}")
@@ -80,6 +117,7 @@ def _fetch_via_scraperapi(url: str, label: str) -> Optional[str]:
         print(f"    Error: {e}")
         return None
 
+
 def _fetch_via_selenium(url: str, label: str) -> Optional[str]:
     driver = None
     try:
@@ -101,6 +139,7 @@ def _fetch_via_selenium(url: str, label: str) -> Optional[str]:
             except Exception:
                 pass
 
+
 def _fetch_with_driver(driver, url: str, label: str) -> Optional[str]:
     """Use an existing Selenium driver to fetch a page (reuse browser)."""
     try:
@@ -113,13 +152,65 @@ def _fetch_with_driver(driver, url: str, label: str) -> Optional[str]:
         print(f"    Browser error ({label}): {e}")
         return None
 
+
 # ---------------------------------------------------------------------------
 # Page parsing
 # ---------------------------------------------------------------------------
+def _flatten_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Flatten MultiIndex columns to single strings."""
+    if isinstance(df.columns, pd.MultiIndex):
+        df = df.copy()
+        df.columns = [
+            " ".join(str(v) for v in col if str(v) != "nan").strip()
+            for col in df.columns
+        ]
+    return df
+
+
+def _is_schedule_table(df: pd.DataFrame) -> bool:
+    df = _flatten_columns(df)
+    cols_lower = [str(c).lower() for c in df.columns]
+    return (
+        any("date" in c for c in cols_lower)
+        and any("home" in c for c in cols_lower)
+        and any("away" in c for c in cols_lower)
+    )
+
+
+def _is_standings_table(df: pd.DataFrame) -> bool:
+    """
+    Robust check for a league standings table.
+
+    Looks for any combination of:
+      - A rank/position column: 'rk', 'rank', 'pos', '#'
+      - A team name column:     'squad', 'team', 'club'
+      - A points column:        'pts', 'points'
+      - Reasonable row count:   8–30 rows (covers large leagues)
+    """
+    df = _flatten_columns(df)
+    cols_lower = [str(c).lower().strip() for c in df.columns]
+    has_rank  = any(c in ("rk", "rank", "pos", "#") for c in cols_lower)
+    has_team  = any(c in ("squad", "team", "club") for c in cols_lower)
+    has_pts   = any("pts" in c or c == "points" for c in cols_lower)
+    has_rows  = 8 <= len(df.dropna(how="all")) <= 30
+    return has_rank and has_team and has_pts and has_rows
+
+
+def _contains_dates(df: pd.DataFrame, sample_rows: int = 5) -> bool:
+    df = _flatten_columns(df)
+    sample = df.head(sample_rows).astype(str)
+    for _, row in sample.iterrows():
+        for val in row:
+            if re.search(r"\d{4}-\d{2}-\d{2}", val) or re.search(r"\d{2}/\d{2}/\d{4}", val):
+                return True
+    return False
+
+
 def _parse_page(html: str, league_code: str = "") -> Tuple[Optional[pd.DataFrame], Optional[pd.DataFrame]]:
     """
-    Parse FBref page, returns (schedule_df, standings_df).
-    Both may be None if not found.
+    Parse FBref schedule page HTML.
+    Returns (schedule_df, standings_df).  standings_df may be None — that's
+    normal for a schedule-only page; standings are fetched separately.
     """
     if "Just a moment" in html or len(html) < 5000:
         print("  Cloudflare blocked.")
@@ -134,95 +225,38 @@ def _parse_page(html: str, league_code: str = "") -> Tuple[Optional[pd.DataFrame
     if not tables:
         return None, None
 
-    is_intl = league_code in ("UCL", "UEL", "UECL", "EC", "WC")
-
-    # Helper to check if a table is a schedule (has date, home, away columns)
-    def is_schedule_table(df):
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = [
-                " ".join(str(v) for v in col if str(v) != "nan").strip()
-                for col in df.columns
-            ]
-        cols_lower = [str(c).lower() for c in df.columns]
-        has_date = any('date' in c for c in cols_lower)
-        has_home = any('home' in c for c in cols_lower)
-        has_away = any('away' in c for c in cols_lower)
-        return has_date and has_home and has_away
-
-    # Helper to check if a table is a standings table
-    def is_standings_table(df):
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = [
-                " ".join(str(v) for v in col if str(v) != "nan").strip()
-                for col in df.columns
-            ]
-        cols_lower = [str(c).lower() for c in df.columns]
-        has_rk = any(c in ['rk', 'rank'] for c in cols_lower)
-        has_squad = any(c in ['squad', 'team'] for c in cols_lower)
-        has_pts = any(c in ['pts', 'points'] for c in cols_lower)
-        return has_rk and has_squad and has_pts
-
-    # Helper to detect schedule by looking at row values (date pattern)
-    def contains_dates(df, sample_rows=5):
-        if isinstance(df.columns, pd.MultiIndex):
-            df.columns = [
-                " ".join(str(v) for v in col if str(v) != "nan").strip()
-                for col in df.columns
-            ]
-        sample = df.head(sample_rows).astype(str)
-        for _, row in sample.iterrows():
-            for val in row:
-                if re.search(r'\d{4}-\d{2}-\d{2}', val) or re.search(r'\d{2}/\d{2}/\d{4}', val):
-                    return True
-        return False
-
+    is_intl = league_code in INTL_LEAGUE_CODES
     schedule_df = None
     standings_df = None
 
-    # First pass: identify all tables
     for df in tables:
-        if is_schedule_table(df):
-            schedule_df = df.dropna(how="all")
-            print(f"  Found schedule table by column names with {len(schedule_df)} rows")
-        elif is_standings_table(df):
+        df = _flatten_columns(df)
+        if _is_standings_table(df) and not is_intl:
             standings_df = df.dropna(how="all")
-            print(f"  Found standings table with {len(standings_df)} rows")
+            print(f"  Found standings table in schedule page ({len(standings_df)} rows)")
+        elif _is_schedule_table(df) and schedule_df is None:
+            schedule_df = df.dropna(how="all")
+            print(f"  Found schedule table ({len(schedule_df)} rows)")
 
-    # If we didn't find schedule by column names, try date-based detection
+    # Date-based fallback for schedule
     if schedule_df is None and not is_intl:
-        candidates = []
-        for idx, df in enumerate(tables):
-            if df.shape[1] >= 3 and contains_dates(df) and not is_standings_table(df):
-                print(f"  Table {idx+1} contains dates – candidate schedule table")
-                candidates.append(df)
+        candidates = [
+            df for df in tables
+            if df.shape[1] >= 3
+            and _contains_dates(df)
+            and not _is_standings_table(df)
+        ]
         if candidates:
-            schedule_df = max(candidates, key=len)
-            schedule_df = schedule_df.dropna(how="all")
-            print(f"  Selected candidate schedule table with {len(schedule_df)} rows")
+            schedule_df = max(candidates, key=len).dropna(how="all")
+            print(f"  Fallback schedule table ({len(schedule_df)} rows)")
 
-    # For international, merge all schedule tables
+    # International: merge multiple schedule tables (group stage etc.)
     if is_intl and schedule_df is None:
-        schedule_tables = []
+        parts = []
         for t in tables:
-            if is_schedule_table(t):
-                if isinstance(t.columns, pd.MultiIndex):
-                    t.columns = [
-                        " ".join(str(v) for v in col if str(v) != "nan").strip()
-                        for col in t.columns
-                    ]
-                schedule_tables.append(t)
-
-        if schedule_tables:
-            merged_parts = []
-            for t in schedule_tables:
-                t = t.dropna(how="all").copy()
-                if isinstance(t.columns, pd.MultiIndex):
-                    t.columns = [
-                        " ".join(str(v) for v in col if str(v) != "nan").strip()
-                        for col in t.columns
-                    ]
+            if _is_schedule_table(t):
+                t = _flatten_columns(t).dropna(how="all").copy()
                 cols_lower_map = {str(c).lower(): c for c in t.columns}
-
                 round_col = cols_lower_map.get("round") or cols_lower_map.get("wk")
                 if round_col:
                     vals = t[round_col].dropna().astype(str)
@@ -230,29 +264,54 @@ def _parse_page(html: str, league_code: str = "") -> Tuple[Optional[pd.DataFrame
                     label = vals.mode()[0] if not vals.empty else None
                 else:
                     label = None
-
                 t["_round_raw"] = label
-                merged_parts.append(t)
+                parts.append(t)
+        if parts:
+            schedule_df = pd.concat(parts, ignore_index=True)
+            print(f"  Merged {len(parts)} schedule tables → {len(schedule_df)} rows")
 
-            schedule_df = pd.concat(merged_parts, ignore_index=True)
-            print(f"  Merged {len(schedule_tables)} schedule tables → {len(schedule_df)} rows")
-
-    # If still no schedule, fall back to largest non-standings table
+    # Last resort fallback
     if schedule_df is None and not is_intl:
-        non_standings = [df for df in tables if not is_standings_table(df)]
+        non_standings = [df for df in tables if not _is_standings_table(df)]
         if non_standings:
-            schedule_df = max(non_standings, key=len)
-            schedule_df = schedule_df.dropna(how="all")
-            print(f"  Fallback: largest non-standings table with {len(schedule_df)} rows")
+            schedule_df = max(non_standings, key=len).dropna(how="all")
+            print(f"  Last-resort schedule table ({len(schedule_df)} rows)")
 
     return schedule_df, standings_df
 
+
+def _parse_standings_page(html: str, league_code: str) -> Optional[pd.DataFrame]:
+    """
+    Parse a dedicated FBref stats page (/en/comps/{id}/{Name}-Stats) for
+    the standings table.  More permissive than the schedule parser since
+    we know we're on a stats page.
+    """
+    if "Just a moment" in html or len(html) < 5000:
+        print("  [standings] Cloudflare blocked stats page.")
+        return None
+
+    try:
+        tables = pd.read_html(io.StringIO(html))
+    except Exception as e:
+        print(f"  [standings] Parse error on stats page: {e}")
+        return None
+
+    # Priority: prefer tables that look like overall standings
+    for df in tables:
+        df = _flatten_columns(df)
+        if _is_standings_table(df):
+            print(f"  [standings] Found standings table on stats page ({len(df.dropna(how='all'))} rows)")
+            return df.dropna(how="all")
+
+    print("  [standings] No standings table found on stats page.")
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Column resolution
+# ---------------------------------------------------------------------------
 def _get_columns(df: pd.DataFrame) -> dict:
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = [
-            " ".join(str(v) for v in col if str(v) != "nan").strip()
-            for col in df.columns
-        ]
+    df = _flatten_columns(df)
     cols = {str(c).lower(): c for c in df.columns}
 
     def col(*names):
@@ -262,24 +321,24 @@ def _get_columns(df: pd.DataFrame) -> dict:
         return None
 
     return {
-        "date":       col("date"),
-        "home":       col("home"),
-        "away":       col("away"),
-        "score":      col("score", "scores"),
-        "time":       col("time"),
-        "round_raw":  col("_round_raw"),
+        "date":      col("date"),
+        "home":      col("home"),
+        "away":      col("away"),
+        "score":     col("score", "scores"),
+        "time":      col("time"),
+        "round_raw": col("_round_raw"),
     }
 
+
 def _safe_to_parquet(df: pd.DataFrame) -> bytes:
-    """Coerce object columns to string before serialising to parquet."""
     df = df.copy()
     for col in df.columns:
         if df[col].dtype == object:
             df[col] = df[col].astype(str)
     return df.to_parquet(index=True)
 
+
 def _classify_round_type(raw: Optional[str], match_date: date, league_code: str) -> Optional[str]:
-    """Normalise round label for UEFA competitions."""
     if league_code not in ("UCL", "UEL", "UECL"):
         return None
     label = (raw or "").lower().strip()
@@ -308,89 +367,143 @@ def _classify_round_type(raw: Optional[str], match_date: date, league_code: str)
         return "semi_final" if match_date.day < 25 else "final"
     return None
 
+
 # ---------------------------------------------------------------------------
 # Standings processing
 # ---------------------------------------------------------------------------
-def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame) -> None:
+def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame) -> int:
     """
     Parse standings table and update teams.current_position.
+    Returns the number of teams updated.
     """
     if standings_df is None or standings_df.empty:
-        print(f"  [standings] No standings data for {league_code}")
-        return
+        return 0
 
-    print(f"  [standings] Processing standings for {league_code} with {len(standings_df)} rows")
+    standings_df = _flatten_columns(standings_df)
+    cols_lower = {str(c).lower().strip(): c for c in standings_df.columns}
 
-    # Flatten columns if MultiIndex
-    if isinstance(standings_df.columns, pd.MultiIndex):
-        standings_df.columns = [
-            " ".join(str(v) for v in col if str(v) != "nan").strip()
-            for col in standings_df.columns
-        ]
-        print(f"  [standings] Flattened columns: {list(standings_df.columns)}")
-
-    # Find the relevant columns
-    cols_lower = {str(c).lower(): c for c in standings_df.columns}
-    print(f"  [standings] Available columns: {list(cols_lower.keys())}")
-
-    # Find position column (usually 'rk' or 'rank')
+    # Find position column
     pos_col = None
-    for key in ['rk', 'rank', 'pos', 'position']:
+    for key in ("rk", "rank", "pos", "#"):
         if key in cols_lower:
             pos_col = cols_lower[key]
-            print(f"  [standings] Found position column: {pos_col}")
             break
 
     # Find team name column
     team_col = None
-    for key in ['squad', 'team', 'club']:
+    for key in ("squad", "team", "club"):
         if key in cols_lower:
             team_col = cols_lower[key]
-            print(f"  [standings] Found team column: {team_col}")
             break
 
     if not pos_col or not team_col:
-        print(f"  [standings] Could not find position/team columns")
-        return
+        print(f"  [standings] Cannot find position/team columns. Available: {list(cols_lower.keys())}")
+        return 0
 
-    # Process each row
+    print(f"  [standings] Using pos_col='{pos_col}', team_col='{team_col}'")
     updated = 0
-    for idx, row in standings_df.iterrows():
-        try:
-            position = int(row[pos_col])
-            team_name_raw = str(row[team_col]).strip()
 
-            if pd.isna(team_name_raw) or team_name_raw in ['', 'nan']:
-                continue
-
-            print(f"  [standings] Row {idx}: {team_name_raw} -> position {position}")
-
-            # Resolve team name to canonical key
-            team_key = resolve_team_name(db, team_name_raw, league_code)
-
-            # Find and update team
-            team = db.query(Team).filter_by(team_key=team_key, league_code=league_code).first()
-            if team:
-                team.current_position = position
-                updated += 1
-                print(f"  [standings] Updated {team_key} to position {position}")
-            else:
-                print(f"  [standings] Team not found: {team_name_raw} -> {team_key}")
-        except Exception as e:
-            print(f"  [standings] Error processing row {idx}: {e}")
+    for _, row in standings_df.iterrows():
+        team_name_raw = str(row[team_col]).strip()
+        if not team_name_raw or team_name_raw.lower() in ("nan", "", "squad", "team"):
             continue
+
+        # Skip repeated header rows (FBref inserts these every N rows)
+        try:
+            position = int(float(str(row[pos_col]).strip()))
+        except (ValueError, TypeError):
+            continue  # non-numeric → header repeat or divider row
+
+        if position < 1 or position > 30:
+            continue  # sanity guard
+
+        team_key = resolve_team_name(db, team_name_raw, league_code)
+        team = db.query(Team).filter_by(team_key=team_key, league_code=league_code).first()
+
+        if team:
+            team.current_position = position
+            updated += 1
+        else:
+            print(f"  [standings] Team not found: '{team_name_raw}' → '{team_key}'")
 
     if updated:
         db.commit()
-        print(f"  [standings] Updated positions for {updated} teams in {league_code}")
+        print(f"  [standings] Updated {updated} team positions for {league_code}")
     else:
-        print(f"  [standings] No teams updated for {league_code}")
+        print(f"  [standings] No teams updated for {league_code} — check team name resolution")
+
+    return updated
+
+
+# ---------------------------------------------------------------------------
+# Public: standalone standings scraper
+# ---------------------------------------------------------------------------
+def scrape_league_standings(
+    league_code: str,
+    schedule_url: Optional[str] = None,
+    db: Optional[Session] = None,
+) -> int:
+    """
+    Fetch and persist current standings for a single league.
+
+    Tries two sources in order:
+      1. The FBref stats page (/en/comps/{id}/{Name}-Stats) — primary source
+      2. The schedule page (passed as schedule_url) — rarely includes standings
+         but worth trying as a free fallback when already fetched
+
+    Args:
+        league_code:   e.g. "ENG-PL"
+        schedule_url:  The schedule URL for this league (from LEAGUE_MAP).
+                       If None, looks up LEAGUE_MAP automatically.
+        db:            SQLAlchemy session. If None, creates and closes one.
+
+    Returns:
+        Number of team positions updated (0 if nothing found/updated).
+    """
+    if league_code in INTL_LEAGUE_CODES:
+        print(f"  [standings] Skipping {league_code} — international competition, no league table.")
+        return 0
+
+    # Resolve schedule URL
+    if schedule_url is None:
+        entry = LEAGUE_MAP.get(league_code)
+        if not entry:
+            print(f"  [standings] Unknown league: {league_code}")
+            return 0
+        # LEAGUE_MAP may store a plain URL or a (current, prev) tuple
+        schedule_url = entry[0] if isinstance(entry, tuple) else entry
+
+    stats_url = _standings_url_from_schedule(schedule_url)
+    if not stats_url:
+        print(f"  [standings] Could not derive stats URL from: {schedule_url}")
+        return 0
+
+    print(f"  [standings] Fetching stats page: {stats_url}")
+    html = _fetch_page(stats_url, f"{league_code} standings")
+    if not html:
+        print(f"  [standings] Failed to fetch stats page for {league_code}")
+        return 0
+
+    standings_df = _parse_standings_page(html, league_code)
+    if standings_df is None or standings_df.empty:
+        print(f"  [standings] No standings found on stats page for {league_code}")
+        return 0
+
+    close_db = db is None
+    if db is None:
+        db = SessionLocal()
+
+    try:
+        return _process_standings(db, league_code, standings_df)
+    finally:
+        if close_db:
+            db.close()
+
 
 # ---------------------------------------------------------------------------
 # Database operations
 # ---------------------------------------------------------------------------
 def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
-    """Merge new completed rows into the FBrefSnapshot for this league."""
     db = SessionLocal()
     try:
         snap = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
@@ -425,41 +538,38 @@ def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
     finally:
         db.close()
 
+
 def _upsert_fixtures(league_code: str, upcoming_df: pd.DataFrame, c: dict) -> None:
-    """Write upcoming fixtures to FBrefFixtures, replacing old future fixtures."""
     db = SessionLocal()
     try:
         today = date.today()
-        # Delete stale upcoming fixtures for this league
         db.query(FBrefFixture).filter(
             FBrefFixture.league_code == league_code,
             FBrefFixture.match_date >= today,
         ).delete()
 
         upcoming_df = upcoming_df.drop_duplicates(subset=[c["date"], c["home"], c["away"]])
-
         added = 0
+
         for _, row in upcoming_df.iterrows():
             try:
                 match_date = row[c["date"]].date()
                 home_raw = str(row[c["home"]]).strip()
                 away_raw = str(row[c["away"]]).strip()
 
-                # Strip country codes that FBref adds for international comps
-                home_raw = re.sub(r'(?i)^[a-z]{2,3}\s+', '', home_raw).strip()
-                home_raw = re.sub(r'(?i)\s+[a-z]{2,3}$', '', home_raw).strip()
-                away_raw = re.sub(r'(?i)^[a-z]{2,3}\s+', '', away_raw).strip()
-                away_raw = re.sub(r'(?i)\s+[a-z]{2,3}$', '', away_raw).strip()
+                # Strip country codes added by FBref for international comps
+                home_raw = re.sub(r"(?i)^[a-z]{2,3}\s+", "", home_raw).strip()
+                home_raw = re.sub(r"(?i)\s+[a-z]{2,3}$", "", home_raw).strip()
+                away_raw = re.sub(r"(?i)^[a-z]{2,3}\s+", "", away_raw).strip()
+                away_raw = re.sub(r"(?i)\s+[a-z]{2,3}$", "", away_raw).strip()
 
                 if not home_raw or not away_raw or home_raw == "nan" or away_raw == "nan":
                     continue
 
-                # Resolve team names using autopilot (creates aliases if needed)
                 home = resolve_and_learn(db, home_raw, league_code)
                 away = resolve_and_learn(db, away_raw, league_code)
 
                 mtime = str(row[c["time"]]).strip() if c["time"] and pd.notnull(row.get(c["time"])) else None
-
                 raw_round = str(row[c["round_raw"]]).strip() if c["round_raw"] and pd.notnull(row.get(c["round_raw"])) else None
                 round_type = _classify_round_type(raw_round, match_date, league_code)
 
@@ -476,6 +586,7 @@ def _upsert_fixtures(league_code: str, upcoming_df: pd.DataFrame, c: dict) -> No
                 added += 1
             except Exception as e:
                 print(f"  Row error: {e}")
+
         db.commit()
         print(f"  Added {added} upcoming fixtures for {league_code}")
     except Exception as e:
@@ -483,30 +594,41 @@ def _upsert_fixtures(league_code: str, upcoming_df: pd.DataFrame, c: dict) -> No
     finally:
         db.close()
 
+
 # ---------------------------------------------------------------------------
 # Main per‑league scraping function
 # ---------------------------------------------------------------------------
 def scrape_league(league_code: str, url: str) -> None:
+    """
+    Scrape one league: fetch schedule page, process scores + fixtures,
+    then fetch the dedicated stats page for standings.
+    """
     print(f"\n{'='*60}")
     print(f"[fixtures] {league_code}")
 
+    # ── 1. Schedule page (scores + upcoming fixtures) ────────────────
     html = _fetch_page(url, league_code)
     if not html:
         return
 
-    schedule_df, standings_df = _parse_page(html, league_code)
+    schedule_df, schedule_standings_df = _parse_page(html, league_code)
 
-    # Process standings if found
-    if standings_df is not None and not standings_df.empty:
-        db = SessionLocal()
-        try:
-            _process_standings(db, league_code, standings_df)
-        finally:
-            db.close()
+    # ── 2. Standings — prefer dedicated stats page, fall back to any
+    #       standings found in the schedule page HTML ─────────────────
+    if league_code not in INTL_LEAGUE_CODES:
+        standings_updated = scrape_league_standings(league_code, schedule_url=url)
+        if standings_updated == 0 and schedule_standings_df is not None:
+            # Rare fallback: standings happened to be embedded in schedule page
+            print(f"  [standings] Falling back to embedded standings from schedule page")
+            db = SessionLocal()
+            try:
+                _process_standings(db, league_code, schedule_standings_df)
+            finally:
+                db.close()
     else:
-        print(f"  No standings table found for {league_code}")
+        print(f"  [standings] Skipping standings for international competition {league_code}")
 
-    # Process schedule
+    # ── 3. Process schedule ───────────────────────────────────────────
     if schedule_df is None or schedule_df.empty:
         print("  No schedule data parsed.")
         return
@@ -521,22 +643,21 @@ def scrape_league(league_code: str, url: str) -> None:
 
     today = date.today()
     cutoff = today + timedelta(days=FIXTURE_DAYS)
-
-    # Split into completed and upcoming
     score_col = c["score"]
+
     if score_col:
         has_score = schedule_df[score_col].astype(str).str.contains(r"\d[–\-]\d", na=False)
         completed_df = schedule_df[has_score].copy()
         upcoming_df = schedule_df[
-            ~has_score &
-            (schedule_df[c["date"]].dt.date >= today) &
-            (schedule_df[c["date"]].dt.date <= cutoff)
+            ~has_score
+            & (schedule_df[c["date"]].dt.date >= today)
+            & (schedule_df[c["date"]].dt.date <= cutoff)
         ].copy()
     else:
         completed_df = pd.DataFrame()
         upcoming_df = schedule_df[
-            (schedule_df[c["date"]].dt.date >= today) &
-            (schedule_df[c["date"]].dt.date <= cutoff)
+            (schedule_df[c["date"]].dt.date >= today)
+            & (schedule_df[c["date"]].dt.date <= cutoff)
         ].copy()
 
     print(f"  Completed rows: {len(completed_df)}")
@@ -548,14 +669,17 @@ def scrape_league(league_code: str, url: str) -> None:
     if not upcoming_df.empty:
         _upsert_fixtures(league_code, upcoming_df, c)
 
+
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="Scrape FBref fixtures and scores")
+    parser = argparse.ArgumentParser(description="Scrape FBref fixtures, scores, and standings")
     parser.add_argument("--league", type=str, default=None, help="Single league code")
+    parser.add_argument("--standings-only", action="store_true",
+                        help="Only refresh standings, skip schedule/fixtures scrape")
     parser.add_argument("--headless", action="store_true", help="Run Chrome headless")
     parser.add_argument("--api", type=str, default=None, metavar="KEY", help="ScraperAPI key")
     args = parser.parse_args()
@@ -572,12 +696,23 @@ if __name__ == "__main__":
             print(f"Unknown league: {args.league}")
             print(f"Available: {list(LEAGUE_MAP.keys())}")
         else:
-            scrape_league(args.league, LEAGUE_MAP[args.league])
+            entry = LEAGUE_MAP[args.league]
+            url = entry[0] if isinstance(entry, tuple) else entry
+            if args.standings_only:
+                scrape_league_standings(args.league, schedule_url=url)
+            else:
+                scrape_league(args.league, url)
     else:
-        print(f"[fixtures] Starting daily scrape for {len(LEAGUE_MAP)} leagues")
+        print(f"[fixtures] Starting scrape for {len(LEAGUE_MAP)} leagues")
         codes = list(LEAGUE_MAP.keys())
-        for i, (code, url) in enumerate(LEAGUE_MAP.items()):
-            scrape_league(code, url)
+        for i, (code, entry) in enumerate(LEAGUE_MAP.items()):
+            url = entry[0] if isinstance(entry, tuple) else entry
+            if args.standings_only:
+                print(f"\n{'='*60}")
+                print(f"[standings] {code}")
+                scrape_league_standings(code, schedule_url=url)
+            else:
+                scrape_league(code, url)
             if i < len(codes) - 1:
                 print(f"\n  Waiting {SLEEP_BETWEEN_LEAGUES}s...")
                 time.sleep(SLEEP_BETWEEN_LEAGUES)
