@@ -68,7 +68,7 @@ class PredictionLog(Base):
     # "red"    = hit rate 60-69%  (high variance)
     # None     = no calibration data yet
     variance_flag   = Column(String,  nullable=True)
-
+weather_tag   = Column(String, default=None)
     # Validation
     status          = Column(String,  default="pending", index=True)
     # pending → awaiting result
