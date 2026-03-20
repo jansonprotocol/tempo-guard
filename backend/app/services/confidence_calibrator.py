@@ -1,231 +1,382 @@
-# backend/app/main.py
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-# Routers
-from app.api.routes_health import router as health_router
-from app.api.routes_auth import router as auth_router
-from app.api.routes_league import router as league_router
-from app.api.routes_team import router as team_router
-from app.api.routes_predict import router as predict_router
-from app.api.routes_futurematch import router as future_router
-from app.api.routes_retrosim import router as retro_router
-from app.api.routes_calibration import router as calib_router
-from app.api.routes_batch import router as batch_router
-from app.api.routes_player_power import router as player_power_router
-from app.api.routes_alias_manager import router as alias_router
-# Database & models
+# backend/app/services/confidence_calibrator.py
+"""
+ATHENA Confidence Calibrator — isotonic regression on PredictionLog history.
+
+WHAT THIS DOES
+==============
+ATHENA's raw confidence_score is derived from signal strengths in the
+prediction pipeline. There is no guarantee it is well-calibrated — i.e.
+that a raw score of 80 actually corresponds to an 80% hit rate.
+
+This module:
+  1. Reads historical (confidence_score, hit/miss) pairs from PredictionLog.
+  2. Bins scores into equal-frequency buckets.
+  3. Applies PAVA (Pool Adjacent Violators Algorithm) — the gold-standard
+     isotonic regression — to ensure the calibration is monotonically
+     non-decreasing (higher raw score must → higher calibrated probability).
+  4. Stores the resulting breakpoint mapping as JSON in the DB.
+  5. At prediction time, interpolates the calibrated probability from those
+     breakpoints given any raw score.
+
+OUTPUTS
+=======
+  calibrated_probability  — float in [0.0, 1.0]
+      The true estimated probability of this prediction being a hit.
+      Used for Kelly-criterion staking, edge detection vs market odds,
+      and displaying honest confidence levels in the frontend.
+
+  brier_score             — float (lower = better)
+      Measures calibration quality. Stored per fit for monitoring.
+      Raw Brier is also stored so you can track improvement over time.
+
+STORAGE
+=======
+  confidence_calibration table (created in main.py _safe_migrate):
+    - league_code  VARCHAR  (NULL = global calibration across all leagues)
+    - n_samples    INTEGER
+    - brier_score  FLOAT
+    - raw_brier    FLOAT
+    - breakpoints_json  TEXT  ([[raw_score, calibrated_prob], ...])
+    - fitted_at    DATETIME
+
+USAGE
+=====
+    # Fit (run after calibration, or as a scheduled job)
+    from app.services.confidence_calibrator import fit_calibration, calibrate_confidence
+
+    result = fit_calibration(db)                      # global
+    result = fit_calibration(db, league_code="ENG-PL")  # per-league
+
+    # Apply at prediction time
+    cal_prob = calibrate_confidence(db, raw_score=78.5, league_code="ENG-PL")
+    # → e.g. 0.71  (meaning "this prediction hits about 71% of the time")
+"""
+from __future__ import annotations
+
+import json
+from datetime import datetime
+from typing import Optional
+
+from sqlalchemy import Column, Integer, String, Float, DateTime, Text
+from sqlalchemy.orm import Session
+
 from app.database.base import Base
-from app.database.db import engine, SessionLocal
-from app.database.models_fbref import FBrefSnapshot  # registers the new table
-from app.models.team_config import TeamConfig         # registers team_configs table
-# v2.0 — player-level models (import registers tables with Base.metadata)
-from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot  # noqa: F401
-# v2.2 — confidence calibration model (import registers table with Base.metadata)
-from app.services.confidence_calibrator import ConfidenceCalibration  # noqa: F401
-# Memory loaders
-from app.memory_loader import load_league_configs, load_teams
 
-from app.admin import setup_admin
+# ── ORM Model ─────────────────────────────────────────────────────────────────
 
-app = FastAPI(
-    title="ATHENA: Tempo Guard",
-    description="Tempo-aware predictive engine (MVP).",
-    version="2.2.0",
-)
+class ConfidenceCalibration(Base):
+    __tablename__ = "confidence_calibration"
 
-# ------------------------------------------------------------------------------
-# CORS
-# ------------------------------------------------------------------------------
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    id                = Column(Integer,  primary_key=True, autoincrement=True)
+    league_code       = Column(String,   nullable=True, index=True)  # NULL = global
+    n_samples         = Column(Integer,  default=0)
+    brier_score       = Column(Float,    default=None)   # calibrated
+    raw_brier         = Column(Float,    default=None)   # uncalibrated baseline
+    breakpoints_json  = Column(Text,     default=None)   # [[raw, calibrated], ...]
+    fitted_at         = Column(DateTime, default=datetime.utcnow)
 
-# ------------------------------------------------------------------------------
-# SAFE COLUMN MIGRATIONS
-# Each entry: (table, column, sql_type, default_clause_or_None)
-# Runs before create_all so the app never crashes on a missing column.
-# Add new columns here whenever the model grows — never remove old entries.
-# ------------------------------------------------------------------------------
-_COLUMN_MIGRATIONS = [
-    # prediction_log
-    ("prediction_log", "variance_flag", "VARCHAR",  None),
-    ("prediction_log", "match_time",    "VARCHAR",  None),
-    # v2.2: weather tag (from Open-Meteo, stored at prediction time)
-    ("prediction_log", "weather_tag",   "VARCHAR",  None),
-    # v2.2: closing odds fields (log bookmaker line for edge tracking)
-    ("prediction_log", "closing_odds",  "FLOAT",    None),
-    ("prediction_log", "market_prob",   "FLOAT",    None),
-    ("prediction_log", "edge",          "FLOAT",    None),
-    # league_configs — DEG/DET/EPS sensitivity multipliers
-    ("league_configs", "deg_sensitivity", "FLOAT",  "1.0"),
-    ("league_configs", "det_sensitivity", "FLOAT",  "1.0"),
-    ("league_configs", "eps_sensitivity", "FLOAT",  "1.0"),
-    # NEW: form delta sensitivity multiplier
-    ("league_configs", "form_delta_sensitivity", "FLOAT", "0.0"),
-    # league_configs — display fields (older, kept for safety)
-    ("league_configs", "display_name",   "VARCHAR", "''"),
-    ("league_configs", "country_code",   "VARCHAR", "''"),
-    # league_configs — v2.0 cross-league strength coefficient
-    ("league_configs", "strength_coefficient", "FLOAT", "1.0"),
-    # team_configs — module nudges + diagnostics
-    ("team_configs",   "det_nudge",      "FLOAT",   "0.0"),
-    ("team_configs",   "deg_nudge",      "FLOAT",   "0.0"),
-    ("team_configs",   "avg_det",        "FLOAT",   None),
-    ("team_configs",   "avg_deg",        "FLOAT",   None),
-    # team_configs — form-based nudges (experimental, kept for future use)
-    ("team_configs", "good_form_nudge",    "FLOAT", "0.0"),
-    ("team_configs", "neutral_form_nudge", "FLOAT", "0.0"),
-    ("team_configs", "poor_form_nudge",    "FLOAT", "0.0"),
-    ("team_configs", "form_good_threshold", "INTEGER", "3"),
-    ("team_configs", "form_poor_threshold", "INTEGER", "-3"),
-    # team_configs — v2.0 player-derived squad power scores
-    ("team_configs",   "squad_power",    "FLOAT",   None),
-    ("team_configs",   "atk_power",      "FLOAT",   None),
-    ("team_configs",   "mid_power",      "FLOAT",   None),
-    ("team_configs",   "def_power",      "FLOAT",   None),
-    ("team_configs",   "gk_power",       "FLOAT",   None),
-    # player_season_stats — v2.0 performance delta
-    ("player_season_stats", "performance_delta", "FLOAT", None),
-    # teams — current league position (populated by scrape_fixtures.py)
-    ("teams", "current_position", "INTEGER", None),
-]
+    def __repr__(self):
+        return (
+            f"<ConfidenceCalibration "
+            f"league={self.league_code or 'global'} "
+            f"n={self.n_samples} "
+            f"brier={self.brier_score}>"
+        )
 
 
-def _safe_migrate(db):
+# ── Constants ─────────────────────────────────────────────────────────────────
+
+MIN_SAMPLES      = 30   # minimum predictions to attempt calibration
+MIN_BIN_SIZE     = 5    # minimum predictions per bin
+MAX_BINS         = 12   # never more than this many breakpoints
+
+
+# ── Core algorithm — PAVA ─────────────────────────────────────────────────────
+
+def _isotonic_regression_1d(values: list[float]) -> list[float]:
     """
-    Idempotent column migrations — runs on every startup.
-    Uses sqlalchemy inspect to check existing columns before issuing ALTER TABLE,
-    so it's safe to re-run indefinitely without errors or data loss.
+    Pool Adjacent Violators Algorithm (PAVA) for non-decreasing isotonic
+    regression.  Runs in O(n) time with no external dependencies.
+
+    Args:
+        values: List of target values (actual hit rates per bin), sorted
+                by the corresponding x values (raw confidence scores).
+
+    Returns:
+        List of the same length with non-decreasing values.
+        Any violations are resolved by pooling adjacent blocks and
+        replacing them with their weighted mean.
     """
-    from sqlalchemy import text, inspect as sa_inspect
+    if not values:
+        return []
 
-    inspector = sa_inspect(db.bind)
-    existing_tables = set(inspector.get_table_names())
+    # Each block: [mean, count]
+    blocks: list[list] = [[v, 1] for v in values]
 
-    for table, column, sql_type, default in _COLUMN_MIGRATIONS:
-        if table not in existing_tables:
-            continue  # table doesn't exist yet — create_all will handle it
-        existing_cols = {c["name"] for c in inspector.get_columns(table)}
-        if column in existing_cols:
-            continue  # already present — nothing to do
+    i = 0
+    while i < len(blocks) - 1:
+        if blocks[i][0] > blocks[i + 1][0]:
+            # Violation — merge blocks i and i+1
+            n1, n2 = blocks[i][1], blocks[i + 1][1]
+            merged_mean = (blocks[i][0] * n1 + blocks[i + 1][0] * n2) / (n1 + n2)
+            blocks[i] = [merged_mean, n1 + n2]
+            blocks.pop(i + 1)
+            # Step back to check if the merged block now violates the one before it
+            if i > 0:
+                i -= 1
+        else:
+            i += 1
+
+    # Expand blocks back to per-bin values
+    result: list[float] = []
+    for mean, count in blocks:
+        result.extend([mean] * count)
+
+    return result
+
+
+# ── Calibration fitting ───────────────────────────────────────────────────────
+
+def fit_calibration(
+    db: Session,
+    league_code: Optional[str] = None,
+    min_samples: int = MIN_SAMPLES,
+) -> dict:
+    """
+    Fit isotonic calibration from historical PredictionLog data.
+
+    Tries league-specific data first. If league_code is None, fits a global
+    calibration across all leagues — useful when individual leagues don't yet
+    have enough predictions.
+
+    Args:
+        db:           SQLAlchemy session.
+        league_code:  If provided, fit for this league only.
+                      If None, fit globally across all leagues.
+        min_samples:  Minimum hit+miss predictions required. Returns an
+                      error dict if insufficient data.
+
+    Returns:
+        Dict with:
+          success (bool), n_samples, n_bins, brier_score, raw_brier,
+          improvement (raw_brier - calibrated_brier), breakpoints, fitted_at.
+    """
+    from app.database.models_predictions import PredictionLog
+
+    query = db.query(
+        PredictionLog.confidence_score,
+        PredictionLog.status,
+    ).filter(
+        PredictionLog.status.in_(["hit", "miss"]),
+        PredictionLog.confidence_score.isnot(None),
+    )
+    if league_code:
+        query = query.filter(PredictionLog.league_code == league_code)
+
+    rows = query.all()
+
+    if len(rows) < min_samples:
+        return {
+            "success":    False,
+            "reason":     f"Insufficient data: {len(rows)} samples (need {min_samples})",
+            "n_samples":  len(rows),
+            "league_code": league_code or "global",
+        }
+
+    raw_scores  = [r.confidence_score for r in rows]
+    is_hit      = [1.0 if r.status == "hit" else 0.0 for r in rows]
+
+    # Sort by score ascending
+    pairs       = sorted(zip(raw_scores, is_hit), key=lambda x: x[0])
+    xs          = [p[0] for p in pairs]
+    ys          = [p[1] for p in pairs]
+
+    # Build equal-frequency bins
+    n = len(xs)
+    n_bins = min(MAX_BINS, max(3, n // MIN_BIN_SIZE))
+    bin_size = n / n_bins
+
+    bin_centers: list[float] = []
+    bin_hit_rates: list[float] = []
+
+    for i in range(n_bins):
+        start = int(i * bin_size)
+        end   = int((i + 1) * bin_size) if i < n_bins - 1 else n
+        chunk_x = xs[start:end]
+        chunk_y = ys[start:end]
+        if not chunk_x:
+            continue
+        bin_centers.append(sum(chunk_x) / len(chunk_x))
+        bin_hit_rates.append(sum(chunk_y) / len(chunk_y))
+
+    # Apply PAVA — enforce monotonicity
+    calibrated_rates = _isotonic_regression_1d(bin_hit_rates)
+    breakpoints      = [
+        [round(bin_centers[i], 4), round(calibrated_rates[i], 4)]
+        for i in range(len(bin_centers))
+    ]
+
+    # Brier score — calibrated
+    cal_brier = sum(
+        (_apply_breakpoints(breakpoints, x) - y) ** 2
+        for x, y in zip(xs, ys)
+    ) / n
+
+    # Brier score — raw (uncalibrated baseline)
+    # Normalize raw score to [0,1] for a fair comparison
+    score_max = max(xs) if max(xs) > 0 else 1.0
+    raw_brier = sum(
+        (x / score_max - y) ** 2
+        for x, y in zip(xs, ys)
+    ) / n
+
+    # Persist to DB
+    now = datetime.utcnow()
+    bp_json = json.dumps(breakpoints)
+
+    existing = (
+        db.query(ConfidenceCalibration)
+        .filter_by(league_code=league_code)
+        .first()
+    )
+    if existing:
+        existing.n_samples        = n
+        existing.brier_score      = round(cal_brier, 6)
+        existing.raw_brier        = round(raw_brier, 6)
+        existing.breakpoints_json = bp_json
+        existing.fitted_at        = now
+    else:
+        db.add(ConfidenceCalibration(
+            league_code       = league_code,
+            n_samples         = n,
+            brier_score       = round(cal_brier, 6),
+            raw_brier         = round(raw_brier, 6),
+            breakpoints_json  = bp_json,
+            fitted_at         = now,
+        ))
+    db.commit()
+
+    print(
+        f"[confidence_calibrator] Fitted {league_code or 'global'}: "
+        f"n={n}, bins={len(breakpoints)}, "
+        f"brier {round(raw_brier,4)} → {round(cal_brier,4)} "
+        f"(Δ={round(raw_brier - cal_brier, 4):+.4f})"
+    )
+
+    return {
+        "success":      True,
+        "league_code":  league_code or "global",
+        "n_samples":    n,
+        "n_bins":       len(breakpoints),
+        "brier_score":  round(cal_brier, 6),
+        "raw_brier":    round(raw_brier, 6),
+        "improvement":  round(raw_brier - cal_brier, 6),
+        "breakpoints":  breakpoints,
+        "fitted_at":    now.isoformat(),
+    }
+
+
+# ── Calibration application ───────────────────────────────────────────────────
+
+def _apply_breakpoints(breakpoints: list[list], raw_score: float) -> float:
+    """
+    Interpolate calibrated probability from breakpoints.
+
+    Uses linear interpolation between the two surrounding breakpoints.
+    Clamps to the first/last breakpoint value outside the range.
+    """
+    if not breakpoints:
+        return 0.5  # no data — neutral
+
+    if raw_score <= breakpoints[0][0]:
+        return breakpoints[0][1]
+
+    if raw_score >= breakpoints[-1][0]:
+        return breakpoints[-1][1]
+
+    for i in range(len(breakpoints) - 1):
+        x0, y0 = breakpoints[i]
+        x1, y1 = breakpoints[i + 1]
+        if x0 <= raw_score <= x1:
+            t = (raw_score - x0) / (x1 - x0) if x1 != x0 else 0.0
+            return y0 + t * (y1 - y0)
+
+    return breakpoints[-1][1]
+
+
+def calibrate_confidence(
+    db: Session,
+    raw_score: float,
+    league_code: Optional[str] = None,
+) -> float:
+    """
+    Convert a raw ATHENA confidence_score to a calibrated probability.
+
+    Lookup order:
+      1. League-specific calibration (if league_code is provided)
+      2. Global calibration (across all leagues)
+      3. Fallback: raw_score normalised to [0, 1] (no calibration available)
+
+    Args:
+        db:           SQLAlchemy session.
+        raw_score:    Raw confidence_score from evaluate_athena.
+        league_code:  League for lookup priority.
+
+    Returns:
+        Calibrated probability in [0.0, 1.0].
+        Represents the estimated true hit rate for predictions at this score.
+    """
+    # 1. League-specific
+    if league_code:
+        cal = (
+            db.query(ConfidenceCalibration)
+            .filter_by(league_code=league_code)
+            .first()
+        )
+        if cal and cal.breakpoints_json:
+            try:
+                bp = json.loads(cal.breakpoints_json)
+                return round(_apply_breakpoints(bp, raw_score), 4)
+            except Exception:
+                pass
+
+    # 2. Global
+    cal = (
+        db.query(ConfidenceCalibration)
+        .filter(ConfidenceCalibration.league_code.is_(None))
+        .first()
+    )
+    if cal and cal.breakpoints_json:
         try:
-            default_clause = f" DEFAULT {default}" if default is not None else ""
-            db.execute(text(
-                f"ALTER TABLE {table} ADD COLUMN {column} {sql_type}{default_clause}"
-            ))
-            db.commit()
-            print(f"[startup] Migration: added {table}.{column} ({sql_type}{default_clause})")
-        except Exception as e:
-            db.rollback()
-            print(f"[startup] Migration warning — {table}.{column}: {e}")
+            bp = json.loads(cal.breakpoints_json)
+            return round(_apply_breakpoints(bp, raw_score), 4)
+        except Exception:
+            pass
 
-    # calibration_log table (created via raw SQL because it's not a SQLAlchemy model)
-    if "calibration_log" not in existing_tables:
-        try:
-            db.execute(text("""
-                CREATE TABLE calibration_log (
-                    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                    league_code VARCHAR NOT NULL,
-                    hit_rate    FLOAT   NOT NULL,
-                    sample_size INTEGER,
-                    applied     BOOLEAN DEFAULT 0,
-                    run_at      DATETIME
-                )
-            """))
-            db.commit()
-            print("[startup] Migration: created calibration_log table")
-        except Exception as e:
-            db.rollback()
-            print(f"[startup] Migration warning — calibration_log: {e}")
-
-    # stats_fetch_cache table (for player stats fetch cache)
-    if "stats_fetch_cache" not in existing_tables:
-        try:
-            db.execute(text("""
-                CREATE TABLE stats_fetch_cache (
-                    league_code VARCHAR PRIMARY KEY,
-                    last_fetched TIMESTAMP NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """))
-            db.commit()
-            print("[startup] Migration: created stats_fetch_cache table")
-        except Exception as e:
-            db.rollback()
-            print(f"[startup] Migration warning — stats_fetch_cache: {e}")
-
-    # confidence_calibration table (v2.2 — isotonic regression breakpoints)
-    if "confidence_calibration" not in existing_tables:
-        try:
-            db.execute(text("""
-                CREATE TABLE confidence_calibration (
-                    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-                    league_code      VARCHAR,
-                    n_samples        INTEGER DEFAULT 0,
-                    brier_score      FLOAT,
-                    raw_brier        FLOAT,
-                    breakpoints_json TEXT,
-                    fitted_at        DATETIME
-                )
-            """))
-            db.commit()
-            print("[startup] Migration: created confidence_calibration table")
-        except Exception as e:
-            db.rollback()
-            print(f"[startup] Migration warning — confidence_calibration: {e}")
+    # 3. Fallback — normalise raw score (safe for any scale)
+    # If max possible score is ~100, divide by 100; if ~1.0, use as-is.
+    normalized = raw_score / 100.0 if raw_score > 1.0 else raw_score
+    return round(min(1.0, max(0.0, normalized)), 4)
 
 
-# ------------------------------------------------------------------------------
-# STARTUP: migrate → create tables → load seeds
-# ------------------------------------------------------------------------------
-@app.on_event("startup")
-def startup_event():
-    db = SessionLocal()
-    try:
-        # 1. Safe column migrations FIRST — before anything queries the models
-        _safe_migrate(db)
-        # 2. Create any fully new tables defined in SQLAlchemy models
-        #    This now includes: players, player_season_stats, squad_snapshots
-        Base.metadata.create_all(bind=engine)
-        # 3. Seed league configs + teams from JSON
-        load_league_configs(db)
-        load_teams(db)
-    finally:
-        db.close()
-
-
-# ------------------------------------------------------------------------------
-# ROUTERS
-# ------------------------------------------------------------------------------
-app.include_router(health_router,  prefix="/health", tags=["Health"])
-app.include_router(auth_router,    prefix="/api/auth", tags=["Auth"])
-app.include_router(league_router,  prefix="/api",      tags=["LeagueConfig"])
-app.include_router(team_router,    prefix="/api",      tags=["Teams"])
-app.include_router(predict_router, prefix="/api",      tags=["Predict"])
-app.include_router(future_router,  prefix="/api",      tags=["Futurematch"])
-app.include_router(retro_router,   prefix="/api",      tags=["Retrosim"])
-app.include_router(calib_router,   prefix="/api",      tags=["Calibration"])
-app.include_router(batch_router,   prefix="/api")
-app.include_router(player_power_router, prefix="/api", tags=["PlayerPower"])
-app.include_router(alias_router, tags=["AliasManager"])
-
-# ------------------------------------------------------------------------------
-# ADMIN DASHBOARD (must be before static mount)
-# ------------------------------------------------------------------------------
-setup_admin(app)
-
-# ------------------------------------------------------------------------------
-# STATIC FRONTEND (served at /app)
-# ------------------------------------------------------------------------------
-from fastapi.responses import RedirectResponse
-
-@app.get("/")
-def root():
-    return RedirectResponse(url="/app")
-
-app.mount("/app", StaticFiles(directory="app/static", html=True), name="app")
+def calibration_status(db: Session) -> list[dict]:
+    """
+    Return a summary of all stored calibrations — useful for the admin panel
+    or a monitoring endpoint.
+    """
+    rows = (
+        db.query(ConfidenceCalibration)
+        .order_by(ConfidenceCalibration.fitted_at.desc())
+        .all()
+    )
+    return [
+        {
+            "league_code":  r.league_code or "global",
+            "n_samples":    r.n_samples,
+            "brier_score":  r.brier_score,
+            "raw_brier":    r.raw_brier,
+            "improvement":  round((r.raw_brier or 0) - (r.brier_score or 0), 6),
+            "fitted_at":    r.fitted_at.isoformat() if r.fitted_at else None,
+        }
+        for r in rows
+    ]
