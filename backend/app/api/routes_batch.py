@@ -715,12 +715,12 @@ def migrate_add_variance_flag(db: Session = Depends(get_db)):
     if "calibration_log" not in existing_tables:
         db.execute(text("""
             CREATE TABLE calibration_log (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 league_code VARCHAR NOT NULL,
                 hit_rate FLOAT NOT NULL,
                 sample_size INTEGER,
-                applied BOOLEAN DEFAULT false,
-                run_at TIMESTAMP
+                applied BOOLEAN DEFAULT 0,
+                run_at DATETIME
             )
         """))
         db.commit()
@@ -812,3 +812,87 @@ def patch_prediction_metadata(
                 flag_updated += 1
     db.commit()
     return {"status": "ok", "time_updated": time_updated, "flag_updated": flag_updated}
+
+
+# ── PATCH /api/predictions/{id}/odds ──────────────────────────────────────────
+
+@router.patch("/predictions/{prediction_id}/odds")
+def log_closing_odds(
+    prediction_id: int,
+    closing_odds:  float = Query(..., description="Decimal odds for ATHENA's side"),
+    opposing_odds: Optional[float] = Query(None, description="Decimal odds for opposite side (enables vig removal)"),
+    db: Session = Depends(get_db),
+):
+    """
+    Log closing bookmaker odds against a stored prediction and compute edge.
+
+    Call this once the market has closed (ideally kick-off minus 1h) to
+    record how much edge ATHENA had vs the closing line.
+
+    Updates prediction_log.closing_odds, market_prob, and edge.
+    Requires the prediction to have a calibrated_probability stored; if not
+    yet fitted, falls back to normalising the raw confidence_score.
+
+    Returns the full odds context including kelly_fraction and value_rating.
+    """
+    pred = db.query(PredictionLog).filter(PredictionLog.id == prediction_id).first()
+    if not pred:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=404, content={"detail": f"Prediction {prediction_id} not found."})
+
+    from app.services.odds_service import parse_decimal_odds, compute_odds_context
+    from app.services.confidence_calibrator import calibrate_confidence
+
+    dec_odds = parse_decimal_odds(closing_odds)
+    opp_odds = parse_decimal_odds(opposing_odds) if opposing_odds else None
+
+    if not dec_odds:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=422, content={"detail": f"Invalid odds value: {closing_odds}"})
+
+    # Get calibrated probability — live lookup so it always uses latest fit
+    cal_prob = None
+    try:
+        cal_prob = calibrate_confidence(db, pred.confidence_score, league_code=pred.league_code)
+    except Exception:
+        pass
+
+    if cal_prob is None:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=422, content={
+            "detail": "No calibrated probability available. Run POST /calibrate/confidence first."
+        })
+
+    ctx = compute_odds_context(
+        market                 = pred.market,
+        calibrated_probability = cal_prob,
+        closing_odds           = dec_odds,
+        opposing_odds          = opp_odds,
+    )
+
+    # Persist to prediction_log
+    try:
+        pred.closing_odds = ctx.decimal_odds
+        pred.market_prob  = ctx.market_prob
+        pred.edge         = ctx.edge
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"[batch] Warning: could not persist odds to prediction {prediction_id}: {e}")
+
+    return {
+        "prediction_id":      prediction_id,
+        "league_code":        pred.league_code,
+        "fixture":            f"{pred.home_team} vs {pred.away_team}",
+        "match_date":         pred.match_date.isoformat(),
+        "market":             pred.market,
+        "calibrated_prob":    cal_prob,
+        "decimal_odds":       ctx.decimal_odds,
+        "raw_market_prob":    ctx.raw_market_prob,
+        "market_prob":        ctx.market_prob,
+        "vig_pct":            ctx.vig_pct,
+        "edge":               ctx.edge,
+        "kelly_fraction":     ctx.kelly_fraction,
+        "value_rating":       ctx.value_rating,
+        "status":             pred.status,
+    }
