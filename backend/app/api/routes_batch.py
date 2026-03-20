@@ -248,6 +248,51 @@ def batch_predict(
             except Exception:
                 pass
 
+    # ── Pre-parse score columns in warmed snapshots ───────────────────
+    # The warmed DataFrames may still have a raw Score column.
+    # Pre-parse once per league so asof_features never triggers the
+    # per-fixture score parsing path.
+    try:
+        from app.services.data_providers.fbref_base import (
+            _SNAPSHOT_OVERRIDE, _parse_score_column as _psc
+        )
+        for lc in warmed_leagues:
+            if lc in _SNAPSHOT_OVERRIDE:
+                _df = _SNAPSHOT_OVERRIDE[lc]
+                _cols = [str(c).lower() for c in _df.columns]
+                _sc = next(
+                    (c for c in _df.columns if str(c).lower() in ("score", "scores")),
+                    None
+                )
+                if _sc and "hg" not in _cols:
+                    _SNAPSHOT_OVERRIDE[lc] = _psc(_df, _sc)
+    except Exception:
+        pass
+
+    # ── Pre-load squad power per league ──────────────────────────────
+    # predict_match → _player_power_nudge reads TeamConfig.squad_power
+    # for every fixture. Pre-load into a dict so predict_match can use
+    # it directly without DB queries per fixture.
+    # Injected into predict module's config cache via a per-request
+    # override dict attached to the db session.
+    try:
+        from app.models.team_config import TeamConfig as _TC
+        if not hasattr(db, "_squad_power_cache"):
+            db._squad_power_cache = {}
+        for lc in warmed_leagues:
+            if lc not in db._squad_power_cache:
+                rows = (
+                    db.query(_TC.team, _TC.squad_power)
+                    .filter(
+                        _TC.league_code == lc,
+                        _TC.squad_power.isnot(None),
+                    )
+                    .all()
+                )
+                db._squad_power_cache[lc] = {r.team: float(r.squad_power) for r in rows}
+    except Exception:
+        pass
+
     for rf in fixtures:
         fix = rf["fix"]
         home_resolved = rf["home"]
