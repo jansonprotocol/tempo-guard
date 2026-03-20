@@ -602,8 +602,37 @@
       font-family: var(--sans);
       font-size: 13px;
       line-height: 1.75;
-      color: var(--muted);
+      color: #c2d4e0;
       margin-bottom: 10px;
+    }
+
+    .info-card ul {
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.75;
+      color: #c2d4e0;
+      margin: 8px 0 10px 0;
+      padding-left: 18px;
+    }
+
+    .info-card ul li { margin-bottom: 5px; }
+
+    .info-card ul li strong {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .info-card-version {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--cyan);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 2px;
+      padding: 2px 7px;
+      margin-bottom: 12px;
     }
 
     .info-card p:last-child { margin-bottom: 0; }
@@ -1790,14 +1819,25 @@
     <!-- ── Info sections ── -->
     <div class="info-grid">
       <div class="info-card">
-        <div class="info-card-title">Tempo Guard</div>
-        <p>Tempo Guard is a football prediction module powered by the ATHENA engine. It gives you high-accuracy over and under market predictions through high-volume simulations and calibrations — both per league and at team level.</p>
-        <p>ATHENA's multi-layer logic covers tempo signals, corridor analysis, DEG/DET pressure modules, and bilateral chaos escalation, producing consistent data-driven results for future match-ups.</p>
+        <div class="info-card-version">ATHENA v2.2</div>
+        <div class="info-card-title">What is Tempo Guard</div>
+        <p>Tempo Guard is a football prediction tool powered by the ATHENA engine. It analyses recent match data across 30+ leagues to give you high-accuracy over/under market calls — calibrated individually per league and per team.</p>
+        <p>The engine has been significantly upgraded. Here is what is powering your predictions now:</p>
+        <ul>
+          <li><strong>Venue-aware scoring</strong> — home and away form are calculated separately, so a team's attack rating at home is not diluted by their away results.</li>
+          <li><strong>Rolling pressure signals</strong> — DEG (defensive decline), DET (match volatility), and EPS (stability) are now computed live from recent match data rather than using fixed defaults.</li>
+          <li><strong>Weather conditions</strong> — upcoming matches factor in forecast wind and rain at the stadium. Heavy weather suppresses goals; ideal conditions nudge the model slightly higher.</li>
+          <li><strong>Squad intelligence</strong> — player-level data is scraped per league. Each team gets an attack, midfield, defence, and goalkeeper power rating. Stronger squads influence the prediction accordingly.</li>
+          <li><strong>Form tracking</strong> — teams over- or underperforming relative to their expected league position get a calibration nudge applied automatically.</li>
+        </ul>
       </div>
       <div class="info-card">
-        <div class="info-card-title">How to use it</div>
-        <p>Enter a match-up above and run the engine. Tempo Guard returns the safest predicted play. Head to your bookmaker and find a suitable bet market — use the given prediction, or scale the line up or down to your liking.</p>
-        <p>Many fixtures are already pre-loaded and auto-validated after each match day.</p>
+        <div class="info-card-version">HOW IT WORKS</div>
+        <div class="info-card-title">Using the predictions</div>
+        <p>Enter a fixture above and run the engine. ATHENA returns the safest predicted market — typically an Asian total line — along with a confidence score and goal corridor.</p>
+        <p>The <strong>confidence score</strong> is now calibrated against historical results. This means a score of 80 reflects an actual historical hit rate close to 80%, not just a raw signal strength — so you know exactly how much weight to give it.</p>
+        <p>Many fixtures are pre-loaded automatically ahead of each match day and validated once results come in. You can track all predictions, filter by league or date, and see the running hit rate on the Predictions page.</p>
+        <p>Use the prediction as a starting point — scale the line up or down to match available odds at your bookmaker.</p>
         <button class="btn-predictions" onclick="showPage('predictions')">→ View Predictions</button>
       </div>
     </div>
