@@ -11,6 +11,80 @@ from app.services.resolve_team import resolve_team_name
 
 router = APIRouter()
 
+INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
+
+
+# ── Matchup validation endpoint ───────────────────────────────────────────────
+
+@router.get("/validate-matchup")
+def validate_matchup(
+    home_team:   str,
+    away_team:   str,
+    league_code: str,
+    match_date:  Optional[str] = None,
+    db: Session = Depends(get_db),
+):
+    """
+    Pre-submit validation for the home page matchup form.
+
+    Checks:
+      1. Both teams exist in the given league (alias-resolved).
+         Skipped for international competitions (UCL/UEL/UECL/EC/WC).
+      2. For past dates: the fixture actually existed in the snapshot
+         on that specific date (uses validate_match_existed from fbref_base).
+         Skipped for future dates — we can't validate what hasn't happened.
+
+    Returns:
+      { valid: true }  — all checks passed, safe to submit
+      { valid: false, reason: "..." }  — clear user-facing message
+    """
+    from app.models.team import Team
+    from app.services.data_providers.fbref_base import validate_match_existed
+    from datetime import date as date_type
+
+    home_r = resolve_team_name(db, home_team, league_code)
+    away_r = resolve_team_name(db, away_team, league_code)
+
+    # ── 1. League membership check ────────────────────────────────────
+    # Skip for international competitions — teams come from domestic leagues.
+    if league_code not in INTL_LEAGUE_CODES:
+        home_in_league = db.query(Team).filter_by(
+            team_key=home_r, league_code=league_code
+        ).first()
+        away_in_league = db.query(Team).filter_by(
+            team_key=away_r, league_code=league_code
+        ).first()
+
+        if not home_in_league:
+            return {
+                "valid": False,
+                "reason": f"\'{home_team}\' is not registered in {league_code}. "
+                          f"Check the team name or select the correct league.",
+            }
+        if not away_in_league:
+            return {
+                "valid": False,
+                "reason": f"\'{away_team}\' is not registered in {league_code}. "
+                          f"Check the team name or select the correct league.",
+            }
+
+    # ── 2. Past-date fixture existence check ──────────────────────────
+    if match_date:
+        try:
+            parsed_date = date_type.fromisoformat(match_date)
+        except ValueError:
+            return {"valid": False, "reason": "Invalid date format."}
+
+        today = date_type.today()
+        if parsed_date < today:
+            exists, reason = validate_match_existed(
+                league_code, home_r, away_r, parsed_date
+            )
+            if not exists:
+                return {"valid": False, "reason": reason}
+
+    return {"valid": True}
+
 
 class PredictBody(BaseModel):
     # ── Required ──────────────────────────────────────────────────────
