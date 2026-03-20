@@ -527,6 +527,42 @@ def scrape_league_standings(
 
 
 # ---------------------------------------------------------------------------
+# Team name helpers
+# ---------------------------------------------------------------------------
+
+# Generic football suffixes that on their own are not valid team names.
+# If name resolution produces one of these it means the original name was
+# mangled by over-aggressive stripping.
+_GENERIC_SUFFIXES = {
+    "fc", "sc", "ac", "cf", "rc", "fk", "bk", "sk", "if", "gk",
+    "afc", "bfc", "cfc", "dfc", "efc", "rfc", "sfc", "ufc",
+    "utd", "united", "city", "town", "rovers", "wanderers",
+}
+
+def _strip_country_code(name: str) -> str:
+    """
+    Strip leading/trailing 2-3 letter country codes added by FBref for
+    international competitions (e.g. "ENG Arsenal" → "Arsenal").
+    Only applied when the result would leave a meaningful name behind.
+    """
+    # Try stripping leading code
+    stripped = re.sub(r"(?i)^[a-z]{2,3}\s+", "", name).strip()
+    # Only accept the stripped version if it leaves more than a bare suffix
+    if stripped and not _is_generic_suffix(stripped):
+        name = stripped
+    # Try stripping trailing code
+    stripped = re.sub(r"(?i)\s+[a-z]{2,3}$", "", name).strip()
+    if stripped and not _is_generic_suffix(stripped):
+        name = stripped
+    return name
+
+
+def _is_generic_suffix(name: str) -> bool:
+    """Return True if name is nothing but a generic football suffix."""
+    return name.strip().lower() in _GENERIC_SUFFIXES
+
+
+# ---------------------------------------------------------------------------
 # Database operations
 # ---------------------------------------------------------------------------
 def _update_snapshot(league_code: str, completed_df: pd.DataFrame) -> None:
@@ -583,19 +619,33 @@ def _upsert_fixtures(league_code: str, upcoming_df: pd.DataFrame, c: dict) -> No
                 home_raw = str(row[c["home"]]).strip()
                 away_raw = str(row[c["away"]]).strip()
 
-                # Strip country codes added by FBref for international comps
-                home_raw = re.sub(r"(?i)^[a-z]{2,3}\s+", "", home_raw).strip()
-                home_raw = re.sub(r"(?i)\s+[a-z]{2,3}$", "", home_raw).strip()
-                away_raw = re.sub(r"(?i)^[a-z]{2,3}\s+", "", away_raw).strip()
-                away_raw = re.sub(r"(?i)\s+[a-z]{2,3}$", "", away_raw).strip()
+                # Strip country codes added by FBref — but ONLY for international
+                # competitions (UCL, UEL, UECL etc). Applying this to domestic
+                # leagues destroys short team names like "Pau FC" → "FC".
+                if league_code in INTL_LEAGUE_CODES:
+                    home_raw = _strip_country_code(home_raw)
+                    away_raw = _strip_country_code(away_raw)
 
-                if not home_raw or not away_raw or home_raw == "nan" or away_raw == "nan":
+                if not home_raw or not away_raw or home_raw.lower() == "nan" or away_raw.lower() == "nan":
                     continue
 
                 home = resolve_and_learn(db, home_raw, league_code)
                 away = resolve_and_learn(db, away_raw, league_code)
 
-                mtime = str(row[c["time"]]).strip() if c["time"] and pd.notnull(row.get(c["time"])) else None
+                # Guard: if resolution returned a bare generic suffix (e.g. "fc",
+                # "sc", "ac") it means the name was mangled. Skip this fixture.
+                if _is_generic_suffix(home) or _is_generic_suffix(away):
+                    print(f"  [fixtures] Skipped mangled name: '{home_raw}'→'{home}' / '{away_raw}'→'{away}'")
+                    continue
+
+                mtime_raw = row[c["time"]] if c["time"] else None
+                mtime = (
+                    str(mtime_raw).strip()
+                    if mtime_raw is not None
+                    and pd.notnull(mtime_raw)
+                    and str(mtime_raw).strip().lower() not in ("nan", "nat", "")
+                    else None
+                )
                 raw_round = str(row[c["round_raw"]]).strip() if c["round_raw"] and pd.notnull(row.get(c["round_raw"])) else None
                 round_type = _classify_round_type(raw_round, match_date, league_code)
 
