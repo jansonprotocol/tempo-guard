@@ -37,6 +37,7 @@ from app.util.asian_lines import evaluate_market, hit_weight
 from app.services.resolve_team import resolve_team_name, clear_resolve_cache
 from app.services.weather_service import get_match_weather, get_stadium_coords, match_hour_utc
 from app.services.confidence_calibrator import calibrate_confidence
+from app.services.feature_cache import warm_snapshot_cache
 
 # Auto-create tables if needed (optional, handled in main.py)
 Base.metadata.create_all(bind=engine)
@@ -212,13 +213,49 @@ def batch_predict(
     results = []
     skipped_by_league: dict = {}
 
+    # ── Pre-build existing prediction keys ───────────────────────────
+    # Avoids a DB query per fixture inside the loop. One query up front
+    # loads all relevant predictions into a set for O(1) lookup.
+    all_dates  = {rf["fix"].match_date for rf in fixtures}
+    all_leagues = {rf["fix"].league_code for rf in fixtures}
+    existing_preds = set()
+    if all_dates and all_leagues:
+        window_preds = db.query(
+            PredictionLog.league_code,
+            PredictionLog.home_team,
+            PredictionLog.away_team,
+            PredictionLog.match_date,
+        ).filter(
+            PredictionLog.league_code.in_(all_leagues),
+            PredictionLog.match_date.in_(all_dates),
+            PredictionLog.status.in_(["pending", "hit", "miss"]),
+        ).all()
+        for p in window_preds:
+            existing_preds.add(
+                f"{p.league_code}|{p.match_date}|{_norm(p.home_team)}|{_norm(p.away_team)}"
+            )
+
+    # ── Pre-warm feature cache per league ────────────────────────────
+    # Loads snapshot DataFrames into memory once per league so
+    # asof_features skips its internal DB read on every fixture.
+    warmed_leagues: set = set()
+    for rf in fixtures:
+        lc = rf["fix"].league_code
+        if lc not in warmed_leagues:
+            try:
+                warm_snapshot_cache(db, lc)
+                warmed_leagues.add(lc)
+            except Exception:
+                pass
+
     for rf in fixtures:
         fix = rf["fix"]
         home_resolved = rf["home"]
         away_resolved = rf["away"]
 
-        # Skip if already has a prediction (uses resolved + normalised matching)
-        if _has_existing_prediction(db, fix.league_code, home_resolved, away_resolved, fix.match_date):
+        # Skip if already has a prediction — O(1) set lookup
+        pred_key = f"{fix.league_code}|{fix.match_date}|{_norm(home_resolved)}|{_norm(away_resolved)}"
+        if pred_key in existing_preds:
             skipped += 1
             skipped_by_league[fix.league_code] = skipped_by_league.get(fix.league_code, 0) + 1
             continue
@@ -524,8 +561,41 @@ def get_predictions(
 
     rows = q.order_by(PL.match_date.asc(), PL.id.asc()).all()
 
-    # v2.0: Performance tags cached per league
-    _league_tag_cache: dict = {}
+    # ── Per-league caches (populated once, reused per row) ──────────
+    # Avoids repeated DB queries for calibration breakpoints,
+    # performance tag data, and form deltas inside the per-row loop.
+    _league_tag_cache:   dict = {}
+    _calib_cache:        dict = {}   # league_code → breakpoints list or None
+
+    def _get_calib_breakpoints(lc: str):
+        """Load calibration breakpoints once per league, cache in memory."""
+        if lc in _calib_cache:
+            return _calib_cache[lc]
+        import json
+        from app.services.confidence_calibrator import ConfidenceCalibration
+        # Try league-specific first, then global
+        row = (
+            db.query(ConfidenceCalibration)
+            .filter_by(league_code=lc)
+            .first()
+        ) or (
+            db.query(ConfidenceCalibration)
+            .filter(ConfidenceCalibration.league_code.is_(None))
+            .first()
+        )
+        bp = json.loads(row.breakpoints_json) if row and row.breakpoints_json else None
+        _calib_cache[lc] = bp
+        return bp
+
+    def _apply_calib(lc: str, raw_score: float) -> float | None:
+        """Apply pre-loaded breakpoints without hitting the DB."""
+        if raw_score is None:
+            return None
+        bp = _get_calib_breakpoints(lc)
+        if not bp:
+            return None
+        from app.services.confidence_calibrator import _apply_breakpoints
+        return round(_apply_breakpoints(bp, raw_score), 4)
 
     def _get_league_cache(lc: str) -> dict:
         if lc in _league_tag_cache:
@@ -559,14 +629,8 @@ def get_predictions(
 
         tags = _match_tags_safe(r.league_code, r.home_team, r.away_team)
 
-        # Calibrated probability (null if calibration not yet fitted)
-        cal_prob = None
-        try:
-            cal_prob = calibrate_confidence(
-                db, r.confidence_score, league_code=r.league_code
-            )
-        except Exception:
-            pass
+        # Calibrated probability — uses pre-loaded breakpoints, no DB query
+        cal_prob = _apply_calib(r.league_code, r.confidence_score)
 
         grouped[d].append({
             "id":                    r.id,
