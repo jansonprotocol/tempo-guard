@@ -64,6 +64,21 @@ SCRAPER_API_KEY: Optional[str] = os.environ.get("SCRAPER_API_KEY")
 # International competitions — no simple league table, standings skipped.
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
+# Explicit stats page URL overrides for leagues where the auto-derived URL
+# returns wrong data (e.g. FBref redirects "Serie-A-Stats" to Italian Serie A
+# instead of Brazilian Serie A, or similar slug collisions).
+# Format: league_code → full stats page URL
+_STANDINGS_URL_OVERRIDES: dict[str, str] = {
+    "BRA-SA": "https://fbref.com/en/comps/24/2026/2026-Serie-A-Stats",
+    "BRA-SB": "https://fbref.com/en/comps/38/2026/2026-Serie-B-Stats",
+    "MLS":    "https://fbref.com/en/comps/22/2026/2026-Major-League-Soccer-Stats",
+    "NOR-EL": "https://fbref.com/en/comps/28/2026/2026-Eliteserien-Stats",
+    "SWE-AL": "https://fbref.com/en/comps/29/2026/2026-Allsvenskan-Stats",
+    "JPN-J1": "https://fbref.com/en/comps/25/2026/2026-J1-League-Stats",
+    "CHN-CSL":"https://fbref.com/en/comps/62/2026/2026-Chinese-Super-League-Stats",
+    "COL-PA": "https://fbref.com/en/comps/41/2026/2026-Primera-A-Stats",
+}
+
 
 # ---------------------------------------------------------------------------
 # URL helpers
@@ -417,7 +432,12 @@ def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame
         if position < 1 or position > 30:
             continue  # sanity guard
 
-        team_key = resolve_team_name(db, team_name_raw, league_code)
+        # Use resolve_and_learn for fuzzy matching + autopilot alias creation.
+        # resolve_team_name only does exact/alias lookup and silently fails
+        # when FBref names don't match DB keys exactly (e.g. accent variants,
+        # abbreviations). resolve_and_learn also creates the alias in the DB
+        # so subsequent runs find the team immediately.
+        team_key = resolve_and_learn(db, team_name_raw, league_code)
         team = db.query(Team).filter_by(team_key=team_key, league_code=league_code).first()
 
         if team:
@@ -470,10 +490,16 @@ def scrape_league_standings(
         if not entry:
             print(f"  [standings] Unknown league: {league_code}")
             return 0
-        # LEAGUE_MAP may store a plain URL or a (current, prev) tuple
         schedule_url = entry[0] if isinstance(entry, tuple) else entry
 
-    stats_url = _standings_url_from_schedule(schedule_url)
+    # Check explicit override first — some leagues have URL slug collisions
+    # (e.g. BRA-SA "Serie-A-Stats" redirects to Italian Serie A on FBref)
+    if league_code in _STANDINGS_URL_OVERRIDES:
+        stats_url = _STANDINGS_URL_OVERRIDES[league_code]
+        print(f"  [standings] Using URL override for {league_code}")
+    else:
+        stats_url = _standings_url_from_schedule(schedule_url)
+
     if not stats_url:
         print(f"  [standings] Could not derive stats URL from: {schedule_url}")
         return 0
