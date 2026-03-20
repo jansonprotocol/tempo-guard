@@ -20,15 +20,18 @@ def get_historical_form_delta(
     """
     Return form delta (expected_pos - actual_pos) for a team as of match_date.
     """
-    # Load snapshot
-    snap = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
-    if not snap:
-        return None
-
-    try:
-        df = pd.read_parquet(io.BytesIO(snap.data))
-    except Exception:
-        return None
+    # Use in-memory snapshot if warmed by feature_cache (avoids DB read + parquet parse)
+    from app.services.data_providers.fbref_base import _SNAPSHOT_OVERRIDE
+    if league_code in _SNAPSHOT_OVERRIDE:
+        df = _SNAPSHOT_OVERRIDE[league_code].copy()
+    else:
+        snap = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
+        if not snap:
+            return None
+        try:
+            df = pd.read_parquet(io.BytesIO(snap.data))
+        except Exception:
+            return None
 
     # Parse scores
     score_col = next((c for c in df.columns if str(c).lower() in ("score", "scores")), None)
