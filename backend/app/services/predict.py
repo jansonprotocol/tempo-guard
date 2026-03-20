@@ -150,13 +150,22 @@ def _player_power_nudge(
     home_cfg: TeamConfig | None,
     away_cfg: TeamConfig | None,
     league_code: str,
+    home_team: str = "",
+    away_team: str = "",
 ) -> float:
     """Squad power delta nudge. May query per-league configs for intl matches."""
     if PLAYER_POWER_BLEND <= 0.0:
         return 0.0
 
-    home_power = float(home_cfg.squad_power) if home_cfg and home_cfg.squad_power is not None else None
-    away_power = float(away_cfg.squad_power) if away_cfg and away_cfg.squad_power is not None else None
+    # Use session-attached squad power cache if available (populated by
+    # batch-predict before the fixture loop to avoid per-fixture DB queries).
+    _cache = getattr(db, "_squad_power_cache", {}).get(league_code, {})
+    if _cache and home_team and away_team:
+        home_power = _cache.get(home_team)
+        away_power = _cache.get(away_team)
+    else:
+        home_power = float(home_cfg.squad_power) if home_cfg and home_cfg.squad_power is not None else None
+        away_power = float(away_cfg.squad_power) if away_cfg and away_cfg.squad_power is not None else None
 
     if home_power is None or away_power is None:
         return 0.0
@@ -304,7 +313,7 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
 
     # ── 3–6. Nudge stack ──────────────────────────────────────────────
     base_nudge  = _team_base_nudge(home_cfg, away_cfg)
-    power_nudge = _player_power_nudge(db, home_cfg, away_cfg, req.league_code)
+    power_nudge = _player_power_nudge(db, home_cfg, away_cfg, req.league_code, req.home_team, req.away_team)
     form_nudge  = _league_form_delta_nudge(
         db, cfg, req.home_team, req.away_team, req.league_code, req.match_date
     )
