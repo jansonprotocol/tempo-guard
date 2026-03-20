@@ -11,17 +11,32 @@ from app.services.resolve_team import resolve_team_name
 
 router = APIRouter()
 
+
 class PredictBody(BaseModel):
-    league_code: str = Field(..., example="NLD1")
-    home_team: str = Field(..., example="Ajax")
-    away_team: str = Field(..., example="PSV")
-    match_date: Optional[date] = Field(None, example="2026-03-01")
-    sot_proj_total: Optional[float] = Field(None, example=11.2)
+    # ── Required ──────────────────────────────────────────────────────
+    league_code: str            = Field(...,  example="ENG-PL")
+    home_team:   str            = Field(...,  example="Arsenal")
+    away_team:   str            = Field(...,  example="Chelsea")
+    match_date:  Optional[date] = Field(None, example="2026-04-05")
+
+    # ── Core rolling features (computed by asof_features if omitted) ──
+    sot_proj_total:         Optional[float] = Field(None, example=11.2)
     support_idx_over_delta: Optional[float] = Field(None, example=0.09)
-    p_two_plus: Optional[float] = Field(None, example=0.76)
-    p_home_tt05: Optional[float] = Field(None, example=0.71)
-    p_away_tt05: Optional[float] = Field(None, example=0.65)
-    tempo_index: Optional[float] = Field(None, example=0.62)
+    p_two_plus:             Optional[float] = Field(None, example=0.76)
+    p_home_tt05:            Optional[float] = Field(None, example=0.71)
+    p_away_tt05:            Optional[float] = Field(None, example=0.65)
+    tempo_index:            Optional[float] = Field(None, example=0.62)
+
+    # ── Module features (v2.2 — passable directly) ───────────────────
+    # Computed by fbref_base.asof_features from rolling data.
+    # Passing them here overrides pipeline defaults — useful for
+    # manual predictions or retrosim with known match conditions.
+    deg_pressure:  Optional[float] = Field(None, example=0.15)
+    det_boost:     Optional[float] = Field(None, example=0.35)
+    home_det:      Optional[float] = Field(None, example=0.40)
+    away_det:      Optional[float] = Field(None, example=0.30)
+    eps_stability: Optional[float] = Field(None, example=0.72)
+
 
 def get_db():
     db = SessionLocal()
@@ -30,27 +45,40 @@ def get_db():
     finally:
         db.close()
 
+
 @router.post("/predict")
 def post_predict(body: PredictBody, db: Session = Depends(get_db)):
     try:
-        # Resolve team names through Team/Alias tables
+        # ── Resolve team names ────────────────────────────────────────
         home_resolved = resolve_team_name(db, body.home_team, body.league_code)
         away_resolved = resolve_team_name(db, body.away_team, body.league_code)
 
-        data = body.model_dump()
-        data["home_team"] = home_resolved
-        data["away_team"] = away_resolved
-        req = MatchRequest(**data)
+        # Build MatchRequest from pipeline fields only (exclude odds fields)
+        req = MatchRequest(
+            league_code            = body.league_code,
+            home_team              = home_resolved,
+            away_team              = away_resolved,
+            match_date             = body.match_date,
+            sot_proj_total         = body.sot_proj_total,
+            support_idx_over_delta = body.support_idx_over_delta,
+            p_two_plus             = body.p_two_plus,
+            p_home_tt05            = body.p_home_tt05,
+            p_away_tt05            = body.p_away_tt05,
+            tempo_index            = body.tempo_index,
+            deg_pressure           = body.deg_pressure,
+            det_boost              = body.det_boost,
+            home_det               = body.home_det,
+            away_det               = body.away_det,
+            eps_stability          = body.eps_stability,
+        )
         pred = predict_match(db, req)
 
-        # v2.0: Generate performance tags (graceful — returns empty if no player data)
+        # ── Performance tags ──────────────────────────────────────────
         perf_tags = {}
         try:
             from app.services.performance_tags import generate_match_tags
             from app.services.performance_tags import _compute_league_zone_avgs
-            league_avgs = _compute_league_zone_avgs(db, body.league_code)
-
-            # Quick form delta lookup — use cached standings if available
+            _compute_league_zone_avgs(db, body.league_code)
             form_deltas = {}
             try:
                 from app.services.form_delta import compute_form_delta
@@ -59,16 +87,13 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
                     form_deltas = {t["team"]: t["form_delta"] for t in delta_data["teams"]}
             except Exception:
                 pass
-
             perf_tags = generate_match_tags(
                 db, body.league_code, home_resolved, away_resolved, form_deltas
             )
         except Exception:
             pass
 
-        # Calibrated probability — converts raw confidence_score to a true
-        # hit-rate estimate using isotonic regression on historical results.
-        # Falls back to normalised raw score if no calibration data exists yet.
+        # ── Calibrated probability ────────────────────────────────────
         calibrated_probability = None
         try:
             from app.services.confidence_calibrator import calibrate_confidence
@@ -79,23 +104,24 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
             pass
 
         return {
-            "league_code": pred.league_code,
-            "fixture": pred.fixture,
+            "league_code":            pred.league_code,
+            "fixture":                pred.fixture,
             "corridor": {
-                "low": pred.corridor.low,
+                "low":  pred.corridor.low,
                 "high": pred.corridor.high,
                 "lean": pred.corridor.lean,
             },
             "translated_play": {
-                "market": pred.translated_play.market,
+                "market":     pred.translated_play.market,
                 "confidence": pred.translated_play.confidence,
             },
-            "confidence_score": pred.confidence_score,
+            "confidence_score":       pred.confidence_score,
             "calibrated_probability": calibrated_probability,
-            "applied_modules": pred.applied_modules,
-            "safety_flags": pred.safety_flags,
-            "explanations": pred.explanations,
-            "performance_tags": perf_tags,
+            "applied_modules":        pred.applied_modules,
+            "safety_flags":           pred.safety_flags,
+            "explanations":           pred.explanations,
+            "performance_tags":       perf_tags,
         }
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
