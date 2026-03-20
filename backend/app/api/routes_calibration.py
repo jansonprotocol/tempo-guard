@@ -814,8 +814,67 @@ def _calibrate_all_background(
     min_matches_before: int,
     apply: bool,
 ):
-    # ... (your existing background function, which you already have)
-    pass  # Replace with your actual function
+    """
+    Background task: calibrate all leagues that have snapshots.
+    Updates _calibration_jobs[job_id] with progress.
+    """
+    from app.database.db import SessionLocal
+    from app.database.models_fbref import FBrefSnapshot
+
+    db = SessionLocal()
+    try:
+        # Get all unique league codes that have snapshots
+        leagues = db.query(FBrefSnapshot.league_code).distinct().all()
+        total = len(leagues)
+
+        with _jobs_lock:
+            _calibration_jobs[job_id]["status"] = "running"
+            _calibration_jobs[job_id]["total"] = total
+
+        results = []
+        for idx, (league_code,) in enumerate(leagues, start=1):
+            with _jobs_lock:
+                _calibration_jobs[job_id]["current_league"] = league_code
+                _calibration_jobs[job_id]["progress"] = idx
+
+            try:
+                # Use the existing calibration core for each league
+                calib_result = _run_calibration(
+                    league_code,
+                    limit,
+                    min_matches_before,
+                    apply,
+                    db,
+                )
+                # calib_result is either CalibResult or JSONResponse.
+                # Convert to serializable dict.
+                if hasattr(calib_result, "dict"):
+                    result_data = calib_result.dict()
+                else:
+                    # If it's a JSONResponse, extract content.
+                    result_data = {"error": calib_result.body.decode() if hasattr(calib_result, "body") else "Unknown error"}
+                results.append({
+                    "league_code": league_code,
+                    "result": result_data,
+                })
+            except Exception as e:
+                results.append({
+                    "league_code": league_code,
+                    "error": str(e),
+                })
+
+        with _jobs_lock:
+            _calibration_jobs[job_id]["status"] = "done"
+            _calibration_jobs[job_id]["result"] = results
+            _calibration_jobs[job_id]["current_league"] = None
+    except Exception as e:
+        import traceback
+        with _jobs_lock:
+            _calibration_jobs[job_id]["status"] = "error"
+            _calibration_jobs[job_id]["error"] = str(e)
+            _calibration_jobs[job_id]["traceback"] = traceback.format_exc()
+    finally:
+        db.close()
 
 @router.post("/calibrate/all")
 def calibrate_all_leagues(
