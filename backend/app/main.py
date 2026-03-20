@@ -21,6 +21,8 @@ from app.database.models_fbref import FBrefSnapshot  # registers the new table
 from app.models.team_config import TeamConfig         # registers team_configs table
 # v2.0 — player-level models (import registers tables with Base.metadata)
 from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot  # noqa: F401
+# v2.2 — confidence calibration model (import registers table with Base.metadata)
+from app.services.confidence_calibrator import ConfidenceCalibration  # noqa: F401
 # Memory loaders
 from app.memory_loader import load_league_configs, load_teams
 
@@ -53,6 +55,12 @@ _COLUMN_MIGRATIONS = [
     # prediction_log
     ("prediction_log", "variance_flag", "VARCHAR",  None),
     ("prediction_log", "match_time",    "VARCHAR",  None),
+    # v2.2: weather tag (from Open-Meteo, stored at prediction time)
+    ("prediction_log", "weather_tag",   "VARCHAR",  None),
+    # v2.2: closing odds fields (log bookmaker line for edge tracking)
+    ("prediction_log", "closing_odds",  "FLOAT",    None),
+    ("prediction_log", "market_prob",   "FLOAT",    None),
+    ("prediction_log", "edge",          "FLOAT",    None),
     # league_configs — DEG/DET/EPS sensitivity multipliers
     ("league_configs", "deg_sensitivity", "FLOAT",  "1.0"),
     ("league_configs", "det_sensitivity", "FLOAT",  "1.0"),
@@ -150,6 +158,26 @@ def _safe_migrate(db):
         except Exception as e:
             db.rollback()
             print(f"[startup] Migration warning — stats_fetch_cache: {e}")
+
+    # confidence_calibration table (v2.2 — isotonic regression breakpoints)
+    if "confidence_calibration" not in existing_tables:
+        try:
+            db.execute(text("""
+                CREATE TABLE confidence_calibration (
+                    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                    league_code      VARCHAR,
+                    n_samples        INTEGER DEFAULT 0,
+                    brier_score      FLOAT,
+                    raw_brier        FLOAT,
+                    breakpoints_json TEXT,
+                    fitted_at        DATETIME
+                )
+            """))
+            db.commit()
+            print("[startup] Migration: created confidence_calibration table")
+        except Exception as e:
+            db.rollback()
+            print(f"[startup] Migration warning — confidence_calibration: {e}")
 
 
 # ------------------------------------------------------------------------------
