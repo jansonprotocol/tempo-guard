@@ -1956,22 +1956,6 @@
     let resolveTimer  = null;
     let leaguesLoaded = false;
 
-    // ── Team display name cache & formatter ──────────────────────────
-    // Populated from /api/player-power/squads on first squad load.
-    // Keys are raw team_key values (e.g. "manchester-city").
-    // Values are display_name strings from the DB (e.g. "Manchester City").
-    const _teamDisplayCache = {};
-
-    function fmtTeam(key) {
-      if (!key) return key;
-      // 1. Check display name cache (populated from squads API)
-      if (_teamDisplayCache[key]) return _teamDisplayCache[key];
-      // 2. Fallback: title-case the key, replacing hyphens/underscores with spaces
-      return key
-        .replace(/[-_]/g, ' ')
-        .replace(/\b\w/g, c => c.toUpperCase());
-    }
-
     // ── Timezone conversion ──────────────────────────────────────────
     // Backend stores match_time as local league time (no TZ info).
     // EU leagues are already CET/CEST; non-EU need converting.
@@ -2131,13 +2115,36 @@
         showError('Please fill in all fields.');
         return;
       }
-      const today = new Date(); today.setHours(0,0,0,0);
-      const picked = new Date(matchDate + 'T00:00:00');
-      const isFuture = picked >= today;
-      const endpoint = isFuture ? '/api/futurematch' : '/api/retrosim';
-      const payload = { league_code: leagueCode, home_team: homeTeam, away_team: awayTeam, match_date: matchDate };
+
       setLoading(true); hideError(); hideResult();
+
+      // ── Pre-submit validation ─────────────────────────────────────
+      // 1. Check both teams belong to the selected league.
+      // 2. For past dates: check the fixture actually existed on that date.
+      // International competitions (UCL/UEL/UECL) skip the league check.
       try {
+        const vParams = new URLSearchParams({
+          home_team: homeTeam, away_team: awayTeam,
+          league_code: leagueCode, match_date: matchDate,
+        });
+        const vRes  = await fetch(`/api/validate-matchup?${vParams}`);
+        const vData = await vRes.json().catch(() => ({}));
+        if (vData.valid === false) {
+          showError(vData.reason || 'Matchup validation failed.');
+          setLoading(false);
+          return;
+        }
+      } catch (_) {
+        // Validation endpoint unreachable — proceed anyway, backend will error if needed
+      }
+
+      // ── Run prediction ────────────────────────────────────────────
+      try {
+        const today = new Date(); today.setHours(0,0,0,0);
+        const picked = new Date(matchDate + 'T00:00:00');
+        const isFuture = picked >= today;
+        const endpoint = isFuture ? '/api/futurematch' : '/api/retrosim';
+        const payload = { league_code: leagueCode, home_team: homeTeam, away_team: awayTeam, match_date: matchDate };
         const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -2197,9 +2204,8 @@
       const pt = d.performance_tags || {};
       if (pt.matchup_tag && pt.home && pt.away) {
         $('perf-matchup').textContent = pt.matchup_tag;
-        const _fixParts = d.fixture ? d.fixture.split(' vs ') : [];
-        $('perf-home-row').innerHTML = _buildPerfTeamRow(_fixParts[0] ? fmtTeam(_fixParts[0].trim()) : 'Home', pt.home);
-        $('perf-away-row').innerHTML = _buildPerfTeamRow(_fixParts[1] ? fmtTeam(_fixParts[1].trim()) : 'Away', pt.away);
+        $('perf-home-row').innerHTML = _buildPerfTeamRow(d.fixture ? d.fixture.split(' vs ')[0] : 'Home', pt.home);
+        $('perf-away-row').innerHTML = _buildPerfTeamRow(d.fixture ? d.fixture.split(' vs ')[1] : 'Away', pt.away);
         perfSection.classList.remove('hidden');
       } else {
         perfSection.classList.add('hidden');
@@ -2604,8 +2610,8 @@
               <span class="pred-detail-label">Form Context</span>
               <span class="pred-detail-val" style="font-family:var(--mono);font-size:11px">${pt.matchup_tag || ''}</span>
             </div>
-            ${buildTeamTags(fmtTeam(p.home_team), pt.home)}
-            ${buildTeamTags(fmtTeam(p.away_team), pt.away)}
+            ${buildTeamTags(p.home_team, pt.home)}
+            ${buildTeamTags(p.away_team, pt.away)}
           </div>`;
       }
 
@@ -2613,7 +2619,7 @@
         <div class="pred-card-collapsed">
           <div class="pred-card-status-dot"></div>
           <div class="pred-card-fixture-name">
-            ${fmtTeam(p.home_team)} <span>vs</span> ${fmtTeam(p.away_team)}
+            ${p.home_team} <span>vs</span> ${p.away_team}
           </div>
           ${kickoffStr ? `<div class="pred-card-kickoff">${kickoffStr}</div>` : ''}
           ${perfHint}
@@ -2706,14 +2712,6 @@
           <span><em>${data.total_teams}</em> teams indexed</span>
         `;
 
-        // Populate display name cache for all teams
-        (data.leagues || []).forEach(league => {
-          (league.teams || []).forEach(team => {
-            if (team.team && team.display_name) {
-              _teamDisplayCache[team.team] = team.display_name;
-            }
-          });
-        });
         renderSquadData(data);
         squadDataLoaded = true;
       } catch (e) {
@@ -2826,7 +2824,7 @@
       header.innerHTML = `
         <div class="team-row-name">
           <span class="team-row-rank">${rank}.</span>
-          ${team.display_name || fmtTeam(team.team)}
+          ${team.team}
           <span class="team-row-chevron">▶</span>
         </div>
         <div class="team-power-cell squad ${powerTier(sp)}">${fmt(sp)}</div>
