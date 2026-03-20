@@ -376,13 +376,17 @@ def _run_calibration(
         ag = int(match_row["ag"])
         w  = _weight(pos)
 
-        # Resolve team names to canonical keys
+        # Resolve team names to canonical keys (used for tracking/nudge/delta)
         home_team = resolve_team_name(db, home_team_raw, league_code)
         away_team = resolve_team_name(db, away_team_raw, league_code)
 
         try:
+            # Pass RAW snapshot names to asof_features — fbref_base uses its
+            # own fuzzy matcher (_match_team) to find rows in the snapshot.
+            # Passing resolved canonical keys like "inter milan" fails because
+            # the snapshot has "Inter" and the extra word tanks the match score.
             metrics = cached_asof_features(
-                league_code, home_team, away_team, match_date,
+                league_code, home_team_raw, away_team_raw, match_date,
                 min_matches=min_matches_before,
             )
         except Exception as e:
