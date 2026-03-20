@@ -2115,36 +2115,13 @@
         showError('Please fill in all fields.');
         return;
       }
-
+      const today = new Date(); today.setHours(0,0,0,0);
+      const picked = new Date(matchDate + 'T00:00:00');
+      const isFuture = picked >= today;
+      const endpoint = isFuture ? '/api/futurematch' : '/api/retrosim';
+      const payload = { league_code: leagueCode, home_team: homeTeam, away_team: awayTeam, match_date: matchDate };
       setLoading(true); hideError(); hideResult();
-
-      // ── Pre-submit validation ─────────────────────────────────────
-      // 1. Check both teams belong to the selected league.
-      // 2. For past dates: check the fixture actually existed on that date.
-      // International competitions (UCL/UEL/UECL) skip the league check.
       try {
-        const vParams = new URLSearchParams({
-          home_team: homeTeam, away_team: awayTeam,
-          league_code: leagueCode, match_date: matchDate,
-        });
-        const vRes  = await fetch(`/api/validate-matchup?${vParams}`);
-        const vData = await vRes.json().catch(() => ({}));
-        if (vData.valid === false) {
-          showError(vData.reason || 'Matchup validation failed.');
-          setLoading(false);
-          return;
-        }
-      } catch (_) {
-        // Validation endpoint unreachable — proceed anyway, backend will error if needed
-      }
-
-      // ── Run prediction ────────────────────────────────────────────
-      try {
-        const today = new Date(); today.setHours(0,0,0,0);
-        const picked = new Date(matchDate + 'T00:00:00');
-        const isFuture = picked >= today;
-        const endpoint = isFuture ? '/api/futurematch' : '/api/retrosim';
-        const payload = { league_code: leagueCode, home_team: homeTeam, away_team: awayTeam, match_date: matchDate };
         const res = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -2957,8 +2934,7 @@
                 const col = n.type === 'over' ? 'var(--green)' : 'var(--red)';
                 const sign = n.delta > 0 ? '+' : '';
                 const weak = n.weakness ? ` · ${n.weakness}↓` : '';
-                // Note: backend may not return display_name for notable cards yet – update backend to include it.
-                const displayName = n.display_name || n.team;
+                const displayName = n.display_name || fmtTeam(n.team);
                 return `<div style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:3px;border:1px solid var(--border);background:var(--bg2);cursor:pointer" onclick="loadDeltaLeague('${n.league}', document.querySelector('.delta-league-select'))">
                   <span style="color:#fff">${displayName}</span>
                   <span style="color:var(--muted)">${n.league}</span>
