@@ -1168,7 +1168,7 @@ def log_closing_odds(
 
 @router.delete("/predictions/bulk")
 def bulk_delete_predictions(
-    ids: str = Query(..., description="Comma-separated prediction IDs to delete"),
+    ids: str = Query(None, description="Comma-separated prediction IDs to delete"),
     league_code: str = Query(None, description="Delete all pending predictions for a league"),
     status: str = Query(None, description="Filter by status: pending, hit, miss, void"),
     db: Session = Depends(get_db),
