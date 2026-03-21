@@ -420,7 +420,7 @@ def _suggest_tt_thresholds(
     # Step toward suggested threshold conservatively
     if best_tt_threshold < current_flip_threshold - STEP:
         new_threshold = round(current_flip_threshold - STEP, 2)
-    elif best_tt_threshold > current_flip_threshold + STEP:
+    elif best_tt_threshold >= current_flip_threshold + STEP:
         new_threshold = round(current_flip_threshold + STEP, 2)
     else:
         new_threshold = current_flip_threshold
@@ -705,19 +705,28 @@ def _suggest_bias(
     if overall_hit_rate < TARGET_HIT_RATE * 100:
         # Below target — nudge the worse side toward neutral (0.5)
         if over_total >= 5 and under_total >= 5:
-            if over_rate <= under_rate:
-                # Over side is weaker — shift its bias toward neutral
+            # Require 8pp gap before nudging to prevent oscillation
+            # when over and under rates are close
+            if over_rate < under_rate - 0.08:
+                # Over side clearly weaker
                 direction = 1.0 if current_over < 0.5 else -1.0
                 new_over = round(
                     max(MIN_BIAS, min(MAX_BIAS, current_over + direction * NUDGE_STEP)), 4
                 )
                 notes.append(f"Nudging over bias {current_over} → {new_over} (over side weaker)")
-            else:
+            elif under_rate < over_rate - 0.08:
+                # Under side clearly weaker
                 direction = 1.0 if current_under < 0.5 else -1.0
                 new_under = round(
                     max(MIN_BIAS, min(MAX_BIAS, current_under + direction * NUDGE_STEP)), 4
                 )
                 notes.append(f"Nudging under bias {current_under} → {new_under} (under side weaker)")
+            else:
+                notes.append(
+                    f"Over/Under gap {abs(round(over_rate-under_rate,3)*100):.1f}pp "
+                    f"< 8pp threshold — biases stable (over={round(over_rate*100,1)}% "
+                    f"under={round(under_rate*100,1)}%)"
+                )
         elif over_total >= 5:
             if over_rate < TARGET_HIT_RATE * 100:
                 direction = 1.0 if current_over < 0.5 else -1.0
