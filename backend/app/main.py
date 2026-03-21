@@ -21,8 +21,6 @@ from app.database.models_fbref import FBrefSnapshot  # registers the new table
 from app.models.team_config import TeamConfig         # registers team_configs table
 # v2.0 — player-level models (import registers tables with Base.metadata)
 from app.models.models_players import Player, PlayerSeasonStats, SquadSnapshot  # noqa: F401
-# v2.2 — confidence calibration model (import registers table with Base.metadata)
-from app.services.confidence_calibrator import ConfidenceCalibration  # noqa: F401
 # Memory loaders
 from app.memory_loader import load_league_configs, load_teams
 
@@ -31,7 +29,7 @@ from app.admin import setup_admin
 app = FastAPI(
     title="ATHENA: Tempo Guard",
     description="Tempo-aware predictive engine (MVP).",
-    version="3.2.0",
+    version="2.2.0",
 )
 
 # ------------------------------------------------------------------------------
@@ -55,12 +53,6 @@ _COLUMN_MIGRATIONS = [
     # prediction_log
     ("prediction_log", "variance_flag", "VARCHAR",  None),
     ("prediction_log", "match_time",    "VARCHAR",  None),
-    # v2.2: weather tag (from Open-Meteo, stored at prediction time)
-    ("prediction_log", "weather_tag",   "VARCHAR",  None),
-    # v2.2: closing odds fields (log bookmaker line for edge tracking)
-    ("prediction_log", "closing_odds",  "FLOAT",    None),
-    ("prediction_log", "market_prob",   "FLOAT",    None),
-    ("prediction_log", "edge",          "FLOAT",    None),
     # league_configs — DEG/DET/EPS sensitivity multipliers
     ("league_configs", "deg_sensitivity", "FLOAT",  "1.0"),
     ("league_configs", "det_sensitivity", "FLOAT",  "1.0"),
@@ -93,6 +85,9 @@ _COLUMN_MIGRATIONS = [
     ("player_season_stats", "performance_delta", "FLOAT", None),
     # teams — current league position (populated by scrape_fixtures.py)
     ("teams", "current_position", "INTEGER", None),
+    # league_configs — v2.2 alt-lane TT threshold tuning
+    ("league_configs", "alt_flip_threshold", "FLOAT", "0.62"),
+    ("league_configs", "tt_home_bias",       "FLOAT", "0.0"),
 ]
 
 
@@ -159,26 +154,6 @@ def _safe_migrate(db):
             db.rollback()
             print(f"[startup] Migration warning — stats_fetch_cache: {e}")
 
-    # confidence_calibration table (v2.2 — isotonic regression breakpoints)
-    if "confidence_calibration" not in existing_tables:
-        try:
-            db.execute(text("""
-                CREATE TABLE confidence_calibration (
-                    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-                    league_code      VARCHAR,
-                    n_samples        INTEGER DEFAULT 0,
-                    brier_score      FLOAT,
-                    raw_brier        FLOAT,
-                    breakpoints_json TEXT,
-                    fitted_at        DATETIME
-                )
-            """))
-            db.commit()
-            print("[startup] Migration: created confidence_calibration table")
-        except Exception as e:
-            db.rollback()
-            print(f"[startup] Migration warning — confidence_calibration: {e}")
-
 
 # ------------------------------------------------------------------------------
 # STARTUP: migrate → create tables → load seeds
@@ -190,27 +165,11 @@ def startup_event():
         # 1. Safe column migrations FIRST — before anything queries the models
         _safe_migrate(db)
         # 2. Create any fully new tables defined in SQLAlchemy models
+        #    This now includes: players, player_season_stats, squad_snapshots
         Base.metadata.create_all(bind=engine)
         # 3. Seed league configs + teams from JSON
         load_league_configs(db)
         load_teams(db)
-        # 4. Pre-warm feature cache for all leagues that have snapshots
-        #    so calibration and batch-predict never pay the cold-start
-        #    parquet read cost — even on the very first request after deploy.
-        try:
-            from app.services.feature_cache import warm_snapshot_cache
-            from app.database.models_fbref import FBrefSnapshot
-            league_codes = [
-                r[0] for r in db.query(FBrefSnapshot.league_code).distinct().all()
-            ]
-            print(f"[startup] Pre-warming feature cache for {len(league_codes)} leagues...")
-            warmed = 0
-            for lc in league_codes:
-                if warm_snapshot_cache(db, lc):
-                    warmed += 1
-            print(f"[startup] Feature cache warmed: {warmed}/{len(league_codes)} leagues")
-        except Exception as e:
-            print(f"[startup] Feature cache warm skipped: {e}")
     finally:
         db.close()
 
