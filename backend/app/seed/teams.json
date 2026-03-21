@@ -69,23 +69,6 @@
     "aliases": []
   },
   {
-    "display_name": "Ipswich Town",
-    "league_code": "ENG-PL",
-    "country": "England",
-    "aliases": [
-      "Ipswich"
-    ]
-  },
-  {
-    "display_name": "Leicester City",
-    "league_code": "ENG-PL",
-    "country": "England",
-    "aliases": [
-      "Leicester",
-      "The Foxes"
-    ]
-  },
-  {
     "display_name": "Liverpool",
     "league_code": "ENG-PL",
     "country": "England",
@@ -131,20 +114,6 @@
     ]
   },
   {
-    "display_name": "Southampton",
-    "league_code": "ENG-PL",
-    "country": "England",
-    "aliases": [
-      "Saints"
-    ]
-  },
-  {
-    "display_name": "Sunderland",
-    "league_code": "ENG-PL",
-    "country": "England",
-    "aliases": []
-  },
-  {
     "display_name": "Tottenham Hotspur",
     "league_code": "ENG-PL",
     "country": "England",
@@ -172,12 +141,6 @@
     ]
   },
   {
-    "display_name": "Burnley",
-    "league_code": "ENG-PL",
-    "country": "England",
-    "aliases": []
-  },
-  {
     "display_name": "Leeds United",
     "league_code": "ENG-PL",
     "country": "England",
@@ -191,14 +154,6 @@
     "country": "England",
     "aliases": [
       "Sheffield United"
-    ]
-  },
-  {
-    "display_name": "Luton Town",
-    "league_code": "ENG-PL",
-    "country": "England",
-    "aliases": [
-      "Luton"
     ]
   },
   {
@@ -259,22 +214,6 @@
     "aliases": []
   },
   {
-    "display_name": "Las Palmas",
-    "league_code": "ESP-LL",
-    "country": "Spain",
-    "aliases": [
-      "UD Las Palmas"
-    ]
-  },
-  {
-    "display_name": "Leganes",
-    "league_code": "ESP-LL",
-    "country": "Spain",
-    "aliases": [
-      "CD Leganes"
-    ]
-  },
-  {
     "display_name": "Mallorca",
     "league_code": "ESP-LL",
     "country": "Spain",
@@ -321,14 +260,6 @@
     "country": "Spain",
     "aliases": [
       "La Real"
-    ]
-  },
-  {
-    "display_name": "Real Valladolid",
-    "league_code": "ESP-LL",
-    "country": "Spain",
-    "aliases": [
-      "Valladolid"
     ]
   },
   {
@@ -439,14 +370,6 @@
     ]
   },
   {
-    "display_name": "Montpellier",
-    "league_code": "FRA-L1",
-    "country": "France",
-    "aliases": [
-      "MHSC"
-    ]
-  },
-  {
     "display_name": "Nantes",
     "league_code": "FRA-L1",
     "country": "France",
@@ -473,28 +396,11 @@
     ]
   },
   {
-    "display_name": "Reims",
-    "league_code": "FRA-L1",
-    "country": "France",
-    "aliases": [
-      "Stade Reims"
-    ]
-  },
-  {
     "display_name": "Rennes",
     "league_code": "FRA-L1",
     "country": "France",
     "aliases": [
       "Stade Rennais"
-    ]
-  },
-  {
-    "display_name": "Saint-Etienne",
-    "league_code": "FRA-L1",
-    "country": "France",
-    "aliases": [
-      "AS Saint-Etienne",
-      "ASSE"
     ]
   },
   {
@@ -538,14 +444,6 @@
     "aliases": [
       "Leverkusen",
       "Die Werkself"
-    ]
-  },
-  {
-    "display_name": "Bochum",
-    "league_code": "GER-BUN",
-    "country": "Germany",
-    "aliases": [
-      "VfL Bochum"
     ]
   },
   {
@@ -795,12 +693,6 @@
   },
   {
     "display_name": "Udinese",
-    "league_code": "ITA-SA",
-    "country": "Italy",
-    "aliases": []
-  },
-  {
-    "display_name": "Venezia",
     "league_code": "ITA-SA",
     "country": "Italy",
     "aliases": []
@@ -1065,9 +957,7 @@
     "country": "Brazil",
     "aliases": [
       "Atletico MG",
-      "Galo",
-      "Atlético Mineiro",
-      "Atletico-MG"
+      "Galo"
     ]
   },
   {
@@ -1092,8 +982,7 @@
     "league_code": "BRA-SA",
     "country": "Brazil",
     "aliases": [
-      "Botafogo (RJ)",
-      "Botafogo RJ"
+      "Botafogo (RJ)"
     ]
   },
   {
@@ -1148,10 +1037,7 @@
     "display_name": "Gremio",
     "league_code": "BRA-SA",
     "country": "Brazil",
-    "aliases": [
-      "Grêmio",
-      "Gremio"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Internacional",
@@ -1197,7 +1083,6 @@
     "league_code": "BRA-SA",
     "country": "Brazil",
     "aliases": [
-      "São Paulo",
       "SPFC"
     ]
   },
@@ -1214,7 +1099,6 @@
     "league_code": "BRA-SA",
     "country": "Brazil",
     "aliases": [
-      "Vitória",
       "EC Vitória"
     ]
   },
@@ -1416,9 +1300,7 @@
     "display_name": "St. Louis City",
     "league_code": "MLS",
     "country": "USA",
-    "aliases": [
-      "St Louis City"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Toronto FC",
@@ -1440,48 +1322,37 @@
     "display_name": "Al-Ahli",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Ahli"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Fayha",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Fayha"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Fateh",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Fateh"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Hazem",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Hazem"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Hilal",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Hilal"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Ittihad",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
     "aliases": [
-      "Al Ittihad",
       "Ittihad"
     ]
   },
@@ -1489,73 +1360,55 @@
     "display_name": "Al-Khaleej",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Khaleej"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Nassr",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Nassr"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Okhdood",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Okhdood"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Qadsiah",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Qadsiah"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Raed",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Raed"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Riyadh",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Riyadh"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Shabab",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Shabab"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Tai",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Tai"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Al-Wehda",
     "league_code": "SAU-SPL",
     "country": "Saudi Arabia",
-    "aliases": [
-      "Al Wehda"
-    ]
+    "aliases": []
   },
   {
     "display_name": "Damac",
@@ -2318,8 +2171,7 @@
     "league_code": "FRA-L2",
     "country": "France",
     "aliases": [
-      "dunkerque",
-      "usl dunkerque"
+      "dunkerque"
     ]
   },
   {
@@ -2441,10 +2293,8 @@
     "league_code": "FRA-L2",
     "country": "France",
     "aliases": [
-      "saint etienne",
       "asse",
-      "as saint-etienne",
-      "saint-etienne"
+      "as saint-etienne"
     ]
   },
   {
@@ -2485,7 +2335,6 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "sporting gijon",
       "real sporting"
     ]
   },
@@ -2511,8 +2360,7 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "cd castellon",
-      "cd castellón"
+      "cd castellon"
     ]
   },
   {
@@ -2522,7 +2370,6 @@
     "aliases": [
       "dep la coruna",
       "la coruña",
-      "la coruna",
       "deportivo"
     ]
   },
@@ -2539,8 +2386,7 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "ud almeria",
-      "almeria"
+      "ud almeria"
     ]
   },
   {
@@ -2548,7 +2394,6 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "cordoba",
       "cordoba cf"
     ]
   },
@@ -2557,8 +2402,7 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "cd leganes",
-      "leganes"
+      "cd leganes"
     ]
   },
   {
@@ -2566,7 +2410,6 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "cultural leonesa",
       "sd ponferradina"
     ]
   },
@@ -2583,9 +2426,7 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "mirandes",
-      "mirandés",
-      "cd mirandes"
+      "mirandes"
     ]
   },
   {
@@ -2593,7 +2434,6 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "real sociedad b",
       "real sociedad ii"
     ]
   },
@@ -2602,7 +2442,6 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "malaga",
       "cd malaga"
     ]
   },
@@ -2627,7 +2466,6 @@
     "league_code": "ESP-LL2",
     "country": "Spain",
     "aliases": [
-      "cadiz",
       "cadiz cf"
     ]
   },
@@ -2867,9 +2705,7 @@
     "league_code": "GER-B2",
     "country": "Germany",
     "aliases": [
-      "dusseldorf",
-      "düsseldorf",
-      "fortuna dusseldorf"
+      "dusseldorf"
     ]
   },
   {
@@ -2886,8 +2722,7 @@
     "league_code": "GER-B2",
     "country": "Germany",
     "aliases": [
-      "1. fc kaiserslautern",
-      "fck"
+      "1. fc kaiserslautern"
     ]
   },
   {
@@ -2905,7 +2740,6 @@
     "country": "Germany",
     "aliases": [
       "furth",
-      "fürth",
       "spvgg greuther furth"
     ]
   },
@@ -2914,9 +2748,7 @@
     "league_code": "GER-B2",
     "country": "Germany",
     "aliases": [
-      "nurnberg",
-      "1. fc nurnberg",
-      "1. fc nürnberg"
+      "1. fc nurnberg"
     ]
   },
   {
@@ -2969,7 +2801,6 @@
     "country": "Germany",
     "aliases": [
       "munster",
-      "münster",
       "preussen munster"
     ]
   },
@@ -3126,9 +2957,7 @@
     "league_code": "ITA-SB",
     "country": "Italy",
     "aliases": [
-      "sudtirol",
-      "fc sudtirol",
-      "fc südtirol"
+      "fc sudtirol"
     ]
   },
   {
