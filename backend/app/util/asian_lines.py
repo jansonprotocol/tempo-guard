@@ -153,6 +153,14 @@ def evaluate_market(
         # Half line (.5): no push possible
         return total < line
 
+    # ── Touch-Touch (TT) markets ──────────────────────────────────────────
+    # "TT Home O0.5" = home team scores at least 1 goal
+    # "TT Away O0.5" = away team scores at least 1 goal
+    if m in ("TT HOME O0.5", "TT HOME O 0.5"):
+        return home_goals >= 1
+    if m in ("TT AWAY O0.5", "TT AWAY O 0.5"):
+        return away_goals >= 1
+
     return None
 
 
