@@ -393,8 +393,9 @@ def _suggest_tt_thresholds(
         agg_tt_total   += b_data["tt_total"]
 
     no_bucket_comparison = best_tt_threshold == current_flip_threshold
-    # Require at least 5 flip picks before acting on aggregate signal.
-    AGG_FLIP_MIN = 5
+    # Require at least 3 flip picks before acting on aggregate signal.
+    # 3 picks at consistent 80%+ is meaningful enough to shift threshold by 0.05.
+    AGG_FLIP_MIN = 3
     if no_bucket_comparison and agg_flip_total >= AGG_FLIP_MIN and agg_tt_total >= MIN_BUCKET:
         agg_flip_rate = agg_flip_hits / agg_flip_total
         agg_tt_rate   = agg_tt_hits   / agg_tt_total
@@ -446,6 +447,12 @@ def _suggest_tt_thresholds(
     result["alt_flip_threshold"] = new_threshold
     result["tt_home_bias"]       = new_tt_bias
     result["bucket_analysis"]    = bucket_analysis
+    # Flag weak TT sides so frontend and future logic can act on them
+    if tt_home_total >= MIN_BUCKET and tt_away_total >= MIN_BUCKET:
+        home_rate = tt_home_hits / tt_home_total
+        away_rate = tt_away_hits / tt_away_total
+        result["tt_home_weak"] = home_rate < 0.65
+        result["tt_away_weak"] = away_rate < 0.65
     result["analysis"] = (
         f"Flip threshold: {current_flip_threshold} → {new_threshold} | "
         f"TT home bias: {current_tt_home_bias} → {new_tt_bias}"
@@ -528,19 +535,26 @@ def _suggest_alt_market_use(
     result["original_win_rate_on_miss"] = round(orig_win_rate_on_miss * 100, 1)
 
     if current_use_alt:
-        if orig_win_rate_on_miss >= current_min_win_rate and alt_rate < orig_rate - 0.05:
+        # Trigger suppression on either:
+        # - High miss-save rate (>=70%) + alt trailing by 3pp+
+        # - Moderate miss-save rate (>=50%) + alt trailing by 8pp+ (persistent gap)
+        suppress = (
+            (orig_win_rate_on_miss >= current_min_win_rate and alt_rate < orig_rate - 0.03)
+            or (orig_win_rate_on_miss >= 0.50 and alt_rate < orig_rate - 0.08)
+        )
+        if suppress:
             result["use_alt_market"] = False
             result["analysis"] = (
                 f"SUPPRESSING alt market: on {round(miss_w,1)} alt misses, "
                 f"original wins {round(orig_win_rate_on_miss*100,1)}% "
                 f"(threshold {round(current_min_win_rate*100,1)}%). "
-                f"Alt {round(alt_rate*100,1)}% vs original {round(orig_rate*100,1)}%."
+                f"Alt {round(alt_rate*100,1)}% vs original {round(orig_rate*100,1)}."
             )
         else:
             result["analysis"] = (
                 f"Alt market retained: original wins {round(orig_win_rate_on_miss*100,1)}% "
                 f"of alt misses (threshold {round(current_min_win_rate*100,1)}%). "
-                f"Alt {round(alt_rate*100,1)}% vs original {round(orig_rate*100,1)}%."
+                f"Alt {round(alt_rate*100,1)}% vs original {round(orig_rate*100,1)}."
             )
     else:
         if alt_rate > orig_rate + 0.05:
