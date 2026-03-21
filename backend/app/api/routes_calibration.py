@@ -59,16 +59,29 @@ MIN_BIAS        = 0.00
 # Key: job_id → { status, progress, total, results, skipped, error, ... }
 _calibration_jobs: dict = {}
 _jobs_lock = threading.Lock()
-_league_locks: dict = {}          # per-league lock prevents concurrent runs
-_league_locks_lock = threading.Lock()  # protects _league_locks itself
+_running_leagues: set = set()    # leagues currently being calibrated
+_running_lock = threading.Lock() # protects _running_leagues
 
 
-def _get_league_lock(league_code: str) -> threading.Lock:
-    """Return (creating if needed) the lock for a specific league."""
-    with _league_locks_lock:
-        if league_code not in _league_locks:
-            _league_locks[league_code] = threading.Lock()
-        return _league_locks[league_code]
+def _league_is_running(league_code: str) -> bool:
+    """Return True if a calibration is already in progress for this league."""
+    with _running_lock:
+        return league_code in _running_leagues
+
+
+def _league_set_running(league_code: str) -> bool:
+    """Mark league as running. Returns False if already running."""
+    with _running_lock:
+        if league_code in _running_leagues:
+            return False
+        _running_leagues.add(league_code)
+        return True
+
+
+def _league_clear_running(league_code: str) -> None:
+    """Mark league as no longer running."""
+    with _running_lock:
+        _running_leagues.discard(league_code)
 
 
 # ── hit_weight helper ──────────────────────────────────────────────
@@ -680,15 +693,14 @@ def _run_calibration(
     Core calibration logic shared by single-league and bulk endpoints.
     Returns CalibResult on success, JSONResponse on error.
     """
-    _lock = _get_league_lock(league_code)
-    if not _lock.acquire(blocking=False):
+    if not _league_set_running(league_code):
         return JSONResponse(status_code=409, content={
             "detail": f"Calibration for {league_code} is already running. Try again shortly."
         })
     try:
         return _run_calibration_inner(league_code, limit, min_matches_before, apply, db)
     finally:
-        _lock.release()
+        _league_clear_running(league_code)
 
 
 def _run_calibration_inner(
