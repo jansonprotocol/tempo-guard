@@ -47,6 +47,19 @@ class LeagueConfig(Base):
     # Calibration will suggest updates based on miss patterns.
     form_delta_sensitivity = Column(Float, default=0.0)
 
+    # ── v2.2: Alt-lane market thresholds ─────────────────────────────
+    # alt_flip_threshold: confidence score below which the main market is
+    #   flipped to the opposite side (Over→U3.5, Under→O1.75).
+    #   Default 0.62. Calibration adjusts this based on per-confidence-bucket
+    #   hit rates — if TT is performing worse than flip at a given threshold,
+    #   the boundary shifts down (fewer TT picks, more flips) and vice versa.
+    #
+    # tt_home_bias: nudge toward home vs away TT selection when confidence
+    #   scores are equal. Positive = prefer home TT, negative = prefer away.
+    #   Calibration writes this based on TT Home vs TT Away hit rate gap.
+    alt_flip_threshold = Column(Float, default=0.62)
+    tt_home_bias       = Column(Float, default=0.0)
+
     # ── v2.0: Cross-league strength coefficient ──────────────────────
     # Multiplier applied to player power scores when comparing teams
     # across different leagues (UCL/UEL/UECL predictions).
