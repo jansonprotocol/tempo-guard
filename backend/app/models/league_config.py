@@ -81,3 +81,10 @@ class LeagueConfig(Base):
     # When True, that side falls back to original market instead.
     tt_home_weak = Column(Boolean, default=False)
     tt_away_weak = Column(Boolean, default=False)
+
+    # ── v2.2: TT confidence gate ─────────────────────────────────────
+    # tt_confidence_min: minimum confidence score to serve TT market.
+    # Picks between alt_flip_threshold and tt_confidence_min get original.
+    # Calibration tunes this ±0.05 per run based on per-bucket TT performance.
+    # Range: alt_flip_threshold (0.62) to 0.85. Default 0.62 = no extra gate.
+    tt_confidence_min = Column(Float, default=0.62)
