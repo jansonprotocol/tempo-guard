@@ -31,7 +31,7 @@ from app.admin import setup_admin
 app = FastAPI(
     title="ATHENA: Tempo Guard",
     description="Tempo-aware predictive engine (MVP).",
-    version="2.2.0",
+    version="3.2.0",
 )
 
 # ------------------------------------------------------------------------------
