@@ -223,6 +223,54 @@ def _is_standings_table(df: pd.DataFrame) -> bool:
     return has_rank and has_team and has_pts and has_rows
 
 
+def _verify_page_league(html: str, league_code: str) -> bool:
+    """
+    Verify the fetched HTML is actually for the right league by checking the
+    page <title>. Guards against ScraperAPI returning a cached PL page.
+    Returns True if page looks correct or no check is defined.
+    """
+    import re as _re
+    LEAGUE_KEYWORDS = {
+        "ENG-PL":  ["premier league"],
+        "ENG-CH":  ["championship"],
+        "ESP-LL":  ["la liga"],
+        "ESP-LL2": ["segunda"],
+        "FRA-L1":  ["ligue 1"],
+        "FRA-L2":  ["ligue 2"],
+        "GER-BUN": ["bundesliga"],
+        "GER-B2":  ["2. bundesliga", "2-bundesliga"],
+        "ITA-SA":  ["serie a"],
+        "ITA-SB":  ["serie b"],
+        "NED-ERE": ["eredivisie"],
+        "TUR-SL":  ["super lig"],
+        "SAU-SPL": ["saudi", "pro league"],
+        "DEN-SL":  ["superliga", "danish"],
+        "BEL-PL":  ["jupiler", "belgian"],
+        "POR-LP":  ["primeira liga", "liga portugal"],
+        "NOR-EL":  ["eliteserien"],
+        "SWE-AL":  ["allsvenskan"],
+        "MLS":     ["major league soccer"],
+        "BRA-SA":  ["série a", "brasileirao"],
+        "BRA-SB":  ["série b"],
+        "JPN-J1":  ["j1 league"],
+        "CHN-CSL": ["chinese super league"],
+        "POL-EK":  ["ekstraklasa"],
+        "SUI-SL":  ["swiss super league"],
+        "MEX-LMX": ["liga mx"],
+    }
+    keywords = LEAGUE_KEYWORDS.get(league_code)
+    if not keywords:
+        return True
+    title_match = _re.search(r"<title[^>]*>(.*?)</title>", html, _re.IGNORECASE | _re.DOTALL)
+    if not title_match:
+        return True
+    title = title_match.group(1).lower()
+    if any(kw in title for kw in keywords):
+        return True
+    print(f"  [standings] Page title mismatch for {league_code}: '{title_match.group(1)[:60]}'")
+    return False
+
+
 def _contains_dates(df: pd.DataFrame, sample_rows: int = 5) -> bool:
     df = _flatten_columns(df)
     sample = df.head(sample_rows).astype(str)
