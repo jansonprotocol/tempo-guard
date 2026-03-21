@@ -666,6 +666,18 @@ def get_predictions(
         except Exception:
             return {}
 
+    def _get_stored_tt(row, key: str):
+        """Pull TT probability from stored applied_modules JSON if available."""
+        import json
+        try:
+            if row.applied_modules:
+                data = json.loads(row.applied_modules)
+                if isinstance(data, dict) and key in data:
+                    return data[key]
+        except Exception:
+            pass
+        return None
+
     grouped: dict = {}
     for r in rows:
         d = r.match_date.isoformat()
@@ -694,6 +706,9 @@ def get_predictions(
             "actual_total":          r.actual_total,
             "p_two_plus":            r.p_two_plus,
             "tempo_index":           r.tempo_index,
+            # TT values for alt lane — pulled from stored inputs JSON if available
+            "p_home_tt05":           _get_stored_tt(r, "p_home_tt05"),
+            "p_away_tt05":           _get_stored_tt(r, "p_away_tt05"),
             "predicted_at":          r.predicted_at.isoformat() if r.predicted_at else None,
             "evaluated_at":          r.evaluated_at.isoformat() if r.evaluated_at else None,
             "variance_flag":         getattr(r, "variance_flag", None),
