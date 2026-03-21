@@ -266,6 +266,24 @@ def _run_calibration(
     current_eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
     current_form_sens = float(cfg.form_delta_sensitivity or 0.0) if cfg else 0.0
 
+    # ── Determine current variance for this league ──────────────────
+    # For red variance leagues, alt market becomes the primary evaluated market.
+    latest_calib = (
+        db.query(CalibrationLog)
+        .filter(CalibrationLog.league_code == league_code)
+        .order_by(CalibrationLog.run_at.desc())
+        .first()
+    )
+    current_variance = None
+    if latest_calib:
+        if latest_calib.hit_rate >= 80:
+            current_variance = "green"
+        elif latest_calib.hit_rate >= 70:
+            current_variance = "orange"
+        else:
+            current_variance = "red"
+    is_alt_variance = True  # Always apply — TT/flip permanently outperforms main
+
     # ── Pre-warm feature cache for this league ───────────────────────
     # Loads the snapshot DataFrame into memory once so asof_features,
     # get_historical_form_delta, and player nudge all skip DB reads.
@@ -476,7 +494,27 @@ def _run_calibration(
                 })
             continue
 
-        market = pred.translated_play.market
+        original_market = pred.translated_play.market
+        conf_score = pred.confidence_score or {"HIGH": 0.85, "MEDIUM": 0.65, "LOW": 0.40}.get(
+            pred.translated_play.confidence, 0.65
+        )
+        p_home_tt = metrics.get("p_home_tt05")
+        p_away_tt = metrics.get("p_away_tt05")
+
+        # For red variance leagues, substitute alt market as primary
+        if is_alt_variance:
+            if conf_score < ALT_FLIP_THRESHOLD:
+                market = "U3.5" if original_market.startswith("O") else "O1.75"
+            else:
+                if p_home_tt is not None or p_away_tt is not None:
+                    h = p_home_tt or 0.0
+                    a = p_away_tt or 0.0
+                    market = "TT Home O0.5" if h >= a else "TT Away O0.5"
+                else:
+                    market = original_market
+        else:
+            market = original_market
+
         result = evaluate_market(market, hg, ag)
         hw = hit_weight(result)
 
@@ -620,6 +658,7 @@ def _run_calibration(
                 "actual":      f"{hg}-{ag}",
                 "total_goals": total_goals,
                 "market":      market,
+                "original_market": original_market if market != original_market else None,
                 "result":      result,
                 "hit":         hw >= 0.5,
                 "hit_weight":  hw,
