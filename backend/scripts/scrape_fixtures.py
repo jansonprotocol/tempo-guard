@@ -48,7 +48,7 @@ from app.database.models_fbref import FBrefSnapshot
 from app.database.models_predictions import FBrefFixture
 from app.models.team import Team
 from app.util.team_resolver import resolve_and_learn
-from app.core.constants import LEAGUE_MAP
+from app.core.constants import LEAGUE_MAP, SEASON_MAP
 from app.services.resolve_team import resolve_team_name
 
 # ---------------------------------------------------------------------------
@@ -83,22 +83,36 @@ _STANDINGS_URL_OVERRIDES: dict[str, str] = {
 # ---------------------------------------------------------------------------
 # URL helpers
 # ---------------------------------------------------------------------------
-def _standings_url_from_schedule(schedule_url: str) -> Optional[str]:
+def _standings_url_from_schedule(schedule_url: str, league_code: str = "") -> Optional[str]:
     """
     Derive the FBref stats/standings page URL from the schedule URL.
 
-    Schedule:  https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures
-    Standings: https://fbref.com/en/comps/9/Premier-League-Stats
+    Always builds a year-specific URL using SEASON_MAP so FBref does not
+    silently redirect smaller leagues to the Premier League stats page.
 
-    Returns None if the URL doesn't match the expected pattern.
+    Schedule:  https://fbref.com/en/comps/60/schedule/Ligue-2-Scores-and-Fixtures
+    Standings: https://fbref.com/en/comps/60/2025-2026/2025-2026-Ligue-2-Stats
+
+    Falls back to the non-year-specific URL if no season is found.
     """
     m = re.match(
         r"(https://fbref\.com/en/comps/\d+)/schedule/(.+?)-Scores-and-Fixtures",
         schedule_url,
     )
-    if m:
-        return f"{m.group(1)}/{m.group(2)}-Stats"
-    return None
+    if not m:
+        return None
+
+    base = m.group(1)   # e.g. https://fbref.com/en/comps/60
+    slug = m.group(2)   # e.g. Ligue-2
+
+    # Use year-specific URL when we have a season — prevents FBref from
+    # redirecting non-canonical slug URLs to a completely different league.
+    season = SEASON_MAP.get(league_code) if league_code else None
+    if season:
+        return f"{base}/{season}/{season}-{slug}-Stats"
+
+    # Fallback: non-year-specific (only for leagues not in SEASON_MAP)
+    return f"{base}/{slug}-Stats"
 
 
 # ---------------------------------------------------------------------------
@@ -498,7 +512,7 @@ def scrape_league_standings(
         stats_url = _STANDINGS_URL_OVERRIDES[league_code]
         print(f"  [standings] Using URL override for {league_code}")
     else:
-        stats_url = _standings_url_from_schedule(schedule_url)
+        stats_url = _standings_url_from_schedule(schedule_url, league_code)
 
     if not stats_url:
         print(f"  [standings] Could not derive stats URL from: {schedule_url}")
