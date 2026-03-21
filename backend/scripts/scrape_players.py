@@ -67,6 +67,10 @@ from app.services.data_providers.fbref_urls import (
     STAT_CATEGORIES,
 )
 from app.core.constants import SEASON_MAP, SCHEDULE_URLS  # <-- imported from shared constants
+try:
+    from app.seed.teams_sync import sync_league_teams as _sync_league_teams
+except ImportError:
+    _sync_league_teams = None
 from app.util.team_resolver import resolve_and_learn
 
 # ── Config ───────────────────────────────────────────────────────────────────
@@ -726,6 +730,13 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
 
         # Update fetch cache after successful processing
         _update_fetch_cache(db, league_code)
+
+        # Sync any newly discovered teams back to teams.json
+        if _sync_league_teams:
+            try:
+                _sync_league_teams(db, league_code)
+            except Exception as _sync_err:
+                print(f"  [teams_sync] Warning: {_sync_err}")
 
     except Exception as e:
         db.rollback()
