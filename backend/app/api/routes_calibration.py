@@ -59,6 +59,16 @@ MIN_BIAS        = 0.00
 # Key: job_id → { status, progress, total, results, skipped, error, ... }
 _calibration_jobs: dict = {}
 _jobs_lock = threading.Lock()
+_league_locks: dict = {}          # per-league lock prevents concurrent runs
+_league_locks_lock = threading.Lock()  # protects _league_locks itself
+
+
+def _get_league_lock(league_code: str) -> threading.Lock:
+    """Return (creating if needed) the lock for a specific league."""
+    with _league_locks_lock:
+        if league_code not in _league_locks:
+            _league_locks[league_code] = threading.Lock()
+        return _league_locks[league_code]
 
 
 # ── hit_weight helper ──────────────────────────────────────────────
@@ -538,6 +548,24 @@ def _run_calibration(
     Core calibration logic shared by single-league and bulk endpoints.
     Returns CalibResult on success, JSONResponse on error.
     """
+    _lock = _get_league_lock(league_code)
+    if not _lock.acquire(blocking=False):
+        return JSONResponse(status_code=409, content={
+            "detail": f"Calibration for {league_code} is already running. Try again shortly."
+        })
+    try:
+        return _run_calibration_inner(league_code, limit, min_matches_before, apply, db)
+    finally:
+        _lock.release()
+
+
+def _run_calibration_inner(
+    league_code: str,
+    limit: int,
+    min_matches_before: int,
+    apply: bool,
+    db: Session,
+) -> CalibResult | JSONResponse:
     row = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
     if not row:
         return JSONResponse(status_code=404, content={
@@ -784,8 +812,7 @@ def _run_calibration(
         # map to the same key and the duplicate is skipped.
         _match_key = (match_date, home_team, away_team, hg, ag)
         if _match_key in _seen_matches:
-            skipped += 1
-            continue
+            continue  # dedup — not counted as a skip
         _seen_matches.add(_match_key)
 
         try:
@@ -1302,21 +1329,35 @@ def _run_calibration(
                 existing.under_matches   = under_n
                 existing.last_calibrated = _dt.utcnow()
             else:
-                db.add(TeamConfig(
-                    league_code=league_code,
-                    team=team,
-                    over_nudge=over_nudge,
-                    under_nudge=under_nudge,
-                    det_nudge=det_nudge,
-                    deg_nudge=deg_nudge,
-                    avg_det=team_avg_det,
-                    avg_deg=team_avg_deg,
-                    over_hit_rate=round(stats["over_hits"] / over_n, 3) if over_n else None,
-                    under_hit_rate=round(stats["under_hits"] / under_n, 3) if under_n else None,
-                    over_matches=over_n,
-                    under_matches=under_n,
-                    last_calibrated=_dt.utcnow(),
-                ))
+                try:
+                    db.add(TeamConfig(
+                        league_code=league_code,
+                        team=team,
+                        over_nudge=over_nudge,
+                        under_nudge=under_nudge,
+                        det_nudge=det_nudge,
+                        deg_nudge=deg_nudge,
+                        avg_det=team_avg_det,
+                        avg_deg=team_avg_deg,
+                        over_hit_rate=round(stats["over_hits"] / over_n, 3) if over_n else None,
+                        under_hit_rate=round(stats["under_hits"] / under_n, 3) if under_n else None,
+                        over_matches=over_n,
+                        under_matches=under_n,
+                        last_calibrated=_dt.utcnow(),
+                    ))
+                    db.flush()  # catch constraint errors early
+                except Exception:
+                    # Row was inserted by a concurrent run — fall back to update
+                    db.rollback()
+                    _existing = db.query(TeamConfig).filter_by(
+                        league_code=league_code, team=team
+                    ).first()
+                    if _existing:
+                        _existing.over_nudge   = over_nudge
+                        _existing.under_nudge  = under_nudge
+                        _existing.det_nudge    = det_nudge
+                        _existing.deg_nudge    = deg_nudge
+                        _existing.last_calibrated = _dt.utcnow()
 
             # Track if any significant nudge was applied (for summary)
             if abs(over_nudge) > 0.005 or abs(under_nudge) > 0.005 \
