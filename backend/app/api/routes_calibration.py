@@ -318,7 +318,7 @@ def _suggest_tt_thresholds(
     MIN_BUCKET = 4
     STEP       = 0.05
     BIAS_STEP  = 0.05
-    BIAS_MAX   = 0.20
+    BIAS_MAX   = 0.35  # raised to allow stronger home/away TT routing correction
 
     result = {
         "alt_flip_threshold": current_flip_threshold,
@@ -365,6 +365,30 @@ def _suggest_tt_thresholds(
         if tt_rate is not None and flip_rate is not None:
             if tt_rate > flip_rate + 0.03:
                 best_tt_threshold = b  # TT wins here → threshold could come down to here
+
+    # ── Aggregate flip vs TT fallback ────────────────────────────────────
+    # If no bucket had enough flip picks to compare per-bucket,
+    # use aggregate flip hit rate vs aggregate TT hit rate instead.
+    # This catches leagues (e.g. ESP-LL2) where flip picks are rare but
+    # consistently outperform TT — threshold should rise to send more to flip.
+    agg_flip_hits = agg_flip_total = 0.0
+    agg_tt_hits   = agg_tt_total   = 0.0
+    for b_data in buckets.values():
+        agg_flip_hits  += b_data["flip_hits"]
+        agg_flip_total += b_data["flip_total"]
+        agg_tt_hits    += b_data["tt_hits"]
+        agg_tt_total   += b_data["tt_total"]
+
+    no_bucket_comparison = best_tt_threshold == current_flip_threshold
+    if no_bucket_comparison and agg_flip_total >= 3 and agg_tt_total >= MIN_BUCKET:
+        agg_flip_rate = agg_flip_hits / agg_flip_total
+        agg_tt_rate   = agg_tt_hits   / agg_tt_total
+        if agg_flip_rate > agg_tt_rate + 0.05:
+            # Flip clearly wins overall → raise threshold so more picks go to flip
+            best_tt_threshold = current_flip_threshold + STEP
+        elif agg_tt_rate > agg_flip_rate + 0.05:
+            # TT clearly wins overall → lower threshold so more picks go to TT
+            best_tt_threshold = current_flip_threshold - STEP
 
     # Step toward suggested threshold conservatively
     if best_tt_threshold < current_flip_threshold - STEP:
