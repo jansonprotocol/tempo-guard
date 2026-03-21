@@ -75,3 +75,9 @@ class LeagueConfig(Base):
     # exceeds this, calibration flags the league for suppression. Default 0.70.
     use_alt_market            = Column(Boolean, default=True)
     alt_min_original_win_rate = Column(Float,   default=0.70)
+
+    # ── v2.2: Per-side TT weakness flags ─────────────────────────────
+    # Set by calibration when a TT side consistently hits <65%.
+    # When True, that side falls back to original market instead.
+    tt_home_weak = Column(Boolean, default=False)
+    tt_away_weak = Column(Boolean, default=False)
