@@ -853,10 +853,67 @@ def _run_calibration_inner(
     # ── Per-match memoization caches ─────────────────────────────────
     _form_delta_cache: dict = {}
 
+    # Pre-build a standings-by-date cache from the already-warmed snapshot.
+    # get_historical_form_delta re-loads the parquet from DB every call —
+    # 400 loads for 200 matches. Instead, slice the warmed DataFrame once
+    # per unique date and cache the standings result.
+    _standings_by_date: dict = {}  # match_date → standings list
+
+    def _standings_asof(mdate) -> list:
+        """Return standings computed from warmed snapshot up to mdate."""
+        if mdate not in _standings_by_date:
+            try:
+                from app.services.data_providers.fbref_base import _SNAPSHOT_OVERRIDE
+                from app.services.form_delta import _compute_standings, _season_cutoff
+                snap_df = _SNAPSHOT_OVERRIDE.get(league_code)
+                if snap_df is None:
+                    _standings_by_date[mdate] = []
+                    return []
+                col_map = {str(c).lower(): c for c in snap_df.columns}
+                date_col = col_map.get("date")
+                home_col = col_map.get("home") or col_map.get("home_team")
+                away_col = col_map.get("away") or col_map.get("away_team")
+                if not all([date_col, home_col, away_col]):
+                    _standings_by_date[mdate] = []
+                    return []
+                sliced = snap_df[snap_df[date_col] <= import_pd_timestamp(mdate)]
+                _standings_by_date[mdate] = _compute_standings(db, sliced, home_col, away_col)
+            except Exception:
+                _standings_by_date[mdate] = []
+        return _standings_by_date[mdate]
+
+    # Import pandas Timestamp once
+    try:
+        import pandas as _pd
+        import_pd_timestamp = _pd.Timestamp
+    except Exception:
+        import_pd_timestamp = lambda d: d
+
     def _cached_form_delta(team: str, lc: str, mdate) -> Optional[int]:
         key = (team, mdate)
         if key not in _form_delta_cache:
-            _form_delta_cache[key] = get_historical_form_delta(db, team, lc, mdate)
+            try:
+                from app.services.form_delta import _season_cutoff
+                standings = _standings_asof(mdate)
+                actual_pos = next(
+                    (e["pos"] for e in standings if e.get("team_key") == team), None
+                )
+                if actual_pos is None:
+                    _form_delta_cache[key] = None
+                    return None
+                # Expected position from squad power ranking (fast path)
+                sorted_teams = sorted(
+                    _squad_power_map.items(), key=lambda x: x[1], reverse=True
+                )
+                expected_pos = next(
+                    (i + 1 for i, (t, _) in enumerate(sorted_teams) if t == team), None
+                )
+                if expected_pos is None:
+                    _form_delta_cache[key] = None
+                else:
+                    _form_delta_cache[key] = expected_pos - actual_pos
+            except Exception:
+                _form_delta_cache[key] = get_historical_form_delta(db, team, lc, mdate)
         return _form_delta_cache[key]
 
     # Player nudge using pre-loaded squad power — zero DB queries
@@ -1442,6 +1499,13 @@ def _run_calibration_inner(
         NUDGE_MAX        = 0.05
         team_nudges_applied = {}
 
+        # Pre-load all TeamConfig rows for this league — one query
+        # instead of one per team in the loop below.
+        _existing_configs: dict = {
+            tc.team: tc
+            for tc in db.query(TeamConfig).filter_by(league_code=league_code).all()
+        }
+
         for team, stats in team_tracker.items():
             over_n  = stats["over_total"]
             under_n = stats["under_total"]
@@ -1506,13 +1570,9 @@ def _run_calibration_inner(
                         max(-DEG_NUDGE_MAX, min(DEG_NUDGE_MAX, excess_miss * DEG_NUDGE_SCALE)), 4
                     )
 
-            # Update or create TeamConfig (only existing fields)
+            # Update or create TeamConfig (dict lookup — no DB query per team)
             from datetime import datetime as _dt
-            existing = (
-                db.query(TeamConfig)
-                .filter_by(league_code=league_code, team=team)
-                .first()
-            )
+            existing = _existing_configs.get(team)
 
             if existing:
                 existing.over_nudge      = over_nudge
