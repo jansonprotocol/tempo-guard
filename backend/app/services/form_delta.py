@@ -19,15 +19,6 @@ from app.models.league_config import LeagueConfig
 from app.models.team import Team  # for display_name lookup
 from app.util.team_resolver import batch_resolve_team_names
 
-# ── Process-level TTL cache for compute_form_delta ────────────────────────────
-# compute_form_delta reads + parses a full parquet snapshot and computes
-# standings twice per call. Called from form_delta_all (30 leagues), GET
-# /predictions (per-league), and calibration. Caching for 15 minutes
-# eliminates all repeat parquet reads within a request burst.
-import time as _time
-_FORM_DELTA_CACHE: dict = {}          # league_code → (result, timestamp)
-_FORM_DELTA_TTL_SECONDS = 900         # 15 minutes
-
 
 # Season boundary: matches before this date are "previous season"
 # Aug–May leagues: previous season ended ~June 2025
@@ -183,15 +174,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     """
     Compute Form Delta for all teams in a league using BATCH RESOLUTION.
     Now includes display_name and robust expected position logic.
-    Results are cached for 15 minutes to avoid repeated parquet reads.
     """
-    # Check cache first
-    cached = _FORM_DELTA_CACHE.get(league_code)
-    if cached:
-        result, ts = cached
-        if _time.time() - ts < _FORM_DELTA_TTL_SECONDS:
-            return result
-
     prev_df, curr_df, home_col, away_col = _load_and_split_snapshot(db, league_code)
 
     if curr_df is None or curr_df.empty:
@@ -276,6 +259,23 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     # Clamp to league size
     for team_key in team_expected:
         team_expected[team_key] = min(team_expected[team_key], n_teams)
+
+    # Resolve position collisions — two ranking systems (prev season + power
+    # ranking) can both assign position 1. For teams using power ranking,
+    # offset their position so it doesn't clash with prev-season teams.
+    # Strategy: prev-season positions take priority; power-ranked teams
+    # fill in the gaps.
+    prev_season_teams = set(k for k, v in team_expected.items() if k in prev_pos_map)
+    power_ranked_teams = set(team_expected.keys()) - prev_season_teams
+    used_positions = {team_expected[k] for k in prev_season_teams}
+    # Re-assign power-ranked teams to positions not claimed by prev-season teams
+    available = [p for p in range(1, n_teams + 1) if p not in used_positions]
+    power_ranked_sorted = sorted(
+        power_ranked_teams,
+        key=lambda t: power_pos_map.get(t, n_teams)
+    )
+    for i, team_key in enumerate(power_ranked_sorted):
+        team_expected[team_key] = available[i] if i < len(available) else n_teams
 
     # Build lookup for current standings by team_key
     current_by_key = {s["team_key"]: s for s in current_standings}
@@ -374,7 +374,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     # Sort by form_delta descending (most overperforming first)
     results.sort(key=lambda t: t["form_delta"], reverse=True)
 
-    final = {
+    return {
         "league_code": league_code,
         "display_name": display_name,
         "total_teams": n_teams,
@@ -385,5 +385,3 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
         },
         "teams": results,
     }
-    _FORM_DELTA_CACHE[league_code] = (final, _time.time())
-    return final
