@@ -450,12 +450,14 @@ def _suggest_tt_thresholds(
     result["alt_flip_threshold"] = new_threshold
     result["tt_home_bias"]       = new_tt_bias
     result["bucket_analysis"]    = bucket_analysis
-    # Flag weak TT sides so frontend and future logic can act on them
-    if tt_home_total >= MIN_BUCKET and tt_away_total >= MIN_BUCKET:
-        home_rate = tt_home_hits / tt_home_total
-        away_rate = tt_away_hits / tt_away_total
-        result["tt_home_weak"] = home_rate < 0.65
-        result["tt_away_weak"] = away_rate < 0.65
+    # Flag weak TT sides — use lower minimum (3 picks) since the bias may
+    # have already reduced one side to very few picks
+    TT_WEAK_MIN = 3
+    if tt_home_total >= TT_WEAK_MIN or tt_away_total >= TT_WEAK_MIN:
+        home_rate = tt_home_hits / tt_home_total if tt_home_total >= TT_WEAK_MIN else None
+        away_rate = tt_away_hits / tt_away_total if tt_away_total >= TT_WEAK_MIN else None
+        result["tt_home_weak"] = (home_rate < 0.65) if home_rate is not None else False
+        result["tt_away_weak"] = (away_rate < 0.65) if away_rate is not None else False
     result["analysis"] = (
         f"Flip threshold: {current_flip_threshold} → {new_threshold} | "
         f"TT home bias: {current_tt_home_bias} → {new_tt_bias}"
@@ -1277,6 +1279,14 @@ def _run_calibration_inner(
                 alt_flip_hits   += (flip_hw >= 0.5) * w
                 alt_flip_misses += (flip_hw < 0.5)  * w
                 alt_flip_count  += 1
+                # Feed flip shadow into calib_records so the threshold
+                # tuner can act on it even when suppression is on
+                calib_records.append({
+                    "confidence_score": raw_conf_score,
+                    "market":           flip_mkt,
+                    "hw":               flip_hw,
+                    "weight":           w,
+                })
         elif raw_conf_score < ALT_TT_THRESHOLD and hw >= 0:
             # TT shadow
             tt_hw = _tt_hit(p_home, p_away, hg, ag)
