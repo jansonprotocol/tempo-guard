@@ -1017,6 +1017,34 @@ def migrate_add_module_columns(db: Session = Depends(get_db)):
     return {"status": "ok", "migrations": results}
 
 
+@router.post("/migrate/fix-null-league-config-defaults")
+def migrate_fix_null_league_config_defaults(db: Session = Depends(get_db)):
+    """Set NULL values to defaults for columns added without backfilling existing rows."""
+    from sqlalchemy import text
+    fixes = [
+        ("tt_home_weak",          "false"),
+        ("tt_away_weak",          "false"),
+        ("min_confidence",        "0.0"),
+        ("tt_confidence_min",     "0.62"),
+        ("use_alt_market",        "true"),
+        ("alt_min_original_win_rate", "0.70"),
+        ("alt_flip_threshold",    "0.62"),
+        ("tt_home_bias",          "0.0"),
+    ]
+    results = {}
+    for col, default in fixes:
+        try:
+            r = db.execute(text(
+                f"UPDATE league_configs SET {col} = {default} WHERE {col} IS NULL"
+            ))
+            db.commit()
+            results[col] = f"{r.rowcount} rows updated"
+        except Exception as e:
+            db.rollback()
+            results[col] = f"skipped: {e}"
+    return {"status": "ok", "fixes": results}
+
+
 @router.post("/migrate/add-alt-suppression-columns")
 def migrate_add_alt_suppression_columns(db: Session = Depends(get_db)):
     """Add use_alt_market and alt_min_original_win_rate columns to league_configs."""
