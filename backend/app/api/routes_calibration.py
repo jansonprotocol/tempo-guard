@@ -103,11 +103,75 @@ def get_db():
 
 # ── Lean gap optimal nudge finder ─────────────────────────────────
 def _find_optimal_bias_shift(lean_records: list) -> dict:
-    # ... (unchanged, same as before)
-    # (keep the existing implementation)
-    # (I'll not repeat the whole function here for brevity, but you should keep the original)
-    # Make sure to keep the exact same function as in your current file.
-    pass
+    """
+    Scan a grid of candidate bias shifts and return the one that maximises
+    weighted flipped-misses while minimising collateral flipped-wins.
+
+    Each record in lean_records has:
+        lean_gap  – over_score minus under_score at prediction time
+        is_miss   – True if the prediction was a full miss
+        is_over   – True if the market was an Over
+        weight    – recency weight (1.0 / 0.5 / 0.2)
+
+    Logic:
+      * An over-miss flips to a win when we shift lean_gap downward enough
+        that it crosses zero → we need shift <= -lean_gap
+      * An under-miss flips when we shift upward → shift >= -lean_gap
+      * A win flips (bad) in the opposite direction
+      Optimal shift = the step that maximises Σ(flipped_miss_weight) with
+      the smallest Σ(flipped_win_weight).
+    """
+    if not lean_records:
+        return {"optimal_shift": 0.0, "analysis": "No lean records available"}
+
+    SHIFT_RANGE = [-0.30, -0.25, -0.20, -0.15, -0.10, -0.05, 0.0,
+                    0.05,  0.10,  0.15,  0.20,  0.25,  0.30]
+
+    best_shift   = 0.0
+    best_score   = -999.0
+    shift_scores = []
+
+    for shift in SHIFT_RANGE:
+        flipped_miss_w = 0.0
+        flipped_win_w  = 0.0
+
+        for r in lean_records:
+            gap    = r["lean_gap"]
+            miss   = r["is_miss"]
+            is_over = r["is_over"]
+            w      = r["weight"]
+            shifted = gap + shift
+
+            if miss:
+                # Miss flips to win if the shifted gap crosses to the right side
+                if is_over  and shifted <= 0:
+                    flipped_miss_w += w
+                if not is_over and shifted >= 0:
+                    flipped_miss_w += w
+            else:
+                # Win flips to miss — penalise this
+                if is_over  and shifted <= 0:
+                    flipped_win_w += w
+                if not is_over and shifted >= 0:
+                    flipped_win_w += w
+
+        # Net score: reward flipped misses, penalise collateral flipped wins
+        score = flipped_miss_w - 1.5 * flipped_win_w
+        shift_scores.append({
+            "shift":           shift,
+            "flipped_misses":  round(flipped_miss_w, 3),
+            "flipped_wins":    round(flipped_win_w, 3),
+            "score":           round(score, 3),
+        })
+        if score > best_score:
+            best_score = score
+            best_shift = shift
+
+    return {
+        "optimal_shift": best_shift,
+        "best_score":    round(best_score, 3),
+        "analysis":      shift_scores,
+    }
 
 
 # ── Sensitivity  ─────────────────────────────────────────
@@ -117,8 +181,51 @@ def _suggest_sensitivities(
     current_det_sens: float,
     current_eps_sens: float,
 ) -> dict:
-    # ... (unchanged)
-    pass
+    """
+    Analyse miss patterns against deg_pressure, det_boost and eps_stability.
+    Suggests multiplier adjustments (range 0.5–2.0, step 0.1).
+    """
+    MIN_RECORDS    = 15
+    MIN_SIGNAL     = 6
+    STEP           = 0.10
+    SENS_MIN       = 0.50
+    SENS_MAX       = 2.00
+    SCALE          = 1.5
+
+    result = {
+        "deg_sensitivity": current_deg_sens,
+        "det_sensitivity": current_det_sens,
+        "eps_sensitivity": current_eps_sens,
+    }
+
+    if len(deg_det_records) < MIN_RECORDS:
+        result["insufficient_data"] = True
+        result["note"] = f"Only {len(deg_det_records)} records (need {MIN_RECORDS})"
+        return result
+
+    baseline_miss = sum(1 for r in deg_det_records if r["is_miss"]) / len(deg_det_records)
+
+    def _suggest_one(field: str, threshold_high: float, current: float) -> float:
+        high = [r for r in deg_det_records if r[field] >= threshold_high]
+        low  = [r for r in deg_det_records if r[field] <  threshold_high]
+        if len(high) < MIN_SIGNAL or len(low) < MIN_SIGNAL:
+            return current
+        miss_high = sum(1 for r in high if r["is_miss"]) / len(high)
+        miss_low  = sum(1 for r in low  if r["is_miss"]) / len(low)
+        lift = miss_high - miss_low
+        # Positive lift → high values correlate with misses → increase sensitivity
+        raw = 1.0 + lift * SCALE
+        capped = max(SENS_MIN, min(SENS_MAX, raw))
+        stepped = round(max(current - STEP, min(current + STEP, capped)), 2)
+        return stepped
+
+    result["deg_sensitivity"] = _suggest_one("deg_pressure",  0.12, current_deg_sens)
+    result["det_sensitivity"] = _suggest_one("det_boost",     0.55, current_det_sens)
+    result["eps_sensitivity"] = _suggest_one("eps_stability", 0.75, current_eps_sens)
+
+    result["baseline_miss_rate"] = round(baseline_miss, 3)
+    result["records_analysed"]   = len(deg_det_records)
+    return result
 
 
 # ── Form delta sensitivity  ───────────────────────────────
@@ -188,8 +295,116 @@ def _suggest_bias(
     miss_patterns: dict,
     lean_records: list,
 ) -> dict:
-    # ... (unchanged)
-    pass
+    """
+    Suggest bias adjustments toward TARGET_HIT_RATE.
+
+    Strategy:
+      1. Run lean-gap optimal shift analysis
+      2. Derive per-side (over/under) hit rates
+      3. Nudge the weaker side's bias by NUDGE_STEP toward neutral
+      4. Adjust tempo_factor based on over_miss_high_tempo pattern
+    """
+    over_rate  = round(over_hits  / max(0.001, over_total)  * 100, 1)
+    under_rate = round(under_hits / max(0.001, under_total) * 100, 1)
+
+    notes: list[str] = []
+    notes.append(
+        f"Hit rates — Over: {over_rate}% ({int(over_total)} picks), "
+        f"Under: {under_rate}% ({int(under_total)} picks), "
+        f"Overall: {overall_hit_rate}%"
+    )
+
+    # ── Lean-gap analysis ─────────────────────────────────────────────
+    lean_result = _find_optimal_bias_shift(lean_records)
+    optimal_shift = lean_result.get("optimal_shift", 0.0)
+    if optimal_shift != 0.0:
+        notes.append(
+            f"Lean-gap optimal shift: {optimal_shift:+.2f} "
+            f"(score={lean_result.get('best_score', 0.0):.3f})"
+        )
+
+    # ── Bias nudge logic ──────────────────────────────────────────────
+    new_over  = current_over
+    new_under = current_under
+
+    gap_to_target = TARGET_HIT_RATE - overall_hit_rate / 100.0
+
+    if overall_hit_rate < TARGET_HIT_RATE * 100:
+        # Below target — nudge the worse side toward neutral (0.5)
+        if over_total >= 5 and under_total >= 5:
+            if over_rate <= under_rate:
+                # Over side is weaker — shift its bias toward neutral
+                direction = 1.0 if current_over < 0.5 else -1.0
+                new_over = round(
+                    max(MIN_BIAS, min(MAX_BIAS, current_over + direction * NUDGE_STEP)), 4
+                )
+                notes.append(f"Nudging over bias {current_over} → {new_over} (over side weaker)")
+            else:
+                direction = 1.0 if current_under < 0.5 else -1.0
+                new_under = round(
+                    max(MIN_BIAS, min(MAX_BIAS, current_under + direction * NUDGE_STEP)), 4
+                )
+                notes.append(f"Nudging under bias {current_under} → {new_under} (under side weaker)")
+        elif over_total >= 5:
+            if over_rate < TARGET_HIT_RATE * 100:
+                direction = 1.0 if current_over < 0.5 else -1.0
+                new_over = round(
+                    max(MIN_BIAS, min(MAX_BIAS, current_over + direction * NUDGE_STEP)), 4
+                )
+                notes.append(f"Nudging over bias {current_over} → {new_over}")
+        elif under_total >= 5:
+            if under_rate < TARGET_HIT_RATE * 100:
+                direction = 1.0 if current_under < 0.5 else -1.0
+                new_under = round(
+                    max(MIN_BIAS, min(MAX_BIAS, current_under + direction * NUDGE_STEP)), 4
+                )
+                notes.append(f"Nudging under bias {current_under} → {new_under}")
+        else:
+            notes.append("Insufficient picks per side to suggest bias change.")
+    else:
+        notes.append(
+            f"Hit rate {overall_hit_rate}% meets target {round(TARGET_HIT_RATE*100,1)}% — "
+            "biases unchanged."
+        )
+
+    # ── Tempo nudge ───────────────────────────────────────────────────
+    new_tempo = current_tempo
+    total_over_misses = miss_patterns.get("total_over_misses", 0)
+    high_tempo_misses = miss_patterns.get("over_miss_high_tempo", 0)
+
+    if total_over_misses > 0:
+        high_tempo_ratio = high_tempo_misses / total_over_misses
+        if high_tempo_ratio >= 0.4 and current_tempo > 0.40:
+            new_tempo = round(max(0.30, current_tempo - 0.02), 4)
+            notes.append(
+                f"High-tempo over-misses ratio={round(high_tempo_ratio,2)} — "
+                f"reducing tempo {current_tempo} → {new_tempo}"
+            )
+        elif high_tempo_ratio < 0.15 and current_tempo < 0.65:
+            new_tempo = round(min(0.70, current_tempo + 0.02), 4)
+            notes.append(
+                f"Low high-tempo miss ratio={round(high_tempo_ratio,2)} — "
+                f"raising tempo {current_tempo} → {new_tempo}"
+            )
+        else:
+            notes.append(f"Tempo factor unchanged at {current_tempo}.")
+    else:
+        notes.append(f"No over misses to evaluate tempo. Tempo unchanged at {current_tempo}.")
+
+    return {
+        "base_over_bias":  new_over,
+        "base_under_bias": new_under,
+        "tempo_factor":    new_tempo,
+        "notes":           notes,
+        "target_hit_rate": TARGET_HIT_RATE,
+        "current_hit_rate": round(overall_hit_rate / 100, 3),
+        "gap_to_target":   round(gap_to_target, 3),
+        "over_hit_rate":   over_rate,
+        "under_hit_rate":  under_rate,
+        "miss_patterns":   miss_patterns,
+        "lean_analysis":   lean_result,
+        "applied_changes": {},
+    }
 
 
 # ── Shared calibration core ────────────────────────────────────────
@@ -545,10 +760,6 @@ def _run_calibration(
                 "w_hits": 0.0, "w_misses": 0.0, "skipped": 0,
                 "raw_hits": 0, "raw_misses": 0,
             }
-
-        # Initialize here so sample_rows.append can reference them regardless of hw
-        home_form_delta = None
-        away_form_delta = None
 
         if hw < 0:
             market_tracker[market]["skipped"] += 1
