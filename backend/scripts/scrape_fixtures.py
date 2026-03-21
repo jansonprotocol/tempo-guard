@@ -895,3 +895,30 @@ if __name__ == "__main__":
                 time.sleep(SLEEP_BETWEEN_LEAGUES)
 
     print("\n[fixtures] Done.")
+
+    # ── Auto-commit teams.json if changed ────────────────────────────
+    # teams_sync writes new teams and aliases discovered during the scrape.
+    # Commit them so they survive the next deploy without re-learning.
+    try:
+        import subprocess
+        teams_file = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "..", "app", "seed", "teams.json"
+        )
+        # Check if teams.json has uncommitted changes
+        status = subprocess.run(
+            ["git", "status", "--porcelain", teams_file],
+            capture_output=True, text=True
+        )
+        if status.stdout.strip():
+            subprocess.run(["git", "add", teams_file], check=True)
+            subprocess.run(
+                ["git", "commit", "-m",
+                 f"[auto] teams.json updated by scrape_fixtures ({date.today()})"],
+                check=True
+            )
+            print("[fixtures] teams.json committed to git.")
+        else:
+            print("[fixtures] teams.json unchanged — no commit needed.")
+    except Exception as _git_err:
+        print(f"[fixtures] Warning: could not auto-commit teams.json: {_git_err}")
