@@ -84,6 +84,8 @@ def _compute_alt_market(
     alt_flip_threshold: float = 0.62,
     tt_home_bias: float = 0.0,
     use_alt_market: bool = True,
+    tt_home_weak: bool = False,
+    tt_away_weak: bool = False,
 ) -> tuple[str, str] | tuple[None, None]:
     """
     Apply alt market substitution (TT/flip) when use_alt_market is True.
@@ -92,8 +94,8 @@ def _compute_alt_market(
       score < alt_flip_threshold → flip to opposite main (Over→U3.5, Under→O1.75)
       score >= alt_flip_threshold → strongest TT side (Home or Away O0.5)
 
-    use_alt_market: if False (set by calibration when original outperforms),
-                    returns (None, None) so original market is served.
+    use_alt_market: if False, returns (None, None) — original market served.
+    tt_home_weak/tt_away_weak: if True, that side falls back to original market.
     alt_flip_threshold: per-league, calibration-tunable (default 0.62)
     tt_home_bias: positive = prefer home TT, negative = prefer away TT
     """
@@ -112,7 +114,12 @@ def _compute_alt_market(
     if p_home_tt05 is not None or p_away_tt05 is not None:
         h = (p_home_tt05 or 0.0) + tt_home_bias
         a = p_away_tt05 or 0.0
-        alt = "TT Home O0.5" if h >= a else "TT Away O0.5"
+        if h >= a:
+            alt = original if tt_home_weak else "TT Home O0.5"
+        else:
+            alt = original if tt_away_weak else "TT Away O0.5"
+        if alt == original:
+            return None, None  # weak side — serve original
         return alt, original
 
     return None, None
@@ -448,6 +455,8 @@ def batch_predict(
             _flip_thresh  = float(_cfg.alt_flip_threshold or 0.62)   if _cfg and hasattr(_cfg, "alt_flip_threshold")    and _cfg.alt_flip_threshold    is not None else 0.62
             _tt_bias      = float(_cfg.tt_home_bias or 0.0)           if _cfg and hasattr(_cfg, "tt_home_bias")          and _cfg.tt_home_bias          is not None else 0.0
             _use_alt      = bool(getattr(_cfg, "use_alt_market", True)) if _cfg else True
+            _tt_home_weak = bool(getattr(_cfg, "tt_home_weak",  False)) if _cfg else False
+            _tt_away_weak = bool(getattr(_cfg, "tt_away_weak",  False)) if _cfg else False
             alt_market, original_market = _compute_alt_market(
                 variance_flag,
                 pred.translated_play.market,
@@ -458,6 +467,8 @@ def batch_predict(
                 alt_flip_threshold=_flip_thresh,
                 tt_home_bias=_tt_bias,
                 use_alt_market=_use_alt,
+                tt_home_weak=_tt_home_weak,
+                tt_away_weak=_tt_away_weak,
             )
             final_market    = alt_market if alt_market else pred.translated_play.market
             alt_suppressed  = (not _use_alt)  # calibration blocked TT/flip for this league
