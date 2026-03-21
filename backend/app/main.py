@@ -91,6 +91,9 @@ _COLUMN_MIGRATIONS = [
     # league_configs — v2.2 alt-lane suppression
     ("league_configs", "use_alt_market",             "BOOLEAN", "true"),
     ("league_configs", "alt_min_original_win_rate",  "FLOAT",   "0.70"),
+    # league_configs — v2.2 per-side TT weakness flags
+    ("league_configs", "tt_home_weak",               "BOOLEAN", "false"),
+    ("league_configs", "tt_away_weak",               "BOOLEAN", "false"),
 ]
 
 
