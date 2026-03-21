@@ -285,6 +285,125 @@ def _suggest_form_delta(
     return result
 
 
+# ── TT threshold tuner ───────────────────────────────────────────────────
+def _suggest_tt_thresholds(
+    calib_records: list,
+    current_flip_threshold: float,
+    current_tt_home_bias: float,
+) -> dict:
+    """
+    Analyse per-confidence-bucket hit rates to suggest a better
+    alt_flip_threshold and tt_home_bias for this league.
+
+    calib_records: list of dicts with keys:
+        confidence_score, market (final), hg, ag, hw (hit weight), weight
+
+    Strategy:
+      - Bin predictions by confidence_score in 0.05-wide buckets
+      - Compare TT hit rate vs flip hit rate in each bucket
+      - Find the threshold where TT starts outperforming flip
+      - Suggest shifting threshold ±0.05 per run (conservative)
+      - Compare TT Home vs TT Away hit rates → suggest tt_home_bias nudge
+    """
+    MIN_BUCKET = 4
+    STEP       = 0.05
+    BIAS_STEP  = 0.05
+    BIAS_MAX   = 0.20
+
+    result = {
+        "alt_flip_threshold": current_flip_threshold,
+        "tt_home_bias":       current_tt_home_bias,
+        "analysis":           "Insufficient data",
+    }
+
+    if len(calib_records) < 20:
+        return result
+
+    # ── Per-bucket flip vs TT comparison ─────────────────────────────
+    buckets: dict = {}
+    for r in calib_records:
+        b = round(round(r["confidence_score"] / STEP) * STEP, 2)
+        if b not in buckets:
+            buckets[b] = {"flip_hits": 0.0, "flip_total": 0.0,
+                           "tt_hits":   0.0, "tt_total":   0.0}
+        mkt = r["market"]
+        hw  = r["hw"]
+        w   = r["weight"]
+        if hw < 0:
+            continue
+        is_tt   = mkt.startswith("TT")
+        is_flip = mkt in ("U3.5", "O1.75")
+        if is_tt:
+            buckets[b]["tt_total"] += w
+            buckets[b]["tt_hits"]  += hw * w
+        elif is_flip:
+            buckets[b]["flip_total"] += w
+            buckets[b]["flip_hits"]  += hw * w
+
+    # Find lowest bucket where TT beats flip by at least 3pp
+    bucket_analysis = []
+    best_tt_threshold = current_flip_threshold
+    for b in sorted(buckets):
+        bkt = buckets[b]
+        tt_rate   = bkt["tt_hits"]   / max(0.001, bkt["tt_total"])   if bkt["tt_total"]   >= MIN_BUCKET else None
+        flip_rate = bkt["flip_hits"] / max(0.001, bkt["flip_total"]) if bkt["flip_total"] >= MIN_BUCKET else None
+        bucket_analysis.append({
+            "bucket":    b,
+            "tt_rate":   round(tt_rate   * 100, 1) if tt_rate   is not None else None,
+            "flip_rate": round(flip_rate * 100, 1) if flip_rate is not None else None,
+        })
+        if tt_rate is not None and flip_rate is not None:
+            if tt_rate > flip_rate + 0.03:
+                best_tt_threshold = b  # TT wins here → threshold could come down to here
+
+    # Step toward suggested threshold conservatively
+    if best_tt_threshold < current_flip_threshold - STEP:
+        new_threshold = round(current_flip_threshold - STEP, 2)
+    elif best_tt_threshold > current_flip_threshold + STEP:
+        new_threshold = round(current_flip_threshold + STEP, 2)
+    else:
+        new_threshold = current_flip_threshold
+
+    new_threshold = round(max(0.40, min(0.80, new_threshold)), 2)
+
+    # ── TT Home vs Away bias ──────────────────────────────────────────
+    tt_home_hits = tt_home_total = 0.0
+    tt_away_hits = tt_away_total = 0.0
+    for r in calib_records:
+        if r["hw"] < 0:
+            continue
+        w = r["weight"]
+        if r["market"] == "TT Home O0.5":
+            tt_home_total += w
+            tt_home_hits  += r["hw"] * w
+        elif r["market"] == "TT Away O0.5":
+            tt_away_total += w
+            tt_away_hits  += r["hw"] * w
+
+    new_tt_bias = current_tt_home_bias
+    if tt_home_total >= MIN_BUCKET and tt_away_total >= MIN_BUCKET:
+        home_rate = tt_home_hits / tt_home_total
+        away_rate = tt_away_hits / tt_away_total
+        gap = home_rate - away_rate
+        # Nudge bias toward the stronger side, step BIAS_STEP per run
+        if gap > 0.05:
+            new_tt_bias = round(min(BIAS_MAX,  current_tt_home_bias + BIAS_STEP), 2)
+        elif gap < -0.05:
+            new_tt_bias = round(max(-BIAS_MAX, current_tt_home_bias - BIAS_STEP), 2)
+        result["tt_home_rate"] = round(home_rate * 100, 1)
+        result["tt_away_rate"] = round(away_rate * 100, 1)
+        result["tt_gap"]       = round(gap * 100, 1)
+
+    result["alt_flip_threshold"] = new_threshold
+    result["tt_home_bias"]       = new_tt_bias
+    result["bucket_analysis"]    = bucket_analysis
+    result["analysis"] = (
+        f"Flip threshold: {current_flip_threshold} → {new_threshold} | "
+        f"TT home bias: {current_tt_home_bias} → {new_tt_bias}"
+    )
+    return result
+
+
 # ── Bias  ────────────────────────────────────────────────
 def _suggest_bias(
     over_hits: float, over_total: float,
@@ -479,7 +598,9 @@ def _run_calibration(
     current_deg_sens = float(cfg.deg_sensitivity or 1.0) if cfg else 1.0
     current_det_sens = float(cfg.det_sensitivity or 1.0) if cfg else 1.0
     current_eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
-    current_form_sens = float(cfg.form_delta_sensitivity or 0.0) if cfg else 0.0
+    current_form_sens      = float(cfg.form_delta_sensitivity or 0.0)  if cfg else 0.0
+    current_flip_threshold = float(getattr(cfg, "alt_flip_threshold", None) or 0.62) if cfg else 0.62
+    current_tt_home_bias   = float(getattr(cfg, "tt_home_bias",       None) or 0.0)  if cfg else 0.0
 
     # ── Determine current variance for this league ──────────────────
     # For red variance leagues, alt market becomes the primary evaluated market.
@@ -590,13 +711,14 @@ def _run_calibration(
     sample_rows: list = []
     lean_records: list = []
     deg_det_records: list = []
+    calib_records: list = []   # per-match records for TT threshold tuning
 
     # ── Shadow alt-lane trackers ──────────────────────────────────────
     # Tracks what hit rate would be if we played the alternative lane
     # instead of the main market on qualifying picks.
-    # Flip trigger: confidence_score < 0.62 (LOW or bottom MEDIUM)
-    # TT trigger:   0.62 <= confidence_score < 0.75 (mid MEDIUM)
-    ALT_FLIP_THRESHOLD = 0.62
+    # Flip trigger: confidence_score < alt_flip_threshold (per-league, calibration-tunable)
+    # TT trigger:   alt_flip_threshold <= confidence_score < 0.75 (mid MEDIUM)
+    ALT_FLIP_THRESHOLD = current_flip_threshold  # per-league, default 0.62
     ALT_TT_THRESHOLD   = 0.75
     alt_flip_hits = alt_flip_misses = 0.0
     alt_flip_count = 0
@@ -746,6 +868,14 @@ def _run_calibration(
 
         result = evaluate_market(market, hg, ag)
         hw = hit_weight(result)
+
+        # Record for TT threshold tuning
+        calib_records.append({
+            "confidence_score": conf_score,
+            "market":           market,
+            "hw":               hw,
+            "weight":           w,
+        })
 
         raw_sd    = metrics.get("support_idx_over_delta") or 0.0
         raw_tempo = metrics.get("tempo_index") or 0.55
@@ -973,6 +1103,14 @@ def _run_calibration(
     suggestion["sensitivity"] = sensitivity_suggestion
     suggestion["form_delta"] = form_delta_suggestion
 
+    # TT threshold suggestion
+    tt_threshold_suggestion = _suggest_tt_thresholds(
+        calib_records,
+        current_flip_threshold,
+        current_tt_home_bias,
+    )
+    suggestion["tt_thresholds"] = tt_threshold_suggestion
+
     # ── Shadow alt-lane hit rates ─────────────────────────────────────
     alt_flip_hr = round(alt_flip_hits / max(0.001, alt_flip_hits + alt_flip_misses) * 100, 1)         if alt_flip_count > 0 else None
     alt_tt_hr   = round(alt_tt_hits / max(0.001, alt_tt_hits + alt_tt_misses) * 100, 1)         if alt_tt_count > 0 else None
@@ -1038,6 +1176,18 @@ def _run_calibration(
         if form_sens_suggested is not None and abs(form_sens_suggested - current_form_sens) >= SENS_MIN_CHANGE:
             cfg.form_delta_sensitivity = form_sens_suggested
             sens_changed["form_delta_sensitivity"] = {"before": current_form_sens, "after": form_sens_suggested}
+
+        # Apply TT threshold suggestions
+        tt_flip_suggested = tt_threshold_suggestion.get("alt_flip_threshold")
+        tt_bias_suggested = tt_threshold_suggestion.get("tt_home_bias")
+        if tt_flip_suggested is not None and abs(tt_flip_suggested - current_flip_threshold) >= 0.01:
+            if hasattr(cfg, "alt_flip_threshold"):
+                cfg.alt_flip_threshold = tt_flip_suggested
+                sens_changed["alt_flip_threshold"] = {"before": current_flip_threshold, "after": tt_flip_suggested}
+        if tt_bias_suggested is not None and abs(tt_bias_suggested - current_tt_home_bias) >= 0.01:
+            if hasattr(cfg, "tt_home_bias"):
+                cfg.tt_home_bias = tt_bias_suggested
+                sens_changed["tt_home_bias"] = {"before": current_tt_home_bias, "after": tt_bias_suggested}
 
         if sens_changed:
             db.commit()
