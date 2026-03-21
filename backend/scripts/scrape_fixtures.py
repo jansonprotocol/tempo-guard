@@ -92,8 +92,6 @@ def _standings_url_from_schedule(schedule_url: str, league_code: str = "") -> Op
 
     Schedule:  https://fbref.com/en/comps/60/schedule/Ligue-2-Scores-and-Fixtures
     Standings: https://fbref.com/en/comps/60/2025-2026/2025-2026-Ligue-2-Stats
-
-    Falls back to the non-year-specific URL if no season is found.
     """
     m = re.match(
         r"(https://fbref\.com/en/comps/\d+)/schedule/(.+?)-Scores-and-Fixtures",
@@ -105,13 +103,10 @@ def _standings_url_from_schedule(schedule_url: str, league_code: str = "") -> Op
     base = m.group(1)   # e.g. https://fbref.com/en/comps/60
     slug = m.group(2)   # e.g. Ligue-2
 
-    # Use year-specific URL when we have a season — prevents FBref from
-    # redirecting non-canonical slug URLs to a completely different league.
     season = SEASON_MAP.get(league_code) if league_code else None
     if season:
         return f"{base}/{season}/{season}-{slug}-Stats"
 
-    # Fallback: non-year-specific (only for leagues not in SEASON_MAP)
     return f"{base}/{slug}-Stats"
 
 
@@ -458,7 +453,18 @@ def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame
             team.current_position = position
             updated += 1
         else:
-            print(f"  [standings] Team not found: '{team_name_raw}' → '{team_key}'")
+            # Fallback: team may exist under a different league (e.g. relegated/promoted
+            # clubs that haven't been re-registered under the new league yet).
+            cross_league_team = db.query(Team).filter_by(team_key=team_key).first()
+            if cross_league_team:
+                cross_league_team.current_position = position
+                updated += 1
+                print(
+                    f"  [standings] Cross-league match: '{team_name_raw}' found under "
+                    f"'{cross_league_team.league_code}' (pos={position})"
+                )
+            else:
+                print(f"  [standings] Team not found: '{team_name_raw}' → '{team_key}'")
 
     if updated:
         db.commit()
