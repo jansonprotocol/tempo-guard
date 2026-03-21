@@ -1978,6 +1978,18 @@
     // US DST: 2nd Sunday March → 1st Sunday November
     // EU DST: last Sunday March → last Sunday October
     // Southern hemisphere (Chile): 1st Saturday April → 1st Saturday September (reversed)
+    // ── Team name display helper ──────────────────────────────────────────
+    // team_keys are lowercase in the DB. Convert to Title Case for display.
+    const _UPPER_TOKENS = new Set(["fc","sc","ac","rc","fk","bk","sk","if","us","usl","afc","bfc"]);
+    function fmtTeam(key) {
+      if (!key) return key;
+      return key.split(' ').map(function(w) {
+        var lw = w.toLowerCase();
+        if (_UPPER_TOKENS.has(lw)) return lw.toUpperCase();
+        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+      }).join(' ');
+    }
+
     function isNorthDST(dateStr) {
       const d = new Date(dateStr + 'T12:00:00');
       const m = d.getMonth() + 1; // 1–12
@@ -2642,7 +2654,7 @@
         <div class="pred-card-collapsed">
           <div class="pred-card-status-dot"></div>
           <div class="pred-card-fixture-name">
-            ${p.home_team} <span>vs</span> ${p.away_team}
+            ${fmtTeam(p.home_team)} <span>vs</span> ${fmtTeam(p.away_team)}
           </div>
           ${kickoffStr ? `<div class="pred-card-kickoff">${kickoffStr}</div>` : ''}
           ${perfHint}
@@ -2988,7 +3000,7 @@
                 const sign = n.delta > 0 ? '+' : '';
                 const weak = n.weakness ? ` · ${n.weakness}↓` : '';
                 // Note: backend may not return display_name for notable cards yet – update backend to include it.
-                const displayName = n.display_name || n.team;
+                const displayName = n.display_name || fmtTeam(n.team);
                 return `<div style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:3px;border:1px solid var(--border);background:var(--bg2);cursor:pointer" onclick="loadDeltaLeague('${n.league}', document.querySelector('.delta-league-select'))">
                   <span style="color:#fff">${displayName}</span>
                   <span style="color:var(--muted)">${n.league}</span>
@@ -3080,6 +3092,8 @@
       `;
 
       sorted.forEach(t => {
+        // Skip orphan team keys (single-word fragments from alias stripping)
+        if (!t.team || t.team.trim().split(' ').length < 2 && t.team.length <= 8 && !t.display_name) return '';
         const sign = t.form_delta > 0 ? '+' : '';
         const deltaClass = t.form_delta >= 3 ? 'pos' : t.form_delta <= -3 ? 'neg' : 'neutral';
         const issue = t.primary_weakness
@@ -3091,7 +3105,7 @@
         html += `
           <tr class="delta-row" onclick="this.classList.toggle('expanded')">
             <td class="num">${t.actual_pos}</td>
-            <td style="font-weight:500;color:#fff">${t.display_name || t.team}</td>  <!-- FIXED: use display_name if available -->
+            <td style="font-weight:500;color:#fff">${t.display_name || fmtTeam(t.team)}</td>
             <td class="num" style="color:var(--muted)">${t.expected_pos}</td>
             <td class="num"><span class="delta-val ${deltaClass}">${sign}${t.form_delta}</span></td>
             <td><span class="delta-status ${t.status}">${t.status.replace('_', ' ')}</span></td>
