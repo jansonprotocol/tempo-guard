@@ -134,14 +134,16 @@ def load_teams(db: Session):
                 country=(entry.get("country") or "").strip(),
             )
 
+            _seen_aliases: set = set()
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
-                if not alias_key or alias_key == team_key:
+                if not alias_key or alias_key == team_key or alias_key in _seen_aliases:
                     continue
                 # Skip if alias already claimed by another team globally
                 if db.query(TeamAlias).filter_by(alias_key=alias_key).first():
                     print(f"  [memory_loader] Skipping alias '{alias_key}' for '{team_key}' — already claimed")
                     continue
+                _seen_aliases.add(alias_key)
                 team.aliases.append(TeamAlias(alias_key=alias_key))
 
             db.add(team)
@@ -159,15 +161,17 @@ def load_teams(db: Session):
             # Rebuild aliases — only add those not already claimed by another team
             existing.aliases.clear()
             db.flush()   # release old alias rows before claiming them again
+            _seen_aliases2: set = set()
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
-                if not alias_key or alias_key == team_key:
+                if not alias_key or alias_key == team_key or alias_key in _seen_aliases2:
                     continue
                 # Check if alias is already owned by a different team
                 clash = db.query(TeamAlias).filter_by(alias_key=alias_key).first()
                 if clash and clash.team_id != existing.id:
                     print(f"  [memory_loader] Skipping alias '{alias_key}' for '{team_key}' — claimed by team_id={clash.team_id}")
                     continue
+                _seen_aliases2.add(alias_key)
                 existing.aliases.append(TeamAlias(alias_key=alias_key))
 
             updated += 1
