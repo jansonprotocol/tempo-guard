@@ -331,7 +331,7 @@ def _suggest_tt_thresholds(
     MIN_BUCKET = 4
     STEP       = 0.05
     BIAS_STEP  = 0.05
-    BIAS_MAX   = 0.35  # raised to allow stronger home/away TT routing correction
+    BIAS_MAX   = 0.50  # raised to allow stronger home/away TT routing correction
 
     result = {
         "alt_flip_threshold": current_flip_threshold,
@@ -436,10 +436,13 @@ def _suggest_tt_thresholds(
         away_rate = tt_away_hits / tt_away_total
         gap = home_rate - away_rate
         # Nudge bias toward the stronger side, step BIAS_STEP per run
+        # Accelerate bias step when the gap is large (>10pp) — slow 0.05
+        # steps take too many runs to converge on strong signals.
+        effective_step = BIAS_STEP * 2 if abs(gap) > 0.10 else BIAS_STEP
         if gap > 0.05:
-            new_tt_bias = round(min(BIAS_MAX,  current_tt_home_bias + BIAS_STEP), 2)
+            new_tt_bias = round(min(BIAS_MAX,  current_tt_home_bias + effective_step), 2)
         elif gap < -0.05:
-            new_tt_bias = round(max(-BIAS_MAX, current_tt_home_bias - BIAS_STEP), 2)
+            new_tt_bias = round(max(-BIAS_MAX, current_tt_home_bias - effective_step), 2)
         result["tt_home_rate"] = round(home_rate * 100, 1)
         result["tt_away_rate"] = round(away_rate * 100, 1)
         result["tt_gap"]       = round(gap * 100, 1)
@@ -788,6 +791,10 @@ def _run_calibration_inner(
     current_tt_home_bias      = float(getattr(cfg, "tt_home_bias",          None) or 0.0)   if cfg else 0.0
     current_use_alt_market    = bool(getattr(cfg,  "use_alt_market",        True))           if cfg else True
     current_min_original_rate = float(getattr(cfg, "alt_min_original_win_rate", None) or 0.70) if cfg else 0.70
+    # Weak TT side flags — when a side consistently underperforms (<65%),
+    # skip that side entirely and fall back to original market
+    _tt_home_weak = bool(getattr(cfg, "tt_home_weak", False)) if cfg else False
+    _tt_away_weak = bool(getattr(cfg, "tt_away_weak", False)) if cfg else False
 
     # ── Determine current variance for this league ──────────────────
     # For red variance leagues, alt market becomes the primary evaluated market.
@@ -1122,9 +1129,12 @@ def _run_calibration_inner(
                 market = "U3.5" if original_market.startswith("O") else "O1.75"
             else:
                 if p_home_tt is not None or p_away_tt is not None:
-                    h = p_home_tt or 0.0
+                    h = (p_home_tt or 0.0) + current_tt_home_bias
                     a = p_away_tt or 0.0
-                    market = "TT Home O0.5" if h >= a else "TT Away O0.5"
+                    if h >= a:
+                        market = original_market if _tt_home_weak else "TT Home O0.5"
+                    else:
+                        market = original_market if _tt_away_weak else "TT Away O0.5"
                 else:
                     market = original_market
         else:
@@ -1475,6 +1485,12 @@ def _run_calibration_inner(
             if hasattr(cfg, "tt_home_bias"):
                 cfg.tt_home_bias = tt_bias_suggested
                 sens_changed["tt_home_bias"] = {"before": current_tt_home_bias, "after": tt_bias_suggested}
+
+        # Write weak TT side flags
+        if hasattr(cfg, "tt_home_weak"):
+            cfg.tt_home_weak = bool(tt_threshold_suggestion.get("tt_home_weak", False))
+        if hasattr(cfg, "tt_away_weak"):
+            cfg.tt_away_weak = bool(tt_threshold_suggestion.get("tt_away_weak", False))
 
         # Apply alt market suppression / re-enable
         suggested_use_alt = alt_market_suggestion.get("use_alt_market")
