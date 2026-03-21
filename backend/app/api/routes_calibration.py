@@ -546,6 +546,10 @@ def _run_calibration(
                 "raw_hits": 0, "raw_misses": 0,
             }
 
+        # Initialize here so sample_rows.append can reference them regardless of hw
+        home_form_delta = None
+        away_form_delta = None
+
         if hw < 0:
             market_tracker[market]["skipped"] += 1
             skipped += 1
