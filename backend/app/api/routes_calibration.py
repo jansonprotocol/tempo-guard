@@ -357,6 +357,41 @@ def _run_calibration(
     sample_rows: list = []
     lean_records: list = []
     deg_det_records: list = []
+
+    # ── Shadow alt-lane trackers ──────────────────────────────────────
+    # Tracks what hit rate would be if we played the alternative lane
+    # instead of the main market on qualifying picks.
+    # Flip trigger: confidence_score < 0.62 (LOW or bottom MEDIUM)
+    # TT trigger:   0.62 <= confidence_score < 0.75 (mid MEDIUM)
+    ALT_FLIP_THRESHOLD = 0.62
+    ALT_TT_THRESHOLD   = 0.75
+    alt_flip_hits = alt_flip_misses = 0.0
+    alt_flip_count = 0
+    alt_tt_hits = alt_tt_misses = 0.0
+    alt_tt_count = 0
+
+    def _derive_flip_market(main_market):
+        if main_market.startswith("O"):
+            return "U3.5"
+        return "O1.75"
+
+    def _tt_stronger_side(p_home, p_away):
+        if p_home is None and p_away is None:
+            return None
+        if p_home is None:
+            return "away"
+        if p_away is None:
+            return "home"
+        return "home" if p_home >= p_away else "away"
+
+    def _tt_hit(p_home, p_away, hg, ag):
+        side = _tt_stronger_side(p_home, p_away)
+        if side is None:
+            return -1.0
+        if side == "away":
+            return 1.0 if ag >= 1 else 0.0
+        return 1.0 if hg >= 1 else 0.0
+
     miss_patterns = {
         "over_miss_low_goals":   0,
         "over_miss_neg_delta":   0,
@@ -534,6 +569,32 @@ def _run_calibration(
                 "away_form_delta": away_form_delta,
             })
 
+        # ── Shadow alt-lane tracking ─────────────────────────────────
+        raw_conf_score = pred.confidence_score if hasattr(pred, "confidence_score") else None
+        if raw_conf_score is None:
+            raw_conf_score = {"HIGH": 0.85, "MEDIUM": 0.65, "LOW": 0.40}.get(
+                pred.translated_play.confidence, 0.65
+            )
+        p_home = metrics.get("p_home_tt05")
+        p_away = metrics.get("p_away_tt05")
+
+        if raw_conf_score < ALT_FLIP_THRESHOLD and hw >= 0:
+            # Flip: evaluate opposite market
+            flip_mkt = _derive_flip_market(market)
+            flip_result = evaluate_market(flip_mkt, hg, ag)
+            flip_hw = hit_weight(flip_result)
+            if flip_hw >= 0:
+                alt_flip_hits   += (flip_hw >= 0.5) * w
+                alt_flip_misses += (flip_hw < 0.5)  * w
+                alt_flip_count  += 1
+        elif raw_conf_score < ALT_TT_THRESHOLD and hw >= 0:
+            # TT shadow
+            tt_hw = _tt_hit(p_home, p_away, hg, ag)
+            if tt_hw >= 0:
+                alt_tt_hits   += (tt_hw >= 0.5) * w
+                alt_tt_misses += (tt_hw < 0.5)  * w
+                alt_tt_count  += 1
+
         total_goals  = hg + ag
         is_half_loss = hw == 0.25
         if is_half_loss:
@@ -639,6 +700,21 @@ def _run_calibration(
 
     suggestion["sensitivity"] = sensitivity_suggestion
     suggestion["form_delta"] = form_delta_suggestion
+
+    # ── Shadow alt-lane hit rates ─────────────────────────────────────
+    alt_flip_hr = round(alt_flip_hits / max(0.001, alt_flip_hits + alt_flip_misses) * 100, 1)         if alt_flip_count > 0 else None
+    alt_tt_hr   = round(alt_tt_hits / max(0.001, alt_tt_hits + alt_tt_misses) * 100, 1)         if alt_tt_count > 0 else None
+    suggestion["alt_lane_shadow"] = {
+        "flip_hit_rate":    alt_flip_hr,
+        "flip_evaluated":   alt_flip_count,
+        "flip_description": "Opposite main market (U3.5/O1.75) on LOW or bottom-MEDIUM confidence picks",
+        "tt_hit_rate":      alt_tt_hr,
+        "tt_evaluated":     alt_tt_count,
+        "tt_description":   "Strongest TT side on mid-MEDIUM confidence picks",
+        "vs_main":          overall_hit_rate,
+        "flip_gain":        round(alt_flip_hr - overall_hit_rate, 1) if alt_flip_hr else None,
+        "tt_gain":          round(alt_tt_hr - overall_hit_rate, 1) if alt_tt_hr else None,
+    }
 
     applied = False
     applied_changes = {}
