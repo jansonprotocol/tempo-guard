@@ -83,19 +83,26 @@ def _compute_alt_market(
     p_away_tt05: float,
     alt_flip_threshold: float = 0.62,
     tt_home_bias: float = 0.0,
+    use_alt_market: bool = True,
 ) -> tuple[str, str] | tuple[None, None]:
     """
-    Always apply alt market substitution regardless of variance flag.
+    Apply alt market substitution (TT/flip) when use_alt_market is True.
 
     Rules (confidence_score based):
       score < alt_flip_threshold → flip to opposite main (Over→U3.5, Under→O1.75)
       score >= alt_flip_threshold → strongest TT side (Home or Away O0.5)
 
+    use_alt_market: if False (set by calibration when original outperforms),
+                    returns (None, None) so original market is served.
     alt_flip_threshold: per-league, calibration-tunable (default 0.62)
     tt_home_bias: positive = prefer home TT, negative = prefer away TT
-                  applied as a nudge to the p_home vs p_away comparison
     """
     original = market
+
+    # Calibration may suppress alt substitution for this league
+    if not use_alt_market:
+        return None, None
+
     score = confidence_score or {"HIGH": 0.85, "MEDIUM": 0.65, "LOW": 0.40}.get(confidence, 0.65)
 
     if score < alt_flip_threshold:
@@ -404,8 +411,9 @@ def batch_predict(
             p_home_tt = metrics.get("p_home_tt05")
             p_away_tt = metrics.get("p_away_tt05")
             _cfg = db.query(LeagueConfig).filter_by(league_code=fix.league_code).first()
-            _flip_thresh = float(_cfg.alt_flip_threshold or 0.62) if _cfg and hasattr(_cfg, "alt_flip_threshold") and _cfg.alt_flip_threshold is not None else 0.62
-            _tt_bias     = float(_cfg.tt_home_bias or 0.0)        if _cfg and hasattr(_cfg, "tt_home_bias")       and _cfg.tt_home_bias       is not None else 0.0
+            _flip_thresh  = float(_cfg.alt_flip_threshold or 0.62)   if _cfg and hasattr(_cfg, "alt_flip_threshold")    and _cfg.alt_flip_threshold    is not None else 0.62
+            _tt_bias      = float(_cfg.tt_home_bias or 0.0)           if _cfg and hasattr(_cfg, "tt_home_bias")          and _cfg.tt_home_bias          is not None else 0.0
+            _use_alt      = bool(getattr(_cfg, "use_alt_market", True)) if _cfg else True
             alt_market, original_market = _compute_alt_market(
                 variance_flag,
                 pred.translated_play.market,
@@ -415,6 +423,7 @@ def batch_predict(
                 p_away_tt,
                 alt_flip_threshold=_flip_thresh,
                 tt_home_bias=_tt_bias,
+                use_alt_market=_use_alt,
             )
             final_market = alt_market if alt_market else pred.translated_play.market
 
@@ -946,6 +955,26 @@ def migrate_add_module_columns(db: Session = Depends(get_db)):
             results[f"team_configs.{col}"] = "added"
         else:
             results[f"team_configs.{col}"] = "already exists"
+    return {"status": "ok", "migrations": results}
+
+
+@router.post("/migrate/add-alt-suppression-columns")
+def migrate_add_alt_suppression_columns(db: Session = Depends(get_db)):
+    """Add use_alt_market and alt_min_original_win_rate columns to league_configs."""
+    from sqlalchemy import text, inspect
+    results = {}
+    inspector = inspect(db.bind)
+    league_cols = [c["name"] for c in inspector.get_columns("league_configs")]
+    for col, col_type, default in [
+        ("use_alt_market",            "BOOLEAN", "true"),
+        ("alt_min_original_win_rate",  "FLOAT",   "0.70"),
+    ]:
+        if col not in league_cols:
+            db.execute(text(f"ALTER TABLE league_configs ADD COLUMN {col} {col_type} DEFAULT {default}"))
+            db.commit()
+            results[f"league_configs.{col}"] = "added"
+        else:
+            results[f"league_configs.{col}"] = "already exists"
     return {"status": "ok", "migrations": results}
 
 
