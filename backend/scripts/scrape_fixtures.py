@@ -110,23 +110,29 @@ def _standings_url_from_schedule(schedule_url: str, league_code: str = "") -> Op
 # ---------------------------------------------------------------------------
 # Fetch helpers (ScraperAPI or Selenium)
 # ---------------------------------------------------------------------------
-def _fetch_page(url: str, label: str) -> Optional[str]:
+def _fetch_page(url: str, label: str, bust_cache: bool = False) -> Optional[str]:
     if SCRAPER_API_KEY:
-        return _fetch_via_scraperapi(url, label)
+        return _fetch_via_scraperapi(url, label, bust_cache=bust_cache)
     return _fetch_via_selenium(url, label)
 
 
-def _fetch_via_scraperapi(url: str, label: str) -> Optional[str]:
+def _fetch_via_scraperapi(url: str, label: str, bust_cache: bool = False) -> Optional[str]:
     print(f"  [ScraperAPI] {label}")
     try:
+        params = {
+            "api_key": SCRAPER_API_KEY,
+            "url": url,
+            "render": "true",
+            "premium": "true",
+        }
+        # ScraperAPI caches responses — standings pages for different leagues
+        # can return cached PL content if fetched in quick succession.
+        # bust_cache=True forces a fresh fetch by disabling the cache.
+        if bust_cache:
+            params["cache"] = "false"
         resp = requests.get(
             "http://api.scraperapi.com",
-            params={
-                "api_key": SCRAPER_API_KEY,
-                "url": url,
-                "render": "true",
-                "premium": "true",
-            },
+            params=params,
             timeout=90,
         )
         if resp.status_code != 200:
@@ -511,7 +517,7 @@ def scrape_league_standings(
         return 0
 
     print(f"  [standings] Fetching stats page: {stats_url}")
-    html = _fetch_page(stats_url, f"{league_code} standings")
+    html = _fetch_page(stats_url, f"{league_code} standings", bust_cache=True)
     if not html:
         print(f"  [standings] Failed to fetch stats page for {league_code}")
         return 0
@@ -691,6 +697,13 @@ def scrape_league(league_code: str, url: str) -> None:
     # ── 1. Schedule page (scores + upcoming fixtures) ────────────────
     html = _fetch_page(url, league_code)
     if not html:
+        return
+
+    # Quick title check — if ScraperAPI returns a cached PL page for this
+    # league URL, skip entirely rather than writing wrong fixtures/standings.
+    if not _verify_page_league(html, league_code):
+        print(f"  [fixtures] Schedule page content does not match {league_code} "
+              f"— skipping (likely cached proxy response).")
         return
 
     schedule_df, schedule_standings_df = _parse_page(html, league_code)
