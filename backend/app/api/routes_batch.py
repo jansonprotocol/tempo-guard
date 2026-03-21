@@ -86,6 +86,7 @@ def _compute_alt_market(
     use_alt_market: bool = True,
     tt_home_weak: bool = False,
     tt_away_weak: bool = False,
+    tt_confidence_min: float = 0.62,
 ) -> tuple[str, str] | tuple[None, None]:
     """
     Apply alt market substitution (TT/flip) when use_alt_market is True.
@@ -110,6 +111,10 @@ def _compute_alt_market(
     if score < alt_flip_threshold:
         alt = "U3.5" if market.startswith("O") else "O1.75"
         return alt, original
+
+    # TT confidence gate — below this score serve original, not TT
+    if score < tt_confidence_min:
+        return None, None
 
     if p_home_tt05 is not None or p_away_tt05 is not None:
         h = (p_home_tt05 or 0.0) + tt_home_bias
@@ -455,8 +460,9 @@ def batch_predict(
             _flip_thresh  = float(_cfg.alt_flip_threshold or 0.62)   if _cfg and hasattr(_cfg, "alt_flip_threshold")    and _cfg.alt_flip_threshold    is not None else 0.62
             _tt_bias      = float(_cfg.tt_home_bias or 0.0)           if _cfg and hasattr(_cfg, "tt_home_bias")          and _cfg.tt_home_bias          is not None else 0.0
             _use_alt      = bool(getattr(_cfg, "use_alt_market", True)) if _cfg else True
-            _tt_home_weak = bool(getattr(_cfg, "tt_home_weak",  False)) if _cfg else False
-            _tt_away_weak = bool(getattr(_cfg, "tt_away_weak",  False)) if _cfg else False
+            _tt_home_weak  = bool(getattr(_cfg,  "tt_home_weak",       False)) if _cfg else False
+            _tt_away_weak  = bool(getattr(_cfg,  "tt_away_weak",       False)) if _cfg else False
+            _tt_conf_min   = float(getattr(_cfg, "tt_confidence_min",  None) or 0.62) if _cfg else 0.62
             alt_market, original_market = _compute_alt_market(
                 variance_flag,
                 pred.translated_play.market,
@@ -469,6 +475,7 @@ def batch_predict(
                 use_alt_market=_use_alt,
                 tt_home_weak=_tt_home_weak,
                 tt_away_weak=_tt_away_weak,
+                tt_confidence_min=_tt_conf_min,
             )
             final_market    = alt_market if alt_market else pred.translated_play.market
             alt_suppressed  = (not _use_alt)  # calibration blocked TT/flip for this league
