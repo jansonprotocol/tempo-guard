@@ -453,18 +453,7 @@ def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame
             team.current_position = position
             updated += 1
         else:
-            # Fallback: team may exist under a different league (e.g. relegated/promoted
-            # clubs that haven't been re-registered under the new league yet).
-            cross_league_team = db.query(Team).filter_by(team_key=team_key).first()
-            if cross_league_team:
-                cross_league_team.current_position = position
-                updated += 1
-                print(
-                    f"  [standings] Cross-league match: '{team_name_raw}' found under "
-                    f"'{cross_league_team.league_code}' (pos={position})"
-                )
-            else:
-                print(f"  [standings] Team not found: '{team_name_raw}' → '{team_key}'")
+            print(f"  [standings] Team not found: '{team_name_raw}' → '{team_key}'")
 
     if updated:
         db.commit()
@@ -540,6 +529,32 @@ def scrape_league_standings(
         db = SessionLocal()
 
     try:
+        # Sanity check: verify at least one team in the parsed standings actually
+        # belongs to this league in the DB. FBref sometimes redirects to the
+        # Premier League even for year-specific URLs — if that happens, every
+        # team will resolve to ENG-PL and none to the target league.
+        standings_df_flat = _flatten_columns(standings_df)
+        cols_lower = {str(c).lower().strip(): c for c in standings_df_flat.columns}
+        team_col_check = cols_lower.get("squad") or cols_lower.get("team") or cols_lower.get("club")
+        if team_col_check:
+            sample_names = [
+                str(r).strip()
+                for r in standings_df_flat[team_col_check].dropna().head(5)
+                if str(r).strip().lower() not in ("nan", "", "squad", "team")
+            ]
+            matched = 0
+            for raw in sample_names:
+                key = resolve_and_learn(db, raw, league_code)
+                if db.query(Team).filter_by(team_key=key, league_code=league_code).first():
+                    matched += 1
+            if matched == 0 and len(sample_names) >= 3:
+                print(
+                    f"  [standings] REJECTED: 0/{len(sample_names)} sampled teams match "
+                    f"{league_code} — FBref likely redirected to wrong league. "
+                    f"Sample: {sample_names[:3]}"
+                )
+                return 0
+
         return _process_standings(db, league_code, standings_df)
     finally:
         if close_db:
