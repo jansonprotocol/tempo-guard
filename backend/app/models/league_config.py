@@ -88,3 +88,9 @@ class LeagueConfig(Base):
     # Calibration tunes this ±0.05 per run based on per-bucket TT performance.
     # Range: alt_flip_threshold (0.62) to 0.85. Default 0.62 = no extra gate.
     tt_confidence_min = Column(Float, default=0.62)
+
+    # ── v2.2: Minimum confidence to serve ANY prediction ─────────────
+    # Picks below this score are skipped entirely — no TT, flip, or original.
+    # Default 0.0 = no gate (all picks served). Calibration tunes this up
+    # when the low-confidence band consistently underperforms across all markets.
+    min_confidence = Column(Float, default=0.0)
