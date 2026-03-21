@@ -86,8 +86,11 @@ _COLUMN_MIGRATIONS = [
     # teams — current league position (populated by scrape_fixtures.py)
     ("teams", "current_position", "INTEGER", None),
     # league_configs — v2.2 alt-lane TT threshold tuning
-    ("league_configs", "alt_flip_threshold", "FLOAT", "0.62"),
-    ("league_configs", "tt_home_bias",       "FLOAT", "0.0"),
+    ("league_configs", "alt_flip_threshold",         "FLOAT",   "0.62"),
+    ("league_configs", "tt_home_bias",               "FLOAT",   "0.0"),
+    # league_configs — v2.2 alt-lane suppression
+    ("league_configs", "use_alt_market",             "BOOLEAN", "true"),
+    ("league_configs", "alt_min_original_win_rate",  "FLOAT",   "0.70"),
 ]
 
 
