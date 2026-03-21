@@ -786,12 +786,24 @@ def _run_calibration_inner(
         "total_under_misses":    0,
     }
 
-    # ── Resolved-name dedup ──────────────────────────────────────────────────
-    # The raw snapshot may contain the same physical match under different
-    # historical name spellings (e.g. "Annecy FC" and "Annecy", "USL Dunkerque"
-    # and "Dunkerque"). drop_duplicates on raw names misses these. Build a seen
-    # set on (date, resolved_home, resolved_away) and skip duplicates.
+    # ── Dedup helpers ────────────────────────────────────────────────────────
+    # Two-level deduplication:
+    #
+    # Level 1 (BEFORE feature computation): score-based key (date, hg, ag,
+    #   home_prefix, away_prefix). "Las Palmas" and "Palmas" on the same date
+    #   with the same score are the same game — skip the expensive asof_features
+    #   call entirely. Using 4-char prefix of the raw name avoids full-string
+    #   false positives while still collapsing name variants.
+    #
+    # Level 2 (AFTER resolve): resolved-name key (date, home_team, away_team,
+    #   hg, ag). Catches cases where prefixes differ but resolution converges.
     _seen_matches: set = set()
+    _seen_scores:  set = set()   # (date, hg, ag, home4, away4) — pre-resolve fast skip
+
+    def _score_key(mdate, h_raw, a_raw, hg, ag):
+        h4 = h_raw.strip().lower()[:4]
+        a4 = a_raw.strip().lower()[:4]
+        return (mdate, hg, ag, h4, a4)
 
     for pos, (_, match_row) in enumerate(completed.iterrows(), start=1):
         match_date = match_row[date_col].date()
@@ -801,15 +813,17 @@ def _run_calibration_inner(
         ag = int(match_row["ag"])
         w  = _weight(pos)
 
+        # Level 1: fast score-based dedup — skip before any DB/feature work
+        sk = _score_key(match_date, home_team_raw, away_team_raw, hg, ag)
+        if sk in _seen_scores:
+            continue  # dedup — not counted as a skip
+        _seen_scores.add(sk)
+
         # Resolve team names to canonical keys (used for tracking/nudge/delta)
         home_team = resolve_team_name(db, home_team_raw, league_code)
         away_team = resolve_team_name(db, away_team_raw, league_code)
 
-        # Skip if we already processed this match under a different name variant.
-        # Key on (date, resolved_home, resolved_away, hg, ag) — the score breaks
-        # ties when two teams play twice on the same date (unlikely but possible).
-        # Using hg+ag means "Rodez" 2-1 "Montpellier" and "Rodez AF" 2-1 "Montpellier"
-        # map to the same key and the duplicate is skipped.
+        # Level 2: resolved-name dedup — catches cases not caught by level 1
         _match_key = (match_date, home_team, away_team, hg, ag)
         if _match_key in _seen_matches:
             continue  # dedup — not counted as a skip
