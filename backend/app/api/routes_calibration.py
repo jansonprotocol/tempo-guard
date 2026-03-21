@@ -380,7 +380,10 @@ def _suggest_tt_thresholds(
         agg_tt_total   += b_data["tt_total"]
 
     no_bucket_comparison = best_tt_threshold == current_flip_threshold
-    if no_bucket_comparison and agg_flip_total >= 3 and agg_tt_total >= MIN_BUCKET:
+    # Require at least 8 flip picks before acting on aggregate signal —
+    # n<8 is too noisy (2 picks at 0% or 100% is meaningless).
+    AGG_FLIP_MIN = 8
+    if no_bucket_comparison and agg_flip_total >= AGG_FLIP_MIN and agg_tt_total >= MIN_BUCKET:
         agg_flip_rate = agg_flip_hits / agg_flip_total
         agg_tt_rate   = agg_tt_hits   / agg_tt_total
         if agg_flip_rate > agg_tt_rate + 0.05:
@@ -435,6 +438,111 @@ def _suggest_tt_thresholds(
         f"Flip threshold: {current_flip_threshold} → {new_threshold} | "
         f"TT home bias: {current_tt_home_bias} → {new_tt_bias}"
     )
+    return result
+
+
+# ── Alt market suppression analyser ──────────────────────────────────────
+def _suggest_alt_market_use(
+    alt_vs_original: list,
+    current_use_alt: bool,
+    current_min_win_rate: float,
+) -> dict:
+    """
+    Analyse whether the alt market (TT/flip) is actively hurting vs the
+    original ATHENA market on missed predictions.
+
+    For each match where alt market missed, checks if the original market
+    would have won. If that "original saves the miss" rate exceeds
+    alt_min_original_win_rate, suggest disabling alt substitution.
+
+    Re-enables if suppressed and the alt is now outperforming.
+    """
+    MIN_RECORDS = 15
+
+    result = {
+        "use_alt_market":            current_use_alt,
+        "alt_min_original_win_rate": current_min_win_rate,
+        "analysis":                  "Insufficient data",
+        "alt_miss_count":            0,
+        "original_wins_on_alt_miss": 0,
+        "original_win_rate_on_miss": None,
+        "alt_overall_rate":          None,
+        "original_overall_rate":     None,
+    }
+
+    if len(alt_vs_original) < MIN_RECORDS:
+        return result
+
+    # Overall hit rates (weighted)
+    alt_hits = alt_total = orig_hits = orig_total = 0.0
+    for r in alt_vs_original:
+        if r["alt_hw"] < 0:
+            continue
+        w = r["weight"]
+        alt_total += w
+        alt_hits  += r["alt_hw"] * w
+        if r["original_hw"] >= 0:
+            orig_total += w
+            orig_hits  += r["original_hw"] * w
+
+    if alt_total < MIN_RECORDS:
+        return result
+
+    alt_rate  = alt_hits  / alt_total
+    orig_rate = orig_hits / orig_total if orig_total > 0 else 0.0
+
+    result["alt_overall_rate"]      = round(alt_rate  * 100, 1)
+    result["original_overall_rate"] = round(orig_rate * 100, 1)
+
+    # Miss analysis: when alt loses, does original win?
+    miss_w = orig_win_on_miss_w = 0.0
+    for r in alt_vs_original:
+        if r["alt_hw"] < 0:
+            continue
+        if r["alt_hw"] < 0.5:   # alt missed
+            w = r["weight"]
+            miss_w += w
+            if r["original_hw"] >= 0.5:   # original would have won
+                orig_win_on_miss_w += w
+
+    result["alt_miss_count"]            = round(miss_w, 1)
+    result["original_wins_on_alt_miss"] = round(orig_win_on_miss_w, 1)
+
+    if miss_w < 4:
+        result["analysis"] = f"Too few alt misses ({round(miss_w,1)}) to analyse suppression"
+        return result
+
+    orig_win_rate_on_miss = orig_win_on_miss_w / miss_w
+    result["original_win_rate_on_miss"] = round(orig_win_rate_on_miss * 100, 1)
+
+    if current_use_alt:
+        if orig_win_rate_on_miss >= current_min_win_rate and alt_rate < orig_rate - 0.05:
+            result["use_alt_market"] = False
+            result["analysis"] = (
+                f"SUPPRESSING alt market: on {round(miss_w,1)} alt misses, "
+                f"original wins {round(orig_win_rate_on_miss*100,1)}% "
+                f"(threshold {round(current_min_win_rate*100,1)}%). "
+                f"Alt {round(alt_rate*100,1)}% vs original {round(orig_rate*100,1)}%."
+            )
+        else:
+            result["analysis"] = (
+                f"Alt market retained: original wins {round(orig_win_rate_on_miss*100,1)}% "
+                f"of alt misses (threshold {round(current_min_win_rate*100,1)}%). "
+                f"Alt {round(alt_rate*100,1)}% vs original {round(orig_rate*100,1)}%."
+            )
+    else:
+        if alt_rate > orig_rate + 0.05:
+            result["use_alt_market"] = True
+            result["analysis"] = (
+                f"RE-ENABLING alt market: alt {round(alt_rate*100,1)}% "
+                f"now outperforms original {round(orig_rate*100,1)}% by >5pp."
+            )
+        else:
+            result["analysis"] = (
+                f"Alt market remains suppressed: alt {round(alt_rate*100,1)}% "
+                f"vs original {round(orig_rate*100,1)}% — gap insufficient to re-enable."
+            )
+
     return result
 
 
@@ -651,8 +759,10 @@ def _run_calibration_inner(
     current_det_sens = float(cfg.det_sensitivity or 1.0) if cfg else 1.0
     current_eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
     current_form_sens      = float(cfg.form_delta_sensitivity or 0.0)  if cfg else 0.0
-    current_flip_threshold = float(getattr(cfg, "alt_flip_threshold", None) or 0.62) if cfg else 0.62
-    current_tt_home_bias   = float(getattr(cfg, "tt_home_bias",       None) or 0.0)  if cfg else 0.0
+    current_flip_threshold    = float(getattr(cfg, "alt_flip_threshold",    None) or 0.62)  if cfg else 0.62
+    current_tt_home_bias      = float(getattr(cfg, "tt_home_bias",          None) or 0.0)   if cfg else 0.0
+    current_use_alt_market    = bool(getattr(cfg,  "use_alt_market",        True))           if cfg else True
+    current_min_original_rate = float(getattr(cfg, "alt_min_original_win_rate", None) or 0.70) if cfg else 0.70
 
     # ── Determine current variance for this league ──────────────────
     # For red variance leagues, alt market becomes the primary evaluated market.
@@ -763,7 +873,8 @@ def _run_calibration_inner(
     sample_rows: list = []
     lean_records: list = []
     deg_det_records: list = []
-    calib_records: list = []   # per-match records for TT threshold tuning
+    calib_records: list    = []   # per-match records for TT threshold tuning
+    alt_vs_original: list = []   # per-match alt vs original market comparison
 
     # ── Shadow alt-lane trackers ──────────────────────────────────────
     # Tracks what hit rate would be if we played the alternative lane
@@ -938,6 +1049,11 @@ def _run_calibration_inner(
         result = evaluate_market(market, hg, ag)
         hw = hit_weight(result)
 
+        # Also evaluate the original market on this same match
+        # so we can compare alt vs original performance directly.
+        original_result = evaluate_market(original_market, hg, ag)
+        original_hw     = hit_weight(original_result)
+
         # Record for TT threshold tuning
         calib_records.append({
             "confidence_score": conf_score,
@@ -945,6 +1061,16 @@ def _run_calibration_inner(
             "hw":               hw,
             "weight":           w,
         })
+
+        # Record for alt-vs-original suppression analysis
+        if market != original_market:   # only when substitution actually happened
+            alt_vs_original.append({
+                "alt_hw":      hw,
+                "original_hw": original_hw,
+                "weight":      w,
+                "market":      market,
+                "original":    original_market,
+            })
 
         raw_sd    = metrics.get("support_idx_over_delta") or 0.0
         raw_tempo = metrics.get("tempo_index") or 0.55
@@ -1180,6 +1306,14 @@ def _run_calibration_inner(
     )
     suggestion["tt_thresholds"] = tt_threshold_suggestion
 
+    # Alt market suppression analysis
+    alt_market_suggestion = _suggest_alt_market_use(
+        alt_vs_original,
+        current_use_alt_market,
+        current_min_original_rate,
+    )
+    suggestion["alt_market_suppression"] = alt_market_suggestion
+
     # ── Shadow alt-lane hit rates ─────────────────────────────────────
     alt_flip_hr = round(alt_flip_hits / max(0.001, alt_flip_hits + alt_flip_misses) * 100, 1)         if alt_flip_count > 0 else None
     alt_tt_hr   = round(alt_tt_hits / max(0.001, alt_tt_hits + alt_tt_misses) * 100, 1)         if alt_tt_count > 0 else None
@@ -1257,6 +1391,20 @@ def _run_calibration_inner(
             if hasattr(cfg, "tt_home_bias"):
                 cfg.tt_home_bias = tt_bias_suggested
                 sens_changed["tt_home_bias"] = {"before": current_tt_home_bias, "after": tt_bias_suggested}
+
+        # Apply alt market suppression / re-enable
+        suggested_use_alt = alt_market_suggestion.get("use_alt_market")
+        if suggested_use_alt is not None and suggested_use_alt != current_use_alt_market:
+            if hasattr(cfg, "use_alt_market"):
+                cfg.use_alt_market = suggested_use_alt
+                sens_changed["use_alt_market"] = {
+                    "before": current_use_alt_market,
+                    "after":  suggested_use_alt,
+                }
+                action = "SUPPRESSED" if not suggested_use_alt else "RE-ENABLED"
+                suggestion["notes"].append(
+                    f"Alt market {action}: {alt_market_suggestion.get('analysis','')}"
+                )
 
         if sens_changed:
             db.commit()
