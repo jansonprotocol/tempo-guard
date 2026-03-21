@@ -743,11 +743,11 @@ def scrape_league(league_code: str, url: str) -> None:
     print(f"[fixtures] {league_code}")
 
     # ── 1. Schedule page (scores + upcoming fixtures) ────────────────
-    html = _fetch_page(url, league_code)
+    html = _fetch_page(url, league_code, bust_cache=True)
     if not html:
         return
 
-    # Quick title check — if ScraperAPI returns a cached PL page for this
+    # Quick title check — if ScraperAPI returns a cached page for this
     # league URL, skip entirely rather than writing wrong fixtures/standings.
     if not _verify_page_league(html, league_code):
         print(f"  [fixtures] Schedule page content does not match {league_code} "
