@@ -48,7 +48,11 @@ from app.database.models_fbref import FBrefSnapshot
 from app.database.models_predictions import FBrefFixture
 from app.models.team import Team
 from app.util.team_resolver import resolve_and_learn
-from app.core.constants import LEAGUE_MAP, SEASON_MAP
+from app.core.constants import LEAGUE_MAP
+try:
+    from app.seed.teams_sync import sync_league_teams as _sync_league_teams
+except ImportError:
+    _sync_league_teams = None
 from app.services.resolve_team import resolve_team_name
 
 # ---------------------------------------------------------------------------
@@ -83,31 +87,22 @@ _STANDINGS_URL_OVERRIDES: dict[str, str] = {
 # ---------------------------------------------------------------------------
 # URL helpers
 # ---------------------------------------------------------------------------
-def _standings_url_from_schedule(schedule_url: str, league_code: str = "") -> Optional[str]:
+def _standings_url_from_schedule(schedule_url: str) -> Optional[str]:
     """
     Derive the FBref stats/standings page URL from the schedule URL.
 
-    Always builds a year-specific URL using SEASON_MAP so FBref does not
-    silently redirect smaller leagues to the Premier League stats page.
+    Schedule:  https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures
+    Standings: https://fbref.com/en/comps/9/Premier-League-Stats
 
-    Schedule:  https://fbref.com/en/comps/60/schedule/Ligue-2-Scores-and-Fixtures
-    Standings: https://fbref.com/en/comps/60/2025-2026/2025-2026-Ligue-2-Stats
+    Returns None if the URL doesn't match the expected pattern.
     """
     m = re.match(
         r"(https://fbref\.com/en/comps/\d+)/schedule/(.+?)-Scores-and-Fixtures",
         schedule_url,
     )
-    if not m:
-        return None
-
-    base = m.group(1)   # e.g. https://fbref.com/en/comps/60
-    slug = m.group(2)   # e.g. Ligue-2
-
-    season = SEASON_MAP.get(league_code) if league_code else None
-    if season:
-        return f"{base}/{season}/{season}-{slug}-Stats"
-
-    return f"{base}/{slug}-Stats"
+    if m:
+        return f"{m.group(1)}/{m.group(2)}-Stats"
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -507,7 +502,7 @@ def scrape_league_standings(
         stats_url = _STANDINGS_URL_OVERRIDES[league_code]
         print(f"  [standings] Using URL override for {league_code}")
     else:
-        stats_url = _standings_url_from_schedule(schedule_url, league_code)
+        stats_url = _standings_url_from_schedule(schedule_url)
 
     if not stats_url:
         print(f"  [standings] Could not derive stats URL from: {schedule_url}")
@@ -529,32 +524,6 @@ def scrape_league_standings(
         db = SessionLocal()
 
     try:
-        # Sanity check: verify at least one team in the parsed standings actually
-        # belongs to this league in the DB. FBref sometimes redirects to the
-        # Premier League even for year-specific URLs — if that happens, every
-        # team will resolve to ENG-PL and none to the target league.
-        standings_df_flat = _flatten_columns(standings_df)
-        cols_lower = {str(c).lower().strip(): c for c in standings_df_flat.columns}
-        team_col_check = cols_lower.get("squad") or cols_lower.get("team") or cols_lower.get("club")
-        if team_col_check:
-            sample_names = [
-                str(r).strip()
-                for r in standings_df_flat[team_col_check].dropna().head(5)
-                if str(r).strip().lower() not in ("nan", "", "squad", "team")
-            ]
-            matched = 0
-            for raw in sample_names:
-                key = resolve_and_learn(db, raw, league_code)
-                if db.query(Team).filter_by(team_key=key, league_code=league_code).first():
-                    matched += 1
-            if matched == 0 and len(sample_names) >= 3:
-                print(
-                    f"  [standings] REJECTED: 0/{len(sample_names)} sampled teams match "
-                    f"{league_code} — FBref likely redirected to wrong league. "
-                    f"Sample: {sample_names[:3]}"
-                )
-                return 0
-
         return _process_standings(db, league_code, standings_df)
     finally:
         if close_db:
@@ -779,6 +748,16 @@ def scrape_league(league_code: str, url: str) -> None:
 
     if not upcoming_df.empty:
         _upsert_fixtures(league_code, upcoming_df, c)
+
+    # Sync any newly resolved teams back to teams.json
+    if _sync_league_teams:
+        _db = SessionLocal()
+        try:
+            _sync_league_teams(_db, league_code)
+        except Exception as _e:
+            print(f"  [teams_sync] Warning: {_e}")
+        finally:
+            _db.close()
 
 
 # ---------------------------------------------------------------------------
