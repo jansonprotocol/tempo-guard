@@ -314,6 +314,7 @@ def _suggest_tt_thresholds(
     current_flip_threshold: float,
     current_tt_home_bias: float,
     current_tt_confidence_min: float = 0.62,
+    current_min_conf: float = 0.0,
 ) -> dict:
     """
     Analyse per-confidence-bucket hit rates to suggest a better
@@ -1500,6 +1501,7 @@ def _run_calibration_inner(
         current_flip_threshold,
         current_tt_home_bias,
         current_tt_conf_min,
+        current_min_conf,
     )
     suggestion["tt_thresholds"] = tt_threshold_suggestion
 
