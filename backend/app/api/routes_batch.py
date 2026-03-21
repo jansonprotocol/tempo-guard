@@ -73,6 +73,39 @@ def _get_variance_flag(league_code: str, db) -> str | None:
         return "red"
 
 
+def _compute_alt_market(
+    variance_flag: str,
+    market: str,
+    confidence: str,
+    confidence_score: float,
+    p_home_tt05: float,
+    p_away_tt05: float,
+) -> tuple[str, str] | tuple[None, None]:
+    """
+    Always apply alt market substitution regardless of variance flag.
+    The variance flag was the initial trigger but TT/flip consistently
+    outperforms the main market — so this is now permanent behaviour.
+
+    Rules (confidence_score based):
+      score < 0.62  → flip to opposite main (Over→U3.5, Under→O1.75)
+      score >= 0.62 → strongest TT side (Home or Away O0.5)
+    """
+    original = market
+    score = confidence_score or {"HIGH": 0.85, "MEDIUM": 0.65, "LOW": 0.40}.get(confidence, 0.65)
+
+    if score < 0.62:
+        alt = "U3.5" if market.startswith("O") else "O1.75"
+        return alt, original
+
+    if p_home_tt05 is not None or p_away_tt05 is not None:
+        h = p_home_tt05 or 0.0
+        a = p_away_tt05 or 0.0
+        alt = "TT Home O0.5" if h >= a else "TT Away O0.5"
+        return alt, original
+
+    return None, None
+
+
 def _dedup_key(league_code: str, home: str, away: str, match_date) -> str:
     """
     Build a normalised dedup key for a fixture.
@@ -361,6 +394,20 @@ def batch_predict(
 
             pred = predict_match(db, req)
 
+            # ── Alt market substitution for red variance leagues ─────
+            variance_flag = _get_variance_flag(fix.league_code, db)
+            p_home_tt = metrics.get("p_home_tt05")
+            p_away_tt = metrics.get("p_away_tt05")
+            alt_market, original_market = _compute_alt_market(
+                variance_flag,
+                pred.translated_play.market,
+                pred.translated_play.confidence,
+                pred.confidence_score,
+                p_home_tt,
+                p_away_tt,
+            )
+            final_market = alt_market if alt_market else pred.translated_play.market
+
             # ── Calibrated probability ───────────────────────────────
             cal_prob = None
             try:
@@ -375,14 +422,15 @@ def batch_predict(
                 "home_team":             home_resolved,
                 "away_team":             away_resolved,
                 "match_date":            fix.match_date.isoformat(),
-                "market":                pred.translated_play.market,
+                "market":                final_market,
+                "original_market":       original_market,
                 "confidence":            pred.translated_play.confidence,
                 "corridor_low":          pred.corridor.low,
                 "corridor_high":         pred.corridor.high,
                 "lean":                  pred.corridor.lean,
                 "confidence_score":      pred.confidence_score,
                 "calibrated_probability": cal_prob,
-                "variance_flag":         _get_variance_flag(fix.league_code, db),
+                "variance_flag":         variance_flag,
                 "weather_tag":           weather_tag,
                 "weather_impact":        weather_impact if weather_impact != 0.0 else None,
             }
@@ -395,20 +443,25 @@ def batch_predict(
                     away_team=away_resolved,
                     match_date=fix.match_date,
                     match_time=getattr(fix, "match_time", None),
-                    market=pred.translated_play.market,
+                    market=final_market,
                     confidence=pred.translated_play.confidence,
                     corridor_low=pred.corridor.low,
                     corridor_high=pred.corridor.high,
                     lean=pred.corridor.lean,
                     confidence_score=pred.confidence_score,
                     applied_modules=json.dumps(pred.applied_modules),
-                    explanations=json.dumps(pred.explanations),
+                    explanations=json.dumps({
+                        "modules": pred.explanations,
+                        "p_home_tt05": p_home_tt,
+                        "p_away_tt05": p_away_tt,
+                        "original_market": original_market,
+                    }),
                     p_two_plus=metrics.get("p_two_plus"),
                     tempo_index=metrics.get("tempo_index"),
                     sot_proj_total=metrics.get("sot_proj_total"),
                     support_delta=metrics.get("support_idx_over_delta"),
                     status="pending",
-                    variance_flag=_get_variance_flag(fix.league_code, db),
+                    variance_flag=variance_flag,
                     predicted_at=datetime.utcnow(),
                     weather_tag=weather_tag,
                 )
@@ -667,11 +720,11 @@ def get_predictions(
             return {}
 
     def _get_stored_tt(row, key: str):
-        """Pull TT probability from stored applied_modules JSON if available."""
+        """Pull TT probability from stored explanations JSON."""
         import json
         try:
-            if row.applied_modules:
-                data = json.loads(row.applied_modules)
+            if row.explanations:
+                data = json.loads(row.explanations)
                 if isinstance(data, dict) and key in data:
                     return data[key]
         except Exception:
@@ -709,6 +762,7 @@ def get_predictions(
             # TT values for alt lane — pulled from stored inputs JSON if available
             "p_home_tt05":           _get_stored_tt(r, "p_home_tt05"),
             "p_away_tt05":           _get_stored_tt(r, "p_away_tt05"),
+            "original_market":       _get_stored_tt(r, "original_market"),
             "predicted_at":          r.predicted_at.isoformat() if r.predicted_at else None,
             "evaluated_at":          r.evaluated_at.isoformat() if r.evaluated_at else None,
             "variance_flag":         getattr(r, "variance_flag", None),
