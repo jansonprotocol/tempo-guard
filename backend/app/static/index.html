@@ -1786,8 +1786,8 @@
             <div class="stat-val" id="res-lean">—</div>
           </div>
           <div class="stat-box">
-            <div class="stat-label">p(2+ Goals)</div>
-            <div class="stat-val" id="res-p2plus">—</div>
+            <div class="stat-label">Alt Lane</div>
+            <div class="stat-val" id="res-alt-lane" style="font-size:13px">—</div>
           </div>
         </div>
         <div id="flags-section" class="hidden">
@@ -2139,6 +2139,55 @@
       }
     });
 
+    // ── Alternative lane logic ──────────────────────────────────────
+    // Rules (agreed):
+    // LOW confidence any variance          → flip to opposite main market
+    // MEDIUM confidence + red variance     → flip to opposite main market
+    // MEDIUM confidence + orange variance  → supportive TT lane
+    // HIGH or green/no variance            → supportive TT lane inline
+    //
+    // Flip: Over market → Under 3.5 | Under market → Over 1.75
+    // TT supportive: show strongest TT side from p_home_tt05 / p_away_tt05
+
+    function _flipMarket(market) {
+      if (!market) return null;
+      if (market.startsWith('O')) return 'U3.5';
+      if (market.startsWith('U')) return 'O1.75';
+      return null;
+    }
+
+    function _ttLane(inp) {
+      if (!inp) return null;
+      const h = inp.p_home_tt05;
+      const a = inp.p_away_tt05;
+      if (h == null && a == null) return null;
+      if (h != null && (a == null || h >= a)) return `TT Home O0.5 (${(h*100).toFixed(0)}%)`;
+      return `TT Away O0.5 (${(a*100).toFixed(0)}%)`;
+    }
+
+    function _computeAltLane(d) {
+      const conf     = (d.translated_play || {}).confidence || '';
+      const variance = d.variance_flag || '';
+      const market   = (d.translated_play || {}).market || '';
+      const inp      = d.inputs_used || {};
+      const isFlip   = conf === 'LOW' || (conf === 'MEDIUM' && variance === 'red');
+      const isTT     = conf === 'MEDIUM' && variance === 'orange';
+      if (isFlip) return _flipMarket(market) || '—';
+      if (isTT)   return _ttLane(inp) || '—';
+      return _ttLane(inp) || '—';
+    }
+
+    function _altLaneForCard(p) {
+      const conf     = p.confidence || '';
+      const variance = p.variance_flag || '';
+      const market   = p.market || '';
+      const isFlip   = conf === 'LOW' || (conf === 'MEDIUM' && variance === 'red');
+      const isTT     = conf === 'MEDIUM' && variance === 'orange';
+      if (isFlip) return (_flipMarket(market) || '—') + ' ⟵ flipped';
+      if (isTT || conf === 'HIGH')   return _ttLane({p_home_tt05: p.p_home_tt05, p_away_tt05: p.p_away_tt05}) || '—';
+      return _ttLane({p_home_tt05: p.p_home_tt05, p_away_tt05: p.p_away_tt05}) || '—';
+    }
+
     function renderResult(d) {
       const isFuture = d.mode === 'futurematch';
       $('res-fixture').textContent = d.fixture || '—';
@@ -2158,7 +2207,7 @@
       leanEl.textContent = lean || '—';
       leanEl.className = `stat-val ${lean === 'OVER' ? 'lean-over' : lean === 'UNDER' ? 'lean-under' : ''}`;
       const inp = d.inputs_used || {};
-      $('res-p2plus').textContent = inp.p_two_plus != null ? (inp.p_two_plus * 100).toFixed(1) + '%' : '—';
+      $('res-alt-lane').textContent = _computeAltLane(d);
       const allFlags = [...(d.safety_flags || []), ...(d.applied_modules || [])];
       const flagsSection = $('flags-section');
       if (allFlags.length > 0) {
@@ -2628,11 +2677,10 @@
               <span class="pred-detail-label">Lean</span>
               <span class="pred-detail-val">${leanStr}</span>
             </div>
-            ${p.p_two_plus != null ? `
             <div class="pred-detail-row">
-              <span class="pred-detail-label">p(2+ Goals)</span>
-              <span class="pred-detail-val">${(p.p_two_plus*100).toFixed(0)}%</span>
-            </div>` : ''}
+              <span class="pred-detail-label">Alt Lane</span>
+              <span class="pred-detail-val" style="font-family:var(--mono);font-size:12px;color:var(--cyan)">${_altLaneForCard(p)}</span>
+            </div>
             ${perfDetail}
             <div class="pred-detail-row" style="padding-top:6px;border-top:1px solid var(--border);margin-top:2px">
               <span class="pred-detail-label" style="color:${p.status === 'hit' ? 'var(--green)' : p.status === 'miss' ? 'var(--red)' : 'var(--muted)'}">
@@ -2934,7 +2982,8 @@
                 const col = n.type === 'over' ? 'var(--green)' : 'var(--red)';
                 const sign = n.delta > 0 ? '+' : '';
                 const weak = n.weakness ? ` · ${n.weakness}↓` : '';
-                const displayName = n.display_name || fmtTeam(n.team);
+                // Note: backend may not return display_name for notable cards yet – update backend to include it.
+                const displayName = n.display_name || n.team;
                 return `<div style="font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:3px;border:1px solid var(--border);background:var(--bg2);cursor:pointer" onclick="loadDeltaLeague('${n.league}', document.querySelector('.delta-league-select'))">
                   <span style="color:#fff">${displayName}</span>
                   <span style="color:var(--muted)">${n.league}</span>
