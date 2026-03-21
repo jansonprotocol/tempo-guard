@@ -338,6 +338,48 @@ def batch_predict(
     except Exception:
         pass
 
+    # ── Pre-cache per-league data ────────────────────────────────────
+    # _get_variance_flag, LeagueConfig, and calibrate_confidence are called
+    # once per fixture = 3 DB queries × 200 fixtures = 600 queries.
+    # Pre-load all of these into dicts keyed by league_code.
+    _variance_cache: dict = {}
+    _cfg_cache: dict = {}
+    _cal_cache: dict = {}  # (league_code, rounded_score) → cal_prob
+    for lc in all_leagues:
+        _variance_cache[lc] = _get_variance_flag(lc, db)
+        _cfg_cache[lc] = db.query(LeagueConfig).filter_by(league_code=lc).first()
+
+    def _get_cal_prob(lc: str, score: float) -> float | None:
+        """Calibrated probability with per-league+score memoization."""
+        if score is None:
+            return None
+        key = (lc, round(score, 3))
+        if key not in _cal_cache:
+            try:
+                _cal_cache[key] = calibrate_confidence(db, score, league_code=lc)
+            except Exception:
+                _cal_cache[key] = None
+        return _cal_cache[key]
+
+    # Pre-fetch weather per unique (home_team, date) pair.
+    # get_match_weather makes an HTTP call — doing it 200× is the biggest
+    # single bottleneck. One call per unique home+date combination instead.
+    _weather_cache: dict = {}  # (home_resolved, date) → {tag, impact} | None
+    for rf in fixtures:
+        key = (rf["home"], rf["fix"].match_date)
+        if key not in _weather_cache:
+            try:
+                coords = get_stadium_coords(rf["home"])
+                if coords:
+                    hour = match_hour_utc(getattr(rf["fix"], "match_time", None))
+                    _weather_cache[key] = get_match_weather(
+                        coords[0], coords[1], rf["fix"].match_date, hour_utc=hour
+                    )
+                else:
+                    _weather_cache[key] = None
+            except Exception:
+                _weather_cache[key] = None
+
     for rf in fixtures:
         fix = rf["fix"]
         home_resolved = rf["home"]
@@ -359,31 +401,23 @@ def batch_predict(
                 fix.match_date,
             )
 
-            # ── Weather adjustment ───────────────────────────────────
-            # Fetch weather for this fixture if we have stadium coords.
-            # weather_impact is an additive adjustment to deg_pressure.
+            # ── Weather adjustment (pre-fetched) ───────────────────────
             weather_tag    = None
             weather_impact = 0.0
-            try:
-                coords = get_stadium_coords(home_resolved)
-                if coords:
-                    hour = match_hour_utc(getattr(fix, "match_time", None))
-                    w = get_match_weather(coords[0], coords[1], fix.match_date, hour_utc=hour)
-                    if w:
-                        weather_tag    = w["weather_tag"]
-                        weather_impact = w["weather_impact"]
-                        if weather_impact != 0.0:
-                            current_deg = metrics.get("deg_pressure") or 0.0
-                            metrics["deg_pressure"] = round(
-                                min(1.0, max(0.0, current_deg + weather_impact)), 3
-                            )
-                            print(
-                                f"[batch-predict] Weather {fix.league_code} "
-                                f"{home_resolved}: {weather_tag} "
-                                f"→ deg {current_deg:.3f}→{metrics['deg_pressure']:.3f}"
-                            )
-            except Exception as _we:
-                print(f"[batch-predict] Weather lookup failed for {home_resolved}: {_we}")
+            w = _weather_cache.get((home_resolved, fix.match_date))
+            if w:
+                weather_tag    = w["weather_tag"]
+                weather_impact = w["weather_impact"]
+                if weather_impact != 0.0:
+                    current_deg = metrics.get("deg_pressure") or 0.0
+                    metrics["deg_pressure"] = round(
+                        min(1.0, max(0.0, current_deg + weather_impact)), 3
+                    )
+                    print(
+                        f"[batch-predict] Weather {fix.league_code} "
+                        f"{home_resolved}: {weather_tag} "
+                        f"→ deg {current_deg:.3f}→{metrics['deg_pressure']:.3f}"
+                    )
 
             # Use RESOLVED names for the prediction request + storage
             req = MatchRequest(
@@ -407,10 +441,10 @@ def batch_predict(
             pred = predict_match(db, req)
 
             # ── Alt market substitution for red variance leagues ─────
-            variance_flag = _get_variance_flag(fix.league_code, db)
+            variance_flag = _variance_cache.get(fix.league_code)
             p_home_tt = metrics.get("p_home_tt05")
             p_away_tt = metrics.get("p_away_tt05")
-            _cfg = db.query(LeagueConfig).filter_by(league_code=fix.league_code).first()
+            _cfg = _cfg_cache.get(fix.league_code)
             _flip_thresh  = float(_cfg.alt_flip_threshold or 0.62)   if _cfg and hasattr(_cfg, "alt_flip_threshold")    and _cfg.alt_flip_threshold    is not None else 0.62
             _tt_bias      = float(_cfg.tt_home_bias or 0.0)           if _cfg and hasattr(_cfg, "tt_home_bias")          and _cfg.tt_home_bias          is not None else 0.0
             _use_alt      = bool(getattr(_cfg, "use_alt_market", True)) if _cfg else True
@@ -428,14 +462,8 @@ def batch_predict(
             final_market    = alt_market if alt_market else pred.translated_play.market
             alt_suppressed  = (not _use_alt)  # calibration blocked TT/flip for this league
 
-            # ── Calibrated probability ───────────────────────────────
-            cal_prob = None
-            try:
-                cal_prob = calibrate_confidence(
-                    db, pred.confidence_score, league_code=fix.league_code
-                )
-            except Exception:
-                pass
+            # ── Calibrated probability (memoized per league+score) ───
+            cal_prob = _get_cal_prob(fix.league_code, pred.confidence_score)
 
             entry = {
                 "league_code":           fix.league_code,
