@@ -777,8 +777,12 @@ def _run_calibration(
         home_team = resolve_team_name(db, home_team_raw, league_code)
         away_team = resolve_team_name(db, away_team_raw, league_code)
 
-        # Skip if we already processed this match under a different name variant
-        _match_key = (match_date, home_team, away_team)
+        # Skip if we already processed this match under a different name variant.
+        # Key on (date, resolved_home, resolved_away, hg, ag) — the score breaks
+        # ties when two teams play twice on the same date (unlikely but possible).
+        # Using hg+ag means "Rodez" 2-1 "Montpellier" and "Rodez AF" 2-1 "Montpellier"
+        # map to the same key and the duplicate is skipped.
+        _match_key = (match_date, home_team, away_team, hg, ag)
         if _match_key in _seen_matches:
             skipped += 1
             continue
