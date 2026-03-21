@@ -38,6 +38,7 @@ from app.services.resolve_team import resolve_team_name, clear_resolve_cache
 from app.services.weather_service import get_match_weather, get_stadium_coords, match_hour_utc
 from app.services.confidence_calibrator import calibrate_confidence
 from app.services.feature_cache import warm_snapshot_cache
+from app.models.league_config import LeagueConfig
 
 # Auto-create tables if needed (optional, handled in main.py)
 Base.metadata.create_all(bind=engine)
