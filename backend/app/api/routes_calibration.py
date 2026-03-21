@@ -636,6 +636,13 @@ def _run_calibration(
         "total_under_misses":    0,
     }
 
+    # ── Resolved-name dedup ──────────────────────────────────────────────────
+    # The raw snapshot may contain the same physical match under different
+    # historical name spellings (e.g. "Annecy FC" and "Annecy", "USL Dunkerque"
+    # and "Dunkerque"). drop_duplicates on raw names misses these. Build a seen
+    # set on (date, resolved_home, resolved_away) and skip duplicates.
+    _seen_matches: set = set()
+
     for pos, (_, match_row) in enumerate(completed.iterrows(), start=1):
         match_date = match_row[date_col].date()
         home_team_raw = str(match_row[home_col])
@@ -647,6 +654,13 @@ def _run_calibration(
         # Resolve team names to canonical keys (used for tracking/nudge/delta)
         home_team = resolve_team_name(db, home_team_raw, league_code)
         away_team = resolve_team_name(db, away_team_raw, league_code)
+
+        # Skip if we already processed this match under a different name variant
+        _match_key = (match_date, home_team, away_team)
+        if _match_key in _seen_matches:
+            skipped += 1
+            continue
+        _seen_matches.add(_match_key)
 
         try:
             # Pass RAW snapshot names to asof_features — fbref_base uses its
