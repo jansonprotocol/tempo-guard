@@ -404,6 +404,8 @@ def batch_predict(
             skipped_by_league[fix.league_code] = skipped_by_league.get(fix.league_code, 0) + 1
             continue
 
+        # Skip if below league minimum confidence gate
+        # (confidence_score not yet known here — check after predict_match)
         try:
             # Use ORIGINAL fixture names for asof_features (they match FBref snapshot data)
             metrics = asof_features(
@@ -452,6 +454,12 @@ def batch_predict(
 
             pred = predict_match(db, req)
 
+            # Skip if below league minimum confidence gate
+            if _min_conf > 0.0 and (pred.confidence_score or 0.0) < _min_conf:
+                skipped += 1
+                skipped_by_league[fix.league_code] = skipped_by_league.get(fix.league_code, 0) + 1
+                continue
+
             # ── Alt market substitution for red variance leagues ─────
             variance_flag = _variance_cache.get(fix.league_code)
             p_home_tt = metrics.get("p_home_tt05")
@@ -463,6 +471,7 @@ def batch_predict(
             _tt_home_weak  = bool(getattr(_cfg,  "tt_home_weak",       False)) if _cfg else False
             _tt_away_weak  = bool(getattr(_cfg,  "tt_away_weak",       False)) if _cfg else False
             _tt_conf_min   = float(getattr(_cfg, "tt_confidence_min",  None) or 0.62) if _cfg else 0.62
+            _min_conf      = float(getattr(_cfg, "min_confidence",     None) or 0.0)  if _cfg else 0.0
             alt_market, original_market = _compute_alt_market(
                 variance_flag,
                 pred.translated_play.market,
