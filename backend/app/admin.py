@@ -36,7 +36,7 @@ class LeagueConfigAdmin(ModelView, model=LeagueConfig):
                     "base_over_bias", "base_under_bias", "tempo_factor",
                     "safety_mode", "aggression_level", "volatility",
                     "deg_sensitivity", "det_sensitivity", "eps_sensitivity",
-                    "form_delta_sensitivity",
+                    "form_delta_sensitivity", "alt_flip_threshold", "tt_home_bias",
                     "strength_coefficient"]
     can_create = True
     can_edit = True
@@ -115,7 +115,7 @@ class PlayerAdmin(ModelView, model=Player):
     form_columns = ["fbref_id", "name", "current_team", "league_code", "position"]
     can_create = True
     can_edit = True
-    can_delete = True
+    can_delete = False  # use DELETE /api/predictions/bulk or force batch-predict instead
     can_view_details = True
     page_size = 50
 
@@ -144,7 +144,7 @@ class PlayerSeasonStatsAdmin(ModelView, model=PlayerSeasonStats):
     column_default_sort = ("power_index", True)
     can_create = False
     can_edit = False
-    can_delete = True
+    can_delete = False  # use DELETE /api/predictions/bulk or force batch-predict instead
     can_view_details = True
     page_size = 50
 
@@ -178,7 +178,7 @@ class PlayerMatchStatsAdmin(ModelView, model=PlayerMatchStats):
     column_default_sort = ("match_date", True)
     can_create = False
     can_edit = False
-    can_delete = True
+    can_delete = False  # use DELETE /api/predictions/bulk or force batch-predict instead
     can_view_details = True
     page_size = 50
 
@@ -208,7 +208,7 @@ class FBrefFixtureAdmin(ModelView, model=FBrefFixture):
     form_columns = ["league_code", "home_team", "away_team", "match_date", "match_time"]
     can_create = True
     can_edit = True
-    can_delete = True
+    can_delete = False  # use DELETE /api/predictions/bulk or force batch-predict instead
     can_view_details = True
     page_size = 50
 
@@ -217,6 +217,9 @@ class PredictionLogAdmin(ModelView, model=PredictionLog):
     name = "Prediction"
     name_plural = "Predictions"
     icon = "fa-solid fa-bullseye"
+    # Bulk delete: sqladmin calls alert(responseText) on non-JSON responses.
+    # Setting page_size_options keeps the list manageable.
+    page_size_options = [25, 50, 100, 200]
     column_list = [PredictionLog.id, PredictionLog.league_code,
                    PredictionLog.home_team, PredictionLog.away_team,
                    PredictionLog.match_date, PredictionLog.market,
@@ -227,7 +230,7 @@ class PredictionLogAdmin(ModelView, model=PredictionLog):
     column_default_sort = ("match_date", True)
     can_create = False
     can_edit = True
-    can_delete = True
+    can_delete = False  # use DELETE /api/predictions/bulk or force batch-predict instead
     can_view_details = True
     page_size = 50
 
