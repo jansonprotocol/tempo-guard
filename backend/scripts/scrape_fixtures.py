@@ -48,7 +48,7 @@ from app.database.models_fbref import FBrefSnapshot
 from app.database.models_predictions import FBrefFixture
 from app.models.team import Team
 from app.util.team_resolver import resolve_and_learn
-from app.core.constants import LEAGUE_MAP
+from app.core.constants import LEAGUE_MAP, SEASON_MAP
 try:
     from app.seed.teams_sync import sync_league_teams as _sync_league_teams
 except ImportError:
@@ -87,22 +87,24 @@ _STANDINGS_URL_OVERRIDES: dict[str, str] = {
 # ---------------------------------------------------------------------------
 # URL helpers
 # ---------------------------------------------------------------------------
-def _standings_url_from_schedule(schedule_url: str) -> Optional[str]:
+def _standings_url_from_schedule(schedule_url: str, league_code: str = "") -> Optional[str]:
     """
     Derive the FBref stats/standings page URL from the schedule URL.
-
-    Schedule:  https://fbref.com/en/comps/9/schedule/Premier-League-Scores-and-Fixtures
-    Standings: https://fbref.com/en/comps/9/Premier-League-Stats
-
-    Returns None if the URL doesn't match the expected pattern.
+    Builds a year-specific URL using SEASON_MAP to prevent FBref redirecting
+    smaller leagues (and comp/13 Ligue 1) to the Premier League stats page.
     """
     m = re.match(
         r"(https://fbref\.com/en/comps/\d+)/schedule/(.+?)-Scores-and-Fixtures",
         schedule_url,
     )
-    if m:
-        return f"{m.group(1)}/{m.group(2)}-Stats"
-    return None
+    if not m:
+        return None
+    base = m.group(1)
+    slug = m.group(2)
+    season = SEASON_MAP.get(league_code) if league_code else None
+    if season:
+        return f"{base}/{season}/{season}-{slug}-Stats"
+    return f"{base}/{slug}-Stats"
 
 
 # ---------------------------------------------------------------------------
@@ -502,7 +504,7 @@ def scrape_league_standings(
         stats_url = _STANDINGS_URL_OVERRIDES[league_code]
         print(f"  [standings] Using URL override for {league_code}")
     else:
-        stats_url = _standings_url_from_schedule(schedule_url)
+        stats_url = _standings_url_from_schedule(schedule_url, league_code)
 
     if not stats_url:
         print(f"  [standings] Could not derive stats URL from: {schedule_url}")
@@ -698,11 +700,35 @@ def scrape_league(league_code: str, url: str) -> None:
     if league_code not in INTL_LEAGUE_CODES:
         standings_updated = scrape_league_standings(league_code, schedule_url=url)
         if standings_updated == 0 and schedule_standings_df is not None:
-            # Rare fallback: standings happened to be embedded in schedule page
+            # Rare fallback: standings happened to be embedded in schedule page.
+            # Run the same sanity check as scrape_league_standings to reject
+            # misdirected PL tables before writing them.
             print(f"  [standings] Falling back to embedded standings from schedule page")
             db = SessionLocal()
             try:
-                _process_standings(db, league_code, schedule_standings_df)
+                standings_flat = _flatten_columns(schedule_standings_df)
+                cols_lower = {str(c).lower().strip(): c for c in standings_flat.columns}
+                team_col_check = cols_lower.get("squad") or cols_lower.get("team") or cols_lower.get("club")
+                sane = False
+                if team_col_check:
+                    sample_names = [
+                        str(r).strip() for r in standings_flat[team_col_check].dropna().head(5)
+                        if str(r).strip().lower() not in ("nan", "", "squad", "team")
+                    ]
+                    matched = sum(
+                        1 for raw in sample_names
+                        if db.query(Team).filter_by(
+                            team_key=resolve_and_learn(db, raw, league_code),
+                            league_code=league_code
+                        ).first()
+                    )
+                    if matched > 0 or len(sample_names) < 3:
+                        sane = True
+                    else:
+                        print(f"  [standings] REJECTED embedded: 0/{len(sample_names)} "
+                              f"sampled teams match {league_code}. Sample: {sample_names[:3]}")
+                if sane:
+                    _process_standings(db, league_code, schedule_standings_df)
             finally:
                 db.close()
     else:
