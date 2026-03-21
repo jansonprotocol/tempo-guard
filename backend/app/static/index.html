@@ -3093,7 +3093,7 @@
 
       sorted.forEach(t => {
         // Skip orphan team keys (single-word fragments from alias stripping)
-        if (!t.team || t.team.trim().split(' ').length < 2 && t.team.length <= 8 && !t.display_name) return '';
+        if (!t.team || (!t.actual_pos && !t.display_name && t.team.trim().indexOf(' ') === -1)) return ''; // skip orphan keys with no position
         const sign = t.form_delta > 0 ? '+' : '';
         const deltaClass = t.form_delta >= 3 ? 'pos' : t.form_delta <= -3 ? 'neg' : 'neutral';
         const issue = t.primary_weakness
