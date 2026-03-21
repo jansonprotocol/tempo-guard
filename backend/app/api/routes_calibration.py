@@ -393,9 +393,8 @@ def _suggest_tt_thresholds(
         agg_tt_total   += b_data["tt_total"]
 
     no_bucket_comparison = best_tt_threshold == current_flip_threshold
-    # Require at least 8 flip picks before acting on aggregate signal —
-    # n<8 is too noisy (2 picks at 0% or 100% is meaningless).
-    AGG_FLIP_MIN = 8
+    # Require at least 5 flip picks before acting on aggregate signal.
+    AGG_FLIP_MIN = 5
     if no_bucket_comparison and agg_flip_total >= AGG_FLIP_MIN and agg_tt_total >= MIN_BUCKET:
         agg_flip_rate = agg_flip_hits / agg_flip_total
         agg_tt_rate   = agg_tt_hits   / agg_tt_total
@@ -792,7 +791,9 @@ def _run_calibration_inner(
             current_variance = "orange"
         else:
             current_variance = "red"
-    is_alt_variance = True  # Always apply — TT/flip permanently outperforms main
+    # Respect the suppression flag — if calibration has blocked alt substitution
+    # for this league, evaluate original markets so the hit rate reflects reality.
+    is_alt_variance = current_use_alt_market
 
     # ── Pre-warm feature cache for this league ───────────────────────
     # Loads the snapshot DataFrame into memory once so asof_features,
