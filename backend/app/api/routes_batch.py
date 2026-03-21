@@ -1101,3 +1101,44 @@ def log_closing_odds(
         "value_rating":       ctx.value_rating,
         "status":             pred.status,
     }
+
+
+# ── Bulk delete predictions ────────────────────────────────────────────────────
+
+@router.delete("/predictions/bulk")
+def bulk_delete_predictions(
+    ids: str = Query(..., description="Comma-separated prediction IDs to delete"),
+    league_code: str = Query(None, description="Delete all pending predictions for a league"),
+    status: str = Query(None, description="Filter by status: pending, hit, miss, void"),
+    db: Session = Depends(get_db),
+):
+    """
+    Delete predictions by ID list or by league + status filter.
+
+    Examples:
+      DELETE /api/predictions/bulk?ids=1,2,3,4
+      DELETE /api/predictions/bulk?league_code=FRA-L2&status=pending
+      DELETE /api/predictions/bulk?league_code=MLS  (all statuses)
+    """
+    deleted = 0
+
+    if ids:
+        id_list = [int(i.strip()) for i in ids.split(",") if i.strip().isdigit()]
+        if id_list:
+            deleted = (
+                db.query(PredictionLog)
+                .filter(PredictionLog.id.in_(id_list))
+                .delete(synchronize_session=False)
+            )
+            db.commit()
+        return {"deleted": deleted, "mode": "by_ids", "ids": id_list}
+
+    if league_code:
+        q = db.query(PredictionLog).filter(PredictionLog.league_code == league_code)
+        if status:
+            q = q.filter(PredictionLog.status == status)
+        deleted = q.delete(synchronize_session=False)
+        db.commit()
+        return {"deleted": deleted, "mode": "by_league", "league_code": league_code, "status": status or "all"}
+
+    return {"deleted": 0, "error": "Provide either ids= or league_code="}
