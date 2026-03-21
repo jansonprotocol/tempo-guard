@@ -90,6 +90,7 @@ def load_league_configs(db: Session):
             existing.aggression_level = float(entry.get("aggression_level", existing.aggression_level))
             existing.volatility = float(entry.get("volatility", existing.volatility))
             existing.description = (entry.get("description") or existing.description or "").strip()
+            existing.description = (entry.get("description") or existing.description or "").strip()
             existing.strength_coefficient = float(entry.get("strength_coefficient", existing.strength_coefficient or 1.0))
             updated += 1
 
@@ -125,52 +126,50 @@ def load_teams(db: Session):
         ).first()
 
         if existing is None:
-            # CREATE — flush immediately so team.id is assigned before
-            # aliases are inserted. Without this, SQLAlchemy batches all
-            # alias INSERTs across every team into one statement, which
-            # blows past SQLite's 999 bind-parameter limit on startup.
+            # CREATE
             team = Team(
                 team_key=team_key,
                 display_name=display_name,
                 league_code=league_code,
                 country=(entry.get("country") or "").strip(),
             )
-            db.add(team)
-            db.flush()  # assigns team.id
 
-            seen_aliases: set = set()
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
-                if alias_key and alias_key != team_key and alias_key not in seen_aliases:
-                    seen_aliases.add(alias_key)
-                    db.add(TeamAlias(team_id=team.id, alias_key=alias_key))
+                if not alias_key or alias_key == team_key:
+                    continue
+                # Skip if alias already claimed by another team globally
+                if db.query(TeamAlias).filter_by(alias_key=alias_key).first():
+                    print(f"  [memory_loader] Skipping alias '{alias_key}' for '{team_key}' — already claimed")
+                    continue
+                team.aliases.append(TeamAlias(alias_key=alias_key))
 
-            db.flush()  # write this team's aliases before moving to next
+            db.add(team)
+            db.flush()   # catch constraint errors per-team, not in bulk
             created += 1
 
         else:
-            # UPDATE — delete old aliases explicitly then re-insert,
-            # deduplicating to avoid unique constraint violations from
-            # duplicate entries in teams.json seed data.
+            # UPDATE
             existing.display_name = display_name
             existing.league_code = league_code
 
             if entry.get("country") is not None:
                 existing.country = (entry.get("country") or "").strip()
 
-            db.query(TeamAlias).filter(
-                TeamAlias.team_id == existing.id
-            ).delete(synchronize_session=False)
-            db.flush()
-
-            seen_aliases: set = set()
+            # Rebuild aliases — only add those not already claimed by another team
+            existing.aliases.clear()
+            db.flush()   # release old alias rows before claiming them again
             for alias in entry.get("aliases", []):
                 alias_key = normalize_team(alias)
-                if alias_key and alias_key != team_key and alias_key not in seen_aliases:
-                    seen_aliases.add(alias_key)
-                    db.add(TeamAlias(team_id=existing.id, alias_key=alias_key))
+                if not alias_key or alias_key == team_key:
+                    continue
+                # Check if alias is already owned by a different team
+                clash = db.query(TeamAlias).filter_by(alias_key=alias_key).first()
+                if clash and clash.team_id != existing.id:
+                    print(f"  [memory_loader] Skipping alias '{alias_key}' for '{team_key}' — claimed by team_id={clash.team_id}")
+                    continue
+                existing.aliases.append(TeamAlias(alias_key=alias_key))
 
-            db.flush()
             updated += 1
 
     db.commit()
