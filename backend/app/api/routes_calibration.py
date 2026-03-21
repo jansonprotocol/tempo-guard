@@ -396,11 +396,25 @@ def _suggest_tt_thresholds(
         agg_flip_rate = agg_flip_hits / agg_flip_total
         agg_tt_rate   = agg_tt_hits   / agg_tt_total
         if agg_flip_rate > agg_tt_rate + 0.05:
-            # Flip clearly wins overall → raise threshold so more picks go to flip
             best_tt_threshold = current_flip_threshold + STEP
         elif agg_tt_rate > agg_flip_rate + 0.05:
-            # TT clearly wins overall → lower threshold so more picks go to TT
             best_tt_threshold = current_flip_threshold - STEP
+    elif no_bucket_comparison and agg_flip_total >= AGG_FLIP_MIN and agg_tt_total < MIN_BUCKET:
+        # Suppressed league — no TT baseline. Compare flip vs overall hit rate instead.
+        all_hits = all_total = 0.0
+        for r in calib_records:
+            if r["hw"] >= 0:
+                all_total += r["weight"]
+                all_hits  += r["hw"] * r["weight"]
+        if all_total >= AGG_FLIP_MIN:
+            agg_flip_rate = agg_flip_hits / agg_flip_total
+            overall_rate  = all_hits / all_total
+            if agg_flip_rate > overall_rate + 0.05:
+                # Flip clearly beats overall → raise threshold
+                best_tt_threshold = current_flip_threshold + STEP
+            elif agg_flip_rate < overall_rate - 0.05:
+                # Flip underperforms → lower threshold
+                best_tt_threshold = current_flip_threshold - STEP
 
     # Step toward suggested threshold conservatively
     if best_tt_threshold < current_flip_threshold - STEP:
@@ -493,6 +507,29 @@ def _suggest_tt_thresholds(
         new_tt_conf_min = round(max(new_threshold, min(0.85, new_tt_conf_min)), 2)
 
     result["tt_confidence_min"] = new_tt_conf_min
+
+    # ── Min confidence gate tuning ───────────────────────────────────
+    # If picks below tt_confidence_min are hitting <45% across all markets,
+    # suggest raising min_confidence to skip them entirely.
+    # If they recover above 55%, lower it back.
+    MIN_CONF_BUCKET = 5
+    low_conf_hits = low_conf_total = 0.0
+    for r in calib_records:
+        if r["hw"] >= 0 and r["confidence_score"] < new_tt_conf_min:
+            low_conf_total += r["weight"]
+            low_conf_hits  += r["hw"] * r["weight"]
+
+    new_min_conf = current_min_conf
+    if low_conf_total >= MIN_CONF_BUCKET:
+        low_conf_rate = low_conf_hits / low_conf_total
+        if low_conf_rate < 0.45 and new_tt_conf_min > current_min_conf:
+            # Low-confidence band is consistently losing — skip entirely
+            new_min_conf = round(min(new_tt_conf_min, current_min_conf + STEP), 2)
+        elif low_conf_rate > 0.55 and current_min_conf > 0.0:
+            # Recovering — lower the gate
+            new_min_conf = round(max(0.0, current_min_conf - STEP), 2)
+
+    result["min_confidence"] = new_min_conf
     # Flag weak TT sides — use lower minimum (3 picks) since the bias may
     # have already reduced one side to very few picks
     TT_WEAK_MIN = 3
@@ -840,7 +877,8 @@ def _run_calibration_inner(
     # skip that side entirely and fall back to original market
     _tt_home_weak       = bool(getattr(cfg, "tt_home_weak",       False)) if cfg else False
     _tt_away_weak       = bool(getattr(cfg, "tt_away_weak",       False)) if cfg else False
-    current_tt_conf_min = float(getattr(cfg, "tt_confidence_min", None) or 0.62) if cfg else 0.62
+    current_tt_conf_min  = float(getattr(cfg, "tt_confidence_min", None) or 0.62) if cfg else 0.62
+    current_min_conf     = float(getattr(cfg, "min_confidence",    None) or 0.0)  if cfg else 0.0
 
     # ── Determine current variance for this league ──────────────────
     # For red variance leagues, alt market becomes the primary evaluated market.
@@ -1166,6 +1204,12 @@ def _run_calibration_inner(
         conf_score = pred.confidence_score or {"HIGH": 0.85, "MEDIUM": 0.65, "LOW": 0.40}.get(
             pred.translated_play.confidence, 0.65
         )
+
+        # Skip entirely if below league minimum confidence gate
+        if current_min_conf > 0.0 and conf_score < current_min_conf:
+            skipped_matches.append({"position": i + 1, "skipped_reason": f"below_min_confidence ({conf_score:.2f} < {current_min_conf})"})
+            skipped += 1
+            continue
         p_home_tt = metrics.get("p_home_tt05")
         p_away_tt = metrics.get("p_away_tt05")
 
@@ -1176,6 +1220,7 @@ def _run_calibration_inner(
             elif conf_score < current_tt_conf_min:
                 # Below TT confidence gate — serve original market
                 market = original_market
+            # (min_confidence skip is handled before this block in outer loop)
             else:
                 if p_home_tt is not None or p_away_tt is not None:
                     h = (p_home_tt or 0.0) + current_tt_home_bias
@@ -1549,6 +1594,13 @@ def _run_calibration_inner(
             cfg.tt_home_weak = bool(tt_threshold_suggestion.get("tt_home_weak", False))
         if hasattr(cfg, "tt_away_weak"):
             cfg.tt_away_weak = bool(tt_threshold_suggestion.get("tt_away_weak", False))
+        # Write min confidence gate
+        min_conf_suggested = tt_threshold_suggestion.get("min_confidence")
+        if min_conf_suggested is not None and abs(min_conf_suggested - current_min_conf) >= 0.01:
+            if hasattr(cfg, "min_confidence"):
+                cfg.min_confidence = min_conf_suggested
+                sens_changed["min_confidence"] = {"before": current_min_conf, "after": min_conf_suggested}
+
         # Write TT confidence gate
         tt_conf_suggested = tt_threshold_suggestion.get("tt_confidence_min")
         if tt_conf_suggested is not None and abs(tt_conf_suggested - current_tt_conf_min) >= 0.01:
