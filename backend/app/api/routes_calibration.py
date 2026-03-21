@@ -313,20 +313,15 @@ def _suggest_tt_thresholds(
     calib_records: list,
     current_flip_threshold: float,
     current_tt_home_bias: float,
+    current_tt_confidence_min: float = 0.62,
 ) -> dict:
     """
     Analyse per-confidence-bucket hit rates to suggest a better
-    alt_flip_threshold and tt_home_bias for this league.
+    alt_flip_threshold, tt_home_bias, and tt_confidence_min for this league.
 
-    calib_records: list of dicts with keys:
-        confidence_score, market (final), hg, ag, hw (hit weight), weight
-
-    Strategy:
-      - Bin predictions by confidence_score in 0.05-wide buckets
-      - Compare TT hit rate vs flip hit rate in each bucket
-      - Find the threshold where TT starts outperforming flip
-      - Suggest shifting threshold ±0.05 per run (conservative)
-      - Compare TT Home vs TT Away hit rates → suggest tt_home_bias nudge
+    tt_confidence_min: the lower gate on TT picks. Picks between
+    alt_flip_threshold and tt_confidence_min route to original market.
+    Calibration moves this ±0.05 per run based on per-bucket TT performance.
     """
     MIN_BUCKET = 4
     STEP       = 0.05
@@ -334,9 +329,10 @@ def _suggest_tt_thresholds(
     BIAS_MAX   = 0.50  # raised to allow stronger home/away TT routing correction
 
     result = {
-        "alt_flip_threshold": current_flip_threshold,
-        "tt_home_bias":       current_tt_home_bias,
-        "analysis":           "Insufficient data",
+        "alt_flip_threshold":  current_flip_threshold,
+        "tt_home_bias":        current_tt_home_bias,
+        "tt_confidence_min":   current_tt_confidence_min,
+        "analysis":            "Insufficient data",
     }
 
     if len(calib_records) < 20:
@@ -450,6 +446,53 @@ def _suggest_tt_thresholds(
     result["alt_flip_threshold"] = new_threshold
     result["tt_home_bias"]       = new_tt_bias
     result["bucket_analysis"]    = bucket_analysis
+
+    # ── TT confidence gate tuning ─────────────────────────────────────
+    # For each bucket, compare TT hit rate vs overall TT rate.
+    # Find the lowest bucket where TT consistently beats the overall rate.
+    # Set tt_confidence_min = that boundary.
+    # This sheds low-confidence TT picks that drag the average down.
+    TT_GATE_MIN_BUCKET = 5
+    overall_tt_hits = overall_tt_total = 0.0
+    for r in calib_records:
+        if r["hw"] >= 0 and r["market"].startswith("TT"):
+            overall_tt_hits  += r["hw"] * r["weight"]
+            overall_tt_total += r["weight"]
+
+    new_tt_conf_min = current_tt_confidence_min
+    if overall_tt_total >= TT_GATE_MIN_BUCKET * 2:
+        overall_tt_rate = overall_tt_hits / overall_tt_total
+        # Build per-bucket TT rates
+        tt_buckets: dict = {}
+        for r in calib_records:
+            if r["hw"] >= 0 and r["market"].startswith("TT"):
+                b = round(round(r["confidence_score"] / STEP) * STEP, 2)
+                if b not in tt_buckets:
+                    tt_buckets[b] = {"hits": 0.0, "total": 0.0}
+                tt_buckets[b]["total"] += r["weight"]
+                tt_buckets[b]["hits"]  += r["hw"] * r["weight"]
+
+        # Find lowest bucket where TT beats overall rate
+        best_gate = current_tt_confidence_min
+        for b in sorted(tt_buckets):
+            bkt = tt_buckets[b]
+            if bkt["total"] < TT_GATE_MIN_BUCKET:
+                continue
+            bkt_rate = bkt["hits"] / bkt["total"]
+            if bkt_rate >= overall_tt_rate - 0.02:  # within 2pp of overall
+                best_gate = b  # this bucket is good enough → gate can come down to here
+                break           # stop at first good bucket from bottom up
+
+        # Step toward best_gate ±0.05 per run
+        if best_gate < current_tt_confidence_min - STEP:
+            new_tt_conf_min = round(current_tt_confidence_min - STEP, 2)
+        elif best_gate > current_tt_confidence_min + STEP:
+            new_tt_conf_min = round(current_tt_confidence_min + STEP, 2)
+
+        # Clamp between alt_flip_threshold and 0.85
+        new_tt_conf_min = round(max(new_threshold, min(0.85, new_tt_conf_min)), 2)
+
+    result["tt_confidence_min"] = new_tt_conf_min
     # Flag weak TT sides — use lower minimum (3 picks) since the bias may
     # have already reduced one side to very few picks
     TT_WEAK_MIN = 3
@@ -795,8 +838,9 @@ def _run_calibration_inner(
     current_min_original_rate = float(getattr(cfg, "alt_min_original_win_rate", None) or 0.70) if cfg else 0.70
     # Weak TT side flags — when a side consistently underperforms (<65%),
     # skip that side entirely and fall back to original market
-    _tt_home_weak = bool(getattr(cfg, "tt_home_weak", False)) if cfg else False
-    _tt_away_weak = bool(getattr(cfg, "tt_away_weak", False)) if cfg else False
+    _tt_home_weak       = bool(getattr(cfg, "tt_home_weak",       False)) if cfg else False
+    _tt_away_weak       = bool(getattr(cfg, "tt_away_weak",       False)) if cfg else False
+    current_tt_conf_min = float(getattr(cfg, "tt_confidence_min", None) or 0.62) if cfg else 0.62
 
     # ── Determine current variance for this league ──────────────────
     # For red variance leagues, alt market becomes the primary evaluated market.
@@ -1129,6 +1173,9 @@ def _run_calibration_inner(
         if is_alt_variance:
             if conf_score < ALT_FLIP_THRESHOLD:
                 market = "U3.5" if original_market.startswith("O") else "O1.75"
+            elif conf_score < current_tt_conf_min:
+                # Below TT confidence gate — serve original market
+                market = original_market
             else:
                 if p_home_tt is not None or p_away_tt is not None:
                     h = (p_home_tt or 0.0) + current_tt_home_bias
@@ -1407,6 +1454,7 @@ def _run_calibration_inner(
         calib_records,
         current_flip_threshold,
         current_tt_home_bias,
+        current_tt_conf_min,
     )
     suggestion["tt_thresholds"] = tt_threshold_suggestion
 
@@ -1501,6 +1549,12 @@ def _run_calibration_inner(
             cfg.tt_home_weak = bool(tt_threshold_suggestion.get("tt_home_weak", False))
         if hasattr(cfg, "tt_away_weak"):
             cfg.tt_away_weak = bool(tt_threshold_suggestion.get("tt_away_weak", False))
+        # Write TT confidence gate
+        tt_conf_suggested = tt_threshold_suggestion.get("tt_confidence_min")
+        if tt_conf_suggested is not None and abs(tt_conf_suggested - current_tt_conf_min) >= 0.01:
+            if hasattr(cfg, "tt_confidence_min"):
+                cfg.tt_confidence_min = tt_conf_suggested
+                sens_changed["tt_confidence_min"] = {"before": current_tt_conf_min, "after": tt_conf_suggested}
 
         # Apply alt market suppression / re-enable
         suggested_use_alt = alt_market_suggestion.get("use_alt_market")
