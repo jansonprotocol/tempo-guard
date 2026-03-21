@@ -425,7 +425,8 @@ def batch_predict(
                 tt_home_bias=_tt_bias,
                 use_alt_market=_use_alt,
             )
-            final_market = alt_market if alt_market else pred.translated_play.market
+            final_market    = alt_market if alt_market else pred.translated_play.market
+            alt_suppressed  = (not _use_alt)  # calibration blocked TT/flip for this league
 
             # ── Calibrated probability ───────────────────────────────
             cal_prob = None
@@ -443,6 +444,7 @@ def batch_predict(
                 "match_date":            fix.match_date.isoformat(),
                 "market":                final_market,
                 "original_market":       original_market,
+                "alt_suppressed":        alt_suppressed,
                 "confidence":            pred.translated_play.confidence,
                 "corridor_low":          pred.corridor.low,
                 "corridor_high":         pred.corridor.high,
@@ -474,6 +476,7 @@ def batch_predict(
                         "p_home_tt05": p_home_tt,
                         "p_away_tt05": p_away_tt,
                         "original_market": original_market,
+                        "alt_suppressed": alt_suppressed,
                     }),
                     p_two_plus=metrics.get("p_two_plus"),
                     tempo_index=metrics.get("tempo_index"),
@@ -782,6 +785,7 @@ def get_predictions(
             "p_home_tt05":           _get_stored_tt(r, "p_home_tt05"),
             "p_away_tt05":           _get_stored_tt(r, "p_away_tt05"),
             "original_market":       _get_stored_tt(r, "original_market"),
+            "alt_suppressed":        _get_stored_tt(r, "alt_suppressed"),
             "predicted_at":          r.predicted_at.isoformat() if r.predicted_at else None,
             "evaluated_at":          r.evaluated_at.isoformat() if r.evaluated_at else None,
             "variance_flag":         getattr(r, "variance_flag", None),
