@@ -1157,6 +1157,8 @@
     .variance-badge.green  { background: rgba(0,255,136,0.12); color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
     .variance-badge.orange { background: rgba(255,176,0,0.12);  color: var(--amber); border: 1px solid rgba(255,176,0,0.25); }
     .variance-badge.red    { background: rgba(255,77,77,0.12);  color: var(--red);   border: 1px solid rgba(255,77,77,0.25); }
+    .alt-suppressed-badge  { display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.05em;font-family:var(--mono);
+                             background:rgba(138,99,255,0.12);color:#8a63ff;border:1px solid rgba(138,99,255,0.3); }
 
     .pred-card-chevron {
       font-size: 10px;
@@ -2604,6 +2606,10 @@
       const varianceBadge  = p.variance_flag
         ? `<div class="variance-badge ${p.variance_flag}">${varianceLabels[p.variance_flag]}</div>`
         : '';
+      // Alt suppression badge — shown when calibration blocked TT/flip for this league
+      const altSuppressedBadge = p.alt_suppressed
+        ? `<div class="alt-suppressed-badge" title="Calibration blocked TT/flip — original market served because it outperforms the alt lane for this league">⊘ ALT BLOCKED</div>`
+        : '';
 
       const varianceDescriptions = {
         green:  'Hit rate ≥ 80% — low variance',
@@ -2616,6 +2622,14 @@
           <span class="pred-detail-val">
             <span class="variance-badge ${p.variance_flag}">${varianceLabels[p.variance_flag]}</span>
             <span style="color:var(--muted);font-size:10px;margin-left:6px">${varianceDescriptions[p.variance_flag]}</span>
+          </span>
+        </div>` : '';
+      const altSuppressedDetail = p.alt_suppressed ? `
+        <div class="pred-detail-row">
+          <span class="pred-detail-label">Alt Lane</span>
+          <span class="pred-detail-val">
+            <span class="alt-suppressed-badge">⊘ ALT BLOCKED</span>
+            <span style="color:var(--muted);font-size:10px;margin-left:6px">TT/flip suppressed — original market outperforms for this league</span>
           </span>
         </div>` : '';
 
@@ -2659,6 +2673,7 @@
           ${kickoffStr ? `<div class="pred-card-kickoff">${kickoffStr}</div>` : ''}
           ${perfHint}
           ${varianceBadge}
+          ${altSuppressedBadge}
           <div class="pred-card-market-inline">
             ${p.market}
             ${p.original_market ? `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-weight:400">was ${p.original_market}</span>` : ''}
@@ -2677,6 +2692,7 @@
               <span class="pred-detail-val" style="color:var(--cyan)">${kickoffStr}</span>
             </div>` : ''}
             ${varianceDetail}
+            ${altSuppressedDetail}
             <div class="pred-detail-row">
               <span class="pred-detail-label">Confidence</span>
               <span class="pred-detail-val" style="color:${confColor}">${p.confidence}</span>
