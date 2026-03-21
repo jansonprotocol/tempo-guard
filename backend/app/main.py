@@ -94,6 +94,8 @@ _COLUMN_MIGRATIONS = [
     # league_configs — v2.2 per-side TT weakness flags
     ("league_configs", "tt_home_weak",               "BOOLEAN", "false"),
     ("league_configs", "tt_away_weak",               "BOOLEAN", "false"),
+    # league_configs — v2.2 TT confidence gate
+    ("league_configs", "tt_confidence_min",          "FLOAT",   "0.62"),
 ]
 
 
