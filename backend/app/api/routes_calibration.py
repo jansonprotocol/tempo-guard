@@ -731,10 +731,15 @@ def _suggest_confidence_shaping(
 
     # Use lean_gap as proxy for delta (it IS delta pre-scaling)
     # Records need lean_gap field — added alongside hw and weight
-    records_with_gap = [r for r in calib_records if r.get("lean_gap") is not None and r["hw"] >= 0]
+    # Separate gated (min_confidence skipped) from normally evaluated records
+    gated_records    = [r for r in calib_records if r.get("gated") and r.get("lean_gap") is not None and r["hw"] >= 0]
+    evaluated_records = [r for r in calib_records if not r.get("gated") and r.get("lean_gap") is not None and r["hw"] >= 0]
+    records_with_gap = gated_records + evaluated_records
     if len(records_with_gap) < 20:
         result["analysis"] = "No lean_gap data in calib_records — skipping confidence shaping"
         return result
+    result["gated_count"] = len(gated_records)
+    result["evaluated_count"] = len(evaluated_records)
 
     # Overall hit rate
     total_hits = total_w = 0.0
@@ -768,6 +773,21 @@ def _suggest_confidence_shaping(
     result["bucket_analysis"] = bucket_analysis
 
     if good_from is None:
+        # Check if gated picks specifically perform well — if so, raise scale
+        if gated_records:
+            gated_hits = sum(r["hw"] * r["weight"] for r in gated_records)
+            gated_total = sum(r["weight"] for r in gated_records)
+            gated_rate = gated_hits / gated_total if gated_total > 0 else 0
+            result["gated_hit_rate"] = round(gated_rate * 100, 1)
+            if gated_rate >= TARGET_HR:
+                # Gated picks are good! Raise scale to let them through
+                new_scale = round(min(2.5, current_scale + SCALE_STEP), 2)
+                result["confidence_scale"] = new_scale
+                result["analysis"] = (
+                    f"Raising scale {current_scale}→{new_scale}: "
+                    f"gated picks hit {round(gated_rate*100,1)}% — worth admitting"
+                )
+                return result
         result["analysis"] = f"No lean_gap bucket hits >= {TARGET_HR*100}% — scale unchanged"
         return result
 
@@ -1404,6 +1424,27 @@ def _run_calibration_inner(
         if current_min_conf > 0.0 and conf_score < current_min_conf:
             skipped_matches.append({"position": pos, "skipped_reason": f"below_min_confidence ({conf_score:.2f} < {current_min_conf})", "conf_score": round(conf_score, 3)})
             skipped += 1
+            # Still evaluate shadow for confidence shaping analysis
+            # so _suggest_confidence_shaping can see if these picks
+            # would have been good and suggest raising the scale
+            _skip_result = evaluate_market(pred.translated_play.market, hg, ag)
+            _skip_hw     = hit_weight(_skip_result)
+            if _skip_hw >= 0:
+                _raw_sd_sk    = (metrics.get("support_idx_over_delta") or 0.0) + (current_over - current_under)
+                _raw_tmp_sk   = max(0.0, min(0.95, (metrics.get("tempo_index") or 0.55) * current_tempo * 2.0))
+                _raw_p2p_sk   = metrics.get("p_two_plus") or 0.68
+                _gap_sk       = round(
+                    (_raw_sd_sk + (_raw_tmp_sk - 0.5) * 0.30)
+                    - ((0.72 - _raw_p2p_sk) * 0.50 + (0.5 - _raw_tmp_sk) * 0.30), 4
+                )
+                calib_records.append({
+                    "confidence_score": conf_score,
+                    "market":           pred.translated_play.market,
+                    "hw":               _skip_hw,
+                    "weight":           w,
+                    "lean_gap":         _gap_sk,
+                    "gated":            True,  # flag: was skipped by min_confidence
+                })
             continue
         p_home_tt = metrics.get("p_home_tt05")
         p_away_tt = metrics.get("p_away_tt05")
@@ -1418,12 +1459,21 @@ def _run_calibration_inner(
             # (min_confidence skip is handled before this block in outer loop)
             else:
                 if p_home_tt is not None or p_away_tt is not None:
-                    h = (p_home_tt or 0.0) + current_tt_home_bias
-                    a = p_away_tt or 0.0
+                    h_raw = p_home_tt or 0.0
+                    a_raw = p_away_tt or 0.0
+                    h = h_raw + current_tt_home_bias
+                    a = a_raw
+                    TT_MIN_RAW = 0.55  # never serve TT side with <55% raw probability
                     if h >= a:
-                        market = original_market if _tt_home_weak else "TT Home O0.5"
+                        if _tt_home_weak or h_raw < TT_MIN_RAW:
+                            market = original_market
+                        else:
+                            market = "TT Home O0.5"
                     else:
-                        market = original_market if _tt_away_weak else "TT Away O0.5"
+                        if _tt_away_weak or a_raw < TT_MIN_RAW:
+                            market = original_market
+                        else:
+                            market = "TT Away O0.5"
                 else:
                     market = original_market
         else:
