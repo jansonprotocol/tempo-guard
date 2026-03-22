@@ -89,6 +89,11 @@ class LeagueConfig(Base):
     # Range: alt_flip_threshold (0.62) to 0.85. Default 0.62 = no extra gate.
     tt_confidence_min = Column(Float, default=0.62)
 
+    # ── v2.2: Consecutive suppression counter ────────────────────────
+    # Increments each run where original beats alt by >1pp.
+    # Resets to 0 when alt catches up. Suppression fires at 3.
+    orig_ahead_runs = Column(Integer, default=0)
+
     # ── v2.2: Minimum confidence to serve ANY prediction ─────────────
     # Picks below this score are skipped entirely — no TT, flip, or original.
     # Default 0.0 = no gate (all picks served). Calibration tunes this up
