@@ -98,6 +98,9 @@ _COLUMN_MIGRATIONS = [
     ("league_configs", "tt_confidence_min",          "FLOAT",   "0.62"),
     # league_configs — v2.2 consecutive suppression counter
     ("league_configs", "orig_ahead_runs",            "INTEGER", "0"),
+    # league_configs — v2.3 per-league confidence shaping
+    ("league_configs", "confidence_scale",           "FLOAT",   "1.0"),
+    ("league_configs", "confidence_floor",           "FLOAT",   "0.60"),
     # league_configs — v2.2 minimum confidence gate
     ("league_configs", "min_confidence",             "FLOAT",   "0.0"),
 ]
