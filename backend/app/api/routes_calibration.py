@@ -1734,6 +1734,9 @@ def _run_calibration_inner(
         current_min_conf,
     )
     suggestion["tt_thresholds"] = tt_threshold_suggestion
+    # Expose current confidence shaping values in tt_thresholds for easy reading
+    suggestion["tt_thresholds"]["confidence_scale"] = current_conf_scale
+    suggestion["tt_thresholds"]["confidence_floor"] = current_conf_floor
 
     # Alt market suppression analysis
     alt_market_suggestion = _suggest_alt_market_use(
