@@ -310,6 +310,8 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
 
     # ── 2. League biases ──────────────────────────────────────────────
     over_bias, under_bias, tempo_factor = _league_bias(cfg)
+    confidence_scale = float(getattr(cfg, "confidence_scale", None) or 1.0)  if cfg else 1.0
+    confidence_floor = float(getattr(cfg, "confidence_floor", None) or 0.60) if cfg else 0.60
 
     # ── 3–6. Nudge stack ──────────────────────────────────────────────
     base_nudge  = _team_base_nudge(home_cfg, away_cfg)
@@ -339,4 +341,8 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
     adjusted_req = _apply_module_adjustments(req, cfg, home_cfg, away_cfg)
 
     # ── 9. Evaluate ───────────────────────────────────────────────────
-    return evaluate_athena(adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge)
+    return evaluate_athena(
+        adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge,
+        confidence_scale=confidence_scale,
+        confidence_floor=confidence_floor,
+    )
