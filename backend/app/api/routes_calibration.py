@@ -1357,6 +1357,13 @@ def _run_calibration_inner(
                         "deg_values": [],
                         "over_miss_det": [],
                         "under_miss_det": [],
+                        # Actual scoring reality — market-agnostic
+                        "goals_scored_home": [],   # goals scored when home
+                        "goals_scored_away": [],   # goals scored when away
+                        "goals_conceded_home": [], # goals conceded when home
+                        "goals_conceded_away": [], # goals conceded when away
+                        "tt_home_hits": 0, "tt_home_total": 0,  # TT Home hit rate
+                        "tt_away_hits": 0, "tt_away_total": 0,  # TT Away hit rate
                     }
 
                 # Update market‑specific stats
@@ -1378,6 +1385,22 @@ def _run_calibration_inner(
                     team_tracker[team]["over_miss_det"].append(raw_det)
                 if not is_over_market and is_full_miss:
                     team_tracker[team]["under_miss_det"].append(raw_det)
+
+                # Record actual goals — market-agnostic scoring reality
+                if team == home_team:
+                    team_tracker[team]["goals_scored_home"].append(hg)
+                    team_tracker[team]["goals_conceded_home"].append(ag)
+                    # TT Home tracking: did home team score?
+                    team_tracker[team]["tt_home_total"] += 1
+                    if hg >= 1:
+                        team_tracker[team]["tt_home_hits"] += 1
+                else:  # away team
+                    team_tracker[team]["goals_scored_away"].append(ag)
+                    team_tracker[team]["goals_conceded_away"].append(hg)
+                    # TT Away tracking: did away team score?
+                    team_tracker[team]["tt_away_total"] += 1
+                    if ag >= 1:
+                        team_tracker[team]["tt_away_hits"] += 1
 
             deg_det_records.append({
                 "deg_pressure":  metrics.get("deg_pressure")  or 0.0,
@@ -1691,18 +1714,65 @@ def _run_calibration_inner(
             for tc in db.query(TeamConfig).filter_by(league_code=league_code).all()
         }
 
+        # Compute league-wide scoring averages for comparison
+        all_home_goals = [g for s in team_tracker.values() for g in s["goals_scored_home"]]
+        all_away_goals = [g for s in team_tracker.values() for g in s["goals_scored_away"]]
+        league_avg_home_scored = sum(all_home_goals) / max(1, len(all_home_goals))
+        league_avg_away_scored = sum(all_away_goals) / max(1, len(all_away_goals))
+        league_avg_scored = (league_avg_home_scored + league_avg_away_scored) / 2
+
         for team, stats in team_tracker.items():
             over_n  = stats["over_total"]
             under_n = stats["under_total"]
             over_nudge  = 0.0
             under_nudge = 0.0
 
-            if over_n >= MIN_TEAM_SAMPLES:
-                team_over_rate  = stats["over_hits"] / over_n
-                gap = team_over_rate - (overall_hit_rate / 100.0)
+            # ── Scoring-reality nudge ─────────────────────────────────
+            # Compare team actual avg goals to league avg.
+            # A team scoring 0.5 goals/game above avg gets +over_nudge.
+            # This works for TT and Over leagues — market-agnostic.
+            home_goals = stats["goals_scored_home"]
+            away_goals = stats["goals_scored_away"]
+            all_scored = home_goals + away_goals
+
+            if len(all_scored) >= MIN_TEAM_SAMPLES:
+                team_avg_scored = sum(all_scored) / len(all_scored)
+                scoring_gap = team_avg_scored - league_avg_scored
+                # Scale: 0.5 goals above avg → full NUDGE_MAX nudge
                 over_nudge = round(
-                    max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
+                    max(-NUDGE_MAX, min(NUDGE_MAX, scoring_gap * NUDGE_SCALE * 2.0)), 4
                 )
+
+            # ── TT-specific nudge for TT-heavy leagues ───────────────
+            # Track how often this team scores at least 1 goal at home/away.
+            # Supplements over_nudge for TT market routing.
+            tt_home_n = stats["tt_home_total"]
+            tt_away_n = stats["tt_away_total"]
+            if tt_home_n >= MIN_TEAM_SAMPLES:
+                tt_home_rate = stats["tt_home_hits"] / tt_home_n
+                # League TT home avg: fraction of home teams that score
+                league_tt_home = sum(
+                    s["tt_home_hits"] for s in team_tracker.values()
+                ) / max(1, sum(s["tt_home_total"] for s in team_tracker.values()))
+                tt_gap = tt_home_rate - league_tt_home
+                # Blend: over_nudge gets 60% scoring reality, 40% TT reality
+                tt_nudge = round(
+                    max(-NUDGE_MAX, min(NUDGE_MAX, tt_gap * NUDGE_SCALE * 1.5)), 4
+                )
+                over_nudge = round(
+                    max(-NUDGE_MAX, min(NUDGE_MAX,
+                        over_nudge * 0.6 + tt_nudge * 0.4)), 4
+                )
+
+            # ── Legacy market-based nudge (fallback when no scoring data) ─
+            # Still useful for suppressed leagues serving Over/Under markets
+            if len(all_scored) < MIN_TEAM_SAMPLES:
+                if over_n >= MIN_TEAM_SAMPLES:
+                    team_over_rate  = stats["over_hits"] / over_n
+                    gap = team_over_rate - (overall_hit_rate / 100.0)
+                    over_nudge = round(
+                        max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
+                    )
 
             if under_n >= MIN_TEAM_SAMPLES:
                 team_under_rate = stats["under_hits"] / under_n
