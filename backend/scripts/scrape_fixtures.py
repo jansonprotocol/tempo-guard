@@ -130,9 +130,11 @@ def _fetch_via_scraperapi(url: str, label: str, bust_cache: bool = False) -> Opt
         # bust_cache=True forces a fresh fetch by disabling the cache.
         if bust_cache:
             params["cache"] = "false"
-            # Also add a timestamp param to the target URL to bust any
-            # intermediate proxy cache that ignores the cache=false flag
-            import time as _time
+            params["keep_headers"] = "true"  # prevents ScraperAPI from reusing cached headers
+            # Rotate session to force a fresh proxy/browser instance
+            import time as _time, random as _random
+            params["session_number"] = str(_random.randint(1, 99999))
+            # Also timestamp the URL to bust any CDN cache
             sep = "&" if "?" in params["url"] else "?"
             params["url"] = f'{params["url"]}{sep}_cb={int(_time.time())}'
         resp = requests.get(
@@ -451,9 +453,30 @@ def _classify_round_type(raw: Optional[str], match_date: date, league_code: str)
 # ---------------------------------------------------------------------------
 # Standings processing
 # ---------------------------------------------------------------------------
+# League tier map — used to distinguish promotions from relegations
+# Higher number = higher tier (1st division = highest)
+_LEAGUE_TIERS: dict[str, int] = {
+    "ENG-PL": 1, "ENG-CH": 2,
+    "ESP-LL": 1, "ESP-LL2": 2,
+    "FRA-L1": 1, "FRA-L2": 2,
+    "GER-BUN": 1, "GER-B2": 2,
+    "ITA-SA": 1, "ITA-SB": 2,
+    "NED-ERE": 1, "BEL-PL": 1, "TUR-SL": 1,
+    "POR-LP": 1, "NOR-EL": 1, "SWE-AL": 1,
+    "DEN-SL": 1, "SAU-SPL": 1, "MLS": 1,
+    "BRA-SA": 1, "BRA-SB": 2,
+    "JPN-J1": 1, "CHN-CSL": 1,
+    "AUT-BL": 1, "SUI-SL": 1,
+    "POL-EK": 1, "MEX-LMX": 1,
+}
+
+
 def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame) -> int:
     """
     Parse standings table and update teams.current_position.
+    Auto-detects promotions and relegations:
+    - Team on table but in wrong league in DB → update league_code
+    - Team in DB for this league but not on table → clear position (relegated/promoted out)
     Returns the number of teams updated.
     """
     if standings_df is None or standings_df.empty:
@@ -482,34 +505,114 @@ def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame
 
     print(f"  [standings] Using pos_col='{pos_col}', team_col='{team_col}'")
     updated = 0
+    teams_on_table: set = set()  # team_keys confirmed on this standings page
+    this_tier = _LEAGUE_TIERS.get(league_code, 0)
 
     for _, row in standings_df.iterrows():
         team_name_raw = str(row[team_col]).strip()
         if not team_name_raw or team_name_raw.lower() in ("nan", "", "squad", "team"):
             continue
 
-        # Skip repeated header rows (FBref inserts these every N rows)
         try:
             position = int(float(str(row[pos_col]).strip()))
         except (ValueError, TypeError):
-            continue  # non-numeric → header repeat or divider row
+            continue
 
         if position < 1 or position > 30:
-            continue  # sanity guard
+            continue
 
-        # Use resolve_and_learn for fuzzy matching + autopilot alias creation.
-        # resolve_team_name only does exact/alias lookup and silently fails
-        # when FBref names don't match DB keys exactly (e.g. accent variants,
-        # abbreviations). resolve_and_learn also creates the alias in the DB
-        # so subsequent runs find the team immediately.
         team_key = resolve_and_learn(db, team_name_raw, league_code)
         team = db.query(Team).filter_by(team_key=team_key, league_code=league_code).first()
 
         if team:
+            # Team already in correct league — normal update
             team.current_position = position
+            teams_on_table.add(team_key)
             updated += 1
         else:
-            print(f"  [standings] Team not found: '{team_name_raw}' → '{team_key}'")
+            # Not found in this league — check if it exists in another league
+            team_elsewhere = db.query(Team).filter_by(team_key=team_key).first()
+            if team_elsewhere:
+                old_lc = team_elsewhere.league_code
+                old_tier = _LEAGUE_TIERS.get(old_lc, 0)
+                new_tier = _LEAGUE_TIERS.get(league_code, 0)
+                old_country = (old_lc or "").split("-")[0]
+                new_country = league_code.split("-")[0]
+                same_country = old_country == new_country
+                adjacent_tier = (
+                    old_tier > 0 and new_tier > 0
+                    and abs(old_tier - new_tier) <= 1
+                )
+                if same_country and adjacent_tier:
+                    team_elsewhere.league_code = league_code
+                    team_elsewhere.current_position = position
+                    teams_on_table.add(team_key)
+                    updated += 1
+                    print(
+                        f"  [standings] UP Moved {team_elsewhere.display_name}: "
+                        f"{old_lc} -> {league_code} (pos {position})"
+                    )
+                    # Also migrate player stats to new league so power index
+                    # picks them up correctly in their new competition context
+                    try:
+                        from app.database.models_players import PlayerSeasonStats
+                        player_rows = (
+                            db.query(PlayerSeasonStats)
+                            .filter_by(league_code=old_lc, team=team_key)
+                            .all()
+                        )
+                        for pr in player_rows:
+                            pr.league_code = league_code
+                        if player_rows:
+                            print(
+                                f"  [standings] Migrated {len(player_rows)} player "
+                                f"stat rows for {team_elsewhere.display_name} "
+                                f"to {league_code}"
+                            )
+                    except Exception as _pe:
+                        print(f"  [standings] Player migration error: {_pe}")
+                    try:
+                        from app.seed.teams_sync import update_team_league
+                        update_team_league(team_elsewhere.display_name, league_code)
+                    except Exception:
+                        pass
+                else:
+                    reason = "cross-country" if not same_country else "non-adjacent tier"
+                    print(
+                        f"  [standings] REJECTED move: {team_elsewhere.display_name} "
+                        f"({old_lc} -> {league_code}) blocked: {reason}"
+                    )
+            else:
+                print(f"  [standings] Team not found: '{team_name_raw}' -> '{team_key}'")
+
+    # ── Relegation/promotion-out detection ───────────────────────────
+    # Find teams currently registered in this league that weren't on the table.
+    # If they appear in a higher-tier league, they were promoted — leave alone.
+    # Otherwise clear their position (relegated to lower tier or data gap).
+    if teams_on_table and updated > 0:
+        all_in_league = db.query(Team).filter_by(league_code=league_code).all()
+        for t in all_in_league:
+            if t.team_key in teams_on_table:
+                continue  # on table — fine
+            if t.current_position is None:
+                continue  # already cleared
+            # Check if this team now appears in a higher-tier league
+            promoted = False
+            if this_tier > 0:
+                higher_leagues = [
+                    lc for lc, tier in _LEAGUE_TIERS.items()
+                    if tier < this_tier  # lower number = higher tier
+                ]
+                for hlc in higher_leagues:
+                    if db.query(Team).filter_by(team_key=t.team_key, league_code=hlc).first():
+                        promoted = True
+                        break
+            if not promoted:
+                print(
+                    f"  [standings] ↓ {t.display_name} not on {league_code} table — "
+                    f"clearing position (was {t.current_position})"
+                )
+                t.current_position = None
 
     if updated:
         db.commit()
@@ -602,7 +705,7 @@ def scrape_league_standings(
                     league_code=league_code
                 ).first()
             )
-            min_match = max(2, len(sample_names) // 2)
+            min_match = max(3, (len(sample_names) * 2) // 3)  # at least 2/3 must match
             if matched < min_match and len(sample_names) >= 3:
                 print(
                     f"  [standings] REJECTED stats page: {matched}/{len(sample_names)} "
@@ -813,7 +916,7 @@ def scrape_league(league_code: str, url: str) -> None:
                             league_code=league_code
                         ).first()
                     )
-                    min_match = max(2, len(sample_names) // 2)  # at least half must match
+                    min_match = max(3, (len(sample_names) * 2) // 3)  # at least 2/3 must match
                     if matched >= min_match or len(sample_names) < 3:
                         sane = True
                     else:
