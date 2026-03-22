@@ -523,14 +523,15 @@ def _suggest_tt_thresholds(
     new_min_conf = current_min_conf
     if low_conf_total >= MIN_CONF_BUCKET:
         low_conf_rate = low_conf_hits / low_conf_total
-        if low_conf_rate < 0.58 and new_tt_conf_min > current_min_conf:
-            # Low-confidence band underperforming — jump directly to tt_confidence_min
-            # if the rate is very bad (<50%), otherwise step conservatively.
-            if low_conf_rate < 0.50:
-                new_min_conf = new_tt_conf_min  # jump to gate immediately
+        if low_conf_rate < 0.65 and new_tt_conf_min > current_min_conf:
+            # Low-confidence band underperforming
+            if low_conf_rate < 0.62:
+                # Clearly bad — jump directly to TT confidence gate
+                new_min_conf = new_tt_conf_min
             else:
+                # Marginal — step conservatively
                 new_min_conf = round(min(new_tt_conf_min, current_min_conf + STEP), 2)
-        elif low_conf_rate > 0.65 and current_min_conf > 0.0:
+        elif low_conf_rate > 0.70 and current_min_conf > 0.0:
             # Recovering strongly — lower the gate
             new_min_conf = round(max(0.0, current_min_conf - STEP), 2)
 
@@ -657,12 +658,17 @@ def _suggest_alt_market_use(
                 f"Alt {round(alt_rate*100,1)}% vs original {round(orig_rate*100,1)}."
             )
     else:
-        if alt_rate > orig_rate + 0.05:
+        # When suppressed, also reset the orig_ahead_runs counter
+        # so it starts fresh if alt re-enables and then underperforms again
+        result["orig_ahead_runs"] = 0
+        if alt_rate is not None and orig_rate is not None and alt_rate > orig_rate + 0.05:
             result["use_alt_market"] = True
             result["analysis"] = (
                 f"RE-ENABLING alt market: alt {round(alt_rate*100,1)}% "
                 f"now outperforms original {round(orig_rate*100,1)}% by >5pp."
             )
+        elif alt_rate is None:
+            result["analysis"] = "Alt market suppressed — insufficient comparison data this run."
         else:
             result["analysis"] = (
                 f"Alt market remains suppressed: alt {round(alt_rate*100,1)}% "
@@ -1666,12 +1672,12 @@ def _run_calibration_inner(
             cfg.tt_home_weak = bool(tt_threshold_suggestion.get("tt_home_weak", False))
         if hasattr(cfg, "tt_away_weak"):
             cfg.tt_away_weak = bool(tt_threshold_suggestion.get("tt_away_weak", False))
-        # Write consecutive suppression counter
+        # Write consecutive suppression counter (not a sensitivity — tracked separately)
         new_orig_ahead = alt_market_suggestion.get("orig_ahead_runs")
         if new_orig_ahead is not None and hasattr(cfg, "orig_ahead_runs"):
-            cfg.orig_ahead_runs = new_orig_ahead
-            if new_orig_ahead > 0:
-                sens_changed["orig_ahead_runs"] = {"before": current_orig_ahead_runs, "after": new_orig_ahead}
+            if new_orig_ahead != current_orig_ahead_runs:
+                cfg.orig_ahead_runs = new_orig_ahead
+                db.commit()
 
         # Write min confidence gate
         min_conf_suggested = tt_threshold_suggestion.get("min_confidence")
