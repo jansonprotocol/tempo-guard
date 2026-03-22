@@ -260,23 +260,6 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     for team_key in team_expected:
         team_expected[team_key] = min(team_expected[team_key], n_teams)
 
-    # Resolve position collisions — two ranking systems (prev season + power
-    # ranking) can both assign position 1. For teams using power ranking,
-    # offset their position so it doesn't clash with prev-season teams.
-    # Strategy: prev-season positions take priority; power-ranked teams
-    # fill in the gaps.
-    prev_season_teams = set(k for k, v in team_expected.items() if k in prev_pos_map)
-    power_ranked_teams = set(team_expected.keys()) - prev_season_teams
-    used_positions = {team_expected[k] for k in prev_season_teams}
-    # Re-assign power-ranked teams to positions not claimed by prev-season teams
-    available = [p for p in range(1, n_teams + 1) if p not in used_positions]
-    power_ranked_sorted = sorted(
-        power_ranked_teams,
-        key=lambda t: power_pos_map.get(t, n_teams)
-    )
-    for i, team_key in enumerate(power_ranked_sorted):
-        team_expected[team_key] = available[i] if i < len(available) else n_teams
-
     # Build lookup for current standings by team_key
     current_by_key = {s["team_key"]: s for s in current_standings}
 
@@ -326,6 +309,39 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
         # Zone analysis
         tc = team_configs.get(team_key)
         tier = tier_label(expected_pos)
+
+        # ── Last-5-match rolling form ─────────────────────────────
+        # Points from the most recent 5 matches (W=3, D=1, L=0)
+        # Shows current momentum independent of season-long position
+        team_matches = [
+            row for _, row in curr_df.iterrows()
+            if str(row.get(home_col, "")).strip().lower() == team_key
+            or str(row.get(away_col, "")).strip().lower() == team_key
+        ]
+        # Sort descending by date and take last 5
+        team_matches.sort(
+            key=lambda r: r.get(date_col, pd.Timestamp.min),
+            reverse=True
+        )
+        last5 = team_matches[:5]
+        last5_pts = 0
+        last5_results = []
+        for r in last5:
+            try:
+                hg = int(float(r.get("hg", 0) or 0))
+                ag = int(float(r.get("ag", 0) or 0))
+            except (ValueError, TypeError):
+                continue
+            is_home = str(r.get(home_col, "")).strip().lower() == team_key
+            if is_home:
+                if hg > ag:   last5_pts += 3; last5_results.append("W")
+                elif hg == ag: last5_pts += 1; last5_results.append("D")
+                else:          last5_results.append("L")
+            else:
+                if ag > hg:   last5_pts += 3; last5_results.append("W")
+                elif ag == hg: last5_pts += 1; last5_results.append("D")
+                else:          last5_results.append("L")
+
         zones = {}
         worst_gap = 0.0
         primary_weakness = None
@@ -369,6 +385,8 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
             "zones": zones,
             "primary_weakness": primary_weakness if delta < 0 else None,
             "primary_strength": primary_strength if delta > 0 else None,
+            "last5_pts": last5_pts,
+            "last5_form": "".join(last5_results),  # e.g. "WDLWW"
         })
 
     # Sort by form_delta descending (most overperforming first)
