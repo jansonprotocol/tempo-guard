@@ -555,7 +555,7 @@ def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame
                     # Also migrate player stats to new league so power index
                     # picks them up correctly in their new competition context
                     try:
-                        from app.database.models_players import PlayerSeasonStats
+                        from app.models.models_players import PlayerSeasonStats
                         player_rows = (
                             db.query(PlayerSeasonStats)
                             .filter_by(league_code=old_lc, team=team_key)
