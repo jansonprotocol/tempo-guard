@@ -555,6 +555,7 @@ def _suggest_alt_market_use(
     alt_vs_original: list,
     current_use_alt: bool,
     current_min_win_rate: float,
+    current_orig_ahead_runs: int = 0,
 ) -> dict:
     """
     Analyse whether the alt market (TT/flip) is actively hurting vs the
@@ -571,6 +572,7 @@ def _suggest_alt_market_use(
     result = {
         "use_alt_market":            current_use_alt,
         "alt_min_original_win_rate": current_min_win_rate,
+        "orig_ahead_runs":           current_orig_ahead_runs,
         "analysis":                  "Insufficient data",
         "alt_miss_count":            0,
         "original_wins_on_alt_miss": 0,
@@ -1577,6 +1579,7 @@ def _run_calibration_inner(
         alt_vs_original,
         current_use_alt_market,
         current_min_original_rate,
+        current_orig_ahead_runs,
     )
     suggestion["alt_market_suppression"] = alt_market_suggestion
 
