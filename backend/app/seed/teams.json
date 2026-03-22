@@ -601,7 +601,7 @@
   },
   {
     "display_name": "Empoli",
-    "league_code": "ITA-SA",
+    "league_code": "ITA-SB",
     "country": "Italy",
     "aliases": []
   },
@@ -653,7 +653,7 @@
   },
   {
     "display_name": "Monza",
-    "league_code": "ITA-SA",
+    "league_code": "ITA-SB",
     "country": "Italy",
     "aliases": [
       "AC Monza"
