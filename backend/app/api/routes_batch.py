@@ -1025,6 +1025,7 @@ def migrate_fix_null_league_config_defaults(db: Session = Depends(get_db)):
         ("tt_home_weak",          "false"),
         ("tt_away_weak",          "false"),
         ("min_confidence",        "0.0"),
+        ("orig_ahead_runs",       "0"),
         ("tt_confidence_min",     "0.62"),
         ("use_alt_market",        "true"),
         ("alt_min_original_win_rate", "0.70"),
