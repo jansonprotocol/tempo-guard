@@ -523,11 +523,11 @@ def _suggest_tt_thresholds(
     new_min_conf = current_min_conf
     if low_conf_total >= MIN_CONF_BUCKET:
         low_conf_rate = low_conf_hits / low_conf_total
-        if low_conf_rate < 0.45 and new_tt_conf_min > current_min_conf:
-            # Low-confidence band is consistently losing — skip entirely
+        if low_conf_rate < 0.58 and new_tt_conf_min > current_min_conf:
+            # Low-confidence band underperforming — skip entirely
             new_min_conf = round(min(new_tt_conf_min, current_min_conf + STEP), 2)
-        elif low_conf_rate > 0.55 and current_min_conf > 0.0:
-            # Recovering — lower the gate
+        elif low_conf_rate > 0.65 and current_min_conf > 0.0:
+            # Recovering strongly — lower the gate
             new_min_conf = round(max(0.0, current_min_conf - STEP), 2)
 
     result["min_confidence"] = new_min_conf
