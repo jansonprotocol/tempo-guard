@@ -1048,6 +1048,29 @@ def migrate_fix_null_league_config_defaults(db: Session = Depends(get_db)):
     return {"status": "ok", "fixes": results}
 
 
+@router.post("/migrate/add-player-shooting-columns")
+def migrate_add_player_shooting_columns(db: Session = Depends(get_db)):
+    """Add shots_per90 and goals_minus_xg to player_season_stats."""
+    from sqlalchemy import text, inspect
+    results = {}
+    inspector = inspect(db.bind)
+    try:
+        cols = [c["name"] for c in inspector.get_columns("player_season_stats")]
+    except Exception:
+        return {"status": "error", "message": "player_season_stats table not found"}
+    for col, col_type, default in [
+        ("shots_per90",    "FLOAT", "0.0"),
+        ("goals_minus_xg", "FLOAT", "0.0"),
+    ]:
+        if col not in cols:
+            db.execute(text(f"ALTER TABLE player_season_stats ADD COLUMN {col} {col_type} DEFAULT {default}"))
+            db.commit()
+            results[f"player_season_stats.{col}"] = "added"
+        else:
+            results[f"player_season_stats.{col}"] = "already exists"
+    return {"status": "ok", "migrations": results}
+
+
 @router.post("/migrate/add-alt-suppression-columns")
 def migrate_add_alt_suppression_columns(db: Session = Depends(get_db)):
     """Add use_alt_market and alt_min_original_win_rate columns to league_configs."""
