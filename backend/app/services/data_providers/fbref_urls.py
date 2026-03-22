@@ -24,7 +24,9 @@ FBREF_BASE = "https://fbref.com"
 
 # Stat categories needed for the player intelligence layer.
 # Each maps to a sub-path under /en/comps/{comp_id}/{category}/
-STAT_CATEGORIES = ["stats", "gca", "passing", "defense", "keepers"]
+STAT_CATEGORIES = ["stats", "gca", "passing", "defense", "keepers", "shooting"]
+# "shooting" adds xG, xGOT per player — strongest predictor of true scoring ability
+# vs shots-on-target which is a weaker proxy
 
 
 def extract_comp_info(schedule_url: str) -> Optional[Tuple[str, str]]:
