@@ -82,14 +82,30 @@ def load_league_configs(db: Session):
             created += 1
 
         else:
-            # UPDATE
-            existing.base_over_bias = float(entry.get("base_over_bias", existing.base_over_bias))
-            existing.base_under_bias = float(entry.get("base_under_bias", existing.base_under_bias))
-            existing.tempo_factor = float(entry.get("tempo_factor", existing.tempo_factor))
+            # UPDATE — only overwrite calibration-tunable fields if the seed value
+            # differs from the hardcoded default. This prevents deploys from resetting
+            # values that calibration has tuned away from the seed.
+            # Non-tunable fields (description, safety_mode, strength_coefficient)
+            # are always written from seed.
+            SEED_DEFAULTS = {
+                "base_over_bias":  0.5,
+                "base_under_bias": 0.5,
+                "tempo_factor":    1.0,
+                "aggression_level": 0.5,
+                "volatility":      0.5,
+            }
+            for field, default in SEED_DEFAULTS.items():
+                seed_val = entry.get(field)
+                if seed_val is None:
+                    continue
+                seed_val = float(seed_val)
+                db_val   = getattr(existing, field, None)
+                # Only overwrite if DB still has the default (uncalibrated)
+                # or the seed itself changed meaningfully from the default
+                if db_val is None or abs(float(db_val) - default) < 0.001:
+                    setattr(existing, field, seed_val)
+                # Otherwise keep the calibrated DB value
             existing.safety_mode = bool(entry.get("safety_mode", existing.safety_mode))
-            existing.aggression_level = float(entry.get("aggression_level", existing.aggression_level))
-            existing.volatility = float(entry.get("volatility", existing.volatility))
-            existing.description = (entry.get("description") or existing.description or "").strip()
             existing.description = (entry.get("description") or existing.description or "").strip()
             existing.strength_coefficient = float(entry.get("strength_coefficient", existing.strength_coefficient or 1.0))
             updated += 1
