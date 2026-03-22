@@ -924,18 +924,25 @@ def _run_calibration_inner(
     # it once here so cached_asof_features never triggers the per-call
     # "[fbref_base] Parsing Score column" path.
     try:
-        from app.services.data_providers.fbref_base import (
-            _SNAPSHOT_OVERRIDE, _parse_score_column as _fbref_parse_score
-        )
-        if league_code in _SNAPSHOT_OVERRIDE:
-            _snap_df = _SNAPSHOT_OVERRIDE[league_code]
+        _snap_ov = None
+        for _mp3 in ["app.services.feature_cache", "app.services.data_providers.fbref_base"]:
+            try:
+                import importlib as _il3
+                _snap_ov = getattr(_il3.import_module(_mp3), "_SNAPSHOT_OVERRIDE", None)
+                if _snap_ov is not None:
+                    break
+            except Exception:
+                continue
+        from app.services.data_providers.fbref_base import _parse_score_column as _fbref_parse_score
+        if _snap_ov and league_code in _snap_ov:
+            _snap_df = _snap_ov[league_code]
             _cols_lower = [str(c).lower() for c in _snap_df.columns]
             _score_col = next(
                 (c for c in _snap_df.columns if str(c).lower() in ("score", "scores")),
                 None
             )
             if _score_col and "hg" not in _cols_lower:
-                _SNAPSHOT_OVERRIDE[league_code] = _fbref_parse_score(_snap_df, _score_col)
+                _snap_ov[league_code] = _fbref_parse_score(_snap_df, _score_col)
     except Exception:
         pass
 
@@ -983,9 +990,23 @@ def _run_calibration_inner(
         """Return standings computed from warmed snapshot up to mdate."""
         if mdate not in _standings_by_date:
             try:
-                from app.services.data_providers.fbref_base import _SNAPSHOT_OVERRIDE
+                # _SNAPSHOT_OVERRIDE may live in feature_cache or fbref_base
+                # depending on version — try both
+                _snap_override = None
+                for _mod_path in [
+                    "app.services.feature_cache",
+                    "app.services.data_providers.fbref_base",
+                ]:
+                    try:
+                        import importlib
+                        _mod = importlib.import_module(_mod_path)
+                        _snap_override = getattr(_mod, "_SNAPSHOT_OVERRIDE", None)
+                        if _snap_override is not None:
+                            break
+                    except Exception:
+                        continue
                 from app.services.form_delta import _compute_standings, _season_cutoff
-                snap_df = _SNAPSHOT_OVERRIDE.get(league_code)
+                snap_df = _snap_override.get(league_code) if _snap_override else None
                 if snap_df is None:
                     _standings_by_date[mdate] = []
                     return []
