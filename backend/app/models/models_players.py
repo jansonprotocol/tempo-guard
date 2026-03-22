@@ -47,6 +47,8 @@ class PlayerSeasonStats(Base):
     assists_per90   = Column(Float, default=0.0)
     xg_per90        = Column(Float, default=0.0)
     xa_per90        = Column(Float, default=0.0)
+    shots_per90     = Column(Float, default=0.0)  # from shooting table
+    goals_minus_xg  = Column(Float, default=0.0)  # finishing over/underperformance
     sca_per90       = Column(Float, default=0.0)
 
     # Midfield
