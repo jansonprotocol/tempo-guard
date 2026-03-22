@@ -625,13 +625,20 @@ def _suggest_alt_market_use(
     result["original_win_rate_on_miss"] = round(orig_win_rate_on_miss * 100, 1)
 
     if current_use_alt:
-        # Trigger suppression on either:
-        # - High miss-save rate (>=70%) + alt trailing by 3pp+
-        # - Moderate miss-save rate (>=50%) + alt trailing by 8pp+ (persistent gap)
+        # Track consecutive runs where original beats alt
+        new_orig_ahead = current_orig_ahead_runs
+        if alt_rate is not None and orig_rate is not None:
+            if orig_rate > alt_rate + 0.01:
+                new_orig_ahead = current_orig_ahead_runs + 1
+            else:
+                new_orig_ahead = 0
+        result["orig_ahead_runs"] = new_orig_ahead
+
         suppress = (
-            (orig_win_rate_on_miss >= current_min_win_rate and alt_rate < orig_rate - 0.03)
+            (orig_win_rate_on_miss >= current_min_win_rate and alt_rate < orig_rate - 0.02)
             or (orig_win_rate_on_miss >= 0.50 and alt_rate < orig_rate - 0.05)
-            or (alt_rate < orig_rate - 0.06 and miss_w >= 8)  # persistent gap over enough misses
+            or (alt_rate < orig_rate - 0.05 and miss_w >= 8)
+            or (new_orig_ahead >= 3)  # original leading 3+ consecutive runs
         )
         if suppress:
             result["use_alt_market"] = False
@@ -888,6 +895,7 @@ def _run_calibration_inner(
     current_tt_home_bias      = float(getattr(cfg, "tt_home_bias",          None) or 0.0)   if cfg else 0.0
     current_use_alt_market    = bool(getattr(cfg,  "use_alt_market",        True))           if cfg else True
     current_min_original_rate = float(getattr(cfg, "alt_min_original_win_rate", None) or 0.70) if cfg else 0.70
+    current_orig_ahead_runs   = int(getattr(cfg,   "orig_ahead_runs",        0) or 0)         if cfg else 0
     # Weak TT side flags — when a side consistently underperforms (<65%),
     # skip that side entirely and fall back to original market
     _tt_home_weak       = bool(getattr(cfg, "tt_home_weak",       False)) if cfg else False
@@ -1655,6 +1663,13 @@ def _run_calibration_inner(
             cfg.tt_home_weak = bool(tt_threshold_suggestion.get("tt_home_weak", False))
         if hasattr(cfg, "tt_away_weak"):
             cfg.tt_away_weak = bool(tt_threshold_suggestion.get("tt_away_weak", False))
+        # Write consecutive suppression counter
+        new_orig_ahead = alt_market_suggestion.get("orig_ahead_runs")
+        if new_orig_ahead is not None and hasattr(cfg, "orig_ahead_runs"):
+            cfg.orig_ahead_runs = new_orig_ahead
+            if new_orig_ahead > 0:
+                sens_changed["orig_ahead_runs"] = {"before": current_orig_ahead_runs, "after": new_orig_ahead}
+
         # Write min confidence gate
         min_conf_suggested = tt_threshold_suggestion.get("min_confidence")
         if min_conf_suggested is not None and abs(min_conf_suggested - current_min_conf) >= 0.01:
