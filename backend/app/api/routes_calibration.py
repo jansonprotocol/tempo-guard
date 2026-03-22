@@ -1243,7 +1243,7 @@ def _run_calibration_inner(
 
         # Skip entirely if below league minimum confidence gate
         if current_min_conf > 0.0 and conf_score < current_min_conf:
-            skipped_matches.append({"position": i + 1, "skipped_reason": f"below_min_confidence ({conf_score:.2f} < {current_min_conf})"})
+            skipped_matches.append({"position": pos, "skipped_reason": f"below_min_confidence ({conf_score:.2f} < {current_min_conf})"})
             skipped += 1
             continue
         p_home_tt = metrics.get("p_home_tt05")
