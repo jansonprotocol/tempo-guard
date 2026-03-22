@@ -83,11 +83,21 @@ class LeagueConfig(Base):
     tt_away_weak = Column(Boolean, default=False)
 
     # ── v2.2: TT confidence gate ─────────────────────────────────────
-    # tt_confidence_min: minimum confidence score to serve TT market.
-    # Picks between alt_flip_threshold and tt_confidence_min get original.
-    # Calibration tunes this ±0.05 per run based on per-bucket TT performance.
-    # Range: alt_flip_threshold (0.62) to 0.85. Default 0.62 = no extra gate.
     tt_confidence_min = Column(Float, default=0.62)
+
+    # ── v2.3: Per-league confidence shaping ─────────────────────────
+    # confidence_scale: multiplier on delta contribution to confidence score.
+    #   Default 1.0 = neutral. Calibration raises this for leagues where
+    #   signals are naturally compressed (e.g. FRA-L1) so genuine picks
+    #   clear the tt_confidence_min gate without lowering the gate itself.
+    #   Range: 0.5–2.5. A scale of 1.4 lifts a delta=0.30 pick from
+    #   confidence 0.675 to 0.705 — enough to clear a 0.70 gate.
+    #
+    # confidence_floor: per-league baseline before delta is added.
+    #   Default 0.60. Raising this for proven leagues lifts all picks
+    #   uniformly. Works alongside confidence_scale.
+    confidence_scale = Column(Float, default=1.0)
+    confidence_floor = Column(Float, default=0.60)
 
     # ── v2.2: Consecutive suppression counter ────────────────────────
     # Increments each run where original beats alt by >1pp.
