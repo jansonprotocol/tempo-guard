@@ -1080,6 +1080,7 @@ def _run_calibration_inner(
     team_tracker:   dict = {}
     w_hits = w_misses = 0.0
     skipped = 0
+    skipped_matches: list = []
     sample_rows: list = []
     lean_records: list = []
     deg_det_records: list = []
