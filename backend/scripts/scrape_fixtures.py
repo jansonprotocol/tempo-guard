@@ -130,6 +130,11 @@ def _fetch_via_scraperapi(url: str, label: str, bust_cache: bool = False) -> Opt
         # bust_cache=True forces a fresh fetch by disabling the cache.
         if bust_cache:
             params["cache"] = "false"
+            # Also add a timestamp param to the target URL to bust any
+            # intermediate proxy cache that ignores the cache=false flag
+            import time as _time
+            sep = "&" if "?" in params["url"] else "?"
+            params["url"] = f'{params["url"]}{sep}_cb={int(_time.time())}'
         resp = requests.get(
             "http://api.scraperapi.com",
             params=params,
@@ -580,6 +585,31 @@ def scrape_league_standings(
         db = SessionLocal()
 
     try:
+        # Sanity check: verify at least half the sampled teams belong to this league.
+        # Catches ScraperAPI returning a cached PL page even with bust_cache.
+        standings_flat = _flatten_columns(standings_df)
+        cols_lower = {str(c).lower().strip(): c for c in standings_flat.columns}
+        team_col_chk = cols_lower.get("squad") or cols_lower.get("team") or cols_lower.get("club")
+        if team_col_chk:
+            sample_names = [
+                str(r).strip() for r in standings_flat[team_col_chk].dropna().head(6)
+                if str(r).strip().lower() not in ("nan", "", "squad", "team")
+            ]
+            matched = sum(
+                1 for raw in sample_names
+                if db.query(Team).filter_by(
+                    team_key=resolve_and_learn(db, raw, league_code),
+                    league_code=league_code
+                ).first()
+            )
+            min_match = max(2, len(sample_names) // 2)
+            if matched < min_match and len(sample_names) >= 3:
+                print(
+                    f"  [standings] REJECTED stats page: {matched}/{len(sample_names)} "
+                    f"sampled teams match {league_code} — likely wrong page. "
+                    f"Sample: {sample_names[:3]}"
+                )
+                return 0
         return _process_standings(db, league_code, standings_df)
     finally:
         if close_db:
@@ -783,10 +813,11 @@ def scrape_league(league_code: str, url: str) -> None:
                             league_code=league_code
                         ).first()
                     )
-                    if matched > 0 or len(sample_names) < 3:
+                    min_match = max(2, len(sample_names) // 2)  # at least half must match
+                    if matched >= min_match or len(sample_names) < 3:
                         sane = True
                     else:
-                        print(f"  [standings] REJECTED embedded: 0/{len(sample_names)} "
+                        print(f"  [standings] REJECTED embedded: {matched}/{len(sample_names)} "
                               f"sampled teams match {league_code}. Sample: {sample_names[:3]}")
                 if sane:
                     _process_standings(db, league_code, schedule_standings_df)
