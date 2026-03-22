@@ -117,14 +117,19 @@ def _compute_alt_market(
         return None, None
 
     if p_home_tt05 is not None or p_away_tt05 is not None:
-        h = (p_home_tt05 or 0.0) + tt_home_bias
-        a = p_away_tt05 or 0.0
+        h_raw = p_home_tt05 or 0.0
+        a_raw = p_away_tt05 or 0.0
+        h = h_raw + tt_home_bias
+        a = a_raw
+        TT_MIN_RAW = 0.55  # never serve TT side with <55% raw probability
         if h >= a:
-            alt = original if tt_home_weak else "TT Home O0.5"
+            if tt_home_weak or h_raw < TT_MIN_RAW:
+                return None, None
+            alt = "TT Home O0.5"
         else:
-            alt = original if tt_away_weak else "TT Away O0.5"
-        if alt == original:
-            return None, None  # weak side — serve original
+            if tt_away_weak or a_raw < TT_MIN_RAW:
+                return None, None
+            alt = "TT Away O0.5"
         return alt, original
 
     return None, None
