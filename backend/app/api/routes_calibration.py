@@ -630,7 +630,8 @@ def _suggest_alt_market_use(
         # - Moderate miss-save rate (>=50%) + alt trailing by 8pp+ (persistent gap)
         suppress = (
             (orig_win_rate_on_miss >= current_min_win_rate and alt_rate < orig_rate - 0.03)
-            or (orig_win_rate_on_miss >= 0.50 and alt_rate < orig_rate - 0.08)
+            or (orig_win_rate_on_miss >= 0.50 and alt_rate < orig_rate - 0.05)
+            or (alt_rate < orig_rate - 0.06 and miss_w >= 8)  # persistent gap over enough misses
         )
         if suppress:
             result["use_alt_market"] = False
@@ -1243,7 +1244,7 @@ def _run_calibration_inner(
 
         # Skip entirely if below league minimum confidence gate
         if current_min_conf > 0.0 and conf_score < current_min_conf:
-            skipped_matches.append({"position": pos, "skipped_reason": f"below_min_confidence ({conf_score:.2f} < {current_min_conf})"})
+            skipped_matches.append({"position": pos, "skipped_reason": f"below_min_confidence ({conf_score:.2f} < {current_min_conf})", "conf_score": round(conf_score, 3)})
             skipped += 1
             continue
         p_home_tt = metrics.get("p_home_tt05")
@@ -1913,8 +1914,14 @@ def _run_calibration_inner(
         "skipped":         skipped,
         "applied":         applied,
         "changes_made":    list(applied_changes.keys()) if applied_changes else [],
-        "best_market":     max(by_market, key=lambda m: m.hit_rate).market if by_market else None,
-        "worst_market":    min(by_market, key=lambda m: m.hit_rate).market if by_market else None,
+        "best_market":     max(by_market, key=lambda m: m.hit_rate).market if len(by_market) > 1 else None,
+        "worst_market":    min(by_market, key=lambda m: m.hit_rate).market if len(by_market) > 1 else None,
+        "min_conf_skips":  len([s for s in skipped_matches if "below_min_confidence" in s.get("skipped_reason", "")]),
+        "conf_distribution": {
+            "below_flip":    sum(1 for s in skipped_matches + sample_rows if s.get("conf_score", s.get("confidence_score_raw", 0)) < current_flip_threshold),
+            "flip_to_tt":    sum(1 for s in skipped_matches if current_flip_threshold <= s.get("conf_score", 0) < current_min_conf),
+            "above_gate":    evaluated,
+        },
         "over_misses":     miss_patterns["total_over_misses"],
         "under_misses":    miss_patterns["total_under_misses"],
         "variance_flag":   (
