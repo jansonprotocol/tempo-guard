@@ -507,6 +507,25 @@ def _suggest_tt_thresholds(
         # Clamp between alt_flip_threshold and 0.85
         new_tt_conf_min = round(max(new_threshold, min(0.85, new_tt_conf_min)), 2)
 
+    # ── Scale-aware gate feedback ────────────────────────────────
+    # When confidence_scale has risen above 1.0, confidence scores are
+    # naturally higher — the gate can relax proportionally.
+    # For every 0.1 increase in scale above 1.0, allow gate to step down
+    # by STEP (0.05), but only if the overall TT hit rate is healthy (≥70%).
+    if current_tt_confidence_min > new_threshold:
+        scale_headroom = max(0.0, current_tt_confidence_min - STEP)
+        scale_lift = (current_tt_confidence_min - new_threshold) * 0.10
+        if (
+            overall_tt_total >= TT_GATE_MIN_BUCKET * 2
+            and overall_tt_rate >= 0.70
+            and current_tt_confidence_min > new_threshold + STEP
+        ):
+            # Gate is above the natural floor and TT is healthy — step down
+            new_tt_conf_min = round(max(
+                new_threshold,
+                min(new_tt_conf_min, current_tt_confidence_min - STEP)
+            ), 2)
+
     result["tt_confidence_min"] = new_tt_conf_min
 
     # ── Min confidence gate tuning ───────────────────────────────────
@@ -675,6 +694,127 @@ def _suggest_alt_market_use(
                 f"vs original {round(orig_rate*100,1)}% — gap insufficient to re-enable."
             )
 
+    return result
+
+
+# ── Confidence shaping ──────────────────────────────────────────────────────
+def _suggest_confidence_shaping(
+    calib_records: list,
+    current_scale: float,
+    current_floor: float,
+    current_tt_conf_min: float,
+) -> dict:
+    """
+    Analyse per-lean_gap-bucket hit rates to suggest confidence_scale
+    and confidence_floor adjustments.
+
+    Strategy:
+    - Bucket picks by their raw lean_gap (proxy for delta)
+    - Find the lean_gap threshold where hit rate drops below target
+    - Suggest scale/floor to lift picks above that threshold over
+      tt_confidence_min so they clear the gate naturally
+    - Both scale and floor move conservatively (±0.05 per run)
+    """
+    MIN_BUCKET  = 5
+    SCALE_STEP  = 0.05
+    FLOOR_STEP  = 0.01
+    TARGET_HR   = 0.70  # minimum acceptable hit rate for a lean_gap bucket
+
+    result = {
+        "confidence_scale": current_scale,
+        "confidence_floor": current_floor,
+        "analysis": "Insufficient data",
+    }
+
+    if len(calib_records) < 20:
+        return result
+
+    # Use lean_gap as proxy for delta (it IS delta pre-scaling)
+    # Records need lean_gap field — added alongside hw and weight
+    records_with_gap = [r for r in calib_records if r.get("lean_gap") is not None and r["hw"] >= 0]
+    if len(records_with_gap) < 20:
+        result["analysis"] = "No lean_gap data in calib_records — skipping confidence shaping"
+        return result
+
+    # Overall hit rate
+    total_hits = total_w = 0.0
+    for r in records_with_gap:
+        total_w    += r["weight"]
+        total_hits += r["hw"] * r["weight"]
+    overall_rate = total_hits / total_w if total_w > 0 else 0.0
+
+    # Bucket by lean_gap in 0.05-wide bins
+    gap_buckets: dict = {}
+    for r in records_with_gap:
+        gap = abs(r["lean_gap"])  # direction doesn't matter, magnitude does
+        b = round(round(gap / 0.05) * 0.05, 2)
+        if b not in gap_buckets:
+            gap_buckets[b] = {"hits": 0.0, "total": 0.0}
+        gap_buckets[b]["total"] += r["weight"]
+        gap_buckets[b]["hits"]  += r["hw"] * r["weight"]
+
+    # Find the lowest lean_gap bucket that hits >= TARGET_HR
+    good_from = None
+    bucket_analysis = []
+    for b in sorted(gap_buckets):
+        bkt = gap_buckets[b]
+        if bkt["total"] < MIN_BUCKET:
+            continue
+        rate = bkt["hits"] / bkt["total"]
+        bucket_analysis.append({"gap_bucket": b, "hit_rate": round(rate * 100, 1), "n": round(bkt["total"], 1)})
+        if rate >= TARGET_HR and good_from is None:
+            good_from = b
+
+    result["bucket_analysis"] = bucket_analysis
+
+    if good_from is None:
+        result["analysis"] = f"No lean_gap bucket hits >= {TARGET_HR*100}% — scale unchanged"
+        return result
+
+    # What confidence score does good_from produce with current scale/floor?
+    # conf = floor + gap * 0.25 * scale
+    current_conf_at_good = current_floor + good_from * 0.25 * current_scale
+
+    # What scale would be needed to put good_from exactly at tt_confidence_min?
+    # tt_conf_min = floor + good_from * 0.25 * needed_scale
+    # needed_scale = (tt_conf_min - floor) / (good_from * 0.25)
+    if good_from > 0.01:
+        needed_scale = (current_tt_conf_min - current_floor) / (good_from * 0.25)
+        needed_scale = round(max(0.5, min(2.5, needed_scale)), 2)
+    else:
+        needed_scale = current_scale
+
+    new_scale = current_scale
+    new_floor = current_floor
+
+    if needed_scale > current_scale + SCALE_STEP:
+        new_scale = round(current_scale + SCALE_STEP, 2)
+        result["analysis"] = (
+            f"Raising confidence_scale {current_scale}→{new_scale}: "
+            f"good picks start at lean_gap={good_from} but need scale={needed_scale:.2f} "
+            f"to clear tt_confidence_min={current_tt_conf_min}"
+        )
+    elif needed_scale < current_scale - SCALE_STEP:
+        new_scale = round(current_scale - SCALE_STEP, 2)
+        result["analysis"] = (
+            f"Lowering confidence_scale {current_scale}→{new_scale}: "
+            f"gate is too permissive for this league"
+        )
+    else:
+        result["analysis"] = (
+            f"confidence_scale {current_scale} is appropriate — "
+            f"good picks (gap≥{good_from}) produce conf≥{round(current_conf_at_good,2)} "
+            f"vs gate {current_tt_conf_min}"
+        )
+
+    # Floor: if overall hit rate is very high and floor is low, nudge up
+    if overall_rate > 0.78 and current_floor < 0.65:
+        new_floor = round(min(0.70, current_floor + FLOOR_STEP), 2)
+    elif overall_rate < 0.65 and current_floor > 0.60:
+        new_floor = round(max(0.60, current_floor - FLOOR_STEP), 2)
+
+    result["confidence_scale"] = new_scale
+    result["confidence_floor"] = new_floor
     return result
 
 
@@ -908,8 +1048,10 @@ def _run_calibration_inner(
     # skip that side entirely and fall back to original market
     _tt_home_weak       = bool(getattr(cfg, "tt_home_weak",       False)) if cfg else False
     _tt_away_weak       = bool(getattr(cfg, "tt_away_weak",       False)) if cfg else False
-    current_tt_conf_min  = float(getattr(cfg, "tt_confidence_min", None) or 0.62) if cfg else 0.62
-    current_min_conf     = float(getattr(cfg, "min_confidence",    None) or 0.0)  if cfg else 0.0
+    current_tt_conf_min  = float(getattr(cfg, "tt_confidence_min",  None) or 0.62)  if cfg else 0.62
+    current_min_conf     = float(getattr(cfg, "min_confidence",     None) or 0.0)   if cfg else 0.0
+    current_conf_scale   = float(getattr(cfg, "confidence_scale",   None) or 1.0)   if cfg else 1.0
+    current_conf_floor   = float(getattr(cfg, "confidence_floor",   None) or 0.60)  if cfg else 0.60
 
     # ── Determine current variance for this league ──────────────────
     # For red variance leagues, alt market becomes the primary evaluated market.
@@ -1295,12 +1437,25 @@ def _run_calibration_inner(
         original_result = evaluate_market(original_market, hg, ag)
         original_hw     = hit_weight(original_result)
 
+        # Pre-compute lean_gap here for calib_records
+        # (full computation happens below with adj values, but we need
+        # a proxy now — use raw metrics directly)
+        _raw_sd_pre    = (metrics.get("support_idx_over_delta") or 0.0) + (current_over - current_under)
+        _raw_tempo_pre = max(0.0, min(0.95, (metrics.get("tempo_index") or 0.55) * current_tempo * 2.0))
+        _raw_p2p_pre   = metrics.get("p_two_plus") or 0.68
+        _lean_gap_pre  = round(
+            (_raw_sd_pre + (_raw_tempo_pre - 0.5) * 0.30)
+            - ((0.72 - _raw_p2p_pre) * 0.50 + (0.5 - _raw_tempo_pre) * 0.30),
+            4
+        )
+
         # Record for TT threshold tuning
         calib_records.append({
             "confidence_score": conf_score,
             "market":           market,
             "hw":               hw,
             "weight":           w,
+            "lean_gap":         _lean_gap_pre,
         })
 
         # Record for alt-vs-original suppression analysis
@@ -1589,6 +1744,15 @@ def _run_calibration_inner(
     )
     suggestion["alt_market_suppression"] = alt_market_suggestion
 
+    # Confidence shaping analysis
+    conf_shaping = _suggest_confidence_shaping(
+        calib_records,
+        current_conf_scale,
+        current_conf_floor,
+        current_tt_conf_min,
+    )
+    suggestion["confidence_shaping"] = conf_shaping
+
     # ── Shadow alt-lane hit rates ─────────────────────────────────────
     alt_flip_hr = round(alt_flip_hits / max(0.001, alt_flip_hits + alt_flip_misses) * 100, 1)         if alt_flip_count > 0 else None
     alt_tt_hr   = round(alt_tt_hits / max(0.001, alt_tt_hits + alt_tt_misses) * 100, 1)         if alt_tt_count > 0 else None
@@ -1685,6 +1849,19 @@ def _run_calibration_inner(
             if hasattr(cfg, "min_confidence"):
                 cfg.min_confidence = min_conf_suggested
                 sens_changed["min_confidence"] = {"before": current_min_conf, "after": min_conf_suggested}
+
+        # Write confidence shaping
+        conf_shaping = suggestion.get("confidence_shaping", {})
+        scale_suggested = conf_shaping.get("confidence_scale")
+        floor_suggested = conf_shaping.get("confidence_floor")
+        if scale_suggested is not None and abs(scale_suggested - current_conf_scale) >= 0.01:
+            if hasattr(cfg, "confidence_scale"):
+                cfg.confidence_scale = scale_suggested
+                sens_changed["confidence_scale"] = {"before": current_conf_scale, "after": scale_suggested}
+        if floor_suggested is not None and abs(floor_suggested - current_conf_floor) >= 0.005:
+            if hasattr(cfg, "confidence_floor"):
+                cfg.confidence_floor = floor_suggested
+                sens_changed["confidence_floor"] = {"before": current_conf_floor, "after": floor_suggested}
 
         # Write TT confidence gate
         tt_conf_suggested = tt_threshold_suggestion.get("tt_confidence_min")
