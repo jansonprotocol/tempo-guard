@@ -439,6 +439,45 @@ def _extract_defense(df: pd.DataFrame) -> dict[str, pd.Series]:
     return result
 
 
+
+def _extract_shooting(df: pd.DataFrame) -> dict[str, pd.Series]:
+    """Extract xG, xGOT per 90 from the Shooting table.
+
+    FBref shooting columns (relevant):
+      Sh/90   — shots per 90
+      xG      — expected goals total
+      xG/Sh   — xG per shot (shot quality)
+      G-xG    — goals minus xG (finishing above/below expectation)
+      np:xG   — non-penalty xG
+    """
+    cols = list(df.columns)
+    result = {}
+    result["player_name"] = df[_find_col(cols, "player")] if _find_col(cols, "player") else None
+
+    ninety_col = _find_col(cols, "90s")
+    nineties = df[ninety_col].apply(_safe_float).replace(0, float("nan")) if ninety_col else None
+
+    # xG per 90 — prefer direct column, fall back to total/90s
+    xg_per90_col = _find_col(cols, "xg per 90", "xg/90", "expected xg per 90")
+    if xg_per90_col:
+        result["xg_per90"] = df[xg_per90_col].apply(_safe_float)
+    elif _find_col(cols, "expected xg", "xg") and nineties is not None:
+        xg_col = _find_col(cols, "expected xg", "xg")
+        result["xg_per90"] = (df[xg_col].apply(_safe_float) / nineties).fillna(0.0)
+
+    # Shots per 90 — useful for power index quality weighting
+    sh_col = _find_col(cols, "sh/90", "shots sh/90")
+    if sh_col:
+        result["shots_per90"] = df[sh_col].apply(_safe_float)
+
+    # G-xG: positive = overperforming (finishing), negative = underperforming
+    g_xg_col = _find_col(cols, "g-xg", "g - xg")
+    if g_xg_col:
+        result["goals_minus_xg"] = df[g_xg_col].apply(_safe_float)
+
+    return result
+
+
 def _extract_keepers(df: pd.DataFrame) -> dict[str, pd.Series]:
     """Extract GK stats from the Keepers table."""
     cols = list(df.columns)
@@ -588,11 +627,12 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
             continue
 
         extractor = {
-            "stats":   _extract_standard,
-            "gca":     _extract_gca,
-            "passing": _extract_passing,
-            "defense": _extract_defense,
-            "keepers": _extract_keepers,
+            "stats":    _extract_standard,
+            "gca":      _extract_gca,
+            "passing":  _extract_passing,
+            "defense":  _extract_defense,
+            "keepers":  _extract_keepers,
+            "shooting": _extract_shooting,
         }.get(cat)
 
         if extractor:
@@ -612,7 +652,7 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
 
     # Build lookup dicts for supplementary categories (by player name)
     supplements: dict[str, dict[str, dict[str, float]]] = {}
-    for cat in ["gca", "passing", "defense", "keepers"]:
+    for cat in ["gca", "passing", "defense", "keepers", "shooting"]:
         if cat in parsed and parsed[cat].get("player_name") is not None:
             names = parsed[cat]["player_name"]
             supplements[cat] = {}
