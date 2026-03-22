@@ -568,7 +568,9 @@ def evaluate_athena(
     league_bias_over: float,
     league_bias_under: float,
     tempo_factor: float,
-    team_nudge: float = 0.0,   # combined home+away team-level calibration nudge
+    team_nudge: float = 0.0,        # combined home+away team-level calibration nudge
+    confidence_scale: float = 1.0,  # per-league delta multiplier (v2.3)
+    confidence_floor: float = 0.60, # per-league confidence baseline (v2.3)
 ) -> Prediction:
     notes:   List[str] = []
     modules: List[str] = []
@@ -710,10 +712,13 @@ def evaluate_athena(
         bilateral_expansion=bilateral_exp,
     )
 
-    # ── Confidence score (needed by translate_play for line selection) 
+    # ── Confidence score (needed by translate_play for line selection)
+    # v2.3: per-league confidence_scale and confidence_floor allow
+    # calibration to lift naturally-compressed leagues (e.g. FRA-L1)
+    # so genuine signals clear the tt_confidence_min gate.
     confidence_score = min(0.95, max(0.55,
-        0.60
-        + (delta * 0.25)
+        confidence_floor
+        + (delta * 0.25 * confidence_scale)
         + (0.05 if final_lean in ("under",) else 0.0)
     ))
 
