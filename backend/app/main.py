@@ -101,6 +101,9 @@ _COLUMN_MIGRATIONS = [
     # league_configs — v2.3 per-league confidence shaping
     ("league_configs", "confidence_scale",           "FLOAT",   "1.0"),
     ("league_configs", "confidence_floor",           "FLOAT",   "0.60"),
+    # player_season_stats — v2.3 shooting stats
+    ("player_season_stats", "shots_per90",           "FLOAT",   "0.0"),
+    ("player_season_stats", "goals_minus_xg",        "FLOAT",   "0.0"),
     # league_configs — v2.2 minimum confidence gate
     ("league_configs", "min_confidence",             "FLOAT",   "0.0"),
 ]
