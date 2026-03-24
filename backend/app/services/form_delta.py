@@ -134,12 +134,12 @@ def _load_and_split_snapshot(
     """
     row = db.query(FBrefSnapshot).filter_by(league_code=league_code).first()
     if not row:
-        return None, None, None, None
+        return None, None, None, None, None
 
     try:
         df = pd.read_parquet(io.BytesIO(row.data))
     except Exception:
-        return None, None, None, None
+        return None, None, None, None, None
 
     # Parse scores
     score_col = next((c for c in df.columns if str(c).lower() in ("score", "scores")), None)
@@ -148,7 +148,7 @@ def _load_and_split_snapshot(
         df = _parse_score_column(df, score_col)
 
     if "hg" not in df.columns or "ag" not in df.columns:
-        return None, None, None, None
+        return None, None, None, None, None
 
     # Resolve columns
     col_map = {str(c).lower(): c for c in df.columns}
@@ -157,7 +157,7 @@ def _load_and_split_snapshot(
     away_col = col_map.get("away") or col_map.get("away_team")
 
     if not all([date_col, home_col, away_col]):
-        return None, None, None, None
+        return None, None, None, None, None
 
     df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
     df = df.dropna(subset=[date_col, "hg", "ag"])
@@ -167,7 +167,7 @@ def _load_and_split_snapshot(
     prev_df = df[df[date_col] < cutoff].copy()
     curr_df = df[df[date_col] >= cutoff].copy()
 
-    return prev_df, curr_df, home_col, away_col
+    return prev_df, curr_df, home_col, away_col, date_col
 
 
 def compute_form_delta(db: Session, league_code: str) -> dict:
@@ -175,7 +175,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
     Compute Form Delta for all teams in a league using BATCH RESOLUTION.
     Now includes display_name and robust expected position logic.
     """
-    prev_df, curr_df, home_col, away_col = _load_and_split_snapshot(db, league_code)
+    prev_df, curr_df, home_col, away_col, date_col = _load_and_split_snapshot(db, league_code)
 
     if curr_df is None or curr_df.empty:
         return {"league_code": league_code, "error": "No current season data", "teams": []}
