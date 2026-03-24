@@ -47,14 +47,20 @@ def extract_comp_info(schedule_url: str) -> Optional[Tuple[str, str]]:
     return m.group(1), m.group(2)
 
 
-def league_stats_url(comp_id: str, slug: str, category: str = "stats") -> str:
+def league_stats_url(
+    comp_id: str,
+    slug: str,
+    category: str = "stats",
+    season: Optional[str] = None,
+) -> str:
     """
     Build a league-level stats page URL.
-
-    One page per category gives ALL players in the league — much more
-    efficient than per-team fetching (35 leagues × 5 categories = 175 fetches
-    vs 500+ per-team fetches).
+    When season is provided (e.g. "2025-2026"), builds a year-specific URL
+    which bypasses Cloudflare bot detection on some leagues (ENG-PL, ENG-CH).
+    Year-specific format: /en/comps/{id}/{season}/{season}-{Slug}-Stats
     """
+    if season:
+        return f"{FBREF_BASE}/en/comps/{comp_id}/{season}/{season}-{slug}-Stats"
     return f"{FBREF_BASE}/en/comps/{comp_id}/{category}/{slug}-Stats"
 
 
