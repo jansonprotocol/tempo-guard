@@ -60,7 +60,9 @@ def league_stats_url(
     Year-specific format: /en/comps/{id}/{season}/{season}-{Slug}-Stats
     """
     if season:
-        return f"{FBREF_BASE}/en/comps/{comp_id}/{season}/{season}-{slug}-Stats"
+        # Year-specific format includes category in path:
+        # /en/comps/{id}/{season}/{category}/{season}-{Slug}-Stats
+        return f"{FBREF_BASE}/en/comps/{comp_id}/{season}/{category}/{season}-{slug}-Stats"
     return f"{FBREF_BASE}/en/comps/{comp_id}/{category}/{slug}-Stats"
 
 
