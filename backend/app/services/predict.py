@@ -231,13 +231,9 @@ def _apply_module_adjustments(
     det_sens = float(cfg.det_sensitivity or 1.0) if cfg else 1.0
     eps_sens = float(cfg.eps_sensitivity or 1.0) if cfg else 1.0
 
-    home_det_n = float(home_cfg.det_nudge or 0.0) if home_cfg else 0.0
-    away_det_n = float(away_cfg.det_nudge or 0.0) if away_cfg else 0.0
-    home_deg_n = float(home_cfg.deg_nudge or 0.0) if home_cfg else 0.0
-    away_deg_n = float(away_cfg.deg_nudge or 0.0) if away_cfg else 0.0
-
-    avg_det_nudge = (home_det_n + away_det_n) / 2.0
-    avg_deg_nudge = (home_deg_n + away_deg_n) / 2.0
+    # det_nudge and deg_nudge retired — merged into over_nudge in calibration v2.3
+    avg_det_nudge = 0.0
+    avg_deg_nudge = 0.0
 
     raw_deg      = req.deg_pressure  if req.deg_pressure  is not None else 0.0
     raw_det      = req.det_boost     if req.det_boost      is not None else 0.30
@@ -310,8 +306,6 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
 
     # ── 2. League biases ──────────────────────────────────────────────
     over_bias, under_bias, tempo_factor = _league_bias(cfg)
-    confidence_scale = float(getattr(cfg, "confidence_scale", None) or 1.0)  if cfg else 1.0
-    confidence_floor = float(getattr(cfg, "confidence_floor", None) or 0.60) if cfg else 0.60
 
     # ── 3–6. Nudge stack ──────────────────────────────────────────────
     base_nudge  = _team_base_nudge(home_cfg, away_cfg)
@@ -341,8 +335,4 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
     adjusted_req = _apply_module_adjustments(req, cfg, home_cfg, away_cfg)
 
     # ── 9. Evaluate ───────────────────────────────────────────────────
-    return evaluate_athena(
-        adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge,
-        confidence_scale=confidence_scale,
-        confidence_floor=confidence_floor,
-    )
+    return evaluate_athena(adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge)
