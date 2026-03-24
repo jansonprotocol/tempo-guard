@@ -486,18 +486,32 @@ def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: 
         else:
             # Found under a different key — check if league needs correcting
             if existing.league_code != league_code:
-                print(f"  [players] Correcting league: {existing.team_key} "
-                      f"{existing.league_code} → {league_code}")
-                existing.league_code = league_code
+                # Only correct if same country — teams never change countries
+                old_country = (existing.league_code or "").split("-")[0]
+                new_country = league_code.split("-")[0]
+                if old_country == new_country:
+                    print(f"  [players] Correcting league: {existing.team_key} "
+                          f"{existing.league_code} → {league_code}")
+                    existing.league_code = league_code
+                else:
+                    print(f"  [players] BLOCKED cross-country correction: "
+                          f"{existing.team_key} ({existing.league_code} → {league_code})")
             resolved_team = existing.team_key
-            actual_league = league_code
+            actual_league = existing.league_code  # keep original if blocked
     else:
         # Team found — stats page is the truth for current league
         if team_record.league_code != league_code:
-            print(f"  [players] Correcting league: {team_record.team_key} "
-                  f"{team_record.league_code} → {league_code}")
-            team_record.league_code = league_code
-        actual_league = league_code
+            # Only correct if same country — teams never change countries
+            old_country = (team_record.league_code or "").split("-")[0]
+            new_country = league_code.split("-")[0]
+            if old_country == new_country:
+                print(f"  [players] Correcting league: {team_record.team_key} "
+                      f"{team_record.league_code} → {league_code}")
+                team_record.league_code = league_code
+            else:
+                print(f"  [players] BLOCKED cross-country correction: "
+                      f"{team_record.team_key} ({team_record.league_code} → {league_code})")
+        actual_league = team_record.league_code  # keep original if blocked
 
     player = db.query(Player).filter_by(fbref_id=fbref_id).first()
     if player:
