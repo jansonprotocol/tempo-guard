@@ -315,12 +315,13 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
         # Shows current momentum independent of season-long position
         team_matches = [
             row for _, row in curr_df.iterrows()
-            if str(row.get(home_col, "")).strip().lower() == team_key
-            or str(row.get(away_col, "")).strip().lower() == team_key
+            if str(row[home_col] if home_col in row.index else "").strip().lower() == team_key
+            or str(row[away_col] if away_col in row.index else "").strip().lower() == team_key
         ]
         # Sort descending by date and take last 5
+        _dc = date_col  # capture for lambda scope
         team_matches.sort(
-            key=lambda r: r.get(date_col, pd.Timestamp.min),
+            key=lambda r: r[_dc] if _dc in r.index else pd.Timestamp.min,
             reverse=True
         )
         last5 = team_matches[:5]
@@ -332,7 +333,7 @@ def compute_form_delta(db: Session, league_code: str) -> dict:
                 ag = int(float(r.get("ag", 0) or 0))
             except (ValueError, TypeError):
                 continue
-            is_home = str(r.get(home_col, "")).strip().lower() == team_key
+            is_home = str(r[home_col] if home_col in r.index else "").strip().lower() == team_key
             if is_home:
                 if hg > ag:   last5_pts += 3; last5_results.append("W")
                 elif hg == ag: last5_pts += 1; last5_results.append("D")
