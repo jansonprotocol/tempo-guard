@@ -2062,51 +2062,53 @@ def _run_calibration_inner(
             away_goals = stats["goals_scored_away"]
             all_scored = home_goals + away_goals
 
+            # ── Combined over_nudge: scoring reality + TT rate + det deviation ──
+            # Consolidation: det_nudge and under_nudge removed.
+            # det deviation contributes 20% to over_nudge (same direction, less noise).
+            # under_nudge always 0.0 — was never read in predict.py.
+
+            scoring_component = 0.0
+            tt_component      = 0.0
+            det_component     = 0.0
+
+            # Scoring reality: actual goals vs league avg
             if len(all_scored) >= MIN_TEAM_SAMPLES:
                 team_avg_scored = sum(all_scored) / len(all_scored)
                 scoring_gap = team_avg_scored - league_avg_scored
-                # Scale: 0.5 goals above avg → full NUDGE_MAX nudge
-                over_nudge = round(
-                    max(-NUDGE_MAX, min(NUDGE_MAX, scoring_gap * NUDGE_SCALE * 2.0)), 4
-                )
+                scoring_component = scoring_gap * NUDGE_SCALE * 2.0
 
-            # ── TT-specific nudge for TT-heavy leagues ───────────────
-            # Track how often this team scores at least 1 goal at home/away.
-            # Supplements over_nudge for TT market routing.
+            # TT reality: how often does team score at least 1
             tt_home_n = stats["tt_home_total"]
-            tt_away_n = stats["tt_away_total"]
             if tt_home_n >= MIN_TEAM_SAMPLES:
                 tt_home_rate = stats["tt_home_hits"] / tt_home_n
-                # League TT home avg: fraction of home teams that score
                 league_tt_home = sum(
                     s["tt_home_hits"] for s in team_tracker.values()
                 ) / max(1, sum(s["tt_home_total"] for s in team_tracker.values()))
-                tt_gap = tt_home_rate - league_tt_home
-                # Blend: over_nudge gets 60% scoring reality, 40% TT reality
-                tt_nudge = round(
-                    max(-NUDGE_MAX, min(NUDGE_MAX, tt_gap * NUDGE_SCALE * 1.5)), 4
-                )
-                over_nudge = round(
-                    max(-NUDGE_MAX, min(NUDGE_MAX,
-                        over_nudge * 0.6 + tt_nudge * 0.4)), 4
-                )
+                tt_component = (tt_home_rate - league_tt_home) * NUDGE_SCALE * 1.5
 
-            # ── Legacy market-based nudge (fallback when no scoring data) ─
-            # Still useful for suppressed leagues serving Over/Under markets
-            if len(all_scored) < MIN_TEAM_SAMPLES:
-                if over_n >= MIN_TEAM_SAMPLES:
-                    team_over_rate  = stats["over_hits"] / over_n
-                    gap = team_over_rate - (overall_hit_rate / 100.0)
-                    over_nudge = round(
-                        max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
-                    )
-
-            if under_n >= MIN_TEAM_SAMPLES:
-                team_under_rate = stats["under_hits"] / under_n
-                gap = team_under_rate - (overall_hit_rate / 100.0)
-                under_nudge = round(
-                    max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
+            # DET contribution: volatile teams score more, merged in at 20% weight
+            det_values = stats["det_values"]
+            if len(det_values) >= MIN_TEAM_SAMPLES:
+                league_avg_det = (
+                    sum(v for s in team_tracker.values() for v in s["det_values"])
+                    / max(1, sum(len(s["det_values"]) for s in team_tracker.values()))
                 )
+                team_avg_det = round(sum(det_values) / len(det_values), 3)
+                det_component = (team_avg_det - league_avg_det) * 0.20
+            else:
+                team_avg_det = None
+
+            # Blend all three — scoring reality dominant, TT and det supplementary
+            if scoring_component != 0.0 or tt_component != 0.0:
+                raw_over = scoring_component * 0.55 + tt_component * 0.25 + det_component * 0.20
+            elif det_component != 0.0:
+                raw_over = det_component  # fallback when no scoring data
+            else:
+                raw_over = 0.0
+            over_nudge  = round(max(-NUDGE_MAX, min(NUDGE_MAX, raw_over)), 4)
+            under_nudge = 0.0  # unused in predict.py — retired
+            det_nudge   = 0.0  # merged into over_nudge above
+            team_avg_deg = None
 
             # ── Form nudges (good/neutral/poor buckets) ───────────────
             # Based on last-5-match points from compute_form_delta.
@@ -2149,49 +2151,8 @@ def _run_calibration_inner(
                         max(-FORM_NUDGE_MAX, min(FORM_NUDGE_MAX, gap * 0.4)), 4
                     )
 
-            # DET nudge
-            DET_NUDGE_MAX   = 0.15
-            DET_NUDGE_SCALE = 0.50
-            det_values = stats["det_values"]
-            det_nudge  = 0.0
-            team_avg_det = None
-            if len(det_values) >= MIN_TEAM_SAMPLES:
-                league_avg_det = (
-                    sum(
-                        v for s in team_tracker.values()
-                        for v in s["det_values"]
-                    ) / max(1, sum(len(s["det_values"]) for s in team_tracker.values()))
-                )
-                team_avg_det = round(sum(det_values) / len(det_values), 3)
-                det_deviation = team_avg_det - league_avg_det
-                det_nudge = round(
-                    max(-DET_NUDGE_MAX, min(DET_NUDGE_MAX, det_deviation * DET_NUDGE_SCALE)), 4
-                )
-
-            # DEG nudge
-            DEG_NUDGE_MAX   = 0.10
-            DEG_NUDGE_SCALE = 0.40
-            from app.engine.pipeline import DEG_TRIGGER as _DEG_TRIGGER
-            deg_nudge    = 0.0
-            team_avg_deg = None
-            deg_values   = stats["deg_values"]
-            if len(deg_values) >= MIN_TEAM_SAMPLES:
-                team_avg_deg = round(sum(deg_values) / len(deg_values), 3)
-
-            over_miss_det  = stats["over_miss_det"]
-            if over_n >= MIN_TEAM_SAMPLES and over_miss_det:
-                low_deg_misses = sum(1 for d in over_miss_det if d < _DEG_TRIGGER)
-                all_low_deg_over = sum(
-                    1 for d in (stats["det_values"])
-                    if d < _DEG_TRIGGER
-                )
-                if all_low_deg_over >= 4:
-                    team_low_deg_miss_rate = low_deg_misses / all_low_deg_over
-                    baseline = 1.0 - (overall_hit_rate / 100.0)
-                    excess_miss = team_low_deg_miss_rate - baseline
-                    deg_nudge = round(
-                        max(-DEG_NUDGE_MAX, min(DEG_NUDGE_MAX, excess_miss * DEG_NUDGE_SCALE)), 4
-                    )
+            # DET and DEG nudges retired — merged into over_nudge above
+            deg_nudge = 0.0
 
             # Update or create TeamConfig (dict lookup — no DB query per team)
             from datetime import datetime as _dt
