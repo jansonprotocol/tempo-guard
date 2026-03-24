@@ -542,15 +542,15 @@ def _suggest_tt_thresholds(
     new_min_conf = current_min_conf
     if low_conf_total >= MIN_CONF_BUCKET:
         low_conf_rate = low_conf_hits / low_conf_total
-        if low_conf_rate < 0.65 and new_tt_conf_min > current_min_conf:
+        if low_conf_rate < 0.73 and new_tt_conf_min > current_min_conf:
             # Low-confidence band underperforming
-            if low_conf_rate < 0.62:
+            if low_conf_rate < 0.68:
                 # Clearly bad — jump directly to TT confidence gate
                 new_min_conf = new_tt_conf_min
             else:
                 # Marginal — step conservatively
                 new_min_conf = round(min(new_tt_conf_min, current_min_conf + STEP), 2)
-        elif low_conf_rate > 0.70 and current_min_conf > 0.0:
+        elif low_conf_rate > 0.78 and current_min_conf > 0.0:
             # Recovering strongly — lower the gate
             new_min_conf = round(max(0.0, current_min_conf - STEP), 2)
 
@@ -1962,11 +1962,24 @@ def _run_calibration_inner(
         team_nudges_applied = {}
 
         # Pre-load all TeamConfig rows for this league — one query
-        # instead of one per team in the loop below.
         _existing_configs: dict = {
             tc.team: tc
             for tc in db.query(TeamConfig).filter_by(league_code=league_code).all()
         }
+
+        # Pre-load last-5 form per team from form_delta
+        # last5_pts: 0-15 (5 wins = 15, 5 losses = 0)
+        # Good form ≥ 10, poor form ≤ 4, neutral 5-9
+        _last5_map: dict[str, int] = {}
+        try:
+            from app.services.form_delta import compute_form_delta
+            _fd_result = compute_form_delta(db, league_code)
+            if _fd_result and _fd_result.get("teams"):
+                for _t in _fd_result["teams"]:
+                    if _t.get("last5_pts") is not None:
+                        _last5_map[_t["team"]] = _t["last5_pts"]
+        except Exception as _fde:
+            pass  # form delta is best-effort
 
         # Compute league-wide scoring averages for comparison
         all_home_goals = [g for s in team_tracker.values() for g in s["goals_scored_home"]]
@@ -2035,6 +2048,31 @@ def _run_calibration_inner(
                     max(-NUDGE_MAX, min(NUDGE_MAX, gap * NUDGE_SCALE)), 4
                 )
 
+            # ── Form nudges (good/neutral/poor buckets) ───────────────
+            # Based on last-5-match points from compute_form_delta.
+            # ≥10 pts = good form, 5-9 = neutral, ≤4 = poor
+            # good_form_nudge:  applied when team is currently in good form
+            # poor_form_nudge:  applied when team is currently in poor form
+            # neutral_form_nudge: always 0.0 (no adjustment when form is average)
+            FORM_NUDGE_MAX  = 0.04
+            FORM_GOOD_THOLD = 10   # pts from last 5: W+W+W+D+D = 11
+            FORM_POOR_THOLD = 4    # pts from last 5: L+L+L+L+D = 1
+            good_form_nudge  = 0.0
+            poor_form_nudge  = 0.0
+
+            last5 = _last5_map.get(team)
+            if last5 is not None:
+                if last5 >= FORM_GOOD_THOLD:
+                    # Good form — nudge over bias up proportionally
+                    scale = (last5 - FORM_GOOD_THOLD) / (15 - FORM_GOOD_THOLD)
+                    good_form_nudge = round(min(FORM_NUDGE_MAX, FORM_NUDGE_MAX * (0.5 + scale * 0.5)), 4)
+                    poor_form_nudge = round(-good_form_nudge * 0.6, 4)  # smaller penalty when form recovers
+                elif last5 <= FORM_POOR_THOLD:
+                    # Poor form — nudge over bias down proportionally
+                    scale = (FORM_POOR_THOLD - last5) / FORM_POOR_THOLD
+                    poor_form_nudge = round(max(-FORM_NUDGE_MAX, -FORM_NUDGE_MAX * (0.5 + scale * 0.5)), 4)
+                    good_form_nudge = round(-poor_form_nudge * 0.6, 4)  # smaller reward when form returns
+
             # DET nudge
             DET_NUDGE_MAX   = 0.15
             DET_NUDGE_SCALE = 0.50
@@ -2084,17 +2122,20 @@ def _run_calibration_inner(
             existing = _existing_configs.get(team)
 
             if existing:
-                existing.over_nudge      = over_nudge
-                existing.under_nudge     = under_nudge
-                existing.det_nudge       = det_nudge
-                existing.deg_nudge       = deg_nudge
-                existing.avg_det         = team_avg_det
-                existing.avg_deg         = team_avg_deg
-                existing.over_hit_rate   = round(stats["over_hits"] / over_n, 3) if over_n else None
-                existing.under_hit_rate  = round(stats["under_hits"] / under_n, 3) if under_n else None
-                existing.over_matches    = over_n
-                existing.under_matches   = under_n
-                existing.last_calibrated = _dt.utcnow()
+                existing.over_nudge        = over_nudge
+                existing.under_nudge       = under_nudge
+                existing.det_nudge         = det_nudge
+                existing.deg_nudge         = deg_nudge
+                existing.good_form_nudge   = good_form_nudge
+                existing.poor_form_nudge   = poor_form_nudge
+                existing.neutral_form_nudge = 0.0
+                existing.avg_det           = team_avg_det
+                existing.avg_deg           = team_avg_deg
+                existing.over_hit_rate     = round(stats["over_hits"] / over_n, 3) if over_n else None
+                existing.under_hit_rate    = round(stats["under_hits"] / under_n, 3) if under_n else None
+                existing.over_matches      = over_n
+                existing.under_matches     = under_n
+                existing.last_calibrated   = _dt.utcnow()
             else:
                 try:
                     db.add(TeamConfig(
@@ -2104,6 +2145,9 @@ def _run_calibration_inner(
                         under_nudge=under_nudge,
                         det_nudge=det_nudge,
                         deg_nudge=deg_nudge,
+                        good_form_nudge=good_form_nudge,
+                        poor_form_nudge=poor_form_nudge,
+                        neutral_form_nudge=0.0,
                         avg_det=team_avg_det,
                         avg_deg=team_avg_deg,
                         over_hit_rate=round(stats["over_hits"] / over_n, 3) if over_n else None,
