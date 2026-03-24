@@ -991,6 +991,54 @@ def _run_calibration(
         _league_clear_running(league_code)
 
 
+def _last5_at_date(
+    df,
+    team_key: str,
+    match_date,
+    home_col: str,
+    away_col: str,
+    date_col: str,
+) -> int | None:
+    """
+    Compute last-5-match points for a team BEFORE a given match date.
+    Reconstructs form as it existed at that moment in time.
+    Returns points (0-15) or None if fewer than 3 prior matches found.
+    """
+    import pandas as _pd
+    try:
+        mdate = _pd.Timestamp(match_date)
+        # All completed matches for this team before this date
+        mask = (
+            (df[date_col] < mdate)
+            & df["hg"].notna()
+            & df["ag"].notna()
+            & (
+                (df[home_col].str.lower().str.strip() == team_key)
+                | (df[away_col].str.lower().str.strip() == team_key)
+            )
+        )
+        prior = df[mask].sort_values(date_col, ascending=False).head(5)
+        if len(prior) < 3:
+            return None  # not enough history
+        pts = 0
+        for _, row in prior.iterrows():
+            try:
+                hg = int(float(row["hg"]))
+                ag = int(float(row["ag"]))
+            except (ValueError, TypeError):
+                continue
+            is_home = str(row[home_col]).lower().strip() == team_key
+            if is_home:
+                if hg > ag:    pts += 3
+                elif hg == ag: pts += 1
+            else:
+                if ag > hg:    pts += 3
+                elif ag == hg: pts += 1
+        return pts
+    except Exception:
+        return None
+
+
 def _run_calibration_inner(
     league_code: str,
     limit: int,
@@ -1568,6 +1616,11 @@ def _run_calibration_inner(
             home_form_delta = _cached_form_delta(home_team, league_code, match_date)
             away_form_delta = _cached_form_delta(away_team, league_code, match_date)
 
+            # Compute last-5 form AT this match date from snapshot
+            # This gives us historically accurate form, not current form
+            home_last5 = _last5_at_date(df, home_team, match_date, home_col, away_col, date_col)
+            away_last5 = _last5_at_date(df, away_team, match_date, home_col, away_col, date_col)
+
             # Initialize team_tracker entries if needed
             for team in [home_team, away_team]:
                 if team not in team_tracker:
@@ -1579,12 +1632,15 @@ def _run_calibration_inner(
                         "over_miss_det": [],
                         "under_miss_det": [],
                         # Actual scoring reality — market-agnostic
-                        "goals_scored_home": [],   # goals scored when home
-                        "goals_scored_away": [],   # goals scored when away
-                        "goals_conceded_home": [], # goals conceded when home
-                        "goals_conceded_away": [], # goals conceded when away
-                        "tt_home_hits": 0, "tt_home_total": 0,  # TT Home hit rate
-                        "tt_away_hits": 0, "tt_away_total": 0,  # TT Away hit rate
+                        "goals_scored_home": [],
+                        "goals_scored_away": [],
+                        "goals_conceded_home": [],
+                        "goals_conceded_away": [],
+                        "tt_home_hits": 0, "tt_home_total": 0,
+                        "tt_away_hits": 0, "tt_away_total": 0,
+                        # Historical last5 per match — list of (last5_pts, hw)
+                        # Used to compute form-conditional hit rates
+                        "last5_hw": [],  # (last5_pts, hit) pairs
                     }
 
                 # Update market‑specific stats
@@ -1611,6 +1667,8 @@ def _run_calibration_inner(
                 if team == home_team:
                     team_tracker[team]["goals_scored_home"].append(hg)
                     team_tracker[team]["goals_conceded_home"].append(ag)
+                    if home_last5 is not None:
+                        team_tracker[team]["last5_hw"].append((home_last5, hw))
                     # TT Home tracking: did home team score?
                     team_tracker[team]["tt_home_total"] += 1
                     if hg >= 1:
@@ -1618,6 +1676,8 @@ def _run_calibration_inner(
                 else:  # away team
                     team_tracker[team]["goals_scored_away"].append(ag)
                     team_tracker[team]["goals_conceded_away"].append(hg)
+                    if away_last5 is not None:
+                        team_tracker[team]["last5_hw"].append((away_last5, hw))
                     # TT Away tracking: did away team score?
                     team_tracker[team]["tt_away_total"] += 1
                     if ag >= 1:
@@ -2060,18 +2120,34 @@ def _run_calibration_inner(
             good_form_nudge  = 0.0
             poor_form_nudge  = 0.0
 
-            last5 = _last5_map.get(team)
-            if last5 is not None:
-                if last5 >= FORM_GOOD_THOLD:
-                    # Good form — nudge over bias up proportionally
-                    scale = (last5 - FORM_GOOD_THOLD) / (15 - FORM_GOOD_THOLD)
-                    good_form_nudge = round(min(FORM_NUDGE_MAX, FORM_NUDGE_MAX * (0.5 + scale * 0.5)), 4)
-                    poor_form_nudge = round(-good_form_nudge * 0.6, 4)  # smaller penalty when form recovers
-                elif last5 <= FORM_POOR_THOLD:
-                    # Poor form — nudge over bias down proportionally
-                    scale = (FORM_POOR_THOLD - last5) / FORM_POOR_THOLD
-                    poor_form_nudge = round(max(-FORM_NUDGE_MAX, -FORM_NUDGE_MAX * (0.5 + scale * 0.5)), 4)
-                    good_form_nudge = round(-poor_form_nudge * 0.6, 4)  # smaller reward when form returns
+            # Use historically-tracked last5 per match to compute form-conditional hit rates
+            last5_records = stats["last5_hw"]
+            if len(last5_records) >= MIN_TEAM_SAMPLES:
+                good_hits = good_n = poor_hits = poor_n = 0.0
+                for l5, hit in last5_records:
+                    if l5 >= FORM_GOOD_THOLD:
+                        good_n += 1
+                        good_hits += max(0.0, hit)
+                    elif l5 <= FORM_POOR_THOLD:
+                        poor_n += 1
+                        poor_hits += max(0.0, hit)
+
+                overall_rate = (sum(max(0.0, h) for _, h in last5_records)
+                                / max(1, len(last5_records)))
+
+                if good_n >= 3:
+                    good_rate = good_hits / good_n
+                    gap = good_rate - overall_rate
+                    good_form_nudge = round(
+                        max(-FORM_NUDGE_MAX, min(FORM_NUDGE_MAX, gap * 0.4)), 4
+                    )
+
+                if poor_n >= 3:
+                    poor_rate = poor_hits / poor_n
+                    gap = poor_rate - overall_rate
+                    poor_form_nudge = round(
+                        max(-FORM_NUDGE_MAX, min(FORM_NUDGE_MAX, gap * 0.4)), 4
+                    )
 
             # DET nudge
             DET_NUDGE_MAX   = 0.15
