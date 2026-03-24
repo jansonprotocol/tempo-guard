@@ -531,7 +531,19 @@ def _process_standings(db: Session, league_code: str, standings_df: pd.DataFrame
             updated += 1
         else:
             # Not found in this league — check if it exists in another league
+            # Search by team_key first, then by display_name as fallback
             team_elsewhere = db.query(Team).filter_by(team_key=team_key).first()
+            if not team_elsewhere:
+                # Try display_name match (case-insensitive)
+                from sqlalchemy import func as _func
+                team_elsewhere = db.query(Team).filter(
+                    _func.lower(Team.display_name) == team_name_raw.lower()
+                ).first()
+            if not team_elsewhere:
+                # Try partial normalised key match
+                team_elsewhere = db.query(Team).filter(
+                    Team.team_key.contains(team_key[:6])
+                ).first() if len(team_key) >= 6 else None
             if team_elsewhere:
                 old_lc = team_elsewhere.league_code
                 old_tier = _LEAGUE_TIERS.get(old_lc, 0)
