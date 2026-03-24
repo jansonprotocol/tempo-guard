@@ -439,45 +439,6 @@ def _extract_defense(df: pd.DataFrame) -> dict[str, pd.Series]:
     return result
 
 
-
-def _extract_shooting(df: pd.DataFrame) -> dict[str, pd.Series]:
-    """Extract xG, xGOT per 90 from the Shooting table.
-
-    FBref shooting columns (relevant):
-      Sh/90   — shots per 90
-      xG      — expected goals total
-      xG/Sh   — xG per shot (shot quality)
-      G-xG    — goals minus xG (finishing above/below expectation)
-      np:xG   — non-penalty xG
-    """
-    cols = list(df.columns)
-    result = {}
-    result["player_name"] = df[_find_col(cols, "player")] if _find_col(cols, "player") else None
-
-    ninety_col = _find_col(cols, "90s")
-    nineties = df[ninety_col].apply(_safe_float).replace(0, float("nan")) if ninety_col else None
-
-    # xG per 90 — prefer direct column, fall back to total/90s
-    xg_per90_col = _find_col(cols, "xg per 90", "xg/90", "expected xg per 90")
-    if xg_per90_col:
-        result["xg_per90"] = df[xg_per90_col].apply(_safe_float)
-    elif _find_col(cols, "expected xg", "xg") and nineties is not None:
-        xg_col = _find_col(cols, "expected xg", "xg")
-        result["xg_per90"] = (df[xg_col].apply(_safe_float) / nineties).fillna(0.0)
-
-    # Shots per 90 — useful for power index quality weighting
-    sh_col = _find_col(cols, "sh/90", "shots sh/90")
-    if sh_col:
-        result["shots_per90"] = df[sh_col].apply(_safe_float)
-
-    # G-xG: positive = overperforming (finishing), negative = underperforming
-    g_xg_col = _find_col(cols, "g-xg", "g - xg")
-    if g_xg_col:
-        result["goals_minus_xg"] = df[g_xg_col].apply(_safe_float)
-
-    return result
-
-
 def _extract_keepers(df: pd.DataFrame) -> dict[str, pd.Series]:
     """Extract GK stats from the Keepers table."""
     cols = list(df.columns)
@@ -503,13 +464,40 @@ def _get_or_create_player(db, fbref_id: str, name: str, team: str, league_code: 
     resolved_team = resolve_team_name(db, team)  # no league_code = search all leagues
 
     # Get the actual team record to find its league
-    team_record = db.query(Team).filter_by(team_key=resolved_team).first()
-    if team_record:
-        actual_league = team_record.league_code
+    team_record = db.query(Team).filter_by(team_key=resolved_team).first() if resolved_team else None
+
+    if not resolved_team or not team_record:
+        # Team not in DB — auto-create it using the scraped league
+        # This covers relegated/promoted teams not yet in teams.json
+        from app.util.text_norm import normalize_team
+        team_key = normalize_team(team)
+        existing = db.query(Team).filter_by(team_key=team_key).first()
+        if not existing:
+            new_team = Team(
+                team_key=team_key,
+                display_name=team.title(),
+                league_code=league_code,
+            )
+            db.add(new_team)
+            db.flush()
+            print(f"  [players] Auto-created team: {team_key} ({league_code})")
+            actual_league = league_code
+            resolved_team = team_key
+        else:
+            # Found under a different key — check if league needs correcting
+            if existing.league_code != league_code:
+                print(f"  [players] Correcting league: {existing.team_key} "
+                      f"{existing.league_code} → {league_code}")
+                existing.league_code = league_code
+            resolved_team = existing.team_key
+            actual_league = league_code
     else:
-        # Team not found – fall back to scraped league (should not happen if teams are seeded)
+        # Team found — stats page is the truth for current league
+        if team_record.league_code != league_code:
+            print(f"  [players] Correcting league: {team_record.team_key} "
+                  f"{team_record.league_code} → {league_code}")
+            team_record.league_code = league_code
         actual_league = league_code
-        print(f"Warning: Team '{resolved_team}' not found for player {name}")
 
     player = db.query(Player).filter_by(fbref_id=fbref_id).first()
     if player:
@@ -588,10 +576,15 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
         shared_driver.uc_open_with_reconnect("about:blank", 1)
 
     # ── Fetch all 5 stat category pages ──────────────────────────────
+    # Use year-specific URL for leagues that have Cloudflare bot detection
+    # on the generic stats URL (ENG-PL, ENG-CH confirmed). The year-specific
+    # URL format bypasses this for the stats category specifically.
+    _YEAR_SPECIFIC_LEAGUES = {"ENG-PL", "ENG-CH"}
     raw_pages: dict[str, str] = {}
     try:
         for cat in STAT_CATEGORIES:
-            url = league_stats_url(comp_id, slug, cat)
+            _season = season if league_code in _YEAR_SPECIFIC_LEAGUES else None
+            url = league_stats_url(comp_id, slug, cat, season=_season)
             print(f"\n  Fetching {cat}: {url}")
             html = _get_html(url, f"{league_code}/{cat}", driver=shared_driver)
 
@@ -627,12 +620,11 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
             continue
 
         extractor = {
-            "stats":    _extract_standard,
-            "gca":      _extract_gca,
-            "passing":  _extract_passing,
-            "defense":  _extract_defense,
-            "keepers":  _extract_keepers,
-            "shooting": _extract_shooting,
+            "stats":   _extract_standard,
+            "gca":     _extract_gca,
+            "passing": _extract_passing,
+            "defense": _extract_defense,
+            "keepers": _extract_keepers,
         }.get(cat)
 
         if extractor:
@@ -652,7 +644,7 @@ def scrape_league_players(league_code: str, schedule_url: str, force: bool = Fal
 
     # Build lookup dicts for supplementary categories (by player name)
     supplements: dict[str, dict[str, dict[str, float]]] = {}
-    for cat in ["gca", "passing", "defense", "keepers", "shooting"]:
+    for cat in ["gca", "passing", "defense", "keepers"]:
         if cat in parsed and parsed[cat].get("player_name") is not None:
             names = parsed[cat]["player_name"]
             supplements[cat] = {}
