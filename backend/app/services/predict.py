@@ -242,8 +242,8 @@ def _apply_module_adjustments(
     raw_eps      = req.eps_stability if req.eps_stability  is not None else 0.65
 
     adj_deg      = _clip(raw_deg * deg_sens + avg_deg_nudge, 0.0, 1.0)
-    adj_home_det = _clip(raw_home_det * det_sens + home_det_n, 0.0, 1.0)
-    adj_away_det = _clip(raw_away_det * det_sens + away_det_n, 0.0, 1.0)
+    adj_home_det = _clip(raw_home_det * det_sens, 0.0, 1.0)
+    adj_away_det = _clip(raw_away_det * det_sens, 0.0, 1.0)
     adj_det      = _clip(raw_det * det_sens + avg_det_nudge,   0.0, 1.0)
     adj_eps      = 1.0 - _clip(1.0 - raw_eps, 0.0, 0.90) if eps_sens == 1.0 else \
                    1.0 - _clip((1.0 - raw_eps) * eps_sens, 0.0, 0.90)
