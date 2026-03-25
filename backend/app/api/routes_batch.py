@@ -457,6 +457,16 @@ def batch_predict(
                 eps_stability=metrics.get("eps_stability"),
             )
 
+            # Load league config before prediction so _min_conf is available
+            _cfg           = _cfg_cache.get(fix.league_code)
+            _min_conf      = float(getattr(_cfg, "min_confidence",     None) or 0.0)  if _cfg else 0.0
+            _flip_thresh   = float(_cfg.alt_flip_threshold or 0.62)   if _cfg and hasattr(_cfg, "alt_flip_threshold")    and _cfg.alt_flip_threshold    is not None else 0.62
+            _tt_bias       = float(_cfg.tt_home_bias or 0.0)           if _cfg and hasattr(_cfg, "tt_home_bias")          and _cfg.tt_home_bias          is not None else 0.0
+            _use_alt       = bool(getattr(_cfg, "use_alt_market", True)) if _cfg else True
+            _tt_home_weak  = bool(getattr(_cfg,  "tt_home_weak",       False)) if _cfg else False
+            _tt_away_weak  = bool(getattr(_cfg,  "tt_away_weak",       False)) if _cfg else False
+            _tt_conf_min   = float(getattr(_cfg, "tt_confidence_min",  None) or 0.62) if _cfg else 0.62
+
             pred = predict_match(db, req)
 
             # Skip if below league minimum confidence gate
@@ -469,14 +479,6 @@ def batch_predict(
             variance_flag = _variance_cache.get(fix.league_code)
             p_home_tt = metrics.get("p_home_tt05")
             p_away_tt = metrics.get("p_away_tt05")
-            _cfg = _cfg_cache.get(fix.league_code)
-            _flip_thresh  = float(_cfg.alt_flip_threshold or 0.62)   if _cfg and hasattr(_cfg, "alt_flip_threshold")    and _cfg.alt_flip_threshold    is not None else 0.62
-            _tt_bias      = float(_cfg.tt_home_bias or 0.0)           if _cfg and hasattr(_cfg, "tt_home_bias")          and _cfg.tt_home_bias          is not None else 0.0
-            _use_alt      = bool(getattr(_cfg, "use_alt_market", True)) if _cfg else True
-            _tt_home_weak  = bool(getattr(_cfg,  "tt_home_weak",       False)) if _cfg else False
-            _tt_away_weak  = bool(getattr(_cfg,  "tt_away_weak",       False)) if _cfg else False
-            _tt_conf_min   = float(getattr(_cfg, "tt_confidence_min",  None) or 0.62) if _cfg else 0.62
-            _min_conf      = float(getattr(_cfg, "min_confidence",     None) or 0.0)  if _cfg else 0.0
             alt_market, original_market = _compute_alt_market(
                 variance_flag,
                 pred.translated_play.market,
@@ -1289,3 +1291,4 @@ def bulk_delete_predictions(
         return {"deleted": deleted, "mode": "by_league", "league_code": league_code, "status": status or "all"}
 
     return {"deleted": 0, "error": "Provide either ids= or league_code="}
+    
