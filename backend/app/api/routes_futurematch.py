@@ -55,14 +55,17 @@ def post_futurematch(body: FutureBody, db: Session = Depends(get_db)):
 
         # (Optional) later: nuance API (injuries, lineup risk) can tweak support_idx_over_delta slightly
 
-        pred = predict_match(db, req)
+        pred = predict_match(db, req, apply_weather=True)
         return {
             "mode": "futurematch",
+            "schema_version": pred.schema_version,
             "league_code": pred.league_code,
             "fixture": pred.fixture,
             "corridor": {"low": pred.corridor.low, "high": pred.corridor.high, "lean": pred.corridor.lean},
             "translated_play": {"market": pred.translated_play.market, "confidence": pred.translated_play.confidence},
             "confidence_score": pred.confidence_score,
+            "rationale": pred.rationale,
+            "weather": {"tag": pred.weather_tag, "impact": pred.weather_impact},
             "applied_modules": pred.applied_modules,
             "safety_flags": pred.safety_flags,
             "explanations": pred.explanations,

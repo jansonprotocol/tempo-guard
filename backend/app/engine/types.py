@@ -56,6 +56,25 @@ class TranslatedPlay(BaseModel):
 
 
 class Prediction(BaseModel):
+    """
+    ATHENA prediction result.
+
+    Confidence is reported two complementary ways:
+      - ``confidence_score``  : float in [0, 1] — the engine's raw internal
+                                signal strength. NOT a probability.
+      - ``translated_play.confidence`` : coarse LOW/MEDIUM/HIGH band tied to the
+                                selected Asian line.
+    For a true, calibrated hit probability, callers use
+    ``confidence_calibrator.calibrate_confidence`` (surfaced as
+    ``calibrated_probability`` at the API layer).
+
+    ``rationale`` is a plain-language, user-facing summary derived from
+    ``applied_modules`` — see ``app.engine.rationale.humanize``. ``explanations``
+    remains the raw developer-facing signal trace.
+    """
+    # Bump when the response shape changes in a backward-incompatible way.
+    schema_version:   str = "2.3"
+
     league_code:      str
     fixture:          str
     corridor:         Corridor
@@ -64,3 +83,11 @@ class Prediction(BaseModel):
     applied_modules:  List[str]
     safety_flags:     List[str]
     explanations:     List[str]
+
+    # User-facing plain-language rationale (O2). Populated by the engine.
+    rationale:        List[str] = []
+
+    # Weather context (D7). Populated by predict_match when weather is applied;
+    # None when weather was not evaluated (e.g. unknown stadium or historical sim).
+    weather_tag:      Optional[str]   = None
+    weather_impact:   Optional[float] = None

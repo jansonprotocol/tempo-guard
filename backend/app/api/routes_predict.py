@@ -145,7 +145,7 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
             away_det               = body.away_det,
             eps_stability          = body.eps_stability,
         )
-        pred = predict_match(db, req)
+        pred = predict_match(db, req, apply_weather=True)
 
         # ── Performance tags ──────────────────────────────────────────
         perf_tags = {}
@@ -178,6 +178,7 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
             pass
 
         return {
+            "schema_version":         pred.schema_version,
             "league_code":            pred.league_code,
             "fixture":                pred.fixture,
             "corridor": {
@@ -191,6 +192,14 @@ def post_predict(body: PredictBody, db: Session = Depends(get_db)):
             },
             "confidence_score":       pred.confidence_score,
             "calibrated_probability": calibrated_probability,
+            # Alias: the calibrated hit probability is the honest "probability"
+            # field consumers should prefer over the raw confidence_score.
+            "probability":            calibrated_probability,
+            "rationale":              pred.rationale,
+            "weather": {
+                "tag":    pred.weather_tag,
+                "impact": pred.weather_impact,
+            },
             "applied_modules":        pred.applied_modules,
             "safety_flags":           pred.safety_flags,
             "explanations":           pred.explanations,

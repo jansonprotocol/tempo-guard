@@ -5,6 +5,7 @@ from math import isfinite
 from typing import List, Tuple
 
 from app.engine.types import MatchRequest, Prediction, Corridor, TranslatedPlay
+from app.engine.rationale import humanize
 
 # ── Core constants ────────────────────────────────────────────────────────────
 ROUNDING   = 0.01
@@ -730,7 +731,7 @@ def evaluate_athena(
         notes, flags, modules,
     )
 
-    return Prediction(
+    prediction = Prediction(
         league_code=req.league_code,
         fixture=f"{req.home_team} vs {req.away_team}",
         corridor=Corridor(low=low, high=high, lean=final_lean),
@@ -740,3 +741,6 @@ def evaluate_athena(
         safety_flags=flags,
         explanations=notes,
     )
+    # Plain-language, user-facing rationale derived from the fired modules.
+    prediction.rationale = humanize(prediction)
+    return prediction

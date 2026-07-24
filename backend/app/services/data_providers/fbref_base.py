@@ -32,10 +32,10 @@ import io
 import math
 import unicodedata
 from datetime import date, datetime, timedelta
-from difflib import get_close_matches
 from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
+from rapidfuzz import fuzz, process
 
 from app.database.db import SessionLocal
 from app.database.models_fbref import FBrefSnapshot
@@ -43,7 +43,11 @@ from app.database.models_fbref import FBrefSnapshot
 # ── Constants ─────────────────────────────────────────────────────────────────
 ROLLING_MATCHES  = 10
 MIN_MATCHES      = 5   # default; calibration can lower this
-FUZZY_CUTOFF     = 0.82
+# Fuzzy match cutoff on rapidfuzz's 0–100 scale (WRatio). ~82 mirrors the
+# previous difflib SequenceMatcher cutoff of 0.82 while giving more robust
+# handling of suffixes/typos, and keeps team matching consistent with
+# app.util.team_resolver, which also uses rapidfuzz WRatio.
+FUZZY_CUTOFF     = 82
 
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
@@ -93,9 +97,16 @@ def _match_team(target: str, candidates: List[str]) -> Optional[str]:
         return accent_map[t_accent]
 
     accent_keys = list(accent_map.keys())
-    close = get_close_matches(t_accent, accent_keys, n=1, cutoff=FUZZY_CUTOFF)
-    if close:
-        return accent_map[close[0]]
+    if not accent_keys:
+        return None
+
+    # rapidfuzz WRatio, score_cutoff on the 0–100 scale. extractOne returns
+    # (choice, score, index) or None when nothing clears the cutoff.
+    best = process.extractOne(
+        t_accent, accent_keys, scorer=fuzz.WRatio, score_cutoff=FUZZY_CUTOFF
+    )
+    if best:
+        return accent_map[best[0]]
 
     return None
 

@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 
 from app.engine.types import MatchRequest, Prediction
 from app.engine.pipeline import evaluate_athena
+from app.engine.rationale import humanize
 from app.models.league_config import LeagueConfig
 from app.models.team_config import TeamConfig
 from app.services.squad_availability import auto_deg_from_depth
@@ -42,6 +43,32 @@ def _current_season(league_code: str) -> str:
 
 def _clip(x: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, x))
+
+
+# ── Weather (D7) ──────────────────────────────────────────────────────────────
+
+def _weather_for_request(req: MatchRequest) -> tuple[Optional[str], float]:
+    """
+    Fetch forecast weather for a fixture's home ground and return
+    (weather_tag, weather_impact). Returns (None, 0.0) when the stadium is
+    unknown or the API is unavailable — weather is opportunistic, never required.
+
+    Mirrors the adjustment batch-predict already applies, so single /predict and
+    /futurematch reach parity with batch. req.home_team is expected to be the
+    resolved team_key (matching STADIUM_COORDS keys).
+    """
+    try:
+        from app.services.weather_service import get_stadium_coords, get_match_weather
+        coords = get_stadium_coords(req.home_team)
+        if not coords:
+            return None, 0.0
+        w = get_match_weather(coords[0], coords[1], req.match_date)
+    except Exception:
+        return None, 0.0
+
+    if not w:
+        return None, 0.0
+    return w.get("weather_tag"), float(w.get("weather_impact") or 0.0)
 
 
 # ── Config loaders — called ONCE per prediction ───────────────────────────────
@@ -269,7 +296,11 @@ def _apply_module_adjustments(
 
 # ── Main entry point ──────────────────────────────────────────────────────────
 
-def predict_match(db: Session, req: MatchRequest) -> Prediction:
+def predict_match(
+    db: Session,
+    req: MatchRequest,
+    apply_weather: bool = False,
+) -> Prediction:
     """
     Main entry point for generating ATHENA predictions.
 
@@ -281,9 +312,17 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
       4. Compute player power nudge.
       5. Compute league-level form delta nudge.
       6. Compute per-team form nudges (v2.1).
-      7. Apply squad depth adjustment (auto DEG).
+      7. Apply squad depth adjustment (auto DEG) + optional weather (D7).
       8. Apply DEG/DET/EPS module adjustments.
       9. Run evaluate_athena with combined nudges.
+
+    apply_weather:
+      When True, fetch forecast weather for the home ground and fold its impact
+      into deg_pressure (same adjustment batch-predict performs inline). Default
+      False so callers that already applied weather — notably batch-predict,
+      which caches one lookup per home+date — do not double-count it. Future-
+      facing routes (/predict, /futurematch) pass True; historical /retrosim
+      leaves it False.
     """
     # ── 0. Resolve team names ─────────────────────────────────────────
     try:
@@ -331,8 +370,31 @@ def predict_match(db: Session, req: MatchRequest) -> Prediction:
             "deg_pressure": round(current_deg + depth_deg, 3),
         })
 
+    # ── 7b. Weather → deg_pressure (D7, opt-in) ──────────────────────
+    weather_tag: Optional[str] = None
+    weather_impact = 0.0
+    if apply_weather:
+        weather_tag, weather_impact = _weather_for_request(req)
+        if weather_impact != 0.0:
+            current_deg = req.deg_pressure if req.deg_pressure is not None else 0.0
+            new_deg = round(_clip(current_deg + weather_impact, 0.0, 1.0), 3)
+            req = req.model_copy(update={"deg_pressure": new_deg})
+            print(
+                f"[predict] Weather {req.league_code} {req.home_team}: "
+                f"{weather_tag} → deg {current_deg:.3f}→{new_deg:.3f}"
+            )
+
     # ── 8. Module adjustments ─────────────────────────────────────────
     adjusted_req = _apply_module_adjustments(req, cfg, home_cfg, away_cfg)
 
     # ── 9. Evaluate ───────────────────────────────────────────────────
-    return evaluate_athena(adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge)
+    prediction = evaluate_athena(
+        adjusted_req, over_bias, under_bias, tempo_factor, combined_nudge
+    )
+
+    # Attach weather context to the result (None when not evaluated/applied).
+    prediction.weather_tag = weather_tag
+    prediction.weather_impact = weather_impact if weather_impact != 0.0 else None
+    # Rebuild rationale so any weather line is reflected in the user-facing text.
+    prediction.rationale = humanize(prediction)
+    return prediction

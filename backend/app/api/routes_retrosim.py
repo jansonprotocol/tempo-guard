@@ -79,11 +79,13 @@ def post_retrosim(body: RetroBody, db: Session = Depends(get_db)):
 
         return {
             "mode":             "retrosim",
+            "schema_version":   pred.schema_version,
             "league_code":      pred.league_code,
             "fixture":          pred.fixture,
             "corridor":         {"low": pred.corridor.low, "high": pred.corridor.high, "lean": pred.corridor.lean},
             "translated_play":  {"market": pred.translated_play.market, "confidence": pred.translated_play.confidence},
             "confidence_score": pred.confidence_score,
+            "rationale":        pred.rationale,
             "applied_modules":  pred.applied_modules,
             "safety_flags":     pred.safety_flags,
             "explanations":     pred.explanations,
