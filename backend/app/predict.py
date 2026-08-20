@@ -83,6 +83,8 @@ def predict_fixture(
         confidence_scale=float(cfg.confidence_scale),
         confidence_floor=float(cfg.confidence_floor),
         module_flags=module_flags,
+        norm_mean=float(cfg.mu_mean),
+        norm_std=float(cfg.mu_std),
     )
     prediction.rationale = humanize(prediction)
     return prediction

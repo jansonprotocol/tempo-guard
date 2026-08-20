@@ -125,3 +125,78 @@ def test_tempo_index_is_not_saturated():
     assert all(0.2 < t < 0.8 for t in typical), typical
     # and the range must still separate low from high scoring fixtures
     assert tempo(4.5) - tempo(1.8) > 0.5
+
+
+# ── Two-lane output: safe and sharp ───────────────────────────────────────────
+
+def _lane_req(tempo):
+    from app.engine.types import MatchRequest
+    return MatchRequest(
+        league_code="ENG-PL", home_team="A", away_team="B",
+        match_date=date(2026, 3, 5), tempo_index=tempo,
+        p_two_plus=0.80, support_idx_over_delta=0.06,
+    )
+
+
+def test_sharp_lane_is_silent_on_ordinary_fixtures():
+    """
+    A fixture sitting at its league's scoring norm gets no sharper play. Most
+    matches are ordinary and should stay on the safe lane.
+    """
+    from app.engine.pipeline import evaluate_athena
+
+    # tempo 0.40 -> mu 2.70, exactly the norm passed below
+    pred = evaluate_athena(_lane_req(0.40), 0.5, 0.5, 0.5,
+                           norm_mean=2.70, norm_std=0.50)
+    assert pred.lanes is not None
+    assert pred.lanes.safe.market == pred.translated_play.market
+    assert pred.lanes.sharp is None
+
+
+def test_sharp_lane_offers_over_on_unusually_high_expectation():
+    from app.engine.pipeline import evaluate_athena
+
+    # tempo 0.70 -> mu 3.60, well above a 2.70 norm at 0.50 sigma
+    pred = evaluate_athena(_lane_req(0.70), 0.5, 0.5, 0.5,
+                           norm_mean=2.70, norm_std=0.50)
+    assert pred.lanes.sharp is not None
+    assert pred.lanes.sharp.market.startswith("O")
+    assert pred.lanes.sharp_tier == "3+ goals"
+    assert pred.lanes.league_z >= 0.70
+
+
+def test_sharp_lane_is_league_relative():
+    """
+    The same fixture must read differently in a high-scoring league and a
+    low-scoring one — 3.0 expected goals is unremarkable in the Bundesliga and
+    notable in Serie A. A global threshold would just describe the league.
+    """
+    from app.engine.pipeline import evaluate_athena
+
+    req = _lane_req(0.50)   # mu = 3.00
+    in_low = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=2.45, norm_std=0.50)
+    in_high = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=3.10, norm_std=0.50)
+
+    assert in_low.lanes.league_z > in_high.lanes.league_z
+    assert in_low.lanes.sharp is not None       # unusual for a low-scoring league
+    assert in_high.lanes.sharp is None          # ordinary for a high-scoring one
+
+
+def test_sharp_lane_uses_expectation_spread_not_result_spread():
+    """
+    Regression guard. The trigger once standardised against the spread of
+    actual match totals (~1.65) rather than of goal expectations (~0.45-0.75).
+    Expectations are rolling averages and vary far less, so every z-score was
+    divided by roughly 2.5 too much and no fixture in Serie A or Argentina ever
+    reached the threshold — the sharp Under lane could not fire at all.
+    """
+    from app.engine.pipeline import evaluate_athena
+
+    req = _lane_req(0.60)   # mu = 3.30, i.e. +0.6 goals above a 2.70 norm
+
+    correct = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=2.70, norm_std=0.50)
+    wrong = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=2.70, norm_std=1.65)
+
+    assert correct.lanes.league_z > wrong.lanes.league_z
+    assert correct.lanes.sharp is not None
+    assert wrong.lanes.sharp is None

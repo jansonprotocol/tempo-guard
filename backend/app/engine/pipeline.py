@@ -5,7 +5,7 @@ from math import isfinite
 from typing import List, Tuple
 
 from app.engine.types import (
-    MatchRequest, ModuleFlags, Prediction, Corridor, TranslatedPlay,
+    Lanes, MatchRequest, ModuleFlags, Prediction, Corridor, TranslatedPlay,
 )
 from app.engine.rationale import humanize
 
@@ -541,6 +541,83 @@ def translate_play(
     return TranslatedPlay(market="U4.25", confidence="MEDIUM")
 
 
+# ── Sharp lane ────────────────────────────────────────────────────────────────
+
+# How far a fixture must sit from its league's scoring norm, in standard
+# deviations, before the sharper rung is offered. Measured on 2025-26: fixtures
+# in the top quarter by goal expectation win the 3+ tier 61% of the time against
+# 49% in the bottom quarter, and the bottom quarter wins the under-4 tier 74.5%
+# against 62%. Roughly ±0.7 sigma isolates those quarters.
+SHARP_Z = 0.70
+
+# Rungs offered per direction. Under the full-win convention the rungs within a
+# tier share a win condition and differ only in price, so the middle one is
+# named and `sharp_tier` states the condition plainly.
+SHARP_OVER  = ("O2.5",  "3+ goals")
+SHARP_UNDER = ("U2.75", "under 3 goals")
+MILD_UNDER  = ("U3.25", "under 4 goals")
+
+
+def sharp_lane(
+    lean: str,
+    safe_market: str,
+    mu_total: float,
+    norm_mean: float,
+    norm_std: float,
+    under_guard: str,
+) -> Tuple[TranslatedPlay | None, str | None, str | None, float]:
+    """
+    Offer a sharper rung when the fixture is unusual *for its own league*.
+
+    Returns (play, tier, reason, league_z). `play` is None when the fixture sits
+    too close to its league norm for a sharper line to be justified — which is
+    most of the time, and deliberately so.
+
+    The comparison is league-relative because goal density varies enormously by
+    competition: Serie A averages 2.43 goals and the Bundesliga 3.24, so an
+    identical expectation means opposite things in the two. Judging a fixture
+    against a global threshold would hand out sharp Overs all season in Germany
+    and sharp Unders all season in Italy, which is a description of the league
+    rather than a read on the match.
+    """
+    # Standardise against the spread of goal *expectations*, not of actual
+    # results. mu is a rolling average and varies far less than individual
+    # scorelines — measured mu_std runs 0.43-0.75 against a goal_std of about
+    # 1.65. Using the latter divided every z-score by roughly 2.5 too much, and
+    # no fixture in Serie A or Argentina ever reached the trigger.
+    std = norm_std if norm_std and norm_std > 0.05 else 0.45
+    z = (mu_total - norm_mean) / std
+
+    if z >= SHARP_Z and lean == "over":
+        market, tier = SHARP_OVER
+        return (
+            TranslatedPlay(market=market, confidence="LOW"),
+            tier,
+            f"Goal expectation {mu_total:.2f} runs {z:+.1f}σ above this league's "
+            f"norm of {norm_mean:.2f} — sharp Over available.",
+            round(z, 2),
+        )
+
+    if z <= -SHARP_Z and lean == "under":
+        # The deepest under rung is only justified when the goal-expectation
+        # signal and the guard agree; on its own it wins barely half the time.
+        if under_guard == "hard":
+            market, tier = SHARP_UNDER
+            why = "hard under signal"
+        else:
+            market, tier = MILD_UNDER
+            why = "below-norm goal expectation"
+        return (
+            TranslatedPlay(market=market, confidence="LOW"),
+            tier,
+            f"Goal expectation {mu_total:.2f} runs {z:+.1f}σ below this league's "
+            f"norm of {norm_mean:.2f} ({why}) — sharp Under available.",
+            round(z, 2),
+        )
+
+    return None, None, None, round(z, 2)
+
+
 # ── Main entry ────────────────────────────────────────────────────────────────
 
 def evaluate_athena(
@@ -552,6 +629,8 @@ def evaluate_athena(
     confidence_scale: float = 1.0,  # per-league delta multiplier (v2.3)
     confidence_floor: float = 0.60, # per-league confidence baseline (v2.3)
     module_flags: ModuleFlags | None = None,
+    norm_mean: float = 2.70,        # mean goal expectation for this league
+    norm_std:  float = 0.45,        # spread of that expectation (not of results)
 ) -> Prediction:
     mf = module_flags or ModuleFlags()
 
@@ -711,6 +790,17 @@ def evaluate_athena(
         notes, flags, modules,
     )
 
+    # ── Sharp lane ────────────────────────────────────────────────────
+    # mu_total is what tempo_index was derived from; invert that mapping rather
+    # than recomputing, so the two can never drift apart.
+    mu_total = raw_tempo * 3.0 + 1.5
+    sharp, tier, sharp_why, league_z = sharp_lane(
+        final_lean, translated.market, mu_total, norm_mean, norm_std, under_guard,
+    )
+    if sharp is not None:
+        modules.append("SharpLane")
+        notes.append(sharp_why)
+
     prediction = Prediction(
         league_code=req.league_code,
         fixture=f"{req.home_team} vs {req.away_team}",
@@ -720,6 +810,13 @@ def evaluate_athena(
         applied_modules=modules,
         safety_flags=flags,
         explanations=notes,
+        lanes=Lanes(
+            safe=translated,
+            sharp=sharp,
+            sharp_tier=tier,
+            sharp_reason=sharp_why,
+            league_z=league_z,
+        ),
     )
     # Plain-language, user-facing rationale derived from the fired modules.
     prediction.rationale = humanize(prediction)

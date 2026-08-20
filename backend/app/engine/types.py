@@ -113,6 +113,32 @@ class TranslatedPlay(BaseModel):
     confidence: str
 
 
+class Lanes(BaseModel):
+    """
+    Two plays for the same fixture, at different sharpness.
+
+    `safe` is the conservative call — a cushioned line that wins on most
+    plausible scorelines. `sharp` is the same read taken further up the Asian
+    ladder, and is only offered when the fixture sits far enough from its own
+    league's scoring norm to justify it.
+
+    Sharpness is league-relative on purpose. A 2.4-goal expectation is an
+    ordinary afternoon in Italy or Argentina and a notably quiet one in Germany
+    or the Netherlands, so the trigger compares a fixture against its own
+    league's distribution rather than a global constant.
+
+    Under the full-win grading convention several ladder rungs are equivalent —
+    O2.25/O2.5/O2.75 all require three goals, U3.25/U3.5/U3.75 all require the
+    total to stay under four. `sharp_tier` names that win condition so the
+    choice of rung, which only changes the price, stays with the bettor.
+    """
+    safe:        TranslatedPlay
+    sharp:       Optional[TranslatedPlay] = None
+    sharp_tier:  Optional[str] = None      # e.g. "3+ goals", "under 3 goals"
+    sharp_reason: Optional[str] = None     # why the sharper line was offered
+    league_z:    Optional[float] = None    # fixture vs league norm, in sigma
+
+
 class Prediction(BaseModel):
     """
     ATHENA prediction result.
@@ -144,6 +170,10 @@ class Prediction(BaseModel):
 
     # User-facing plain-language rationale (O2). Populated by the engine.
     rationale:        List[str] = []
+
+    # Safe and sharp plays for this fixture. `translated_play` remains the safe
+    # call so every existing caller keeps its meaning.
+    lanes:            Optional[Lanes] = None
 
     # Weather context (D7). Populated by predict_match when weather is applied;
     # None when weather was not evaluated (e.g. unknown stadium or historical sim).
