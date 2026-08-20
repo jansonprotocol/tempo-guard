@@ -673,6 +673,11 @@ def evaluate_athena(
     module_flags: ModuleFlags | None = None,
     norm_mean: float = 2.70,        # mean goal expectation for this league
     norm_std:  float = 0.45,        # spread of that expectation (not of results)
+    # Loosest under / tightest over worth offering here. None means no limit.
+    # A judgement about prices, which the engine cannot observe — see the note
+    # in app.engine.market_select on why this is config and not a rule.
+    max_under_line: float | None = None,
+    min_over_line:  float | None = None,
 ) -> Prediction:
     mf = module_flags or ModuleFlags()
 
@@ -839,7 +844,10 @@ def evaluate_athena(
     # app.engine.market_select for the measurement behind this.
     pick_win_prob = pick_edge = None
     if mf.prob_select:
-        picked = market_select.choose(req.mu_total, req.league_mu)
+        picked = market_select.choose(
+            req.mu_total, req.league_mu,
+            max_under=max_under_line, min_over=min_over_line,
+        )
         if picked is not None:
             market, edge, pw = picked
             if market != translated.market:

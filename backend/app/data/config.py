@@ -72,6 +72,22 @@ class LeagueConfig:
     mu_std:  float = 0.45
 
     # ── Per-team over nudges: {team_name: nudge} ──────────────────────
+    # Loosest under line worth offering in this league, and tightest over.
+    # None means no restriction.
+    #
+    # Not derivable from the goal data, which is why it is config rather than a
+    # rule. Italian Serie B averages 2.51 goals and Serie A 2.55 — four
+    # hundredths apart — yet the loose under rungs are reportedly unplayable in
+    # one and fine in the other. An automatic cap on distance-from-mean cannot
+    # separate leagues that are statistically identical, and when tried it
+    # stripped U4.25 across the whole 2.5-goal cluster and cost 0.53 points of
+    # edge in the leagues that did not need it.
+    #
+    # So this carries a judgement about market prices that the engine has no
+    # access to, made by whoever actually places the bets.
+    max_under_line: Optional[float] = None
+    min_over_line: Optional[float] = None
+
     team_nudges: dict[str, float] = field(default_factory=dict)
 
     # ── Module overrides: {module_name: bool} ─────────────────────────

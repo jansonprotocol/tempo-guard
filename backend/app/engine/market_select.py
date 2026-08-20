@@ -95,39 +95,30 @@ _MAX_TOTAL = 12
 # accuracy.
 MIN_WIN_PROB = 0.79
 
-# ── Playability: how far a line may sit from the league's own scoring ────────
-# A first attempt used a probability ceiling — refuse any market modelled above
-# some chance of landing — on the reasoning that a near-certainty cannot be
-# priced. Measured, it did the opposite of what was wanted. In a 2.2-goal league
-# "1+ goals" is a 92% event, so the ceiling excluded O1.0 first and pushed the
-# pick to U4.25: it removed the playable rung and forced the unplayable one, on
-# 39 of 120 Serie B fixtures.
+# ── Playability: which rungs are worth offering in a given league ────────────
+# Two attempts to derive this failed, and both failures are instructive.
 #
-# Probability does not separate them, because both are ~90% events. Line
-# position does. U4.25 in a league averaging 2.2 goals sits two goals above the
-# mean and pays nothing; the same line in a 3.2-goal league sits one goal above
-# and is a real bet. So the constraint is distance from the league's own
-# expectation, which self-adjusts instead of needing a list of "tight" leagues.
+# A probability ceiling — refuse anything modelled above some chance of landing
+# — did the opposite of its purpose. In a 2.2-goal league "1+ goals" is a 92%
+# event, so it excluded O1.0 and forced U4.25 on 39 of 120 Serie B fixtures:
+# it removed the playable rung and mandated the unplayable one.
 #
-# Overs are capped on the other side for the same reason: O2.5 in a 2.2-goal
-# league is a lottery ticket, and the rung that is actually buyable there is
-# O1.0.
-# Set from the brief rather than swept: in a 2.2-goal league U3.5 is wanted and
-# U3.75/U4.25 are not, which puts the cut between 1.30 and 1.55 above mu. In a
-# 3.15-goal league the same rule leaves U4.25 available, where it is a real bet.
-UNDER_MAX_ABOVE = 1.35
+# A cap on distance from the league mean failed more subtly. Italian Serie B
+# averages 2.51 goals and Serie A 2.55. The loose under rungs are reportedly
+# unbuyable in the first and fine in the second, and no rule reading a
+# four-hundredths difference can express that. Applied anyway it stripped U4.25
+# across every mid-scoring league and cost 0.53 points of edge where it was not
+# wanted, against a 0.26 gain where it was.
+#
+# The conclusion is that playability is not a property of the goal distribution.
+# It is a fact about prices, which the engine cannot see and should stop trying
+# to infer. The limits therefore come from league config, set by whoever places
+# the bets, and default to no restriction — an unconfigured league behaves
+# exactly as it did before this existed.
 
-# Deliberately loose. Only the under side was reported as unplayable; this exists
-# so O1.0 is reachable in a tight league without pruning the Over rungs that
-# already work in ordinary ones.
-OVER_MAX_BELOW = 2.00
-
-# Lines and means are decimals, and 2.20 - 1.20 is 1.0000000000000002, which
-# silently excluded O1.0 at exactly the boundary.
+# Lines and limits are decimals; compare with a tolerance so a rung sitting
+# exactly on its limit is not silently dropped.
 _EPS = 1e-9
-
-# Measurement switch only. Production always applies the rule.
-_PLAYABLE_ON = True
 
 
 def _line_of(market: str) -> float:
@@ -137,20 +128,14 @@ def _line_of(market: str) -> float:
         return 0.0
 
 
-def playable(market: str, league_mu: float) -> bool:
-    """
-    Could this line be bought at a price worth taking, in this league?
-
-    Judged by where the line sits relative to what the league actually scores,
-    not by how likely it is to land. See the note above for why the two differ.
-    """
-    if not _PLAYABLE_ON:
-        return True
+def playable(market: str, max_under: Optional[float] = None,
+             min_over: Optional[float] = None) -> bool:
+    """Is this rung worth offering, given a league's declared limits?"""
     line = _line_of(market)
-    if market.startswith("U"):
-        return line <= league_mu + UNDER_MAX_ABOVE + _EPS
-    if market.startswith("O"):
-        return line >= league_mu - OVER_MAX_BELOW - _EPS
+    if market.startswith("U") and max_under is not None:
+        return line <= max_under + _EPS
+    if market.startswith("O") and min_over is not None:
+        return line >= min_over - _EPS
     return True
 
 
@@ -221,6 +206,8 @@ def choose(
     league_mu: Optional[float],
     ladder: Optional[Sequence[str]] = None,
     min_win_prob: Optional[float] = None,
+    max_under: Optional[float] = None,
+    min_over: Optional[float] = None,
 ) -> Optional[tuple[str, float, float]]:
     """
     Pick the market with the largest edge that still clears the probability
@@ -241,13 +228,13 @@ def choose(
 
     ranked = score_markets(mu, league_mu, ladder)
     for market, edge, here, _typical in ranked:
-        if here >= min_win_prob and playable(market, league_mu):
+        if here >= min_win_prob and playable(market, max_under, min_over):
             return market, edge, here
 
     # Nothing both clears the floor and is buyable. Prefer buyable-but-risky
     # over safe-but-unpriceable: a bet that cannot be bought is not a tip.
     for market, edge, here, _typical in ranked:
-        if playable(market, league_mu):
+        if playable(market, max_under, min_over):
             return market, edge, here
 
     # Take the safest available rather than the
