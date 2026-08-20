@@ -1,0 +1,215 @@
+"""
+Data-layer tests — parser, team matching and the store contract.
+
+The parser tests use inline fixtures rather than repository files, so they run
+without `athena data load` having been executed.
+"""
+from datetime import date
+
+import pandas as pd
+import pytest
+
+from app.data.features import _canonical, _match_team
+from app.data.openfootball import parse_text
+
+# ── Fixtures ──────────────────────────────────────────────────────────────────
+
+RESULTS_MID = """\
+= England | Premier League 2025/26
+
+# Matches  3
+
+▪ Regular Season - 1
+Fri Aug 15 2025
+  19:00   Liverpool  4-2 (1-0)  Bournemouth
+                  (Hugo EKITIKE 37', Cody GAKPO 49')
+Sat Aug 16
+  12:30   Aston Villa  0-0 (0-0)  Newcastle United
+  15:00   Brighton & Hove Albion  1-1 (0-0)  Fulham
+"""
+
+RESULTS_V = """\
+= UEFA Champions League 2025/26
+
+▪ League, Matchday 1
+  Tue Sep 16 2025
+    18:45  Athletic Club (ESP)     v Arsenal FC (ENG)         0-2 (0-0)
+           PAE Olympiakos SFP (GRE) v Paphos FC (CYP)          0-0
+    21:00  Juventus FC (ITA)       v Galatasaray SK (TUR)     3-2 a.e.t. (3-0, 1-0)
+           Paris Saint-Germain FC (FRA) v Arsenal FC (ENG)    4-3 pen. 1-1 a.e.t. (1-1, 0-1)
+"""
+
+FIXTURES = """\
+= English Premier League 2026/27
+
+▪ Matchday 1
+  Fri Aug 21 2026
+    20:00  Arsenal FC              v Coventry City FC
+  Sat Aug 22
+    12:30  Hull City AFC           v Manchester United FC
+    15:00  Ipswich Town FC         v Sunderland AFC
+           Nottingham Forest FC    v Leeds United FC
+"""
+
+ANNOTATED = """\
+= Scotland | Premiership 2025/26
+
+▪ Matchday 1
+  Sat Aug 16 2025
+    15:00  Rangers FC              v St. Johnstone FC         [cancelled]
+           Tottenham Hotspur (ENG) v Stade Rennais (FRA)      0-3    [awarded]
+"""
+
+
+# ── Score-in-middle layout ────────────────────────────────────────────────────
+
+def test_parses_middle_score_layout():
+    df = parse_text(RESULTS_MID)
+    assert len(df) == 3
+    first = df.iloc[0]
+    assert first["home"] == "Liverpool"
+    assert first["away"] == "Bournemouth"
+    assert (first["hg"], first["ag"]) == (4, 2)
+    assert (first["hthg"], first["htag"]) == (1, 0)
+    assert first["status"] == "result"
+
+
+def test_goalscorer_lines_are_ignored():
+    """Scorer continuation lines must not be mistaken for matches."""
+    assert len(parse_text(RESULTS_MID)) == 3
+
+
+def test_date_year_is_inherited():
+    df = parse_text(RESULTS_MID)
+    assert df.iloc[0]["date"] == pd.Timestamp("2025-08-15")
+    # "Sat Aug 16" carries no year — it must inherit 2025, not default to today.
+    assert df.iloc[1]["date"] == pd.Timestamp("2025-08-16")
+
+
+def test_team_names_with_ampersand():
+    df = parse_text(RESULTS_MID)
+    assert "Brighton & Hove Albion" in set(df["home"])
+
+
+# ── "v" layout, cups, extra time ──────────────────────────────────────────────
+
+def test_parses_v_layout_and_strips_country_codes():
+    df = parse_text(RESULTS_V)
+    assert df.iloc[0]["home"] == "Athletic Club"
+    assert df.iloc[0]["away"] == "Arsenal FC"
+    assert (df.iloc[0]["hg"], df.iloc[0]["ag"]) == (0, 2)
+
+
+def test_score_without_halftime():
+    df = parse_text(RESULTS_V)
+    row = df[df["home"] == "PAE Olympiakos SFP"].iloc[0]
+    assert (row["hg"], row["ag"]) == (0, 0)
+    assert pd.isna(row["hthg"])
+
+
+def test_extra_time_uses_ninety_minute_score():
+    """
+    Over/under settles on regulation time. "3-2 a.e.t. (3-0, 1-0)" must record
+    3-0, not 3-2 — otherwise every knockout tie inflates the goal totals that
+    calibration learns from.
+    """
+    df = parse_text(RESULTS_V)
+    row = df[df["home"] == "Juventus FC"].iloc[0]
+    assert (row["hg"], row["ag"]) == (3, 0)
+    assert (row["hthg"], row["htag"]) == (1, 0)
+
+
+def test_penalties_use_ninety_minute_score():
+    df = parse_text(RESULTS_V)
+    row = df[df["home"] == "Paris Saint-Germain FC"].iloc[0]
+    assert (row["hg"], row["ag"]) == (1, 1)
+    assert (row["hthg"], row["htag"]) == (0, 1)
+
+
+# ── Fixtures ──────────────────────────────────────────────────────────────────
+
+def test_unplayed_matches_are_fixtures():
+    df = parse_text(FIXTURES)
+    assert len(df) == 4
+    assert set(df["status"]) == {"fixture"}
+    assert df["hg"].isna().all()
+
+
+def test_fixture_time_inheritance_does_not_drop_matches():
+    """A fixture listed under an earlier kick-off time still parses."""
+    df = parse_text(FIXTURES)
+    assert "Nottingham Forest FC" in set(df["home"])
+
+
+# ── Annotations ───────────────────────────────────────────────────────────────
+
+def test_cancelled_match_is_flagged_not_treated_as_result():
+    df = parse_text(ANNOTATED)
+    row = df[df["home"] == "Rangers FC"].iloc[0]
+    assert row["status"] == "cancelled"
+    assert pd.isna(row["hg"])
+    # The annotation must not leak into the team name.
+    assert row["away"] == "St. Johnstone FC"
+
+
+def test_awarded_match_is_flagged():
+    """Forfeits carry a scoreline but are not football results."""
+    df = parse_text(ANNOTATED)
+    row = df[df["home"] == "Tottenham Hotspur"].iloc[0]
+    assert row["status"] == "awarded"
+    assert (row["hg"], row["ag"]) == (0, 3)
+
+
+def test_empty_input_yields_empty_frame():
+    assert parse_text("").empty
+
+
+# ── Team-name canonicalisation and matching ───────────────────────────────────
+
+@pytest.mark.parametrize("raw,expected", [
+    ("AFC Bournemouth", "bournemouth"),
+    ("Arsenal FC", "arsenal"),
+    ("Brighton & Hove Albion FC", "brighton hove albion"),
+    ("Atlético Madrid", "atletico madrid"),
+])
+def test_canonical_strips_decoration(raw, expected):
+    assert _canonical(raw) == expected
+
+
+def test_canonical_never_empties_a_name():
+    """A club whose whole name is a 'club token' must keep its identity."""
+    assert _canonical("PSV") != ""
+
+
+PL_TEAMS = [
+    "Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton & Hove Albion",
+    "Burnley", "Chelsea FC", "Crystal Palace", "Everton", "Fulham",
+    "Leeds United", "Liverpool", "Manchester City", "Manchester United",
+    "Newcastle United", "Nottingham Forest", "Sunderland", "Tottenham Hotspur",
+]
+
+
+@pytest.mark.parametrize("probe,expected", [
+    ("Arsenal FC", "Arsenal"),
+    ("Leeds United FC", "Leeds United"),
+    ("AFC Bournemouth", "Bournemouth"),
+    ("Brighton & Hove Albion FC", "Brighton & Hove Albion"),
+    ("Manchester United FC", "Manchester United"),
+    ("Chelsea", "Chelsea FC"),
+])
+def test_match_team_resolves_suffix_drift(probe, expected):
+    assert _match_team(probe, PL_TEAMS) == expected
+
+
+@pytest.mark.parametrize("probe", ["Coventry City FC", "Hull City AFC", "Wrexham AFC"])
+def test_match_team_refuses_wrong_club(probe):
+    """
+    Regression guard. A permissive fuzzy scorer once resolved "Coventry City FC"
+    to "Chelsea FC", which would have produced a confident tip built on another
+    club's form. Absent teams must return None so the fixture is skipped.
+    """
+    assert _match_team(probe, PL_TEAMS) is None
+
+
+def test_match_team_handles_empty_candidates():
+    assert _match_team("Arsenal", []) is None
