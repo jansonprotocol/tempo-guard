@@ -403,3 +403,35 @@ def test_sot_requires_most_of_the_window():
         "ast": [3, 2] + [None] * 8,
     })
     assert features._sot_per_game(rows, "a") is None
+
+
+def test_shot_blend_shifts_the_scoring_rate():
+    """
+    A side scoring far below what its shot volume implies should be nudged up,
+    and one scoring far above it nudged down — the blend anticipates regression
+    rather than extrapolating a hot streak.
+    """
+    import pandas as pd
+    from app.data import features
+
+    rows = pd.DataFrame({
+        "home": ["A"] * 6, "away": ["B"] * 6,
+        "hst": [7, 8, 6, 7, 7, 7],     # 7 shots on target a game
+        "ast": [2, 2, 2, 2, 2, 2],
+    })
+    conv = 0.25                         # 7 * 0.25 = 1.75 implied goals
+
+    under = features._blended_scoring_rate(rows, "a", goals_rate=0.5, conversion=conv)
+    over = features._blended_scoring_rate(rows, "a", goals_rate=3.0, conversion=conv)
+    assert under > 0.5, "under-converting side should be revised up"
+    assert over < 3.0, "over-converting side should be revised down"
+
+
+def test_shot_blend_is_inert_without_shot_data():
+    """Leagues with no shot counts must keep their goal rate untouched."""
+    import pandas as pd
+    from app.data import features
+
+    rows = pd.DataFrame({"home": ["A"] * 6, "away": ["B"] * 6})
+    assert features._blended_scoring_rate(rows, "a", 1.4, None) == 1.4
+    assert features._blended_scoring_rate(rows, "a", 1.4, 0.25) == 1.4
