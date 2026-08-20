@@ -26,7 +26,7 @@ from app.engine.types import ModuleFlags
 from app.predict import predict_fixture
 from app.util.asian_lines import evaluate_market, hit_weight
 
-CAPPED = ["BRA-SB", "ARG-PD", "ARG-CLP", "ITA-SB"]
+CAPPED = ["BRA-SB", "ARG-PD", "ARG-CLP", "ITA-SB", "GRE-SL"]
 LIMIT = 400
 
 

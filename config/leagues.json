@@ -641,7 +641,7 @@
     "goal_std": 1.532,
     "mu_mean": 2.477,
     "mu_std": 0.606,
-    "max_under_line": null,
+    "max_under_line": 3.5,
     "min_over_line": null,
     "team_nudges": {},
     "module_overrides": {},
