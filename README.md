@@ -197,32 +197,52 @@ backend/tests/         pytest suite (no data or network needed)
 
 ## Data
 
-Sourced from [openfootball](https://github.com/openfootball) — public domain,
-plain-text, git-native. **41 competitions across every continent**, 354
-league-seasons, ~112,000 completed matches, 4.3 MB of parquet committed to the
-repo.
+Two providers, chosen for opposite strengths.
 
-| Region | Competitions |
-|---|---|
-| Europe | Premier League, Championship, Bundesliga 1–2, La Liga 1–2, Serie A–B, Ligue 1–2, Eredivisie, Primeira, Scottish, Turkish, Greek, Swiss, Danish, Polish, Czech, Russian, Ukrainian, Croatian, Romanian, Norwegian, Swedish |
-| South America | Brasileirão A–B, Argentine Primera, Colombian, Ecuadorian, Paraguayan, Copa Libertadores |
-| North America | MLS, Liga MX |
-| Asia | J1 League, Chinese Super League |
-| Africa | Egypt, Morocco, Algeria, Nigeria, South Africa |
-| Cups | Champions League, Copa Libertadores |
+| | openfootball (git) | football-data.co.uk (HTTP) |
+|---|---|---|
+| Access | clone once, then offline | fetched on request |
+| History | deep — 27 seasons of England | 2000 onward for most |
+| Freshness | weekly auto-update, often 3–6 weeks behind | within hours of kick-off |
+| Fixtures | full schedule months ahead | played matches only |
+| Statistics | goals, half-time, scorers | goals, **shots on target**, corners, cards, referee, **xG from 2026-27** |
+| Coverage | 47 competitions incl. all UEFA cups | 30 leagues, incl. China/Japan/Brazil/MLS |
 
 ```
-athena data load              # recent seasons
-athena data load --history    # every season upstream publishes (27 for England)
+athena data sync              # git-pull openfootball
+athena data load --history    # parse every season it publishes
+athena data live              # top up the current season online
+athena data status
 ```
 
-History depth matters more than it looks: resolving a 2% edge needs several
-thousand matches per league, which one season cannot provide. `--history` is the
-difference between ~300 and ~10,000 matches for a major league.
+`data live` merges rather than overwrites: live results win, and the git
+fixture schedule survives where a match has not been played yet. Neither
+provider alone is sufficient for a season in progress — one has the schedule,
+the other has the results.
+
+**59 competitions · ~176,000 results · 7.9 MB committed.** Europe, South
+America, North America, Asia, Africa, and all six UEFA club competitions.
+
+### No bookmaker data, by design
+
+football-data.co.uk files carry ~132 columns, of which ~108 are bookmaker
+prices. The parser reads a strict allowlist of football columns and discards
+every odds column at parse time; `assert_no_odds()` fails loudly if one ever
+reaches the store.
+
+Odds encode the market's own forecast. Feeding them in would make ATHENA partly
+a market-follower, and any apparent edge would be the bookmakers' opinion
+echoed back. The engine forms its view from football alone.
+
+The cost of that choice is real and worth stating: without prices,
+profitability can only ever be **modelled** from goal distributions, never
+measured against what a bet would actually have paid.
 
 Add a competition by adding an entry to `backend/app/data/sources.py`. Season
-keys follow the competition's own convention — European winter leagues use
-`2025-26`, calendar-year leagues (Brazil, MLS, Japan, the Nordics) use `2025`.
+keys follow each competition's own convention — European winter leagues use
+`2025-26`, calendar-year leagues (Brazil, MLS, Japan, the Nordics) use `2025`,
+and football-data spells the same thing `2025/2026`, so all three are compared
+on the starting year.
 
 ### What the data does and does not carry
 

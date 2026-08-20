@@ -77,7 +77,7 @@ def _load_footballdata(src: "sources.LeagueSource", season: str):
     from app.data import footballdata as fd
 
     if src.fd_country:
-        df = fd.fetch_extra(src.fd_country, season=season)
+        df = fd.fetch_extra(src.fd_country, season=season, league=src.fd_league)
     elif src.fd_div:
         # Main-league URLs key seasons as "2526" for 2025-26.
         start = int(season.split("-")[0])
@@ -89,6 +89,80 @@ def _load_footballdata(src: "sources.LeagueSource", season: str):
         fd.assert_no_odds(df)
         df = df.drop(columns=[c for c in ("season_raw", "league_raw") if c in df.columns])
     return df
+
+
+def _merge_live(base: pd.DataFrame, live: pd.DataFrame) -> pd.DataFrame:
+    """
+    Combine a git-sourced season with a freshly fetched one.
+
+    The two providers are complementary and neither alone is sufficient for the
+    current season: openfootball publishes the full fixture list months ahead
+    but lags weeks behind on results, while football-data.co.uk carries results
+    within hours but lists only matches already played. Overwriting one with the
+    other would lose either the schedule or the freshness.
+
+    So live rows win, and base rows survive only where the same fixture has not
+    yet appeared live. Matching is on canonicalised team names rather than the
+    raw strings, because the two sources spell clubs differently ("Arsenal FC"
+    versus "Arsenal"), and ignores the date, which occasionally differs by a day
+    between sources for the same match.
+    """
+    from app.data.features import _canonical
+
+    if base is None or base.empty:
+        return live
+    if live is None or live.empty:
+        return base
+
+    def key(df):
+        return (df["home"].astype(str).map(_canonical) + "|"
+                + df["away"].astype(str).map(_canonical))
+
+    seen = set(key(live))
+    keep = base[~key(base).isin(seen)]
+    merged = pd.concat([live, keep], ignore_index=True)
+    return merged.sort_values("date").reset_index(drop=True)
+
+
+def refresh_live(
+    league_codes: Optional[Iterable[str]] = None,
+    season: Optional[str] = None,
+    quiet: bool = False,
+) -> dict[str, int]:
+    """
+    Top up the current season from football-data.co.uk for every league that
+    has an identifier there, merging over whatever the git source provided.
+
+    This is the online half of the hybrid: git carries deep history and the
+    fixture schedule offline, this brings results up to the minute on request.
+    """
+    codes = list(league_codes) if league_codes else [
+        c for c, s in sources.LEAGUES.items() if s.fd_div or s.fd_country
+    ]
+    out: dict[str, int] = {}
+
+    for code in codes:
+        src = sources.get(code)
+        target = season or (src.default_seasons()[-1])
+        live = _load_footballdata(src, target)
+        if live is None or live.empty:
+            if not quiet:
+                print(f"  [live] {code:8s} {target}: nothing published yet")
+            continue
+
+        base = store.load(code, target)
+        merged = _merge_live(base, live)
+        merged = merged.assign(league_code=code, season=target)
+        store.save(code, target, merged)
+
+        played = int((merged["status"] == "result").sum())
+        out[code] = played
+        if not quiet:
+            fixtures = int((merged["status"] == "fixture").sum())
+            print(f"  [live] {code:8s} {target}  results={played:4d} fixtures={fixtures:4d}"
+                  f"  latest={merged['date'].max():%Y-%m-%d}")
+
+    return out
 
 
 def source_file(league_code: str, season: str) -> Optional[Path]:

@@ -6,10 +6,17 @@ A local, offline over/under tips engine. Data lives in this repository as
 parquet snapshots; tuning lives in config/leagues.json; nothing needs a server
 or a database.
 
-    Data
-      athena data sync                 fetch/update the openfootball sources
-      athena data load                 parse sources into data/*.parquet
+    Data — two providers, deliberately
+      athena data sync                 git-pull the openfootball sources
+      athena data load [--history]     parse them into data/*.parquet
+      athena data live                 top up the current season online
       athena data status               what is stored right now
+
+      openfootball (git) carries deep history and the fixture schedule, and
+      works entirely offline once committed. football-data.co.uk is fetched on
+      request and is current within hours, with measured shots and — from
+      2026-27 — expected goals. `data live` merges the second over the first.
+      No bookmaker data is ingested from either.
 
     Calibration
       athena calibrate ENG-PL          replay a league, search better dials
@@ -111,11 +118,20 @@ def cmd_data(args) -> int:
         print(f"\n  {len(results)} repos ready in {loader.CACHE_DIR}")
         return 0
 
+    if args.action == "live":
+        print("Refreshing current season from football-data.co.uk…")
+        got = loader.refresh_live(
+            [args.league] if args.league else None, season=args.season
+        )
+        print(f"\n  {len(got)} leagues refreshed, "
+              f"{sum(got.values())} results now stored for the current season")
+        return 0
+
     if args.action == "load":
         codes = [args.league] if args.league else None
         seasons = [args.season] if args.season else None
         print("Parsing sources into data/…")
-        loaded = loader.load_all(codes, seasons)
+        loaded = loader.load_all(codes, seasons, history=args.history)
         total = sum(len(v) for v in loaded.values())
         print(f"\n  Loaded {total} league-seasons into {store.DATA_DIR}")
         return 0
@@ -335,9 +351,13 @@ def main(argv=None) -> int:
 
     # data
     d = sub.add_parser("data", help="fetch, load and inspect match data")
-    d.add_argument("action", choices=["sync", "load", "status"])
+    d.add_argument("action", choices=["sync", "load", "live", "status"],
+                   help="sync: git-pull sources | load: parse to parquet | "
+                        "live: top up current season online | status: what's stored")
     d.add_argument("--league", help="limit to one league code")
     d.add_argument("--season", help="limit to one season, e.g. 2025-26")
+    d.add_argument("--history", action="store_true",
+                   help="load every season upstream publishes, not just recent")
     d.set_defaults(func=cmd_data)
 
     # calibrate

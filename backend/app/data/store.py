@@ -52,7 +52,15 @@ def available_leagues() -> list[str]:
 
 
 def save(league_code: str, season: str, df: pd.DataFrame) -> Path:
-    """Write a season snapshot, creating directories as needed."""
+    """
+    Write a season snapshot, creating directories as needed.
+
+    Duplicate fixtures are dropped on the way in. Two providers now feed the
+    same league, and a match counted twice would silently distort every rolling
+    feature computed from it — cheap insurance against an expensive bug.
+    """
+    if not df.empty and {"date", "home", "away"} <= set(df.columns):
+        df = df.drop_duplicates(subset=["date", "home", "away"], keep="first")
     path = season_path(league_code, season)
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(path, index=False)

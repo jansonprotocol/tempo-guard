@@ -43,6 +43,8 @@ class LeagueSource:
     provider: str = "openfootball"
     fd_div: Optional[str] = None       # main-league division code, e.g. "E0"
     fd_country: Optional[str] = None   # extra-league country code, e.g. "CHN"
+    fd_league: Optional[str] = None    # competition within an extra file, since
+                                       # some countries publish two in one file
 
     def season_path(self, season: str) -> str:
         return self.path.format(season=season)
@@ -89,75 +91,96 @@ LEAGUES: dict[str, LeagueSource] = {
     "ENG-PL": LeagueSource(
         "ENG-PL", "English Premier League", "england",
         "{season}/1-premierleague.txt", "{season}/1-premierleague-full.txt",
+        fd_div="E0"
     ),
     "GER-BL": LeagueSource(
         "GER-BL", "German Bundesliga", "deutschland",
         "{season}/1-bundesliga.txt", "{season}/1-bundesliga-full.txt",
+        fd_div="D1"
     ),
     "ESP-LL": LeagueSource(
         "ESP-LL", "Spanish La Liga", "espana",
         "{season}/1-liga.txt", "{season}/1-liga-full.txt",
+        fd_div="SP1"
     ),
     "ITA-SA": LeagueSource(
         "ITA-SA", "Italian Serie A", "italy",
         "{season}/1-seriea.txt", "{season}/1-seriea-full.txt",
+        fd_div="I1"
     ),
     "FRA-L1": LeagueSource(
         "FRA-L1", "French Ligue 1", "europe",
         "france/{season}_fr1.txt", "france/{season}_fr1-full.txt",
+        fd_div="F1"
     ),
     # ── Secondary domestic ────────────────────────────────────────────────
     "NED-ED": LeagueSource(
         "NED-ED", "Dutch Eredivisie", "europe", "netherlands/{season}_nl1.txt",
+        fd_div="N1"
     ),
     "POR-PL": LeagueSource(
         "POR-PL", "Portuguese Primeira Liga", "europe", "portugal/{season}_pt1.txt",
+        fd_div="P1"
     ),
     "ENG-CH": LeagueSource(
         "ENG-CH", "English Championship", "england", "{season}/2-championship.txt",
+        fd_div="E1"
     ),
     "GER-B2": LeagueSource(
         "GER-B2", "German 2. Bundesliga", "deutschland", "{season}/2-bundesliga2.txt",
+        fd_div="D2"
     ),
     "ESP-L2": LeagueSource(
         "ESP-L2", "Spanish Segunda", "espana", "{season}/2-liga2.txt",
+        fd_div="SP2"
     ),
     "ITA-SB": LeagueSource(
         "ITA-SB", "Italian Serie B", "italy", "{season}/2-serieb.txt",
+        fd_div="I2"
     ),
     "FRA-L2": LeagueSource(
         "FRA-L2", "French Ligue 2", "europe", "france/{season}_fr2.txt",
+        fd_div="F2"
     ),
     # ── Rest of Europe ────────────────────────────────────────────────────
     "SCO-PL": LeagueSource(
         "SCO-PL", "Scottish Premiership", "europe", "scotland/{season}_sc1.txt",
+        fd_div="SC0"
     ),
     "TUR-SL": LeagueSource(
         "TUR-SL", "Turkish Süper Lig", "europe", "turkey/{season}_tr1.txt",
+        fd_div="T1"
     ),
     "GRE-SL": LeagueSource(
         "GRE-SL", "Greek Super League", "europe", "greece/{season}_gr1.txt",
+        fd_div="G1"
     ),
     "BEL-PL": LeagueSource(
         "BEL-PL", "Belgian Pro League", "europe", "belgium/{season}_be1.txt",
+        fd_div="B1"
     ),
     "AUT-BL": LeagueSource(
         "AUT-BL", "Austrian Bundesliga", "europe", "austria/{season}_at1.txt",
+        fd_country="AUT", fd_league="Bundesliga"
     ),
     "SUI-SL": LeagueSource(
         "SUI-SL", "Swiss Super League", "europe", "switzerland/{season}_ch1.txt",
+        fd_country="SWZ", fd_league="Super League"
     ),
     "DEN-SL": LeagueSource(
         "DEN-SL", "Danish Superliga", "europe", "denmark/{season}_dk1.txt",
+        fd_country="DNK", fd_league="Superliga"
     ),
     "POL-EK": LeagueSource(
         "POL-EK", "Polish Ekstraklasa", "europe", "poland/{season}_pl1.txt",
+        fd_country="POL", fd_league="Ekstraklasa"
     ),
     "CZE-FL": LeagueSource(
         "CZE-FL", "Czech First League", "europe", "czech-republic/{season}_cz1.txt",
     ),
     "RUS-PL": LeagueSource(
         "RUS-PL", "Russian Premier League", "europe", "russia/{season}_ru1.txt",
+        fd_country="RUS", fd_league="Premier League"
     ),
     "UKR-PL": LeagueSource(
         "UKR-PL", "Ukrainian Premier League", "europe", "ukraine/{season}_ua1.txt",
@@ -167,21 +190,25 @@ LEAGUES: dict[str, LeagueSource] = {
     ),
     "ROU-L1": LeagueSource(
         "ROU-L1", "Romanian Liga I", "europe", "romania/{season}_ro1.txt",
+        fd_country="ROU", fd_league="Superliga"
     ),
     # Nordic leagues run inside a calendar year.
     "NOR-EL": LeagueSource(
         "NOR-EL", "Norwegian Eliteserien", "europe", "norway/{season}_no1.txt",
         calendar_year=True,
+        fd_country="NOR", fd_league="Eliteserien"
     ),
     "SWE-AL": LeagueSource(
         "SWE-AL", "Swedish Allsvenskan", "europe", "sweden/{season}_se1.txt",
         calendar_year=True,
+        fd_country="SWE", fd_league="Allsvenskan"
     ),
 
     # ── South America (calendar-year seasons) ─────────────────────────────
     "BRA-SA": LeagueSource(
         "BRA-SA", "Brazilian Série A", "south-america", "brazil/{season}_br1.txt",
         calendar_year=True,
+        fd_country="BRA", fd_league="Serie A"
     ),
     "BRA-SB": LeagueSource(
         "BRA-SB", "Brazilian Série B", "south-america", "brazil/{season}_br2.txt",
@@ -190,6 +217,7 @@ LEAGUES: dict[str, LeagueSource] = {
     "ARG-PD": LeagueSource(
         "ARG-PD", "Argentine Primera División", "south-america",
         "argentina/{season}_ar1.txt", calendar_year=True,
+        fd_country="ARG", fd_league="Liga Profesional"
     ),
     "COL-PA": LeagueSource(
         "COL-PA", "Colombian Primera A", "south-america",
@@ -208,15 +236,18 @@ LEAGUES: dict[str, LeagueSource] = {
     "MLS": LeagueSource(
         "MLS", "Major League Soccer", "world",
         "north-america/major-league-soccer/{season}_mls.txt", calendar_year=True,
+        fd_country="USA", fd_league="MLS"
     ),
     "MEX-LMX": LeagueSource(
         "MEX-LMX", "Liga MX", "world", "north-america/mexico/{season}_mx1.txt",
+        fd_country="MEX", fd_league="Liga MX"
     ),
 
     # ── Asia (calendar-year seasons) ──────────────────────────────────────
     "JPN-J1": LeagueSource(
         "JPN-J1", "Japanese J1 League", "world", "asia/japan/{season}_jp1.txt",
         calendar_year=True,
+        fd_country="JPN", fd_league="J1 League"
     ),
     # Sourced from football-data.co.uk rather than openfootball: the latter's
     # Asia coverage stops at 2025, so the current season was entirely missing.
@@ -283,6 +314,48 @@ LEAGUES: dict[str, LeagueSource] = {
         "copa-libertadores/{season}_copal.txt",
         calendar_year=True, international=True,
     ),
+    # ── football-data.co.uk only ──────────────────────────────────────────
+    # Competitions openfootball does not publish. These have no git mirror, so
+    # they are fetched live and depend on network access at load time.
+    "ENG-L1": LeagueSource(
+        "ENG-L1", "English League One", "", "",
+        provider="footballdata", fd_div="E2",
+    ),
+    "ENG-L2": LeagueSource(
+        "ENG-L2", "English League Two", "", "",
+        provider="footballdata", fd_div="E3",
+    ),
+    "ENG-NL": LeagueSource(
+        "ENG-NL", "English National League", "", "",
+        provider="footballdata", fd_div="EC",
+    ),
+    "SCO-CH": LeagueSource(
+        "SCO-CH", "Scottish Championship", "", "",
+        provider="footballdata", fd_div="SC1",
+    ),
+    "SCO-L1": LeagueSource(
+        "SCO-L1", "Scottish League One", "", "",
+        provider="footballdata", fd_div="SC2",
+    ),
+    "SCO-L2": LeagueSource(
+        "SCO-L2", "Scottish League Two", "", "",
+        provider="footballdata", fd_div="SC3",
+    ),
+    "FIN-VL": LeagueSource(
+        "FIN-VL", "Finnish Veikkausliiga", "", "",
+        calendar_year=True, provider="footballdata",
+        fd_country="FIN", fd_league="Veikkausliiga",
+    ),
+    "IRL-PD": LeagueSource(
+        "IRL-PD", "Irish Premier Division", "", "",
+        calendar_year=True, provider="footballdata",
+        fd_country="IRL", fd_league="Premier Division",
+    ),
+    "ARG-CLP": LeagueSource(
+        "ARG-CLP", "Copa de la Liga Profesional", "", "",
+        calendar_year=True, provider="footballdata",
+        fd_country="ARG", fd_league="Copa De La Liga Profesional",
+    ),
 }
 
 
@@ -296,8 +369,8 @@ def get(code: str) -> LeagueSource:
 
 
 def repos() -> set[str]:
-    """Distinct upstream repos needed to cover the registry."""
-    return {src.repo for src in LEAGUES.values()}
+    """Distinct upstream git repos needed to cover the registry."""
+    return {src.repo for src in LEAGUES.values() if src.repo}
 
 
 def codes() -> list[str]:

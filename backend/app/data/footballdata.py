@@ -53,11 +53,18 @@ BASE_URL = "https://www.football-data.co.uk"
 # column means deliberately choosing to ingest it.
 
 # Main-league layout.
+#
+# HxG/AxG are expected goals, which this source began publishing with the
+# 2026-27 season — they are absent from every earlier file. Captured from the
+# outset so the history builds from day one: xG is a markedly better predictor
+# of future scoring than goals themselves, and unlike odds it is a measurement
+# of football, not a market opinion.
 _MAIN_COLUMNS = {
     "Date": "date", "Time": "time",
     "HomeTeam": "home", "AwayTeam": "away",
     "FTHG": "hg", "FTAG": "ag",
     "HTHG": "hthg", "HTAG": "htag",
+    "HxG": "hxg", "AxG": "axg",
     "HS": "hs", "AS": "as_", "HST": "hst", "AST": "ast",
     "HC": "hc", "AC": "ac",
     "HF": "hf", "AF": "af",
@@ -100,6 +107,13 @@ def _parse_date(value: str) -> Optional[pd.Timestamp]:
     return None
 
 
+def _to_float(value: str) -> Optional[float]:
+    try:
+        return float(str(value).strip())
+    except (ValueError, TypeError):
+        return None
+
+
 def _to_int(value: str) -> Optional[int]:
     try:
         return int(float(str(value).strip()))
@@ -112,6 +126,7 @@ def _rows_to_frame(rows: list[dict], mapping: dict[str, str]) -> pd.DataFrame:
     out = []
     int_fields = {"hg", "ag", "hthg", "htag", "hs", "as_", "hst", "ast",
                   "hc", "ac", "hf", "af", "hy", "ay", "hr", "ar"}
+    float_fields = {"hxg", "axg"}
 
     for raw in rows:
         rec: dict = {}
@@ -123,6 +138,8 @@ def _rows_to_frame(rows: list[dict], mapping: dict[str, str]) -> pd.DataFrame:
                 rec["date"] = _parse_date(val)
             elif dest in int_fields:
                 rec[dest] = _to_int(val)
+            elif dest in float_fields:
+                rec[dest] = _to_float(val)
             else:
                 rec[dest] = (val or "").strip() or None
 
@@ -159,7 +176,11 @@ def fetch_main(div: str, season: str) -> pd.DataFrame:
     return _rows_to_frame(_read_csv(text), _MAIN_COLUMNS)
 
 
-def fetch_extra(country_code: str, season: Optional[str] = None) -> pd.DataFrame:
+def fetch_extra(
+    country_code: str,
+    season: Optional[str] = None,
+    league: Optional[str] = None,
+) -> pd.DataFrame:
     """
     Fetch an extra-league file (all seasons in one file), optionally filtered.
 
@@ -173,9 +194,31 @@ def fetch_extra(country_code: str, season: Optional[str] = None) -> pd.DataFrame
     df = _rows_to_frame(_read_csv(text), _EXTRA_COLUMNS)
     if df.empty:
         return df
+
+    if league is not None and "league_raw" in df.columns:
+        # Several countries publish two competitions in one file (Argentina's
+        # Liga Profesional and Copa de la Liga; Switzerland's two tiers).
+        want = league.strip().casefold()
+        df = df[df["league_raw"].fillna("").str.strip().str.casefold() == want]
+
     if season is not None and "season_raw" in df.columns:
-        df = df[df["season_raw"].astype(str) == str(season)].reset_index(drop=True)
-    return df
+        df = df[df["season_raw"].astype(str).map(_season_matches(str(season)))]
+
+    return df.reset_index(drop=True)
+
+
+def _season_matches(wanted: str):
+    """
+    Season spellings are inconsistent between and within these files: a
+    calendar-year league may be keyed "2026" while a winter league in the same
+    file is "2026/2027", and ATHENA itself uses "2026-27". Compare on the
+    starting year so all three forms agree.
+    """
+    def start_year(value: str) -> str:
+        return value.replace("/", "-").split("-")[0].strip()
+
+    target = start_year(wanted)
+    return lambda value: start_year(str(value)) == target
 
 
 def season_key(start_year: int) -> str:
