@@ -28,6 +28,39 @@ Measured here, for the current lane and for probability floors:
                 strike.
 
 Nothing is written. The engine is untouched until the numbers justify it.
+
+RESULT: THE REPLACEMENT LOSES
+=============================
+Measured on 10,159 fixtures across 26 leagues:
+
+    current (z-score)   fires 45.0%  strike 60.2%  edge +4.86%
+    probability @ 0.65  fires 44.0%  strike 63.8%  edge +3.00%
+    probability @ 0.70  fires 30.4%  strike 67.1%  edge +2.50%
+    safe lane  @ 0.79   fires  100%  strike 80.6%  edge +3.01%
+
+At a matched fire rate the existing gate earns nearly two more points of edge,
+paying 3.6 points of strike for them. The sharp lane exists to find value, so
+the replacement is worse at its job and was not adopted.
+
+The premise behind proposing it — that a rule ignoring the goal model must be
+inferior — was wrong, and the shape of the error is worth keeping. The
+probability lane maximises PREDICTED edge; that is its objective function. It
+still loses on MEASURED edge to a gate that never computes edge at all. A method
+optimising a quantity should not be beaten on that quantity by a method
+ignoring it.
+
+The explanation is that the Poisson edge estimates are overconfident. The model
+finds gaps, ranks them, takes the largest, and the largest are
+disproportionately the ones where it is wrong. The z-score gate is cruder but
+demands two independent conditions — the fixture is unusual for its league AND
+the lean agrees — before offering anything, and that conjunction selects better
+than the model's own confidence does.
+
+That also reframes why the safe lane works. Its 0.79 floor succeeds largely by
+ignoring the edge ranking for anything risky, confining the model to bets that
+land whether or not it is right. Wherever its confidence actually drives the
+choice, it underperforms. Any future attempt to let the model pick freely
+should expect this and measure realised edge, not predicted.
 """
 from __future__ import annotations
 
