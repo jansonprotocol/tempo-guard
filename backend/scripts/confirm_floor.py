@@ -137,7 +137,7 @@ def main() -> None:
     net = resc - brok
     print(f"\n  0.79 vs flowchart on the same matches: "
           f"rescued {resc}, broken {brok}, net {net:+d}")
-    print(f"  strike {fh:.2%} -> {nh:.2%} ({nh - fh:+.2f} pts), "
+    print(f"  strike {fh:.2%} -> {nh:.2%} ({(nh - fh) * 100:+.2f} pts), "
           f"edge {fh - fb:+.2%} -> {nh - nb:+.2%}")
 
     o80_old = sum(1 for c in fper if fper[c][0] >= 0.80)
