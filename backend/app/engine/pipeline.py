@@ -558,6 +558,43 @@ SHARP_OVER  = ("O2.5",  "3+ goals")
 SHARP_UNDER = ("U2.75", "under 3 goals")
 MILD_UNDER  = ("U3.25", "under 4 goals")
 
+# The gate may fire and still be offering a coin flip. Before a sharp play is
+# published, the goal model must give its market at least this chance of
+# landing. Measured over 10,159 fixtures across 26 leagues:
+#
+#     veto   fires   strike    edge
+#     none   45.0%    60.2%  +4.86%
+#     0.65   36.4%    62.6%  +6.29%
+#     0.70   26.0%    65.6%  +6.79%
+#     0.75   17.8%    69.0%  +6.68%   (U3.25 becomes 58% of plays)
+#
+# Unlike every other lever tried, this raises strike AND edge together, because
+# it is not rebalancing risk — it removes plays that were bad on both counts.
+#
+# 0.75 reaches a higher strike rate and concentrates over half its output into
+# one market for no extra edge, so 0.70 is the setting.
+#
+# NOTE ON THE MODEL'S ROLE HERE. It vetoes; it never chooses. Letting it pick
+# the sharp market by predicted edge was measured and lost to this gate by
+# nearly two points of realised edge at a matched fire rate: it takes the bets
+# it is most confident about, and those are disproportionately the ones it gets
+# wrong. As a floor the same numbers behave, which is the only job they get.
+SHARP_MIN_WIN = 0.70
+
+
+def _confident_enough(market: str, mu_total: float) -> bool:
+    """
+    Would the goal model give this market a fair chance of landing?
+
+    The z-gate asks whether the fixture is unusual; it does not ask whether the
+    rung it then reaches for is achievable. A fixture can sit well above its
+    league norm and still make 3+ goals a coin flip, and those plays were being
+    published as sharp calls.
+    """
+    if mu_total is None or mu_total <= 0:
+        return True          # no estimate to veto on — leave the gate alone
+    return market_select.p_win(market, mu_total) >= SHARP_MIN_WIN
+
 
 def sharp_lane(
     lean: str,
@@ -591,6 +628,8 @@ def sharp_lane(
 
     if z >= SHARP_Z and lean == "over":
         market, tier = SHARP_OVER
+        if not _confident_enough(market, mu_total):
+            return None, None, None, round(z, 2)
         return (
             TranslatedPlay(market=market, confidence="LOW"),
             tier,
@@ -608,6 +647,8 @@ def sharp_lane(
         else:
             market, tier = MILD_UNDER
             why = "below-norm goal expectation"
+        if not _confident_enough(market, mu_total):
+            return None, None, None, round(z, 2)
         return (
             TranslatedPlay(market=market, confidence="LOW"),
             tier,

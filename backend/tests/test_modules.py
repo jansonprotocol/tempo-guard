@@ -203,8 +203,10 @@ def test_sharp_lane_is_silent_on_ordinary_fixtures():
 def test_sharp_lane_offers_over_on_unusually_high_expectation():
     from app.engine.pipeline import evaluate_athena
 
-    # tempo 0.70 -> mu 3.60, well above a 2.70 norm at 0.50 sigma
-    pred = evaluate_athena(_lane_req(0.70), 0.5, 0.5, 0.5,
+    # tempo 0.80 -> mu 3.90, well above a 2.70 norm at 0.50 sigma. Also clears
+    # the confidence veto: P(3+ goals | mu=3.90) is 0.75. At the old fixture of
+    # mu=3.60 it was 0.697, a whisker under the bar.
+    pred = evaluate_athena(_lane_req(0.80), 0.5, 0.5, 0.5,
                            norm_mean=2.70, norm_std=0.50)
     assert pred.lanes.sharp is not None
     assert pred.lanes.sharp.market.startswith("O")
@@ -220,9 +222,11 @@ def test_sharp_lane_is_league_relative():
     """
     from app.engine.pipeline import evaluate_athena
 
-    req = _lane_req(0.50)   # mu = 3.00
+    # mu = 3.90. The old fixture used mu = 3.00, which the confidence veto now
+    # rejects outright and rightly so: it asked for 3+ goals on a 58% chance.
+    req = _lane_req(0.80)
     in_low = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=2.45, norm_std=0.50)
-    in_high = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=3.10, norm_std=0.50)
+    in_high = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=3.70, norm_std=0.50)
 
     assert in_low.lanes.league_z > in_high.lanes.league_z
     assert in_low.lanes.sharp is not None       # unusual for a low-scoring league
@@ -239,7 +243,7 @@ def test_sharp_lane_uses_expectation_spread_not_result_spread():
     """
     from app.engine.pipeline import evaluate_athena
 
-    req = _lane_req(0.60)   # mu = 3.30, i.e. +0.6 goals above a 2.70 norm
+    req = _lane_req(0.75)   # mu = 3.75, i.e. +1.05 goals above a 2.70 norm
 
     correct = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=2.70, norm_std=0.50)
     wrong = evaluate_athena(req, 0.5, 0.5, 0.5, norm_mean=2.70, norm_std=1.65)
@@ -266,10 +270,70 @@ def test_sharp_lane_fires_both_directions():
         )
 
     # Serie A-like norm: 2.38 expected goals, spread 0.53
-    high = evaluate_athena(req(0.60, 0.85), 0.5, 0.5, 0.5,
+    high = evaluate_athena(req(0.80, 0.85), 0.5, 0.5, 0.5,
                            norm_mean=2.38, norm_std=0.53)
     low = evaluate_athena(req(0.10, 0.55), 0.5, 0.5, 0.5,
                           norm_mean=2.38, norm_std=0.53)
 
     assert high.lanes.sharp is not None and high.lanes.sharp.market.startswith("O")
     assert low.lanes.sharp is not None and low.lanes.sharp.market.startswith("U")
+
+
+# ── Sharp lane confidence veto ────────────────────────────────────────────────
+
+def test_sharp_lane_vetoes_coin_flips():
+    """
+    The z-gate asks whether a fixture is unusual. It never asked whether the
+    rung it then reaches for is achievable, so it published plays like O2.5 —
+    needing 3+ goals — on fixtures where the model put that at 58%.
+
+    Measured over 10,159 fixtures, dropping those lifted the lane from 60.2%
+    strike / +4.86% edge to 65.6% / +6.79%. Both rose, because the plays removed
+    were bad on both counts rather than merely risky.
+    """
+    from app.engine.pipeline import SHARP_MIN_WIN, evaluate_athena
+    from app.engine import market_select
+
+    # mu = 3.00: unusual for a 2.45-goal league, but only a 58% shot at 3+.
+    marginal = evaluate_athena(_lane_req(0.50), 0.5, 0.5, 0.5,
+                               norm_mean=2.45, norm_std=0.50)
+    assert market_select.p_win("O2.5", 3.00) < SHARP_MIN_WIN
+    assert marginal.lanes.league_z >= 0.70, "the gate itself should still fire"
+    assert marginal.lanes.sharp is None, "but the veto should suppress the play"
+
+
+def test_sharp_veto_never_publishes_below_the_floor():
+    """Whatever the gate offers must clear the floor, in either direction."""
+    from app.engine.pipeline import SHARP_MIN_WIN, evaluate_athena
+    from app.engine import market_select
+
+    for tempo in (0.05, 0.20, 0.40, 0.60, 0.80, 0.95):
+        for norm in (2.30, 2.70, 3.10):
+            pred = evaluate_athena(_lane_req(tempo), 0.5, 0.5, 0.5,
+                                   norm_mean=norm, norm_std=0.50)
+            if pred.lanes.sharp is None:
+                continue
+            mu = 1.5 + tempo * 3.0
+            p = market_select.p_win(pred.lanes.sharp.market, mu)
+            assert p >= SHARP_MIN_WIN - 1e-9, (tempo, norm, pred.lanes.sharp.market, p)
+
+
+def test_sharp_veto_only_vetoes_never_chooses():
+    """
+    The model gets a veto, not a vote. Letting it pick the sharp market by
+    predicted edge was measured and lost to the z-gate by nearly two points of
+    realised edge at a matched fire rate — it takes the bets it is most
+    confident about, and those are disproportionately the ones it gets wrong.
+
+    So the published market must always be one the gate chose.
+    """
+    from app.engine.pipeline import (
+        MILD_UNDER, SHARP_OVER, SHARP_UNDER, evaluate_athena,
+    )
+
+    allowed = {SHARP_OVER[0], SHARP_UNDER[0], MILD_UNDER[0]}
+    for tempo in (0.05, 0.25, 0.50, 0.75, 0.95):
+        pred = evaluate_athena(_lane_req(tempo), 0.5, 0.5, 0.5,
+                               norm_mean=2.70, norm_std=0.50)
+        if pred.lanes.sharp is not None:
+            assert pred.lanes.sharp.market in allowed
