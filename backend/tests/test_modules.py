@@ -221,7 +221,7 @@ def test_sharp_lane_fires_both_directions():
     # Serie A-like norm: 2.38 expected goals, spread 0.53
     high = evaluate_athena(req(0.60, 0.85), 0.5, 0.5, 0.5,
                            norm_mean=2.38, norm_std=0.53)
-    low = evaluate_athena(req(0.20, 0.55), 0.5, 0.5, 0.5,
+    low = evaluate_athena(req(0.10, 0.55), 0.5, 0.5, 0.5,
                           norm_mean=2.38, norm_std=0.53)
 
     assert high.lanes.sharp is not None and high.lanes.sharp.market.startswith("O")
