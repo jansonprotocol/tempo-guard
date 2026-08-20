@@ -44,7 +44,7 @@ LEAGUES = [
 ]
 LIMIT = 400
 HOLDOUT_FRACTION = 0.30
-FLOORS = [0.55, 0.62, 0.68, 0.72, 0.76, 0.80, 0.84, 0.88]
+FLOORS = [0.76, 0.77, 0.78, 0.79, 0.80, 0.81, 0.82]
 
 
 def base_rate(markets, totals) -> float:
