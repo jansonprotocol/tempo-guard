@@ -8,6 +8,7 @@ from app.engine.types import (
     Lanes, MatchRequest, ModuleFlags, Prediction, Corridor, TranslatedPlay,
 )
 from app.engine.rationale import humanize
+from app.engine import market_select
 
 # ── Core constants ────────────────────────────────────────────────────────────
 ROUNDING   = 0.01
@@ -789,6 +790,33 @@ def evaluate_athena(
         p2p, confidence_score,
         notes, flags, modules,
     )
+
+    # ── Probability-based market selection ────────────────────────────
+    # The flowchart above never consults the goal estimate, so improvements to
+    # it do not reach the output. When enabled, pick the market by expected
+    # edge over a typical fixture in the same league instead. See
+    # app.engine.market_select for the measurement behind this.
+    if mf.prob_select:
+        picked = market_select.choose(req.mu_total, req.league_mu)
+        if picked is not None:
+            market, edge, pw = picked
+            if market != translated.market:
+                notes.append(
+                    f"ProbSelect: {translated.market} -> {market} "
+                    f"(win {pw:.0%}, edge {edge:+.1%} vs a typical "
+                    f"{req.league_code} fixture)."
+                )
+            else:
+                notes.append(
+                    f"ProbSelect confirms {market} "
+                    f"(win {pw:.0%}, edge {edge:+.1%})."
+                )
+            modules.append("ProbSelect")
+            translated = TranslatedPlay(
+                market=market,
+                confidence=("HIGH" if edge >= 0.06 else
+                            "MEDIUM" if edge >= 0.03 else "LOW"),
+            )
 
     # ── Sharp lane ────────────────────────────────────────────────────
     # mu_total is what tempo_index was derived from; invert that mapping rather

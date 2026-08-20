@@ -117,6 +117,8 @@ def build_request(
         p_home_tt05=m.get("p_home_tt05"),
         p_away_tt05=m.get("p_away_tt05"),
         tempo_index=m.get("tempo_index"),
+        mu_total=m.get("mu_total"),
+        league_mu=m.get("league_mu"),
         deg_pressure=m.get("deg_pressure"),
         det_boost=m.get("det_boost"),
         home_det=m.get("home_det"),

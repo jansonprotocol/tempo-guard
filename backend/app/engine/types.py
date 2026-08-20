@@ -22,6 +22,13 @@ class MatchRequest(BaseModel):
     p_away_tt05:            Optional[float] = None
     tempo_index:            Optional[float] = None
 
+    # Expected total goals for this fixture, and the league's own recent
+    # mean. tempo_index is a clipped rescaling of mu_total and loses the
+    # extremes; the market selector needs the unclipped value and something
+    # to compare it against.
+    mu_total:               Optional[float] = None
+    league_mu:              Optional[float] = None
+
     # ── DEG/DET/EPS features (new) ────────────────────────────────────
     # deg_pressure  : structural decline signal [0.0, 1.0]
     #   High → both teams' recent form shows scoring drop / defensive erosion
@@ -91,6 +98,9 @@ class ModuleFlags(BaseModel):
     det:              bool = False   # -0.45%
     eps:              bool = False   # inert: corridor-only, never the market
     mfr:              bool = True    # +0.03%
+    # Pick the market from the Poisson model by edge over a typical
+    # fixture, instead of the threshold flowchart in translate_play.
+    prob_select: bool = False
     bilateral:        bool = False   # inert: corridor-only, never the market
 
     def disabled(self) -> list[str]:

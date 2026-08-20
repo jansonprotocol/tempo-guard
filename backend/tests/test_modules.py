@@ -53,8 +53,14 @@ def test_all_on_restores_every_module():
 
 
 def test_disabled_lists_the_pruned_set():
+    """
+    Five of these were pruned by ablation. prob_select is different: it is new
+    and off until measured, not measured and found wanting. It joins the list
+    because `disabled()` reports every flag that is off, which is the honest
+    thing for it to report.
+    """
     assert set(ModuleFlags().disabled()) == {
-        "burst_sentinel", "gate_b", "det", "eps", "bilateral",
+        "burst_sentinel", "gate_b", "det", "eps", "bilateral", "prob_select",
     }
 
 

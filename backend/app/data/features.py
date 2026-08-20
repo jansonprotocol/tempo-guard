@@ -654,6 +654,10 @@ def _compute_features(
         "away_det":               _compute_team_det(A),
         "det_boost":              round((_compute_team_det(H) + _compute_team_det(A)) / 2.0, 3),
         "eps_stability":          _compute_eps_stability(H, A),
+        # The raw goal expectation and its league reference. Both were
+        # already computed here and thrown away; the market selector needs
+        # them to compare this fixture against a typical one.
+        "mu_total":               round(float(mu_total), 3),
         # Diagnostics
         "h_scoring_rate":         round(gfh, 3),
         "a_scoring_rate":         round(gfa, 3),
