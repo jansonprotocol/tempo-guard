@@ -281,3 +281,22 @@ def test_registry_covers_multiple_continents():
     for code in ["BRA-SA", "MLS", "JPN-J1", "EGY-PL", "ENG-PL"]:
         assert code in sources.LEAGUES, code
     assert len(sources.LEAGUES) >= 35
+
+
+def test_uefa_competitions_are_registered():
+    """
+    All three UEFA club competitions plus their qualifying rounds share the
+    champions-league repo, one file per competition per season. Coverage
+    differs by competition — the Conference League only exists from 2021-22 —
+    so the loader must tolerate missing seasons rather than erroring.
+    """
+    from app.data import sources
+
+    for code, filename in [
+        ("UCL", "cl"), ("UEL", "el"), ("UECL", "conf"),
+        ("UCL-Q", "clq"), ("UEL-Q", "elq"), ("UECL-Q", "confq"),
+    ]:
+        src = sources.get(code)
+        assert src.repo == "champions-league", code
+        assert src.season_path("2024-25") == f"2024-25/{filename}.txt"
+        assert src.international is True, code

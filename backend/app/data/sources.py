@@ -233,9 +233,38 @@ LEAGUES: dict[str, LeagueSource] = {
     ),
 
     # ── Cups / international ──────────────────────────────────────────────
+    # All three UEFA club competitions live in the champions-league repo, one
+    # file per competition per season: cl/el/conf for the main draws and
+    # clq/elq/confq for qualifying. Coverage differs — the Champions League goes
+    # back to 2011-12, the Europa League to 2020-21, the Conference League to
+    # 2021-22 (it did not exist before). Seasons a repo has not published are
+    # skipped by the loader rather than erroring.
     "UCL": LeagueSource(
         "UCL", "UEFA Champions League", "champions-league", "{season}/cl.txt",
         international=True,
+    ),
+    "UEL": LeagueSource(
+        "UEL", "UEFA Europa League", "champions-league", "{season}/el.txt",
+        international=True,
+    ),
+    "UECL": LeagueSource(
+        "UECL", "UEFA Conference League", "champions-league", "{season}/conf.txt",
+        international=True,
+    ),
+    # Qualifying rounds. Separate competitions in their own right, and worth
+    # loading: they are real matches between the same clubs, adding several
+    # hundred fixtures a season to what is otherwise a thin sample.
+    "UCL-Q": LeagueSource(
+        "UCL-Q", "UEFA Champions League qualifying", "champions-league",
+        "{season}/clq.txt", international=True,
+    ),
+    "UEL-Q": LeagueSource(
+        "UEL-Q", "UEFA Europa League qualifying", "champions-league",
+        "{season}/elq.txt", international=True,
+    ),
+    "UECL-Q": LeagueSource(
+        "UECL-Q", "UEFA Conference League qualifying", "champions-league",
+        "{season}/confq.txt", international=True,
     ),
     "COPA-L": LeagueSource(
         "COPA-L", "Copa Libertadores", "south-america",
