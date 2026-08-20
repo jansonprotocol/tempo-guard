@@ -195,6 +195,7 @@ def enrich_from_footballdata(
 
     Returns {league_code: matches now carrying shot data}.
     """
+    from app.data import sources as _s  # noqa: F401  (kept explicit for clarity)
     codes = list(league_codes) if league_codes else [
         c for c, s in sources.LEAGUES.items()
         if s.fd_div and s.provider == "openfootball"
@@ -204,7 +205,12 @@ def enrich_from_footballdata(
     for code in codes:
         src = sources.get(code)
         enriched = 0
-        for season in store.available_seasons(code):
+        # Union of what is stored and what football-data publishes. Iterating
+        # only stored seasons would enrich in place but never backfill, and
+        # several leagues turned out to be nearly empty because their git path
+        # was wrong — Scotland's top flight held 12 matches, Belgium 18.
+        seasons = sorted(set(store.available_seasons(code)) | set(src.all_seasons(since=2000)))
+        for season in seasons:
             live = _load_footballdata(src, season)
             if live is None or live.empty:
                 continue
