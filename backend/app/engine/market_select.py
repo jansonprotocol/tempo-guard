@@ -184,7 +184,7 @@ def p_win(market: str, mu: float) -> float:
 def score_markets(
     mu: float,
     league_mu: float,
-    ladder: Sequence[str] = LADDER,
+    ladder: Optional[Sequence[str]] = None,
 ) -> list[tuple[str, float, float, float]]:
     """
     Score every candidate market for a fixture.
@@ -193,6 +193,8 @@ def score_markets(
     first. Exposed separately from `choose` so the reasoning can be printed and
     inspected rather than taken on trust.
     """
+    if ladder is None:
+        ladder = LADDER
     out = []
     for m in ladder:
         here = p_win(m, mu)
@@ -217,7 +219,7 @@ def score_markets(
 def choose(
     mu: Optional[float],
     league_mu: Optional[float],
-    ladder: Sequence[str] = LADDER,
+    ladder: Optional[Sequence[str]] = None,
     min_win_prob: Optional[float] = None,
 ) -> Optional[tuple[str, float, float]]:
     """
@@ -234,6 +236,8 @@ def choose(
     # sweep can vary it without reloading the module.
     if min_win_prob is None:
         min_win_prob = MIN_WIN_PROB
+    if ladder is None:
+        ladder = LADDER
 
     ranked = score_markets(mu, league_mu, ladder)
     for market, edge, here, _typical in ranked:
