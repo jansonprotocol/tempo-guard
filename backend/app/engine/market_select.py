@@ -138,7 +138,7 @@ def choose(
     mu: Optional[float],
     league_mu: Optional[float],
     ladder: Sequence[str] = LADDER,
-    min_win_prob: float = MIN_WIN_PROB,
+    min_win_prob: Optional[float] = None,
 ) -> Optional[tuple[str, float, float]]:
     """
     Pick the market with the largest edge that still clears the probability
@@ -149,6 +149,11 @@ def choose(
     """
     if mu is None or league_mu is None or mu <= 0 or league_mu <= 0:
         return None
+
+    # Read the floor at call time, not as a default bound at import, so a
+    # sweep can vary it without reloading the module.
+    if min_win_prob is None:
+        min_win_prob = MIN_WIN_PROB
 
     ranked = score_markets(mu, league_mu, ladder)
     for market, edge, here, _typical in ranked:
