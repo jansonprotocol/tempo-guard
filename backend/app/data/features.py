@@ -376,7 +376,12 @@ def _compute_team_det(rows: pd.DataFrame) -> float:
     return round(_clip(std / 2.5, 0.10, 0.80), 3)
 
 
-def _league_conversion(df: pd.DataFrame) -> Optional[float]:
+# Goals per shot on target, keyed by league. A whole-league aggregate has no
+# business being recomputed per fixture.
+_CONVERSION_CACHE: dict[str, Optional[float]] = {}
+
+
+def _league_conversion(df: pd.DataFrame, league_code: Optional[str] = None) -> Optional[float]:
     """
     Goals per shot on target for a league, or None when shots are unavailable.
 
@@ -389,13 +394,21 @@ def _league_conversion(df: pd.DataFrame) -> Optional[float]:
     if "hst" not in df.columns or "ast" not in df.columns:
         return None
 
-    idx = _frame_index(df)
-    if "conversion" not in idx:
-        rows = df[df["hst"].notna() & df["ast"].notna()]
-        sot = float((rows["hst"] + rows["ast"]).sum()) if len(rows) else 0.0
-        goals = float((rows["hg"] + rows["ag"]).sum()) if len(rows) else 0.0
-        idx["conversion"] = (goals / sot) if sot > 50 else None
-    return idx["conversion"]
+    # Keyed by league, not by frame. Keying it to the frame index looked
+    # harmless but was quadratic: asof_features passes a freshly date-filtered
+    # slice for every fixture, so the index missed every time and rebuilt the
+    # entire team-name map once per match.
+    if league_code is not None and league_code in _CONVERSION_CACHE:
+        return _CONVERSION_CACHE[league_code]
+
+    rows = df[df["hst"].notna() & df["ast"].notna()]
+    sot = float((rows["hst"] + rows["ast"]).sum()) if len(rows) else 0.0
+    goals = float((rows["hg"] + rows["ag"]).sum()) if len(rows) else 0.0
+    conv = (goals / sot) if sot > 50 else None
+
+    if league_code is not None:
+        _CONVERSION_CACHE[league_code] = conv
+    return conv
 
 
 def _blended_scoring_rate(
@@ -490,7 +503,7 @@ def _compute_features(
 
     # Blend in what each side's shot volume implies it should be scoring.
     # Applied after the venue split so the two adjustments compose.
-    conversion = _league_conversion(full_df)
+    conversion = _league_conversion(full_df, league_code)
     gfh = _blended_scoring_rate(H, h_norm, gfh, conversion)
     gfa = _blended_scoring_rate(A, a_norm, gfa, conversion)
     shots_blended = conversion is not None

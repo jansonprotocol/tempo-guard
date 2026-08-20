@@ -280,10 +280,25 @@ def cmd_propose(args) -> int:
     print(f"Searching toggles for {len(codes)} league(s) — nothing will be written.")
     print("Every gain below is measured on matches the search never saw.")
     print()
-    proposals = propose_many(
-        codes, limit=args.limit,
-        progress=(lambda m: print(f"  {m}", flush=True)) if args.verbose else None,
-    )
+    # Emit per league as each finishes. Long searches that only print at the
+    # end lose everything if they are interrupted — which has already cost this
+    # project two multi-hour runs.
+    from app.propose import propose_league
+    proposals = []
+    for i, code in enumerate(codes, 1):
+        try:
+            p = propose_league(code, limit=args.limit)
+        except Exception as exc:
+            print(f"  [{i}/{len(codes)}] {code:9s} skipped ({exc})", flush=True)
+            continue
+        if p is None:
+            print(f"  [{i}/{len(codes)}] {code:9s} too little data", flush=True)
+            continue
+        proposals.append(p)
+        tag = f"{len(p.edits)} edit(s) {p.gain:+.1%}" if p.edits else "no change"
+        print(f"  [{i}/{len(codes)}] {code:9s} n={p.sample:4d} "
+              f"holdout {p.holdout_baseline:.1%} -> {p.holdout_proposed:.1%}   {tag}",
+              flush=True)
 
     changed = [p for p in proposals if p.edits]
     print()
