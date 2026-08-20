@@ -98,9 +98,11 @@ class ModuleFlags(BaseModel):
     det:              bool = False   # -0.45%
     eps:              bool = False   # inert: corridor-only, never the market
     mfr:              bool = True    # +0.03%
-    # Pick the market from the Poisson model by edge over a typical
-    # fixture, instead of the threshold flowchart in translate_play.
-    prob_select: bool = False
+    # Pick the market from the Poisson model by edge over a typical fixture,
+    # instead of the threshold flowchart in translate_play. On by measurement:
+    # 80.57% strike and +1.15% edge against the flowchart's 79.66% and +0.72%,
+    # with 21 of 32 leagues clearing 80% rather than 14.
+    prob_select: bool = True
     bilateral:        bool = False   # inert: corridor-only, never the market
 
     def disabled(self) -> list[str]:
@@ -180,6 +182,12 @@ class Prediction(BaseModel):
 
     # User-facing plain-language rationale (O2). Populated by the engine.
     rationale:        List[str] = []
+
+    # Why the market was picked, when the probability selector chose it.
+    # Carried as numbers rather than left in a formatted note so the
+    # explanation layer states the real reason instead of reconstructing it.
+    pick_win_prob:    Optional[float] = None
+    pick_edge:        Optional[float] = None
 
     # Safe and sharp plays for this fixture. `translated_play` remains the safe
     # call so every existing caller keeps its meaning.

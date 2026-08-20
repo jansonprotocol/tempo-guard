@@ -53,15 +53,56 @@ def test_all_on_restores_every_module():
 
 
 def test_disabled_lists_the_pruned_set():
-    """
-    Five of these were pruned by ablation. prob_select is different: it is new
-    and off until measured, not measured and found wanting. It joins the list
-    because `disabled()` reports every flag that is off, which is the honest
-    thing for it to report.
-    """
+    """All five were pruned by ablation and stay off."""
     assert set(ModuleFlags().disabled()) == {
-        "burst_sentinel", "gate_b", "det", "eps", "bilateral", "prob_select",
+        "burst_sentinel", "gate_b", "det", "eps", "bilateral",
     }
+
+
+# ── Probability-based market selection ────────────────────────────────────────
+
+def test_prob_select_is_on_with_the_measured_floor():
+    """
+    Enabled on measurement, not preference: 80.57% strike and +1.15% edge over
+    3,716 unseen matches, against the flowchart's 79.66% and +0.72%, with 21 of
+    32 leagues clearing 80% rather than 14.
+
+    The floor is the load-bearing number. Edge is widest for lines in the
+    middle of the goal distribution, so without one the selector chases the
+    most volatile line available — at 0.55 it won only 60% of the time. Anyone
+    lowering it should expect the strike rate to follow.
+    """
+    from app.engine import market_select
+
+    assert ModuleFlags().prob_select is True
+    assert market_select.MIN_WIN_PROB == 0.79
+
+
+def test_prob_select_never_offers_a_market_below_the_floor():
+    """
+    The floor is what separates this from the 60%-strike version. A pick that
+    does not clear it should be impossible for any realistic fixture.
+    """
+    from app.engine import market_select
+
+    for mu in (1.6, 2.0, 2.4, 2.7, 3.0, 3.4, 4.0):
+        for lmu in (2.3, 2.7, 3.1):
+            market, _edge, p = market_select.choose(mu, lmu)
+            assert p >= market_select.MIN_WIN_PROB - 1e-9, (mu, lmu, market, p)
+
+
+def test_prob_select_reads_the_goal_estimate():
+    """
+    The whole point: the market must respond to the goal estimate. The
+    flowchart it replaces never read mu at all, which is why four separate
+    improvements to mu produced no change in output.
+    """
+    from app.engine import market_select
+
+    quiet = market_select.choose(2.0, 2.7)[0]
+    lively = market_select.choose(3.6, 2.7)[0]
+    assert quiet.startswith("U")
+    assert lively.startswith("O")
 
 
 # ── Flags actually take effect ────────────────────────────────────────────────

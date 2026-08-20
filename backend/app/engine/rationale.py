@@ -85,6 +85,36 @@ def _lead_sentence(lean: str, market: str, band: str) -> str:
     )
 
 
+def _pick_sentences(market: str, win_prob: float, edge: float) -> List[str]:
+    """
+    State why this market was chosen, in the terms it was actually chosen on.
+
+    The market is picked by comparing the modelled chance of the line landing
+    against the chance in an ordinary fixture of the same league, so those are
+    the two numbers worth showing. Saying "medium confidence" instead would
+    describe a different quantity than the one that made the decision.
+    """
+    out = [
+        f"Modelled chance of {market} landing here: {win_prob:.0%}."
+    ]
+    if edge >= 0.03:
+        out.append(
+            f"That is {edge:+.0%} better than a typical fixture in this league — "
+            f"the clearest gap on the ladder, which is why this line was taken."
+        )
+    elif edge > 0.005:
+        out.append(
+            f"Only {edge:+.0%} better than a typical fixture in this league, so "
+            f"the line is safe rather than sharp."
+        )
+    else:
+        out.append(
+            "No line stood out against a typical fixture in this league, so the "
+            "safest one was taken. This is a thin call."
+        )
+    return out
+
+
 def humanize(prediction: Any) -> List[str]:
     """
     Build a plain-language rationale for a Prediction.
@@ -99,6 +129,11 @@ def humanize(prediction: Any) -> List[str]:
     band = confidence_band(getattr(prediction, "confidence_score", 0.0))
 
     sentences: List[str] = [_lead_sentence(lean, market, band)]
+
+    win_prob = getattr(prediction, "pick_win_prob", None)
+    edge = getattr(prediction, "pick_edge", None)
+    if win_prob is not None and edge is not None:
+        sentences.extend(_pick_sentences(market, win_prob, edge))
 
     weather_tag = getattr(prediction, "weather_tag", None)
     if weather_tag and weather_tag != "Clear":

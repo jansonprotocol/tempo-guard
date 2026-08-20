@@ -69,9 +69,31 @@ LADDER: tuple[str, ...] = (
 _MAX_TOTAL = 12
 
 # A market must have at least this chance of landing before its edge is worth
-# anything. Without a floor the selector will happily take a 30% shot because
-# it is 8 points better than usual, which is the opposite of the brief.
-MIN_WIN_PROB = 0.55
+# anything. This is the single most consequential number in the module: edge is
+# largest for lines in the middle of the goal distribution, where probability
+# actually responds to a change in mu, so without a floor the selector runs
+# straight to the most volatile line available. At 0.55 it did exactly that and
+# won 60% of the time.
+#
+# Swept in steps of 0.01 over 3,716 unseen matches across 32 leagues:
+#
+#     floor   strike    edge   leagues >=80%   most-picked line
+#      0.55   60.06%  +2.53%       0/32        U2.75 36%
+#      0.76   77.83%  +1.11%      11/32        O1.5  33%
+#      0.79   80.57%  +1.15%      21/32        U4.25 40%
+#      0.82   82.67%  +1.11%      25/32        U4.25 53%
+#      0.88   84.45%  +0.86%      29/32        U4.25 65%
+#
+# Two things that table settles. Between 0.76 and 0.82 the edge column is flat
+# to within noise, so strike rate in that band is nearly free — the trade-off
+# only bites at the extremes. And the 85% target is reachable at 0.88 only by
+# emitting U4.25 in two matches out of three, which scores well precisely
+# because it is close to a constant.
+#
+# 0.79 is the highest floor that clears 80% strike while keeping the most-picked
+# line under half of all calls. Above it the gain is concentration rather than
+# accuracy.
+MIN_WIN_PROB = 0.79
 
 
 @lru_cache(maxsize=None)

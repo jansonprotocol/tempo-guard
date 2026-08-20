@@ -796,6 +796,7 @@ def evaluate_athena(
     # it do not reach the output. When enabled, pick the market by expected
     # edge over a typical fixture in the same league instead. See
     # app.engine.market_select for the measurement behind this.
+    pick_win_prob = pick_edge = None
     if mf.prob_select:
         picked = market_select.choose(req.mu_total, req.league_mu)
         if picked is not None:
@@ -817,6 +818,7 @@ def evaluate_athena(
                 confidence=("HIGH" if edge >= 0.06 else
                             "MEDIUM" if edge >= 0.03 else "LOW"),
             )
+            pick_win_prob, pick_edge = pw, edge
 
     # ── Sharp lane ────────────────────────────────────────────────────
     # mu_total is what tempo_index was derived from; invert that mapping rather
@@ -846,6 +848,8 @@ def evaluate_athena(
             league_z=league_z,
         ),
     )
+    prediction.pick_win_prob = pick_win_prob
+    prediction.pick_edge = pick_edge
     # Plain-language, user-facing rationale derived from the fired modules.
     prediction.rationale = humanize(prediction)
     return prediction
