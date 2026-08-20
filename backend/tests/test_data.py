@@ -333,3 +333,25 @@ def test_provider_is_recorded_on_sources():
     assert sources.get("CHN-SL").provider == "footballdata"
     assert sources.get("CHN-SL").fd_country == "CHN"
     assert sources.get("ENG-PL").provider == "openfootball"
+
+
+def test_domestic_fallback_follows_the_registry():
+    """
+    Cup fixtures resolve club form from domestic leagues. That list was once
+    hardcoded to twelve leagues and silently starved the cups as coverage grew:
+    67 of 113 Europa League clubs were unresolvable, including Olympiakos and
+    Fenerbahce, whose leagues were loaded but simply absent from the list.
+    Deriving it from the registry keeps the two in step.
+    """
+    from app.data import features, sources
+
+    fallback = features._domestic_fallback()
+    assert len(fallback) > 40, "fallback should span the registry, not a fixed subset"
+
+    # Domestic leagues added after the original list must be present.
+    for code in ["GRE-SL", "TUR-SL", "CZE-FL", "BEL-PL", "NOR-EL", "CRO-1L"]:
+        assert code in fallback, code
+
+    # Cup competitions must not be searched for domestic form.
+    for code in ["UCL", "UEL", "UECL"]:
+        assert code not in fallback, code

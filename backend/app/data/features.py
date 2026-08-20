@@ -90,11 +90,23 @@ INTL_GOAL_AVERAGES: Dict[str, float] = {
     "UCL": 2.70, "UEL": 2.50, "UECL": 2.40, "EC": 2.25, "WC": 2.30,
 }
 
-# Domestic leagues searched when resolving a cup team's recent club form.
-_DOMESTIC_FALLBACK = [
-    "ENG-PL", "ESP-LL", "GER-BL", "ITA-SA", "FRA-L1",
-    "NED-ED", "POR-PL", "ENG-CH", "GER-B2", "ESP-L2", "ITA-SB", "FRA-L2",
-]
+def _domestic_fallback() -> List[str]:
+    """
+    Domestic leagues searched when resolving a cup team's recent club form.
+
+    Derived from the registry rather than hardcoded. An earlier fixed list of
+    twelve leagues silently starved the cup competitions as coverage grew: 67 of
+    113 Europa League clubs could not be resolved at all, including Olympiakos,
+    Fenerbahçe, Slavia Praha and Bodø/Glimt — whose domestic leagues were in
+    fact loaded, just absent from the list.
+
+    Ordered by stored match count so the deepest leagues are searched first;
+    the search keeps the largest frame it finds, so this only affects speed.
+    """
+    from app.data import sources
+
+    codes = [c for c, s in sources.LEAGUES.items() if not s.international]
+    return sorted(codes, key=lambda c: -len(store.load_results(c)))
 
 
 # ── Name normalisation ────────────────────────────────────────────────────────
@@ -430,13 +442,18 @@ def _asof_features_intl(
 
     def best_frame(team: str) -> tuple[pd.DataFrame, Optional[pd.DataFrame]]:
         best_rows, best_full = pd.DataFrame(), None
-        for code in _DOMESTIC_FALLBACK:
+        for code in _domestic_fallback():
             df = store.load_results(code)
             if df.empty:
                 continue
             rows = _find_team_rows(df, team, cutoff)
             if len(rows) > len(best_rows):
                 best_rows, best_full = rows, df
+            # A full rolling window is the most that will ever be used, so once
+            # one league supplies it there is nothing better to find. Without
+            # this the search scans all ~50 leagues for every cup team.
+            if len(best_rows) >= ROLLING_MATCHES:
+                break
         return best_rows, best_full
 
     H, full_H = best_frame(home_team)
