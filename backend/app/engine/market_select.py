@@ -60,8 +60,8 @@ from app.util.asian_lines import evaluate_market, hit_weight
 # flowchart could reach, so a comparison measures the decision rule and not a
 # change of vocabulary.
 LADDER: tuple[str, ...] = (
-    "O1.5", "O1.75", "O2.25", "O2.5", "O2.75",
-    "U2.75", "U3.25", "U3.5", "U3.75", "U4.25",
+    "O1.0", "O1.5", "O1.75", "O2.25", "O2.5", "O2.75",
+    "U2.75", "U3.0", "U3.25", "U3.5", "U3.75", "U4.25",
 )
 
 # Totals worth summing over. P(11+ goals) at any realistic mu is far below the
@@ -94,6 +94,20 @@ _MAX_TOTAL = 12
 # line under half of all calls. Above it the gain is concentration rather than
 # accuracy.
 MIN_WIN_PROB = 0.79
+
+# The other end of the same idea. A market modelled far above this is not a
+# forecast, it is an arithmetic fact about the league — in a competition where
+# 97% of matches finish under five goals, U4.25 wins nearly always and is priced
+# to match. Winning a 1.05 shot 92% of the time loses money while looking
+# excellent on a hit-rate report.
+#
+# The floor refuses bets too risky to want; the ceiling refuses bets too certain
+# to price. Together they confine the selector to the band where a market is
+# both winnable and buyable, and it self-adjusts by league: at a Serie B
+# expectation of 2.2 goals U4.25 models at 0.928 and is excluded, dropping the
+# choice to U3.5 at 0.819, while in a high-scoring league it never approaches
+# the ceiling and nothing changes.
+MAX_WIN_PROB = 0.90
 
 
 @lru_cache(maxsize=None)
@@ -161,6 +175,7 @@ def choose(
     league_mu: Optional[float],
     ladder: Sequence[str] = LADDER,
     min_win_prob: Optional[float] = None,
+    max_win_prob: Optional[float] = None,
 ) -> Optional[tuple[str, float, float]]:
     """
     Pick the market with the largest edge that still clears the probability
@@ -177,12 +192,22 @@ def choose(
     if min_win_prob is None:
         min_win_prob = MIN_WIN_PROB
 
+    if max_win_prob is None:
+        max_win_prob = MAX_WIN_PROB
+
     ranked = score_markets(mu, league_mu, ladder)
     for market, edge, here, _typical in ranked:
-        if here >= min_win_prob:
+        if min_win_prob <= here <= max_win_prob:
             return market, edge, here
 
-    # Nothing clears the floor — take the safest available rather than the
+    # Nothing sits in the band. Which side it missed on decides the fallback.
+    above = [(m, e, h) for m, e, h, _ in ranked if h > max_win_prob]
+    if above:
+        # Everything is too certain to price — an extremely lopsided fixture.
+        # Take the least certain of them: closest to being a real bet.
+        return min(above, key=lambda r: r[2])
+
+    # Everything is too risky. Take the safest available rather than the
     # highest-edge one, since at this point no line is comfortable.
     safest = max(ladder, key=lambda m: p_win(m, mu))
     return safest, 0.0, p_win(safest, mu)
