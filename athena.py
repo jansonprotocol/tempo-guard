@@ -256,6 +256,89 @@ def cmd_ablate(args) -> int:
     return 0
 
 
+# ── propose / accept ──────────────────────────────────────────────────────────
+
+# Leagues whose safe lane lags. Excludes the African competitions, whose high
+# hit rates come from very low scoring base rates rather than from any edge.
+WEAK_DEFAULT = [
+    "NED-ED", "POR-PL", "FRA-L2", "GRE-SL", "SUI-SL", "DEN-SL", "POL-EK",
+    "RUS-PL", "CZE-FL", "SWE-AL", "FIN-VL", "IRL-PD", "JPN-J1", "CHN-SL",
+    "ENG-L1", "ENG-L2", "SCO-L1", "SCO-L2", "ENG-NL", "TUR-SL", "BEL-PL",
+    "SCO-CH", "BRA-SB", "COL-PA", "ECU-S1", "PAR-D1", "ARG-CLP", "MEX-LMX",
+]
+
+
+def cmd_propose(args) -> int:
+    from app.propose import propose_many, save_proposals
+
+    codes = [args.league] if args.league else (
+        [c for c in sources.codes() if len(store.load_results(c)) > 200]
+        if args.all else WEAK_DEFAULT
+    )
+    codes = [c for c in codes if len(store.load_results(c)) > 200]
+
+    print(f"Searching toggles for {len(codes)} league(s) — nothing will be written.")
+    print("Every gain below is measured on matches the search never saw.")
+    print()
+    proposals = propose_many(
+        codes, limit=args.limit,
+        progress=(lambda m: print(f"  {m}", flush=True)) if args.verbose else None,
+    )
+
+    changed = [p for p in proposals if p.edits]
+    print()
+    print(f"  {'LEAGUE':9s} {'n':>5s} {'now':>7s} {'holdout':>8s} {'->':>3s} {'proposed':>9s} {'GAIN':>7s}")
+    print(_rule())
+    for p in sorted(proposals, key=lambda x: -x.gain):
+        mark = "" if p.edits else "   (no change worth making)"
+        print(f"  {p.league_code:9s} {p.sample:5d} {p.baseline:7.1%} "
+              f"{p.holdout_baseline:8.1%} {'->':>3s} {p.holdout_proposed:9.1%} "
+              f"{p.gain:+7.1%}{mark}")
+    print(_rule())
+
+    if changed:
+        print()
+        print("  PROPOSED EDITS")
+        for p in sorted(changed, key=lambda x: -x.gain):
+            print(f"    {p.league_code}  (+{p.gain:.1%} on {p.holdout_sample} unseen matches)")
+            for e in p.edits:
+                print(f"       {e.field:26s} {str(e.current):>7s} -> {str(e.proposed):<7s}"
+                      f"  holdout {e.holdout_gain:+.1%}  [{e.note}]")
+        path = save_proposals(proposals)
+        print()
+        print(f"  Written to {path.name}. Nothing applied yet.")
+        print(f"  Review, then run:  athena accept            (all)")
+        print(f"                     athena accept NED-ED     (one league)")
+    else:
+        print()
+        print("  No league produced an edit that survived on unseen matches.")
+        print("  That is a real answer: the current settings are not the thing")
+        print("  holding these leagues back.")
+    return 0
+
+
+def cmd_accept(args) -> int:
+    from app.propose import accept, load_proposals
+
+    data = load_proposals()
+    if not data:
+        print("No proposals on file. Run `athena propose` first.")
+        return 1
+
+    applied = accept([args.league] if args.league else None)
+    if not applied:
+        print("Nothing applied — no matching proposals with edits.")
+        return 1
+
+    for code, lines in applied.items():
+        print(f"  {code}")
+        for l in lines:
+            print(f"     {l}")
+    print()
+    print(f"  Applied to {len(applied)} league(s) in config/leagues.json")
+    return 0
+
+
 # ── retrosim / futurematch ────────────────────────────────────────────────────
 
 def cmd_retrosim(args) -> int:
@@ -391,6 +474,20 @@ def main(argv=None) -> int:
     a.add_argument("--detail", action="store_true", help="per-league breakdown")
     a.add_argument("-v", "--verbose", action="store_true")
     a.set_defaults(func=cmd_ablate)
+
+    # propose
+    pr = sub.add_parser("propose", help="search toggles and recommend edits (writes nothing)")
+    pr.add_argument("league", nargs="?", help="one league; default: the weaker set")
+    pr.add_argument("--all", action="store_true", help="every league with enough data")
+    pr.add_argument("--limit", type=int, default=400,
+                    help="most recent N matches per league (default 400)")
+    pr.add_argument("-v", "--verbose", action="store_true")
+    pr.set_defaults(func=cmd_propose)
+
+    # accept
+    ac = sub.add_parser("accept", help="apply proposals previously reviewed")
+    ac.add_argument("league", nargs="?", help="one league; default: all proposed")
+    ac.set_defaults(func=cmd_accept)
 
     # retrosim
     r = sub.add_parser("retrosim", help="re-simulate a past match and grade it")
