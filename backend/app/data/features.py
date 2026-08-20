@@ -76,6 +76,12 @@ VENUE_MIN   = 3         # minimum venue-specific games before blending
 # expected goals, since the source data carries no shot counts.
 SOT_PER_GOAL = 3.2
 
+# Tempo normalisation. mu_total (expected match goals) realistically spans about
+# 1.5-4.5; mapping that onto 0-1 keeps the signal spread out instead of pinned
+# at a ceiling. See the tempo_index note in _compute_features.
+TEMPO_BASE = 1.5
+TEMPO_SPAN = 3.0
+
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
 # Historical goals/game baselines for competitions whose own history is too
@@ -326,7 +332,16 @@ def _compute_features(
         "p_two_plus":             round(float(p_two_plus), 3),
         "p_home_tt05":            round(float(1.0 - _poisson_p0(gfh)), 3),
         "p_away_tt05":            round(float(1.0 - _poisson_p0(gfa)), 3),
-        "tempo_index":            round(_clip(mu_total / 3.0, 0.2, 0.9), 3),
+        # Tempo is normalised so a typical fixture lands near the middle of the
+        # range. The previous mapping (mu/3.0 clipped at 0.9) saturated: league
+        # means sit at 2.4-3.2 goals, so ~63% of matches pinned to the ceiling
+        # and the signal was effectively constant. That starved every module
+        # gated on low tempo — gate_b, ulr and mfr could fire on a handful of
+        # matches per season rather than acting as real controls.
+        # TEMPO_BASE is roughly the lowest realistic match total, TEMPO_SPAN the
+        # working range above it.
+        "tempo_index":            round(_clip((mu_total - TEMPO_BASE) / TEMPO_SPAN,
+                                              0.05, 0.95), 3),
         "sot_proj_total":         round(_clip(mu_total * SOT_PER_GOAL, 6.0, 16.0), 2),
         "support_idx_over_delta": round(_clip((mu_total - league_mu) * 0.12, -0.15, 0.15), 3),
         "deg_pressure":           _compute_deg_pressure(H, A, h_norm, a_norm),

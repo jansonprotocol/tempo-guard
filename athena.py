@@ -192,6 +192,46 @@ def cmd_calibrate(args) -> int:
     return 0
 
 
+# ── ablate ────────────────────────────────────────────────────────────────────
+
+def cmd_ablate(args) -> int:
+    from app.ablate import ablate_many
+
+    codes = ([args.league] if args.league
+             else [c for c in sources.codes() if len(store.load_results(c)) > 100])
+    print(f"Ablating {len(codes)} league(s) — disabling one module at a time…")
+    per, totals = ablate_many(codes, progress=(lambda m: print(f"  {m}")) if args.verbose else None)
+
+    if not per:
+        print("Nothing to ablate — no stored results.")
+        return 1
+
+    print()
+    print("  MODULE CONTRIBUTION  (positive = disabling it makes results worse)")
+    print(_rule())
+    print(f"  {'module':16s} {'contribution':>13s} {'preds changed':>14s} {'verdict':>9s}")
+    print(_rule())
+    for m, t in sorted(totals.items(), key=lambda kv: kv[1]["mean_contribution"]):
+        c = t["mean_contribution"]
+        verdict = ("HURTS" if c < -0.005 else
+                   "helps" if c > 0.005 else
+                   "inert" if t["changed"] == 0 else "neutral")
+        print(f"  {m:16s} {c:+12.2%} {t['changed']:14d} {verdict:>9s}")
+    print(_rule())
+
+    if args.detail:
+        for code, (rate, sample, effects) in per.items():
+            print(f"\n  {code}  baseline {rate:.1%} (n={sample})")
+            for e in effects:
+                print(f"    {e.module:16s} without={e.without:6.1%} "
+                      f"{e.contribution:+7.2%} changed={e.changed:4d}  {e.verdict}")
+    print()
+    print("  Defaults already reflect these measurements (engine/types.py).")
+    print("  Override per league via 'module_overrides' in config/leagues.json.")
+    print()
+    return 0
+
+
 # ── retrosim / futurematch ────────────────────────────────────────────────────
 
 def cmd_retrosim(args) -> int:
@@ -310,6 +350,13 @@ def main(argv=None) -> int:
     c.add_argument("--detail", action="store_true", help="per-market breakdown")
     c.add_argument("-v", "--verbose", action="store_true")
     c.set_defaults(func=cmd_calibrate)
+
+    # ablate
+    a = sub.add_parser("ablate", help="measure what each engine module is worth")
+    a.add_argument("league", nargs="?", help="league code; default: all with enough data")
+    a.add_argument("--detail", action="store_true", help="per-league breakdown")
+    a.add_argument("-v", "--verbose", action="store_true")
+    a.set_defaults(func=cmd_ablate)
 
     # retrosim
     r = sub.add_parser("retrosim", help="re-simulate a past match and grade it")

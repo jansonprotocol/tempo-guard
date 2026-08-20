@@ -39,7 +39,7 @@ import pandas as pd
 from app.data import config, features, store
 from app.data.config import LeagueConfig
 from app.predict import predict_fixture, build_request
-from app.engine.types import MatchRequest
+from app.engine.types import MatchRequest, ModuleFlags
 from app.util.asian_lines import evaluate_market, hit_weight
 
 # Minimum matches of history before a fixture can be replayed. Lower than the
@@ -150,6 +150,7 @@ def replay(
     season: Optional[str] = None,
     min_matches: int = CALIB_MIN_MATCHES,
     _pairs: Optional[list[tuple[MatchRequest, tuple[int, int]]]] = None,
+    module_flags: Optional["ModuleFlags"] = None,
 ) -> ReplayResult:
     """
     Retro-simulate every completed match for a league and grade the calls.
@@ -165,7 +166,7 @@ def replay(
     result = ReplayResult(league_code=league_code)
 
     for req, (hg, ag) in pairs:
-        pred = predict_fixture(req, cfg)
+        pred = predict_fixture(req, cfg, module_flags=module_flags)
         market = pred.translated_play.market
         w = hit_weight(evaluate_market(market, hg, ag))
         if w < 0:

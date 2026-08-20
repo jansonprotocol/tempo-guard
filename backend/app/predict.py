@@ -23,7 +23,7 @@ from app.data import config, features
 from app.data.config import LeagueConfig
 from app.engine.pipeline import evaluate_athena
 from app.engine.rationale import humanize
-from app.engine.types import MatchRequest, Prediction
+from app.engine.types import MatchRequest, ModuleFlags, Prediction
 
 
 def _clip(x: float, lo: float, hi: float) -> float:
@@ -56,10 +56,23 @@ def _apply_sensitivities(req: MatchRequest, cfg: LeagueConfig) -> MatchRequest:
     })
 
 
-def predict_fixture(req: MatchRequest, cfg: Optional[LeagueConfig] = None) -> Prediction:
-    """Run the engine for a request whose features are already populated."""
+def predict_fixture(
+    req: MatchRequest,
+    cfg: Optional[LeagueConfig] = None,
+    module_flags: Optional[ModuleFlags] = None,
+) -> Prediction:
+    """
+    Run the engine for a request whose features are already populated.
+
+    `module_flags` takes precedence when given (ablation and dial search pass it
+    explicitly); otherwise the league's `module_overrides` are layered over the
+    measured defaults.
+    """
     cfg = cfg or config.get(req.league_code)
     adjusted = _apply_sensitivities(req, cfg)
+
+    if module_flags is None and cfg.module_overrides:
+        module_flags = ModuleFlags(**cfg.module_overrides)
 
     prediction = evaluate_athena(
         adjusted,
@@ -69,6 +82,7 @@ def predict_fixture(req: MatchRequest, cfg: Optional[LeagueConfig] = None) -> Pr
         team_nudge=_team_nudge(cfg, req.home_team, req.away_team),
         confidence_scale=float(cfg.confidence_scale),
         confidence_floor=float(cfg.confidence_floor),
+        module_flags=module_flags,
     )
     prediction.rationale = humanize(prediction)
     return prediction

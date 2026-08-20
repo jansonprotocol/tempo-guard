@@ -13,6 +13,7 @@ athena data status                                    # what's loaded
 athena tips --days 7 --explain                        # tips for the week
 athena retrosim ENG-PL "Arsenal" "Chelsea" 2026-01-04 # re-run a past match
 athena calibrate ENG-PL --detail                      # tune a league
+athena ablate                                         # what each module is worth
 ```
 
 ## Quick start
@@ -76,11 +77,77 @@ data/*.parquet  →  asof_features  →  evaluate_athena  →  translate_play  �
 retrosim and calibration reproduce what the engine would have said on the
 morning of the match. There is no lookahead anywhere in the pipeline.
 
-The engine is a stack of named modules, each of which can appear in a tip's
-explanation: `BurstSentinel` (chaos → force Over), `UnderGuard` (low goal
-expectation → Under), `DEG` (defensive decline), `DET` (volatility),
-`EPS` (inconsistent totals → trim the ceiling), `MFR` (momentum),
-`BilateralChaos` (both teams volatile), `GateB` / `InlineVeto` (hard blocks).
+The engine is a stack of named modules. Which ones are active is decided by
+measurement, not intuition — see below.
+
+## Which modules earn their place
+
+```
+athena ablate            # every league
+athena ablate ENG-PL --detail
+```
+
+Ablation disables one module at a time and measures the effect on hit rate over
+a full replay. Run across nine leagues and ~2,900 matches, the result was blunt:
+
+| Module | Contribution | Verdict |
+|---|---|---|
+| `ulr` low tempo → Under | +0.24% | **on** |
+| `deg` defensive decline | +0.03% | **on** |
+| `mfr` momentum | +0.03% | **on** |
+| `under_guard` low goal expectation | 0.00% | **on** — the only Under pathway |
+| `gate_b`, `eps`, `bilateral` | 0.00% | **off** — changed zero predictions |
+| `det` volatility | −0.45% | **off** — cost accuracy in 4 leagues |
+| `burst_sentinel` chaos → force Over | **−1.91%** | **off** — cost accuracy in *all nine* |
+
+Disabling the five non-earners is worth **+2.4%** in-sample and **+1.5%** on a
+chronological holdout (7 of 9 leagues improve).
+
+Two further modules, `InlineVeto` and `S-LOCK`, were deleted outright: both were
+unreachable. `InlineVeto` was fed a hardcoded `quality_ok = True`, and `S-LOCK`
+compared the lean against itself, so neither could ever fire.
+
+The disabled modules' code is kept, not deleted. Their inputs — volatility,
+phase stability — are exactly the signals that richer data such as xG would make
+meaningful. Any league can switch one back on via `module_overrides` in
+`config/leagues.json`, and these toggles are far higher-leverage calibration
+dials than the bias and tempo factors, because a toggle changes the selected
+market outright.
+
+### A note on the tempo signal
+
+`tempo_index` used to clip at 0.9 and was then scaled past its own ceiling,
+pinning about 63% of matches to the maximum. The signal was effectively a
+constant, which starved every module gated on low tempo — `gate_b`, `ulr` and
+`mfr` could fire on a literal handful of matches per season. Normalising it so a
+typical fixture lands mid-range was worth **+2.8%** on its own and revived
+`ulr`. `test_tempo_index_is_not_saturated` guards against a regression.
+
+## Accuracy, honestly
+
+Raw hit rate is a misleading target, because bookmakers price close to the true
+probability. What matters is beating the **base rate of the line you bet** by
+more than the bookmaker's margin — roughly 5.3% relative, on any line.
+
+For scale: always betting U4.5 in Serie B scores 91.6% and still loses money,
+because U4.5 pays about 1.09 and needs 91.7% to break even. Meanwhile 58% on
+O2.5 is profitable.
+
+Current state after the prune, over ~3,000 replayed matches:
+
+```
+hit rate      80.4%   (was 77.7%)
+base rate     78.5%   of the same markets the engine chose
+edge          +1.9%   (was +1.2%)
+needed        +4.1%   to clear the margin
+```
+
+So the engine is measurably better than it was, and one league (ESP-LL, 84.7% vs
+83.7% needed) now clears the bar — but it is not yet profitable across the
+board. The remaining gap is an information problem, not a tuning problem: the
+best feature scores AUC 0.548 against a coin-flip 0.50, and a Dixon-Coles
+attack/defence model built on the same goals-only data does no better. Closing
+it needs xG, lineups, and odds — not more rules.
 
 ## Layout
 
@@ -90,7 +157,10 @@ config/leagues.json    per-league dials — calibration writes here
 data/<LEAGUE>/*.parquet match snapshots, committed
 backend/app/
   data/                openfootball parser, loader, store, features, config
-  engine/              prediction pipeline, types, plain-language rationale
+  engine/              prediction pipeline, types, module flags, rationale
+  predict.py           features -> Prediction
+  calibrate.py         replay, dial search, holdout verification
+  ablate.py            per-module contribution measurement
   util/asian_lines.py  Asian line grading
 backend/tests/         pytest suite (no data or network needed)
 ```

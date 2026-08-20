@@ -44,6 +44,64 @@ class MatchRequest(BaseModel):
     eps_stability:  Optional[float] = None
 
 
+class ModuleFlags(BaseModel):
+    """
+    Per-module on/off switches.
+
+    Two purposes:
+      1. Ablation — disable one module at a time and measure what it is
+         actually worth, rather than assuming every module earns its place.
+      2. Calibration — these are far higher-leverage dials than the bias and
+         tempo factors, because a module toggle changes the market selection
+         outright rather than nudging a score by a few hundredths.
+
+    DEFAULTS REFLECT MEASURED CONTRIBUTION
+    ======================================
+    Every module was ablated across nine leagues and ~2,900 replayed matches
+    (`app.ablate`). Modules that cost accuracy, or that never changed a single
+    prediction, are off by default. Figures are mean contribution to hit rate,
+    where positive means "disabling this makes results worse":
+
+        ulr              +0.24%   fires on 59 predictions, helps 2 leagues
+        deg              +0.03%   marginal but positive
+        mfr              +0.03%   marginal but positive
+        under_guard       0.00%   net neutral, but shapes 596 predictions and
+                                  is the engine's only route to Under markets
+        gate_b            0.00%   INERT — changed 0 predictions
+        eps               0.00%   INERT — only moves the corridor ceiling,
+                                  never the selected market
+        bilateral         0.00%   INERT — same, ceiling only
+        det              -0.45%   costs accuracy in 4 leagues
+        burst_sentinel   -1.91%   costs accuracy in ALL NINE leagues
+
+    Disabling the five non-earners together is worth +2.4% in-sample and
+    +1.5% on a chronological holdout (7 of 9 leagues improve).
+
+    The code behind the disabled modules is kept rather than deleted: their
+    inputs (volatility, phase stability) are exactly the signals that richer
+    data such as xG would make meaningful, and a per-league config can switch
+    any of them back on. NED-ED, for instance, measurably prefers
+    burst_sentinel enabled.
+    """
+    burst_sentinel:   bool = False   # -1.91%: hurt every league tested
+    gate_b:           bool = False   # inert: never changed a prediction
+    ulr:              bool = True    # +0.24%
+    under_guard:      bool = True    # neutral, but the only Under pathway
+    deg:              bool = True    # +0.03%
+    det:              bool = False   # -0.45%
+    eps:              bool = False   # inert: corridor-only, never the market
+    mfr:              bool = True    # +0.03%
+    bilateral:        bool = False   # inert: corridor-only, never the market
+
+    def disabled(self) -> list[str]:
+        return [k for k, v in self.model_dump().items() if not v]
+
+    @classmethod
+    def all_on(cls) -> "ModuleFlags":
+        """The pre-prune engine — used by ablation to establish a baseline."""
+        return cls(**{k: True for k in cls.model_fields})
+
+
 class Corridor(BaseModel):
     low:  float
     high: float

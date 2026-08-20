@@ -4,12 +4,13 @@ from __future__ import annotations
 from math import isfinite
 from typing import List, Tuple
 
-from app.engine.types import MatchRequest, Prediction, Corridor, TranslatedPlay
+from app.engine.types import (
+    MatchRequest, ModuleFlags, Prediction, Corridor, TranslatedPlay,
+)
 from app.engine.rationale import humanize
 
 # ── Core constants ────────────────────────────────────────────────────────────
 ROUNDING   = 0.01
-HYSTERESIS = 1.0
 
 # BurstSentinel — raised thresholds so it doesn't fire on every high-tempo match
 BURST_MIN_SUPPORT = 0.12   # was 0.10 — raised to prevent borderline triggers after rounding
@@ -58,14 +59,6 @@ def _r(x: float) -> float:
 
 
 # ── Modules ───────────────────────────────────────────────────────────────────
-
-def inline_veto(qlty_ok: bool, notes: List[str], modules: List[str]) -> bool:
-    if not qlty_ok:
-        modules.append("InlineVeto")
-        notes.append("Inline Veto: data incomplete → default to Under corridor.")
-        return True
-    return False
-
 
 def burst_sentinel(
     support_delta: float, p2p: float, tempo: float,
@@ -148,20 +141,6 @@ def ceiling_cushion(apply: bool, notes: List[str], modules: List[str]) -> None:
         notes.append("Ceiling Cushion: prefer U3.5/4.5 over naked U3.5.")
 
 
-def s_lock(
-    prev_lean: str, new_lean: str, delta: float,
-    notes: List[str], modules: List[str],
-) -> str:
-    if prev_lean and prev_lean != new_lean and delta < HYSTERESIS:
-        modules.append("S-LOCK_Hysteresis")
-        notes.append(
-            f"S-LOCK: prevented flip {prev_lean}→{new_lean} "
-            f"(Δ={delta:.2f}<{HYSTERESIS})."
-        )
-        return prev_lean
-    return new_lean
-
-
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _clip(x: float, lo: float, hi: float) -> float:
@@ -181,7 +160,7 @@ def deg_degradation(
     Applies negative pressure on over_score to suppress Over projections.
 
     Returns: negative adjustment to over_score (0.0 to -DEG_MAX_PRESSURE).
-    Cannot override Inline Veto or BurstSentinel.
+    Cannot override BurstSentinel.
     Adjustment window: up to ±1.8pp per spec (implemented as ±0.08 score units).
     """
     dp = _r(deg_pressure)
@@ -572,7 +551,10 @@ def evaluate_athena(
     team_nudge: float = 0.0,        # combined home+away team-level calibration nudge
     confidence_scale: float = 1.0,  # per-league delta multiplier (v2.3)
     confidence_floor: float = 0.60, # per-league confidence baseline (v2.3)
+    module_flags: ModuleFlags | None = None,
 ) -> Prediction:
+    mf = module_flags or ModuleFlags()
+
     notes:   List[str] = []
     modules: List[str] = []
     flags:   List[str] = ["SinglesOnly"]
@@ -617,30 +599,30 @@ def evaluate_athena(
     burst_p2p     = req.p_two_plus if req.p_two_plus is not None else 0.68
     burst_tempo   = raw_tempo
 
-    # ── Pre-lean protections ─────────────────────────────────────────
-    quality_ok = True
-    veto       = inline_veto(quality_ok, notes, modules)
-
     # ── Modules ──────────────────────────────────────────────────────
     # BurstSentinel uses raw unbiased values — prevents calibration
     # nudges from artificially triggering forced-over mode
-    burst_on    = burst_sentinel(burst_support, burst_p2p, burst_tempo, notes, modules)
-    gateb_block = gate_b(tempo, support_delta, notes, modules)
-    ulr_on      = ulr_low_tempo(tempo, notes, modules)
-    under_guard = under_p2p_guard(p2p, support_delta, notes, modules)
+    burst_on    = burst_sentinel(burst_support, burst_p2p, burst_tempo, notes, modules) \
+                  if mf.burst_sentinel else False
+    gateb_block = gate_b(tempo, support_delta, notes, modules) if mf.gate_b else False
+    ulr_on      = ulr_low_tempo(tempo, notes, modules) if mf.ulr else False
+    under_guard = under_p2p_guard(p2p, support_delta, notes, modules) \
+                  if mf.under_guard else "none"
 
     # DEG/DET/EPS/MFR/BILATERAL — run after core protections
-    # DEG: fail-safe respected (cannot override Inline Veto — veto zeros it implicitly
-    # by forcing under lean, but we still let DEG log for transparency)
-    deg_adj  = deg_degradation(deg_p, notes, modules)
-    det_adj  = det_detonation(det_b, burst_on, notes, modules)
-    eps_tap  = eps_phase_stability(eps, burst_on, notes, modules)
-    mfr_adj  = mfr_soft(support_delta, tempo, gateb_block, notes, modules)
-    lift_adj = mfr_to_lift(support_delta, gateb_block, notes, modules)
-    # MFR Soft and MFR_TO_LIFT are mutually exclusive — only the stronger fires
-    # mfr_to_lift threshold is higher so it replaces soft when both would trigger
-    mfr_total = lift_adj if lift_adj > 0.0 else mfr_adj
-    bilateral_exp = bilateral_chaos_escalator(h_det, a_det, burst_on, notes, modules)
+    deg_adj  = deg_degradation(deg_p, notes, modules) if mf.deg else 0.0
+    det_adj  = det_detonation(det_b, burst_on, notes, modules) if mf.det else 0.0
+    eps_tap  = eps_phase_stability(eps, burst_on, notes, modules) if mf.eps else 0.0
+    if mf.mfr:
+        mfr_adj  = mfr_soft(support_delta, tempo, gateb_block, notes, modules)
+        lift_adj = mfr_to_lift(support_delta, gateb_block, notes, modules)
+        # MFR Soft and MFR_TO_LIFT are mutually exclusive — only the stronger fires
+        # mfr_to_lift threshold is higher so it replaces soft when both would trigger
+        mfr_total = lift_adj if lift_adj > 0.0 else mfr_adj
+    else:
+        mfr_total = 0.0
+    bilateral_exp = bilateral_chaos_escalator(h_det, a_det, burst_on, notes, modules) \
+                    if mf.bilateral else 0.0
 
     # ── Lean scoring ─────────────────────────────────────────────────
     # Balanced formula — tempo contribution is halved to stop BRA-SA
@@ -656,7 +638,7 @@ def evaluate_athena(
     # Core module adjustments
     if burst_on:
         over_score  += 0.10
-    if gateb_block or veto:
+    if gateb_block:
         under_score += 0.08
     if ulr_on:
         under_score += 0.05
@@ -669,8 +651,6 @@ def evaluate_athena(
     # DEG reduces over_score (structural decline → suppress over)
     # DET increases over_score (volatility → expand over outlook)
     # MFR increases over_score (momentum → support over floor)
-    # Note: DEG applies even when veto fired (for transparency), but veto's
-    # under_score boost ensures under wins regardless.
     over_score += deg_adj   # negative
     over_score += det_adj   # positive
     over_score += mfr_total # positive
@@ -689,7 +669,7 @@ def evaluate_athena(
     # ── Lean decision ────────────────────────────────────────────────
     if burst_on:
         new_lean = "over"
-    elif gateb_block or veto or ulr_on or under_guard == "hard":
+    elif gateb_block or ulr_on or under_guard == "hard":
         new_lean = "under"
     elif under_guard == "soft" and under_score >= over_score:
         new_lean = "under"
@@ -701,10 +681,10 @@ def evaluate_athena(
         else:
             new_lean = "balanced"
 
-    final_lean = s_lock(
-        prev_lean=new_lean, new_lean=new_lean,
-        delta=delta, notes=notes, modules=modules,
-    )
+    # Lean is final here. A hysteresis guard (S-LOCK) used to sit at this
+    # point, but it compared the new lean against itself and could never fire;
+    # re-introducing it would need a stored previous lean per fixture.
+    final_lean = new_lean
 
     # ── Corridor ──────────────────────────────────────────────────────
     low, high = build_corridor(

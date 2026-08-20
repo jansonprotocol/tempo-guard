@@ -58,6 +58,13 @@ class LeagueConfig:
     # ── Per-team over nudges: {team_name: nudge} ──────────────────────
     team_nudges: dict[str, float] = field(default_factory=dict)
 
+    # ── Module overrides: {module_name: bool} ─────────────────────────
+    # Sparse — only modules that differ from the measured defaults in
+    # engine.types.ModuleFlags need an entry. These are the highest-leverage
+    # calibration dials available, because a toggle changes market selection
+    # outright rather than nudging a score.
+    module_overrides: dict[str, bool] = field(default_factory=dict)
+
     # ── Calibration bookkeeping ───────────────────────────────────────
     last_calibrated: Optional[str] = None
     last_hit_rate:   Optional[float] = None
