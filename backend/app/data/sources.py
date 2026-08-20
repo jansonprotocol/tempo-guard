@@ -37,6 +37,32 @@ class LeagueSource:
     def season_path(self, season: str) -> str:
         return self.path.format(season=season)
 
+    def default_seasons(self) -> list[str]:
+        """
+        Season keys to try for this league, newest last.
+
+        Season naming is not universal. Leagues played across a European winter
+        are keyed "2025-26"; leagues played inside a single calendar year —
+        Brazil, MLS, Japan, the Nordics — are keyed "2025". Getting this wrong
+        simply finds no file, so each league states which convention it uses.
+        """
+        if self.calendar_year:
+            return ["2024", "2025", "2026"]
+        return ["2024-25", "2025-26", "2026-27"]
+
+    def all_seasons(self, since: int = 2000, until: int = 2026) -> list[str]:
+        """
+        Every season key this league could have, oldest first.
+
+        openfootball carries deep history — 27 seasons of England, 17 of
+        Germany, 9 of Brazil. That depth matters: resolving a 2% edge needs
+        thousands of matches per league, far more than one season provides.
+        Keys that have no file upstream are skipped by the loader.
+        """
+        if self.calendar_year:
+            return [str(y) for y in range(since, until + 1)]
+        return [f"{y}-{str(y + 1)[2:]}" for y in range(since, until + 1)]
+
     def season_full_path(self, season: str) -> Optional[str]:
         return self.full_path.format(season=season) if self.full_path else None
 
@@ -92,10 +118,129 @@ LEAGUES: dict[str, LeagueSource] = {
     "FRA-L2": LeagueSource(
         "FRA-L2", "French Ligue 2", "europe", "france/{season}_fr2.txt",
     ),
+    # ── Rest of Europe ────────────────────────────────────────────────────
+    "SCO-PL": LeagueSource(
+        "SCO-PL", "Scottish Premiership", "europe", "scotland/{season}_sc1.txt",
+    ),
+    "TUR-SL": LeagueSource(
+        "TUR-SL", "Turkish Süper Lig", "europe", "turkey/{season}_tr1.txt",
+    ),
+    "GRE-SL": LeagueSource(
+        "GRE-SL", "Greek Super League", "europe", "greece/{season}_gr1.txt",
+    ),
+    "BEL-PL": LeagueSource(
+        "BEL-PL", "Belgian Pro League", "europe", "belgium/{season}_be1.txt",
+    ),
+    "AUT-BL": LeagueSource(
+        "AUT-BL", "Austrian Bundesliga", "europe", "austria/{season}_at1.txt",
+    ),
+    "SUI-SL": LeagueSource(
+        "SUI-SL", "Swiss Super League", "europe", "switzerland/{season}_ch1.txt",
+    ),
+    "DEN-SL": LeagueSource(
+        "DEN-SL", "Danish Superliga", "europe", "denmark/{season}_dk1.txt",
+    ),
+    "POL-EK": LeagueSource(
+        "POL-EK", "Polish Ekstraklasa", "europe", "poland/{season}_pl1.txt",
+    ),
+    "CZE-FL": LeagueSource(
+        "CZE-FL", "Czech First League", "europe", "czech-republic/{season}_cz1.txt",
+    ),
+    "RUS-PL": LeagueSource(
+        "RUS-PL", "Russian Premier League", "europe", "russia/{season}_ru1.txt",
+    ),
+    "UKR-PL": LeagueSource(
+        "UKR-PL", "Ukrainian Premier League", "europe", "ukraine/{season}_ua1.txt",
+    ),
+    "CRO-1L": LeagueSource(
+        "CRO-1L", "Croatian HNL", "europe", "croatia/{season}_hr1.txt",
+    ),
+    "ROU-L1": LeagueSource(
+        "ROU-L1", "Romanian Liga I", "europe", "romania/{season}_ro1.txt",
+    ),
+    # Nordic leagues run inside a calendar year.
+    "NOR-EL": LeagueSource(
+        "NOR-EL", "Norwegian Eliteserien", "europe", "norway/{season}_no1.txt",
+        calendar_year=True,
+    ),
+    "SWE-AL": LeagueSource(
+        "SWE-AL", "Swedish Allsvenskan", "europe", "sweden/{season}_se1.txt",
+        calendar_year=True,
+    ),
+
+    # ── South America (calendar-year seasons) ─────────────────────────────
+    "BRA-SA": LeagueSource(
+        "BRA-SA", "Brazilian Série A", "south-america", "brazil/{season}_br1.txt",
+        calendar_year=True,
+    ),
+    "BRA-SB": LeagueSource(
+        "BRA-SB", "Brazilian Série B", "south-america", "brazil/{season}_br2.txt",
+        calendar_year=True,
+    ),
+    "ARG-PD": LeagueSource(
+        "ARG-PD", "Argentine Primera División", "south-america",
+        "argentina/{season}_ar1.txt", calendar_year=True,
+    ),
+    "COL-PA": LeagueSource(
+        "COL-PA", "Colombian Primera A", "south-america",
+        "colombia/{season}_co1.txt", calendar_year=True,
+    ),
+    "ECU-S1": LeagueSource(
+        "ECU-S1", "Ecuadorian Serie A", "south-america",
+        "ecuador/{season}_ec1.txt", calendar_year=True,
+    ),
+    "PAR-D1": LeagueSource(
+        "PAR-D1", "Paraguayan División Profesional", "south-america",
+        "paraguay/{season}_py1.txt", calendar_year=True,
+    ),
+
+    # ── North America ─────────────────────────────────────────────────────
+    "MLS": LeagueSource(
+        "MLS", "Major League Soccer", "world",
+        "north-america/major-league-soccer/{season}_mls.txt", calendar_year=True,
+    ),
+    "MEX-LMX": LeagueSource(
+        "MEX-LMX", "Liga MX", "world", "north-america/mexico/{season}_mx1.txt",
+    ),
+
+    # ── Asia (calendar-year seasons) ──────────────────────────────────────
+    "JPN-J1": LeagueSource(
+        "JPN-J1", "Japanese J1 League", "world", "asia/japan/{season}_jp1.txt",
+        calendar_year=True,
+    ),
+    "CHN-SL": LeagueSource(
+        "CHN-SL", "Chinese Super League", "world", "asia/china/{season}_cn1.txt",
+        calendar_year=True,
+    ),
+
+    # ── Africa ────────────────────────────────────────────────────────────
+    "EGY-PL": LeagueSource(
+        "EGY-PL", "Egyptian Premier League", "world", "africa/egypt/{season}_eg1.txt",
+    ),
+    "MAR-BP": LeagueSource(
+        "MAR-BP", "Moroccan Botola Pro", "world", "africa/morocco/{season}_ma1.txt",
+    ),
+    "ALG-L1": LeagueSource(
+        "ALG-L1", "Algerian Ligue 1", "world", "africa/algeria/{season}_dz1.txt",
+    ),
+    "NGA-PL": LeagueSource(
+        "NGA-PL", "Nigerian Professional League", "world",
+        "africa/nigeria/{season}_ng1.txt",
+    ),
+    "RSA-PL": LeagueSource(
+        "RSA-PL", "South African Premiership", "world",
+        "africa/south-africa/{season}_za1.txt",
+    ),
+
     # ── Cups / international ──────────────────────────────────────────────
     "UCL": LeagueSource(
         "UCL", "UEFA Champions League", "champions-league", "{season}/cl.txt",
         international=True,
+    ),
+    "COPA-L": LeagueSource(
+        "COPA-L", "Copa Libertadores", "south-america",
+        "copa-libertadores/{season}_copal.txt",
+        calendar_year=True, international=True,
     ),
 }
 

@@ -185,19 +185,77 @@ def _team_names(df: pd.DataFrame) -> List[str]:
     return list(set(df["home"].astype(str)) | set(df["away"].astype(str)))
 
 
+# ── Per-frame index cache ─────────────────────────────────────────────────────
+# Replaying a league used to be quadratic: every match re-normalised both team
+# columns with a Python-level .map() over the whole frame and rebuilt the team
+# name list before fuzzy-matching. On a single season that was tolerable; across
+# 27 seasons of history it made a replay unusable.
+#
+# Instead each frame is indexed once — normalised name columns, the set of names
+# present, and a per-team row index — and every subsequent lookup is a dict hit
+# plus a date filter.
+#
+# The cache is keyed by id(df) and *keeps a reference to the frame itself*. That
+# reference is load-bearing: without it a frame could be collected and a new one
+# allocated at the same address, and the stale index would silently be served
+# for the wrong data. Holding the frame keeps every live id unique.
+#
+# (Stashing the index on df.attrs looks tidier but breaks pandas: attrs
+# propagate to slices, and concat compares attrs dicts, which raises as soon as
+# the dict contains array values.)
+_INDEX_CACHE: dict[int, dict] = {}
+_MAX_CACHED_FRAMES = 8
+
+
+def _frame_index(df: pd.DataFrame) -> dict:
+    cached = _INDEX_CACHE.get(id(df))
+    if cached is not None and cached["n_rows"] == len(df):
+        return cached
+
+    home_norm = df["home"].astype(str).map(_norm)
+    away_norm = df["away"].astype(str).map(_norm)
+    names = _team_names(df)
+
+    # team_norm -> positional rows where that team played, home or away
+    by_team: dict[str, "pd.Index"] = {}
+    for norm_name in set(home_norm) | set(away_norm):
+        by_team[norm_name] = df.index[(home_norm == norm_name) | (away_norm == norm_name)]
+
+    index = {
+        "n_rows": len(df),
+        "frame": df,             # keeps id(df) alive and unique — see above
+        "home_norm": home_norm,
+        "away_norm": away_norm,
+        "names": names,
+        "by_team": by_team,
+        "resolved": {},          # raw team name -> matched dataset name
+    }
+    if len(_INDEX_CACHE) >= _MAX_CACHED_FRAMES:
+        _INDEX_CACHE.clear()
+    _INDEX_CACHE[id(df)] = index
+    return index
+
+
+def _resolve_in_frame(df: pd.DataFrame, team: str) -> Optional[str]:
+    """Match a team name against a frame, memoised per frame."""
+    idx = _frame_index(df)
+    if team not in idx["resolved"]:
+        idx["resolved"][team] = _match_team(team, idx["names"])
+    return idx["resolved"][team]
+
+
 def _find_team_rows(df: pd.DataFrame, team: str, cutoff: datetime) -> pd.DataFrame:
     """Last ROLLING_MATCHES for a team (home or away) strictly before cutoff."""
-    work = df[df["date"] < cutoff]
-    if work.empty:
-        return work
+    if df.empty:
+        return df
 
-    matched = _match_team(team, _team_names(work))
+    matched = _resolve_in_frame(df, team)
     if matched is None:
         return pd.DataFrame()
 
-    n = _norm(matched)
-    rows = work[(work["home"].astype(str).map(_norm) == n) |
-                (work["away"].astype(str).map(_norm) == n)]
+    idx = _frame_index(df)
+    rows = df.loc[idx["by_team"].get(_norm(matched), df.index[:0])]
+    rows = rows[rows["date"] < cutoff]
     return rows.sort_values("date", ascending=False).head(ROLLING_MATCHES)
 
 
@@ -205,16 +263,16 @@ def _find_venue_rows(
     df: pd.DataFrame, team: str, cutoff: datetime, venue: str,
 ) -> pd.DataFrame:
     """Last ROLLING_MATCHES for a team in a specific venue context."""
-    work = df[df["date"] < cutoff]
-    if work.empty:
-        return work
+    if df.empty:
+        return df
 
-    matched = _match_team(team, _team_names(work))
+    matched = _resolve_in_frame(df, team)
     if matched is None:
         return pd.DataFrame()
 
-    col = "home" if venue == "home" else "away"
-    rows = work[work[col].astype(str).map(_norm) == _norm(matched)]
+    idx = _frame_index(df)
+    col_norm = idx["home_norm"] if venue == "home" else idx["away_norm"]
+    rows = df[(col_norm == _norm(matched)) & (df["date"] < cutoff)]
     return rows.sort_values("date", ascending=False).head(ROLLING_MATCHES)
 
 

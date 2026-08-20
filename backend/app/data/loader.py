@@ -77,6 +77,7 @@ def load_league(
     league_code: str,
     season: str,
     quiet: bool = False,
+    skip_quiet: bool = False,
 ) -> Optional[pd.DataFrame]:
     """
     Parse one league-season into the store. Returns the DataFrame, or None when
@@ -84,7 +85,7 @@ def load_league(
     """
     path = source_file(league_code, season)
     if path is None:
-        if not quiet:
+        if not quiet and not skip_quiet:
             print(f"  [load] {league_code} {season}: not published upstream — skipped")
         return None
 
@@ -111,15 +112,32 @@ def load_all(
     league_codes: Optional[Iterable[str]] = None,
     seasons: Optional[Iterable[str]] = None,
     quiet: bool = False,
+    history: bool = False,
 ) -> dict[str, list[str]]:
-    """Parse every requested league-season into the store."""
+    """
+    Parse every requested league-season into the store.
+
+    history=True loads every season the upstream repo publishes rather than the
+    recent default. That is the difference between ~300 matches per league and
+    several thousand — and only the latter can resolve a small edge.
+    """
     codes = list(league_codes) if league_codes else sources.codes()
-    szns = list(seasons) if seasons else DEFAULT_SEASONS
+    explicit = list(seasons) if seasons else None
     loaded: dict[str, list[str]] = {}
 
     for code in codes:
+        # Season keys differ by competition: European winter leagues use
+        # "2025-26", calendar-year leagues (Brazil, MLS, Japan, the Nordics)
+        # use "2025". Each league declares its own convention.
+        src = sources.get(code)
+        if explicit is not None:
+            szns = explicit
+        elif history:
+            szns = src.all_seasons()
+        else:
+            szns = src.default_seasons()
         for season in szns:
-            df = load_league(code, season, quiet=quiet)
+            df = load_league(code, season, quiet=quiet, skip_quiet=history)
             if df is not None:
                 loaded.setdefault(code, []).append(season)
 

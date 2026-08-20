@@ -213,3 +213,71 @@ def test_match_team_refuses_wrong_club(probe):
 
 def test_match_team_handles_empty_candidates():
     assert _match_team("Arsenal", []) is None
+
+
+# ── Numeric date headers (used by some non-European datasets) ─────────────────
+
+NUMERIC_DATES = """\
+= Nigeria Professional League 2024/2025
+
+▪ Matchday 1
+  08.09.
+    16:00  Abia Warriors FC           v Remo Stars FC              0-2 (0-0)
+  15.09.2024
+    16:00  Bendel FC                  v Rivers United FC           0-0 (0-0)
+"""
+
+
+def test_parses_numeric_date_headers():
+    """
+    Some datasets head their fixtures with "08.09." rather than "Sun Sep 08".
+    Nigeria's whole archive uses it; before this was handled the league parsed
+    to zero matches and vanished from the registry silently.
+    """
+    df = parse_text(NUMERIC_DATES)
+    assert len(df) == 2
+    assert df.iloc[0]["date"] == pd.Timestamp("2024-09-08")   # year inherited
+    assert df.iloc[1]["date"] == pd.Timestamp("2024-09-15")   # year explicit
+
+
+def test_numeric_date_rejects_impossible_month():
+    """A score-like line must not be mistaken for a date."""
+    df = parse_text("= X 2025/26\n  45.99.\n    12:00  A v B  1-0\n")
+    assert df.empty
+
+
+# ── Season conventions ────────────────────────────────────────────────────────
+
+def test_calendar_year_leagues_use_year_only_seasons():
+    """
+    Brazil, MLS, Japan and the Nordics play inside one calendar year and are
+    keyed "2025"; European winter leagues are keyed "2025-26". Getting this
+    wrong just finds no file, so the league silently disappears.
+    """
+    from app.data import sources
+
+    assert sources.get("BRA-SA").calendar_year is True
+    assert all("-" not in s for s in sources.get("BRA-SA").default_seasons())
+
+    assert sources.get("ENG-PL").calendar_year is False
+    assert all("-" in s for s in sources.get("ENG-PL").default_seasons())
+
+
+def test_all_seasons_spans_history():
+    from app.data import sources
+
+    eng = sources.get("ENG-PL").all_seasons(since=2000, until=2026)
+    assert eng[0] == "2000-01" and eng[-1] == "2026-27"
+    assert len(eng) == 27
+
+    bra = sources.get("BRA-SA").all_seasons(since=2000, until=2026)
+    assert bra[0] == "2000" and bra[-1] == "2026"
+
+
+def test_registry_covers_multiple_continents():
+    """Guard against the registry quietly regressing to Europe-only."""
+    from app.data import sources
+
+    for code in ["BRA-SA", "MLS", "JPN-J1", "EGY-PL", "ENG-PL"]:
+        assert code in sources.LEAGUES, code
+    assert len(sources.LEAGUES) >= 35

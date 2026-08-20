@@ -62,6 +62,11 @@ _RE_DATE = re.compile(
     re.IGNORECASE,
 )
 
+# Numeric date header, used by some datasets instead of "Fri Aug 15 2025":
+#   "08.09."        day.month, year inherited
+#   "08.09.2024"    day.month.year
+_RE_DATE_NUMERIC = re.compile(r"^\s*(\d{1,2})\.(\d{1,2})\.(\d{4})?\s*$")
+
 # Goalscorer continuation lines start with "(" after indentation.
 _RE_SCORERS = re.compile(r"^\s*\(")
 
@@ -163,12 +168,20 @@ def _regulation_score(m: re.Match) -> tuple[Optional[int], Optional[int],
 
 def _parse_date(line: str, current_year: Optional[int]) -> Optional[date]:
     m = _RE_DATE.match(line)
-    if not m:
-        return None
-    month = _MONTHS[m.group(1).lower()[:3]]
-    day = int(m.group(2))
-    year = int(m.group(3)) if m.group(3) else current_year
-    if year is None:
+    if m:
+        month = _MONTHS[m.group(1).lower()[:3]]
+        day = int(m.group(2))
+        year = int(m.group(3)) if m.group(3) else current_year
+    else:
+        # Numeric "08.09." / "08.09.2024" form used by some datasets.
+        m = _RE_DATE_NUMERIC.match(line)
+        if not m:
+            return None
+        day = int(m.group(1))
+        month = int(m.group(2))
+        year = int(m.group(3)) if m.group(3) else current_year
+
+    if year is None or not (1 <= month <= 12):
         return None
     try:
         return date(year, month, day)

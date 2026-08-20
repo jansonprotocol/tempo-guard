@@ -168,17 +168,31 @@ backend/tests/         pytest suite (no data or network needed)
 ## Data
 
 Sourced from [openfootball](https://github.com/openfootball) — public domain,
-plain-text, git-native. Currently loaded:
+plain-text, git-native. **41 competitions across every continent**, 354
+league-seasons, ~112,000 completed matches, 4.3 MB of parquet committed to the
+repo.
 
-| Competition | Results 25/26 | Fixtures 26/27 |
-|---|---|---|
-| Premier League, La Liga, Serie A | 380 each | 380 each |
-| Bundesliga, Ligue 1, Eredivisie, Primeira | ~300 each | ~306 each |
-| Championship | 557 | 552 |
-| 2. Bundesliga, Segunda, Serie B, Ligue 2 | partial | — |
-| Champions League | 189 | — |
+| Region | Competitions |
+|---|---|
+| Europe | Premier League, Championship, Bundesliga 1–2, La Liga 1–2, Serie A–B, Ligue 1–2, Eredivisie, Primeira, Scottish, Turkish, Greek, Swiss, Danish, Polish, Czech, Russian, Ukrainian, Croatian, Romanian, Norwegian, Swedish |
+| South America | Brasileirão A–B, Argentine Primera, Colombian, Ecuadorian, Paraguayan, Copa Libertadores |
+| North America | MLS, Liga MX |
+| Asia | J1 League, Chinese Super League |
+| Africa | Egypt, Morocco, Algeria, Nigeria, South Africa |
+| Cups | Champions League, Copa Libertadores |
 
-Add a competition by adding an entry to `backend/app/data/sources.py`.
+```
+athena data load              # recent seasons
+athena data load --history    # every season upstream publishes (27 for England)
+```
+
+History depth matters more than it looks: resolving a 2% edge needs several
+thousand matches per league, which one season cannot provide. `--history` is the
+difference between ~300 and ~10,000 matches for a major league.
+
+Add a competition by adding an entry to `backend/app/data/sources.py`. Season
+keys follow the competition's own convention — European winter leagues use
+`2025-26`, calendar-year leagues (Brazil, MLS, Japan, the Nordics) use `2025`.
 
 ### What the data does and does not carry
 

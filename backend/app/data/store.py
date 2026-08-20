@@ -57,6 +57,7 @@ def save(league_code: str, season: str, df: pd.DataFrame) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(path, index=False)
     _CACHE.setdefault(league_code, {})[season] = df
+    _VIEW_CACHE.clear()   # stored data changed; cached views are stale
     return path
 
 
@@ -93,6 +94,13 @@ def load(league_code: str, season: Optional[str] = None) -> pd.DataFrame:
     return out
 
 
+# Concatenated per-league views, cached so repeated calls return the *same*
+# object. A replay asks for a league's results once per match; rebuilding and
+# re-concatenating that frame each time is pure waste, and downstream feature
+# code keys its own index cache on frame identity.
+_VIEW_CACHE: dict[tuple[str, Optional[str], str], pd.DataFrame] = {}
+
+
 def load_results(league_code: str, season: Optional[str] = None) -> pd.DataFrame:
     """
     Load only genuine played results.
@@ -100,11 +108,21 @@ def load_results(league_code: str, season: Optional[str] = None) -> pd.DataFrame
     Excludes upcoming fixtures and administrative outcomes (cancelled, awarded,
     abandoned, postponed) — forfeit scorelines are not football results and
     would distort goal distributions used for calibration.
+
+    The returned frame is cached and shared; treat it as read-only.
     """
+    key = (league_code, season, "result")
+    hit = _VIEW_CACHE.get(key)
+    if hit is not None:
+        return hit
+
     df = load(league_code, season)
     if df.empty or "status" not in df.columns:
-        return df
-    return df[df["status"] == "result"].reset_index(drop=True)
+        out = df
+    else:
+        out = df[df["status"] == "result"].reset_index(drop=True)
+    _VIEW_CACHE[key] = out
+    return out
 
 
 def load_fixtures(league_code: str, season: Optional[str] = None) -> pd.DataFrame:
@@ -117,6 +135,7 @@ def load_fixtures(league_code: str, season: Optional[str] = None) -> pd.DataFram
 
 def clear_cache() -> None:
     _CACHE.clear()
+    _VIEW_CACHE.clear()
 
 
 def stats() -> dict:
