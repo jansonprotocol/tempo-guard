@@ -65,7 +65,13 @@ def _print_prediction(pred, header: str, actual: tuple[int, int] | None = None) 
     from app.engine.rationale import confidence_band
 
     tp = pred.translated_play
-    print(f"  TIP           {tp.market}   ({market_description(tp.market)})")
+    print(f"  SAFE          {tp.market}   ({market_description(tp.market)})")
+
+    L = getattr(pred, "lanes", None)
+    if L is not None and L.sharp is not None:
+        print(f"  SHARP         {L.sharp.market}   (needs {L.sharp_tier})")
+    elif L is not None:
+        print(f"  SHARP         —   (fixture too close to this league's norm)")
     print(f"  Lean          {pred.corridor.lean}   "
           f"corridor {pred.corridor.low}–{pred.corridor.high} goals")
     # Two distinct things, kept apart deliberately:
@@ -84,12 +90,14 @@ def _print_prediction(pred, header: str, actual: tuple[int, int] | None = None) 
 
     if actual is not None:
         hg, ag = actual
-        graded = evaluate_market(tp.market, hg, ag)
-        won = hit_weight(graded) >= 1.0
+        won = hit_weight(evaluate_market(tp.market, hg, ag)) >= 1.0
         print()
         print(_rule())
         print(f"  ACTUAL        {hg}-{ag}  ({hg + ag} goals)")
-        print(f"  RESULT        {'✓ HIT' if won else '✗ MISS'}")
+        print(f"  SAFE          {'✓ HIT' if won else '✗ MISS'}")
+        if L is not None and L.sharp is not None:
+            swon = hit_weight(evaluate_market(L.sharp.market, hg, ag)) >= 1.0
+            print(f"  SHARP         {'✓ HIT' if swon else '✗ MISS'}")
     print(_rule("═"))
     print()
 
@@ -311,6 +319,10 @@ def cmd_tips(args) -> int:
                 continue
             if pred.confidence_score < args.min_confidence:
                 continue
+            if getattr(args, "sharp_only", False):
+                L = getattr(pred, "lanes", None)
+                if not (L and L.sharp):
+                    continue
             rows.append((mdate, code, pred))
 
     if not rows:
@@ -322,11 +334,13 @@ def cmd_tips(args) -> int:
     print()
     print(f"  TIPS — next {args.days} days ({len(rows)} fixtures)")
     print(_rule())
-    print(f"  {'DATE':11s} {'LEAGUE':8s} {'FIXTURE':44s} {'TIP':7s} {'CONF':>5s}")
+    print(f"  {'DATE':11s} {'LEAGUE':8s} {'FIXTURE':38s} {'SAFE':7s} {'SHARP':7s} {'CONF':>5s}")
     print(_rule())
     for mdate, code, pred in rows:
-        print(f"  {mdate.isoformat():11s} {code:8s} {pred.fixture[:44]:44s} "
-              f"{pred.translated_play.market:7s} {pred.confidence_score:5.2f}")
+        L = getattr(pred, "lanes", None)
+        sharp = L.sharp.market if (L and L.sharp) else "—"
+        print(f"  {mdate.isoformat():11s} {code:8s} {pred.fixture[:38]:38s} "
+              f"{pred.translated_play.market:7s} {sharp:7s} {pred.confidence_score:5.2f}")
     print(_rule())
 
     if args.explain:
@@ -403,6 +417,8 @@ def main(argv=None) -> int:
     t.add_argument("--min-confidence", type=float, default=0.0,
                    dest="min_confidence", help="hide tips below this confidence")
     t.add_argument("--explain", action="store_true", help="show reasoning per tip")
+    t.add_argument("--sharp-only", action="store_true", dest="sharp_only",
+                   help="only fixtures where a sharper play is on offer")
     t.set_defaults(func=cmd_tips)
 
     args = p.parse_args(argv)

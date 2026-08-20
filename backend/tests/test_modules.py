@@ -200,3 +200,29 @@ def test_sharp_lane_uses_expectation_spread_not_result_spread():
     assert correct.lanes.league_z > wrong.lanes.league_z
     assert correct.lanes.sharp is not None
     assert wrong.lanes.sharp is None
+
+
+def test_sharp_lane_fires_both_directions():
+    """
+    The sharp lane must be able to go Under as well as Over. It once could not:
+    the trigger used the wrong standard deviation, so no Serie A or Argentine
+    fixture ever reached the Under threshold and the lane was Over-only.
+    """
+    from app.engine.pipeline import evaluate_athena
+    from app.engine.types import MatchRequest
+
+    def req(tempo, p2p):
+        return MatchRequest(
+            league_code="X", home_team="A", away_team="B",
+            match_date=date(2026, 3, 5), tempo_index=tempo, p_two_plus=p2p,
+            support_idx_over_delta=0.0,
+        )
+
+    # Serie A-like norm: 2.38 expected goals, spread 0.53
+    high = evaluate_athena(req(0.60, 0.85), 0.5, 0.5, 0.5,
+                           norm_mean=2.38, norm_std=0.53)
+    low = evaluate_athena(req(0.20, 0.55), 0.5, 0.5, 0.5,
+                          norm_mean=2.38, norm_std=0.53)
+
+    assert high.lanes.sharp is not None and high.lanes.sharp.market.startswith("O")
+    assert low.lanes.sharp is not None and low.lanes.sharp.market.startswith("U")
