@@ -115,6 +115,7 @@ def _requests_for(
     before: Optional[date],
     season: Optional[str],
     min_matches: int,
+    limit: Optional[int] = None,
 ) -> list[tuple[MatchRequest, int]]:
     """
     Build (request, total_goals) pairs for every replayable match.
@@ -129,6 +130,12 @@ def _requests_for(
 
     if before is not None:
         df = df[df["date"].dt.date < before]
+
+    # Trim before building features, not after. Slicing the result instead
+    # meant computing features for a league's entire history and discarding
+    # all but the tail — for England that is 9,880 fixtures to keep 400.
+    if limit:
+        df = df.tail(limit)
 
     pairs: list[tuple[MatchRequest, tuple[int, int]]] = []
     for _, row in df.iterrows():

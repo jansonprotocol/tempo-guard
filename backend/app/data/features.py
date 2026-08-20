@@ -234,22 +234,56 @@ def _frame_index(df: pd.DataFrame) -> dict:
 
     # team_norm -> positional rows where that team played, home or away
     by_team: dict[str, "pd.Index"] = {}
+    by_home: dict[str, "pd.Index"] = {}
+    by_away: dict[str, "pd.Index"] = {}
     for norm_name in set(home_norm) | set(away_norm):
-        by_team[norm_name] = df.index[(home_norm == norm_name) | (away_norm == norm_name)]
+        at_home = home_norm == norm_name
+        at_away = away_norm == norm_name
+        by_team[norm_name] = df.index[at_home | at_away]
+        by_home[norm_name] = df.index[at_home]
+        by_away[norm_name] = df.index[at_away]
+
+    # Sorted dates plus a running goal total, so the as-of league mean is a
+    # binary search rather than a full re-filter of the frame per fixture.
+    order = df["date"].values.argsort()
+    dates_sorted = df["date"].values[order]
+    goals = (df["hg"].fillna(0) + df["ag"].fillna(0)).values[order]
+    cum_goals = goals.cumsum()
 
     index = {
         "n_rows": len(df),
+        "dates_sorted": dates_sorted,
+        "cum_goals": cum_goals,
         "frame": df,             # keeps id(df) alive and unique — see above
         "home_norm": home_norm,
         "away_norm": away_norm,
         "names": names,
         "by_team": by_team,
+        "by_home": by_home,
+        "by_away": by_away,
         "resolved": {},          # raw team name -> matched dataset name
     }
     if len(_INDEX_CACHE) >= _MAX_CACHED_FRAMES:
         _INDEX_CACHE.clear()
     _INDEX_CACHE[id(df)] = index
     return index
+
+
+def _league_mean_asof(df: pd.DataFrame, cutoff: datetime) -> tuple[float, int]:
+    """
+    Mean total goals over matches strictly before `cutoff`, and how many there
+    were, in O(log n).
+
+    This used to be a full boolean filter of the frame for every fixture — fine
+    on a single season of 380 rows, quadratic across a league's whole history.
+    """
+    import numpy as np
+
+    idx = _frame_index(df)
+    k = int(np.searchsorted(idx["dates_sorted"], np.datetime64(cutoff), side="left"))
+    if k <= 0:
+        return 0.0, 0
+    return float(idx["cum_goals"][k - 1] / k), k
 
 
 def _resolve_in_frame(df: pd.DataFrame, team: str) -> Optional[str]:
@@ -287,8 +321,12 @@ def _find_venue_rows(
         return pd.DataFrame()
 
     idx = _frame_index(df)
-    col_norm = idx["home_norm"] if venue == "home" else idx["away_norm"]
-    rows = df[(col_norm == _norm(matched)) & (df["date"] < cutoff)]
+    # Was a full-frame boolean comparison, run twice per fixture, so its cost
+    # scaled with the league's entire history rather than the team's own
+    # matches. Indexed like by_team for the same reason.
+    key = "by_home" if venue == "home" else "by_away"
+    rows = df.loc[idx[key].get(_norm(matched), df.index[:0])]
+    rows = rows[rows["date"] < cutoff]
     return rows.sort_values("date", ascending=False).head(ROLLING_MATCHES)
 
 
@@ -320,13 +358,12 @@ def _sot_per_game(rows: pd.DataFrame, team_norm: str) -> Optional[float]:
     if rows.empty or "hst" not in rows.columns or "ast" not in rows.columns:
         return None
 
-    total, counted = 0.0, 0
-    for _, r in rows.iterrows():
-        is_home = _norm(str(r["home"])) == team_norm
-        val = r["hst"] if is_home else r["ast"]
-        if pd.notnull(val):
-            total += float(val)
-            counted += 1
+    import numpy as np
+    is_home = rows["home"].astype(str).map(_norm).values == team_norm
+    val = np.where(is_home, rows["hst"].values, rows["ast"].values).astype(float)
+    ok = ~np.isnan(val)
+    total = float(val[ok].sum())
+    counted = int(ok.sum())
 
     # Require most of the window to have data; a couple of stray rows would
     # make the rate noisier than the estimate it replaces.
@@ -336,12 +373,9 @@ def _sot_per_game(rows: pd.DataFrame, team_norm: str) -> Optional[float]:
 
 
 def _match_totals(rows: pd.DataFrame) -> List[int]:
-    totals = []
-    for _, r in rows.iterrows():
-        hg = int(r["hg"]) if pd.notnull(r["hg"]) else 0
-        ag = int(r["ag"]) if pd.notnull(r["ag"]) else 0
-        totals.append(hg + ag)
-    return totals
+    if rows.empty:
+        return []
+    return (rows["hg"].fillna(0) + rows["ag"].fillna(0)).astype(int).tolist()
 
 
 def _compute_deg_pressure(
@@ -484,6 +518,7 @@ def _compute_features(
     hname: str, aname: str,
     full_df: pd.DataFrame,
     league_code: Optional[str] = None,
+    league_mu: Optional[float] = None,
     H_home: Optional[pd.DataFrame] = None,
     A_away: Optional[pd.DataFrame] = None,
 ) -> Dict[str, float]:
@@ -517,7 +552,8 @@ def _compute_features(
 
     if league_code and league_code in INTL_GOAL_AVERAGES:
         league_mu = INTL_GOAL_AVERAGES[league_code]
-    else:
+    elif league_mu is None:
+        # Only reached by the cup fallback, which assembles frames by hand.
         league_mu = float(
             (full_df["hg"].fillna(0) + full_df["ag"].fillna(0)).mean() or 2.5
         )
@@ -620,8 +656,8 @@ def asof_features(
         return {}
 
     cutoff = _cutoff(match_date)
-    work = df[df["date"] < cutoff]
-    if work.empty:
+    league_mu_asof, n_before = _league_mean_asof(df, cutoff)
+    if n_before == 0:
         return {}
 
     H = _find_team_rows(df, home_team, cutoff)
@@ -630,8 +666,9 @@ def asof_features(
         return {}
 
     return _compute_features(
-        H, A, home_team, away_team, work,
+        H, A, home_team, away_team, df,
         league_code=league_code,
+        league_mu=league_mu_asof,
         H_home=_find_venue_rows(df, home_team, cutoff, "home"),
         A_away=_find_venue_rows(df, away_team, cutoff, "away"),
     )

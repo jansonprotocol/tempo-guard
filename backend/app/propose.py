@@ -132,9 +132,7 @@ def propose_league(
     say = progress or (lambda _m: None)
     cfg = config.get(league_code)
 
-    pairs = _requests_for(league_code, None, season, min_matches)
-    if limit:
-        pairs = pairs[-limit:]
+    pairs = _requests_for(league_code, None, season, min_matches, limit=limit)
     if len(pairs) < 60:
         return None
 
