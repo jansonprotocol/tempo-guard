@@ -66,6 +66,30 @@ def sync_repos(repos: Optional[Iterable[str]] = None, quiet: bool = False) -> di
     return results
 
 
+def _load_espn(src: "sources.LeagueSource", season: str):
+    """
+    Fetch one season from ESPN's scoreboard.
+
+    Like the football-data path this needs network at load time rather than
+    reading a local clone. ESPN seasons are calendar years, so the season label
+    is the year; a league whose season straddles two years would need mapping
+    here before being pointed at this provider.
+    """
+    from app.data import espn
+
+    if not src.espn_code:
+        return None
+    try:
+        year = int(str(season)[:4])
+    except ValueError:
+        return None
+    df = espn.fetch_season(src.espn_code, year, src.code)
+    if df is None or df.empty:
+        return None
+    # The store expects a status vocabulary; ESPN only yields finished matches.
+    return df.assign(status="result")
+
+
 def _load_footballdata(src: "sources.LeagueSource", season: str):
     """
     Fetch one season from football-data.co.uk.
@@ -246,7 +270,13 @@ def load_league(
     """
     src = sources.get(league_code)
 
-    if src.provider == "footballdata":
+    if src.provider == "espn":
+        df = _load_espn(src, season)
+        if df is None or df.empty:
+            if not quiet and not skip_quiet:
+                print(f"  [load] {league_code} {season}: not available upstream — skipped")
+            return None
+    elif src.provider == "footballdata":
         df = _load_footballdata(src, season)
         if df is None or df.empty:
             if not quiet and not skip_quiet:

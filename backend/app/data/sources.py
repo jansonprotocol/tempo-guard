@@ -40,11 +40,17 @@ class LeagueSource:
     # "footballdata"  football-data.co.uk: same-day results and measured
     #                 shot counts. Only football columns are ingested —
     #                 see app.data.footballdata for why odds are excluded.
+    # "espn"          ESPN's public scoreboard: the fallback for competitions
+    #                 the other two drop. Whole season per request, shots on
+    #                 target back to 2019. A league sourced here is sourced
+    #                 here ONLY — see app.data.espn on why these are never
+    #                 merged with openfootball naming.
     provider: str = "openfootball"
     fd_div: Optional[str] = None       # main-league division code, e.g. "E0"
     fd_country: Optional[str] = None   # extra-league country code, e.g. "CHN"
     fd_league: Optional[str] = None    # competition within an extra file, since
                                        # some countries publish two in one file
+    espn_code: Optional[str] = None    # ESPN competition slug, e.g. "bra.2"
 
     def season_path(self, season: str) -> str:
         return self.path.format(season=season)
@@ -210,9 +216,15 @@ LEAGUES: dict[str, LeagueSource] = {
         calendar_year=True,
         fd_country="BRA", fd_league="Serie A"
     ),
+    # Sourced from ESPN, not openfootball. openfootball published the 2025
+    # fixture list and stopped filling in results in May, so its file trails
+    # off into unplayed matches and there is no 2026 file at all;
+    # football-data.co.uk covers Brazil but only Serie A. ESPN carries the
+    # competition complete from 2019 WITH shots on target, which openfootball
+    # never provided here.
     "BRA-SB": LeagueSource(
-        "BRA-SB", "Brazilian Série B", "south-america", "brazil/{season}_br2.txt",
-        calendar_year=True,
+        "BRA-SB", "Brazilian Série B", "", "",
+        calendar_year=True, provider="espn", espn_code="bra.2",
     ),
     "ARG-PD": LeagueSource(
         "ARG-PD", "Argentine Primera División", "south-america",
