@@ -435,3 +435,76 @@ def test_shot_blend_is_inert_without_shot_data():
     rows = pd.DataFrame({"home": ["A"] * 6, "away": ["B"] * 6})
     assert features._blended_scoring_rate(rows, "a", 1.4, None) == 1.4
     assert features._blended_scoring_rate(rows, "a", 1.4, 0.25) == 1.4
+
+
+# ── League aggregates are point-in-time and era-local ─────────────────────────
+
+def test_league_conversion_does_not_read_the_future():
+    """
+    Regression guard. `_compute_features` passes the whole unfiltered league
+    frame, and the conversion rate was computed over all of it — every stored
+    season, including seasons after the fixture being predicted — then cached
+    under the league alone with no date in the key.
+
+    A 2012 fixture must not see a rate shaped by 2024 football.
+    """
+    from datetime import datetime
+    from app.data import features, store
+
+    df = store.load_results("ENG-PL")
+    if df.empty or "hst" not in df.columns:
+        import pytest
+        pytest.skip("ENG-PL shot data not loaded")
+
+    features._CONVERSION_CACHE.clear()
+    old = features._league_conversion(df, "ENG-PL", datetime(2012, 6, 1))
+    features._CONVERSION_CACHE.clear()
+    new = features._league_conversion(df, "ENG-PL", datetime(2026, 6, 1))
+
+    assert old is not None and new is not None
+    # The source changed how it counts shots on target around 2015; the two
+    # eras must therefore land on visibly different rates rather than one
+    # pooled compromise that is wrong for both.
+    assert new - old > 0.05, (old, new)
+
+
+def test_league_conversion_is_order_independent():
+    """
+    The cache key carries the year, and the window is anchored to the start of
+    that year rather than to the cutoff itself — so the answer cannot depend on
+    which fixture happened to be computed first.
+    """
+    from datetime import datetime
+    from app.data import features, store
+
+    df = store.load_results("ENG-PL")
+    if df.empty or "hst" not in df.columns:
+        import pytest
+        pytest.skip("ENG-PL shot data not loaded")
+
+    features._CONVERSION_CACHE.clear()
+    jan = features._league_conversion(df, "ENG-PL", datetime(2024, 1, 5))
+    dec = features._league_conversion(df, "ENG-PL", datetime(2024, 12, 20))
+    features._CONVERSION_CACHE.clear()
+    dec_first = features._league_conversion(df, "ENG-PL", datetime(2024, 12, 20))
+
+    assert jan == dec == dec_first
+
+
+def test_league_mean_is_windowed_not_cumulative():
+    """
+    The mean must describe the league now, not its entire stored history.
+    England has ~9,800 matches back to 1993; a 2026 fixture should be judged
+    against recent seasons, and the sample size proves the window is applied.
+    """
+    from datetime import datetime
+    from app.data import features, store
+
+    df = store.load_results("ENG-PL")
+    if len(df) < 2000:
+        import pytest
+        pytest.skip("ENG-PL history not loaded")
+
+    mean, n = features._league_mean_asof(df, datetime(2026, 6, 1))
+    assert 0 < n < 2000, f"window not applied: n={n} of {len(df)}"
+    assert 2.0 < mean < 4.0

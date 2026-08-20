@@ -86,6 +86,33 @@ SHOT_BLEND = 0.60
 TEMPO_BASE = 1.5
 TEMPO_SPAN = 3.0
 
+# ── Recency window for league-wide aggregates ─────────────────────────────────
+# League means and shot-conversion rates describe "what this league is like
+# now", so they are computed over a trailing window rather than all of stored
+# history. Two separate reasons, both measured:
+#
+# DRIFT. Scoring levels move. As of 2026 the all-time mean sits 0.215 goals
+# above Serie A's recent level and 0.223 below Ligue 1's. The sharp lane
+# standardises fixtures against this mean, so an error here shifts every
+# z-score and can fire the lane the wrong way.
+#
+# UNIT BREAKS. Worse than drift, the source's shot-on-target definition
+# changed. England records 12.43 SoT per game in 2010-2015 and 8.64 in
+# 2015-2023 — teams did not stop shooting by 30%, the counting rule changed.
+# Pooling across that break returned a conversion of 0.257 for England when
+# the modern value is ~0.318, so the shot blend was fed a constant roughly 20%
+# too low on every recent fixture. A trailing window sits inside one regime and
+# sidesteps the break without needing to know where it is.
+#
+# Three years is long enough for a stable rate and short enough to stay within
+# a single recording convention.
+RECENT_WINDOW_DAYS = 365 * 3
+
+# Below this many matches the window is too thin to describe a league, and the
+# aggregate falls back to all history before the cutoff. Thin-but-real beats
+# precise-but-empty, and the fallback is still strictly as-of.
+MIN_LEAGUE_SAMPLE = 150
+
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
 # Historical goals/game baselines for competitions whose own history is too
@@ -271,19 +298,34 @@ def _frame_index(df: pd.DataFrame) -> dict:
 
 def _league_mean_asof(df: pd.DataFrame, cutoff: datetime) -> tuple[float, int]:
     """
-    Mean total goals over matches strictly before `cutoff`, and how many there
-    were, in O(log n).
+    Mean total goals over the RECENT_WINDOW_DAYS before `cutoff`, and how many
+    matches that was, in O(log n).
 
-    This used to be a full boolean filter of the frame for every fixture — fine
-    on a single season of 380 rows, quadratic across a league's whole history.
+    Windowed rather than cumulative. Averaging a league's entire stored history
+    answers "what has this league ever been like", when what every caller
+    actually wants is "what is it like now" — and for England that difference
+    is 9,800 matches back to 1993 versus the current level.
+
+    Falls back to all history before the cutoff when the window is too thin to
+    mean anything, which mostly affects a league's first stored seasons.
     """
     import numpy as np
 
     idx = _frame_index(df)
-    k = int(np.searchsorted(idx["dates_sorted"], np.datetime64(cutoff), side="left"))
-    if k <= 0:
+    ds, cg = idx["dates_sorted"], idx["cum_goals"]
+
+    hi = int(np.searchsorted(ds, np.datetime64(cutoff), side="left"))
+    if hi <= 0:
         return 0.0, 0
-    return float(idx["cum_goals"][k - 1] / k), k
+
+    start = cutoff - timedelta(days=RECENT_WINDOW_DAYS)
+    lo = int(np.searchsorted(ds, np.datetime64(start), side="left"))
+    n = hi - lo
+    if n >= MIN_LEAGUE_SAMPLE:
+        total = float(cg[hi - 1] - (cg[lo - 1] if lo > 0 else 0.0))
+        return total / n, n
+
+    return float(cg[hi - 1] / hi), hi
 
 
 def _resolve_in_frame(df: pd.DataFrame, team: str) -> Optional[str]:
@@ -412,36 +454,63 @@ def _compute_team_det(rows: pd.DataFrame) -> float:
 
 # Goals per shot on target, keyed by league. A whole-league aggregate has no
 # business being recomputed per fixture.
-_CONVERSION_CACHE: dict[str, Optional[float]] = {}
+# Keyed by (league_code, year): the rate is a windowed, point-in-time value,
+# so a key without a date would serve one season's rate to every other.
+_CONVERSION_CACHE: dict[tuple, Optional[float]] = {}
 
 
-def _league_conversion(df: pd.DataFrame, league_code: Optional[str] = None) -> Optional[float]:
+def _league_conversion(
+    df: pd.DataFrame,
+    league_code: Optional[str] = None,
+    cutoff: Optional[datetime] = None,
+) -> Optional[float]:
     """
-    Goals per shot on target for a league, or None when shots are unavailable.
+    Goals per shot on target for a league, over the window ending at `cutoff`,
+    or None when shots are unavailable or too sparse to trust.
 
-    Needed because conversion is not universal: England converts about 0.257 of
-    its shots on target, Germany 0.320. Using one global rate would make German
+    Needed because conversion is not universal: England converts about 0.318 of
+    its shots on target, Germany 0.335. Using one global rate would make German
     attacks look weak and English ones strong purely as an artefact.
 
-    Cached on the frame index, since it is a whole-league aggregate.
+    THIS USED TO READ THE FUTURE. `_compute_features` passes the whole
+    unfiltered league frame, so the rate was computed over every stored season
+    — including seasons after the fixture being predicted — and cached under
+    the league alone with no date in the key. Both halves are fixed here: the
+    window ends at the cutoff, and the cache key carries the year.
+
+    It also used to pool across the source's 2015 change in how shots on target
+    are counted, which alone put England's rate ~20% below its true modern
+    value. See RECENT_WINDOW_DAYS.
+
+    The window is anchored to the start of the cutoff's year rather than to the
+    cutoff itself. That keeps the result identical for every fixture in a given
+    season regardless of the order they are computed in — an order-dependent
+    cache could otherwise serve a January fixture a rate derived from December.
     """
     if "hst" not in df.columns or "ast" not in df.columns:
         return None
 
-    # Keyed by league, not by frame. Keying it to the frame index looked
-    # harmless but was quadratic: asof_features passes a freshly date-filtered
-    # slice for every fixture, so the index missed every time and rebuilt the
-    # entire team-name map once per match.
-    if league_code is not None and league_code in _CONVERSION_CACHE:
-        return _CONVERSION_CACHE[league_code]
+    # Keyed by (league, year), not by frame. Keying it to the frame index
+    # looked harmless but was quadratic: asof_features passes a freshly
+    # date-filtered slice for every fixture, so the index missed every time and
+    # rebuilt the entire team-name map once per match.
+    year = cutoff.year if cutoff is not None else None
+    key = (league_code, year)
+    if league_code is not None and key in _CONVERSION_CACHE:
+        return _CONVERSION_CACHE[key]
 
     rows = df[df["hst"].notna() & df["ast"].notna()]
+    if cutoff is not None and len(rows):
+        end = datetime(year, 1, 1)
+        rows = rows[(rows["date"] < end)
+                    & (rows["date"] >= end - timedelta(days=RECENT_WINDOW_DAYS))]
+
     sot = float((rows["hst"] + rows["ast"]).sum()) if len(rows) else 0.0
     goals = float((rows["hg"] + rows["ag"]).sum()) if len(rows) else 0.0
     conv = (goals / sot) if sot > 50 else None
 
     if league_code is not None:
-        _CONVERSION_CACHE[league_code] = conv
+        _CONVERSION_CACHE[key] = conv
     return conv
 
 
@@ -521,6 +590,7 @@ def _compute_features(
     league_mu: Optional[float] = None,
     H_home: Optional[pd.DataFrame] = None,
     A_away: Optional[pd.DataFrame] = None,
+    cutoff: Optional[datetime] = None,
 ) -> Dict[str, float]:
     names = list(set(_team_names(H)) | set(_team_names(A)))
     h_norm = _norm(_match_team(hname, names) or hname)
@@ -538,7 +608,7 @@ def _compute_features(
 
     # Blend in what each side's shot volume implies it should be scoring.
     # Applied after the venue split so the two adjustments compose.
-    conversion = _league_conversion(full_df, league_code)
+    conversion = _league_conversion(full_df, league_code, cutoff)
     gfh = _blended_scoring_rate(H, h_norm, gfh, conversion)
     gfa = _blended_scoring_rate(A, a_norm, gfa, conversion)
     shots_blended = conversion is not None
@@ -671,6 +741,7 @@ def asof_features(
         league_mu=league_mu_asof,
         H_home=_find_venue_rows(df, home_team, cutoff, "home"),
         A_away=_find_venue_rows(df, away_team, cutoff, "away"),
+        cutoff=cutoff,
     )
 
 
