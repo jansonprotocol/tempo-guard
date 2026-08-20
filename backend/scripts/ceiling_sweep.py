@@ -44,7 +44,7 @@ from app.util.asian_lines import evaluate_market, hit_weight
 TIGHT = ["BRA-SB", "ARG-PD", "ITA-SB", "ARG-CLP", "GRE-SL"]
 NORMAL = ["ENG-PL", "GER-BL", "NED-ED", "ITA-SA", "TUR-SL", "BRA-SA"]
 LIMIT = 400
-CEILINGS = [1.00, 0.92, 0.90, 0.88, 0.86, 0.84]
+
 
 
 def won(m, t):
@@ -74,8 +74,8 @@ def build(codes):
     return out
 
 
-def score(group, ceiling):
-    market_select.MAX_WIN_PROB = ceiling
+def score(group, on):
+    market_select._PLAYABLE_ON = on
     hits = tot = 0
     mk, totals = [], []
     for _code, cfg, flags, pairs in group:
@@ -101,12 +101,11 @@ def main():
         if not group:
             continue
         print(f"\n{label} — {sum(len(p) for _, _, _, p in group)} fixtures")
-        print(f"  {'ceiling':>8} {'strike':>8} {'edge':>8}   mix")
+        print(f"  {'playable':>8} {'strike':>8} {'edge':>8}   mix")
         print("  " + "-" * 70)
-        for c in CEILINGS:
-            strike, edge, mk, tot = score(group, c)
-            mix = " ".join(f"{m}:{n * 100 // tot}%" for m, n in mk.most_common(4))
-            lab = "none" if c >= 1.0 else f"{c:.2f}"
+        for on, lab in ((False, "off"), (True, "on")):
+            strike, edge, mk, tot = score(group, on)
+            mix = " ".join(f"{m}:{n * 100 // tot}%" for m, n in mk.most_common(5))
             print(f"  {lab:>8} {strike:8.1%} {edge:+8.2%}   {mix}", flush=True)
 
 

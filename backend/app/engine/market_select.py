@@ -95,19 +95,63 @@ _MAX_TOTAL = 12
 # accuracy.
 MIN_WIN_PROB = 0.79
 
-# The other end of the same idea. A market modelled far above this is not a
-# forecast, it is an arithmetic fact about the league — in a competition where
-# 97% of matches finish under five goals, U4.25 wins nearly always and is priced
-# to match. Winning a 1.05 shot 92% of the time loses money while looking
-# excellent on a hit-rate report.
+# ── Playability: how far a line may sit from the league's own scoring ────────
+# A first attempt used a probability ceiling — refuse any market modelled above
+# some chance of landing — on the reasoning that a near-certainty cannot be
+# priced. Measured, it did the opposite of what was wanted. In a 2.2-goal league
+# "1+ goals" is a 92% event, so the ceiling excluded O1.0 first and pushed the
+# pick to U4.25: it removed the playable rung and forced the unplayable one, on
+# 39 of 120 Serie B fixtures.
 #
-# The floor refuses bets too risky to want; the ceiling refuses bets too certain
-# to price. Together they confine the selector to the band where a market is
-# both winnable and buyable, and it self-adjusts by league: at a Serie B
-# expectation of 2.2 goals U4.25 models at 0.928 and is excluded, dropping the
-# choice to U3.5 at 0.819, while in a high-scoring league it never approaches
-# the ceiling and nothing changes.
-MAX_WIN_PROB = 0.90
+# Probability does not separate them, because both are ~90% events. Line
+# position does. U4.25 in a league averaging 2.2 goals sits two goals above the
+# mean and pays nothing; the same line in a 3.2-goal league sits one goal above
+# and is a real bet. So the constraint is distance from the league's own
+# expectation, which self-adjusts instead of needing a list of "tight" leagues.
+#
+# Overs are capped on the other side for the same reason: O2.5 in a 2.2-goal
+# league is a lottery ticket, and the rung that is actually buyable there is
+# O1.0.
+# Set from the brief rather than swept: in a 2.2-goal league U3.5 is wanted and
+# U3.75/U4.25 are not, which puts the cut between 1.30 and 1.55 above mu. In a
+# 3.15-goal league the same rule leaves U4.25 available, where it is a real bet.
+UNDER_MAX_ABOVE = 1.35
+
+# Deliberately loose. Only the under side was reported as unplayable; this exists
+# so O1.0 is reachable in a tight league without pruning the Over rungs that
+# already work in ordinary ones.
+OVER_MAX_BELOW = 2.00
+
+# Lines and means are decimals, and 2.20 - 1.20 is 1.0000000000000002, which
+# silently excluded O1.0 at exactly the boundary.
+_EPS = 1e-9
+
+# Measurement switch only. Production always applies the rule.
+_PLAYABLE_ON = True
+
+
+def _line_of(market: str) -> float:
+    try:
+        return float(market[1:])
+    except ValueError:
+        return 0.0
+
+
+def playable(market: str, league_mu: float) -> bool:
+    """
+    Could this line be bought at a price worth taking, in this league?
+
+    Judged by where the line sits relative to what the league actually scores,
+    not by how likely it is to land. See the note above for why the two differ.
+    """
+    if not _PLAYABLE_ON:
+        return True
+    line = _line_of(market)
+    if market.startswith("U"):
+        return line <= league_mu + UNDER_MAX_ABOVE + _EPS
+    if market.startswith("O"):
+        return line >= league_mu - OVER_MAX_BELOW - _EPS
+    return True
 
 
 @lru_cache(maxsize=None)
@@ -175,7 +219,6 @@ def choose(
     league_mu: Optional[float],
     ladder: Sequence[str] = LADDER,
     min_win_prob: Optional[float] = None,
-    max_win_prob: Optional[float] = None,
 ) -> Optional[tuple[str, float, float]]:
     """
     Pick the market with the largest edge that still clears the probability
@@ -192,22 +235,18 @@ def choose(
     if min_win_prob is None:
         min_win_prob = MIN_WIN_PROB
 
-    if max_win_prob is None:
-        max_win_prob = MAX_WIN_PROB
-
     ranked = score_markets(mu, league_mu, ladder)
     for market, edge, here, _typical in ranked:
-        if min_win_prob <= here <= max_win_prob:
+        if here >= min_win_prob and playable(market, league_mu):
             return market, edge, here
 
-    # Nothing sits in the band. Which side it missed on decides the fallback.
-    above = [(m, e, h) for m, e, h, _ in ranked if h > max_win_prob]
-    if above:
-        # Everything is too certain to price — an extremely lopsided fixture.
-        # Take the least certain of them: closest to being a real bet.
-        return min(above, key=lambda r: r[2])
+    # Nothing both clears the floor and is buyable. Prefer buyable-but-risky
+    # over safe-but-unpriceable: a bet that cannot be bought is not a tip.
+    for market, edge, here, _typical in ranked:
+        if playable(market, league_mu):
+            return market, edge, here
 
-    # Everything is too risky. Take the safest available rather than the
+    # Take the safest available rather than the
     # highest-edge one, since at this point no line is comfortable.
     safest = max(ladder, key=lambda m: p_win(m, mu))
     return safest, 0.0, p_win(safest, mu)
