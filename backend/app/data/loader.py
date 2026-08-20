@@ -93,34 +93,45 @@ def _load_footballdata(src: "sources.LeagueSource", season: str):
 
 def _merge_live(base: pd.DataFrame, live: pd.DataFrame) -> pd.DataFrame:
     """
-    Combine a git-sourced season with a freshly fetched one.
+    Combine a git-sourced season with one fetched from football-data.
 
-    The two providers are complementary and neither alone is sufficient for the
-    current season: openfootball publishes the full fixture list months ahead
-    but lags weeks behind on results, while football-data.co.uk carries results
-    within hours but lists only matches already played. Overwriting one with the
-    other would lose either the schedule or the freshness.
+    The two providers are complementary and neither alone is sufficient for a
+    season in progress: openfootball publishes the full fixture list months
+    ahead but lags weeks behind on results, while football-data carries results
+    within hours but lists only matches already played.
 
-    So live rows win, and base rows survive only where the same fixture has not
-    yet appeared live. Matching is on canonicalised team names rather than the
-    raw strings, because the two sources spell clubs differently ("Arsenal FC"
-    versus "Arsenal"), and ignores the date, which occasionally differs by a day
-    between sources for the same match.
+    The merge deliberately does NOT try to pair rows by team name. The two
+    sources abbreviate differently — "Man United" against "Manchester United
+    FC", "Wolves" against "Wolverhampton Wanderers FC" — and the strict matcher
+    correctly refuses those, while loosening it enough to catch them would
+    reintroduce the wrong-club matching it exists to prevent. An earlier
+    name-keyed version silently doubled ENG-PL from 9,880 rows to 17,616.
+
+    Instead the split is by date, which needs no matching at all:
+
+      * every played match comes from live, which is authoritative for results
+        and carries the richer statistics
+      * base contributes only fixtures dated after live's last result — matches
+        that demonstrably have not been played yet
+
+    A consequence worth knowing: within a season, team naming then comes from a
+    single source, so the feature layer never has to reconcile two spellings.
     """
-    from app.data.features import _canonical
-
     if base is None or base.empty:
         return live
     if live is None or live.empty:
         return base
 
-    def key(df):
-        return (df["home"].astype(str).map(_canonical) + "|"
-                + df["away"].astype(str).map(_canonical))
+    live_results = live[live["status"] == "result"] if "status" in live else live
+    if live_results.empty:
+        # Nothing played yet upstream — the git schedule is all we have.
+        return base
 
-    seen = set(key(live))
-    keep = base[~key(base).isin(seen)]
-    merged = pd.concat([live, keep], ignore_index=True)
+    cutoff = live_results["date"].max()
+    future = base[(base["status"] == "fixture") & (base["date"] > cutoff)] \
+        if "status" in base else base[base["date"] > cutoff]
+
+    merged = pd.concat([live, future], ignore_index=True)
     return merged.sort_values("date").reset_index(drop=True)
 
 
@@ -161,6 +172,51 @@ def refresh_live(
             fixtures = int((merged["status"] == "fixture").sum())
             print(f"  [live] {code:8s} {target}  results={played:4d} fixtures={fixtures:4d}"
                   f"  latest={merged['date'].max():%Y-%m-%d}")
+
+    return out
+
+
+def enrich_from_footballdata(
+    league_codes: Optional[Iterable[str]] = None,
+    quiet: bool = False,
+) -> dict[str, int]:
+    """
+    Re-source stored seasons from football-data.co.uk where it covers them.
+
+    Same matches, richer record: openfootball publishes goals only, while
+    football-data carries measured shots, shots on target, corners, cards and
+    the referee for the same fixtures back to 2000. Wiring real shot counts in
+    replaces an estimate (sot_proj_total, currently derived from goals via a
+    fixed ratio) with a measurement.
+
+    Merged rather than overwritten, for the same reason `refresh_live` merges:
+    football-data lists only matches already played, so a straight overwrite
+    would delete the fixture schedule openfootball publishes months ahead.
+
+    Returns {league_code: matches now carrying shot data}.
+    """
+    codes = list(league_codes) if league_codes else [
+        c for c, s in sources.LEAGUES.items()
+        if s.fd_div and s.provider == "openfootball"
+    ]
+    out: dict[str, int] = {}
+
+    for code in codes:
+        src = sources.get(code)
+        enriched = 0
+        for season in store.available_seasons(code):
+            live = _load_footballdata(src, season)
+            if live is None or live.empty:
+                continue
+            base = store.load(code, season)
+            merged = _merge_live(base, live).assign(league_code=code, season=season)
+            store.save(code, season, merged)
+            if "hst" in merged.columns:
+                enriched += int(merged["hst"].notna().sum())
+        out[code] = enriched
+        if not quiet:
+            total = len(store.load_results(code))
+            print(f"  [enrich] {code:8s} {enriched:6d} of {total:6d} results now carry shots")
 
     return out
 

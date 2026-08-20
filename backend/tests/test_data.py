@@ -355,3 +355,51 @@ def test_domestic_fallback_follows_the_registry():
     # Cup competitions must not be searched for domestic form.
     for code in ["UCL", "UEL", "UECL"]:
         assert code not in fallback, code
+
+
+# ── Shots on target: measured vs estimated ────────────────────────────────────
+
+def test_sot_uses_measured_shots_when_available():
+    """
+    sot_proj_total was always derived from expected goals via a fixed ratio.
+    Where the source carries real shot counts it should be measured instead,
+    and say so, because the two are not interchangeable.
+    """
+    import pandas as pd
+    from app.data import features
+
+    rows = pd.DataFrame({
+        "home": ["A"] * 5,
+        "away": ["B"] * 5,
+        "hst": [6, 8, 4, 7, 5],
+        "ast": [3, 2, 4, 3, 3],
+    })
+    assert features._sot_per_game(rows, "a") == pytest.approx(6.0)
+    assert features._sot_per_game(rows, "b") == pytest.approx(3.0)
+
+
+def test_sot_falls_back_when_shots_absent():
+    """openfootball carries no shot counts; the estimate must still be produced."""
+    import pandas as pd
+    from app.data import features
+
+    rows = pd.DataFrame({"home": ["A"] * 5, "away": ["B"] * 5})
+    assert features._sot_per_game(rows, "a") is None
+
+    total, measured = features._projected_sot(rows, rows, "a", "b", mu_total=2.8)
+    assert measured is False
+    assert total == pytest.approx(2.8 * features.SOT_PER_GOAL, abs=0.01)
+
+
+def test_sot_requires_most_of_the_window():
+    """A couple of stray rows would be noisier than the estimate they replace."""
+    import pandas as pd
+    from app.data import features
+
+    rows = pd.DataFrame({
+        "home": ["A"] * 10,
+        "away": ["B"] * 10,
+        "hst": [6, 8] + [None] * 8,
+        "ast": [3, 2] + [None] * 8,
+    })
+    assert features._sot_per_game(rows, "a") is None

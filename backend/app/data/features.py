@@ -305,6 +305,32 @@ def _goals_per_game(rows: pd.DataFrame, team_norm: str, metric: str = "scored") 
     return total / len(rows)
 
 
+def _sot_per_game(rows: pd.DataFrame, team_norm: str) -> Optional[float]:
+    """
+    Measured shots on target per game for a team, or None when the source did
+    not carry shot counts for these matches.
+
+    A team's shots on target are the home column when it played at home and the
+    away column when it played away, so the columns cannot simply be averaged.
+    """
+    if rows.empty or "hst" not in rows.columns or "ast" not in rows.columns:
+        return None
+
+    total, counted = 0.0, 0
+    for _, r in rows.iterrows():
+        is_home = _norm(str(r["home"])) == team_norm
+        val = r["hst"] if is_home else r["ast"]
+        if pd.notnull(val):
+            total += float(val)
+            counted += 1
+
+    # Require most of the window to have data; a couple of stray rows would
+    # make the rate noisier than the estimate it replaces.
+    if counted < max(3, len(rows) // 2):
+        return None
+    return total / counted
+
+
 def _match_totals(rows: pd.DataFrame) -> List[int]:
     totals = []
     for _, r in rows.iterrows():
@@ -344,6 +370,30 @@ def _compute_team_det(rows: pd.DataFrame) -> float:
     mean_g = sum(totals) / len(totals)
     std = (sum((x - mean_g) ** 2 for x in totals) / len(totals)) ** 0.5
     return round(_clip(std / 2.5, 0.10, 0.80), 3)
+
+
+def _projected_sot(
+    H: pd.DataFrame, A: pd.DataFrame,
+    h_norm: str, a_norm: str,
+    mu_total: float,
+) -> tuple[float, bool]:
+    """
+    Projected shots on target for the fixture, and whether it was measured.
+
+    Prefers each side's actual recent shots-on-target rate. Falls back to
+    deriving the figure from expected goals via SOT_PER_GOAL when the source
+    carried no shot counts — which is the case for every openfootball-only
+    league, and for any season football-data does not cover.
+
+    Returns (total, measured).
+    """
+    h_sot = _sot_per_game(H, h_norm)
+    a_sot = _sot_per_game(A, a_norm)
+
+    if h_sot is not None and a_sot is not None:
+        return round(_clip(h_sot + a_sot, 2.0, 24.0), 2), True
+
+    return round(_clip(mu_total * SOT_PER_GOAL, 6.0, 16.0), 2), False
 
 
 def _compute_eps_stability(h_rows: pd.DataFrame, a_rows: pd.DataFrame) -> float:
@@ -391,6 +441,8 @@ def _compute_features(
     p1 = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
 
+    sot_total, sot_measured = _projected_sot(H, A, h_norm, a_norm, mu_total)
+
     if league_code and league_code in INTL_GOAL_AVERAGES:
         league_mu = INTL_GOAL_AVERAGES[league_code]
     else:
@@ -412,7 +464,11 @@ def _compute_features(
         # working range above it.
         "tempo_index":            round(_clip((mu_total - TEMPO_BASE) / TEMPO_SPAN,
                                               0.05, 0.95), 3),
-        "sot_proj_total":         round(_clip(mu_total * SOT_PER_GOAL, 6.0, 16.0), 2),
+        # Measured where the source carries shot counts, estimated otherwise.
+        # See _projected_sot — the two are on noticeably different scales, so
+        # which one is in play matters to the O2.5 gate that consumes it.
+        "sot_proj_total":         sot_total,
+        "sot_measured":           sot_measured,
         "support_idx_over_delta": round(_clip((mu_total - league_mu) * 0.12, -0.15, 0.15), 3),
         "deg_pressure":           _compute_deg_pressure(H, A, h_norm, a_norm),
         "home_det":               _compute_team_det(H),
