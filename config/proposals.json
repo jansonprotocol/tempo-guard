@@ -1,0 +1,388 @@
+{
+  "generated": "2026-08-20",
+  "leagues": {
+    "NED-ED": {
+      "league_code": "NED-ED",
+      "sample": 396,
+      "holdout_sample": 119,
+      "baseline": 0.8611,
+      "holdout_baseline": 0.8655,
+      "holdout_proposed": 0.8655,
+      "edits": [],
+      "gain": 0.0
+    },
+    "POR-PL": {
+      "league_code": "POR-PL",
+      "sample": 398,
+      "holdout_sample": 120,
+      "baseline": 0.794,
+      "holdout_baseline": 0.775,
+      "holdout_proposed": 0.7917,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.56,
+          "proposed": 0.4,
+          "holdout_gain": 0.0167,
+          "train_gain": 0.0036,
+          "note": "scales the tempo signal"
+        }
+      ],
+      "gain": 0.0167
+    },
+    "FRA-L2": {
+      "league_code": "FRA-L2",
+      "sample": 400,
+      "holdout_sample": 120,
+      "baseline": 0.79,
+      "holdout_baseline": 0.7417,
+      "holdout_proposed": 0.7833,
+      "edits": [
+        {
+          "field": "bias_shift",
+          "current": 0.0,
+          "proposed": -0.5,
+          "holdout_gain": 0.025,
+          "train_gain": 0.0143,
+          "note": "net over/under pressure"
+        },
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.45,
+          "holdout_gain": 0.0167,
+          "train_gain": 0.0179,
+          "note": "scales the tempo signal"
+        }
+      ],
+      "gain": 0.0416
+    },
+    "GRE-SL": {
+      "league_code": "GRE-SL",
+      "sample": 400,
+      "holdout_sample": 120,
+      "baseline": 0.7625,
+      "holdout_baseline": 0.7083,
+      "holdout_proposed": 0.7583,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.4,
+          "holdout_gain": 0.05,
+          "train_gain": 0.05,
+          "note": "scales the tempo signal"
+        }
+      ],
+      "gain": 0.05
+    },
+    "SUI-SL": {
+      "league_code": "SUI-SL",
+      "sample": 382,
+      "holdout_sample": 115,
+      "baseline": 0.7723,
+      "holdout_baseline": 0.8,
+      "holdout_proposed": 0.8,
+      "edits": [],
+      "gain": 0.0
+    },
+    "DEN-SL": {
+      "league_code": "DEN-SL",
+      "sample": 353,
+      "holdout_sample": 106,
+      "baseline": 0.7819,
+      "holdout_baseline": 0.7642,
+      "holdout_proposed": 0.7642,
+      "edits": [],
+      "gain": 0.0
+    },
+    "POL-EK": {
+      "league_code": "POL-EK",
+      "sample": 360,
+      "holdout_sample": 109,
+      "baseline": 0.7778,
+      "holdout_baseline": 0.7798,
+      "holdout_proposed": 0.8073,
+      "edits": [
+        {
+          "field": "bias_shift",
+          "current": 0.0,
+          "proposed": -0.5,
+          "holdout_gain": 0.0275,
+          "train_gain": 0.012,
+          "note": "net over/under pressure"
+        }
+      ],
+      "gain": 0.0275
+    },
+    "RUS-PL": {
+      "league_code": "RUS-PL",
+      "sample": 376,
+      "holdout_sample": 113,
+      "baseline": 0.7739,
+      "holdout_baseline": 0.7876,
+      "holdout_proposed": 0.8053,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.7,
+          "holdout_gain": 0.0088,
+          "train_gain": 0.0076,
+          "note": "scales the tempo signal"
+        },
+        {
+          "field": "bias_shift",
+          "current": 0.0,
+          "proposed": 0.4,
+          "holdout_gain": 0.0088,
+          "train_gain": 0.0114,
+          "note": "net over/under pressure"
+        }
+      ],
+      "gain": 0.0177
+    },
+    "CZE-FL": {
+      "league_code": "CZE-FL",
+      "sample": 400,
+      "holdout_sample": 120,
+      "baseline": 0.76,
+      "holdout_baseline": 0.775,
+      "holdout_proposed": 0.775,
+      "edits": [],
+      "gain": 0.0
+    },
+    "SWE-AL": {
+      "league_code": "SWE-AL",
+      "sample": 363,
+      "holdout_sample": 109,
+      "baseline": 0.7934,
+      "holdout_baseline": 0.7706,
+      "holdout_proposed": 0.7706,
+      "edits": [],
+      "gain": 0.0
+    },
+    "FIN-VL": {
+      "league_code": "FIN-VL",
+      "sample": 400,
+      "holdout_sample": 120,
+      "baseline": 0.7775,
+      "holdout_baseline": 0.75,
+      "holdout_proposed": 0.75,
+      "edits": [],
+      "gain": 0.0
+    },
+    "IRL-PD": {
+      "league_code": "IRL-PD",
+      "sample": 400,
+      "holdout_sample": 120,
+      "baseline": 0.7675,
+      "holdout_baseline": 0.7083,
+      "holdout_proposed": 0.7083,
+      "edits": [],
+      "gain": 0.0
+    },
+    "JPN-J1": {
+      "league_code": "JPN-J1",
+      "sample": 383,
+      "holdout_sample": 115,
+      "baseline": 0.765,
+      "holdout_baseline": 0.7826,
+      "holdout_proposed": 0.8435,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.4,
+          "holdout_gain": 0.0435,
+          "train_gain": 0.0485,
+          "note": "scales the tempo signal"
+        },
+        {
+          "field": "bias_shift",
+          "current": 0.0,
+          "proposed": -0.5,
+          "holdout_gain": 0.0174,
+          "train_gain": 0.0597,
+          "note": "net over/under pressure"
+        }
+      ],
+      "gain": 0.0609
+    },
+    "CHN-SL": {
+      "league_code": "CHN-SL",
+      "sample": 391,
+      "holdout_sample": 118,
+      "baseline": 0.8056,
+      "holdout_baseline": 0.7881,
+      "holdout_proposed": 0.7881,
+      "edits": [],
+      "gain": 0.0
+    },
+    "ENG-L1": {
+      "league_code": "ENG-L1",
+      "sample": 399,
+      "holdout_sample": 120,
+      "baseline": 0.7845,
+      "holdout_baseline": 0.8,
+      "holdout_proposed": 0.8,
+      "edits": [],
+      "gain": 0.0
+    },
+    "ENG-L2": {
+      "league_code": "ENG-L2",
+      "sample": 400,
+      "holdout_sample": 120,
+      "baseline": 0.7725,
+      "holdout_baseline": 0.7667,
+      "holdout_proposed": 0.7917,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.4,
+          "holdout_gain": 0.025,
+          "train_gain": 0.0429,
+          "note": "scales the tempo signal"
+        }
+      ],
+      "gain": 0.025
+    },
+    "SCO-L1": {
+      "league_code": "SCO-L1",
+      "sample": 393,
+      "holdout_sample": 118,
+      "baseline": 0.8142,
+      "holdout_baseline": 0.8305,
+      "holdout_proposed": 0.8305,
+      "edits": [],
+      "gain": 0.0
+    },
+    "SCO-L2": {
+      "league_code": "SCO-L2",
+      "sample": 396,
+      "holdout_sample": 119,
+      "baseline": 0.7879,
+      "holdout_baseline": 0.8067,
+      "holdout_proposed": 0.8067,
+      "edits": [],
+      "gain": 0.0
+    },
+    "ENG-NL": {
+      "league_code": "ENG-NL",
+      "sample": 396,
+      "holdout_sample": 119,
+      "baseline": 0.8182,
+      "holdout_baseline": 0.7815,
+      "holdout_proposed": 0.7815,
+      "edits": [],
+      "gain": 0.0
+    },
+    "TUR-SL": {
+      "league_code": "TUR-SL",
+      "sample": 398,
+      "holdout_sample": 120,
+      "baseline": 0.8417,
+      "holdout_baseline": 0.8583,
+      "holdout_proposed": 0.8583,
+      "edits": [],
+      "gain": 0.0
+    },
+    "BEL-PL": {
+      "league_code": "BEL-PL",
+      "sample": 394,
+      "holdout_sample": 119,
+      "baseline": 0.8198,
+      "holdout_baseline": 0.8403,
+      "holdout_proposed": 0.8403,
+      "edits": [],
+      "gain": 0.0
+    },
+    "SCO-CH": {
+      "league_code": "SCO-CH",
+      "sample": 398,
+      "holdout_sample": 120,
+      "baseline": 0.7739,
+      "holdout_baseline": 0.7583,
+      "holdout_proposed": 0.7833,
+      "edits": [
+        {
+          "field": "bias_shift",
+          "current": 0.0,
+          "proposed": -0.5,
+          "holdout_gain": 0.025,
+          "train_gain": 0.0216,
+          "note": "net over/under pressure"
+        }
+      ],
+      "gain": 0.025
+    },
+    "BRA-SB": {
+      "league_code": "BRA-SB",
+      "sample": 384,
+      "holdout_sample": 116,
+      "baseline": 0.8333,
+      "holdout_baseline": 0.8362,
+      "holdout_proposed": 0.8621,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.4,
+          "holdout_gain": 0.0259,
+          "train_gain": 0.0261,
+          "note": "scales the tempo signal"
+        }
+      ],
+      "gain": 0.0259
+    },
+    "COL-PA": {
+      "league_code": "COL-PA",
+      "sample": 396,
+      "holdout_sample": 119,
+      "baseline": 0.7955,
+      "holdout_baseline": 0.8151,
+      "holdout_proposed": 0.8487,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.4,
+          "holdout_gain": 0.0336,
+          "train_gain": 0.0433,
+          "note": "scales the tempo signal"
+        }
+      ],
+      "gain": 0.0336
+    },
+    "ARG-CLP": {
+      "league_code": "ARG-CLP",
+      "sample": 385,
+      "holdout_sample": 116,
+      "baseline": 0.8416,
+      "holdout_baseline": 0.7328,
+      "holdout_proposed": 0.75,
+      "edits": [
+        {
+          "field": "tempo_factor",
+          "current": 0.5,
+          "proposed": 0.4,
+          "holdout_gain": 0.0172,
+          "train_gain": 0.026,
+          "note": "scales the tempo signal"
+        }
+      ],
+      "gain": 0.0172
+    },
+    "MEX-LMX": {
+      "league_code": "MEX-LMX",
+      "sample": 366,
+      "holdout_sample": 110,
+      "baseline": 0.776,
+      "holdout_baseline": 0.7636,
+      "holdout_proposed": 0.7636,
+      "edits": [],
+      "gain": 0.0
+    }
+  }
+}
