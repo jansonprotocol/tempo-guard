@@ -127,27 +127,57 @@ typical fixture lands mid-range was worth **+2.8%** on its own and revived
 
 Raw hit rate is a misleading target, because bookmakers price close to the true
 probability. What matters is beating the **base rate of the line you bet** by
-more than the bookmaker's margin — roughly 5.3% relative, on any line.
+more than the bookmaker's margin.
 
 For scale: always betting U4.5 in Serie B scores 91.6% and still loses money,
 because U4.5 pays about 1.09 and needs 91.7% to break even. Meanwhile 58% on
 O2.5 is profitable.
 
-Current state after the prune, over ~3,000 replayed matches:
+### Does the engine have skill?
 
-```
-hit rate      80.4%   (was 77.7%)
-base rate     78.5%   of the same markets the engine chose
-edge          +1.9%   (was +1.2%)
-needed        +4.1%   to clear the margin
-```
+Measured over full available history, where samples are large enough for the
+confidence interval to be tighter than the effect:
 
-So the engine is measurably better than it was, and one league (ESP-LL, 84.7% vs
-83.7% needed) now clears the bar — but it is not yet profitable across the
-board. The remaining gap is an information problem, not a tuning problem: the
-best feature scores AUC 0.548 against a coin-flip 0.50, and a Dixon-Coles
-attack/defence model built on the same goals-only data does no better. Closing
-it needs xG, lineups, and odds — not more rules.
+| League | n | hit rate | base rate | edge | ±95% CI | real? |
+|---|---|---|---|---|---|---|
+| ENG-PL | 9,662 | 78.0% | 75.6% | **+2.4%** | 0.8% | yes |
+| ESP-LL | 5,179 | 81.0% | 77.2% | **+3.8%** | 1.1% | yes |
+| ITA-SA | 4,765 | 80.0% | 77.6% | **+2.4%** | 1.1% | yes |
+| GER-BL | 4,761 | 80.9% | 77.3% | **+3.6%** | 1.1% | yes |
+| FRA-L1 | 4,102 | 79.9% | 75.4% | **+4.5%** | 1.2% | yes |
+
+Yes. Every league beats its own base rate by more than its confidence interval.
+That is genuine signal, not a coin landing well.
+
+### Is that enough to be profitable?
+
+It depends entirely on the margin you are charged, and the answer sits right on
+the boundary:
+
+| League | at 2% margin | 3% | 4% | 5% |
+|---|---|---|---|---|
+| ENG-PL | +0.9% | +0.1% | −0.8% | −1.6% |
+| ESP-LL | +2.2% | +1.4% | +0.6% | −0.3% |
+| ITA-SA | +0.8% | +0.0% | −0.8% | −1.7% |
+| GER-BL | +2.0% | +1.2% | +0.4% | −0.5% |
+| FRA-L1 | +3.0% | +2.2% | +1.4% | +0.5% |
+
+Soft books charging 5% beat the engine almost everywhere. Sharp books running
+2–3% on major-league totals do not. The margin assumption is doing more work
+than any tuning decision in this repository.
+
+**This is modelled, not measured.** Both the base rate and the required margin
+are inferred from goal distributions rather than read from real prices. It is a
+reason to go and get odds data, not a result to bet on.
+
+### What deep history corrected
+
+Earlier single-season measurements put Portugal, China and Croatia above
+break-even and the Premier League far below. Re-measured on full history those
+rankings dissolve: ESP-LL moved from +0.1% to −0.2%, and the leagues that looked
+profitable had 150–600 matches each, where the confidence interval is ±4–8
+points. Selecting the best 5 of 39 leagues on a single season finds noise
+reliably. Nothing under a few thousand matches should be trusted per league.
 
 ## Layout
 
