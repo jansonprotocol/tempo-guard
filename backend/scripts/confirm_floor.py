@@ -109,17 +109,22 @@ def main() -> None:
         return hits / tot, b, mk, per, tot
 
     results = {}
-    print(f"  {'rule':16s} {'hit':>7} {'base':>7} {'EDGE':>7} {'95% CI on hit':>18}  top market")
-    print("  " + "-" * 76)
+    print(f"  {'rule':16s} {'hit':>7} {'EDGE':>7} {'>=80%':>7} {'>=85%':>7}  top market")
+    print("  " + "-" * 64)
     for label, prob, floor in (("flowchart", False, None),
                                ("floor 0.79", True, 0.79),
-                               ("floor 0.82", True, 0.82)):
+                               ("floor 0.82", True, 0.82),
+                               ("floor 0.85", True, 0.85),
+                               ("floor 0.88", True, 0.88),
+                               ("floor 0.91", True, 0.91)):
         hit, base, mk, per, tot = run(prob, floor)
         results[label] = (hit, base, per, tot)
         se = math.sqrt(hit * (1 - hit) / tot)
         top = mk.most_common(1)[0]
-        print(f"  {label:16s} {hit:7.2%} {base:7.2%} {hit - base:+7.2%} "
-              f"  {hit - 1.96 * se:6.2%}..{hit + 1.96 * se:6.2%}  "
+        o80 = sum(1 for c in per if per[c][0] >= 0.80)
+        o85 = sum(1 for c in per if per[c][0] >= 0.85)
+        print(f"  {label:16s} {hit:7.2%} {hit - base:+7.2%} "
+              f"{o80:3d}/{len(per):<3d} {o85:3d}/{len(per):<3d}  "
               f"{top[0]} {top[1] / tot:.0%}", flush=True)
 
     # Paired comparison: same matches, so the flip ledger is the sharper test.
