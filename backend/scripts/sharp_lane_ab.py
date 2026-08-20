@@ -51,7 +51,7 @@ LEAGUES = [
     "SCO-CH", "BRA-SA", "ARG-PD", "COL-PA", "MEX-LMX", "MLS",
     "JPN-J1", "CHN-SL",
 ]
-LIMIT = 500
+LIMIT = 400
 SHARP_FLOORS = [0.50, 0.55, 0.60, 0.65, 0.70]
 
 # A sharp play is only worth offering when it differs from the safe one and
