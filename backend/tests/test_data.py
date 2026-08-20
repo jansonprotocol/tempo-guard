@@ -300,3 +300,36 @@ def test_uefa_competitions_are_registered():
         assert src.repo == "champions-league", code
         assert src.season_path("2024-25") == f"2024-25/{filename}.txt"
         assert src.international is True, code
+
+
+# ── football-data.co.uk provider ──────────────────────────────────────────────
+
+def test_odds_columns_are_rejected():
+    """
+    The provider ingests a strict allowlist of football columns. This guard is
+    the backstop: if a bookmaker column ever reaches a stored frame, loading
+    must fail loudly rather than quietly letting market data into the engine.
+    """
+    import pandas as pd
+    from app.data import footballdata as fd
+
+    clean = pd.DataFrame({"date": [], "home": [], "away": [], "hg": [], "ast": []})
+    fd.assert_no_odds(clean)          # must not raise
+
+    for bad_col in ["B365H", "PSCH", "AvgC>2.5", "MaxH", "WHD"]:
+        with pytest.raises(ValueError):
+            fd.assert_no_odds(pd.DataFrame({"date": [], bad_col: []}))
+
+
+def test_footballdata_season_key():
+    from app.data import footballdata as fd
+    assert fd.season_key(2025) == "2526"
+    assert fd.season_key(1999) == "9900"
+
+
+def test_provider_is_recorded_on_sources():
+    """CHN-SL moved to football-data because openfootball's Asia data stops at 2025."""
+    from app.data import sources
+    assert sources.get("CHN-SL").provider == "footballdata"
+    assert sources.get("CHN-SL").fd_country == "CHN"
+    assert sources.get("ENG-PL").provider == "openfootball"

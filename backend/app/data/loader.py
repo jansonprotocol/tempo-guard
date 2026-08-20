@@ -66,6 +66,31 @@ def sync_repos(repos: Optional[Iterable[str]] = None, quiet: bool = False) -> di
     return results
 
 
+def _load_footballdata(src: "sources.LeagueSource", season: str):
+    """
+    Fetch one season from football-data.co.uk.
+
+    Requires network access at load time — unlike the openfootball path, which
+    reads a local clone. The odds guard runs before anything is returned, so a
+    bookmaker column can never reach the store.
+    """
+    from app.data import footballdata as fd
+
+    if src.fd_country:
+        df = fd.fetch_extra(src.fd_country, season=season)
+    elif src.fd_div:
+        # Main-league URLs key seasons as "2526" for 2025-26.
+        start = int(season.split("-")[0])
+        df = fd.fetch_main(src.fd_div, fd.season_key(start))
+    else:
+        return None
+
+    if df is not None and not df.empty:
+        fd.assert_no_odds(df)
+        df = df.drop(columns=[c for c in ("season_raw", "league_raw") if c in df.columns])
+    return df
+
+
 def source_file(league_code: str, season: str) -> Optional[Path]:
     """Resolve the on-disk .txt for a league-season, or None if absent."""
     src = sources.get(league_code)
@@ -83,13 +108,21 @@ def load_league(
     Parse one league-season into the store. Returns the DataFrame, or None when
     the upstream file does not exist (common for seasons a repo has not published).
     """
-    path = source_file(league_code, season)
-    if path is None:
-        if not quiet and not skip_quiet:
-            print(f"  [load] {league_code} {season}: not published upstream — skipped")
-        return None
+    src = sources.get(league_code)
 
-    df = parse_file(path)
+    if src.provider == "footballdata":
+        df = _load_footballdata(src, season)
+        if df is None or df.empty:
+            if not quiet and not skip_quiet:
+                print(f"  [load] {league_code} {season}: not available upstream — skipped")
+            return None
+    else:
+        path = source_file(league_code, season)
+        if path is None:
+            if not quiet and not skip_quiet:
+                print(f"  [load] {league_code} {season}: not published upstream — skipped")
+            return None
+        df = parse_file(path)
     if df.empty:
         if not quiet:
             print(f"  [load] {league_code} {season}: parsed 0 matches — skipped")

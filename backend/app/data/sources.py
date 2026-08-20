@@ -28,11 +28,21 @@ OPENFOOTBALL_ORG = "https://github.com/openfootball"
 class LeagueSource:
     code: str            # ATHENA league code, e.g. "ENG-PL"
     name: str            # human-readable name
-    repo: str            # openfootball repo name
+    repo: str            # openfootball repo name ("" for other providers)
     path: str            # season file template, "{season}" placeholder
     full_path: Optional[str] = None   # lineup-bearing variant, when published
     calendar_year: bool = False       # True for calendar-year seasons (BRA, MLS)
     international: bool = False       # cup/international competition
+
+    # ── Provider ──────────────────────────────────────────────────────
+    # "openfootball"  git repos: deep history, broad coverage, but the
+    #                 auto-update runs weekly and lags on live seasons.
+    # "footballdata"  football-data.co.uk: same-day results and measured
+    #                 shot counts. Only football columns are ingested —
+    #                 see app.data.footballdata for why odds are excluded.
+    provider: str = "openfootball"
+    fd_div: Optional[str] = None       # main-league division code, e.g. "E0"
+    fd_country: Optional[str] = None   # extra-league country code, e.g. "CHN"
 
     def season_path(self, season: str) -> str:
         return self.path.format(season=season)
@@ -208,9 +218,11 @@ LEAGUES: dict[str, LeagueSource] = {
         "JPN-J1", "Japanese J1 League", "world", "asia/japan/{season}_jp1.txt",
         calendar_year=True,
     ),
+    # Sourced from football-data.co.uk rather than openfootball: the latter's
+    # Asia coverage stops at 2025, so the current season was entirely missing.
     "CHN-SL": LeagueSource(
-        "CHN-SL", "Chinese Super League", "world", "asia/china/{season}_cn1.txt",
-        calendar_year=True,
+        "CHN-SL", "Chinese Super League", "", "",
+        calendar_year=True, provider="footballdata", fd_country="CHN",
     ),
 
     # ── Africa ────────────────────────────────────────────────────────────
