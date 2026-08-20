@@ -72,8 +72,18 @@ def _print_prediction(pred, header: str, actual: tuple[int, int] | None = None) 
         print(f"  SHARP         {L.sharp.market}   (needs {L.sharp_tier})")
     elif L is not None:
         print(f"  SHARP         —   (fixture too close to this league's norm)")
-    print(f"  Lean          {pred.corridor.lean}   "
-          f"corridor {pred.corridor.low}–{pred.corridor.high} goals")
+    # The corridor lean is the flowchart's raw read, and the played side comes
+    # from the market. Printing "Lean under" beside an O1.0 tip read as a
+    # contradiction; label the raw signal as such and show the side actually
+    # being played, noting the disagreement rather than hiding it.
+    side = "over" if pred.translated_play.market.upper().startswith("O") else "under"
+    if side == pred.corridor.lean:
+        print(f"  Lean          {side}   "
+              f"corridor {pred.corridor.low}–{pred.corridor.high} goals")
+    else:
+        print(f"  Lean          {side}   "
+              f"corridor {pred.corridor.low}–{pred.corridor.high} goals   "
+              f"(raw tempo read {pred.corridor.lean}, overridden on value)")
     # Two distinct things, kept apart deliberately:
     #   signal       how strong the engine's read is (confidence_score)
     #   line safety  how much cushion the chosen line has — translate_play marks

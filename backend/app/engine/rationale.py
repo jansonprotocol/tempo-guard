@@ -128,7 +128,26 @@ def humanize(prediction: Any) -> List[str]:
     market = getattr(prediction.translated_play, "market", "?")
     band = confidence_band(getattr(prediction, "confidence_score", 0.0))
 
+    # The corridor lean is the flowchart's verdict, and the market may no
+    # longer come from the flowchart. When probability selection overrides it,
+    # quoting the old lean produces a flat contradiction — "leans toward Under
+    # and recommends the O1.0 market" — which is what a Serie B fixture printed
+    # before this. The market itself is the truth about which side is being
+    # played; the lean is only worth mentioning when it agrees.
+    side = "over" if market.upper().startswith("O") else "under"
+    if lean != side:
+        lean = side
+        overridden = True
+    else:
+        overridden = False
+
     sentences: List[str] = [_lead_sentence(lean, market, band)]
+
+    if overridden:
+        sentences.append(
+            "The signal read the other way on raw tempo, but this fixture sits "
+            "above its league's scoring average, so the value is on this side."
+        )
 
     win_prob = getattr(prediction, "pick_win_prob", None)
     edge = getattr(prediction, "pick_edge", None)
@@ -141,8 +160,22 @@ def humanize(prediction: Any) -> List[str]:
             f"Forecast conditions ({weather_tag}) were factored into the goal outlook."
         )
 
+    # Several module phrases argue for a side. When the published market is on
+    # the other one, they are describing a decision that was replaced, so they
+    # are dropped rather than printed alongside a contradicting tip.
+    _UNDER_PHRASES = ("GateB", "UnderGuard_HARD", "UnderGuard_SOFT", "ULR",
+                      "DEG_Degradation", "EPS_PhaseStability", "CeilingCushion",
+                      "InlineVeto")
+    _OVER_PHRASES = ("BurstSentinel", "DET_Detonation", "MFR_TO_LIFT",
+                     "MFR_Soft", "BILATERAL_CHAOS_ESCALATOR")
+
     for key, phrase in _MODULE_PHRASES:
-        if any(m == key or m.startswith(key) for m in modules):
-            sentences.append(phrase)
+        if not any(m == key or m.startswith(key) for m in modules):
+            continue
+        if side == "over" and key in _UNDER_PHRASES:
+            continue
+        if side == "under" and key in _OVER_PHRASES:
+            continue
+        sentences.append(phrase)
 
     return sentences
