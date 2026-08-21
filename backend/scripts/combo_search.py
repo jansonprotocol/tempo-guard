@@ -144,13 +144,35 @@ def main() -> None:
         solo[k] = h - dh
         print(f"  flip {k:18s} alone: {h - dh:+4d} matches on train")
 
+    # Written as it goes. A 128-pass search takes long enough that losing it to
+    # a restart costs the whole run, which has already happened once.
+    prog = Path(__file__).resolve().parents[1] / ".cache" / f"combo_{LIMIT}.csv"
+    prog.parent.mkdir(parents=True, exist_ok=True)
+    done = {}
+    if prog.exists():
+        for ln in prog.read_text().splitlines():
+            bits = ln.split(",")
+            if len(bits) == len(ALL_TOGGLES) + 1:
+                done[bits[0]] = int(bits[-1])
+        print(f"  resuming: {len(done)} combinations already scored")
+
     print("\n  searching all combinations...", flush=True)
     results = []
-    for values in product([False, True], repeat=len(ALL_TOGGLES)):
-        combo = dict(zip(ALL_TOGGLES, values))
-        h, _ = score(train, combo)
-        parts = sum(solo[k] for k in ALL_TOGGLES if combo[k] != default[k])
-        results.append((h - dh, (h - dh) - parts, combo))
+    with prog.open("a") as fh:
+        for i, values in enumerate(product([False, True],
+                                           repeat=len(ALL_TOGGLES))):
+            combo = dict(zip(ALL_TOGGLES, values))
+            key = "".join("1" if v else "0" for v in values)
+            if key in done:
+                h = done[key]
+            else:
+                h, _ = score(train, combo)
+                fh.write(f"{key},{','.join(str(v) for v in values)},{h}\n")
+                fh.flush()
+            parts = sum(solo[k] for k in ALL_TOGGLES if combo[k] != default[k])
+            results.append((h - dh, (h - dh) - parts, combo))
+            if (i + 1) % 16 == 0:
+                print(f"    {i + 1}/128", flush=True)
     results.sort(key=lambda r: -r[0])
 
     print(f"\n  TOP {TOP_N} ON TRAIN (gain vs default, and synergy over the parts)")
