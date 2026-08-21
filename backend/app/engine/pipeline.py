@@ -680,6 +680,7 @@ def evaluate_athena(
     min_over_line:  float | None = None,
     min_win_prob:   float | None = None,
     use_possession: bool = False,
+    use_season_stage: bool = False,
 ) -> Prediction:
     mf = module_flags or ModuleFlags()
 
@@ -865,6 +866,26 @@ def evaluate_athena(
                     modules.append("Possession")
             except Exception:
                 pass          # a possession failure must never cost a tip
+
+        # Season stage lifts the expectation in a campaign's closing stretch.
+        # Applied after possession so the two compose, and global rather than
+        # per-league: the per-league numbers scatter the way small samples do,
+        # not the way separate football cultures would, and per-league fitting
+        # is what made possession inert.
+        if use_season_stage and mu is not None:
+            try:
+                from app.data import season_stage as _stage
+                lift = _stage.shift(req.league_code, req.home_team,
+                                    req.away_team, req.match_date)
+                if lift:
+                    mu = mu + lift
+                    notes.append(
+                        f"Season stage: {lift:+.2f} goals "
+                        f"(closing stretch of the {req.league_code} season)."
+                    )
+                    modules.append("SeasonStage")
+            except Exception:
+                pass          # never let a stage failure cost a tip
 
         picked = market_select.choose(
             mu, req.league_mu,

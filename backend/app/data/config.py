@@ -92,6 +92,11 @@ class LeagueConfig:
     # call overrides, so they no longer change a tip. These four do.
     min_win_prob: Optional[float] = None     # per-league floor; None = global 0.79
     use_possession: bool = False             # apply the fitted possession shift
+    # Season stage lifts the goal expectation in a campaign's closing stretch.
+    # Unlike every other feature dial this describes what the match is WORTH
+    # rather than how good the sides are, so it is the one input the goal model
+    # does not already carry in some form.
+    use_season_stage: bool = False
     max_under_line: Optional[float] = None
     min_over_line: Optional[float] = None
 

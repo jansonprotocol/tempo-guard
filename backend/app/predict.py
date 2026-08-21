@@ -89,6 +89,7 @@ def predict_fixture(
         min_over_line=cfg.min_over_line,
         min_win_prob=cfg.min_win_prob,
         use_possession=cfg.use_possession,
+        use_season_stage=cfg.use_season_stage,
     )
     prediction.rationale = humanize(prediction)
     return prediction
