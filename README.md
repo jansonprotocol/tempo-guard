@@ -8,13 +8,13 @@
 
 ## Pending FUTURE match bettips
 
-| League | Fixture | Play | Date | Modelled | Edge |
-|---|---|---|---|---|---|
-| Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 2026-08-21 | 89% | +8.9% |
-| Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 2026-08-21 | 84% | +6.6% |
-| Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −0.5% |
-| Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −1.0% |
-| LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
+| Live | League | Fixture | Play | Date | Modelled | Edge |
+|---|---|---|---|---|---|---|
+| ⏱ LIVE: 0-1 (90'+) — losing | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 2026-08-21 | 89% | +8.9% |
+| ⏱ LIVE: 1-0 (51') — needs 1 | Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 2026-08-21 | 84% | +6.6% |
+| ⏱ LIVE: 0-3 (68') — winning, at the line | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −0.5% |
+| ⏱ LIVE: 0-0 (52') — winning | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −1.0% |
+| ⏱ LIVE: 0-0 (40') — winning | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
 
 ## Completed FUTURE match bettips
 
@@ -46,13 +46,12 @@
 - Retrosims are never logged here. Those are engine optimisation, not tips.
 - Pending → completed once a result is confirmed.
 
-### Live at time of writing
+### Live scores
 
-- **Al Qadsiah 0-1 Al-Ittihad (90'+)** — O1.5 needs 2+. One goal short, effectively lost barring stoppage time.
-- **Marseille 1-0 Strasbourg (51')** — O1.5 needs one more.
-- **Erzurumspor 0-3 Galatasaray (68')** — U4.25 winning, but at three goals already. One more is a half win, two more loses it.
-- **Standard 0-0 La Louvière (52')** — U4.25 winning.
-- **Real Betis v Real Sociedad** — U4.25, was 0-0 at 40'.
+Scores in the pending table are a snapshot, not a feed — they are whatever was
+last reported and go stale between updates. Erzurumspor is the one to watch: at
+three goals it is already on the U4.25 line, so a fourth is a half win and a
+fifth loses it.
 
 ### Notes on individual calls
 
