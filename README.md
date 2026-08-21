@@ -74,20 +74,17 @@ priced.
 Serie B and the Premier League stores end 2026-05-08 and 2026-05-24, so Vicenza
 and Arsenal were priced off last season's form with none of the current one.
 
-All four of this batch were in play when issued and were run as if unstarted, so
-no live information reached them.
+Every fixture here was in play or unstarted when issued and all were run as if
+unstarted, so no live information reached them. Cajamarca is an Under and needs
+full time to settle; ≤3 goals wins it.
 
-Al Diriyah has one match of stored history — newly promoted — so the engine
-declined rather than predicting from nothing. That is the history gate doing its
-job, and it is the first no-tip in this log.
-
-Cajamarca is an Under and needs full time to settle; ≤3 goals wins it.
-
-Sirius v Häcken carried a caveat, and is now settled above. The Swedish store
-holds each of these clubs under two identities: `IK Sirius`/`BK Häcken` for
-2023-2025 and `Sirius`/`Hacken` for 2026, because the seasons came from
-different providers. The prediction was made under the current naming and
-therefore saw 17 matches per side instead of 84.
+The Cracovia defect is not isolated. A scan of all 52 leagues finds the same
+era-split naming in 15 of them, touching roughly 73 team names — Sion/FC Sion,
+AIK/AIK Solna, Legia/Legia Warszawa — wherever a league's 2026 season arrived
+from a different provider than its earlier ones. It is what made Sirius v Häcken
+a 17-match read instead of an 84-match one, and it causes both thin predictions
+and false refusals. The detector is fuzzy and overcounts, since Celta B and
+Celta are genuinely different clubs, so the real figure needs a pass by hand.
 
 ### How this log works
 
@@ -196,8 +193,33 @@ a full replay. Run across nine leagues and ~2,900 matches, the result was blunt:
 | `det` volatility | −0.45% | **off** — cost accuracy in 4 leagues |
 | `burst_sentinel` chaos → force Over | **−1.91%** | **off** — cost accuracy in *all nine* |
 
-Disabling the five non-earners is worth **+2.4%** in-sample and **+1.5%** on a
+Disabling the five non-earners was worth **+2.4%** in-sample and **+1.5%** on a
 chronological holdout (7 of 9 leagues improve).
+
+### Those figures are now obsolete — every module contributes exactly 0.00%
+
+They were measured before probability selection existed, and probability
+selection changed what a module can reach. The market now comes from
+`market_select.choose(mu, league_mu, …)`, while `burst_sentinel`, `det`, `ulr`,
+`deg` and `mfr` all adjust the **old flowchart's lean and corridor scores** — and
+the flowchart no longer picks the market. They still compute, they still shape
+the corridor shown in the output, and nothing they produce reaches the tip.
+
+Measured directly over 998 fixtures across five leagues:
+
+| toggle | markets changed |
+|---|---|
+| `burst_sentinel`, `det`, `ulr`, `deg`, `mfr` | **0 each** |
+| `use_possession` | 14 |
+| `use_season_stage` | 17 |
+
+A search over all 128 on/off combinations of those seven returned the identical
+holdout score for every one of them — 1326/1630 = 81.35% — because only the two
+that move `mu` can change anything at all. See `scripts/combo_search.py`.
+
+The modules are not worthless, they are unplugged: they encode real football
+logic and whisper it into a corridor nothing reads. Reconnecting them would mean
+letting them move `mu` rather than the lean.
 
 Two further modules, `InlineVeto` and `S-LOCK`, were deleted outright: both were
 unreachable. `InlineVeto` was fed a hardcoded `quality_ok = True`, and `S-LOCK`

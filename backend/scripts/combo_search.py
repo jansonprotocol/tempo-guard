@@ -45,6 +45,42 @@ ladder.
 Features are resolved once and reused across all 128 combinations, since feature
 resolution does not depend on which toggles are set — the same reason
 calibration resolves once and searches after.
+
+RESULT: NO INTERACTION IS POSSIBLE, BECAUSE FIVE OF SEVEN DO NOTHING
+====================================================================
+Every one of the 128 combinations scores exactly the same on the holdout:
+1326/1630 = 81.35%, identical to the default, with synergy zero throughout. The
+train spread across 126 scored combinations runs -4 to +0 with a standard
+deviation of 1.6 matches.
+
+That is not a weak interaction. It is five inert toggles:
+
+    toggle              markets changed / 998
+    burst_sentinel            0
+    det                       0
+    ulr                       0
+    deg                       0
+    mfr                       0
+    use_possession           14
+    use_season_stage         17
+
+The cause is structural rather than statistical. When probability selection took
+over, the market began coming from market_select.choose(mu, league_mu, ...).
+burst_sentinel, det, ulr, deg and mfr all adjust the OLD flowchart's lean and
+corridor scores, and the flowchart no longer picks the market — so they still
+compute, still appear in the corridor, and nothing they produce reaches the tip.
+The 128-combination search was really a search over four: possession crossed
+with season stage.
+
+This invalidates the ablation figures those modules carry in their own
+docstring and in the README (ulr +0.24%, det -0.45%, burst_sentinel -1.91%).
+Those were measured before probability selection existed. Every one is now
+exactly 0.00%.
+
+The finding is not that the modules are worthless. They encode real football
+logic and are simply unplugged: they whisper into a corridor nothing reads. The
+question worth asking next is what happens if they move `mu` instead of the
+lean, which would reconnect five features at once rather than adding an eighth.
 """
 from __future__ import annotations
 
