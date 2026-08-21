@@ -32,6 +32,45 @@ here is that the override is usually right. One vivid loss is not evidence
 against it — the ledger is.
 
 Rows are cached, so re-slicing costs seconds.
+
+RESULT: THE OVERRIDE STAYS
+==========================
+13,792 fixtures, override fires on 1,510 of them (10.9%):
+
+    taken (what Athena published)   85.7% +/-0.9%   edge -1.99%
+    lean  (follow the tempo read)   78.1% +/-1.1%   edge +3.20%
+
+Following the tempo read would have lost 115 bets net. Kashiwa was the tail,
+not the rule.
+
+The narrow hypothesis — that the override is wrong specifically when it is a
+FALLBACK, i.e. when the pick carries negative edge — is not merely unsupported.
+It is backwards:
+
+    edge < 0:   taken 88.0%   lean 75.8%     (12.2 points apart)
+    edge >= 0:  taken 83.3%   lean 80.5%     ( 2.8 points apart)
+
+The override is at its most valuable exactly where it looked least defensible.
+Negative-edge fallbacks are the highest-strike bucket in the entire book at
+88.0%, because a negative edge means the selector found nothing worth backing
+and retreated to a rung that lands whether or not the model is right. That is
+the third independent time this codebase has found predicted edge pointing the
+wrong way for hit rate: the sharp-lane comparison, the abstention probe, and now
+this.
+
+And in the exact direction of the Kashiwa loss:
+
+    lean over -> taken (U4.25 100%)   85.5%
+    lean over -> lean  (O1.5  100%)   77.0%
+
+STRIKE AND EDGE DISAGREE HERE
+=============================
+The lean arm wins on edge (+3.20% against -1.99%) while losing badly on strike.
+Both are true and they are not in conflict: following the tempo read buys
+genuine value at a worse hit rate, because Over rungs simply land less often
+than Under ones. The brief is hit rate, so the override is kept. Anyone
+optimising for value rather than strike should read this table the other way
+round.
 """
 from __future__ import annotations
 
