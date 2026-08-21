@@ -30,6 +30,41 @@ recomputed through market_select directly instead of re-replaying. The OFF arm
 is reproduced from the cache and checked against the engine's own answer, so a
 divergence between the two shows up as a mismatch rather than as a silent
 difference in what is being compared.
+
+RESULT: CONSISTENT, SMALL, AND NOT DECISIVELY SIGNIFICANT
+=========================================================
+13,886 fixtures, 1,246 of them in the closing stretch.
+
+    shift 0.05   changed  92   rescued 18   broken 13   NET  +5   +0.9 sigma
+    shift 0.10   changed 170   rescued 33   broken 25   NET  +8   +1.1 sigma
+    shift 0.15   changed 249   rescued 47   broken 30   NET +17   +1.9 sigma
+    shift 0.20   changed 334   rescued 62   broken 45   NET +17   +1.6 sigma
+    shift 0.30   changed 504   rescued 87   broken 72   NET +15   +1.2 sigma
+
+This is the shape of a real effect rather than a curve fit. The net is positive
+at every value tried, rises and falls smoothly, and does not depend on 0.150
+being exactly right — the same gain arrives at 0.20 and most of it at 0.30. A
+fitted constant would show a spike at its own value and nothing either side.
+
+The chronological split is the weaker half of the case:
+
+    older half (2023-10 to 2025-11)   NET  +4   +0.7 sigma
+    newer half (2025-11 to 2026-08)   NET +13   +2.0 sigma
+
+Both positive, neither negative, but the older half is effectively a null and
+the result is carried by the newer one.
+
+Direction is entirely one-way — 130 fixtures move from Under to Over and none
+move back — which is mechanical, since a lift can only add goals. So the whole
+gain rides on Under-to-Over conversions in end-of-season fixtures, set against
+the cost of the goalless dead rubbers that punishes.
+
+VERDICT
+=======
+Positive in all five shift settings and both halves, never negative anywhere
+tested, and worth about +0.12 points on the whole book or +1.4 on the 9% of
+fixtures it touches. No single test clears two sigma. That is a marginal call
+rather than a demonstrated win, and it should be described as one.
 """
 from __future__ import annotations
 
