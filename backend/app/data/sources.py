@@ -266,10 +266,13 @@ LEAGUES: dict[str, LeagueSource] = {
     ),
 
     # ── Asia (calendar-year seasons) ──────────────────────────────────────
+    # Repointed at ESPN: openfootball decayed from 380 matches in 2024 to
+    # 136 in 2025 and 20 in 2026. ESPN also carries the 2026 restructure,
+    # where drawn league matches go to a shootout (see _FINISHED in
+    # app.data.espn).
     "JPN-J1": LeagueSource(
-        "JPN-J1", "Japanese J1 League", "world", "asia/japan/{season}_jp1.txt",
-        calendar_year=True,
-        fd_country="JPN", fd_league="J1 League"
+        "JPN-J1", "Japanese J1 League", "", "",
+        calendar_year=True, provider="espn", espn_code="jpn.1",
     ),
     # Sourced from football-data.co.uk rather than openfootball: the latter's
     # Asia coverage stops at 2025, so the current season was entirely missing.

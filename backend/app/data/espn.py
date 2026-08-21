@@ -59,6 +59,21 @@ _STAT_MAP = {
     "foulsCommitted": "f",
 }
 
+# Statuses that count as a completed 90 minutes.
+#
+# STATUS_FINAL_PEN has to be here, and missing it would have been a silent
+# disaster. Japan's 2026 restructure sends drawn league matches to a shootout,
+# so 51 of its 2026 fixtures carry that status — and they are *precisely the
+# draws*. Accepting only STATUS_FULL_TIME would have dropped every drawn match
+# from the league and skewed its goal distribution with nothing looking wrong.
+# The score field holds the regulation result; the shootout lives in `notes`
+# and is never read.
+#
+# STATUS_FINAL_AET is deliberately excluded. Its score includes extra-time
+# goals, and totals markets settle on 90 minutes, so those rows would be
+# graded against a number the bet never used.
+_FINISHED = {"STATUS_FULL_TIME", "STATUS_FINAL_PEN"}
+
 # Columns a frame from here may contain. Mirrors the football-data allowlist.
 COLUMNS = [
     "date", "home", "away", "hg", "ag",
@@ -128,8 +143,7 @@ def fetch_season(espn_code: str, year: int, league_code: str,
         if not comps:
             continue
         c = comps[0]
-        if (c.get("status", {}).get("type", {}).get("name")
-                != "STATUS_FULL_TIME"):
+        if c.get("status", {}).get("type", {}).get("name") not in _FINISHED:
             continue
 
         sides = {x.get("homeAway"): x for x in c.get("competitors") or []}
