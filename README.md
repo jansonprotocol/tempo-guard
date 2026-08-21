@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 90.5%
+## CURRENT CONFIRMED HITRATE: 90.9%
 
-**19 / 21 settled** · over/under markets only · live tips, not backtests
+**20 / 22 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,10 +10,9 @@
 
 | Live | League | Fixture | Play | Date | Modelled | Edge |
 |---|---|---|---|---|---|---|
-| — not started | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 (≤3 goals) | 2026-08-21 | 88% | +7.8% |
+| ⏱ LIVE: 1-0 (11') — winning | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 (≤3 goals) | 2026-08-21 | 88% | +7.8% |
 | — not started | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 (≤2, half loss at 3) | 2026-08-22 | 81% | +21.7% |
 | — not started | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 (≤3 goals) | 2026-08-22 | 82% | +12.6% |
-| ⏱ LIVE: 1-0 (45') — needs 1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 (≤3, half win at 4) | 2026-08-22 | 79% | +0.1% |
 | — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 (≤3 goals) | 2026-08-22 | 84% | +22.2% |
 | — not started | Championship | Millwall v Norwich | O1.5 (2+ goals) | 2026-08-22 | 81% | +8.4% |
@@ -47,12 +46,13 @@
 | ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 | 2026-08-21 | 84% | −0.5% |
 | ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 | 2026-08-21 | 84% | −1.0% |
 | ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 | 2026-08-21 | 84% | −2.9% |
+| ✅ HIT — 1-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 | 2026-08-21 | 83% | +10% |
 
 ---
 
 ### Notes on the log
 
-- Sample is 21 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
+- Sample is 22 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
 - All tips issued as-of the morning of the match. In-play fixtures run as if unstarted — no live information reaches them.
 - Retrosims are never logged here. Those are engine optimisation, not tips.
 - Pending → completed once a result is confirmed.
