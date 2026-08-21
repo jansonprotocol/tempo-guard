@@ -25,7 +25,25 @@ followed when the two disagree is a measurable question, not a judgement call.
 
 ## Pending FUTURE match bettips
 
-_None._
+| Date | League | Fixture | Play | Modelled | Edge |
+|---|---|---|---|---|---|
+| 2026-08-21 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 (2+ goals) | 91% | +12% |
+| 2026-08-21 | Allsvenskan | Sirius v Häcken | O2.25 (3+ goals, half loss at 2) | 80% | +24% |
+| 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 (≤3 goals, half win at 4) | 89% | +1% |
+| 2026-08-21 | Saudi Pro League | Al Hazem v Al Diriyah | **NO TIP** | — | — |
+
+All four were in play when issued and were run as if unstarted, so no live
+information reached them.
+
+Al Diriyah has one match of stored history — newly promoted — so the engine
+declined rather than predicting from nothing. That is the history gate doing its
+job, and it is the first no-tip in this log.
+
+Sirius v Häcken carries a caveat. The Swedish store holds each of these clubs
+under two identities: `IK Sirius`/`BK Häcken` for 2023-2025 and `Sirius`/`Hacken`
+for 2026, because the seasons came from different providers. The prediction was
+made under the current naming and therefore saw 17 matches per side instead of
+84. The +24% edge is the largest on the board and should be read against that.
 
 ### How this log works
 
