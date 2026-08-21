@@ -121,7 +121,13 @@ Two of those carried double-digit edge. The engine would have published all thre
 
 Also refused by the history gate: **Marítimo v Académico Viseu** (Viseu has two matches). **Thun v Servette** postponed, not run.
 
-Eight of the twenty-one tips carry negative edge, all of them U4.25 fallbacks and seven of those in the Championship — an opening-weekend division where almost every side has thin or stale form, so the selector is finding nothing and retreating. Worth watching as a block rather than individually.
+Eight of the twenty-one carry negative edge, all U4.25 fallbacks and seven of them Championship fixtures kicking off together at 16:00.
+
+The cause is the probability floor, not thin form — an earlier version of this note said thin form and that was wrong. Southampton v Stoke is the clean example: mu 2.89 against a league mu of 2.58, so the fixture reads as LIVELIER than average and every positive-edge market is an Over. O2.25 carries +7.69% edge but wins only 55.2% of the time, and O1.5 carries +5.63% at 78.4% — six tenths of a point under the 0.79 floor. Nothing clears, the fallback takes the safest buyable rung, and that rung is a U4.25 the engine actively disagrees with, which is why the edge prints negative.
+
+The Championship produces a cluster of these because its league mu is 2.58 and most fixtures land at 2.7-2.9, exactly the band where O1.5 prices at 76-79% and sits on top of the floor. A few hundredths of a goal decide between O1.5 at +5.6% and U4.25 at -4.8%. West Ham v Charlton shows the other side: mu 3.64, O1.5 clears at 87.8%, tipped at +15.0%. Derby v Cardiff is a genuine nothing, mu 2.55 against 2.58.
+
+Not a Championship problem — any league whose scoring average puts O1.5 near the floor does this. The fallback is still correct on hit rate, measured at 85.7% against 78.1% for following the lean. It buys safety by taking the side it disagrees with.
 
 ### Known data defects
 
