@@ -29,6 +29,39 @@ Which leaves two candidates, and they need different responses:
 The clean separator is a FIXED market. U4.25's base rate depends only on the
 matches, not on what the engine chose, so tracking it per era isolates the first
 explanation from the second.
+
+RESULT: NEITHER. THE ERAS WERE NEVER THE VARIABLE.
+==================================================
+On a fixed set of 12 leagues:
+
+    2015-2017      883   strike 78.9%  base 77.8%  edge +1.17%   (too thin)
+    2018-2020     5641   strike 81.9%  base 77.5%  edge +4.40%
+    2021-2023    11912   strike 81.8%  base 78.3%  edge +3.49%
+    2024-2026    10152   strike 82.7%  base 78.9%  edge +3.80%
+
+Edge is stable between +3.5% and +4.4% from 2018 on, and the most recent era
+beats 2021-2023. Strike rate rises across the period. Nothing decays.
+
+The apparent gap came from comparing different LEAGUE SETS, not different eras.
+Over the same recent period, these 12 leagues score +3.80% while the 32-league
+holdout scores +0.72% — because the latter includes CHN-SL, IRL-PD, FIN-VL and
+the others already measured at negative edge. The confirmation run, meanwhile,
+covered 27 leagues rather than 32 only because DEN-SL, SWE-AL and POL-EK lacked
+the history for its window, and those skips silently dropped weak leagues and
+inflated its number.
+
+Two samples differing in composition were read as a difference in time. Any
+future comparison across periods has to hold the league set fixed, or it is
+measuring which leagues were included.
+
+KNOWN FLAWS IN THIS SCRIPT
+==========================
+The 2,400-match window per league starves the early eras — 2015-2017 gets 883
+fixtures and is not comparable to the rest. Per-era windows would fix it.
+
+`_requests_for` is called inside the era loop, so features are rebuilt for every
+era: ~115,000 builds where 29,000 would do, turning a four-minute job into
+fifty. Build once, filter by date.
 """
 from __future__ import annotations
 
