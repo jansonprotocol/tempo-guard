@@ -60,6 +60,15 @@ MAX_SHIFT = 0.35
 
 _FIT_CACHE: dict[tuple, Optional[tuple[float, float]]] = {}
 
+# The design matrix for a league, built once and sliced by date thereafter.
+#
+# Rebuilding it per fit made one COL-PA fit take 36 seconds, and a 500-match
+# search spans roughly 24 league-months, so a single candidate cost half an
+# hour. The rows do not depend on the cutoff — only which prefix of them is
+# used does — so the quadratic walk now runs once per league rather than once
+# per fit. Same class of mistake as recomputing features per candidate earlier.
+_ROWS_CACHE: dict[str, Optional[tuple]] = {}
+
 
 def _team_possession(rows: pd.DataFrame, team: str) -> Optional[float]:
     if "hpos" not in rows.columns or rows.empty:
@@ -74,31 +83,28 @@ def _team_possession(rows: pd.DataFrame, team: str) -> Optional[float]:
     return float(own.mean())
 
 
-def _fit(league_code: str, cutoff: datetime) -> Optional[tuple[float, float]]:
+def _build_rows(league_code: str) -> Optional[tuple]:
     """
-    Coefficients (pos_avg, pos_gap) for a league, from matches before cutoff.
+    (dates, design matrix) for a league's whole possession history.
 
-    Cached per calendar month: a refit every fixture would be wasteful and the
-    coefficient moves slowly, but caching by league alone would let a fit made
-    late in a season describe matches played early in it.
+    Walked once per league. Every cutoff then takes a prefix of these rows,
+    which is what makes a monthly refit cheap enough to run inside a search.
     """
-    key = (league_code, cutoff.year, cutoff.month)
-    if key in _FIT_CACHE:
-        return _FIT_CACHE[key]
+    if league_code in _ROWS_CACHE:
+        return _ROWS_CACHE[league_code]
 
     df = store.load_results(league_code)
     if df.empty or "hpos" not in df.columns:
-        _FIT_CACHE[key] = None
+        _ROWS_CACHE[league_code] = None
         return None
-    df = df[(df["date"] < cutoff) & df["hpos"].notna()
-            & df["apos"].notna() & df["hg"].notna()]
+    df = df[df["hpos"].notna() & df["apos"].notna() & df["hg"].notna()]
     df = df.sort_values("date").reset_index(drop=True)
     if len(df) < MIN_FIT:
-        _FIT_CACHE[key] = None
+        _ROWS_CACHE[league_code] = None
         return None
 
     tot = (df["hg"].astype(float) + df["ag"].astype(float)).values
-    rows = []
+    dates, rows = [], []
     for i in range(80, len(df)):
         r = df.iloc[i]
         past = df.iloc[:i]
@@ -112,13 +118,43 @@ def _fit(league_code: str, cutoff: datetime) -> Optional[tuple[float, float]]:
         as_ = float(np.where(a["home"] == r["away"], a["hg"], a["ag"]).mean())
         if not np.isfinite(hs) or not np.isfinite(as_):
             continue
+        dates.append(r["date"])
         rows.append((hs + as_, (hp + ap) / 2, abs(hp - ap), tot[i]))
 
     if len(rows) < MIN_FIT:
+        _ROWS_CACHE[league_code] = None
+        return None
+    out = (np.array(dates, dtype="datetime64[ns]"), np.array(rows, dtype=float))
+    _ROWS_CACHE[league_code] = out
+    return out
+
+
+def _fit(league_code: str, cutoff: datetime) -> Optional[tuple[float, float]]:
+    """
+    Coefficients (pos_avg, pos_gap) for a league, from matches before cutoff.
+
+    Cached per calendar month: a refit every fixture would be wasteful and the
+    coefficient moves slowly, but caching by league alone would let a fit made
+    late in a season describe matches played early in it.
+    """
+    key = (league_code, cutoff.year, cutoff.month)
+    if key in _FIT_CACHE:
+        return _FIT_CACHE[key]
+
+    built = _build_rows(league_code)
+    if built is None:
+        _FIT_CACHE[key] = None
+        return None
+    dates, all_rows = built
+
+    # Strictly before the cutoff. The as-of rule is now applied by slicing
+    # rather than by rebuilding, which is the whole point of the row cache.
+    k = int(np.searchsorted(dates, np.datetime64(cutoff), side="left"))
+    arr = all_rows[:k]
+    if len(arr) < MIN_FIT:
         _FIT_CACHE[key] = None
         return None
 
-    arr = np.array(rows, dtype=float)
     X = np.column_stack([arr[:, 0], arr[:, 1], arr[:, 2], np.ones(len(arr))])
     try:
         b = np.linalg.lstsq(X, arr[:, 3], rcond=None)[0]
