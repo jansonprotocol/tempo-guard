@@ -85,6 +85,13 @@ class LeagueConfig:
     #
     # So this carries a judgement about market prices that the engine has no
     # access to, made by whoever actually places the bets.
+    # ── Dials that actually reach the market selector ─────────────────
+    # Since prob_select took over, the published market comes from
+    # market_select.choose(mu, league_mu, max_under, min_over) at a probability
+    # floor. tempo_factor, bias and the module flags feed the flowchart that
+    # call overrides, so they no longer change a tip. These four do.
+    min_win_prob: Optional[float] = None     # per-league floor; None = global 0.79
+    use_possession: bool = False             # apply the fitted possession shift
     max_under_line: Optional[float] = None
     min_over_line: Optional[float] = None
 

@@ -678,6 +678,8 @@ def evaluate_athena(
     # in app.engine.market_select on why this is config and not a rule.
     max_under_line: float | None = None,
     min_over_line:  float | None = None,
+    min_win_prob:   float | None = None,
+    use_possession: bool = False,
 ) -> Prediction:
     mf = module_flags or ModuleFlags()
 
@@ -844,9 +846,30 @@ def evaluate_athena(
     # app.engine.market_select for the measurement behind this.
     pick_win_prob = pick_edge = None
     if mf.prob_select:
+        # Possession shifts the goal expectation before a market is chosen. It
+        # is per-league because the fitted coefficient changes SIGN between
+        # competitions — lopsided possession means more goals in Colombia and
+        # fewer in Japan — so a global term would cancel itself out.
+        mu = req.mu_total
+        if use_possession and mu is not None:
+            try:
+                from app.data import possession as _poss
+                shift = _poss.shift(req.league_code, req.home_team,
+                                    req.away_team, req.match_date)
+                if shift is not None:
+                    mu = mu + shift
+                    notes.append(
+                        f"Possession: {shift:+.2f} goals "
+                        f"(fitted on {req.league_code} history before this match)."
+                    )
+                    modules.append("Possession")
+            except Exception:
+                pass          # a possession failure must never cost a tip
+
         picked = market_select.choose(
-            req.mu_total, req.league_mu,
+            mu, req.league_mu,
             max_under=max_under_line, min_over=min_over_line,
+            min_win_prob=min_win_prob,
         )
         if picked is not None:
             market, edge, pw = picked

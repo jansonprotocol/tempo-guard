@@ -87,6 +87,8 @@ def predict_fixture(
         norm_std=float(cfg.mu_std),
         max_under_line=cfg.max_under_line,
         min_over_line=cfg.min_over_line,
+        min_win_prob=cfg.min_win_prob,
+        use_possession=cfg.use_possession,
     )
     prediction.rationale = humanize(prediction)
     return prediction
