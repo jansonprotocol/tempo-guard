@@ -1,20 +1,10 @@
-fastapi
-uvicorn
-pydantic
-sqlalchemy
-psycopg2-binary
-python-dotenv
-passlib[argon2]
-argon2-cffi
-pyjwt
-requests
-numpy==1.26.4
-pandas==2.2.2
-requests-cache
-lxml
-html5lib
-pyarrow
-httpx==0.27.2
-seleniumbase
-rapidfuzz>=3.0.0
-sqladmin>=0.20.0
+# ATHENA: Tempo Guard — local engine dependencies.
+# No web framework, no database driver: the engine runs offline against
+# parquet snapshots in data/ and JSON config in config/.
+pandas>=2.0
+pyarrow>=14.0
+rapidfuzz>=3.0
+pydantic>=2.0
+
+# Development
+pytest>=7.0

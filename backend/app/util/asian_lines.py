@@ -60,6 +60,12 @@ def evaluate_market(
     """
     Evaluate a market result.
 
+    Numpy scalars are coerced to int first. Passing a numpy total once made
+    every half-line market grade as 0% rather than raising: the bare
+    comparisons returned np.bool_, and every consumer here tests `result is
+    True`, an identity check np.True_ fails. It fell through to the
+    unrecognised-market path and scored silently wrong.
+
     Returns:
         True        — full win
         False       — full loss
@@ -67,7 +73,7 @@ def evaluate_market(
         "half_loss" — half loss (lose on one half, push on other)
         None        — unrecognised market
     """
-    total = home_goals + away_goals
+    total = int(home_goals) + int(away_goals)
     m = market.strip().upper()
 
     # Compound/slash → take lower (conservative) line
@@ -76,9 +82,9 @@ def evaluate_market(
 
     # ── BTTS ─────────────────────────────────────────────────────────
     if m == "BTTS":
-        return home_goals > 0 and away_goals > 0
+        return bool(home_goals > 0 and away_goals > 0)
     if m in ("NO_BTTS", "NO BTTS"):
-        return not (home_goals > 0 and away_goals > 0)
+        return bool(not (home_goals > 0 and away_goals > 0))
 
     # ── Over lines ────────────────────────────────────────────────────
     if m.startswith("O"):
@@ -111,10 +117,10 @@ def evaluate_market(
             # Whole line: push at exactly line
             if total == int(line):
                 return "half_win"           # push = refund
-            return total > line
+            return bool(total > line)
 
         # Half line (.5): no push possible
-        return total > line
+        return bool(total > line)
 
     # ── Under lines ───────────────────────────────────────────────────
     if m.startswith("U"):
@@ -148,18 +154,18 @@ def evaluate_market(
             # Whole line: push at exactly line
             if total == int(line):
                 return "half_win"                  # push = refund
-            return total < line
+            return bool(total < line)
 
         # Half line (.5): no push possible
-        return total < line
+        return bool(total < line)
 
     # ── Touch-Touch (TT) markets ──────────────────────────────────────────
     # "TT Home O0.5" = home team scores at least 1 goal
     # "TT Away O0.5" = away team scores at least 1 goal
     if m in ("TT HOME O0.5", "TT HOME O 0.5"):
-        return home_goals >= 1
+        return bool(home_goals >= 1)
     if m in ("TT AWAY O0.5", "TT AWAY O 0.5"):
-        return away_goals >= 1
+        return bool(away_goals >= 1)
 
     return None
 

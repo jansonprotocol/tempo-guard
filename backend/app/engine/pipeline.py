@@ -4,11 +4,14 @@ from __future__ import annotations
 from math import isfinite
 from typing import List, Tuple
 
-from app.engine.types import MatchRequest, Prediction, Corridor, TranslatedPlay
+from app.engine.types import (
+    Lanes, MatchRequest, ModuleFlags, Prediction, Corridor, TranslatedPlay,
+)
+from app.engine.rationale import humanize
+from app.engine import market_select
 
 # ── Core constants ────────────────────────────────────────────────────────────
 ROUNDING   = 0.01
-HYSTERESIS = 1.0
 
 # BurstSentinel — raised thresholds so it doesn't fire on every high-tempo match
 BURST_MIN_SUPPORT = 0.12   # was 0.10 — raised to prevent borderline triggers after rounding
@@ -57,14 +60,6 @@ def _r(x: float) -> float:
 
 
 # ── Modules ───────────────────────────────────────────────────────────────────
-
-def inline_veto(qlty_ok: bool, notes: List[str], modules: List[str]) -> bool:
-    if not qlty_ok:
-        modules.append("InlineVeto")
-        notes.append("Inline Veto: data incomplete → default to Under corridor.")
-        return True
-    return False
-
 
 def burst_sentinel(
     support_delta: float, p2p: float, tempo: float,
@@ -147,20 +142,6 @@ def ceiling_cushion(apply: bool, notes: List[str], modules: List[str]) -> None:
         notes.append("Ceiling Cushion: prefer U3.5/4.5 over naked U3.5.")
 
 
-def s_lock(
-    prev_lean: str, new_lean: str, delta: float,
-    notes: List[str], modules: List[str],
-) -> str:
-    if prev_lean and prev_lean != new_lean and delta < HYSTERESIS:
-        modules.append("S-LOCK_Hysteresis")
-        notes.append(
-            f"S-LOCK: prevented flip {prev_lean}→{new_lean} "
-            f"(Δ={delta:.2f}<{HYSTERESIS})."
-        )
-        return prev_lean
-    return new_lean
-
-
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _clip(x: float, lo: float, hi: float) -> float:
@@ -180,7 +161,7 @@ def deg_degradation(
     Applies negative pressure on over_score to suppress Over projections.
 
     Returns: negative adjustment to over_score (0.0 to -DEG_MAX_PRESSURE).
-    Cannot override Inline Veto or BurstSentinel.
+    Cannot override BurstSentinel.
     Adjustment window: up to ±1.8pp per spec (implemented as ±0.08 score units).
     """
     dp = _r(deg_pressure)
@@ -561,6 +542,124 @@ def translate_play(
     return TranslatedPlay(market="U4.25", confidence="MEDIUM")
 
 
+# ── Sharp lane ────────────────────────────────────────────────────────────────
+
+# How far a fixture must sit from its league's scoring norm, in standard
+# deviations, before the sharper rung is offered. Measured on 2025-26: fixtures
+# in the top quarter by goal expectation win the 3+ tier 61% of the time against
+# 49% in the bottom quarter, and the bottom quarter wins the under-4 tier 74.5%
+# against 62%. Roughly ±0.7 sigma isolates those quarters.
+SHARP_Z = 0.70
+
+# Rungs offered per direction. Under the full-win convention the rungs within a
+# tier share a win condition and differ only in price, so the middle one is
+# named and `sharp_tier` states the condition plainly.
+SHARP_OVER  = ("O2.5",  "3+ goals")
+SHARP_UNDER = ("U2.75", "under 3 goals")
+MILD_UNDER  = ("U3.25", "under 4 goals")
+
+# The gate may fire and still be offering a coin flip. Before a sharp play is
+# published, the goal model must give its market at least this chance of
+# landing. Measured over 10,159 fixtures across 26 leagues:
+#
+#     veto   fires   strike    edge
+#     none   45.0%    60.2%  +4.86%
+#     0.65   36.4%    62.6%  +6.29%
+#     0.70   26.0%    65.6%  +6.79%
+#     0.75   17.8%    69.0%  +6.68%   (U3.25 becomes 58% of plays)
+#
+# Unlike every other lever tried, this raises strike AND edge together, because
+# it is not rebalancing risk — it removes plays that were bad on both counts.
+#
+# 0.75 reaches a higher strike rate and concentrates over half its output into
+# one market for no extra edge, so 0.70 is the setting.
+#
+# NOTE ON THE MODEL'S ROLE HERE. It vetoes; it never chooses. Letting it pick
+# the sharp market by predicted edge was measured and lost to this gate by
+# nearly two points of realised edge at a matched fire rate: it takes the bets
+# it is most confident about, and those are disproportionately the ones it gets
+# wrong. As a floor the same numbers behave, which is the only job they get.
+SHARP_MIN_WIN = 0.70
+
+
+def _confident_enough(market: str, mu_total: float) -> bool:
+    """
+    Would the goal model give this market a fair chance of landing?
+
+    The z-gate asks whether the fixture is unusual; it does not ask whether the
+    rung it then reaches for is achievable. A fixture can sit well above its
+    league norm and still make 3+ goals a coin flip, and those plays were being
+    published as sharp calls.
+    """
+    if mu_total is None or mu_total <= 0:
+        return True          # no estimate to veto on — leave the gate alone
+    return market_select.p_win(market, mu_total) >= SHARP_MIN_WIN
+
+
+def sharp_lane(
+    lean: str,
+    safe_market: str,
+    mu_total: float,
+    norm_mean: float,
+    norm_std: float,
+    under_guard: str,
+) -> Tuple[TranslatedPlay | None, str | None, str | None, float]:
+    """
+    Offer a sharper rung when the fixture is unusual *for its own league*.
+
+    Returns (play, tier, reason, league_z). `play` is None when the fixture sits
+    too close to its league norm for a sharper line to be justified — which is
+    most of the time, and deliberately so.
+
+    The comparison is league-relative because goal density varies enormously by
+    competition: Serie A averages 2.43 goals and the Bundesliga 3.24, so an
+    identical expectation means opposite things in the two. Judging a fixture
+    against a global threshold would hand out sharp Overs all season in Germany
+    and sharp Unders all season in Italy, which is a description of the league
+    rather than a read on the match.
+    """
+    # Standardise against the spread of goal *expectations*, not of actual
+    # results. mu is a rolling average and varies far less than individual
+    # scorelines — measured mu_std runs 0.43-0.75 against a goal_std of about
+    # 1.65. Using the latter divided every z-score by roughly 2.5 too much, and
+    # no fixture in Serie A or Argentina ever reached the trigger.
+    std = norm_std if norm_std and norm_std > 0.05 else 0.45
+    z = (mu_total - norm_mean) / std
+
+    if z >= SHARP_Z and lean == "over":
+        market, tier = SHARP_OVER
+        if not _confident_enough(market, mu_total):
+            return None, None, None, round(z, 2)
+        return (
+            TranslatedPlay(market=market, confidence="LOW"),
+            tier,
+            f"Goal expectation {mu_total:.2f} runs {z:+.1f}σ above this league's "
+            f"norm of {norm_mean:.2f} — sharp Over available.",
+            round(z, 2),
+        )
+
+    if z <= -SHARP_Z and lean == "under":
+        # The deepest under rung is only justified when the goal-expectation
+        # signal and the guard agree; on its own it wins barely half the time.
+        if under_guard == "hard":
+            market, tier = SHARP_UNDER
+            why = "hard under signal"
+        else:
+            market, tier = MILD_UNDER
+            why = "below-norm goal expectation"
+        if not _confident_enough(market, mu_total):
+            return None, None, None, round(z, 2)
+        return (
+            TranslatedPlay(market=market, confidence="LOW"),
+            tier,
+            f"Goal expectation {mu_total:.2f} runs {z:+.1f}σ below this league's "
+            f"norm of {norm_mean:.2f} ({why}) — sharp Under available.",
+            round(z, 2),
+        )
+
+    return None, None, None, round(z, 2)
+
+
 # ── Main entry ────────────────────────────────────────────────────────────────
 
 def evaluate_athena(
@@ -571,7 +670,17 @@ def evaluate_athena(
     team_nudge: float = 0.0,        # combined home+away team-level calibration nudge
     confidence_scale: float = 1.0,  # per-league delta multiplier (v2.3)
     confidence_floor: float = 0.60, # per-league confidence baseline (v2.3)
+    module_flags: ModuleFlags | None = None,
+    norm_mean: float = 2.70,        # mean goal expectation for this league
+    norm_std:  float = 0.45,        # spread of that expectation (not of results)
+    # Loosest under / tightest over worth offering here. None means no limit.
+    # A judgement about prices, which the engine cannot observe — see the note
+    # in app.engine.market_select on why this is config and not a rule.
+    max_under_line: float | None = None,
+    min_over_line:  float | None = None,
 ) -> Prediction:
+    mf = module_flags or ModuleFlags()
+
     notes:   List[str] = []
     modules: List[str] = []
     flags:   List[str] = ["SinglesOnly"]
@@ -616,30 +725,30 @@ def evaluate_athena(
     burst_p2p     = req.p_two_plus if req.p_two_plus is not None else 0.68
     burst_tempo   = raw_tempo
 
-    # ── Pre-lean protections ─────────────────────────────────────────
-    quality_ok = True
-    veto       = inline_veto(quality_ok, notes, modules)
-
     # ── Modules ──────────────────────────────────────────────────────
     # BurstSentinel uses raw unbiased values — prevents calibration
     # nudges from artificially triggering forced-over mode
-    burst_on    = burst_sentinel(burst_support, burst_p2p, burst_tempo, notes, modules)
-    gateb_block = gate_b(tempo, support_delta, notes, modules)
-    ulr_on      = ulr_low_tempo(tempo, notes, modules)
-    under_guard = under_p2p_guard(p2p, support_delta, notes, modules)
+    burst_on    = burst_sentinel(burst_support, burst_p2p, burst_tempo, notes, modules) \
+                  if mf.burst_sentinel else False
+    gateb_block = gate_b(tempo, support_delta, notes, modules) if mf.gate_b else False
+    ulr_on      = ulr_low_tempo(tempo, notes, modules) if mf.ulr else False
+    under_guard = under_p2p_guard(p2p, support_delta, notes, modules) \
+                  if mf.under_guard else "none"
 
     # DEG/DET/EPS/MFR/BILATERAL — run after core protections
-    # DEG: fail-safe respected (cannot override Inline Veto — veto zeros it implicitly
-    # by forcing under lean, but we still let DEG log for transparency)
-    deg_adj  = deg_degradation(deg_p, notes, modules)
-    det_adj  = det_detonation(det_b, burst_on, notes, modules)
-    eps_tap  = eps_phase_stability(eps, burst_on, notes, modules)
-    mfr_adj  = mfr_soft(support_delta, tempo, gateb_block, notes, modules)
-    lift_adj = mfr_to_lift(support_delta, gateb_block, notes, modules)
-    # MFR Soft and MFR_TO_LIFT are mutually exclusive — only the stronger fires
-    # mfr_to_lift threshold is higher so it replaces soft when both would trigger
-    mfr_total = lift_adj if lift_adj > 0.0 else mfr_adj
-    bilateral_exp = bilateral_chaos_escalator(h_det, a_det, burst_on, notes, modules)
+    deg_adj  = deg_degradation(deg_p, notes, modules) if mf.deg else 0.0
+    det_adj  = det_detonation(det_b, burst_on, notes, modules) if mf.det else 0.0
+    eps_tap  = eps_phase_stability(eps, burst_on, notes, modules) if mf.eps else 0.0
+    if mf.mfr:
+        mfr_adj  = mfr_soft(support_delta, tempo, gateb_block, notes, modules)
+        lift_adj = mfr_to_lift(support_delta, gateb_block, notes, modules)
+        # MFR Soft and MFR_TO_LIFT are mutually exclusive — only the stronger fires
+        # mfr_to_lift threshold is higher so it replaces soft when both would trigger
+        mfr_total = lift_adj if lift_adj > 0.0 else mfr_adj
+    else:
+        mfr_total = 0.0
+    bilateral_exp = bilateral_chaos_escalator(h_det, a_det, burst_on, notes, modules) \
+                    if mf.bilateral else 0.0
 
     # ── Lean scoring ─────────────────────────────────────────────────
     # Balanced formula — tempo contribution is halved to stop BRA-SA
@@ -655,7 +764,7 @@ def evaluate_athena(
     # Core module adjustments
     if burst_on:
         over_score  += 0.10
-    if gateb_block or veto:
+    if gateb_block:
         under_score += 0.08
     if ulr_on:
         under_score += 0.05
@@ -668,8 +777,6 @@ def evaluate_athena(
     # DEG reduces over_score (structural decline → suppress over)
     # DET increases over_score (volatility → expand over outlook)
     # MFR increases over_score (momentum → support over floor)
-    # Note: DEG applies even when veto fired (for transparency), but veto's
-    # under_score boost ensures under wins regardless.
     over_score += deg_adj   # negative
     over_score += det_adj   # positive
     over_score += mfr_total # positive
@@ -688,7 +795,7 @@ def evaluate_athena(
     # ── Lean decision ────────────────────────────────────────────────
     if burst_on:
         new_lean = "over"
-    elif gateb_block or veto or ulr_on or under_guard == "hard":
+    elif gateb_block or ulr_on or under_guard == "hard":
         new_lean = "under"
     elif under_guard == "soft" and under_score >= over_score:
         new_lean = "under"
@@ -700,10 +807,10 @@ def evaluate_athena(
         else:
             new_lean = "balanced"
 
-    final_lean = s_lock(
-        prev_lean=new_lean, new_lean=new_lean,
-        delta=delta, notes=notes, modules=modules,
-    )
+    # Lean is final here. A hysteresis guard (S-LOCK) used to sit at this
+    # point, but it compared the new lean against itself and could never fire;
+    # re-introducing it would need a stored previous lean per fixture.
+    final_lean = new_lean
 
     # ── Corridor ──────────────────────────────────────────────────────
     low, high = build_corridor(
@@ -730,7 +837,50 @@ def evaluate_athena(
         notes, flags, modules,
     )
 
-    return Prediction(
+    # ── Probability-based market selection ────────────────────────────
+    # The flowchart above never consults the goal estimate, so improvements to
+    # it do not reach the output. When enabled, pick the market by expected
+    # edge over a typical fixture in the same league instead. See
+    # app.engine.market_select for the measurement behind this.
+    pick_win_prob = pick_edge = None
+    if mf.prob_select:
+        picked = market_select.choose(
+            req.mu_total, req.league_mu,
+            max_under=max_under_line, min_over=min_over_line,
+        )
+        if picked is not None:
+            market, edge, pw = picked
+            if market != translated.market:
+                notes.append(
+                    f"ProbSelect: {translated.market} -> {market} "
+                    f"(win {pw:.0%}, edge {edge:+.1%} vs a typical "
+                    f"{req.league_code} fixture)."
+                )
+            else:
+                notes.append(
+                    f"ProbSelect confirms {market} "
+                    f"(win {pw:.0%}, edge {edge:+.1%})."
+                )
+            modules.append("ProbSelect")
+            translated = TranslatedPlay(
+                market=market,
+                confidence=("HIGH" if edge >= 0.06 else
+                            "MEDIUM" if edge >= 0.03 else "LOW"),
+            )
+            pick_win_prob, pick_edge = pw, edge
+
+    # ── Sharp lane ────────────────────────────────────────────────────
+    # mu_total is what tempo_index was derived from; invert that mapping rather
+    # than recomputing, so the two can never drift apart.
+    mu_total = raw_tempo * 3.0 + 1.5
+    sharp, tier, sharp_why, league_z = sharp_lane(
+        final_lean, translated.market, mu_total, norm_mean, norm_std, under_guard,
+    )
+    if sharp is not None:
+        modules.append("SharpLane")
+        notes.append(sharp_why)
+
+    prediction = Prediction(
         league_code=req.league_code,
         fixture=f"{req.home_team} vs {req.away_team}",
         corridor=Corridor(low=low, high=high, lean=final_lean),
@@ -739,4 +889,16 @@ def evaluate_athena(
         applied_modules=modules,
         safety_flags=flags,
         explanations=notes,
+        lanes=Lanes(
+            safe=translated,
+            sharp=sharp,
+            sharp_tier=tier,
+            sharp_reason=sharp_why,
+            league_z=league_z,
+        ),
     )
+    prediction.pick_win_prob = pick_win_prob
+    prediction.pick_edge = pick_edge
+    # Plain-language, user-facing rationale derived from the fired modules.
+    prediction.rationale = humanize(prediction)
+    return prediction
