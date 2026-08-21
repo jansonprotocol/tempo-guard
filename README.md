@@ -11,8 +11,21 @@
 | 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 (≤3 goals, half win at 4) | 86% | −2.3% | ❌ MISS — 6 goals |
 | 2026-08-21 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 (2+ goals) | 91% | +12% | ✅ HIT — 0-3, settled in play |
 | 2026-08-21 | Allsvenskan | Sirius v Häcken | O2.25 (3+ goals, half loss at 2) | 80% | +24% | ✅ HIT — 0-3, settled in play |
+| 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 (≤3 goals, half win at 4) | 89% | +1% | ✅ HIT — 1-3, half win at 4 goals |
+| 2026-08-21 | Premier League | Arsenal v Coventry | O1.5 (2+ goals) | 82% | +1.9% | ✅ HIT — 2-0, settled in play |
+| 2026-08-21 | LaLiga 2 | Córdoba v Girona | O1.5 (2+ goals) | 80% | +9.3% | ✅ HIT — 2-0, settled in play |
+| 2026-08-21 | Serie B | Vicenza v Catanzaro | O1.5 (2+ goals) | 77% | +5.2% | ✅ HIT — 1-1, settled in play |
 
-**6 / 7**
+**10 / 11**
+
+Cajamarca settled on the push: four goals is a half win on U4.25, which counts as
+a win under the full-win convention this engine grades by, because the bettor
+offsets the line. Worth noting rather than glossing — it was one goal from a
+loss.
+
+Arsenal and Vicenza are the two tips priced off stale stores (Premier League
+data ends 2026-05-24, Serie B 2026-05-08), so both were read from last season's
+form alone and both landed. Two matches say nothing about whether that is safe.
 
 Sirius landed despite being the least trustworthy tip of the batch: the Swedish
 naming split meant it was priced off 17 matches per side instead of 84, and it
@@ -40,17 +53,13 @@ followed when the two disagree is a measurable question, not a judgement call.
 
 | Date | League | Fixture | Play | Modelled | Edge |
 |---|---|---|---|---|---|
-| 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 (≤3 goals, half win at 4) | 89% | +1% |
 | 2026-08-21 | Ligue 2 | Sochaux v Guingamp | U3.0 (≤3 goals) | 84% | +9.1% |
 | 2026-08-21 | Ligue 2 | Pau v Nancy | U3.0 (≤3 goals) | 84% | +8.6% |
 | 2026-08-21 | Ligue 2 | Boulogne v Red Star | U3.0 (≤3 goals) | 83% | +7.9% |
 | 2026-08-21 | Ligue 2 | Clermont v Dijon | U4.25 (≤3 goals, half win at 4) | 90% | +1.1% |
 | 2026-08-21 | Ligue 2 | Dunkerque v Montpellier | U4.25 (≤3 goals, half win at 4) | 84% | −5.1% |
-| 2026-08-21 | LaLiga 2 | Córdoba v Girona | O1.5 (2+ goals) | 80% | +9.3% |
 | 2026-08-21 | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 89% | +8.9% |
 | 2026-08-21 | Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 84% | +6.6% |
-| 2026-08-21 | Serie B | Vicenza v Catanzaro | O1.5 (2+ goals) | 77% | +5.2% |
-| 2026-08-21 | Premier League | Arsenal v Coventry | O1.5 (2+ goals) | 82% | +1.9% |
 | 2026-08-21 | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3 goals, half win at 4) | 84% | −0.5% |
 | 2026-08-21 | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3 goals, half win at 4) | 84% | −1.0% |
 | 2026-08-21 | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3 goals, half win at 4) | 84% | −2.9% |
