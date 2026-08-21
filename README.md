@@ -20,6 +20,31 @@
 | — not started | Chinese Super League | Chengdu v Shenhua | O1.5 (2+ goals) | 2026-08-22 | 82% | +0.1% |
 | — not started | Championship | Lincoln v Portsmouth | **NO TIP** | 2026-08-22 | — | — |
 | — not started | Premier League | Hull v Man United | **NO TIP — withheld** | 2026-08-22 | — | — |
+| — not started | Chinese Super League | Guoan v Yukun | O2.25 (3+, half loss at 2) | 2026-08-22 | 81% | +20.3% |
+| — not started | Championship | West Ham v Charlton | O1.5 (2+ goals) | 2026-08-22 | 88% | +15.0% |
+| — not started | Allsvenskan | Örgryte v Halmstad | U3.0 (≤3 goals) | 2026-08-22 | 81% | +14.2% |
+| — not started | LaLiga 2 | Real Oviedo v Leganés | U3.0 (≤3 goals) | 2026-08-22 | 85% | +8.9% |
+| — not started | Ligue 1 | Lens v Auxerre | O1.5 (2+ goals) | 2026-08-22 | 86% | +8.3% |
+| — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 (≤3 goals) | 2026-08-22 | 79% | +7.1% |
+| — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 (≤3, half win at 4) | 2026-08-22 | 90% | +5.0% |
+| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 (2+ goals) | 2026-08-22 | 86% | +3.6% |
+| — not started | Championship | Wrexham v Watford | U4.25 (≤3, half win at 4) | 2026-08-22 | 91% | +2.9% |
+| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 (2+ goals) | 2026-08-22 | 82% | +2.7% |
+| — not started | Premier League | Everton v Crystal Palace | U4.25 (≤3, half win at 4) | 2026-08-22 | 84% | +1.9% |
+| — not started | Ekstraklasa | Korona v Motor | U4.25 (≤3, half win at 4) | 2026-08-22 | 87% | +1.8% |
+| — not started | Premier League | Forest v Leeds | O1.5 (2+ goals) | 2026-08-22 | 81% | +0.9% |
+| — not started | Championship | Derby v Cardiff | U4.25 (≤3, half win at 4) | 2026-08-22 | 88% | +0.3% |
+| — not started | Ligue 2 | Nantes v Rodez | U4.25 (≤3, half win at 4) | 2026-08-22 | 88% | −0.3% |
+| — not started | Championship | QPR v Bolton | U4.25 (≤3, half win at 4) | 2026-08-22 | 87% | −0.7% |
+| — not started | Championship | Preston v Wolves | U4.25 (≤3, half win at 4) | 2026-08-22 | 84% | −3.7% |
+| — not started | Championship | Blackburn v Middlesbrough | U4.25 (≤3, half win at 4) | 2026-08-22 | 84% | −3.9% |
+| — not started | Championship | Swansea v Sheffield United | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | −4.7% |
+| — not started | Championship | Southampton v Stoke | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | −4.8% |
+| — not started | Ligue 2 | Metz v Laval | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | −5.8% |
+| — not started | Chinese Super League | Qingdao v Taishan | **NO TIP — withheld** | 2026-08-22 | — | — |
+| — not started | Premier League | Ipswich v Sunderland | **NO TIP — withheld** | 2026-08-22 | — | — |
+| — not started | Ekstraklasa | Piast v Legia | **NO TIP — withheld** | 2026-08-22 | — | — |
+| — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** | 2026-08-22 | — | — |
 
 ## Completed FUTURE match bettips
 
@@ -83,6 +108,20 @@ last reported and go stale between updates.
 - **Al Nassr** — first tip where lean and market agreed. First sharp lane to land (O2.5). Finished 0-4.
 - **Sirius** — won, but least trustworthy of the batch: priced off 17 matches per side instead of 84 due to a naming split.
 - **Arsenal, Vicenza** — priced off stale stores (PL ends 2026-05-24, Serie B 2026-05-08). Last season's form only. Both landed; two matches prove nothing.
+
+### Saturday 22 Aug slate
+
+Three tips withheld by hand, all on the recency defect rather than the gate:
+
+- **Qingdao v Taishan** (U4.25, 90%, +10.9%) — Qingdao's newest match in the window is **1,682 days old**. Four and a half years.
+- **Ipswich v Sunderland** (U3.0, 83%, +18.2%) — Ipswich's Premier League form is **453 days old**; relegated and now back up.
+- **Piast v Legia** (O1.5, 81%, +5.1%) — the era-split naming defect: current-season data sits under `Legia` with four matches, older data under `Legia Warszawa` at **454 days**. Neither identity gives a usable read.
+
+Two of those carried double-digit edge. The engine would have published all three.
+
+Also refused by the history gate: **Marítimo v Académico Viseu** (Viseu has two matches). **Thun v Servette** postponed, not run.
+
+Eight of the twenty-one tips carry negative edge, all of them U4.25 fallbacks and seven of those in the Championship — an opening-weekend division where almost every side has thin or stale form, so the selector is finding nothing and retreating. Worth watching as a block rather than individually.
 
 ### Known data defects
 
