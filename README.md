@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 90.0%
+## CURRENT CONFIRMED HITRATE: 90.5%
 
-**18 / 20 settled** · over/under markets only · live tips, not backtests
+**19 / 21 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,7 +10,6 @@
 
 | Live | League | Fixture | Play | Date | Modelled | Edge |
 |---|---|---|---|---|---|---|
-| ⏱ LIVE: 1-0 (82') — winning | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
 | — not started | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 (≤3 goals) | 2026-08-21 | 88% | +7.8% |
 | — not started | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 (≤2, half loss at 3) | 2026-08-22 | 81% | +21.7% |
 | — not started | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 (≤3 goals) | 2026-08-22 | 82% | +12.6% |
@@ -41,12 +40,13 @@
 | ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 | 2026-08-21 | 89% | +8.9% |
 | ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 | 2026-08-21 | 84% | −0.5% |
 | ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 | 2026-08-21 | 84% | −1.0% |
+| ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 | 2026-08-21 | 84% | −2.9% |
 
 ---
 
 ### Notes on the log
 
-- Sample is 20 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
+- Sample is 21 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
 - All tips issued as-of the morning of the match. In-play fixtures run as if unstarted — no live information reaches them.
 - Retrosims are never logged here. Those are engine optimisation, not tips.
 - Pending → completed once a result is confirmed.
@@ -68,7 +68,7 @@ last reported and go stale between updates.
 - **Kashiwa (the miss)** — raw tempo read said *over*; selector overrode to U4.25. Finished 6 goals. Raw read was right. Edge was −2.3%: engine had found nothing and fell back to the safest rung. Override measured across 1,510 fixtures since: 85.7% vs 78.1% for following the lean. Override stays.
 - **Cajamarca and Erzurumspor** — both settled on the push. 4 goals = half win on U4.25 = win under the full-win convention. Two of the 17 wins are half wins, so a bettor who does not offset the line scores 15 clean wins, 2 pushes and 2 losses instead of 17 and 2. Worth stating: the headline rate depends on the convention.
 - **Erzurumspor** — a −0.5% fallback that took the safest rung and needed it: 0-4 landed exactly on the half win, one goal from a loss.
-- **Negative-edge tips** (Dunkerque −5.1%, Betis −2.9%, Standard −1.0%, Erzurumspor −0.5%) — fallbacks, not reads. Logged as issued, not recommended.
+- **Negative-edge fallbacks are 4/5.** Dunkerque −5.1% won, Betis −2.9% won, Kashiwa −2.3% lost, Standard −1.0% won, Erzurumspor −0.5% won on the push. These are fixtures where the selector found nothing worth backing and retreated to the safest rung — logged as issued rather than recommended, and outperforming the tips that carried real edge. Five bets prove nothing, but it matches the measurement: negative-edge picks are the highest-strike bucket in the book at 88.0%, because a negative edge means the engine refused to gamble on a read it did not have.
 - **Marseille is the red-card finding, live.** O1.5 tip, 1-0 at 51 minutes, Strasbourg sent off, finished 4-0. Reds open matches rather than stalling them — measured at +0.15 goals across 1,795 fixtures, with Over tips scoring 85.7% when a red appears against 79.1% when none does.
 - **Standard Liège** — the other side of it: an Under that survived a red. La Louvière went down to ten and it still finished 2-0, comfortably inside U4.25.
 - **Al Qadsiah (the second miss)** — O1.5 at 89% and +8.9% edge, lean and market agreeing, high line safety. Everything that has marked the good calls in this log, and it finished 0-1. Al-Ittihad went down to ten men. Nothing in the tip was wrong; the match simply had one goal in it.
