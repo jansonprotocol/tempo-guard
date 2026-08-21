@@ -41,7 +41,38 @@ followed when the two disagree is a measurable question, not a judgement call.
 | Date | League | Fixture | Play | Modelled | Edge |
 |---|---|---|---|---|---|
 | 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 (≤3 goals, half win at 4) | 89% | +1% |
+| 2026-08-21 | Ligue 2 | Sochaux v Guingamp | U3.0 (≤3 goals) | 84% | +9.1% |
+| 2026-08-21 | Ligue 2 | Pau v Nancy | U3.0 (≤3 goals) | 84% | +8.6% |
+| 2026-08-21 | Ligue 2 | Boulogne v Red Star | U3.0 (≤3 goals) | 83% | +7.9% |
+| 2026-08-21 | Ligue 2 | Clermont v Dijon | U4.25 (≤3 goals, half win at 4) | 90% | +1.1% |
+| 2026-08-21 | Ligue 2 | Dunkerque v Montpellier | U4.25 (≤3 goals, half win at 4) | 84% | −5.1% |
+| 2026-08-21 | LaLiga 2 | Córdoba v Girona | O1.5 (2+ goals) | 80% | +9.3% |
+| 2026-08-21 | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 89% | +8.9% |
+| 2026-08-21 | Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 84% | +6.6% |
+| 2026-08-21 | Serie B | Vicenza v Catanzaro | O1.5 (2+ goals) | 77% | +5.2% |
+| 2026-08-21 | Premier League | Arsenal v Coventry | O1.5 (2+ goals) | 82% | +1.9% |
+| 2026-08-21 | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3 goals, half win at 4) | 84% | −0.5% |
+| 2026-08-21 | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3 goals, half win at 4) | 84% | −1.0% |
+| 2026-08-21 | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3 goals, half win at 4) | 84% | −2.9% |
 | 2026-08-21 | Saudi Pro League | Al Hazem v Al Diriyah | **NO TIP** | — | — |
+| 2026-08-21 | Saudi Pro League | Al Faisaly v Neom | **NO TIP** | — | — |
+| 2026-08-21 | Ekstraklasa | Cracovia v Wieczysta | **NO TIP** | — | — |
+
+The four positive-edge Unders in Ligue 2 and the four positive-edge Overs are
+where the engine actually found something; the four negative-edge U4.25 calls
+are fallbacks, the same pattern that produced the Kashiwa miss. Recorded as
+issued rather than as recommended.
+
+Three caveats attach to this batch.
+
+Al Faisaly has one stored match and Al Diriyah one, both newly promoted, so the
+history gate declined. Cracovia's refusal is different and is a DEFECT: the club
+has 72 stored matches but they are split across `KS Cracovia` (2023-2025) and
+`Cracovia` (2026), so the engine saw four and refused a fixture it could have
+priced.
+
+Serie B and the Premier League stores end 2026-05-08 and 2026-05-24, so Vicenza
+and Arsenal were priced off last season's form with none of the current one.
 
 All four of this batch were in play when issued and were run as if unstarted, so
 no live information reached them.
