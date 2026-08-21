@@ -35,6 +35,16 @@ from app.util.asian_lines import evaluate_market, hit_weight
 LIMIT = int(sys.argv[1]) if len(sys.argv) > 1 else 600
 LEVELS = [0.79, 0.85, 0.88, 0.90, 0.91, 0.92, 0.93]
 
+# Continental competitions are excluded by default, on cost rather than
+# principle. Resolving as-of features for them runs roughly thirty times slower
+# per fixture than for a domestic league — UCL alone took eight minutes for 171
+# fixtures where a 300-fixture domestic league takes fifteen seconds — so the
+# four of them cost more than the other forty-eight combined. They are also a
+# tiny slice of the pooled sample and are not competitions this engine is aimed
+# at. Pass "all" as the second argument to include them.
+EUROPEAN = {"UCL", "UEL", "UECL", "UECL-Q"}
+INCLUDE_EUROPEAN = len(sys.argv) > 2 and sys.argv[2] == "all"
+
 
 def won(m, t) -> bool:
     return hit_weight(evaluate_market(m, t, 0)) >= 1.0
@@ -75,6 +85,8 @@ def line(label, picks, pool):
 
 def main() -> None:
     codes = sorted(config.load_all().keys())
+    if not INCLUDE_EUROPEAN:
+        codes = [c for c in codes if c not in EUROPEAN]
     rows = []
     for code in codes:
         try:
