@@ -252,6 +252,12 @@ LEAGUES: dict[str, LeagueSource] = {
         "COL-PA", "Colombian Primera A", "", "",
         calendar_year=True, provider="espn", espn_code="col.1",
     ),
+    # Chile runs February to December like its neighbours, so the season is the
+    # calendar year and the Clausura is the back half of one campaign.
+    "CHI-PD": LeagueSource(
+        "CHI-PD", "Chilean Primera División", "", "",
+        calendar_year=True, provider="espn", espn_code="chi.1",
+    ),
     # Peru runs February to December, so the season IS the calendar year. The
     # Clausura is the back half of that single campaign rather than a separate
     # competition, and ESPN publishes both halves under per.1.
