@@ -145,18 +145,20 @@ def main() -> None:
     print("  " + "-" * 74)
     results = []
     t_base = score(train, cfg, flags, False)[0]
+    # Every candidate is printed, passing or not. An empty table cannot be
+    # distinguished from a filter that rejected everything, and the shape of
+    # the failures is itself the finding when nothing wins.
     for label, c, f, pos in variants(cfg):
         th = score(train, c, f, pos)[0]
-        if th < t_base:                       # must not hurt where it can see
-            continue
         hh, h_out, h_mk, h_tot = score(hold, c, f, pos)
         net = sum(1 for a, b in zip(b_out, h_out) if b and not a) - \
               sum(1 for a, b in zip(b_out, h_out) if a and not b)
-        if net <= 0:
-            continue
-        results.append((net, label, hh, h_mk, h_tot, c, f, pos))
+        ok = th >= t_base and net > 0
+        if ok:
+            results.append((net, label, hh, h_mk, h_tot, c, f, pos))
         print(f"  {label:34s} {th - t_base:+6d} on {len(train):3d} "
-              f"{hh}/{len(hold)} = {hh / len(hold):6.1%} {net:+6d}", flush=True)
+              f"{hh}/{len(hold)} = {hh / len(hold):6.1%} {net:+6d}"
+              f"{'  <- accepted' if ok else ''}", flush=True)
 
     if not results:
         print("\n  No single toggle produced a net gain on unseen matches.")
