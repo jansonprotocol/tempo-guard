@@ -15,7 +15,7 @@
 | — not started | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 (≤3 goals) | 2026-08-21 | 88% | +7.8% |
 | — not started | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 (≤2, half loss at 3) | 2026-08-22 | 81% | +21.7% |
 | — not started | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 (≤3 goals) | 2026-08-22 | 82% | +12.6% |
-| ⏱ LIVE: 0-0 (12') — needs 2 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
+| ⏱ LIVE: 1-0 (22') — needs 1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 (≤3, half win at 4) | 2026-08-22 | 79% | +0.1% |
 
 ## Completed FUTURE match bettips
