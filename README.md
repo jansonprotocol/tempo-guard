@@ -7,23 +7,25 @@
 | 2026-08-20 | LaLiga | Rayo Vallecano v Alavés | O1.5 (2+ goals) | 82% | +7.7% | ✅ HIT — 1-1 |
 | 2026-08-21 | Brasileirão Série B | Athletic v CRB | O1.0 (2+ goals) | 90% | +1.0% | ✅ HIT |
 | 2026-08-21 | Brasileirão Série B | Novorizontino v América-MG | O1.0 (2+ goals) | 90% | +1.1% | ✅ HIT |
+| 2026-08-21 | J1 League | FC Tokyo v JEF United Ichihara-Chiba | U4.25 (≤3 goals, half win at 4) | 89% | +0.9% | ✅ HIT |
+| 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 (≤3 goals, half win at 4) | 86% | −2.3% | ❌ MISS — 6 goals |
 
-**3 / 3**
+**4 / 5**
+
+The miss is the informative one. Athena's raw tempo read on Kashiwa was
+**over**, and the market selector overrode it onto the Under because the
+fixture sat above J1's scoring average and no line beat a typical fixture there.
+The match finished with six goals — the raw read was right and the override was
+wrong. The negative edge was the engine saying so at the time: it had found
+nothing worth backing and fell back to the safest rung.
+
+Recorded because it is the first live case of the override costing a bet, and
+because the same override fires across the book. Whether the raw lean should be
+followed when the two disagree is a measurable question, not a judgement call.
 
 ## Pending FUTURE match bettips
 
-| Date | League | Fixture | Play | Modelled | Edge |
-|---|---|---|---|---|---|
-| 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 (≤3 goals, half win at 4) | 86% | −2.3% |
-| 2026-08-21 | J1 League | FC Tokyo v JEF United Ichihara-Chiba | U4.25 (≤3 goals, half win at 4) | 89% | +0.9% |
-
-Both are thin calls. The Kashiwa edge is *negative* — the engine found no line
-that beats a typical J1 fixture and took the safest available, which is a
-fallback rather than a read. Recorded as issued, not as recommended.
-
-Prediction made as-of the morning of the match; Kashiwa was already in play when
-the tip was generated and was run as if unstarted, so no live information
-reached it.
+_None._
 
 ### How this log works
 
