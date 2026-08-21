@@ -569,3 +569,69 @@ def test_espn_season_span_follows_calendar_year_flag():
         assert seen["dates"] == "20250701-20260630"
     finally:
         mod.requests.get = real
+
+
+# ── Possession adjustment ─────────────────────────────────────────────────────
+
+def test_possession_is_off_unless_a_league_has_data():
+    """
+    The adjustment must return None rather than a guess when a league has no
+    possession, too little history to fit, or a side without a profile. Callers
+    then proceed exactly as before.
+    """
+    from datetime import date
+    from app.data import possession
+
+    # ENG-PL comes from football-data.co.uk, which publishes no possession.
+    assert possession.shift("ENG-PL", "Arsenal", "Chelsea", date(2026, 3, 5)) is None
+
+
+def test_possession_shift_is_bounded():
+    """
+    A regression fitted on a few thousand noisy matches should nudge a goal
+    expectation, not overturn it. Whatever the fit produces, the published shift
+    stays inside MAX_SHIFT.
+    """
+    from datetime import date
+    from app.data import possession, store
+
+    df = store.load_results("COL-PA")
+    if df.empty or "hpos" not in df.columns:
+        import pytest
+        pytest.skip("COL-PA possession not loaded")
+
+    seen = 0
+    recent = df[df["date"] >= "2026-01-01"].head(25)
+    for _, r in recent.iterrows():
+        s = possession.shift("COL-PA", r["home"], r["away"], r["date"].date())
+        if s is None:
+            continue
+        seen += 1
+        assert abs(s) <= possession.MAX_SHIFT + 1e-9, (r["home"], r["away"], s)
+    assert seen > 0, "expected at least one fixture to produce a shift"
+
+
+def test_possession_fit_is_as_of():
+    """
+    The coefficient for a fixture must come only from matches before it. Fitting
+    on a league's whole history and scoring the same matches would confirm any
+    signal, real or not — which is how a false result already arose once in this
+    codebase.
+    """
+    from datetime import datetime
+    from app.data import possession, store
+
+    df = store.load_results("COL-PA")
+    if df.empty or "hpos" not in df.columns:
+        import pytest
+        pytest.skip("COL-PA possession not loaded")
+
+    possession._FIT_CACHE.clear()
+    early = possession._fit("COL-PA", datetime(2022, 1, 1))
+    possession._FIT_CACHE.clear()
+    late = possession._fit("COL-PA", datetime(2026, 6, 1))
+
+    # Different windows must produce different fits; identical values would mean
+    # the cutoff was ignored.
+    if early is not None and late is not None:
+        assert early != late, "fit ignored the cutoff"
