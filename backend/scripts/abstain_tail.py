@@ -32,7 +32,7 @@ from app.engine.types import ModuleFlags
 from app.predict import predict_fixture
 from app.util.asian_lines import evaluate_market, hit_weight
 
-LIMIT = 600
+LIMIT = int(sys.argv[1]) if len(sys.argv) > 1 else 600
 LEVELS = [0.79, 0.85, 0.88, 0.90, 0.91, 0.92, 0.93]
 
 
