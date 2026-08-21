@@ -98,17 +98,25 @@ def _stats(competitor: dict) -> dict:
 
 
 def fetch_season(espn_code: str, year: int, league_code: str,
-                 country: str = "") -> pd.DataFrame:
+                 country: str = "", calendar_year: bool = True) -> pd.DataFrame:
     """
     One season of a competition, finished matches only.
+
+    `calendar_year` decides what a season *is*. Brazil and MLS run January to
+    December, so the year is the season. Europe runs August to May, and
+    fetching those as a calendar year splices the back half of one season onto
+    the front half of the next — the rows all exist and every season label is
+    wrong, which is worse than missing data because nothing looks broken.
 
     Unplayed fixtures are dropped rather than stored with null scores: the
     store holds results, and a fixture row with no score is what made
     openfootball's Série B file look complete when it was not.
     """
+    span = (f"{year}0101-{year}1231" if calendar_year
+            else f"{year}0701-{year + 1}0630")
     r = requests.get(
         SCOREBOARD.format(code=espn_code),
-        params={"dates": f"{year}0101-{year}1231", "limit": LIMIT},
+        params={"dates": span, "limit": LIMIT},
         timeout=TIMEOUT,
     )
     r.raise_for_status()
@@ -143,7 +151,7 @@ def fetch_season(espn_code: str, year: int, league_code: str,
             "hst": hs["st"], "ast": as_["st"],
             "hc": hs["c"], "ac": as_["c"],
             "hf": hs["f"], "af": as_["f"],
-            "season": str(year),
+            "season": str(year) if calendar_year else f"{year}-{str(year + 1)[2:]}",
             "league_code": league_code,
             "country": country,
             "status": "FT",
@@ -155,13 +163,14 @@ def fetch_season(espn_code: str, year: int, league_code: str,
 
 
 def fetch_seasons(espn_code: str, years, league_code: str,
-                  country: str = "", progress=None) -> pd.DataFrame:
+                  country: str = "", progress=None,
+                  calendar_year: bool = True) -> pd.DataFrame:
     """Several seasons, concatenated. A failed year is skipped, not fatal."""
     say = progress or (lambda _m: None)
     frames = []
     for y in years:
         try:
-            df = fetch_season(espn_code, y, league_code, country)
+            df = fetch_season(espn_code, y, league_code, country, calendar_year)
         except Exception as exc:
             say(f"  {league_code} {y}: failed ({exc})")
             continue

@@ -51,6 +51,16 @@ class LeagueSource:
     fd_league: Optional[str] = None    # competition within an extra file, since
                                        # some countries publish two in one file
     espn_code: Optional[str] = None    # ESPN competition slug, e.g. "bra.2"
+    #
+    # Leagues repointed at ESPN because their previous feed died while the
+    # competition kept playing: BRA-SB (openfootball stopped mid-2025 and
+    # publishes no 2026 file), COL-PA, UEL and UECL (all 450+ days stale), and
+    # AUT-BL (openfootball carried only the current season, 18 matches, so it
+    # could predict but had nothing to replay).
+    #
+    # Croatia and the Czech league could NOT be rescued this way: ESPN returns
+    # HTTP 400 for every Croatian slug tried, and cze.1 resolves to a name with
+    # zero matches in both 2025 and 2026. Both remain retro-only.
 
     def season_path(self, season: str) -> str:
         return self.path.format(season=season)
@@ -166,8 +176,8 @@ LEAGUES: dict[str, LeagueSource] = {
         fd_div="B1"
     ),
     "AUT-BL": LeagueSource(
-        "AUT-BL", "Austrian Bundesliga", "europe", "austria/{season}_at1.txt",
-        fd_country="AUT", fd_league="Bundesliga"
+        "AUT-BL", "Austrian Bundesliga", "", "",
+        provider="espn", espn_code="aut.1",
     ),
     "SUI-SL": LeagueSource(
         "SUI-SL", "Swiss Super League", "europe", "switzerland/{season}_ch1.txt",
@@ -232,8 +242,8 @@ LEAGUES: dict[str, LeagueSource] = {
         fd_country="ARG", fd_league="Liga Profesional"
     ),
     "COL-PA": LeagueSource(
-        "COL-PA", "Colombian Primera A", "south-america",
-        "colombia/{season}_co1.txt", calendar_year=True,
+        "COL-PA", "Colombian Primera A", "", "",
+        calendar_year=True, provider="espn", espn_code="col.1",
     ),
     "ECU-S1": LeagueSource(
         "ECU-S1", "Ecuadorian Serie A", "south-america",
@@ -299,12 +309,12 @@ LEAGUES: dict[str, LeagueSource] = {
         international=True,
     ),
     "UEL": LeagueSource(
-        "UEL", "UEFA Europa League", "champions-league", "{season}/el.txt",
-        international=True,
+        "UEL", "UEFA Europa League", "", "",
+        international=True, provider="espn", espn_code="uefa.europa",
     ),
     "UECL": LeagueSource(
-        "UECL", "UEFA Conference League", "champions-league", "{season}/conf.txt",
-        international=True,
+        "UECL", "UEFA Conference League", "", "",
+        international=True, provider="espn", espn_code="uefa.europa.conf",
     ),
     # Qualifying rounds. Separate competitions in their own right, and worth
     # loading: they are real matches between the same clubs, adding several

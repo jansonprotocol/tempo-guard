@@ -83,7 +83,8 @@ def _load_espn(src: "sources.LeagueSource", season: str):
         year = int(str(season)[:4])
     except ValueError:
         return None
-    df = espn.fetch_season(src.espn_code, year, src.code)
+    df = espn.fetch_season(src.espn_code, year, src.code,
+                           calendar_year=src.calendar_year)
     if df is None or df.empty:
         return None
     # The store expects a status vocabulary; ESPN only yields finished matches.

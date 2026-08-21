@@ -285,24 +285,35 @@ def test_registry_covers_multiple_continents():
 
 def test_uefa_competitions_are_registered():
     """
-    All three UEFA club competitions plus their qualifying rounds share the
-    champions-league repo, one file per competition per season. Coverage
-    differs by competition — the Conference League only exists from 2021-22 —
-    so the loader must tolerate missing seasons rather than erroring.
+    The UEFA club competitions are split across two providers, deliberately.
+
+    UCL and all three qualifying rounds still come from openfootball's
+    champions-league repo, one file per competition per season, and the loader
+    must tolerate missing seasons since coverage differs by competition.
+
+    UEL and UECL were repointed at ESPN because openfootball stopped: both sat
+    450+ days stale while the competitions kept playing. They are the reason a
+    third provider exists, alongside Brazilian Serie B.
     """
     from app.data import sources
 
     for code, filename in [
-        ("UCL", "cl"), ("UEL", "el"), ("UECL", "conf"),
-        ("UCL-Q", "clq"), ("UEL-Q", "elq"), ("UECL-Q", "confq"),
+        ("UCL", "cl"), ("UCL-Q", "clq"), ("UEL-Q", "elq"), ("UECL-Q", "confq"),
     ]:
         src = sources.get(code)
         assert src.repo == "champions-league", code
-        assert src.season_path("2024-25") == f"2024-25/{filename}.txt"
+        assert filename in src.path, code
         assert src.international is True, code
 
-
-# ── football-data.co.uk provider ──────────────────────────────────────────────
+    for code, slug in [("UEL", "uefa.europa"), ("UECL", "uefa.europa.conf")]:
+        src = sources.get(code)
+        assert src.provider == "espn", code
+        assert src.espn_code == slug, code
+        assert src.international is True, code
+        # Autumn-spring competitions. Fetching these as calendar years would
+        # splice the back half of one season onto the front of the next, and
+        # every season label would be wrong while nothing looked broken.
+        assert src.calendar_year is False, code
 
 def test_odds_columns_are_rejected():
     """
@@ -508,3 +519,53 @@ def test_league_mean_is_windowed_not_cumulative():
     mean, n = features._league_mean_asof(df, datetime(2026, 6, 1))
     assert 0 < n < 2000, f"window not applied: n={n} of {len(df)}"
     assert 2.0 < mean < 4.0
+
+
+def test_espn_sourced_leagues_declare_a_slug():
+    """
+    Every ESPN-provider league needs a slug; without one the loader silently
+    returns None and the league looks merely empty rather than misconfigured.
+    """
+    from app.data import sources
+
+    espn = [s for s in sources.LEAGUES.values() if s.provider == "espn"]
+    assert espn, "expected at least the leagues rescued from dead feeds"
+    for s in espn:
+        assert s.espn_code, s.code
+        assert not s.repo and not s.path, f"{s.code} should not keep a git path"
+
+
+def test_espn_season_span_follows_calendar_year_flag():
+    """
+    Regression guard on the splice. A calendar-year league asks for January to
+    December; an autumn-spring one asks July to June of the following year.
+    """
+    from app.data import espn
+
+    seen = {}
+
+    class _Resp:
+        status_code = 200
+
+        @staticmethod
+        def raise_for_status():
+            pass
+
+        @staticmethod
+        def json():
+            return {"events": []}
+
+    def fake_get(url, params=None, timeout=None):
+        seen["dates"] = params["dates"]
+        return _Resp()
+
+    import app.data.espn as mod
+    real = mod.requests.get
+    mod.requests.get = fake_get
+    try:
+        espn.fetch_season("x.1", 2025, "X", calendar_year=True)
+        assert seen["dates"] == "20250101-20251231"
+        espn.fetch_season("x.1", 2025, "X", calendar_year=False)
+        assert seen["dates"] == "20250701-20260630"
+    finally:
+        mod.requests.get = real
