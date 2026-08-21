@@ -25,6 +25,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import pandas as pd
+
 from app.calibrate import CALIB_MIN_MATCHES, _requests_for
 from app.data import config
 from app.engine import market_select
@@ -43,7 +45,15 @@ LEVELS = [0.79, 0.85, 0.88, 0.90, 0.91, 0.92, 0.93]
 # tiny slice of the pooled sample and are not competitions this engine is aimed
 # at. Pass "all" as the second argument to include them.
 EUROPEAN = {"UCL", "UEL", "UECL", "UECL-Q"}
-INCLUDE_EUROPEAN = len(sys.argv) > 2 and sys.argv[2] == "all"
+_ARGS = set(sys.argv[2:])
+INCLUDE_EUROPEAN = "all" in _ARGS
+FORCE_FRESH = "fresh" in _ARGS
+
+# Markets to hold out of the analysis, e.g. "no-O1.0".
+EXCLUDE = {a[3:] for a in _ARGS if a.startswith("no-")}
+
+# Replay rows live here so a re-slice does not mean a re-replay.
+CACHE_DIR = Path(__file__).resolve().parents[1] / ".cache"
 
 
 def won(m, t) -> bool:
@@ -83,7 +93,30 @@ def line(label, picks, pool):
           f"edge {s - base:+7.2%}   {mix}")
 
 
-def main() -> None:
+def cache_path() -> Path:
+    tag = "all" if INCLUDE_EUROPEAN else "dom"
+    return CACHE_DIR / f"tail_rows_{LIMIT}_{tag}.csv"
+
+
+def build_rows() -> list[dict]:
+    """
+    One row per replayable fixture: what was picked, what landed, how sure.
+
+    Cached to disk because the expensive part is resolving as-of features, and
+    that does not depend on the question being asked of the result. Re-slicing
+    the same replay — excluding a market, splitting by league, moving a
+    threshold — was costing a twelve-minute recompute each time, which is the
+    same mistake as rebuilding the possession design matrix per fit.
+
+    Delete the file, or pass "fresh" as the third argument, to rebuild.
+    """
+    path = cache_path()
+    if path.exists() and not FORCE_FRESH:
+        df = pd.read_csv(path)
+        print(f"reusing {path.name} ({len(df)} fixtures) "
+              f"— pass 'fresh' to rebuild\n")
+        return df.to_dict("records")
+
     codes = sorted(config.load_all().keys())
     if not INCLUDE_EUROPEAN:
         codes = [c for c in codes if c not in EUROPEAN]
@@ -107,9 +140,32 @@ def main() -> None:
                          "total": int(hg) + int(ag), "p_win": pw})
         print(f"  {code}: {len(pairs)}", flush=True)
 
+    if rows:
+        CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        pd.DataFrame(rows).to_csv(path, index=False)
+        print(f"\ncached {len(rows)} fixtures to {path.name}\n")
+    return rows
+
+
+def main() -> None:
+    rows = build_rows()
     if not rows:
         print("no data")
         return
+
+    # Markets may be held out of the tail to test whether a band is a genuine
+    # confidence effect or just one near-certain rung. The 0.91 tail came back
+    # 33% O1.0 and the 0.93 tail 82%, so "abstain high" and "buy O1.0" are
+    # candidates for being the same rule.
+    if EXCLUDE:
+        before = len(rows)
+        rows = [r for r in rows if r["market"] not in EXCLUDE]
+        print(f"excluding {', '.join(sorted(EXCLUDE))}: "
+              f"{before} -> {len(rows)} fixtures\n")
+        if not rows:
+            print("nothing left")
+            return
+
     rows.sort(key=lambda r: r["date"])
     n = len(rows)
     half = n // 2

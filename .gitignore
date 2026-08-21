@@ -12,3 +12,6 @@ venv/
 
 # OS / editor
 .DS_Store
+
+# Replay caches (regenerable)
+backend/.cache/
