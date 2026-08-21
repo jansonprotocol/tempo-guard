@@ -10,8 +10,16 @@
 | 2026-08-21 | J1 League | FC Tokyo v JEF United Ichihara-Chiba | U4.25 (≤3 goals, half win at 4) | 89% | +0.9% | ✅ HIT |
 | 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 (≤3 goals, half win at 4) | 86% | −2.3% | ❌ MISS — 6 goals |
 | 2026-08-21 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 (2+ goals) | 91% | +12% | ✅ HIT — 0-3, settled in play |
+| 2026-08-21 | Allsvenskan | Sirius v Häcken | O2.25 (3+ goals, half loss at 2) | 80% | +24% | ✅ HIT — 0-3, settled in play |
 
-**5 / 6**
+**6 / 7**
+
+Sirius landed despite being the least trustworthy tip of the batch: the Swedish
+naming split meant it was priced off 17 matches per side instead of 84, and it
+carried the largest edge on the board at +24%. One winning bet does not tell us
+whether that number was real or an artefact of thin history — a tip computed on
+a quarter of the available data can be right for reasons that have nothing to do
+with being well founded. The split is still worth fixing.
 
 Al Nassr is the first tip where the lane and the market agreed rather than one
 overriding the other, and it is also the first sharp lane to land: O2.5 needed
@@ -32,7 +40,6 @@ followed when the two disagree is a measurable question, not a judgement call.
 
 | Date | League | Fixture | Play | Modelled | Edge |
 |---|---|---|---|---|---|
-| 2026-08-21 | Allsvenskan | Sirius v Häcken | O2.25 (3+ goals, half loss at 2) | 80% | +24% |
 | 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 (≤3 goals, half win at 4) | 89% | +1% |
 | 2026-08-21 | Saudi Pro League | Al Hazem v Al Diriyah | **NO TIP** | — | — |
 
@@ -43,11 +50,13 @@ Al Diriyah has one match of stored history — newly promoted — so the engine
 declined rather than predicting from nothing. That is the history gate doing its
 job, and it is the first no-tip in this log.
 
-Sirius v Häcken carries a caveat. The Swedish store holds each of these clubs
-under two identities: `IK Sirius`/`BK Häcken` for 2023-2025 and `Sirius`/`Hacken`
-for 2026, because the seasons came from different providers. The prediction was
-made under the current naming and therefore saw 17 matches per side instead of
-84. The +24% edge is the largest on the board and should be read against that.
+Cajamarca is an Under and needs full time to settle; ≤3 goals wins it.
+
+Sirius v Häcken carried a caveat, and is now settled above. The Swedish store
+holds each of these clubs under two identities: `IK Sirius`/`BK Häcken` for
+2023-2025 and `Sirius`/`Hacken` for 2026, because the seasons came from
+different providers. The prediction was made under the current naming and
+therefore saw 17 matches per side instead of 84.
 
 ### How this log works
 
