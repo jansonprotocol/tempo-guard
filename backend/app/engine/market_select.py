@@ -128,14 +128,29 @@ def _line_of(market: str) -> float:
         return 0.0
 
 
+# The lowest Over rung a league may reach for unless it says otherwise.
+#
+# O1.0 wins on 1+ goals, which makes it the right call only where 2+ is a
+# genuine question — a league averaging around 2.2 goals. It was previously
+# unconstrained by default, so it was reachable everywhere, and the engine
+# offered it three times in a J1 matchday (2.52 goals/match) and would have
+# offered it in the Bundesliga at 3.19. In a normal-scoring league it is not a
+# read on the fixture, it is a near-certainty at a price to match.
+#
+# Defaulting to 1.5 excludes it; a league that genuinely plays that low
+# declares min_over_line 1.0 for itself, the same way it declares an under cap.
+DEFAULT_MIN_OVER = 1.5
+
+
 def playable(market: str, max_under: Optional[float] = None,
              min_over: Optional[float] = None) -> bool:
     """Is this rung worth offering, given a league's declared limits?"""
     line = _line_of(market)
     if market.startswith("U") and max_under is not None:
         return line <= max_under + _EPS
-    if market.startswith("O") and min_over is not None:
-        return line >= min_over - _EPS
+    if market.startswith("O"):
+        floor = DEFAULT_MIN_OVER if min_over is None else min_over
+        return line >= floor - _EPS
     return True
 
 
