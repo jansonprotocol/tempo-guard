@@ -59,10 +59,20 @@ def won(m, t) -> bool:
 
 
 def base_of(markets, totals) -> float:
+    """
+    Average win rate of the chosen markets across the sample.
+
+    Weighted over DISTINCT markets rather than iterated per pick. The naive
+    form re-scans every total once per fixture, which is O(n^2): at 11,000
+    fixtures that is 2.7 minutes for a single call and it silently turned a
+    summary into an hour of arithmetic. The ladder has twelve rungs, so
+    counting them collapses it to O(12n) for an identical number.
+    """
     if not markets or not totals:
         return 0.0
-    return sum(sum(1 for t in totals if won(m, t)) / len(totals)
-               for m in markets) / len(markets)
+    n = len(totals)
+    return sum(c * sum(1 for t in totals if won(m, t)) / n
+               for m, c in Counter(markets).items()) / len(markets)
 
 
 def season_rates(df: pd.DataFrame) -> dict[tuple, float]:
