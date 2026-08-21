@@ -35,6 +35,45 @@ it removes fixtures. That alone means nothing. Two things have to hold:
 
 Replayed at min_matches=1 so the thin end is visible; production would never
 have issued most of these. Rows are cached.
+
+RESULT: THE DIAL IS ALREADY IN THE RIGHT PLACE
+==============================================
+14,260 fixtures. There is a real cliff, and MIN_MATCHES=5 already sits on it:
+
+    hist 1-4     470 (3.3%)   72.8%     <- refused today
+    hist 5-7     278          77.0%
+    hist 8-11    373          80.2%
+    hist 12-15   410          76.6%
+    hist 16-24   863          80.2%
+    hist 25-49  1898          80.1%
+    hist 50+    9968          81.0%
+
+Below five matches a fixture is genuinely unreadable. Above it the curve is flat
+and the 12-15 dip is inside its own error bar.
+
+Raising the threshold further buys nothing, because what improves is the bucket
+that leaves, not the book that stays:
+
+    hist >= 5    kept 96.7% = 80.6%   dropped 72.8%   gap +7.80%
+    hist >= 8    kept 94.8% = 80.6%   dropped 74.3%   gap +6.31%
+    hist >= 12   kept 92.1% = 80.7%   dropped 76.3%   gap +4.38%
+    hist >= 30   kept 80.3% = 81.0%   dropped 77.4%   gap +3.57%
+
+Kept strike moves 80.6% to 81.0% while a fifth of the book is discarded. Every
+threshold holds on the chronological split at the same level, so nothing is
+being missed for want of a bigger sample.
+
+A CORRECTION THIS RUN FORCES
+============================
+The abstention probe reported history "separating by +6.65%", and that was
+quoted as if it were a gain available by raising the gate. It is not. It is the
+distance between kept and dropped, which a gate can be large on while improving
+the book by almost nothing — exactly what happens here. The number that matters
+for hit rate is kept strike, and it is flat.
+
+The window cap turns out not to cost anything either. Uncapped history adds no
+information beyond the ten-match window: the buckets above 8 are all ~80% with
+no trend, so the gate testing a saturating quantity is not a defect worth fixing.
 """
 from __future__ import annotations
 
