@@ -8,34 +8,34 @@
 
 ## Pending FUTURE match bettips
 
-| Date | League | Fixture | Play | Modelled | Edge |
+| League | Fixture | Play | Date | Modelled | Edge |
 |---|---|---|---|---|---|
-| 2026-08-21 | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 89% | +8.9% |
-| 2026-08-21 | Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 84% | +6.6% |
-| 2026-08-21 | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3, half win at 4) | 84% | −0.5% |
-| 2026-08-21 | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 84% | −1.0% |
-| 2026-08-21 | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 84% | −2.9% |
+| Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 2026-08-21 | 89% | +8.9% |
+| Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 2026-08-21 | 84% | +6.6% |
+| Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −0.5% |
+| Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −1.0% |
+| LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
 
 ## Completed FUTURE match bettips
 
-| Date | League | Fixture | Play | Modelled | Edge | Result |
+| Result | League | Fixture | Play | Date | Modelled | Edge |
 |---|---|---|---|---|---|---|
-| 2026-08-20 | LaLiga | Rayo Vallecano v Alavés | O1.5 | 82% | +7.7% | ✅ HIT — 1-1 |
-| 2026-08-21 | Brasileirão Série B | Athletic v CRB | O1.0 | 90% | +1.0% | ✅ HIT |
-| 2026-08-21 | Brasileirão Série B | Novorizontino v América-MG | O1.0 | 90% | +1.1% | ✅ HIT |
-| 2026-08-21 | J1 League | FC Tokyo v JEF United | U4.25 | 89% | +0.9% | ✅ HIT |
-| 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 | 86% | −2.3% | ❌ MISS — 6 goals |
-| 2026-08-21 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 | 91% | +12% | ✅ HIT — 0-3 |
-| 2026-08-21 | Allsvenskan | Sirius v Häcken | O2.25 | 80% | +24% | ✅ HIT — 0-3 |
-| 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 | 89% | +1% | ✅ HIT — 1-3, half win |
-| 2026-08-21 | Premier League | Arsenal v Coventry | O1.5 | 82% | +1.9% | ✅ HIT — 2-0 |
-| 2026-08-21 | LaLiga 2 | Córdoba v Girona | O1.5 | 80% | +9.3% | ✅ HIT — 2-0 |
-| 2026-08-21 | Serie B | Vicenza v Catanzaro | O1.5 | 77% | +5.2% | ✅ HIT — 1-2 |
-| 2026-08-21 | Ligue 2 | Sochaux v Guingamp | U3.0 | 84% | +9.1% | ✅ HIT — 1-0 |
-| 2026-08-21 | Ligue 2 | Pau v Nancy | U3.0 | 84% | +8.6% | ✅ HIT — 0-1 |
-| 2026-08-21 | Ligue 2 | Boulogne v Red Star | U3.0 | 83% | +7.9% | ✅ HIT — 1-1 |
-| 2026-08-21 | Ligue 2 | Clermont v Dijon | U4.25 | 90% | +1.1% | ✅ HIT — 1-1 |
-| 2026-08-21 | Ligue 2 | Dunkerque v Montpellier | U4.25 | 84% | −5.1% | ✅ HIT — 0-1 |
+| ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 | 2026-08-20 | 82% | +7.7% |
+| ✅ HIT | Brasileirão Série B | Athletic v CRB | O1.0 | 2026-08-21 | 90% | +1.0% |
+| ✅ HIT | Brasileirão Série B | Novorizontino v América-MG | O1.0 | 2026-08-21 | 90% | +1.1% |
+| ✅ HIT | J1 League | FC Tokyo v JEF United | U4.25 | 2026-08-21 | 89% | +0.9% |
+| ❌ MISS — 6 goals | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 | 2026-08-21 | 86% | −2.3% |
+| ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 | 2026-08-21 | 91% | +12% |
+| ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 | 2026-08-21 | 80% | +24% |
+| ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 | 2026-08-21 | 89% | +1% |
+| ✅ HIT — 2-0 | Premier League | Arsenal v Coventry | O1.5 | 2026-08-21 | 82% | +1.9% |
+| ✅ HIT — 2-0 | LaLiga 2 | Córdoba v Girona | O1.5 | 2026-08-21 | 80% | +9.3% |
+| ✅ HIT — 1-2 | Serie B | Vicenza v Catanzaro | O1.5 | 2026-08-21 | 77% | +5.2% |
+| ✅ HIT — 1-0 | Ligue 2 | Sochaux v Guingamp | U3.0 | 2026-08-21 | 84% | +9.1% |
+| ✅ HIT — 0-1 | Ligue 2 | Pau v Nancy | U3.0 | 2026-08-21 | 84% | +8.6% |
+| ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 | 2026-08-21 | 83% | +7.9% |
+| ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 | 2026-08-21 | 90% | +1.1% |
+| ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 | 2026-08-21 | 84% | −5.1% |
 
 ---
 
