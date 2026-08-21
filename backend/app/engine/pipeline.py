@@ -681,6 +681,7 @@ def evaluate_athena(
     min_win_prob:   float | None = None,
     use_possession: bool = False,
     use_season_stage: bool = False,
+    module_mu_scale: float = 0.0,
 ) -> Prediction:
     mf = module_flags or ModuleFlags()
 
@@ -784,6 +785,30 @@ def evaluate_athena(
     over_score += det_adj   # positive
     over_score += mfr_total # positive
 
+    # ── Module tilt: the same adjustments, expressed as one number ────
+    #
+    # Everything above moves `over_score` and `under_score`, which decide the
+    # corridor lean. Since probability selection took over, the lean no longer
+    # decides the market — measured directly, toggling burst_sentinel, det,
+    # ulr, deg or mfr changes ZERO markets out of 998. The modules still
+    # compute and nothing they compute reaches the tip.
+    #
+    # This is their net opinion in one term: positive when they argue for more
+    # goals, negative for fewer. It is only their OWN contributions, not the
+    # support/tempo baseline both scores start from, so it measures what the
+    # modules add rather than restating the signal they were handed.
+    #
+    # Nothing uses it unless a league sets module_mu_scale, which defaults to
+    # zero and reproduces current behaviour exactly.
+    module_tilt = _r(
+        (0.10 if burst_on else 0.0)
+        + det_adj + mfr_total + deg_adj
+        - (0.08 if gateb_block else 0.0)
+        - (0.05 if ulr_on else 0.0)
+        - (0.15 if under_guard == "hard" else
+           0.07 if under_guard == "soft" else 0.0)
+    )
+
     over_score  = _r(over_score)
     under_score = _r(under_score)
     delta       = abs(over_score - under_score)
@@ -886,6 +911,17 @@ def evaluate_athena(
                     modules.append("SeasonStage")
             except Exception:
                 pass          # never let a stage failure cost a tip
+
+        # Module tilt, converted from lean-score units into goals. This is the
+        # only path by which burst_sentinel, det, ulr, deg and mfr can reach a
+        # tip at all; at scale 0.0 they remain exactly as inert as measured.
+        if module_mu_scale and mu is not None and module_tilt:
+            mu = mu + module_mu_scale * module_tilt
+            notes.append(
+                f"Module tilt: {module_mu_scale * module_tilt:+.2f} goals "
+                f"(tilt {module_tilt:+.3f} x scale {module_mu_scale:g})."
+            )
+            modules.append("ModuleTilt")
 
         picked = market_select.choose(
             mu, req.league_mu,

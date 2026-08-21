@@ -105,6 +105,12 @@ class LeagueConfig:
     # data — see scripts/season_stage_validate.py for the full ledger and for
     # the honest weakness, which is that older seasons contributed +4 of the +17.
     use_season_stage: bool = True
+    # How far the modules' net opinion may move the goal expectation, in goals
+    # per unit of lean score. Zero disconnects them, which is what they have
+    # effectively been since probability selection took over the market choice:
+    # toggling any of burst_sentinel, det, ulr, deg or mfr changes zero markets
+    # out of 998. Non-zero is the only route by which they can reach a tip.
+    module_mu_scale: float = 0.0
     max_under_line: Optional[float] = None
     min_over_line: Optional[float] = None
 
