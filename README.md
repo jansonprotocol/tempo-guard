@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 89.5%
+## CURRENT CONFIRMED HITRATE: 90.0%
 
-**17 / 19 settled** · over/under markets only · live tips, not backtests
+**18 / 20 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,12 +10,11 @@
 
 | Live | League | Fixture | Play | Date | Modelled | Edge |
 |---|---|---|---|---|---|---|
-| ⏱ LIVE: 1-0 (70') — winning | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −1.0% |
-| ⏱ LIVE: 0-0 (53') — winning | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
+| ⏱ LIVE: 1-0 (82') — winning | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
 | — not started | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 (≤3 goals) | 2026-08-21 | 88% | +7.8% |
 | — not started | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 (≤2, half loss at 3) | 2026-08-22 | 81% | +21.7% |
 | — not started | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 (≤3 goals) | 2026-08-22 | 82% | +12.6% |
-| ⏱ LIVE: 1-0 (22') — needs 1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
+| ⏱ LIVE: 0-0 (43') — needs 2, goal ruled out | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 (≤3, half win at 4) | 2026-08-22 | 79% | +0.1% |
 
 ## Completed FUTURE match bettips
@@ -41,12 +40,13 @@
 | ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 | 2026-08-21 | 84% | +6.6% |
 | ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 | 2026-08-21 | 89% | +8.9% |
 | ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 | 2026-08-21 | 84% | −0.5% |
+| ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 | 2026-08-21 | 84% | −1.0% |
 
 ---
 
 ### Notes on the log
 
-- Sample is 19 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
+- Sample is 20 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
 - All tips issued as-of the morning of the match. In-play fixtures run as if unstarted — no live information reaches them.
 - Retrosims are never logged here. Those are engine optimisation, not tips.
 - Pending → completed once a result is confirmed.
@@ -69,6 +69,8 @@ last reported and go stale between updates.
 - **Cajamarca and Erzurumspor** — both settled on the push. 4 goals = half win on U4.25 = win under the full-win convention. Two of the 17 wins are half wins, so a bettor who does not offset the line scores 15 clean wins, 2 pushes and 2 losses instead of 17 and 2. Worth stating: the headline rate depends on the convention.
 - **Erzurumspor** — a −0.5% fallback that took the safest rung and needed it: 0-4 landed exactly on the half win, one goal from a loss.
 - **Negative-edge tips** (Dunkerque −5.1%, Betis −2.9%, Standard −1.0%, Erzurumspor −0.5%) — fallbacks, not reads. Logged as issued, not recommended.
+- **Marseille is the red-card finding, live.** O1.5 tip, 1-0 at 51 minutes, Strasbourg sent off, finished 4-0. Reds open matches rather than stalling them — measured at +0.15 goals across 1,795 fixtures, with Over tips scoring 85.7% when a red appears against 79.1% when none does.
+- **Standard Liège** — the other side of it: an Under that survived a red. La Louvière went down to ten and it still finished 2-0, comfortably inside U4.25.
 - **Al Qadsiah (the second miss)** — O1.5 at 89% and +8.9% edge, lean and market agreeing, high line safety. Everything that has marked the good calls in this log, and it finished 0-1. Al-Ittihad went down to ten men. Nothing in the tip was wrong; the match simply had one goal in it.
 - **Ligue 2 swept 5/5.** Three U3.0 calls at +7.9% to +9.1% edge — the strongest cluster issued — all landed, plus both U4.25s. The league flagged as noisy produced the cleanest night.
 - **Dunkerque** — the counterpoint to Kashiwa. Same shape: lean said *over*, selector overrode to U4.25, edge −5.1%. Finished 0-1. Override was right this time. Two live cases, one each way; the 1,510-fixture measurement (85.7% vs 78.1%) is what settles it, not these.
@@ -80,7 +82,7 @@ last reported and go stale between updates.
 
 - **Era-split team names** — 15 leagues, ~73 names. `KS Cracovia` (2023-25) vs `Cracovia` (2026), `IK Sirius` vs `Sirius`, `AIK Solna` vs `AIK`. Cause: 2026 seasons arriving from a different provider. Effect: thin predictions and false refusals. Cracovia was refused on 4 matches when 72 exist. Detector is fuzzy and overcounts — needs a manual pass.
 - **Stale stores** — Premier League and Serie B end in May 2026.
-- **No-tips resolved** — Al Faisaly 0-2 Neom, Al Hazem 0-1 Al Diriyah, Cracovia 1-2 Wieczysta. All three finished under 3 goals, so a safe Under would have landed on each. Not counted either way: a refusal is not a bet, and grading declined fixtures after the fact is how a no-tip rule gets talked into becoming a tip.
+- **No-tips resolved** — Al Faisaly 0-2 Neom, Al Hazem 0-1 Al Diriyah, Cracovia **3-2** Wieczysta. An earlier version of this note said all three finished under three goals; that was wrong. Cracovia was read at 1-2 with fourteen minutes left and finished on five, which would have beaten a U4.25 and lost a U3.0. Two of three would have been safe Unders, not three. Still not counted either way — a refusal is not a bet — and the error is left visible because grading declined fixtures from partial scores is exactly the habit that turns a no-tip rule into a tip.
 
 ---
 
