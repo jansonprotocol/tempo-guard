@@ -15,6 +15,12 @@
 | — not started | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 (≤3 goals) | 2026-08-22 | 82% | +12.6% |
 | ⏱ LIVE: 1-0 (45') — needs 1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 (≤3, half win at 4) | 2026-08-22 | 79% | +0.1% |
+| — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 (≤3 goals) | 2026-08-22 | 84% | +22.2% |
+| — not started | Championship | Millwall v Norwich | O1.5 (2+ goals) | 2026-08-22 | 81% | +8.4% |
+| — not started | Championship | Birmingham v Bristol City | U4.25 (≤3, half win at 4) | 2026-08-22 | 90% | +1.9% |
+| — not started | Chinese Super League | Chengdu v Shenhua | O1.5 (2+ goals) | 2026-08-22 | 82% | +0.1% |
+| — not started | Championship | Lincoln v Portsmouth | **NO TIP** | 2026-08-22 | — | — |
+| — not started | Premier League | Hull v Man United | **NO TIP — withheld** | 2026-08-22 | — | — |
 
 ## Completed FUTURE match bettips
 
@@ -79,6 +85,8 @@ last reported and go stale between updates.
 - **Arsenal, Vicenza** — priced off stale stores (PL ends 2026-05-24, Serie B 2026-05-08). Last season's form only. Both landed; two matches prove nothing.
 
 ### Known data defects
+
+- **No recency bound on team history.** `_find_team_rows` takes a club's last ten matches with no limit on how old they are, so a side returning to a competition after years away is priced on ancient form. Hull v Man United exposed it: Hull last played in the Premier League in **2017**, and the engine produced a confident U4.25 at 84% built on ten matches from March–May 2017. The history gate counts matches, not their age. **Hull was withheld by hand** — the engine would have tipped it. This wants a real fix: either a recency window or a refusal when the newest match in a side's window is older than a season.
 
 - **Era-split team names** — 15 leagues, ~73 names. `KS Cracovia` (2023-25) vs `Cracovia` (2026), `IK Sirius` vs `Sirius`, `AIK Solna` vs `AIK`. Cause: 2026 seasons arriving from a different provider. Effect: thin predictions and false refusals. Cracovia was refused on 4 matches when 72 exist. Detector is fuzzy and overcounts — needs a manual pass.
 - **Stale stores** — Premier League and Serie B end in May 2026.
