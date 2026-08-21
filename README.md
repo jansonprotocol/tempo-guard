@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 93.8%
+## CURRENT CONFIRMED HITRATE: 88.9%
 
-**15 / 16 settled** · over/under markets only · live tips, not backtests
+**16 / 18 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,15 +10,13 @@
 
 | Live | League | Fixture | Play | Date | Modelled | Edge |
 |---|---|---|---|---|---|---|
-| ⏱ LIVE: 0-1 (90'+) — losing | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 2026-08-21 | 89% | +8.9% |
-| ⏱ LIVE: 1-0 (51') — needs 1 | Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 2026-08-21 | 84% | +6.6% |
-| ⏱ LIVE: 0-3 (68') — winning, at the line | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −0.5% |
-| ⏱ LIVE: 0-0 (52') — winning | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −1.0% |
-| ⏱ LIVE: 0-0 (40') — winning | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
+| ⏱ LIVE: 0-4 (86') — HALF WIN, a 5th loses it | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −0.5% |
+| ⏱ LIVE: 1-0 (70') — winning | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −1.0% |
+| ⏱ LIVE: 0-0 (53') — winning | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 2026-08-21 | 84% | −2.9% |
 | — not started | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 (≤3 goals) | 2026-08-21 | 88% | +7.8% |
 | — not started | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 (≤2, half loss at 3) | 2026-08-22 | 81% | +21.7% |
 | — not started | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 (≤3 goals) | 2026-08-22 | 82% | +12.6% |
-| ⏱ LIVE: 0-0 (12') | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
+| ⏱ LIVE: 0-0 (12') — needs 2 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 (2+ goals) | 2026-08-21 | 83% | +10% |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 (≤3, half win at 4) | 2026-08-22 | 79% | +0.1% |
 
 ## Completed FUTURE match bettips
@@ -41,12 +39,14 @@
 | ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 | 2026-08-21 | 83% | +7.9% |
 | ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 | 2026-08-21 | 90% | +1.1% |
 | ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 | 2026-08-21 | 84% | −5.1% |
+| ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 | 2026-08-21 | 84% | +6.6% |
+| ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 | 2026-08-21 | 89% | +8.9% |
 
 ---
 
 ### Notes on the log
 
-- Sample is 16 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
+- Sample is 18 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
 - All tips issued as-of the morning of the match. In-play fixtures run as if unstarted — no live information reaches them.
 - Retrosims are never logged here. Those are engine optimisation, not tips.
 - Pending → completed once a result is confirmed.
@@ -61,15 +61,16 @@
 ### Live scores
 
 Scores in the pending table are a snapshot, not a feed — they are whatever was
-last reported and go stale between updates. Erzurumspor is the one to watch: at
-three goals it is already on the U4.25 line, so a fourth is a half win and a
-fifth loses it.
+last reported and go stale between updates. Erzurumspor is now 0-4 at 86
+minutes: four goals is a half win on U4.25 and therefore currently a WIN, but a
+fifth loses it outright. Held pending until full time rather than banked.
 
 ### Notes on individual calls
 
 - **Kashiwa (the miss)** — raw tempo read said *over*; selector overrode to U4.25. Finished 6 goals. Raw read was right. Edge was −2.3%: engine had found nothing and fell back to the safest rung. Override measured across 1,510 fixtures since: 85.7% vs 78.1% for following the lean. Override stays.
 - **Cajamarca** — settled on the push. 4 goals = half win on U4.25 = win under the full-win convention. One goal from a loss.
 - **Negative-edge tips** (Dunkerque −5.1%, Betis −2.9%, Standard −1.0%, Erzurumspor −0.5%) — fallbacks, not reads. Logged as issued, not recommended.
+- **Al Qadsiah (the second miss)** — O1.5 at 89% and +8.9% edge, lean and market agreeing, high line safety. Everything that has marked the good calls in this log, and it finished 0-1. Al-Ittihad went down to ten men. Nothing in the tip was wrong; the match simply had one goal in it.
 - **Ligue 2 swept 5/5.** Three U3.0 calls at +7.9% to +9.1% edge — the strongest cluster issued — all landed, plus both U4.25s. The league flagged as noisy produced the cleanest night.
 - **Dunkerque** — the counterpoint to Kashiwa. Same shape: lean said *over*, selector overrode to U4.25, edge −5.1%. Finished 0-1. Override was right this time. Two live cases, one each way; the 1,510-fixture measurement (85.7% vs 78.1%) is what settles it, not these.
 - **Al Nassr** — first tip where lean and market agreed. First sharp lane to land (O2.5). Finished 0-4.
