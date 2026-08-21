@@ -246,11 +246,21 @@ def choose(
         if here >= min_win_prob and playable(market, max_under, min_over):
             return market, edge, here
 
-    # Nothing both clears the floor and is buyable. Prefer buyable-but-risky
-    # over safe-but-unpriceable: a bet that cannot be bought is not a tip.
-    for market, edge, here, _typical in ranked:
-        if playable(market, max_under, min_over):
-            return market, edge, here
+    # Nothing both clears the floor and is buyable. This happens in a capped
+    # league whenever the fixture's expectation sits low enough that only the
+    # excluded loose rungs would have cleared the floor.
+    #
+    # Fall back to the SAFEST buyable rung, not the highest-edge one. Ranking by
+    # edge here was a real defect: edge is widest on the most volatile lines, so
+    # a capped Serie B fixture at 2.4 expected goals — where U3.75 and U4.25 are
+    # excluded and nothing else reaches 0.79 — came out as U2.75 at 57% or
+    # O2.25 at 48%. The engine went from offering near-certainties to offering
+    # coin flips, in the same league, purely because the safe options were
+    # capped away.
+    buyable = [(m, e, h) for m, e, h, _ in ranked
+               if playable(m, max_under, min_over)]
+    if buyable:
+        return max(buyable, key=lambda r: r[2])
 
     # Take the safest available rather than the
     # highest-edge one, since at this point no line is comfortable.

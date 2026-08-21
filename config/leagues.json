@@ -717,7 +717,7 @@
     "mu_mean": 2.528,
     "mu_std": 0.475,
     "max_under_line": 3.5,
-    "min_over_line": 1.0,
+    "min_over_line": null,
     "team_nudges": {},
     "module_overrides": {},
     "last_calibrated": null,
