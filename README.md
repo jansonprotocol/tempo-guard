@@ -1,53 +1,10 @@
-# ATHENA: Tempo Guard
+# ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## Completed FUTURE match bettips
+## CURRENT CONFIRMED HITRATE: 90.9%
 
-| Date | League | Fixture | Play | Modelled | Edge | Result |
-|---|---|---|---|---|---|---|
-| 2026-08-20 | LaLiga | Rayo Vallecano v Alavés | O1.5 (2+ goals) | 82% | +7.7% | ✅ HIT — 1-1 |
-| 2026-08-21 | Brasileirão Série B | Athletic v CRB | O1.0 (2+ goals) | 90% | +1.0% | ✅ HIT |
-| 2026-08-21 | Brasileirão Série B | Novorizontino v América-MG | O1.0 (2+ goals) | 90% | +1.1% | ✅ HIT |
-| 2026-08-21 | J1 League | FC Tokyo v JEF United Ichihara-Chiba | U4.25 (≤3 goals, half win at 4) | 89% | +0.9% | ✅ HIT |
-| 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 (≤3 goals, half win at 4) | 86% | −2.3% | ❌ MISS — 6 goals |
-| 2026-08-21 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 (2+ goals) | 91% | +12% | ✅ HIT — 0-3, settled in play |
-| 2026-08-21 | Allsvenskan | Sirius v Häcken | O2.25 (3+ goals, half loss at 2) | 80% | +24% | ✅ HIT — 0-3, settled in play |
-| 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 (≤3 goals, half win at 4) | 89% | +1% | ✅ HIT — 1-3, half win at 4 goals |
-| 2026-08-21 | Premier League | Arsenal v Coventry | O1.5 (2+ goals) | 82% | +1.9% | ✅ HIT — 2-0, settled in play |
-| 2026-08-21 | LaLiga 2 | Córdoba v Girona | O1.5 (2+ goals) | 80% | +9.3% | ✅ HIT — 2-0, settled in play |
-| 2026-08-21 | Serie B | Vicenza v Catanzaro | O1.5 (2+ goals) | 77% | +5.2% | ✅ HIT — 1-1, settled in play |
+**10 / 11 settled** · over/under markets only · live tips, not backtests
 
-**10 / 11**
-
-Cajamarca settled on the push: four goals is a half win on U4.25, which counts as
-a win under the full-win convention this engine grades by, because the bettor
-offsets the line. Worth noting rather than glossing — it was one goal from a
-loss.
-
-Arsenal and Vicenza are the two tips priced off stale stores (Premier League
-data ends 2026-05-24, Serie B 2026-05-08), so both were read from last season's
-form alone and both landed. Two matches say nothing about whether that is safe.
-
-Sirius landed despite being the least trustworthy tip of the batch: the Swedish
-naming split meant it was priced off 17 matches per side instead of 84, and it
-carried the largest edge on the board at +24%. One winning bet does not tell us
-whether that number was real or an artefact of thin history — a tip computed on
-a quarter of the available data can be right for reasons that have nothing to do
-with being well founded. The split is still worth fixing.
-
-Al Nassr is the first tip where the lane and the market agreed rather than one
-overriding the other, and it is also the first sharp lane to land: O2.5 needed
-3+ and got there in the same match.
-
-The miss is the informative one. Athena's raw tempo read on Kashiwa was
-**over**, and the market selector overrode it onto the Under because the
-fixture sat above J1's scoring average and no line beat a typical fixture there.
-The match finished with six goals — the raw read was right and the override was
-wrong. The negative edge was the engine saying so at the time: it had found
-nothing worth backing and fell back to the safest rung.
-
-Recorded because it is the first live case of the override costing a bet, and
-because the same override fires across the book. Whether the raw lean should be
-followed when the two disagree is a measurable question, not a judgement call.
+---
 
 ## Pending FUTURE match bettips
 
@@ -56,51 +13,118 @@ followed when the two disagree is a measurable question, not a judgement call.
 | 2026-08-21 | Ligue 2 | Sochaux v Guingamp | U3.0 (≤3 goals) | 84% | +9.1% |
 | 2026-08-21 | Ligue 2 | Pau v Nancy | U3.0 (≤3 goals) | 84% | +8.6% |
 | 2026-08-21 | Ligue 2 | Boulogne v Red Star | U3.0 (≤3 goals) | 83% | +7.9% |
-| 2026-08-21 | Ligue 2 | Clermont v Dijon | U4.25 (≤3 goals, half win at 4) | 90% | +1.1% |
-| 2026-08-21 | Ligue 2 | Dunkerque v Montpellier | U4.25 (≤3 goals, half win at 4) | 84% | −5.1% |
+| 2026-08-21 | Ligue 2 | Clermont v Dijon | U4.25 (≤3, half win at 4) | 90% | +1.1% |
+| 2026-08-21 | Ligue 2 | Dunkerque v Montpellier | U4.25 (≤3, half win at 4) | 84% | −5.1% |
 | 2026-08-21 | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 (2+ goals) | 89% | +8.9% |
 | 2026-08-21 | Ligue 1 | Marseille v Strasbourg | O1.5 (2+ goals) | 84% | +6.6% |
-| 2026-08-21 | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3 goals, half win at 4) | 84% | −0.5% |
-| 2026-08-21 | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3 goals, half win at 4) | 84% | −1.0% |
-| 2026-08-21 | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3 goals, half win at 4) | 84% | −2.9% |
+| 2026-08-21 | Süper Lig | Erzurumspor v Galatasaray | U4.25 (≤3, half win at 4) | 84% | −0.5% |
+| 2026-08-21 | Belgian Pro League | Standard Liège v La Louvière | U4.25 (≤3, half win at 4) | 84% | −1.0% |
+| 2026-08-21 | LaLiga | Real Betis v Real Sociedad | U4.25 (≤3, half win at 4) | 84% | −2.9% |
 | 2026-08-21 | Saudi Pro League | Al Hazem v Al Diriyah | **NO TIP** | — | — |
 | 2026-08-21 | Saudi Pro League | Al Faisaly v Neom | **NO TIP** | — | — |
 | 2026-08-21 | Ekstraklasa | Cracovia v Wieczysta | **NO TIP** | — | — |
 
-The four positive-edge Unders in Ligue 2 and the four positive-edge Overs are
-where the engine actually found something; the four negative-edge U4.25 calls
-are fallbacks, the same pattern that produced the Kashiwa miss. Recorded as
-issued rather than as recommended.
+## Completed FUTURE match bettips
 
-Three caveats attach to this batch.
+| Date | League | Fixture | Play | Modelled | Edge | Result |
+|---|---|---|---|---|---|---|
+| 2026-08-20 | LaLiga | Rayo Vallecano v Alavés | O1.5 | 82% | +7.7% | ✅ HIT — 1-1 |
+| 2026-08-21 | Brasileirão Série B | Athletic v CRB | O1.0 | 90% | +1.0% | ✅ HIT |
+| 2026-08-21 | Brasileirão Série B | Novorizontino v América-MG | O1.0 | 90% | +1.1% | ✅ HIT |
+| 2026-08-21 | J1 League | FC Tokyo v JEF United | U4.25 | 89% | +0.9% | ✅ HIT |
+| 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 | 86% | −2.3% | ❌ MISS — 6 goals |
+| 2026-08-21 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 | 91% | +12% | ✅ HIT — 0-3 |
+| 2026-08-21 | Allsvenskan | Sirius v Häcken | O2.25 | 80% | +24% | ✅ HIT — 0-3 |
+| 2026-08-21 | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 | 89% | +1% | ✅ HIT — 1-3, half win |
+| 2026-08-21 | Premier League | Arsenal v Coventry | O1.5 | 82% | +1.9% | ✅ HIT — 2-0 |
+| 2026-08-21 | LaLiga 2 | Córdoba v Girona | O1.5 | 80% | +9.3% | ✅ HIT — 2-0 |
+| 2026-08-21 | Serie B | Vicenza v Catanzaro | O1.5 | 77% | +5.2% | ✅ HIT — 1-1 |
 
-Al Faisaly has one stored match and Al Diriyah one, both newly promoted, so the
-history gate declined. Cracovia's refusal is different and is a DEFECT: the club
-has 72 stored matches but they are split across `KS Cracovia` (2023-2025) and
-`Cracovia` (2026), so the engine saw four and refused a fixture it could have
-priced.
+---
 
-Serie B and the Premier League stores end 2026-05-08 and 2026-05-24, so Vicenza
-and Arsenal were priced off last season's form with none of the current one.
+### Notes on the log
 
-Every fixture here was in play or unstarted when issued and all were run as if
-unstarted, so no live information reached them. Cajamarca is an Under and needs
-full time to settle; ≤3 goals wins it.
+- Sample is 11 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
+- All tips issued as-of the morning of the match. In-play fixtures run as if unstarted — no live information reaches them.
+- Retrosims are never logged here. Those are engine optimisation, not tips.
+- Pending → completed once a result is confirmed.
 
-The Cracovia defect is not isolated. A scan of all 52 leagues finds the same
-era-split naming in 15 of them, touching roughly 73 team names — Sion/FC Sion,
-AIK/AIK Solna, Legia/Legia Warszawa — wherever a league's 2026 season arrived
-from a different provider than its earlier ones. It is what made Sirius v Häcken
-a 17-match read instead of an 84-match one, and it causes both thin predictions
-and false refusals. The detector is fuzzy and overcounts, since Celta B and
-Celta are genuinely different clubs, so the real figure needs a pass by hand.
+### Notes on individual calls
 
-### How this log works
+- **Kashiwa (the miss)** — raw tempo read said *over*; selector overrode to U4.25. Finished 6 goals. Raw read was right. Edge was −2.3%: engine had found nothing and fell back to the safest rung. Override measured across 1,510 fixtures since: 85.7% vs 78.1% for following the lean. Override stays.
+- **Cajamarca** — settled on the push. 4 goals = half win on U4.25 = win under the full-win convention. One goal from a loss.
+- **Negative-edge tips** (Dunkerque −5.1%, Betis −2.9%, Standard −1.0%, Erzurumspor −0.5%) — fallbacks, not reads. Logged as issued, not recommended.
+- **Al Nassr** — first tip where lean and market agreed. First sharp lane to land (O2.5).
+- **Sirius** — won, but least trustworthy of the batch: priced off 17 matches per side instead of 84 due to a naming split.
+- **Arsenal, Vicenza** — priced off stale stores (PL ends 2026-05-24, Serie B 2026-05-08). Last season's form only. Both landed; two matches prove nothing.
 
-Every `futurematch` run is written here as **pending** when issued, and moved to
-**completed** with its result once confirmed. Retrosims are not logged — those
-are engine optimisation, not tips.
+### Known data defects
 
+- **Era-split team names** — 15 leagues, ~73 names. `KS Cracovia` (2023-25) vs `Cracovia` (2026), `IK Sirius` vs `Sirius`, `AIK Solna` vs `AIK`. Cause: 2026 seasons arriving from a different provider. Effect: thin predictions and false refusals. Cracovia was refused on 4 matches when 72 exist. Detector is fuzzy and overcounts — needs a manual pass.
+- **Stale stores** — Premier League and Serie B end in May 2026.
+- **No-tips** — Al Faisaly, Al Diriyah both have 1 stored match (newly promoted). Gate working correctly. Cracovia's refusal is the defect above, not the gate.
+
+---
+
+## Most recent key updates
+
+**Season stage — enabled, all leagues.** First feature dial to default on. Inert for the first 92% of a season. Across the closing 9%: 81.3% → 82.7%, 47 rescued / 30 broken. Positive at every shift 0.05–0.30 and in both halves. No single test clears 2σ; older seasons contributed +4 of +17.
+
+**Module layer found dead.** `burst_sentinel`, `det`, `ulr`, `deg`, `mfr` change **zero** markets out of 998. They move the old flowchart's lean scores; probability selection no longer reads them. All 128 on/off combinations score identically: 1326/1630 = 81.35%.
+
+**Reconnecting them fails both ways.** Adding their opinion to `mu` is monotonically harmful (−22 net at scale 2.0, >4σ). Inverting it collapses the market mix to 82% U4.25 — buying certainty, not information. Wire kept at 0.0.
+
+**Ceiling measured.** Perfect knowledge of both teams' season-long scoring rates is worth **+2.3%** (81.3% → 83.6%). Knowing the actual result is worth +18.7%. Team-quality features are effectively exhausted.
+
+**Eight ideas rejected on holdout.** BurstSentinel · probability ceiling · probability sharp lane · goal variance · additive mismatch · multiplicative mu blend · possession · referee tendency · rest days.
+
+**Three of my own recommendations withdrawn after measurement.** Abstention lane (92.8% tail was 83 fixtures; 86.6% at 851, and the slope was entirely O1.0). Edge gate (backwards — dropping low-edge fixtures costs 9.5 points). League cull (league quality does not persist: r = +0.153).
+
+**History gate confirmed already correct.** `MIN_MATCHES = 5` sits on the real cliff (1-4 matches → 72.8%). Raising it moves kept strike by 0.4 points while discarding a fifth of the book.
+
+**Two leagues added** — Saudi Pro League (1,169 matches), Peru Liga 1 (6,860), both via ESPN.
+
+**Recurring pattern worth naming.** Five separate times, something that raised hit rate turned out to be buying near-certain lines rather than predicting: floor sweep, O1.0 tail, abstention lane, league cull, inverted module tilt. Strike up, edge down, market mix collapsing to U4.25 is the signature.
+
+---
+
+## Athena's main mission
+
+**Give the highest hit rate in bet tips. Over/under markets only. Nothing else.**
+
+- Hit rate is the objective. Edge is diagnostic, not the target.
+- No live odds, ever. Bookmaker lines would saturate the model and bias it toward following the market instead of pricing football.
+- Recent data matters most. Current and last season carry the weight.
+- Fewer, sharper plays beat more plays at a lower hit rate.
+- A net gain counts even if it breaks some winners: 7 rescued for 2 broken is progress.
+
+## Athena engine — key features
+
+**Probability-based market selection.** For every rung on the Asian ladder, `P(win | mu)` from Poisson, scored against a typical fixture in the same league. Picks the best edge subject to a probability floor (0.79 default, per-league overridable). Confirmed on 29,762 unseen matches: 80.60% strike, +213 net wins, 18/27 leagues ≥80%.
+
+**As-of everything.** Every feature reads only matches strictly before the fixture date. No lookahead anywhere in the pipeline.
+
+**Chronological holdout on every claim.** Tune on the earlier portion, verify on the later. Nothing is written unless the gain survives data the search never saw.
+
+**Full-win grading convention.** Half-wins count as wins — the bettor offsets the line. `U4.25` at 4 goals is a win.
+
+**Per-league playability caps.** `max_under_line` / `min_over_line`. Low-tempo leagues capped at U3.5; `O1.0` restricted to four declared low-tempo competitions. This is a judgement about market prices the engine has no access to.
+
+**Season stage.** Closing-stretch lift of +0.15 goals, placed as-of from matches played versus the league's typical season length.
+
+**Sharp lane with a confidence veto.** Fires at 0.7σ from league norm with the lean agreeing, vetoed below 0.70 win probability. Strike 60.2% → 65.6%, edge +4.86% → +6.79%.
+
+**History gate.** Refuses a fixture when either side has fewer than 5 prior matches. Produces genuine no-tips rather than guesses.
+
+**Team tags in output.** Attack, defence, possession, form, table position — descriptive only, never fed back into selection.
+
+**Three data providers.** openfootball, football-data.co.uk, ESPN. 52 leagues.
+
+**No odds anywhere.** `assert_no_odds` fails loudly if a bookmaker-shaped column ever reaches a frame.
+
+---
+
+## Reference
 
 A local over/under goals engine for football. It reads match results, computes
 point-in-time form features, and produces a total-goals tip on the Asian line
