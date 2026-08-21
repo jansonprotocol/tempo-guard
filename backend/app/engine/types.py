@@ -197,3 +197,10 @@ class Prediction(BaseModel):
     # None when weather was not evaluated (e.g. unknown stadium or historical sim).
     weather_tag:      Optional[str]   = None
     weather_impact:   Optional[float] = None
+
+    # Readable description of who is playing, computed as of match day. See
+    # app.data.tags: these explain a tip, they do not produce one. Populated
+    # only on single-match paths — a replay of thousands of fixtures does not
+    # pay to build them, and nothing downstream reads them.
+    home_tags:        List[str] = []
+    away_tags:        List[str] = []

@@ -144,4 +144,17 @@ def predict_match(
     req = build_request(league_code, home_team, away_team, match_date, min_matches)
     if req is None:
         return None
-    return predict_fixture(req, cfg)
+    pred = predict_fixture(req, cfg)
+
+    # Descriptive only, and deliberately attached here rather than inside
+    # predict_fixture: the replay path calls that thousands of times and must
+    # not pay for tags nothing downstream reads.
+    try:
+        from app.data import tags as _tags
+        h, a = _tags.for_fixture(league_code, req.home_team, req.away_team, match_date)
+        pred.home_tags = h.labels()
+        pred.away_tags = a.labels()
+    except Exception:
+        pass          # a tag failure must never cost a tip
+
+    return pred
