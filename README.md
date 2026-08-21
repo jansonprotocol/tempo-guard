@@ -1,5 +1,37 @@
 # ATHENA: Tempo Guard
 
+## Completed FUTURE match bettips
+
+| Date | League | Fixture | Play | Modelled | Edge | Result |
+|---|---|---|---|---|---|---|
+| 2026-08-20 | LaLiga | Rayo Vallecano v Alavés | O1.5 (2+ goals) | 82% | +7.7% | ✅ HIT — 1-1 |
+| 2026-08-21 | Brasileirão Série B | Athletic v CRB | O1.0 (2+ goals) | 90% | +1.0% | ✅ HIT |
+| 2026-08-21 | Brasileirão Série B | Novorizontino v América-MG | O1.0 (2+ goals) | 90% | +1.1% | ✅ HIT |
+
+**3 / 3**
+
+## Pending FUTURE match bettips
+
+| Date | League | Fixture | Play | Modelled | Edge |
+|---|---|---|---|---|---|
+| 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 (≤3 goals, half win at 4) | 86% | −2.3% |
+| 2026-08-21 | J1 League | FC Tokyo v JEF United Ichihara-Chiba | U4.25 (≤3 goals, half win at 4) | 89% | +0.9% |
+
+Both are thin calls. The Kashiwa edge is *negative* — the engine found no line
+that beats a typical J1 fixture and took the safest available, which is a
+fallback rather than a read. Recorded as issued, not as recommended.
+
+Prediction made as-of the morning of the match; Kashiwa was already in play when
+the tip was generated and was run as if unstarted, so no live information
+reached it.
+
+### How this log works
+
+Every `futurematch` run is written here as **pending** when issued, and moved to
+**completed** with its result once confirmed. Retrosims are not logged — those
+are engine optimisation, not tips.
+
+
 A local over/under goals engine for football. It reads match results, computes
 point-in-time form features, and produces a total-goals tip on the Asian line
 ladder (`O1.75`, `U3.75`, …) together with the reasoning behind it.
