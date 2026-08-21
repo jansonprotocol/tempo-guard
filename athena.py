@@ -93,6 +93,14 @@ def _print_prediction(pred, header: str, actual: tuple[int, int] | None = None) 
     if pred.weather_tag:
         print(f"  Weather       {pred.weather_tag}")
 
+    # Who is playing, as of match day. Descriptive: these are printed so the
+    # fixture can be read at a glance, and are not inputs to the tip above.
+    if pred.home_tags or pred.away_tags:
+        home, away = pred.fixture.split(" vs ", 1)
+        print()
+        print(f"  {home[:26]:26s} {', '.join(pred.home_tags) or '—'}")
+        print(f"  {away[:26]:26s} {', '.join(pred.away_tags) or '—'}")
+
     print()
     print("  Why:")
     for line in pred.rationale:
