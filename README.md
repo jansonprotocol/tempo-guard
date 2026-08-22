@@ -97,7 +97,7 @@
 
 ### Actual placed bets
 
-**Win: 16 / 24 — 67%  ·  Pending: 11 / 35  ·  Average odds: ≈1.31**
+**Win: 16 / 25 — 64%  ·  Pending: 14 / 39  ·  Average odds: ≈1.29**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -151,8 +151,7 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds |
 |---|---|---|---|---|
-| 17:00 | Real Oviedo v Leganés | U3.0 | U3.5 | — |
-| 17:00 | Athletic Bilbao v Sevilla | U3.0 | U3.5 | — |
+| 17:00 | Real Oviedo v Leganés | U3.0 | U3.5 | 1.17 |
 | 17:45 | Al-Fateh v Al-Ettifaq | O1.5 | O2.5 | 1.50 |
 | 18:00 | Rizespor v Samsunspor | O1.5 | **O1.5 — Tip 1** | 1.25 |
 | 18:00 | Sport Huancayo v Moquegua | U3.0 | U3.5 | 1.38 |
@@ -162,8 +161,12 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 | 18:30 | Inter v Monza | U4.25 | U4.5 | 1.23 |
 | 18:30 | Udinese v Como | O1.5 | **O1.5 — Tip 1** | 1.34 |
 | 18:45 | Sparta Rotterdam v Utrecht | O1.5 | **O1.5 — Tip 1** | 1.22 |
+| 19:00 | Südtirol v Entella | U3.0 | **U2.75 — Tip 2** | 1.34 |
+| 19:00 | Ceuta v Las Palmas | U4.25 | U4.5 | 1.10 |
+| 19:00 | Estoril v Rio Ave | U3.0 | U3.25 | 1.38 |
+| 20:00 | Saint-Étienne v Grenoble | U4.25 | U4.5 | 1.15 |
 
-Eleven open. Prices are recorded from the Sanfrecce bet onward; the earlier
+Fourteen open. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
 
 
@@ -224,14 +227,15 @@ between Tip 1 and Tip 2, using settlement rather than the label — `U3.5` and
 
 | Lane | n | Fixtures |
 |---|---|---|
-| **Tip 1** | 7 | Okayama (U3.25), Nagoya, Millwall, Rizespor, Udinese, Sparta (O1.5), Southampton (U4.25) |
+| **Tip 1** | 8 | Okayama (U3.25), Nagoya, Millwall, Rizespor, Udinese, Sparta (O1.5), Southampton (U4.25), Estoril (U3.25 — settles identically to the U3.0 tipped) |
 | **Middle** | 19 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung · Huancayo, Al-Kholood (U3.5 between U3.0 and U4.25) |
 | **Past Tip 2** | 5 | Birmingham, Wrexham, Everton, Zulte Waregem, Korona — all `U3.5` where Tip 2 was `U3.75`, so a full loss at 4 goals instead of a half loss |
-| **Past Tip 1, safer** | 3 | Charleroi, Brentford, Inter — `U4.5` where `U4.25` was tipped. Wins outright at 4 where the tip only half-wins, so strictly better settlement at a shorter price |
+| **Past Tip 1, safer** | 5 | Charleroi, Brentford, Inter, Ceuta, Saint-Étienne — `U4.5` where `U4.25` was tipped. Wins outright at 4 where the tip only half-wins, so strictly better settlement at a shorter price |
+| **Tip 2 exactly** | 1 | Südtirol — `U2.75` at 69.9%, the second lane taken outright rather than as a middle |
 | **Past Tip 1, riskier** | 1 | Guoan (O2.5, riskier than the O2.25 tipped and away from Tip 2) |
 | **Neither** | 0 | Three Towns was the only one — Over on a fixture Athena had no opinion on (−0.05% edge) — and it was traded out before kickoff |
 
-Seven bets are the published tip exactly. Nineteen sit between the two lanes,
+Eight bets are the published tip exactly. Nineteen sit between the two lanes,
 usually a rung safer than Tip 2 because the price was better there. Five went
 *past* Tip 2 into the harsher variant of the same win tier, which costs nothing
 unless a match lands on exactly 4 goals — and two of the 25 settled bets so far
@@ -536,6 +540,23 @@ enough that the skips cost more than they saved.
   The model is the pessimistic estimate here and the only one that makes it a
   losing bet. Worth recording precisely because it is a case where the engine's
   own probability and the engine's own track record disagree about the same bet.
+
+- **Bet count corrected — the log was three short, and all three errors were mine.**
+  Four of the six fixtures listed as unplaced were in fact backed (Südtirol,
+  Ceuta, Estoril, Saint-Étienne), Real Oviedo's price was never recorded, and
+  Athletic Bilbao was still being carried as open when its `U3.5` was already
+  dead at four goals. Corrected to **39 placed, 25 settled, 14 open**, which
+  matches the book's own open-bet count.
+
+- **Südtirol is the first bet taken at Tip 2 outright.** `U2.75` at 69.9%,
+  against a Tip 1 of `U3.0` at 87.1% — a SHARPEN pair, so by construction the
+  bet cannot win on any total where the tip loses, and gives up 17 points of
+  strike rate for the price. Worth flagging because it is precisely the family
+  measured at 64.7% against Tip 1's 84.1%.
+
+- **Estoril is the opposite and worth copying.** `U3.25` where `U3.0` was tipped
+  settles *identically* on every total — win at ≤2, half-win at 3, loss at 4 —
+  so it is Tip 1 in all but name, taken at whatever price was better.
 
 ### Notes on the log
 
