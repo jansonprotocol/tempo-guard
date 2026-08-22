@@ -97,6 +97,43 @@ That is the number the hit rate has to clear to make money, and it sits well
 below the 92% the tips have run at but well above what a single bad stretch
 would produce.
 
+
+### Decision tracking
+
+Two questions the results will answer, recorded now so they can be graded rather
+than remembered.
+
+**1. Did taking Tip 2 help?** Of the 25 staked, **9 were Tip 1, 15 were Tip 2, 1 was
+neither.** Tip 2 was mostly taken because Tip 1's price was too short or the line
+was not offered — Wrexham's U4.25 at 1.34 became U3.5, Metz's U4.25 became O1.5.
+Graded on: how many Tip 2 bets won that Tip 1 would have lost, against how many
+lost that Tip 1 would have won.
+
+| Taken | Fixtures |
+|---|---|
+| **Tip 1** (9) | Okayama, Nagoya, Kyoto Sanga, Shenzhen, Guoan, Millwall, Örgryte, Athletic Bilbao, Real Oviedo |
+| **Tip 2** (15) | Kashima, Cerezo, Yokohama FM, Birmingham, West Ham, Wrexham, Preston, Blackburn, Swansea, Everton, Metz, Lens, Zulte Waregem, Fortuna Sittard, Korona |
+| **Neither** (1) | Three Towns — Over taken on a fixture Athena had no opinion on (−0.05% edge) |
+
+**2. Did skipping help?** Eight tipped fixtures went unbacked, mostly short odds
+with no playable Tip 2. Graded on whether the skip evaded a miss or cost a win.
+
+| Skipped | Tip 1 | Tip 2 | Reason |
+|---|---|---|---|
+| Sanfrecce v Kawasaki | O1.5 81.7% +9.2% | — | short odds |
+| Southampton v Stoke | U4.25 83.3% −4.8% | O1.75 78.4% +5.6% | not taken |
+| Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% | unreproducible tip |
+| Chengdu v Shenhua | O1.5 82.1% +0.2% | — | flat fixture |
+| Derby v Cardiff | U4.25 88.4% +0.4% | — | short odds, no Tip 2 |
+| QPR v Bolton | U4.25 87.4% −0.7% | — | short odds, no Tip 2 |
+| Nantes v Rodez | U4.25 88.4% −0.3% | — | short odds, no Tip 2 |
+| Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | — | short odds, no Tip 2 |
+
+The skip logic is worth testing precisely because it is not free. Six of the
+eight carry a Tip 1 above 82%, so skipping them protects against a bad price and
+gives up a likely winner at the same time. Whether that trade pays depends
+entirely on how often the short-priced favourites actually land.
+
 ---
 
 ### Notes on the log
