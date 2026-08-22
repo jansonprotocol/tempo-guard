@@ -12,11 +12,11 @@
 |---|---|---|---|---|---|
 | **LIVE: 0-1** (72') 🟥 | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | U4.25 94.5% +5.0% (lower edge) | 2026-08-22 17:00 |
 | **LIVE: 1-3** (72') 🟥 | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
-| **LIVE: 0-1** (47') | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
+| **LIVE: 0-1** (47') | Ekstraklasa | Piast v Legia | O1.5 84.9% +8.8% | O2.25 65.2% +13.4% (floor −13.8) | 2026-08-22 17:30 |
 | **LIVE: 0-0** (HT) | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
 | **LIVE: 0-1** (36') | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
 | **LIVE: 0-1** (36') | Süper Lig | Çorum v Kasımpaşa | **NO TIP** — 1 match | — | 2026-08-22 18:00 |
-| **LIVE: 1-0** (36') | Swiss Super League | Luzern v Lausanne | **WITHHELD** — split name | — | 2026-08-22 18:00 |
+| **LIVE: 1-0** (36') | Swiss Super League | Luzern v Lausanne | O1.5 81.6% +2.7% | O2.25 60.0% +4.1% (floor −19.0) | 2026-08-22 18:00 |
 | **LIVE: 0-1** (34') | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge) | 2026-08-22 18:00 |
 | **LIVE: 1-0** (25') | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | U4.25 91.4% +9.5% (lower edge) | 2026-08-22 18:10 |
 | — not started | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **U3.75 78.7% +8.7%** (floor −0.3) | 2026-08-22 18:15 |
@@ -33,10 +33,10 @@
 | — not started | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | **O1.75 74.7% +2.9%** (floor −4.3) | 2026-08-22 20:00 |
 | — not started | Saudi Pro League | Al-Ahli v Abha | O1.5 83.1% +3.3% | O2.25 62.3% +5.1% (floor −16.7) | 2026-08-22 20:00 |
 | — not started | Saudi Pro League | Al-Khaleej v Al-Shabab | U4.25 86.1% +4.3% | U3.75 71.2% +6.0% (floor −7.8) | 2026-08-22 20:00 |
-| — not started | Ekstraklasa | Śląsk v Widzew | **WITHHELD** — split name | — | 2026-08-22 20:15 |
+| — not started | Ekstraklasa | Śląsk v Widzew | U3.0 84.3% +14.1% | U4.25 94.0% +8.5% (lower edge) | 2026-08-22 20:15 |
 | — not started | Peru Liga 1 | UTC v Comerciantes Unidos | U3.0 80.7% +7.1% | U4.25 92.0% +4.3% (lower edge) | 2026-08-22 20:15 |
 | — not started | Süper Lig | Fenerbahçe v Konyaspor | O1.5 87.7% +10.6% | O2.25 70.2% +16.9% (floor −8.8) | 2026-08-22 20:30 |
-| — not started | Swiss Super League | Zürich v Basel | **WITHHELD** — split name, both clubs | — | 2026-08-22 20:30 |
+| — not started | Swiss Super League | Zürich v Basel | **O2.25 83.5% +27.6%** | O1.75 94.2% +15.3% (lower edge) | 2026-08-22 20:30 |
 | — not started | Ligue 1 | Le Mans v Brest | **NO TIP** — 0 matches | — | 2026-08-22 20:45 |
 | — not started | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% | U4.25 92.0% +7.7% (lower edge) | 2026-08-22 20:45 |
 | — not started | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% | U3.75 73.7% +5.1% (floor −5.3) | 2026-08-22 20:45 |
@@ -592,6 +592,29 @@ enough that the skips cost more than they saved.
 - **`Sporting v Alverca` was one alias away and is now tipped.** The store files
   them as `Sp Lisbon` (854 rows); a bare `Sporting` resolved to nothing. Added.
   `Le Mans` remains a genuine no-tip — zero rows under any spelling.
+
+- **Split names FIXED for Poland and Switzerland — four withheld fixtures now
+  price.** `config/team_merges.json` folds each 2026 spelling onto its historical
+  one: `Zurich` → `FC Zürich`, `Legia` → `Legia Warszawa`, twenty clubs across
+  the two leagues. Applied in `store.load_results`, so team rows, venue rows and
+  the per-team nudges all see one name; renaming adds no rows, so league means
+  and base rates are untouched.
+
+  **Guarded the same way the alias layer is**: a variant folds in only when the
+  primary is BELOW the five-match gate. A club the engine can already price is
+  left exactly as it was. Verified by pricing all 164 upcoming fixtures with
+  merges off and on — **0 changed, 0 lost, 155 identical**, 93 tests passing.
+
+      Śląsk v Widzew    was withheld    now U3.0 84.3% +14.1%
+      Zürich v Basel    was withheld    now O2.25 83.5% +27.6%
+      Piast v Legia     was withheld    now O1.5 84.9% +8.8%
+      Luzern v Lausanne was withheld    now O1.5 81.6% +2.7%
+
+  Four clubs are deliberately left split. `Stade Lausanne-Ouchy` is a different
+  club from `FC Lausanne-Sport`; `Wisla` and `Wisla Plock` are two clubs with no
+  historical rows either side; and `FC Thun` / `FC Vaduz` have real counterparts
+  whose history stops in 2020 and 2021 — merging those would buy a tip built on
+  six-year-old form, which is the recency defect wearing a different hat.
 
 ### Notes on the log
 

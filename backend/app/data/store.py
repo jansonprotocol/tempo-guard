@@ -17,6 +17,7 @@ reads each season exactly once.
 """
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Optional
@@ -109,6 +110,67 @@ def load(league_code: str, season: Optional[str] = None) -> pd.DataFrame:
 _VIEW_CACHE: dict[tuple[str, Optional[str], str], pd.DataFrame] = {}
 
 
+# ── Split-name merging ────────────────────────────────────────────────────────
+# Some clubs are filed under two spellings because the 2026 seasons come from a
+# different provider than the historical ones — `Zurich` alongside `FC Zürich`,
+# `Legia` alongside `Legia Warszawa`. The name resolver picks one, so a club
+# with 220 matches of history gets served the 3 rows of the current season and
+# drops under the match gate.
+#
+# The fix is applied here rather than at lookup time so that team rows, venue
+# rows and the per-team nudges all see the same name. Renaming does not add or
+# remove a row, so league means and base rates are untouched.
+#
+# GUARDED: a variant is only folded into its primary when the primary has FEWER
+# rows than the gate. That is what keeps this safe to ship mid-season — a club
+# the engine can already price is left exactly as it was, so no live tip moves.
+_MERGE_GATE = 5
+_MERGES: Optional[dict[str, dict[str, str]]] = None
+
+
+def _merge_map(league_code: str) -> dict[str, str]:
+    """variant (lowercased) -> primary name, for one league."""
+    global _MERGES
+    if _MERGES is None:
+        path = Path(os.environ.get("ATHENA_CONFIG_DIR",
+                                   Path(__file__).resolve().parents[3] / "config"))
+        f = path / "team_merges.json"
+        raw = json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
+        _MERGES = {}
+        for code, groups in raw.items():
+            if code.startswith("_") or not isinstance(groups, dict):
+                continue
+            _MERGES[code] = {v.strip().lower(): primary
+                             for primary, variants in groups.items()
+                             for v in variants}
+    return _MERGES.get(league_code, {})
+
+
+def _apply_merges(league_code: str, df: pd.DataFrame) -> pd.DataFrame:
+    """Fold split spellings onto one name, where the primary is under the gate."""
+    mapping = _merge_map(league_code)
+    if not mapping or df.empty or "home" not in df.columns:
+        return df
+
+    home = df["home"].astype(str)
+    away = df["away"].astype(str)
+    counts = pd.concat([home, away]).str.lower().value_counts()
+
+    active = {v: p for v, p in mapping.items()
+              if counts.get(p.lower(), 0) < _MERGE_GATE}
+    if not active:
+        return df
+
+    def fold(s: pd.Series) -> pd.Series:
+        return s.mask(s.str.lower().isin(active),
+                      s.str.lower().map(active)).fillna(s)
+
+    out = df.copy()
+    out["home"] = fold(home)
+    out["away"] = fold(away)
+    return out
+
+
 def load_results(league_code: str, season: Optional[str] = None) -> pd.DataFrame:
     """
     Load only genuine played results.
@@ -129,6 +191,7 @@ def load_results(league_code: str, season: Optional[str] = None) -> pd.DataFrame
         out = df
     else:
         out = df[df["status"] == "result"].reset_index(drop=True)
+    out = _apply_merges(league_code, out)
     _VIEW_CACHE[key] = out
     return out
 
