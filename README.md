@@ -10,6 +10,13 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
+| — not started | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | — none | 2026-08-22 |
+| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | — none | 2026-08-22 |
+| — not started | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 |
+| — not started | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 |
+| — not started | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 |
+| — not started | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 |
+| — not started | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 |
 | — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% | U4.25 93.8% +14.6% (lower edge) | 2026-08-22 |
 | — not started | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% | O1.75 93.1% +11.1% (lower edge) | 2026-08-22 |
 | — not started | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 |
