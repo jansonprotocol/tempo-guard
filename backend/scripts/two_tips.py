@@ -24,7 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.data import config
-from app.engine import market_select
+from app.engine import market_select, team_total
 from app.engine.types import ModuleFlags
 from app.predict import build_request, predict_fixture
 
@@ -71,6 +71,15 @@ def tips(lg: str, h: str, a: str, d: date):
         why = (f"floor {(p2 - floor) * 100:+.1f}" if p2 < floor
                else "lower edge" if e2 <= e1 else "runner-up")
         t2 = (m2, p2, e2, why)
+
+    # A team total is a different market rather than another rung, so it is
+    # compared on EDGE — how far each beats a typical fixture of its own kind —
+    # and only replaces the ladder runner-up when it beats it on that measure.
+    tt = team_total.candidates(lg, d, req.p_home_tt05, req.p_away_tt05)
+    if tt:
+        m3, p3, e3 = tt[0]
+        if t2 is None or e3 > t2[2]:
+            t2 = (m3, p3, e3, "team total")
     return dict(mu=req.mu_total, lmu=req.league_mu, t1=(t1, p1, e1), t2=t2)
 
 
