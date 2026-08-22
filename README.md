@@ -17,7 +17,7 @@
 | **LIVE: 0-0** (74') | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 16:00 |
 | **LIVE: 2-2** (74') | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 16:00 |
 | **LIVE: 0-0** (75') | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 16:00 |
-| **LIVE: 1-1** (75') | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) · **backed U4.25 @ 1.16** | 2026-08-22 16:00 |
+| **LIVE: 1-1** (75') | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
 | **LIVE: 0-0** (75') | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
 | **LIVE: 2-1** (75') ✅ | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 16:00 |
 | **LIVE: 0-2** (73') ✅ | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 16:00 |
@@ -28,17 +28,17 @@
 | **LIVE: 0-1** (33') 🟥 | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
 | **LIVE: 1-0** (18') | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
 | — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
-| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) · **backed O2.5 @ 1.50** | 2026-08-22 17:45 |
-| — not started | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5)  · **backed O1.5 @ 1.25** | 2026-08-22 18:00 |
+| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
+| — not started | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
 | — not started | Süper Lig | Çorum v Kasımpaşa | **NO TIP** — 1 match | — | 2026-08-22 18:00 |
 | — not started | Swiss Super League | Luzern v Lausanne | **WITHHELD** — split name | — | 2026-08-22 18:00 |
-| — not started | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge)  · **backed U3.5 @ 1.38** | 2026-08-22 18:00 |
-| — not started | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | U4.25 91.4% +9.5% (lower edge)  · **backed U3.5 @ 1.36** | 2026-08-22 18:10 |
-| — not started | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **U3.75 78.7% +8.7%** (floor −0.3)  · **backed U4.5 @ 1.13** | 2026-08-22 18:15 |
-| — not started | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% | **U3.75 77.7% +12.7%** (floor −1.3)  · **backed U4.5 @ 1.17** | 2026-08-22 18:30 |
-| — not started | Serie A | Inter v Monza | U4.25 84.9% −3.8% | **O1.75 76.8% +4.9%** (floor −2.2)  · **backed U4.5 @ 1.23** | 2026-08-22 18:30 |
-| — not started | Serie A | Udinese v Como | O1.5 80.4% +8.5% | O2.25 58.2% +11.8% (floor −20.8)  · **backed O1.5 @ 1.34** | 2026-08-22 18:30 |
-| — not started | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | — none  · **backed O1.5 @ 1.22** | 2026-08-22 18:45 |
+| — not started | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge) | 2026-08-22 18:00 |
+| — not started | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | U4.25 91.4% +9.5% (lower edge) | 2026-08-22 18:10 |
+| — not started | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **U3.75 78.7% +8.7%** (floor −0.3) | 2026-08-22 18:15 |
+| — not started | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% | **U3.75 77.7% +12.7%** (floor −1.3) | 2026-08-22 18:30 |
+| — not started | Serie A | Inter v Monza | U4.25 84.9% −3.8% | **O1.75 76.8% +4.9%** (floor −2.2) | 2026-08-22 18:30 |
+| — not started | Serie A | Udinese v Como | O1.5 80.4% +8.5% | O2.25 58.2% +11.8% (floor −20.8) | 2026-08-22 18:30 |
+| — not started | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | — none | 2026-08-22 18:45 |
 | — not started | Serie B | Carrarese v Mantova | U3.0 74.2% −1.2% — **no rung cleared the floor** | O1.75 72.7% +1.1% (floor −6.3) | 2026-08-22 19:00 |
 | — not started | Serie B | Südtirol v Entella | U3.0 87.1% +11.8% | U2.75 69.9% +15.9% (floor −9.1) | 2026-08-22 19:00 |
 | — not started | LaLiga 2 | Ceuta v Las Palmas | U4.25 90.6% +1.1% | **U3.75 78.2% +1.8%** (floor −0.8) | 2026-08-22 19:00 |
@@ -144,6 +144,39 @@ book offers.** Al-Fateh's `O2.25` needed only 1.459, so the same 1.50 that was
 8% under water on `O2.5` would have been genuinely positive one rung down. The
 tier is chosen by the model; the rung is chosen by price, and until now this log
 gave one fair value for all three.
+
+
+#### Open positions — what is actually staked
+
+The tables above are Athena's output and nothing else. This is the bet book: the
+lane actually taken and the price paid, which is frequently not Tip 1.
+
+| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds |
+|---|---|---|---|---|
+| 16:00 | Everton v Crystal Palace | U4.25 | U3.5 | — |
+| 16:00 | Wrexham v Watford | U4.25 | U3.5 | — |
+| 16:00 | Zulte Waregem v Beveren | U4.25 | U3.5 | — |
+| 16:00 | Blackburn v Middlesbrough | U4.25 | O1.5 | — |
+| 16:00 | Preston v Wolves | U4.25 | O1.5 | — |
+| 16:00 | Swansea v Sheffield United | U4.25 | O1.5 | — |
+| 16:00 | West Ham v Charlton | O1.5 | O2.5 | — |
+| 16:00 | Southampton v Stoke | U4.25 | **U4.25 — Tip 1** | 1.16 |
+| 16:30 | Fortuna Sittard v AZ | O1.5 | O2.5 | — |
+| 17:00 | Real Oviedo v Leganés | U3.0 | U3.5 | — |
+| 17:00 | Athletic Bilbao v Sevilla | U3.0 | U3.5 | — |
+| 17:15 | Lens v Auxerre | O1.5 | O2.25 | — |
+| 17:45 | Al-Fateh v Al-Ettifaq | O1.5 | O2.5 | 1.50 |
+| 18:00 | Rizespor v Samsunspor | O1.5 | **O1.5 — Tip 1** | 1.25 |
+| 18:00 | Sport Huancayo v Moquegua | U3.0 | U3.5 | 1.38 |
+| 18:10 | Al-Kholood v Al-Taawoun | U3.0 | U3.5 | 1.36 |
+| 18:15 | Charleroi v Mechelen | U4.25 | U4.5 | 1.13 |
+| 18:30 | Brentford v Tottenham | U4.25 | U4.5 | 1.17 |
+| 18:30 | Inter v Monza | U4.25 | U4.5 | 1.23 |
+| 18:30 | Udinese v Como | O1.5 | **O1.5 — Tip 1** | 1.34 |
+| 18:45 | Sparta Rotterdam v Utrecht | O1.5 | **O1.5 — Tip 1** | 1.22 |
+
+Twenty-one open. Prices are recorded from the Sanfrecce bet onward; the earlier
+afternoon block was logged without them.
 
 
 #### Still to place — evening slate
