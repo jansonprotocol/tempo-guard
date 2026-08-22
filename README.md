@@ -357,6 +357,63 @@ and the reason the floor sits at 0.79 rather than wherever the strike rate peaks
 One caveat on the table itself: it is a sweep with no chronological holdout, so
 by this repository's own standard it generates candidates and settles nothing.
 
+#### What Tip 2 actually is — three families, and two of them are settled by logic
+
+Every (Tip 1, Tip 2) pair is one of three kinds, decided by set containment on
+winning totals rather than by any measurement:
+
+    SHARPEN   Tip 2's winning totals are a SUBSET of Tip 1's
+              U4.25 -> U3.75 · O1.5 -> O2.25 · U3.0 -> U2.75 · O1.0 -> O1.75
+    NET       Tip 1's winning totals are a subset of TIP 2's
+              U3.0 -> U4.25 · O1.5 -> O1.0 · O2.25 -> O1.75 · U2.75 -> U4.25
+    FLIP      neither contains the other — opposite sides of the book
+              U4.25 -> O1.75 · O1.0 -> U3.5
+
+Over 7,393 fixtures, 6,852 of which carried a Tip 2 (93%):
+
+                n      T1      T2     both   T1only  T2only  neither
+    SHARPEN   4089   84.1%   64.7%   64.7%   19.4%    0.0%   15.9%
+    NET       2024   73.9%   89.4%   73.9%    0.0%   15.5%   10.6%
+    FLIP       739   88.6%   73.6%   62.2%   26.4%   11.4%    0.0%
+
+    Tip 1 lost ...        Tip 2 won that fixture
+    SHARPEN   651 times     0   (  0%)
+    NET       529 times   314   ( 59%)
+    FLIP       84 times    84   (100%)
+
+Three of those numbers are not findings, they are arithmetic, and no sample can
+move them. `T2only = 0` in SHARPEN because Tip 2 winning *implies* Tip 1 won.
+`T1only = 0` in NET for the mirror reason. `neither = 0` in FLIP because the two
+markets between them cover every possible total — in a `U4.25`/`O1.75` pair one
+of the two always lands. (Not exploitable: backing both at 1.15 and 1.35 stakes
+two units to win back one.)
+
+**The engine has been labelling this all along and the log never said so:**
+
+    "(lower edge)"  = NET      Tip 2 wins whenever Tip 1 does, and 59% of the
+                               time Tip 1 fails.  89.4% vs 73.9%.
+    "(floor -X)"    = SHARPEN  Tip 2 is strictly harder and can never rescue a
+                               loss.             64.7% vs 84.1%.
+
+By exact pair, the extremes are worth knowing:
+
+    U2.75 -> U4.25  [NET]   T1 55.6%  T2 91.1%   Tip 2 rescues 35.6% of fixtures
+    O1.5  -> O1.0   [NET]   T1 73.5%  T2 91.2%
+    O1.5  -> O2.25  [SHAR]  T1 81.2%  T2 58.5%   a 23-point downgrade
+    U3.0  -> U2.75  [SHAR]  T1 79.5%  T2 53.8%   a 26-point downgrade
+    U4.25 -> O1.75  [FLIP]  T1 88.0%  T2 73.6%
+
+**This is why taking Tip 2 has not helped.** Both losing deviations on 22 Aug —
+Cerezo and Yokohama — were FLIP pairs taken on the Over side, where Tip 1 runs
+at 88.6% and Tip 2 at 73.6%. Crossing the book is a fifteen-point downgrade in
+strike rate, paid for in price. Kashima was the identical trade and won, which
+is what a 74% bet does three times in four.
+
+The one place Tip 2 genuinely beats Tip 1 on strike rate is NET, and there it is
+not really an alternative — it is the same read bought safer, always `U4.25` or
+`O1.0`, always at a short price. Which is the buying-certainty trade again,
+wearing a different label.
+
 #### The deviation test — and it was computable at the time
 
 A deviation beats the published tip only when `p_dev × odds_dev > p_tip1 × odds_tip1`.
