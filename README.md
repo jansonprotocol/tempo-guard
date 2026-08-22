@@ -8,47 +8,47 @@
 
 ## Pending FUTURE match bettips
 
-| Live | League | Teams | Tip 1 | Tip 2 | Date |
+| Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| — not started | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | — none | 2026-08-22 |
-| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | — none | 2026-08-22 |
-| — not started | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 |
-| — not started | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 |
-| — not started | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 |
-| — not started | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 |
-| — not started | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 |
-| — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% | U4.25 93.8% +14.6% (lower edge) | 2026-08-22 |
-| — not started | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% | O1.75 93.1% +11.1% (lower edge) | 2026-08-22 |
-| — not started | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 |
-| — not started | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | U4.25 92.1% +9.2% (lower edge) | 2026-08-22 |
-| — not started | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | U4.25 94.5% +5.0% (lower edge) | 2026-08-22 |
-| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | — none | 2026-08-22 |
-| — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 |
-| — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 |
-| — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.75 77.7% +7.7% (floor −1.3) | 2026-08-22 |
-| — not started | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.75 70.9% +5.9% (floor −8.1) | 2026-08-22 |
-| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.75 66.4% +5.9% (floor −12.6) | 2026-08-22 |
-| — not started | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.75 78.9% +4.8% (floor −0.1) | 2026-08-22 |
-| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | — none | 2026-08-22 |
-| — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 |
-| — not started | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.75 72.9% +2.7% (floor −6.1) | 2026-08-22 |
-| — not started | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 |
-| — not started | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 |
-| — not started | Chinese Super League | Chengdu v Shenhua | O1.5 82.1% +0.2% | — none | 2026-08-22 |
-| — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none | 2026-08-22 |
-| — not started | Ligue 2 | Nantes v Rodez | U4.25 88.4% −0.3% | — none | 2026-08-22 |
-| — not started | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 |
-| — not started | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% | **O1.75 78.8% +6.9%** (floor −0.2) | 2026-08-22 |
-| — not started | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 |
-| — not started | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 |
-| — not started | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 |
-| — not started | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 |
-| — not started | Chinese Super League | Qingdao v Taishan | **WITHHELD** — form 1,682d old | — | 2026-08-22 |
-| — not started | Premier League | Ipswich v Sunderland | **WITHHELD** — form 453d old | — | 2026-08-22 |
-| — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 |
-| — not started | Premier League | Hull v Man United | **WITHHELD** — form from 2017 | — | 2026-08-22 |
-| — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 |
-| — not started | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 |
+| — not started | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 11:00 |
+| — not started | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 11:30 |
+| — not started | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | — none | 2026-08-22 12:00 |
+| — not started | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 12:00 |
+| — not started | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
+| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | — none | 2026-08-22 12:15 |
+| — not started | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 12:30 |
+| — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none | 2026-08-22 13:00 |
+| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | — none | 2026-08-22 13:30 |
+| — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 13:30 |
+| — not started | Premier League | Hull v Man United | **WITHHELD** — form from 2017 | — | 2026-08-22 13:30 |
+| — not started | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 13:30 |
+| — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% | U4.25 93.8% +14.6% (lower edge) | 2026-08-22 13:35 |
+| — not started | Chinese Super League | Chengdu v Shenhua | O1.5 82.1% +0.2% | — none | 2026-08-22 13:35 |
+| — not started | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% | O1.75 93.1% +11.1% (lower edge) | 2026-08-22 14:00 |
+| — not started | Ligue 2 | Nantes v Rodez | U4.25 88.4% −0.3% | — none | 2026-08-22 14:00 |
+| — not started | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% | **O1.75 78.8% +6.9%** (floor −0.2) | 2026-08-22 14:00 |
+| — not started | Chinese Super League | Qingdao v Taishan | **WITHHELD** — form 1,682d old | — | 2026-08-22 14:00 |
+| — not started | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.75 72.9% +2.7% (floor −6.1) | 2026-08-22 14:45 |
+| — not started | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | U4.25 92.1% +9.2% (lower edge) | 2026-08-22 15:00 |
+| — not started | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 16:00 |
+| — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.75 77.7% +7.7% (floor −1.3) | 2026-08-22 16:00 |
+| — not started | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.75 70.9% +5.9% (floor −8.1) | 2026-08-22 16:00 |
+| — not started | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.75 78.9% +4.8% (floor −0.1) | 2026-08-22 16:00 |
+| — not started | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 16:00 |
+| — not started | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 16:00 |
+| — not started | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 16:00 |
+| — not started | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
+| — not started | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
+| — not started | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 16:00 |
+| — not started | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 16:00 |
+| — not started | Premier League | Ipswich v Sunderland | **WITHHELD** — form 453d old | — | 2026-08-22 16:00 |
+| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.75 66.4% +5.9% (floor −12.6) | 2026-08-22 16:30 |
+| — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 16:30 |
+| — not started | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | U4.25 94.5% +5.0% (lower edge) | 2026-08-22 17:00 |
+| — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
+| — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
+| — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
+| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | — none | 2026-08-22 17:45 |
 
 ## Completed FUTURE match bettips: Tip 1 92.0% hit · Tip 2 80.0% hit
 
