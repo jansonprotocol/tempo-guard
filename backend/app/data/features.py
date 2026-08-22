@@ -40,7 +40,7 @@ from typing import Dict, List, Optional, Tuple
 import pandas as pd
 from rapidfuzz import fuzz, process
 
-from app.data import store
+from app.data import aliases, store
 
 # ── Constants (unchanged from the tuned FBref implementation) ─────────────────
 ROLLING_MATCHES = 10
@@ -334,6 +334,27 @@ def _resolve_in_frame(df: pd.DataFrame, team: str) -> Optional[str]:
     if team not in idx["resolved"]:
         idx["resolved"][team] = _match_team(team, idx["names"])
     return idx["resolved"][team]
+
+
+def _aliased(league_code: str, df: pd.DataFrame, team: str) -> str:
+    """
+    The name this league's store files `team` under.
+
+    Ordered so the alias table is a fallback and never an override: if the
+    resolver can already match the raw name, that match stands untouched. An
+    alias therefore only ever converts a fixture the engine WITHHELD into one it
+    can price, and can never change a tip it already issues — which is what
+    makes config/team_aliases.json safe to extend mid-season.
+
+    Guards against a stale entry too: an alias pointing at a name the store no
+    longer carries is ignored rather than trusted into an empty row set.
+    """
+    if _resolve_in_frame(df, team) is not None:
+        return team
+    mapped = aliases.get(league_code, team)
+    if mapped and _resolve_in_frame(df, mapped) is not None:
+        return mapped
+    return team
 
 
 def _find_team_rows(df: pd.DataFrame, team: str, cutoff: datetime) -> pd.DataFrame:
@@ -685,7 +706,7 @@ def _asof_features_intl(
             df = store.load_results(code)
             if df.empty:
                 continue
-            rows = _find_team_rows(df, team, cutoff)
+            rows = _find_team_rows(df, _aliased(code, df, team), cutoff)
             if len(rows) > len(best_rows):
                 best_rows, best_full = rows, df
             # A full rolling window is the most that will ever be used, so once
@@ -733,6 +754,11 @@ def asof_features(
     league_mu_asof, n_before = _league_mean_asof(df, cutoff)
     if n_before == 0:
         return {}
+
+    # Done once, before any lookup, so the rolling rows, the venue rows and the
+    # per-team nudges all key off the same name.
+    home_team = _aliased(league_code, df, home_team)
+    away_team = _aliased(league_code, df, away_team)
 
     H = _find_team_rows(df, home_team, cutoff)
     A = _find_team_rows(df, away_team, cutoff)
