@@ -141,6 +141,57 @@ Average odds of about 1.33 across the 26 (range 1.17–1.60) put break-even near
 Sanfrecce bet onward, so the Three Towns swap cannot be applied exactly. Per-bet
 odds are recorded from here.
 
+#### Every tip now carries a "buy from" price
+
+`two_tips.py` prints a threshold beside each lane:
+
+    COL-PA  Santa Fe v América    TIP1 O1.5  80.8% +13.59% buy>=1.30
+    BRA-SA  Cruzeiro v Flamengo   TIP1 O1.5  88.0% +16.41% buy>=1.19
+    CHI-PD  Huachipato v Limache  TIP1 U4.25 85.9%  +0.69% buy>=1.24
+
+If the book is at or above that number the bet is worth taking; below it, the
+tip may still be right and the price still wrong. It is break-even plus a 5%
+margin — break-even alone is a coin flip with extra steps, and 5% is chosen
+against this log's own record, where bets have averaged about 1.29 at roughly a
+72% strike. That is close enough to level that the margin is the difference
+between grinding and drifting.
+
+**Getting this right required fixing a mistake that runs through the whole
+log.** Every "fair price" quoted before this was `1 / P`, and `P` is the
+engine's win probability — which counts a push and a half-win as a win, because
+that is what the HIT-RATE column wants. Money does not work that way. `U3.0` at
+exactly 3 goals returns the stake; scoring it as a win and quoting `1 / P`
+claims a price the bet cannot pay.
+
+The error is not small, and it does not run one way, so no single fudge factor
+corrects it. At mu = 2.60:
+
+    market    1/P     true      gap    what 1/P got wrong
+    O2.75    2.077   2.391   +15.1%    counts the half-win at 3 as a full win
+    U3.0     1.359   1.509   +11.1%    counts the push at 3 as a win
+    O1.75    1.365   1.440    +5.5%    counts the half-loss at 2 as a win
+    U3.25    1.359   1.421    +4.6%    counts the half-win at 3 as a full win
+    U4.25    1.140   1.152    +1.1%    counts the half-win at 4 as a full win
+    O1.5     1.365   1.365     0.0%    correct — no push possible
+    U3.5     1.359   1.359     0.0%    correct — no push possible
+    O2.5     2.077   2.077     0.0%    correct — no push possible
+    U3.75    1.359   1.263    −7.1%    ignores that 4 only half-loses
+    O2.25    2.077   1.816   −12.6%    ignores that 2 only half-loses
+
+Rungs that push or half-win on the boundary were quoted **too cheap to buy**;
+rungs that only half-LOSE were quoted **too dear**, so real value was being
+turned down. Only the `.5` lines were ever right — which is why the `O1.5` bets
+in this log priced out sensibly and everything else drifted.
+
+`app/engine/pricing.py` computes it properly: decompose each rung into its two
+half-stakes, settle both against a Poisson over totals, and solve for the odds
+at which expected return equals the stake. Team rungs (`U1.5`, `O1.5`, `O0.5`)
+are all `.5` lines and cannot push, so `1 / P` is exactly right there and is
+used directly.
+
+This also generalises the by-hand `O2.25 / O2.5 / O2.75` working below. That
+section got one tier right; this gets the ladder right.
+
 #### Which rung to buy, and what `1 / P` actually means
 
 Two of the 26 — Sanfrecce `O2.25` at 1.35 and Al-Fateh `O2.5` at 1.50 — are the
@@ -195,24 +246,34 @@ Two coupons taken at 21:57 and later. Every one is scored on the engine's own
 probability for the rung actually bought, so `fair` is the price that would make
 it a break-even bet and `EV` is what the model thinks the stake is worth.
 
-| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Fair | EV | Lane class |
-|---|---|---|---|---|---|---|---|
-| 22:30 | Juan Pablo II v ADT | U3.0 +9.6% | U3.25 | 1.42 | 1.203 | **+18.0%** | same tier |
-| 22:30 | Águilas Doradas v Millonarios | U4.25 **−7.2%** | O1.5 | 1.34 | 1.291 | +3.8% | FLIP |
-| 23:00 | Ceará v Londrina | U3.0 +3.2% | **U3.0 — Tip 1** | 1.37 | 1.178 | **+16.3%** | Tip 1 |
-| 23:05 | Tolima v Bucaramanga | U4.25 **−5.6%** | O1.5 | 1.40 | 1.322 | +5.9% | FLIP |
-| 23:30 | Internacional v Atlético-MG | U4.25 **−2.5%** | O1.5 | 1.34 | 1.333 | +0.6% | FLIP |
-| 23:30 | Huachipato v Limache | U4.25 +0.7% | U4.5 | 1.16 | 1.164 | −0.4% | same tier |
-| 01:10 | Santa Fe v América de Cali | O1.5 +13.6% | **O1.5 — Tip 1** | 1.49 | 1.237 | **+20.5%** | Tip 1 |
-| 01:30 | Cruzeiro v Flamengo | O1.5 +16.2% | **O1.5 — Tip 1** | 1.32 | 1.139 | **+15.9%** | Tip 1 |
-| 02:00 | U. Católica v Ñublense | O1.5 +6.9% | **O1.5 — Tip 1** | 1.25 | 1.200 | +4.1% | Tip 1 |
-| 03:15 | Ind. Medellín v Cúcuta | U3.0 +0.4% | U3.5 | 1.36 | 1.249 | +8.9% | same tier |
+| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Break-even | Buy from | EV | Lane class |
+|---|---|---|---|---|---|---|---|---|
+| 22:30 | Juan Pablo II v ADT | U3.0 +9.6% | U3.25 | 1.42 | 1.230 | 1.29 | **+14.0%** | same tier |
+| 22:30 | Águilas Doradas v Millonarios | U4.25 **−7.2%** | O1.5 | 1.34 | 1.291 | 1.36 | +3.8% ⚠ | FLIP |
+| 23:00 | Ceará v Londrina | U3.0 +3.2% | **U3.0 — Tip 1** | 1.37 | 1.227 | 1.29 | +9.5% | Tip 1 |
+| 23:05 | Tolima v Bucaramanga | U4.25 **−5.6%** | O1.5 | 1.40 | 1.322 | 1.39 | +5.9% | FLIP |
+| 23:30 | Internacional v Atlético-MG | U4.25 **−2.5%** | O1.5 | 1.34 | 1.333 | 1.40 | +0.6% ⚠ | FLIP |
+| 23:30 | Huachipato v Limache | U4.25 +0.7% | U4.5 | 1.16 | 1.164 | 1.22 | **−0.4%** ⚠ | same tier |
+| 01:10 | Santa Fe v América de Cali | O1.5 +13.6% | **O1.5 — Tip 1** | 1.49 | 1.237 | 1.30 | **+20.5%** | Tip 1 |
+| 01:30 | Cruzeiro v Flamengo | O1.5 +16.2% | **O1.5 — Tip 1** | 1.32 | 1.136 | 1.19 | **+16.2%** | Tip 1 |
+| 02:00 | U. Católica v Ñublense | O1.5 +6.9% | **O1.5 — Tip 1** | 1.25 | 1.200 | 1.26 | +4.1% ⚠ | Tip 1 |
+| 03:15 | Ind. Medellín v Cúcuta | U3.0 +0.4% | U3.5 | 1.36 | 1.249 | 1.31 | +8.9% | same tier |
+
+⚠ = taken below the `buy from` threshold. Portfolio EV is **+8.3% per bet**.
+
+**Two of these EV figures were published an hour earlier and were too high.**
+Juan Pablo II `U3.25` was quoted +18.0% and is really +14.0%; Ceará `U3.0` was
+quoted +16.3% and is really +9.5%. Both were priced at `1 / P`, which counts a
+push as a win — see the pricing section below. The other eight are `.5` lines,
+where `1 / P` happens to be correct, which is why the batch as a whole barely
+moved.
 
 **This is the best-priced batch in the log.** Nine of the ten are positive EV
 and four clear +15%, which has not happened before — the South American books
 are quoting Overs and low Unders far above what the engine makes them. Santa Fe
-`O1.5` at **1.49** against a fair 1.237 is the single largest edge taken all
-day, ahead of Basel.
+`O1.5` at **1.49** against a break-even of 1.237 is the single largest edge
+taken all day, ahead of Basel. Four sit below the 5% margin threshold, and
+Huachipato is the only one actually negative.
 
 Six of the ten sit in Tip 1's own probability tier — four Tip 1 exactly, two a
 rung softer. That is the highest disciplined share of any block so far, and it

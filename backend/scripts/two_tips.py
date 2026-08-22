@@ -24,7 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.data import config
-from app.engine import market_select, team_total
+from app.engine import market_select, pricing, team_total
 from app.engine.types import ModuleFlags
 from app.predict import build_request, predict_fixture
 
@@ -83,6 +83,23 @@ def tips(lg: str, h: str, a: str, d: date):
     return dict(mu=req.mu_total, lmu=req.league_mu, t1=(t1, p1, e1), t2=t2)
 
 
+def _buy(market: str, mu: float, p: float) -> str:
+    """
+    The price to check the book against: break-even plus a margin.
+
+    Match rungs are priced from the goal distribution, because a quarter or
+    whole line can push and `1 / p` would misprice it. Every team rung on offer
+    (`U1.5`, `O1.5`, `O0.5`) is a `.5` line, which cannot push — there `1 / p`
+    IS the break-even, so the same margin is applied to it directly rather
+    than leaving the column blank.
+    """
+    try:
+        be = pricing.break_even(market, mu)
+    except (ValueError, IndexError):
+        be = 1 / p if p > 0 else None
+    return f"buy>={be * (1 + pricing.DEFAULT_MARGIN):.2f}" if be else "buy>=  — "
+
+
 def main() -> None:
     args = sys.argv[1:]
     rows = []
@@ -105,10 +122,10 @@ def main() -> None:
         m1, p1, e1 = r["t1"]
         line = (f"{lg:8s} {h[:22]:22.22s} v {a[:20]:20.20s} "
                 f"mu {r['mu']:4.2f}/{r['lmu']:4.2f}  "
-                f"TIP1 {m1:6s} {p1:5.1%} {e1:+6.2%}")
+                f"TIP1 {m1:6s} {p1:5.1%} {e1:+6.2%} {_buy(m1, r['mu'], p1)}")
         if r["t2"]:
             m2, p2, e2, why = r["t2"]
-            line += f"   TIP2 {m2:6s} {p2:5.1%} {e2:+6.2%} ({why})"
+            line += f"   TIP2 {m2:6s} {p2:5.1%} {e2:+6.2%} {_buy(m2, r['mu'], p2)} ({why})"
         else:
             line += "   TIP2 — none"
         print(line)
