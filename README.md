@@ -170,23 +170,25 @@ Fourteen open. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
 
 
-#### Still to place — evening slate
+#### Not backed — and only one of these was a decision
 
-Eight of the 18:00–20:00 fixtures are backed. These are the tipped ones that are
-not, kept here so the skip ledger stays honest rather than reconstructed later.
+The evening slate is closed out. Of the six tipped fixtures held back earlier,
+four were taken and two could not be bought at all.
 
-| Kickoff | Fixture | Tip 1 | Tip 2 | status |
-|---|---|---|---|---|
-| 19:00 | Südtirol v Entella | **U3.0 87.1% +11.8%** | U2.75 69.9% +15.9% | **unplaced — best read on the card** |
-| 19:00 | Ceuta v Las Palmas | U4.25 90.6% +1.1% | U3.75 78.2% +1.8% | unplaced |
-| 19:00 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% | U3.75 78.0% +1.5% | unplaced |
-| 19:00 | Estoril v Rio Ave | U3.0 82.8% +11.3% | U4.25 93.2% +6.9% | unplaced |
-| 19:30 | Valencia v Celta | U4.25 87.1% +0.3% | — none | unplaced |
-| 20:00 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | O1.75 74.7% +2.9% | unplaced |
+| Fixture | Tip 1 | Why not backed |
+|---|---|---|
+| Albacete v Real Sociedad B | U4.25 90.5% +0.9% | **market unavailable** |
+| Valencia v Celta | U4.25 87.1% +0.3% | **market unavailable** |
+| Carrarese v Mantova | U3.0 74.2% −1.2% | **engine advised no bet** — nothing on the ladder cleared the floor |
 
-Three more carry no playable tip and are not counted as skips: `Çorum v
-Kasımpaşa` (1 match), `Luzern v Lausanne` (split name), `Carrarese v Mantova`
-(no rung cleared the floor).
+These are kept out of the skip ledger deliberately. A skip is a judgement that
+gets graded; **an unavailable price is not a judgement**, and neither is
+declining a fixture the engine itself refused to back. Folding them in would
+credit or blame a decision nobody made.
+
+Both unavailable fixtures were `U4.25` above 87% at roughly +1% edge — the exact
+shape that prices inside the margin, so there was probably nothing worth having
+even if the market had been open.
 
 #### The evening batch is a different kind of betting from the afternoon
 
