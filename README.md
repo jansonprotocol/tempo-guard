@@ -1623,6 +1623,108 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
 
 - **Two Premier League tips were re-verified and corrected.** Forest v Leeds was logged as O1.5 81% +0.9% and now reads U4.25 83% +1.4%; Everton v Crystal Palace read +1.9% and now reads +4.2%. Same code, same data, same resolved names — the earlier figures do not reproduce and the cause is not identified. Championship and Ligue 2 fixtures from the same batch reproduce exactly, so it is confined to ENG-PL, which is also the stale store. Recorded rather than hidden: a tip that cannot be reproduced is a tip that cannot be trusted.
 
+### Diagnostics — 23 Aug, full sweep
+
+Run across every league: freshness, configuration, and a per-league retrosim
+scoring 120–260 fixtures each strictly as-of. `scripts/retrosim.py`,
+`scripts/league_status.py`.
+
+#### 1. The engine is systematically overconfident, by about 4 points
+
+Twenty-six leagues, ~3,000 priced fixtures replayed:
+
+    weighted   says 85.7%   actually hit 81.8%   gap -3.9
+
+The live log's 84.5% on 97 tips is a small, favourable sample. **The engine's
+stated probability is not what it delivers**, and the `MIN_WIN_PROB = 0.79`
+floor is really buying something closer to 0.75.
+
+#### 2. Four leagues are genuinely broken, and it is not a small effect
+
+Re-run at n≈260 so the intervals mean something. In all four the stated
+probability sits OUTSIDE the 95% interval of what actually landed:
+
+    league     n    says     hit      gap    95% interval
+    CHN-SL   251   84.9%   75.3%    -9.6      [70-80]
+    CHI-PD   255   85.3%   75.7%    -9.6      [70-81]
+    SAU-PL   258   85.5%   78.3%    -7.2      [73-83]
+    COL-PA   260   86.4%   80.8%    -5.6      [76-85]
+
+    ENG-CH   259   85.1%   84.2%    -0.9      [79-88]   control
+    ESP-L2   259   85.1%   84.9%    -0.2      [80-89]   control
+    TUR-SL   258   84.9%   85.7%    +0.8      [81-89]   control
+
+The controls are near-perfect, so this is not the engine being globally
+miscalibrated in a way that excuses the four. **China, Chile, Saudi and
+Colombia are individually bad**, and all four are currently being tipped —
+Saudi has 6 settled tips in the live log at 50%, Colombia 3 settled and 3
+pending, Chile 1 settled and 2 pending.
+
+The live log agreed before the retrosim ran: Saudi 3/6, J1 6/9, Peru 3/5 were
+the three worst there, and the retrosim independently puts SAU-PL at -7.2,
+JPN-J1 at -5.3 and PER-L1 at -4.2 on 120+ fixtures each. Two independent reads,
+same answer.
+
+#### 3. Season-restart is a separate effect and it is real
+
+Some leagues look bad only in the most recent window. Scoring the 120 matches
+BEFORE the last 120:
+
+    league     last 120    prior 120
+    ENG-NL       -8.3        -1.5      restart effect
+    FRA-L2       -7.8        -0.1      restart effect
+    CHN-SL      -10.7        -9.3      persistent
+    CHI-PD       -8.1       -11.9      persistent
+    SAU-PL       -7.6        -6.9      persistent
+    COL-PA       -6.9        -6.0      persistent
+
+`ENG-NL` and `FRA-L2` recover completely mid-season. Their last-120 window
+straddles the summer break, where the rolling form window reaches across it and
+describes teams that no longer exist in that shape. **The engine is materially
+worse in the first weeks of a season and does not know it** — that is most of
+today's slate.
+
+#### 4. Configuration: 13 of 52 leagues are actually tuned
+
+    tuned (a dial moved off default)   13   ENG-CH, ENG-PL, ESP-L2, ESP-LL,
+                                            FRA-L1, FRA-L2, GER-B2, GER-BL,
+                                            ITA-SA, ITA-SB, NED-ED, POR-PL, UCL
+    registered only                    39   means filled in, every dial default
+    no config at all                    9   CHI-PD, SAU-PL, PER-L1, AUT-BL, ...
+
+**All three unconfigured leagues that are being tipped underperform** — CHI-PD
+-9.6, SAU-PL -7.2, PER-L1 -4.2. But configuration is not sufficient: CHN-SL and
+COL-PA are registered and still run -9.6 and -5.6, while TUR-SL is equally
+untuned and calibrates perfectly. Being unconfigured is a risk marker, not the
+cause.
+
+#### 5. Seven leagues are being tipped on stale data
+
+`league_status.py` already flags these as not cleared for futurematch, and the
+tip path does not enforce it:
+
+    ENG-PL   90 days stale      ITA-SA   90 days
+    FRA-L1   97 days            ITA-SB  106 days
+    GER-BL   98 days            GRE-SL   93 days
+    COPA-L   86 days
+
+Four of them were tipped this weekend (Brentford, Genoa/Parma/Inter/Udinese,
+Toulouse/Nice/Troyes, five Serie B fixtures). Those tips ran on form ending in
+May 2026. **They went 17/19 — better than the fresh leagues** — so this is a
+governance gap rather than a demonstrated harm, but nineteen fixtures prove
+nothing and the status tool's own verdict is being ignored.
+
+#### What this changes
+
+Nothing is being switched off mid-slate. Ranked by what the evidence supports:
+
+1. **Stop tipping CHN-SL, CHI-PD, SAU-PL, COL-PA** until re-calibrated. Four
+   leagues, ~1,000 fixtures of evidence, intervals excluding their own claim.
+2. **Make the freshness gate binding** rather than advisory.
+3. **Damp confidence early in a season** — the restart effect is worth 6–8
+   points in the leagues where it shows.
+4. Re-check the global -3.9 after 1–3; some of it is those four leagues.
+
 ### Known data defects
 
 - **FIXED — team-name resolution was non-deterministic across processes.** The
