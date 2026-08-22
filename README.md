@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 85.7%
+## CURRENT CONFIRMED HITRATE: 86.5%
 
-**72 / 84 settled** · over/under markets only · live tips, not backtests
+**77 / 89 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,11 +10,6 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 0-0** (HT) | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% | **Nice U1.5** 76.3% +21.1% (team) | 2026-08-22 20:45 |
-| **LIVE: 0-1** (84') | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% | U3.75 73.7% +5.1% (floor −5.3) | 2026-08-22 20:45 |
-| **LIVE: 0-0** (HT) | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% | **Troyes U1.5** 79.1% +23.9% (team) | 2026-08-22 20:45 |
-| **LIVE: 0-0** (HT) | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% | **Genoa U1.5** 75.1% +15.0% (team) | 2026-08-22 20:45 |
-| **LIVE: 0-0** (HT) | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% | **Parma U1.5** 81.6% +21.5% (team) | 2026-08-22 20:45 |
 | **LIVE: 0-0** (26') | Serie B | Benevento v Modena | U3.0 82.2% +6.9% | U2.75 62.7% +8.8% (floor −16.3) | 2026-08-22 21:00 |
 | **LIVE: 1-0** (31') | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% | **Cremonese O0.5** 83.3% +14.5% (team) | 2026-08-22 21:00 |
 | **LIVE: 0-0** (31') | Eredivisie | Heerenveen v Zwolle | U4.25 84.5% +5.2% | U3.75 68.8% +7.0% (floor −10.2) | 2026-08-22 21:00 |
@@ -34,9 +29,9 @@
 | — not started | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% | O2.25 62.7% +10.3% (floor −16.3) | 2026-08-23 02:00 |
 | — not started | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% | — none | 2026-08-23 03:15 |
 
-## Completed FUTURE match bettips: Tip 1 85.7% hit · Tip 2 72.7% hit
+## Completed FUTURE match bettips: Tip 1 86.5% hit · Tip 2 76.1% hit
 
-**Tip 1 — 72 / 84**   ·   **Tip 2 — 48 / 66** (18 fixtures offered no second tip)
+**Tip 1 — 77 / 89**   ·   **Tip 2 — 54 / 71** (18 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
@@ -115,7 +110,7 @@
 | ✅ HIT — 1-2 | LaLiga 2 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% | ✅ U3.75 78.0% +1.5% | 2026-08-22 |
 | ✅ HIT — 0-2 | Liga Portugal | Estoril v Rio Ave | U3.0 82.8% +11.3% | ✅ U4.25 93.2% +6.9% | 2026-08-22 |
 | ✅ HIT — 0-0 | LaLiga | Valencia v Celta | U4.25 87.1% +0.3% | — none offered | 2026-08-22 |
-| ✅ HIT — 1-1 | Belgian Pro League | Antwerp v Genk | O1.5 82.5% +6.3% | ❌ O2.25 61.5% +9.3% | 2026-08-22 |
+| ✅ HIT — 4-4 | Belgian Pro League | Antwerp v Genk | O1.5 82.5% +6.3% | ✅ O2.25 61.5% +9.3% | 2026-08-22 |
 | ✅ HIT — 3-1 | Süper Lig | Fenerbahçe v Konyaspor | O1.5 87.7% +10.6% | ✅ O2.25 70.2% +16.9% | 2026-08-22 |
 | ✅ HIT — 4-0, half win | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | ✅ **Saint-Étienne O0.5** 82.0% +8.7% (team) | 2026-08-22 |
 | ✅ HIT — 0-0 | Saudi Pro League | Al-Khaleej v Al-Shabab | U4.25 86.1% +4.3% | ❌ **Al-Shabab O0.5** 80.8% +8.1% (team) | 2026-08-22 |
@@ -124,11 +119,16 @@
 | ✅ HIT — 1-2 | Swiss Super League | Zürich v Basel | **O2.25 83.5% +27.6%** | ✅ **Basel O1.5** 78.8% +46.4% (team) | 2026-08-22 |
 | ✅ HIT — 1-1 (decided) | Serie B | Avellino v Arezzo | O1.5 76.9% +5.3% — below the floor | — none | 2026-08-22 |
 | ✅ HIT — 1-1 (decided) | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% | ✅ **Real Madrid O0.5** 83.6% +14.9% (team) | 2026-08-22 |
+| ✅ HIT — 0-0 | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% | ✅ **Nice U1.5** 76.3% +21.1% (team) | 2026-08-22 |
+| ✅ HIT — 0-2 | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% | ✅ U3.75 73.7% +5.1% (floor −5.3) | 2026-08-22 |
+| ✅ HIT — 0-0 | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% | ✅ **Troyes U1.5** 79.1% +23.9% (team) | 2026-08-22 |
+| ✅ HIT — 0-2 | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% | ✅ **Genoa U1.5** 75.1% +15.0% (team) | 2026-08-22 |
+| ✅ HIT — 0-1 | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% | ✅ **Parma U1.5** 81.6% +21.5% (team) | 2026-08-22 |
 
 
 ### Actual placed bets
 
-**Win: 33 / 48 — 69%  ·  Pending: 8 / 56  ·  Average odds: ≈1.28**
+**Win: 38 / 53 — 72%  ·  Pending: 3 / 56  ·  Average odds: ≈1.28**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -182,16 +182,11 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds |
 |---|---|---|---|---|
-| 20:45 | Nice v Lorient | U3.0 | U3.25 | 1.33 |
-| 20:45 | Toulouse v Lyon | U4.25 | U4.5 | 1.12 |
-| 20:45 | Troyes v Paris FC | U4.25 | **Troyes U1.5 — team lane** | 1.48 |
-| 20:45 | Genoa v Napoli | U4.25 | **Genoa U1.5 — team lane** | 1.18 |
-| 20:45 | Parma v Cagliari | U3.0 | **Parma U1.5 — team lane** | 1.33 |
 | 21:00 | Benevento v Modena | U3.0 | U3.5 | 1.29 |
 | 21:00 | Empoli v Cremonese | O1.5 | **O1.5 — Tip 1** | 1.34 |
 | 21:00 | Heerenveen v Zwolle | U4.25 | U4.5 | 1.29 |
 
-Eight open. Prices are recorded from the Sanfrecce bet onward; the earlier
+Three open. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
 
 #### Closed in the 20:00–21:30 block
@@ -205,6 +200,29 @@ afternoon block was logged without them.
 | Zürich v Basel | **Basel O1.5 — team lane** | **1.83** | 1-2 | ✅ **win** |
 | Fluminense v Remo | O1.5 — flip off a fallback | 1.33 | 1-1 (decided) | ✅ win |
 | Espanyol v Real Madrid | O1.5 — Tip 1 | 1.17 | 1-1 (decided) | ✅ win |
+
+#### Closed in the 20:45 block — 5 from 5
+
+| Fixture | Lane taken | Odds | Result | Graded |
+|---|---|---|---|---|
+| Nice v Lorient | U3.25 — one rung safer | 1.33 | 0-0 | ✅ win |
+| Toulouse v Lyon | U4.5 — one rung safer | 1.12 | 0-2 | ✅ win |
+| Troyes v Paris FC | **Troyes U1.5 — team lane** | **1.48** | 0-0 | ✅ win |
+| Genoa v Napoli | **Genoa U1.5 — team lane** | 1.18 | 0-2 | ✅ win |
+| Parma v Cagliari | **Parma U1.5 — team lane** | 1.33 | 0-1 | ✅ win |
+
+A clean sweep, and both halves of it are the pattern the log has been arguing
+for all evening. The two match-ladder bets were taken **one rung safer than Tip
+1** — the disciplined lane. The three team lanes were all Tip 2 as published,
+taken at the price the engine quoted, and all three were `U1.5` on the home
+side: Troyes, Genoa and Parma between them scored **zero goals**.
+
+That is the team lane working in its Under direction, which is the half that
+was nearly discarded. An earlier build of the module offered `O0.5` only,
+having rejected every Under after measuring `U0.5` inside the extreme tail.
+`U1.5` was the best-calibrated rung on the whole ladder and it was sitting on
+the cutting-room floor. Tonight it went 4/4 — these three plus UTC — including
+Troyes at **1.48**, the best price of the five.
 
 Four from seven, but the shape matters more than the count. The one bet in the
 block that was priced like a real edge — **Basel `O1.5` at 1.83** — landed, and
@@ -302,26 +320,28 @@ hit rate without marking them makes the headline number mean two things at once.
 
 #### Discipline is the largest single effect in the bet log
 
-48 settled bets, split by the lane actually taken:
+53 settled bets, split by the lane actually taken:
 
     Tip 1 exactly              11/11   100.0%
-    safer rung of Tip 1's tier  4/5     80.0%
-    past Tip 2                  3/5     60.0%
+    safer rung of Tip 1's tier  6/7     85.7%
+    team lane (off-ladder)      4/5     80.0%
     FLIP (crossed the book)     5/8     62.5%
-    team lane (off-ladder)      1/2     50.0%
+    past Tip 2                  3/5     60.0%
     middle                      6/13    46.2%
     sharpen                     0/1      0.0%
 
-    Tip 1 or one rung safer    15/16 = 93.8%   95% interval 71.7% .. 98.9%
-    everything else            18/32 = 56.2%   95% interval 39.3% .. 71.8%
+    Tip 1 or one rung safer    17/18 = 94.4%   95% interval 74.2% .. 99.0%
+    everything else            21/35 = 60.0%   95% interval 43.6% .. 74.4%
 
-A **37.6-point** gap, and the two intervals no longer overlap at all. The
-20:00–21:30 block widened it rather than softening it: both disciplined bets in
-that block won (Espanyol at Tip 1 exactly, Saint-Étienne one rung safer), and
-the three that lost were all off the disciplined lane — two `middle` rungs
-between Tip 1 and Tip 2 (Śląsk `U3.5`, UTC `U3.5`) and one team lane
-(Al-Shabab `O0.5`). `middle` is now the worst bucket in the book at 46.2%, below
-even a coin flip on bets priced around 1.25. Every independent
+A **34.4-point** gap. The two intervals touch again only because the 20:45
+sweep pulled the undisciplined bucket up — three of those five were team lanes
+and all three won, which is the undisciplined side of the ledger finally
+producing something. That is worth separating from the rest of it: the team
+lane sits at **4/5 = 80%**, well clear of `middle` at 46.2% and `past Tip 2` at
+60%. Not every deviation from Tip 1 is the same deviation.
+
+`middle` remains the worst bucket in the book — a rung chosen between Tip 1 and
+Tip 2 for no reason the engine gave, losing money at prices around 1.25. Every independent
 measurement today pointed the same way — FLIP lanes at 73.6% against Tip 1's
 88.6%, the 4-goal trap punishing past-Tip-2 three times, sharpen rungs unable to
 rescue a loss by construction — and this is those findings showing up in the
@@ -331,18 +351,19 @@ Chronologically the effect is real but smaller than the lane split implies:
 
     first 22 settled   15/22 = 68.2%   disciplined 4/22 = 18%
     middle 19 settled  14/19 = 73.7%   disciplined 10/19 = 53%
-    last 7 settled      4/7  = 57.1%   disciplined  2/7  = 29%
+    20:00-21:30         4/7  = 57.1%   disciplined  2/7  = 29%
+    20:45 block         5/5  = 100.0%  disciplined  2/5  = 40%
 
 Discipline nearly tripled through the afternoon and the win rate rose 5.5
-points. The last block fell back on both counts at once, which is the same
-relationship seen from the other side: discipline dropped to 29% and the win
-rate dropped with it. The gap between that and the 37.6-point lane difference
-is simply that most bets still are not disciplined.
+points. The 20:00–21:30 block fell back on both counts at once. The 20:45 block
+then went 5/5 at only 40% disciplined, which is the honest counter-example: the
+lane split is a tendency across 53 bets, not a rule that holds in every window
+of five.
 
-**Two honest deflations.** 11/11 on Tip 1 is above Tip 1's own 85.7% live rate —
-16 disciplined bets would be expected to return 13.7 and returned 15, so a
-little luck sits on top of a real effect. At the other end, 32 undisciplined
-bets returning 18 is below even the FLIP lane's measured 73.6%, so there is bad
+**Two honest deflations.** 11/11 on Tip 1 is above Tip 1's own 86.5% live rate —
+18 disciplined bets would be expected to return 15.6 and returned 17, so a
+little luck sits on top of a real effect. At the other end, 35 undisciplined
+bets returning 21 is below even the FLIP lane's measured 73.6%, so there is bad
 luck there too. The direction and rough size hold; the exact numbers will
 regress toward roughly 86% and roughly 70%.
 
@@ -1091,6 +1112,12 @@ nothing; the point of keeping this column separate is that in fifty it will.
 
 Scores in the pending table are a snapshot, not a feed — they are whatever was
 last reported and go stale between updates.
+
+**One result was graded off a stale snapshot and has been corrected.** Antwerp v
+Genk was logged as `1-1` and its Tip 2 (`O2.25`) marked a miss; the match
+finished **4-4**. Tip 1 was unaffected — `O1.5` wins on either scoreline — but
+Tip 2 flips to a hit, so the Tip 2 rate moves up rather than down. Grading only
+on `FT` from here; a mid-match score is not a result.
 
 ### Notes on individual calls
 
