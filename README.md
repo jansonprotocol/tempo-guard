@@ -258,6 +258,46 @@ easy** — its base rate is 88%, so an 86% hit rate on it is below par. `O1.5` a
 edge ranks the reads; they disagree, and the log should stop quoting one as
 evidence for the other.
 
+#### Why 41% of every pick is `U4.25`, and what would change it
+
+Nothing in today's work touched market selection — the only engine change was
+the alias layer, which decides *which fixtures* get priced, not *which market*
+gets chosen. The mix is unchanged and will stay unchanged.
+
+The concentration is not a defect, it is one number. `market_select.choose`
+takes the highest-edge market clearing `MIN_WIN_PROB`, and falls back to the
+safest buyable rung when nothing clears it. `U4.25` **is** that rung. Sweeping
+the floor across 2,987 fixtures (`scripts/floor_mix.py`):
+
+     floor     hit    base    edge   market mix
+      0.95  87.28%  84.79%  +2.49%   U4.25 75%  O1.5 25%
+      0.91  87.21%  84.63%  +2.58%   U4.25 74%  O1.5 25%  U3.0 1%
+      0.87  86.58%  83.91%  +2.67%   U4.25 70%  O1.5 25%  U3.0 6%
+      0.83  85.27%  82.59%  +2.68%   U4.25 62%  O1.5 24%  U3.0 13%
+      0.79  82.32%  79.67%  +2.65%   U4.25 45%  O1.5 27%  U3.0 26%   <- shipping
+      0.75  79.38%  75.84%  +3.53%   U3.0 38%  O1.5 34%  U4.25 23%
+      0.70  76.03%  71.77%  +4.26%   U3.0 45%  O1.5 36%  U4.25  7%
+      0.65  72.75%  67.94%  +4.80%   U3.0 44%  O1.5 29%  O2.25 13%
+      0.55  63.14%  57.70%  +5.44%   U2.75 35%  O2.25 30%  U3.0 22%
+
+**New markets surface only by lowering the floor, and every step costs hit
+rate.** Roughly three points of strike per 0.04 of floor. `U4.25` does not fall
+below a quarter of the book until 0.75, where the headline drops to 79.4%.
+
+Going the other way is the trap this project has now walked into six times.
+Raise the floor to 0.95 and the hit rate climbs to **87.3%** — five points above
+shipping, and the best number anywhere in this table. It is worth nothing. The
+base rate of the markets chosen climbs by **5.12 points** over the same range
+while realised edge *falls* from +2.65% to +2.49%. Every point of the apparent
+gain is the rung getting easier, and none of it is the engine predicting better.
+
+The signature is identical every time it has appeared: **strike up, edge flat or
+down, mix collapsing toward `U4.25`.** It is the reason edge is tracked at all,
+and the reason the floor sits at 0.79 rather than wherever the strike rate peaks.
+
+One caveat on the table itself: it is a sweep with no chronological holdout, so
+by this repository's own standard it generates candidates and settles nothing.
+
 #### The deviation test — and it was computable at the time
 
 A deviation beats the published tip only when `p_dev × odds_dev > p_tip1 × odds_tip1`.
