@@ -202,6 +202,68 @@ at 1.18 needed 1.332. Both won. Meanwhile `Basel O1.5` at 1.83 needed 1.269 and
 read quality, bought properly. **The team lane is not the problem; buying a 65%
 claim at an 85% price is.**
 
+#### Chasing the 1.20–1.39 band, and why it did not become a rule
+
+The odds bands split sharply, and the middle of the book is where the money
+went:
+
+    band         n   Athena says   actually hit     gap      ROI
+    1.00-1.19   14         84.8%          92.9%    +8.1    +6.6%
+    1.20-1.29   17         81.0%          58.8%   -22.2   -26.1%
+    1.30-1.39   19         76.4%          63.2%   -13.3   -12.7%
+    1.40+       10         74.4%          80.0%    +5.6   +22.1%
+
+**60% of the book sat in 1.20–1.39 and it returned -19.0%.** Tempting to make a
+rule of it. Three checks say don't.
+
+**First, the band is mostly a `U3.x` tier in disguise.** Splitting it:
+
+    BAND, U3.x rungs         13 bets   says 79.3%   hit 53.8%   ROI -27.6%
+    BAND, everything else    23 bets   says 78.2%   hit 65.2%   ROI -14.2%
+    ALL U3.x bets            18 bets   says 80.1%   hit 61.1%   ROI -18.4%
+    ALL non-U3.x bets        42 bets   says 79.0%   hit 76.2%   ROI  -1.0%
+
+`U3.0`, `U3.25` and `U3.5` price around 1.20–1.40, so "that band" and "that
+tier" are nearly the same set. The independent tip record agrees — across all
+95 settled Tip 1s, `U3.x` says 82.8% and lands 72.7%, a **-10.0** gap, while
+`U4.25` runs +2.8 and `O1.x` runs +3.1.
+
+**Second, the structural explanation is testable and it is false.** The natural
+story is overdispersion: real totals having fatter tails than Poisson, more 4+
+goal games than the model expects, which would hurt `U3.x` most because its
+boundary sits closest to the typical total. `scripts/dispersion.py` checks it on
+**272,857 matches**:
+
+    mean total 2.623   variance 2.713   var/mean 1.034   (Poisson => 1.000)
+
+    rung    Poisson says   actually     gap
+    U2.75          51.3%      51.2%    -0.1
+    U3.0           73.1%      72.9%    -0.2
+    U3.5           73.1%      72.9%    -0.2
+    U4.25          87.4%      87.1%    -0.4
+    O1.5           73.7%      73.3%    -0.4
+
+Mild overdispersion exists and is worth **less than half a point** at every rung
+traded. `U3.x` is not singled out; it is the best-calibrated under on the
+ladder. There is no shape correction to apply.
+
+**Third, the pattern was found by searching for it.** The band was selected
+because it looked bad, so testing it on the same 60 bets is circular. The
+shortfall is `z = -2.03` on 18 `U3.x` bets — suggestive, not established, and
+discounted further for having been fished out of a dozen possible slices.
+
+**What survives.** Overall calibration is excellent: across 95 settled tips the
+engine says **84.6%** and delivers **85.3%**, a gap of **+0.6 points**. The
+engine is not lying about its probabilities. The band effect is most likely
+variance sitting on top of a real but small `U3.x` wobble, and the honest
+response is to keep counting rather than to add a rule. `U3.x` calibration is
+worth re-checking at 100+ tips.
+
+**The pricing answer is the one that holds.** In that band the average margin
+bought was only **+1.1%** (1.20–1.29) and **+3.1%** (1.30–1.39), against the
+**+5% or better** that separated the profitable bets from the rest. The band did
+not lose because the tips were bad — it lost because it was bought thin.
+
 #### On cash-outs
 
 Five positions were closed early and the ledger flags them. They are scored as
