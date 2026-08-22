@@ -291,6 +291,8 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
       Le Mans             0 rows     up from Ligue 2
       Elversberg          0 rows     up from 2. Bundesliga
 
+  **Accepted as-is.** Refusing a promoted club is the gate behaving correctly, and a tip built on one or two matches would be worse than no tip. Not to be confused with the split-name problem below, which fails the other way round — it *issues* a tip off three or four matches instead of withholding one.
+
   None of these is a naming fault, and no alias can help — there is nothing in the store to alias *to*. `Marítimo v Académico Viseu` is correct as logged: the store holds exactly two rows mentioning Viseu (Benfica 2-2 on 09 Aug, Viseu 0-1 Santa Clara on 15 Aug) and nothing under any other spelling. The fix is a second-tier source per country plus cross-division lookup — the same feature Hull and Ipswich need, approached from the other side.
 
 - **`Piast v Legia` — confirmed a true split, and it is league-wide.** `Legia` holds 4 rows (2026-07-24 → 2026-08-14) and `Legia Warszawa` holds 68 (2023-07-21 → 2025-05-24). One club, 72 matches, and the engine sees 4. The same 2026-provider break splits **26 further clubs across Denmark, Mexico, Poland, Russia and Switzerland** — `CF Monterrey` 587 rows vs `Monterrey` 4, `CF Pachuca` 558 vs `Pachuca` 4, `FC Zürich` 220 vs `Zurich` 3. Those leagues have no fixtures in the current window, so nothing is being lost today, but every one of them would tip off three or four matches the moment their fixtures load.
