@@ -31,6 +31,27 @@
 | — not started | Liga Portugal | Estoril v Rio Ave | U3.0 82.8% +11.3% | U4.25 93.2% +6.9% (lower edge) | 2026-08-22 19:00 |
 | — not started | LaLiga | Valencia v Celta | U4.25 87.1% +0.3% | — none | 2026-08-22 19:30 |
 | — not started | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | **O1.75 74.7% +2.9%** (floor −4.3) | 2026-08-22 20:00 |
+| — not started | Saudi Pro League | Al-Ahli v Abha | O1.5 83.1% +3.3% | O2.25 62.3% +5.1% (floor −16.7) | 2026-08-22 20:00 |
+| — not started | Saudi Pro League | Al-Khaleej v Al-Shabab | U4.25 86.1% +4.3% | U3.75 71.2% +6.0% (floor −7.8) | 2026-08-22 20:00 |
+| — not started | Ekstraklasa | Śląsk v Widzew | **WITHHELD** — split name | — | 2026-08-22 20:15 |
+| — not started | Peru Liga 1 | UTC v Comerciantes Unidos | U3.0 80.7% +7.1% | U4.25 92.0% +4.3% (lower edge) | 2026-08-22 20:15 |
+| — not started | Süper Lig | Fenerbahçe v Konyaspor | O1.5 87.7% +10.6% | O2.25 70.2% +16.9% (floor −8.8) | 2026-08-22 20:30 |
+| — not started | Swiss Super League | Zürich v Basel | **WITHHELD** — split name, both clubs | — | 2026-08-22 20:30 |
+| — not started | Ligue 1 | Le Mans v Brest | **NO TIP** — 0 matches | — | 2026-08-22 20:45 |
+| — not started | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% | U4.25 92.0% +7.7% (lower edge) | 2026-08-22 20:45 |
+| — not started | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% | U3.75 73.7% +5.1% (floor −5.3) | 2026-08-22 20:45 |
+| — not started | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% | **U3.75 78.4% +9.8%** (floor −0.6) | 2026-08-22 20:45 |
+| — not started | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% | **U3.75 78.3% +3.2%** (floor −0.7) | 2026-08-22 20:45 |
+| — not started | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% | U4.25 95.8% +7.1% (lower edge) | 2026-08-22 20:45 |
+| — not started | Belgian Pro League | Antwerp v Genk | O1.5 82.5% +6.3% | O2.25 61.5% +9.3% (floor −17.5) | 2026-08-22 20:45 |
+| — not started | Serie B | Benevento v Modena | U3.0 82.2% +6.9% | U2.75 62.7% +8.8% (floor −16.3) | 2026-08-22 21:00 |
+| — not started | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% | O2.25 59.5% +13.4% (floor −19.5) | 2026-08-22 21:00 |
+| — not started | Serie B | Avellino v Arezzo | O1.5 76.9% +5.3% — **below the floor** | — none | 2026-08-22 21:00 |
+| — not started | Eredivisie | Heerenveen v Zwolle | U4.25 84.5% +5.2% | U3.75 68.8% +7.0% (floor −10.2) | 2026-08-22 21:00 |
+| — not started | Brasileirão | Fluminense v Remo | U4.25 88.2% −0.7% | O1.75 72.7% +1.0% (floor −6.3) | 2026-08-22 21:00 |
+| — not started | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% | O2.25 56.8% +7.2% (floor −22.2) | 2026-08-22 21:30 |
+| — not started | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% | U4.25 94.8% +5.2% (lower edge) | 2026-08-22 21:30 |
+| — not started | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% | O2.25 63.8% +13.2% (floor −15.2) | 2026-08-22 21:30 |
 
 ## Completed FUTURE match bettips: Tip 1 90.9% hit · Tip 2 75.0% hit
 
@@ -559,6 +580,18 @@ enough that the skips cost more than they saved.
 - **Estoril is the opposite and worth copying.** `U3.25` where `U3.0` was tipped
   settles *identically* on every total — win at ≤2, half-win at 3, loss at 4 —
   so it is Tip 1 in all but name, taken at whatever price was better.
+
+- **Three more splits in the late slate, and they cost two fixtures.** `Śląsk`
+  and `Widzew` are each filed twice in the Ekstraklasa store — the unaccented
+  2026 spelling with 4 rows against the accented historical one with 68 — and
+  `Zürich` and `Basel` the same way in Switzerland (`FC Zürich` 220 rows vs
+  `Zurich` 3; `FC Basel 1893` vs `Basel` 3). Four clubs, two withheld fixtures,
+  all from the same 2026 provider rename. This is now the defect costing the most
+  live tips.
+
+- **`Sporting v Alverca` was one alias away and is now tipped.** The store files
+  them as `Sp Lisbon` (854 rows); a bare `Sporting` resolved to nothing. Added.
+  `Le Mans` remains a genuine no-tip — zero rows under any spelling.
 
 ### Notes on the log
 
