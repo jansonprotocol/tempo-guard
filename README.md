@@ -128,7 +128,7 @@
 
 ### Actual placed bets
 
-**Win: 38 / 53 — 72%  ·  Pending: 3 / 56  ·  Average odds: ≈1.28**
+**Win: 38 / 53 — 72%  ·  Pending: 13 / 66  ·  Average odds: ≈1.29**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -188,6 +188,48 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 
 Three open. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
+
+#### The overnight slate — 10 bets, €1.20 each, priced against the ladder
+
+Two coupons taken at 21:57 and later. Every one is scored on the engine's own
+probability for the rung actually bought, so `fair` is the price that would make
+it a break-even bet and `EV` is what the model thinks the stake is worth.
+
+| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Fair | EV | Lane class |
+|---|---|---|---|---|---|---|---|
+| 22:30 | Juan Pablo II v ADT | U3.0 +9.6% | U3.25 | 1.42 | 1.203 | **+18.0%** | same tier |
+| 22:30 | Águilas Doradas v Millonarios | U4.25 **−7.2%** | O1.5 | 1.34 | 1.291 | +3.8% | FLIP |
+| 23:00 | Ceará v Londrina | U3.0 +3.2% | **U3.0 — Tip 1** | 1.37 | 1.178 | **+16.3%** | Tip 1 |
+| 23:05 | Tolima v Bucaramanga | U4.25 **−5.6%** | O1.5 | 1.40 | 1.322 | +5.9% | FLIP |
+| 23:30 | Internacional v Atlético-MG | U4.25 **−2.5%** | O1.5 | 1.34 | 1.333 | +0.6% | FLIP |
+| 23:30 | Huachipato v Limache | U4.25 +0.7% | U4.5 | 1.16 | 1.164 | −0.4% | same tier |
+| 01:10 | Santa Fe v América de Cali | O1.5 +13.6% | **O1.5 — Tip 1** | 1.49 | 1.237 | **+20.5%** | Tip 1 |
+| 01:30 | Cruzeiro v Flamengo | O1.5 +16.2% | **O1.5 — Tip 1** | 1.32 | 1.139 | **+15.9%** | Tip 1 |
+| 02:00 | U. Católica v Ñublense | O1.5 +6.9% | **O1.5 — Tip 1** | 1.25 | 1.200 | +4.1% | Tip 1 |
+| 03:15 | Ind. Medellín v Cúcuta | U3.0 +0.4% | U3.5 | 1.36 | 1.249 | +8.9% | same tier |
+
+**This is the best-priced batch in the log.** Nine of the ten are positive EV
+and four clear +15%, which has not happened before — the South American books
+are quoting Overs and low Unders far above what the engine makes them. Santa Fe
+`O1.5` at **1.49** against a fair 1.237 is the single largest edge taken all
+day, ahead of Basel.
+
+Six of the ten sit in Tip 1's own probability tier — four Tip 1 exactly, two a
+rung softer. That is the highest disciplined share of any block so far, and it
+happened without a rule being applied.
+
+**The three FLIPs are the ones to watch, and they are not the same as the
+earlier ones.** Águilas, Tolima and Internacional all have a Tip 1 that is a
+*negative-edge* `U4.25` — the engine finding nothing and retreating — with a
+second lane on the Over carrying +3.4% to +10.2%. That is the Fluminense shape
+that won tonight and the Kashima shape that won this morning, not the Cerezo
+shape that lost. The pattern is worth naming: **crossing off a negative-edge
+fallback has a case; crossing off a positive-edge tip does not.** Three fixtures
+will not settle it, but they are logged as a group so it can be counted later.
+
+**Huachipato is the one bet with no case.** `U4.5` at 1.16 against a fair 1.164
+is fractionally negative, on a Tip 1 carrying +0.7% edge — the engine has no
+read and the price does not pay for taking one anyway.
 
 #### Closed in the 20:00–21:30 block
 
@@ -298,7 +340,7 @@ between Tip 1 and Tip 2, using settlement rather than the label — `U3.5` and
 | Lane | n | Fixtures |
 |---|---|---|
 | **Tip 1** | 11 | Okayama (U3.25), Nagoya, Millwall, Rizespor, Udinese, Sparta (O1.5), Southampton (U4.25), Estoril, Nice (U3.25 — settles identically to the U3.0 tipped), Al-Ahli, Fenerbahçe (O1.5) |
-| **Middle** | 21 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung · Huancayo, Al-Kholood, Śląsk, UTC Cajamarca (U3.5 between U3.0 and U4.25) |
+| **Middle** *(bucket definition corrected — see the discipline section; the `U3.5`-off-`U3.0` entries are same-tier, not middle)* | 21 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung · Huancayo, Al-Kholood, Śląsk, UTC Cajamarca (U3.5 between U3.0 and U4.25) |
 | **Past Tip 2** | 5 | Birmingham, Wrexham, Everton, Zulte Waregem, Korona — all `U3.5` where Tip 2 was `U3.75`, so a full loss at 4 goals instead of a half loss |
 | **Past Tip 1, safer** | 7 | Charleroi, Brentford, Inter, Ceuta, Saint-Étienne, Al-Khaleej, Toulouse — `U4.5` where `U4.25` was tipped. Wins outright at 4 where the tip only half-wins, so strictly better settlement at a shorter price |
 | **Tip 2 exactly** | 1 | Südtirol — `U2.75` at 69.9%, the second lane taken outright rather than as a middle |
@@ -320,28 +362,59 @@ hit rate without marking them makes the headline number mean two things at once.
 
 #### Discipline is the largest single effect in the bet log
 
-53 settled bets, split by the lane actually taken:
+**This section carried a classification error and the corrected numbers are
+much weaker. Read the correction before the table.**
 
-    Tip 1 exactly              11/11   100.0%
-    safer rung of Tip 1's tier  6/7     85.7%
-    team lane (off-ladder)      4/5     80.0%
-    FLIP (crossed the book)     5/8     62.5%
-    past Tip 2                  3/5     60.0%
-    middle                      6/13    46.2%
-    sharpen                     0/1      0.0%
+The `middle` bucket was defined as "a rung sitting between Tip 1 and Tip 2",
+and `U3.5` off a `U3.0` tip was filed there. That is wrong. The engine scores
+`U3.0`, `U3.25`, `U3.5` and `U3.75` at the **identical win probability** —
+they are one tier, differing only in what happens on the push:
 
-    Tip 1 or one rung safer    17/18 = 94.4%   95% interval 74.2% .. 99.0%
-    everything else            21/35 = 60.0%   95% interval 43.6% .. 74.4%
+    Śląsk    U4.25 94.0%  |  U3.0 U3.25 U3.5 U3.75 all 84.3%  |  O1.5 O1.75 61.4%
+    UTC      U4.25 92.0%  |  U3.0 U3.25 U3.5 U3.75 all 80.7%  |  O1.5 O1.75 66.1%
 
-A **34.4-point** gap. The two intervals touch again only because the 20:45
-sweep pulled the undisciplined bucket up — three of those five were team lanes
-and all three won, which is the undisciplined side of the ledger finally
-producing something. That is worth separating from the rest of it: the team
-lane sits at **4/5 = 80%**, well clear of `middle` at 46.2% and `past Tip 2` at
-60%. Not every deviation from Tip 1 is the same deviation.
+So `U3.0 -> U3.5` is not a deviation at all under the convention this log
+grades on. Checked against all nine settled cases, the two rungs agree **9 out
+of 9 times** — Kyoto, Athletic Bilbao, Al-Kholood, Śląsk and UTC lost on both;
+Shenzhen, Örgryte, Real Oviedo and Huancayo won on both. They cannot disagree:
+the only total that separates them is exactly 3 goals, where `U3.0` pushes and
+`U3.5` wins outright, and a push already counts as a win here.
 
-`middle` remains the worst bucket in the book — a rung chosen between Tip 1 and
-Tip 2 for no reason the engine gave, losing money at prices around 1.25. Every independent
+**Nine of the thirteen `middle` bets were Tip 1 wearing a different label.**
+Filing them as deviations counted Tip 1's own losing night on `U3.0` against
+the undisciplined bucket, which inflated the gap from both ends at once.
+
+Re-cut by the engine's actual tier grouping, 53 settled bets:
+
+    same tier as Tip 1         21/27 = 77.8%   95% interval 59.2% .. 89.4%
+      of which Tip 1 exactly   11/11
+      one rung softer           6/7
+      U3.0 -> U3.5              4/9    <- the mislabelled group
+    genuinely elsewhere        17/26 = 65.4%   95% interval 46.2% .. 80.6%
+      team lane (off-ladder)    4/5
+      FLIP (crossed the book)   5/8
+      past Tip 2                3/5
+      true middle               2/4
+      sharpen                   0/1
+
+**The gap falls from 34.4 points to 12.4, and the intervals now overlap
+heavily.** Discipline still looks better than deviating, but on 53 bets this is
+no longer a result — it is a lean. The earlier 94.4% was an artefact of putting
+nine Tip-1-equivalent bets on the wrong side of the line.
+
+Two things survive the correction and are worth keeping:
+
+- **The team lane at 4/5 is the strongest non-Tip-1 bucket**, and it is the only
+  one that is genuinely orthogonal — every other "deviation" here is a rung of
+  the same ladder.
+- **`sharpen` at 0/1 and `past Tip 2` at 3/5 are still the shapes to avoid**,
+  and both have an argument behind them beyond the record: a sharpen rung cannot
+  by construction rescue a Tip 1 loss, and past-Tip-2 walks into the 4-goal trap.
+
+**What this actually costs.** `U3.0 -> U3.5` does not change the hit rate, but
+it is not free — it trades price for the 3-goal push. That is a money decision,
+not an accuracy one, and it belongs in a returns column this log does not yet
+keep. Judging it by strike rate was always going to return Tip 1's own number. Every independent
 measurement today pointed the same way — FLIP lanes at 73.6% against Tip 1's
 88.6%, the 4-goal trap punishing past-Tip-2 three times, sharpen rungs unable to
 rescue a loss by construction — and this is those findings showing up in the
@@ -349,23 +422,29 @@ money rather than in a backtest.
 
 Chronologically the effect is real but smaller than the lane split implies:
 
-    first 22 settled   15/22 = 68.2%   disciplined 4/22 = 18%
-    middle 19 settled  14/19 = 73.7%   disciplined 10/19 = 53%
-    20:00-21:30         4/7  = 57.1%   disciplined  2/7  = 29%
-    20:45 block         5/5  = 100.0%  disciplined  2/5  = 40%
+    first 22 settled   15/22 = 68.2%
+    middle 19 settled  14/19 = 73.7%
+    20:00-21:30         4/7  = 57.1%
+    20:45 block         5/5  = 100.0%
 
-Discipline nearly tripled through the afternoon and the win rate rose 5.5
-points. The 20:00–21:30 block fell back on both counts at once. The 20:45 block
-then went 5/5 at only 40% disciplined, which is the honest counter-example: the
-lane split is a tendency across 53 bets, not a rule that holds in every window
-of five.
+The chronological trend is mild and the per-block swings are larger than it.
+The "disciplined share" column that used to sit beside this has been dropped
+until the bet ledger is machine-readable — it was computed from the same broken
+bucket definition as the table above, and re-deriving it by hand from prose is
+exactly how the error got in.
 
-**Two honest deflations.** 11/11 on Tip 1 is above Tip 1's own 86.5% live rate —
-18 disciplined bets would be expected to return 15.6 and returned 17, so a
-little luck sits on top of a real effect. At the other end, 35 undisciplined
-bets returning 21 is below even the FLIP lane's measured 73.6%, so there is bad
-luck there too. The direction and rough size hold; the exact numbers will
-regress toward roughly 86% and roughly 70%.
+**Where the remaining numbers sit.** 11/11 on Tip 1 exactly is above Tip 1's own
+86.5% live rate and will regress. The same-tier bucket at 77.8% is *below* it,
+pulled down by the `U3.0` cluster going 4/9 — a bad night for one market, not a
+property of the lane. Both will drift toward roughly 86%, because by
+construction they are the same bet.
+
+**The open defect this exposed.** The bet log lives in prose, so every
+cross-cut of it is re-derived by hand and can be re-derived wrong. The fix is a
+`bets.csv` with fixture, league, Tip 1, lane taken, price, and result, so
+buckets are computed from the engine's own tier grouping rather than from a
+label typed at the time. Until that exists, treat every split in this section as
+provisional.
 
 #### Graded so far — 14 settled placed bets, and the deviations are still losing
 
