@@ -15,7 +15,7 @@
 | — not started | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | O2.75 63.3% +16.2% (floor −15.7) | 2026-08-22 12:00 |
 | — not started | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 12:00 |
 | — not started | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
-| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% (floor −18.8) | 2026-08-22 12:15 |
+| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% (floor −18.8) · **backed O2.25 @ 1.35** | 2026-08-22 12:15 |
 | — not started | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 12:30 |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none | 2026-08-22 13:00 |
 | — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | O2.75 59.4% +11.9% (floor −19.6) | 2026-08-22 13:30 |
@@ -85,17 +85,39 @@
 
 ### Actual placed bets
 
-**Win: 0 / 0 —  ·  Pending: 25 / 25  ·  Average odds: 1.32**
+**Win: 0 / 0 —  ·  Pending: 26 / 26  ·  Average odds: 1.32**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
-the 33 tipped fixtures on 22 Aug, 25 were backed, 8 skipped on price. Several
+the 33 tipped fixtures on 22 Aug, 26 were backed, 7 skipped on price. Several
 were taken at Tip 2 rather than Tip 1, and a few at a line between the two, so
 this record grades the bet placed rather than the tip issued.
 
-Average odds of 1.32 across the 25 (range 1.17–1.60) put break-even at **75.6%**.
+Average odds of 1.32 across the 26 (range 1.17–1.60) put break-even at **75.6%**.
 That is the number the hit rate has to clear to make money, and it sits well
 below the 92% the tips have run at but well above what a single bad stretch
 would produce.
+
+**The 26th bet is the first one taken below the model's price.** Sanfrecce
+`O2.25` at 1.35, staked after the Tip 2 fix surfaced the fixture. It is worth
+recording separately because it is the first divergence between the two things
+this log tracks — hit rate and price:
+
+    rung     wins on   at 2 goals    model P    break-even odds
+    O1.5      2+        full win      81.7%          1.224
+    O2.25     3+        HALF loss     60.2%          1.483
+    O2.75     3+        full loss     60.2%          1.662
+
+`O2.25` and `O2.75` win on the same totals, so the engine prices them
+identically at 60.2%. They are not the same bet: at exactly 2 goals `O2.25`
+gives back half the stake where `O2.75` gives back nothing, which is why its
+break-even price is 1.483 rather than 1.662. **1.35 is below both.** By the
+model the bet is about 8% under water — it prices in a goal expectation of
+**3.456** where Athena has **3.114**.
+
+The lesson is about the quote, not the bet: fair odds published here as `1 / P`
+are correct only for the harsh rung of a tier. Every soft rung — `O2.25`,
+`U3.75`, `U4.25` — carries a half-settlement cushion that lowers the price it
+needs, and quoting one fair value for the tier hides that.
 
 
 ### Decision tracking
@@ -111,22 +133,28 @@ between Tip 1 and Tip 2, using settlement rather than the label — `U3.5` and
 | Lane | n | Fixtures |
 |---|---|---|
 | **Tip 1** | 3 | Okayama (U3.25), Nagoya (O1.5), Millwall (O1.5) |
-| **Middle** | 15 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens (O2.25) |
+| **Middle** | 16 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25, Tip 2's win tier on its softer rung) |
 | **Past Tip 2** | 5 | Birmingham, Wrexham, Everton, Zulte Waregem, Korona — all `U3.5` where Tip 2 was `U3.75`, so a full loss at 4 goals instead of a half loss |
 | **Past Tip 1** | 1 | Guoan (O2.5, riskier than the O2.25 tipped and away from Tip 2) |
 | **Neither** | 1 | Three Towns — Over on a fixture Athena had no opinion on (−0.05% edge) |
 
-Only three bets are the published tip exactly. Fifteen sit between the two lanes,
+Only three bets are the published tip exactly. Sixteen sit between the two lanes,
 usually a rung safer than Tip 2 because the price was better there. Five went
 *past* Tip 2 into the harsher variant of the same win tier, which costs nothing
 unless a match lands on exactly 4 goals — and two of the 25 settled bets so far
 have done exactly that.
 
-**2. Did skipping help?** Seven tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
+Twenty-five of the 26 sit at 79% or above on the model. Sanfrecce is the
+exception at 60.2%, so it is also the first test of the trade this log has never
+had to grade: **a lower-probability bet bought for a longer price.** Whether it
+lands says nothing on its own; what it starts is the separate column that has to
+be kept from here, because mixing 60% bets into a 92% hit rate without marking
+them makes the headline number mean two different things at once.
+
+**2. Did skipping help?** Six tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
 
 | Skipped | Tip 1 | Tip 2 | Reason |
 |---|---|---|---|
-| Sanfrecce v Kawasaki | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% | short odds on Tip 1; Tip 2 was hidden by a bad filter |
 | Southampton v Stoke | U4.25 83.3% −4.8% | O1.75 78.4% +5.6% | **to be taken later** |
 | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% | unreproducible tip |
 | Chengdu v Shenhua | O1.5 82.1% +0.2% | — | flat fixture |
@@ -144,14 +172,12 @@ bet worth making, and with no Tip 2 there is nothing else on the fixture.
     88.4%         1.131          1.10      Derby, Nantes
     87.4%         1.144          1.11      QPR
     82.4%         1.214          1.18      Al-Fateh
-    81.7%         1.224          1.19      Sanfrecce
 
 So the rule falls out of the numbers rather than being imposed: **a Tip 1 above
 about 87% with no Tip 2 is unbettable**, because the price it deserves is inside
-the margin. Sanfrecce at 81.7% is the borderline case — fair value 1.22, and
-1.19 offered is close enough to argue about.
+the margin.
 
-The skip is still not free. Six of the seven carry a Tip 1 above 82%, so
+The skip is still not free. Five of the six carry a Tip 1 above 82%, so
 declining them avoids a poor price and forgoes a likely winner in the same move.
 What the results settle is whether those short-priced favourites land often
 enough that the skips cost more than they saved.
@@ -203,7 +229,7 @@ last reported and go stale between updates.
 
 Same-tier duplicates are excluded: `O1.75` wins on exactly the totals `O1.5` does, so offering it as an alternative is offering the same wager twice.
 
-Tip 2's probability floor is **relative to Tip 1**, not absolute. A flat 65% floor was wrong and hid real plays: on Sanfrecce it suppressed an `O2.75` at 60.2% carrying **+13.04% edge — more than the tip itself** — at a fair price of 1.66, which is exactly the alternative you want when Tip 1's price is too short. The floor is now the greater of 55% or 25 points below Tip 1, which keeps that one and still excludes QPR's 48.7%, sitting 39 points below its tip.
+Tip 2's probability floor is **relative to Tip 1**, not absolute. A flat 65% floor was wrong and hid real plays: on Sanfrecce it suppressed an `O2.75` at 60.2% carrying **+13.04% edge — more than the tip itself** — at a fair price of 1.66, which is exactly the alternative you want when Tip 1's price is too short. The floor is now the greater of 55% or 25 points below Tip 1, which keeps that one and still excludes QPR's 48.7%, sitting 39 points below its tip. Sanfrecce was then backed on `O2.25`, the softer rung of the same win tier — see **Actual placed bets** for why 1.35 was under its price and why `1 / P` is the wrong fair value for a soft rung.
 
 **Derby, Nantes, QPR and Chengdu genuinely have no Tip 2.** On those the best edge anywhere on the ladder is under +1.2%, so there is nothing to offer at any price.
 
