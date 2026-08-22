@@ -31,16 +31,16 @@
 | — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
 | — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
 | — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) · **backed O2.5 @ 1.50** | 2026-08-22 17:45 |
-| — not started | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
+| — not started | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5)  · **backed O1.5 @ 1.25** | 2026-08-22 18:00 |
 | — not started | Süper Lig | Çorum v Kasımpaşa | **NO TIP** — 1 match | — | 2026-08-22 18:00 |
 | — not started | Swiss Super League | Luzern v Lausanne | **WITHHELD** — split name | — | 2026-08-22 18:00 |
-| — not started | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge) | 2026-08-22 18:00 |
-| — not started | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | U4.25 91.4% +9.5% (lower edge) | 2026-08-22 18:10 |
-| — not started | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **U3.75 78.7% +8.7%** (floor −0.3) | 2026-08-22 18:15 |
-| — not started | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% | **U3.75 77.7% +12.7%** (floor −1.3) | 2026-08-22 18:30 |
-| — not started | Serie A | Inter v Monza | U4.25 84.9% −3.8% | **O1.75 76.8% +4.9%** (floor −2.2) | 2026-08-22 18:30 |
-| — not started | Serie A | Udinese v Como | O1.5 80.4% +8.5% | O2.25 58.2% +11.8% (floor −20.8) | 2026-08-22 18:30 |
-| — not started | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | — none | 2026-08-22 18:45 |
+| — not started | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge)  · **backed U3.5 @ 1.38** | 2026-08-22 18:00 |
+| — not started | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | U4.25 91.4% +9.5% (lower edge)  · **backed U3.5 @ 1.36** | 2026-08-22 18:10 |
+| — not started | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **U3.75 78.7% +8.7%** (floor −0.3)  · **backed U4.5 @ 1.13** | 2026-08-22 18:15 |
+| — not started | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% | **U3.75 77.7% +12.7%** (floor −1.3)  · **backed U4.5 @ 1.17** | 2026-08-22 18:30 |
+| — not started | Serie A | Inter v Monza | U4.25 84.9% −3.8% | **O1.75 76.8% +4.9%** (floor −2.2)  · **backed U4.5 @ 1.23** | 2026-08-22 18:30 |
+| — not started | Serie A | Udinese v Como | O1.5 80.4% +8.5% | O2.25 58.2% +11.8% (floor −20.8)  · **backed O1.5 @ 1.34** | 2026-08-22 18:30 |
+| — not started | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | — none  · **backed O1.5 @ 1.22** | 2026-08-22 18:45 |
 | — not started | Serie B | Carrarese v Mantova | U3.0 74.2% −1.2% — **no rung cleared the floor** | O1.75 72.7% +1.1% (floor −6.3) | 2026-08-22 19:00 |
 | — not started | Serie B | Südtirol v Entella | U3.0 87.1% +11.8% | U2.75 69.9% +15.9% (floor −9.1) | 2026-08-22 19:00 |
 | — not started | LaLiga 2 | Ceuta v Las Palmas | U4.25 90.6% +1.1% | **U3.75 78.2% +1.8%** (floor −0.8) | 2026-08-22 19:00 |
@@ -99,7 +99,7 @@
 
 ### Actual placed bets
 
-**Win: 7 / 12 — 58%  ·  Pending: 14 / 26  ·  Average odds: ≈1.33**
+**Win: 7 / 12 — 58%  ·  Pending: 22 / 34  ·  Average odds: ≈1.31**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -144,6 +144,51 @@ book offers.** Al-Fateh's `O2.25` needed only 1.459, so the same 1.50 that was
 8% under water on `O2.5` would have been genuinely positive one rung down. The
 tier is chosen by the model; the rung is chosen by price, and until now this log
 gave one fair value for all three.
+
+
+#### Still to place — evening slate
+
+Eight of the 18:00–20:00 fixtures are backed. These are the tipped ones that are
+not, kept here so the skip ledger stays honest rather than reconstructed later.
+
+| Kickoff | Fixture | Tip 1 | Tip 2 | status |
+|---|---|---|---|---|
+| 19:00 | Südtirol v Entella | **U3.0 87.1% +11.8%** | U2.75 69.9% +15.9% | **unplaced — best read on the card** |
+| 19:00 | Ceuta v Las Palmas | U4.25 90.6% +1.1% | U3.75 78.2% +1.8% | unplaced |
+| 19:00 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% | U3.75 78.0% +1.5% | unplaced |
+| 19:00 | Estoril v Rio Ave | U3.0 82.8% +11.3% | U4.25 93.2% +6.9% | unplaced |
+| 19:30 | Valencia v Celta | U4.25 87.1% +0.3% | — none | unplaced |
+| 20:00 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | O1.75 74.7% +2.9% | unplaced |
+
+Three more carry no playable tip and are not counted as skips: `Çorum v
+Kasımpaşa` (1 match), `Luzern v Lausanne` (split name), `Carrarese v Mantova`
+(no rung cleared the floor).
+
+#### The evening batch is a different kind of betting from the afternoon
+
+Every one of the eight is either Tip 1 exactly or a **safer rung of Tip 1's own
+tier**. Not one crosses to the other side of the book, which is what cost three
+bets earlier today.
+
+    fixture      tipped   taken   what changed
+    Rizespor     O1.5     O1.5    —
+    Udinese      O1.5     O1.5    —
+    Sparta       O1.5     O1.5    —
+    Huancayo     U3.0     U3.5    wins outright at 3 where U3.0 only half-wins
+    Al-Kholood   U3.0     U3.5    same
+    Charleroi    U4.25    U4.5    wins outright at 4 where U4.25 only half-wins
+    Brentford    U4.25    U4.5    same
+    Inter        U4.25    U4.5    same
+
+The five moves are all *strict upgrades in settlement* — `U3.5` beats `U3.0` at
+exactly three goals and matches it everywhere else; `U4.5` beats `U4.25` at
+exactly four. Nothing was given up on the win condition, and the shorter price
+is what was paid for it.
+
+That is the reverse of this morning, where longer prices were bought by taking
+riskier rungs. Batch average odds **1.260**, break-even **79.4%** — against Tip
+1's running 87.5%. The one to watch is Charleroi at **1.13**, which needs 88.5%
+against a tip modelled at 90.9%: a real margin, but a thin one.
 
 
 ### Decision tracking
