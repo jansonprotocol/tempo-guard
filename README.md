@@ -820,6 +820,54 @@ enough that the skips cost more than they saved.
   two-condition gate — a lower probability floor with an edge floor doing the
   real work. Unmeasured, and therefore unshipped.
 
+#### "On a fallback, swap Tip 1 for the team lane" — refused, and the logic was not the problem
+
+The argument is asymmetric and correct as an argument: when Tip 1 loses,
+swapping can only help or be neutral, so the risk lives entirely in fixtures
+where Tip 1 would have won and the lane does not. Marginal hit rates cannot
+settle it, because both bets are cut from the SAME goal expectation and win
+together far more often than independence would imply. Only the joint outcome
+decides it.
+
+    FALLBACKS (Tip 1 negative edge, n = 138)
+      Tip 1 won,  lane won       83   60.1%   no change
+      Tip 1 won,  lane lost      41   29.7%   COSTS a bet
+      Tip 1 lost, lane won       11    8.0%   GAINS a bet
+      Tip 1 lost, lane lost       3    2.2%   no change
+      Tip 1 alone 89.86%   lane alone 68.12%   net -30 bets = -21.74%
+
+    EVERYTHING ELSE (control, n = 1363)
+      Tip 1 alone 80.04%   lane alone 68.89%   net -152 bets = -11.15%
+
+**The premise fails, not the reasoning.** The rule needs Tip 1 to lose often
+enough on fallbacks for the gains to matter. It does not: a fallback `U4.25`
+hits **89.86%**, *higher* than Tip 1's 80.04% everywhere else. There are only 11
+fixtures to rescue and 41 to break, so the trade loses roughly a fifth of all
+bets it touches.
+
+That is the same fact from a different angle as the zero-edge finding: a fallback
+wins as often as picking that rung blind, which makes it worthless as
+information and **excellent as a strike rate**. Swapping it trades hit rate for
+edge, and for anyone optimising hit rate that is the wrong direction.
+
+Split by lane, `O1.5` is catastrophic on fallbacks:
+
+    lane U1.5  (n=37)   Tip 1 94.59%   lane 78.38%   net -16.22%
+    lane O1.5  (n=28)   Tip 1 92.86%   lane 39.29%   net -53.57%
+    lane O0.5  (n=73)   Tip 1 86.30%   lane 73.97%   net -12.33%
+
+`O1.5` asks a side to score twice on exactly the fixtures the engine reads as
+low-tempo enough to fall back. It lands 39% of the time.
+
+**Inter v Monza was real and it was the 1-in-9 case.** Tip 1's fallback lost on
+five goals and `Inter O1.5` won on the same scoreline — that genuinely cannot
+happen with any rung of the match ladder. It is worth ~8% of fallbacks, against
+a ~30% chance of the reverse.
+
+**What survives:** the team lane keeps its value as a SECOND bet, where the
+holdout put it at +9.69% to +19.01% edge. What it cannot do is replace Tip 1 —
+those are different claims and only the second one is refuted here.
+
 #### Team-lane shadow record
 
 Team totals became a Tip 2 candidate after most of tonight's fixtures had kicked
