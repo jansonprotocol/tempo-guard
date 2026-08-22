@@ -12,13 +12,13 @@
 |---|---|---|---|---|---|
 | — not started | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 11:00 |
 | — not started | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 11:30 |
-| — not started | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | — none | 2026-08-22 12:00 |
+| — not started | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | O2.75 63.3% +16.2% (floor −15.7) | 2026-08-22 12:00 |
 | — not started | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 12:00 |
 | — not started | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
-| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | — none | 2026-08-22 12:15 |
+| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% (floor −18.8) | 2026-08-22 12:15 |
 | — not started | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 12:30 |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none | 2026-08-22 13:00 |
-| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | — none | 2026-08-22 13:30 |
+| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | O2.75 59.4% +11.9% (floor −19.6) | 2026-08-22 13:30 |
 | — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 13:30 |
 | — not started | Premier League | Hull v Man United | **WITHHELD** — form from 2017 | — | 2026-08-22 13:30 |
 | — not started | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 13:30 |
@@ -48,7 +48,7 @@
 | — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
 | — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
 | — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
-| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | — none | 2026-08-22 17:45 |
+| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
 
 ## Completed FUTURE match bettips: Tip 1 92.0% hit · Tip 2 80.0% hit
 
@@ -126,14 +126,14 @@ have done exactly that.
 
 | Skipped | Tip 1 | Tip 2 | Reason |
 |---|---|---|---|
-| Sanfrecce v Kawasaki | O1.5 81.7% +9.2% | — | short odds |
+| Sanfrecce v Kawasaki | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% | short odds on Tip 1; Tip 2 was hidden by a bad filter |
 | Southampton v Stoke | U4.25 83.3% −4.8% | O1.75 78.4% +5.6% | **to be taken later** |
 | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% | unreproducible tip |
 | Chengdu v Shenhua | O1.5 82.1% +0.2% | — | flat fixture |
 | Derby v Cardiff | U4.25 88.4% +0.4% | — | short odds, no Tip 2 |
 | QPR v Bolton | U4.25 87.4% −0.7% | — | short odds, no Tip 2 |
 | Nantes v Rodez | U4.25 88.4% −0.3% | — | short odds, no Tip 2 |
-| Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | — | short odds, no Tip 2 |
+| Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% | short odds on Tip 1; Tip 2 was hidden by a bad filter |
 
 Derby and Nantes are not really a judgement call, they are arithmetic. Both are
 `U4.25` at 88.4%, and a fair price at that probability is **1.131** — after a
@@ -201,7 +201,11 @@ last reported and go stale between updates.
 - **floor −X** — it lost only to the 0.79 probability floor, by X points. Wrexham's U3.75 missed by **0.1**.
 - **lower edge** — it is the safer rung and the engine took the sharper one. Useful when you want to trade edge for probability.
 
-Same-tier duplicates are excluded: `O1.75` wins on exactly the totals `O1.5` does, so offering it as an alternative is offering the same wager twice. Tip 2 also has to clear 65% or it is not an alternative, it is a different sport.
+Same-tier duplicates are excluded: `O1.75` wins on exactly the totals `O1.5` does, so offering it as an alternative is offering the same wager twice.
+
+Tip 2's probability floor is **relative to Tip 1**, not absolute. A flat 65% floor was wrong and hid real plays: on Sanfrecce it suppressed an `O2.75` at 60.2% carrying **+13.04% edge — more than the tip itself** — at a fair price of 1.66, which is exactly the alternative you want when Tip 1's price is too short. The floor is now the greater of 55% or 25 points below Tip 1, which keeps that one and still excludes QPR's 48.7%, sitting 39 points below its tip.
+
+**Derby, Nantes, QPR and Chengdu genuinely have no Tip 2.** On those the best edge anywhere on the ladder is under +1.2%, so there is nothing to offer at any price.
 
 **The five bold Tip 2s are the ones worth reading closely.** Preston, Blackburn, Swansea, Southampton and Metz all publish a U4.25 carrying −3.7% to −5.8% edge, while an Over sits 0.2 to 1.7 points under the floor with +4.5% to +6.9%. On those five the engine is buying a line it disagrees with because the line it agrees with missed by a fraction.
 
