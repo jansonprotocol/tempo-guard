@@ -12,7 +12,7 @@
 |---|---|---|---|---|---|
 | **LIVE: 0-1** (74') | Ekstraklasa | Piast v Legia | O1.5 84.9% +8.8% | O2.25 65.2% +13.4% (floor −13.8) | 2026-08-22 17:30 |
 | **LIVE: 0-0** (60') | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
-| **LIVE: 0-1** (46') | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
+| **LIVE: 2+ goals** ✅ | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
 | **LIVE: 0-1** (HT) | Süper Lig | Çorum v Kasımpaşa | **NO TIP** — 1 match | — | 2026-08-22 18:00 |
 | **LIVE: 1-0** (46') | Swiss Super League | Luzern v Lausanne | O1.5 81.6% +2.7% | O2.25 60.0% +4.1% (floor −19.0) | 2026-08-22 18:00 |
 | **LIVE: 0-1** (HT) | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge) | 2026-08-22 18:00 |
@@ -118,7 +118,7 @@
 
 ### Actual placed bets
 
-**Win: 17 / 26 — 65%  ·  Pending: 21 / 47  ·  Average odds: ≈1.28**
+**Win: 18 / 27 — 67%  ·  Pending: 20 / 47  ·  Average odds: ≈1.28**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -173,7 +173,6 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds |
 |---|---|---|---|---|
 | 17:45 | Al-Fateh v Al-Ettifaq | O1.5 | O2.5 | 1.50 |
-| 18:00 | Rizespor v Samsunspor | O1.5 | **O1.5 — Tip 1** | 1.25 |
 | 18:00 | Sport Huancayo v Moquegua | U3.0 | U3.5 | 1.38 |
 | 18:10 | Al-Kholood v Al-Taawoun | U3.0 | U3.5 | 1.36 |
 | 18:15 | Charleroi v Mechelen | U4.25 | U4.5 | 1.13 |
@@ -194,7 +193,7 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 | 20:45 | Nice v Lorient | U3.0 | U3.25 | 1.33 |
 | 20:45 | Toulouse v Lyon | U4.25 | U4.5 | 1.12 |
 
-Twenty-one open. Prices are recorded from the Sanfrecce bet onward; the earlier
+Twenty open. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
 
 
