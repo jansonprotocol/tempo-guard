@@ -206,6 +206,59 @@ What survives is smaller and duller. Tip 1 is running at 88.2% over 34 settled
 tips; the lanes taken instead are running at 50% over 8. Until there is a
 measured reason to leave it, the published tip is the bet.
 
+#### What the 34 settled tips actually say
+
+    overall            30/34   88.2%      95% interval 73.4% .. 95.3%
+    Over  tips         13/14   92.9%
+    Under tips         17/20   85.0%
+
+    NOT U4.25          20/22   90.9%
+    U4.25              10/12   83.3%
+      of which, negative edge   6/8    75.0%
+      of which, positive edge   4/4   100.0%
+
+The one structural weakness is the fallback rung. `U4.25` is what the selector
+reaches for when nothing on the ladder beats a typical fixture, and it carries
+both misses that are not genuine reads. Everything that *is* a read runs at
+90.9%.
+
+A caution against reading more into it: tips at **≥85% model probability hit 75%**
+while those **below 85% hit 95.5%**, which looks like the engine being
+overconfident exactly where it is most sure. It is mostly composition — the ≥85%
+group is 7/12 `U4.25` at a mean edge of +2.30%, the <85% group averages +7.13%.
+High probability is standing in for "fallback", not causing anything.
+
+#### The deviation test — and it was computable at the time
+
+A deviation beats the published tip only when `p_dev × odds_dev > p_tip1 × odds_tip1`.
+At Tip 1's 88.2% and a typical short price of 1.20, a lane bought at 1.35 has to
+clear **78.4%**. Judged on the engine's *own* Tip 2 probabilities, at the moment
+of betting:
+
+    fixture              Tip 2    model P    needed
+    Kashima v Fukuoka    O1.75     73.6%     78.4%    short by  4.8 pts
+    Cerezo v Shimizu     O1.75     74.4%     78.4%    short by  4.0 pts
+    Yokohama v Vissel    O1.75     74.7%     78.4%    short by  3.7 pts
+    Sanfrecce            O2.25     60.2%     78.4%    short by 18.2 pts
+
+None cleared it. That is not hindsight — every number in the table was on screen
+before kickoff.
+
+**But the honest version has a caveat that matters.** The threshold scales with
+Tip 1's true hit rate, and 88.2% over 34 tips has a wide interval. Recompute at
+the bottom of it, 73.4%, and the bar at 1.35 falls to **65.2%** — under which the
+three `O1.75` flips all clear comfortably and only Sanfrecce still fails.
+
+So the two findings are of different strength, and should not be treated alike:
+
+- **Dropping into a 60% lane is wrong under any estimate of Tip 1's rate.** That
+  is Sanfrecce, and it also failed the price test on the day (1.35 paid against a
+  1.483 break-even).
+- **The `O1.75` direction flips are genuinely undecided.** They are wrong if Tip 1
+  really hits ~88%, right if it really hits ~73%. Thirty-four tips cannot tell
+  those apart, and eight placed bets certainly cannot. What settles it is more
+  results, not more reasoning.
+
 **2. Did skipping help?** Six tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
 
 | Skipped | Tip 1 | Tip 2 | Reason |
