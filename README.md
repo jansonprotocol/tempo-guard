@@ -203,13 +203,14 @@ between Tip 1 and Tip 2, using settlement rather than the label — `U3.5` and
 
 | Lane | n | Fixtures |
 |---|---|---|
-| **Tip 1** | 3 | Okayama (U3.25), Nagoya (O1.5), Millwall (O1.5) |
-| **Middle** | 17 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung |
+| **Tip 1** | 7 | Okayama (U3.25), Nagoya, Millwall, Rizespor, Udinese, Sparta (O1.5), Southampton (U4.25) |
+| **Middle** | 19 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung · Huancayo, Al-Kholood (U3.5 between U3.0 and U4.25) |
 | **Past Tip 2** | 5 | Birmingham, Wrexham, Everton, Zulte Waregem, Korona — all `U3.5` where Tip 2 was `U3.75`, so a full loss at 4 goals instead of a half loss |
-| **Past Tip 1** | 1 | Guoan (O2.5, riskier than the O2.25 tipped and away from Tip 2) |
+| **Past Tip 1, safer** | 3 | Charleroi, Brentford, Inter — `U4.5` where `U4.25` was tipped. Wins outright at 4 where the tip only half-wins, so strictly better settlement at a shorter price |
+| **Past Tip 1, riskier** | 1 | Guoan (O2.5, riskier than the O2.25 tipped and away from Tip 2) |
 | **Neither** | 0 | Three Towns was the only one — Over on a fixture Athena had no opinion on (−0.05% edge) — and it was traded out before kickoff |
 
-Only three bets are the published tip exactly. Seventeen sit between the two lanes,
+Seven bets are the published tip exactly. Nineteen sit between the two lanes,
 usually a rung safer than Tip 2 because the price was better there. Five went
 *past* Tip 2 into the harsher variant of the same win tier, which costs nothing
 unless a match lands on exactly 4 goals — and two of the 25 settled bets so far
@@ -222,48 +223,41 @@ longer price.** Whether they land says nothing on its own; what they start is th
 separate column that has to be kept from here, because mixing 60% bets into a 92%
 hit rate without marking them makes the headline number mean two things at once.
 
-#### Graded so far — the lane deviations are LOSING, and the rule I proposed is dead
-
-Eight placed bets have settled. Four won. Had every one of them simply been the
-published Tip 1, six would have won:
-
-    bet as placed      4 / 8      50%
-    Tip 1 as published 6 / 8      75%
+#### Graded so far — 14 settled placed bets, and the deviations are still losing
 
 | Fixture | Tip 1 | Lane taken | Total | Tip 1 | Bet |
 |---|---|---|---|---|---|
-| Kashima v Fukuoka | `U4.25` 87.5% −0.8% | `O1.5` middle | 5 | ❌ | ✅ **saved** |
-| Okayama v Verdy | `U3.0` 79.9% +5.5% | `U3.25` Tip 1 | 0 | ✅ | ✅ |
-| Cerezo v Shimizu | `U4.25` 86.9% −1.5% | `O1.5` middle | 1 | ✅ | ❌ **cost** |
-| Kyoto v Mito | `U3.0` 81.9% +7.4% | `U3.5` middle | 4 | ❌ | ❌ |
-| Nagoya v Gamba | `O1.5` 83.7% +11.2% | `O1.5` Tip 1 | 4 | ✅ | ✅ |
-| Sanfrecce v Kawasaki | `O1.5` 81.7% +9.2% | `O2.25` middle | 2 | ✅ | ❌ **cost** |
-| Yokohama v Vissel | `U4.25` 86.7% −1.6% | `O1.5` middle | 1 | ✅ | ❌ **cost** |
-| Millwall v Norwich | `O1.5` 81.2% +8.4% | `O1.5` Tip 1 | 3 | ✅ | ✅ |
+| Kashima v Fukuoka | `U4.25` −0.8% | `O1.5` FLIP | 5 | ❌ | ✅ **saved** |
+| Okayama v Verdy | `U3.0` +5.5% | `U3.25` Tip 1 | 0 | ✅ | ✅ |
+| Cerezo v Shimizu | `U4.25` −1.5% | `O1.5` FLIP | 1 | ✅ | ❌ **cost** |
+| Kyoto v Mito | `U3.0` +7.4% | `U3.5` middle | 4 | ❌ | ❌ |
+| Nagoya v Gamba | `O1.5` +11.2% | `O1.5` Tip 1 | 4 | ✅ | ✅ |
+| Sanfrecce v Kawasaki | `O1.5` +9.2% | `O2.25` sharpen | 2 | ✅ | ❌ **cost** |
+| Yokohama v Vissel | `U4.25` −1.6% | `O1.5` FLIP | 1 | ✅ | ❌ **cost** |
+| Millwall v Norwich | `O1.5` +8.4% | `O1.5` Tip 1 | 3 | ✅ | ✅ |
+| Birmingham v Bristol City | `U4.25` +1.8% | `U3.5` past Tip 2 | 4 | ✅ | ❌ **cost** |
+| Shenzhen v Zhejiang | `U3.0` +22.2% | `U3.5` middle | 2 | ✅ | ✅ |
+| Guoan v Yukun | `O2.25` +20.3% | `O2.5` past Tip 1 | 6 | ✅ | ✅ |
+| Metz v Laval | `U4.25` −5.8% | `O1.5` FLIP | 2 | ✅ | ✅ |
+| Korona v Motor | `U4.25` +1.8% | `U3.5` past Tip 2 | 2 | ✅ | ✅ |
+| Örgryte v Halmstad | `U3.0` +14.2% | `U3.5` middle | 2 | ✅ | ✅ |
 
-Deviating from Tip 1 rescued **one** bet and cost **three**. Every one of the
-three losses is the same shape: Tip 1 said Under, the second lane said Over, the
-match finished on one or two goals, and the Over was bought.
+    bet as placed       9 / 14     64%
+    Tip 1 as published 12 / 14     86%
 
-**And the rule proposed earlier today is refuted by the same batch.** After
-Kashima I wrote that a `U4.25` at negative edge is a fallback rather than a read,
-and that the second lane is the actual signal. Two more settled hours later:
+**Deviating has rescued one bet and cost four.** The four losses divide cleanly:
 
-    Kashima v Fukuoka    U4.25  −0.8%   5 goals   ❌ Tip 1 wrong, Over right
-    Cerezo v Shimizu     U4.25  −1.5%   1 goal    ✅ Tip 1 RIGHT, Over wrong
-    Yokohama v Vissel    U4.25  −1.6%   1 goal    ✅ Tip 1 RIGHT, Over wrong
+- **Three FLIP crossings** (Cerezo, Yokohama — plus Kashima on the winning side).
+  Measured at 73.6% for the Over lane against Tip 1's 88.6%, so a 3-from-5 day is
+  exactly par, not bad luck.
+- **One sharpen** (Sanfrecce, `O1.5` → `O2.25`), which by construction can never
+  rescue a Tip 1 loss and here converted a Tip 1 win into a bet loss.
+- **One past-Tip-2** (Birmingham), landing on exactly 4 goals — the only total
+  that separates `U3.5` from the `U4.25` tipped.
 
-Across the whole log, negative-edge `U4.25` tips stand at **6 hits from 8**, or
-75% — barely below the book average and nowhere near a signal to fade. One
-observation became a rule in a single afternoon and was dead by evening, which is
-the sixth time in this project that something promising turned out to be noise.
-The pattern that keeps repeating is not about football, it is about sample size:
-**two cases never justified the word "rule", and writing it down as one was the
-mistake, not the reading of Kashima.**
-
-What survives is smaller and duller. Tip 1 is running at 88.2% over 34 settled
-tips; the lanes taken instead are running at 50% over 8. Until there is a
-measured reason to leave it, the published tip is the bet.
+The 4-goal pattern is now the single most expensive thing in the log. Kyoto,
+Birmingham and (live) Zulte Waregem all finished or sit on four, and on every one
+the tip half-wins while the rung past it loses in full.
 
 #### What the 34 settled tips actually say
 
