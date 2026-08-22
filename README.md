@@ -43,35 +43,37 @@
 | — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 |
 | — not started | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 |
 
-## Completed FUTURE match bettips
+## Completed FUTURE match bettips: Tip 1 92.0% hit · Tip 2 78.6% hit
+
+**Tip 1 — 23 / 25**   ·   **Tip 2 — 11 / 14** (9 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
-| ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 82% +7.7% | — | 2026-08-20 |
-| ✅ HIT | Brasileirão Série B | Athletic v CRB | O1.0 90% +1.0% | — | 2026-08-21 |
-| ✅ HIT | Brasileirão Série B | Novorizontino v América-MG | O1.0 90% +1.1% | — | 2026-08-21 |
-| ✅ HIT | J1 League | FC Tokyo v JEF United | U4.25 89% +0.9% | — | 2026-08-21 |
-| ❌ MISS — 6 goals | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 86% −2.3% | — | 2026-08-21 |
-| ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 91% +12% | — | 2026-08-21 |
-| ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 80% +24% | — | 2026-08-21 |
-| ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 89% +1% | — | 2026-08-21 |
-| ✅ HIT — 2-0 | Premier League | Arsenal v Coventry | O1.5 82% +1.9% | — | 2026-08-21 |
-| ✅ HIT — 2-0 | LaLiga 2 | Córdoba v Girona | O1.5 80% +9.3% | — | 2026-08-21 |
-| ✅ HIT — 1-2 | Serie B | Vicenza v Catanzaro | O1.5 77% +5.2% | — | 2026-08-21 |
-| ✅ HIT — 1-0 | Ligue 2 | Sochaux v Guingamp | U3.0 84% +9.1% | — | 2026-08-21 |
-| ✅ HIT — 0-1 | Ligue 2 | Pau v Nancy | U3.0 84% +8.6% | — | 2026-08-21 |
-| ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 83% +7.9% | — | 2026-08-21 |
-| ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 90% +1.1% | — | 2026-08-21 |
-| ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 84% −5.1% | — | 2026-08-21 |
-| ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 84% +6.6% | — | 2026-08-21 |
-| ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 89% +8.9% | — | 2026-08-21 |
-| ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 84% −0.5% | — | 2026-08-21 |
-| ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 84% −1.0% | — | 2026-08-21 |
-| ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 84% −2.9% | — | 2026-08-21 |
-| ✅ HIT — 3-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 83% +10% | — | 2026-08-21 |
-| ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 88% +7.8% | — | 2026-08-21 |
-| ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 81% +21.7% | — | 2026-08-22 |
-| ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 82% +12.6% | — | 2026-08-22 |
+| ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 82% +7.7% | — none offered | 2026-08-20 |
+| ✅ HIT | Brasileirão Série B | Athletic v CRB | O1.0 90% +1.0% | — none offered | 2026-08-21 |
+| ✅ HIT | Brasileirão Série B | Novorizontino v América-MG | O1.0 90% +1.1% | — none offered | 2026-08-21 |
+| ✅ HIT | J1 League | FC Tokyo v JEF United | U4.25 89% +0.9% | ⏳ U3.75 76% +1.5% | 2026-08-21 |
+| ❌ MISS — 6 goals | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 86% −2.3% | ✅ O1.75 75% +3.0% | 2026-08-21 |
+| ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 91% +12% | ✅ O2.75 77% +20.0% | 2026-08-21 |
+| ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 80% +24% | ✅ O1.75 93% +13.9% | 2026-08-21 |
+| ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 89% +1% | ❌ U3.75 75% +1.8% | 2026-08-21 |
+| ✅ HIT — 2-0 | Premier League | Arsenal v Coventry | O1.5 82% +1.9% | — none offered | 2026-08-21 |
+| ✅ HIT — 2-0 | LaLiga 2 | Córdoba v Girona | O1.5 80% +9.3% | — none offered | 2026-08-21 |
+| ✅ HIT — 1-2 | Serie B | Vicenza v Catanzaro | O1.5 77% +5.2% | — none offered | 2026-08-21 |
+| ✅ HIT — 1-0 | Ligue 2 | Sochaux v Guingamp | U3.0 84% +9.1% | ✅ U4.25 94% +5.2% | 2026-08-21 |
+| ✅ HIT — 0-1 | Ligue 2 | Pau v Nancy | U3.0 84% +8.6% | ✅ U4.25 94% +5.0% | 2026-08-21 |
+| ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 83% +7.9% | ✅ U4.25 93% +4.6% | 2026-08-21 |
+| ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 90% +1.1% | ✅ U3.75 77% +1.7% | 2026-08-21 |
+| ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 84% −5.1% | ❌ O1.75 78% +6.2% | 2026-08-21 |
+| ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 84% +6.6% | — none offered | 2026-08-21 |
+| ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 89% +8.9% | ❌ O2.75 72% +14.7% | 2026-08-21 |
+| ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 84% −0.5% | — none offered | 2026-08-21 |
+| ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 84% −1.0% | ✅ O1.75 77% +1.1% | 2026-08-21 |
+| ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 84% −2.9% | — none offered | 2026-08-21 |
+| ✅ HIT — 3-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 83% +10% | — none offered | 2026-08-21 |
+| ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 88% +7.8% | ✅ U4.25 96% +4.1% | 2026-08-21 |
+| ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 81% +21.7% | ✅ U4.25 98% +6.7% | 2026-08-22 |
+| ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 82% +12.6% | ✅ U4.25 93% +7.8% | 2026-08-22 |
 
 ---
 
