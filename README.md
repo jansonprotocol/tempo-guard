@@ -217,16 +217,46 @@ measured reason to leave it, the published tip is the bet.
       of which, negative edge   6/8    75.0%
       of which, positive edge   4/4   100.0%
 
-The one structural weakness is the fallback rung. `U4.25` is what the selector
-reaches for when nothing on the ladder beats a typical fixture, and it carries
-both misses that are not genuine reads. Everything that *is* a read runs at
-90.9%.
+**That reading was wrong, and 7,393 stored fixtures say so.** The live 6/8 on
+negative-edge `U4.25` looked like a structural weakness. It is not:
 
-A caution against reading more into it: tips at **≥85% model probability hit 75%**
-while those **below 85% hit 95.5%**, which looks like the engine being
-overconfident exactly where it is most sure. It is mostly composition — the ≥85%
-group is 7/12 `U4.25` at a mean edge of +2.30%, the <85% group averages +7.13%.
-High probability is standing in for "fallback", not causing anything.
+    ALL FIXTURES (7,393)          hit      base     realised edge
+    everything                  81.85%   79.26%      +2.59%
+      not U4.25                 78.46%   74.83%      +3.63%
+      U4.25, edge >= 0          86.86%   84.76%      +2.10%
+      U4.25, edge < 0           86.62%   88.16%      -1.54%
+
+    refusing that bucket:       81.23%   (12% of the book declined)
+    refusing all negative edge: 80.99%   (13% declined)
+    refusing all U4.25:         78.46%   (41% declined)
+
+**Every gate lowers the hit rate.** Negative-edge `U4.25` wins 86.6%, comfortably
+above the 81.9% book average, so declining it trades good bets for none.
+
+What the large sample *does* show is subtler and worth keeping. On that bucket
+the engine returns **−1.54%** against the rung's own base rate: picking `U4.25`
+blindly on those same fixtures would have won 88.16% where following the engine
+won 86.62%. It is the one place in the book where the engine adds negative value.
+
+So the two questions have opposite answers, and which one matters depends
+entirely on what is being optimised:
+
+    optimising HIT RATE   keep them. 86.6% beats the 81.9% book average.
+    optimising SKILL      they are worthless — worse than picking the rung blind.
+
+Since this project optimises hit rate, they stay.
+
+**A caution on the caution.** The 2,194-fixture run put that same bucket at
+*+1.72%* realised edge; the 7,393-fixture run puts it at −1.54%. A sign flip
+between overlapping samples means the true value is near zero and not resolved by
+either. What is stable across both is the part that matters for betting: the
+bucket hits mid-to-high 80s, and refusing it costs hit rate.
+
+The genuinely useful reframe is the benchmark. **`U4.25` is not strong, it is
+easy** — its base rate is 88%, so an 86% hit rate on it is below par. `O1.5` at
+78.5% against a 74.8% base is doing far more work. Hit rate ranks the rungs;
+edge ranks the reads; they disagree, and the log should stop quoting one as
+evidence for the other.
 
 #### The deviation test — and it was computable at the time
 
