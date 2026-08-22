@@ -17,7 +17,7 @@
 | — not started | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
 | — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% (floor −18.8) · **backed O2.25 @ 1.35** | 2026-08-22 12:15 |
 | — not started | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 12:30 |
-| — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none | 2026-08-22 13:00 |
+| — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none · **traded out for Al-Fateh** | 2026-08-22 13:00 |
 | — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | O2.75 59.4% +11.9% (floor −19.6) | 2026-08-22 13:30 |
 | — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 13:30 |
 | — not started | Premier League | Hull v Man United | **WITHHELD** — form from 2017 | — | 2026-08-22 13:30 |
@@ -48,7 +48,7 @@
 | — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
 | — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
 | — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
-| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
+| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) · **backed O2.5 @ 1.50** | 2026-08-22 17:45 |
 
 ## Completed FUTURE match bettips: Tip 1 92.0% hit · Tip 2 80.0% hit
 
@@ -85,39 +85,51 @@
 
 ### Actual placed bets
 
-**Win: 0 / 0 —  ·  Pending: 26 / 26  ·  Average odds: 1.32**
+**Win: 0 / 0 —  ·  Pending: 26 / 26  ·  Average odds: ≈1.33**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
-the 33 tipped fixtures on 22 Aug, 26 were backed, 7 skipped on price. Several
-were taken at Tip 2 rather than Tip 1, and a few at a line between the two, so
-this record grades the bet placed rather than the tip issued.
+the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
+Towns was traded out and the stake moved to Al-Fateh, so the count holds at 26.
+Several were taken at Tip 2 rather than Tip 1, and a few at a line between the
+two, so this record grades the bet placed rather than the tip issued.
 
-Average odds of 1.32 across the 26 (range 1.17–1.60) put break-even at **75.6%**.
-That is the number the hit rate has to clear to make money, and it sits well
-below the 92% the tips have run at but well above what a single bad stretch
-would produce.
+Average odds of about 1.33 across the 26 (range 1.17–1.60) put break-even near
+**75%**. It is approximate: individual prices were only logged from the
+Sanfrecce bet onward, so the Three Towns swap cannot be applied exactly. Per-bet
+odds are recorded from here.
 
-**The 26th bet is the first one taken below the model's price.** Sanfrecce
-`O2.25` at 1.35, staked after the Tip 2 fix surfaced the fixture. It is worth
-recording separately because it is the first divergence between the two things
-this log tracks — hit rate and price:
+#### Which rung to buy, and what `1 / P` actually means
 
-    rung     wins on   at 2 goals    model P    break-even odds
-    O1.5      2+        full win      81.7%          1.224
-    O2.25     3+        HALF loss     60.2%          1.483
-    O2.75     3+        full loss     60.2%          1.662
+Two of the 26 — Sanfrecce `O2.25` at 1.35 and Al-Fateh `O2.5` at 1.50 — are the
+first bets taken **below the model's price**, and both for the same reason: the
+fair odds quoted in this log are `1 / P`, and `1 / P` is right for exactly one
+rung of a tier.
 
-`O2.25` and `O2.75` win on the same totals, so the engine prices them
-identically at 60.2%. They are not the same bet: at exactly 2 goals `O2.25`
-gives back half the stake where `O2.75` gives back nothing, which is why its
-break-even price is 1.483 rather than 1.662. **1.35 is below both.** By the
-model the bet is about 8% under water — it prices in a goal expectation of
-**3.456** where Athena has **3.114**.
+`O2.25`, `O2.5` and `O2.75` all win on 3+ goals, so the engine prices them
+identically. They settle differently, and the difference is worth a third of a
+point of odds:
 
-The lesson is about the quote, not the bet: fair odds published here as `1 / P`
-are correct only for the harsh rung of a tier. Every soft rung — `O2.25`,
-`U3.75`, `U4.25` — carries a half-settlement cushion that lowers the price it
-needs, and quoting one fair value for the tier hides that.
+    rung    at 2 goals    at 3 goals    Sanfrecce      Al-Fateh
+                                        (P 60.2%)      (P 61.3%)
+    O2.25   HALF loss     full win        1.483          1.459
+    O2.5    full loss     full win        1.662  = 1/P   1.631  = 1/P
+    O2.75   full loss     HALF win        1.812          1.772
+
+**`1 / P` is the `O2.5` number.** The soft rung needs about 0.18 less and the
+harsh rung about 0.15 more. So the two bets grade like this:
+
+    Sanfrecce  O2.25  taken 1.35  needs 1.483   -8.0%   implies mu 3.456 vs 3.114
+    Al-Fateh   O2.5   taken 1.50  needs 1.631   -8.1%   implies mu 3.433 vs 3.166
+
+Both are about 8% under water by the model, and in both cases the book is
+reading the fixture as roughly a third of a goal higher-scoring than Athena
+does. That is the disagreement being bet on, not a mispriced rung.
+
+The practical rule this produces: **inside a tier, take the softest rung the
+book offers.** Al-Fateh's `O2.25` needed only 1.459, so the same 1.50 that was
+8% under water on `O2.5` would have been genuinely positive one rung down. The
+tier is chosen by the model; the rung is chosen by price, and until now this log
+gave one fair value for all three.
 
 
 ### Decision tracking
@@ -133,23 +145,23 @@ between Tip 1 and Tip 2, using settlement rather than the label — `U3.5` and
 | Lane | n | Fixtures |
 |---|---|---|
 | **Tip 1** | 3 | Okayama (U3.25), Nagoya (O1.5), Millwall (O1.5) |
-| **Middle** | 16 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25, Tip 2's win tier on its softer rung) |
+| **Middle** | 17 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung |
 | **Past Tip 2** | 5 | Birmingham, Wrexham, Everton, Zulte Waregem, Korona — all `U3.5` where Tip 2 was `U3.75`, so a full loss at 4 goals instead of a half loss |
 | **Past Tip 1** | 1 | Guoan (O2.5, riskier than the O2.25 tipped and away from Tip 2) |
-| **Neither** | 1 | Three Towns — Over on a fixture Athena had no opinion on (−0.05% edge) |
+| **Neither** | 0 | Three Towns was the only one — Over on a fixture Athena had no opinion on (−0.05% edge) — and it was traded out before kickoff |
 
-Only three bets are the published tip exactly. Sixteen sit between the two lanes,
+Only three bets are the published tip exactly. Seventeen sit between the two lanes,
 usually a rung safer than Tip 2 because the price was better there. Five went
 *past* Tip 2 into the harsher variant of the same win tier, which costs nothing
 unless a match lands on exactly 4 goals — and two of the 25 settled bets so far
 have done exactly that.
 
-Twenty-five of the 26 sit at 79% or above on the model. Sanfrecce is the
-exception at 60.2%, so it is also the first test of the trade this log has never
-had to grade: **a lower-probability bet bought for a longer price.** Whether it
-lands says nothing on its own; what it starts is the separate column that has to
-be kept from here, because mixing 60% bets into a 92% hit rate without marking
-them makes the headline number mean two different things at once.
+Twenty-four of the 26 sit at 79% or above on the model. Sanfrecce (60.2%) and
+Al-Fateh (61.3%) are the exceptions, and together they are the first test of the
+trade this log has never had to grade: **a lower-probability bet bought for a
+longer price.** Whether they land says nothing on its own; what they start is the
+separate column that has to be kept from here, because mixing 60% bets into a 92%
+hit rate without marking them makes the headline number mean two things at once.
 
 **2. Did skipping help?** Six tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
 
@@ -161,7 +173,6 @@ them makes the headline number mean two different things at once.
 | Derby v Cardiff | U4.25 88.4% +0.4% | — | short odds, no Tip 2 |
 | QPR v Bolton | U4.25 87.4% −0.7% | — | short odds, no Tip 2 |
 | Nantes v Rodez | U4.25 88.4% −0.3% | — | short odds, no Tip 2 |
-| Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% | short odds on Tip 1; Tip 2 was hidden by a bad filter |
 
 Derby and Nantes are not really a judgement call, they are arithmetic. Both are
 `U4.25` at 88.4%, and a fair price at that probability is **1.131** — after a
@@ -171,13 +182,12 @@ bet worth making, and with no Tip 2 there is nothing else on the fixture.
     model P     fair odds    at 3% margin
     88.4%         1.131          1.10      Derby, Nantes
     87.4%         1.144          1.11      QPR
-    82.4%         1.214          1.18      Al-Fateh
 
 So the rule falls out of the numbers rather than being imposed: **a Tip 1 above
 about 87% with no Tip 2 is unbettable**, because the price it deserves is inside
 the margin.
 
-The skip is still not free. Five of the six carry a Tip 1 above 82%, so
+The skip is still not free. All six carry a Tip 1 above 82%, so
 declining them avoids a poor price and forgoes a likely winner in the same move.
 What the results settle is whether those short-priced favourites land often
 enough that the skips cost more than they saved.
@@ -186,7 +196,7 @@ enough that the skips cost more than they saved.
 
 ### Notes on the log
 
-- Sample is 25 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
+- Sample is 26 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
 - All tips issued as-of the morning of the match. In-play fixtures run as if unstarted — no live information reaches them.
 - Retrosims are never logged here. Those are engine optimisation, not tips.
 - Pending → completed once a result is confirmed.
