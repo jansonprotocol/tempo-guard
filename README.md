@@ -10,24 +10,24 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 0-0** (26') | Serie B | Benevento v Modena | U3.0 82.2% +6.9% | U2.75 62.7% +8.8% (floor −16.3) | 2026-08-22 21:00 |
-| **LIVE: 1-0** (31') | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% | **Cremonese O0.5** 83.3% +14.5% (team) | 2026-08-22 21:00 |
-| **LIVE: 0-0** (31') | Eredivisie | Heerenveen v Zwolle | U4.25 84.5% +5.2% | U3.75 68.8% +7.0% (floor −10.2) | 2026-08-22 21:00 |
-| **LIVE: 1-1** (68') | Brasileirão | Fluminense v Remo | U4.25 88.2% −0.7% | O1.75 72.7% +1.0% (floor −6.3) | 2026-08-22 21:00 |
-| **LIVE: 0-0** (1') | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% | **Cádiz U1.5** 77.5% +5.9% (team) | 2026-08-22 21:30 |
-| — not started | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% | **Sporting O1.5** 64.5% +22.3% (team) | 2026-08-22 21:30 |
-| — not started | Peru Liga 1 | Juan Pablo II v ADT | U3.0 83.1% +9.6% | **Juan Pablo II U1.5** 75.2% +22.4% (team) | 2026-08-22 22:30 |
-| — not started | Colombia Primera A | Águilas Doradas v Millonarios | U4.25 84.2% −7.2% | **O1.75 77.5% +10.2%** (floor −1.5) | 2026-08-22 22:30 |
-| — not started | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% | U2.75 66.4% +4.5% (floor −12.6) | 2026-08-22 23:00 |
-| — not started | Colombia Primera A | Tolima v Bucaramanga | U4.25 85.9% −5.6% | **O1.75 75.6% +8.4%** (floor −3.4) | 2026-08-22 23:05 |
-| — not started | Brasileirão | Internacional v Atlético-MG | U4.25 86.4% −2.5% | O1.75 75.0% +3.4% (floor −4.0) | 2026-08-22 23:30 |
-| — not started | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% | U2.75 64.6% +2.6% (floor −14.4) | 2026-08-22 23:30 |
-| — not started | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% | — none | 2026-08-22 23:30 |
-| — not started | Colombia Primera A | Santa Fe v América de Cali | **O1.5 80.8% +13.6%** | O2.25 58.8% +18.0% (floor −20.2) | 2026-08-23 01:10 |
-| — not started | Brasileirão | Cruzeiro v Flamengo | **O1.5 88.0% +16.4%** | **Flamengo O1.5** 61.9% +33.6% (team) | 2026-08-23 01:30 |
-| — not started | Peru Liga 1 | Deportivo Garcilaso v Cusco | U4.25 86.4% −1.3% | O1.75 75.0% +1.7% (floor −4.0) | 2026-08-23 02:00 |
-| — not started | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% | O2.25 62.7% +10.3% (floor −16.3) | 2026-08-23 02:00 |
-| — not started | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% | — none | 2026-08-23 03:15 |
+| **LIVE: 0-0** (26') | Serie B | Benevento v Modena | U3.0 82.2% +6.9% · buy≥1.35 | U2.75 62.7% +8.8% (floor −16.3) · buy≥1.51 | 2026-08-22 21:00 |
+| **LIVE: 1-0** (31') | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% · buy≥1.29 | **Cremonese O0.5** 83.3% +14.5% (team) · buy≥1.26 | 2026-08-22 21:00 |
+| **LIVE: 0-0** (31') | Eredivisie | Heerenveen v Zwolle | U4.25 84.5% +5.2% · buy≥1.26 | U3.75 68.8% +7.0% (floor −10.2) · buy≥1.41 | 2026-08-22 21:00 |
+| **LIVE: 1-1** (68') | Brasileirão | Fluminense v Remo | U4.25 88.2% −0.7% · buy≥1.20 | O1.75 72.7% +1.0% (floor −6.3) · buy≥1.53 | 2026-08-22 21:00 |
+| **LIVE: 0-0** (1') | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% · buy≥1.27 | **Cádiz U1.5** 77.5% +5.9% (team) · buy≥1.35 | 2026-08-22 21:30 |
+| — not started | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% · buy≥1.25 | **Sporting O1.5** 64.5% +22.3% (team) · buy≥1.63 | 2026-08-22 21:30 |
+| — not started | Peru Liga 1 | Juan Pablo II v ADT | U3.0 83.1% +9.6% · buy≥1.33 | **Juan Pablo II U1.5** 75.2% +22.4% (team) · buy≥1.40 | 2026-08-22 22:30 |
+| — not started | Colombia Primera A | Águilas Doradas v Millonarios | U4.25 84.2% −7.2% · buy≥1.27 | **O1.75 77.5% +10.2%** (floor −1.5) · buy≥1.41 | 2026-08-22 22:30 |
+| — not started | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% · buy≥1.29 | U2.75 66.4% +4.5% (floor −12.6) · buy≥1.44 | 2026-08-22 23:00 |
+| — not started | Colombia Primera A | Tolima v Bucaramanga | U4.25 85.9% −5.6% · buy≥1.24 | **O1.75 75.6% +8.4%** (floor −3.4) · buy≥1.45 | 2026-08-22 23:05 |
+| — not started | Brasileirão | Internacional v Atlético-MG | U4.25 86.4% −2.5% · buy≥1.23 | O1.75 75.0% +3.4% (floor −4.0) · buy≥1.47 | 2026-08-22 23:30 |
+| — not started | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% · buy≥1.32 | U2.75 64.6% +2.6% (floor −14.4) · buy≥1.47 | 2026-08-22 23:30 |
+| — not started | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% · buy≥1.24 | — none | 2026-08-22 23:30 |
+| — not started | Colombia Primera A | Santa Fe v América de Cali | **O1.5 80.8% +13.6%** · buy≥1.30 | O2.25 58.8% +18.0% (floor −20.2) · buy≥1.59 | 2026-08-23 01:10 |
+| — not started | Brasileirão | Cruzeiro v Flamengo | **O1.5 88.0% +16.4%** · buy≥1.19 | **Flamengo O1.5** 61.9% +33.6% (team) · buy≥1.70 | 2026-08-23 01:30 |
+| — not started | Peru Liga 1 | Deportivo Garcilaso v Cusco | U4.25 86.4% −1.3% · buy≥1.23 | O1.75 75.0% +1.7% (floor −4.0) · buy≥1.47 | 2026-08-23 02:00 |
+| — not started | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% · buy≥1.26 | O2.25 62.7% +10.3% (floor −16.3) · buy≥1.50 | 2026-08-23 02:00 |
+| — not started | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% · buy≥1.40 | — none | 2026-08-23 03:15 |
 
 ## Completed FUTURE match bettips: Tip 1 86.5% hit · Tip 2 76.1% hit
 
@@ -35,95 +35,95 @@
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
-| ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 82% +7.7% | — none offered | 2026-08-20 |
-| ✅ HIT — 0-2 | Brasileirão Série B | Athletic v CRB | O1.0 90% +1.0% | — none offered | 2026-08-21 |
-| ✅ HIT — 3-0 | Brasileirão Série B | Novorizontino v América-MG | O1.0 90% +1.1% | — none offered | 2026-08-21 |
-| ✅ HIT — 2-0 | J1 League | FC Tokyo v JEF United | U4.25 89% +0.9% | ✅ U3.75 76% +1.5% | 2026-08-21 |
-| ❌ MISS — 4-2 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 86% −2.3% | ✅ O1.75 75% +3.0% | 2026-08-21 |
-| ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 91% +12% | ✅ O2.75 77% +20.0% | 2026-08-21 |
-| ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 80% +24% | ✅ O1.75 93% +13.9% | 2026-08-21 |
-| ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 89% +1% | ❌ U3.75 75% +1.8% | 2026-08-21 |
-| ✅ HIT — 2-0 | Premier League | Arsenal v Coventry | O1.5 82% +1.9% | — none offered | 2026-08-21 |
-| ✅ HIT — 2-0 | LaLiga 2 | Córdoba v Girona | O1.5 80% +9.3% | — none offered | 2026-08-21 |
-| ✅ HIT — 1-2 | Serie B | Vicenza v Catanzaro | O1.5 77% +5.2% | — none offered | 2026-08-21 |
-| ✅ HIT — 1-0 | Ligue 2 | Sochaux v Guingamp | U3.0 84% +9.1% | ✅ U4.25 94% +5.2% | 2026-08-21 |
-| ✅ HIT — 0-1 | Ligue 2 | Pau v Nancy | U3.0 84% +8.6% | ✅ U4.25 94% +5.0% | 2026-08-21 |
-| ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 83% +7.9% | ✅ U4.25 93% +4.6% | 2026-08-21 |
-| ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 90% +1.1% | ✅ U3.75 77% +1.7% | 2026-08-21 |
-| ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 84% −5.1% | ❌ O1.75 78% +6.2% | 2026-08-21 |
-| ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 84% +6.6% | — none offered | 2026-08-21 |
-| ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 89% +8.9% | ❌ O2.75 72% +14.7% | 2026-08-21 |
-| ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 84% −0.5% | — none offered | 2026-08-21 |
-| ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 84% −1.0% | ✅ O1.75 77% +1.1% | 2026-08-21 |
-| ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 84% −2.9% | — none offered | 2026-08-21 |
-| ✅ HIT — 3-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 83% +10% | — none offered | 2026-08-21 |
-| ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 88% +7.8% | ✅ U4.25 96% +4.1% | 2026-08-21 |
-| ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 81% +21.7% | ✅ U4.25 98% +6.7% | 2026-08-22 |
-| ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 82% +12.6% | ✅ U4.25 93% +7.8% | 2026-08-22 |
-| ❌ MISS — 3-2 | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | ✅ O1.75 73.6% +1.2% | 2026-08-22 |
-| ✅ HIT — 0-0 | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | ✅ U4.25 91.6% +3.3% | 2026-08-22 |
-| ✅ HIT — 1-0 | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | ❌ O1.75 74.4% +2.0% | 2026-08-22 |
-| ❌ MISS — 1-3 | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | ✅ U4.25 92.7% +4.4%, half win | 2026-08-22 |
-| ✅ HIT — 3-1 | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | ✅ O2.75 63.3% +16.2% | 2026-08-22 |
-| ✅ HIT — 1-1 | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | ❌ O2.75 60.2% +13.0% | 2026-08-22 |
-| ✅ HIT — 1-0 | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | ❌ O1.75 74.7% +2.2% | 2026-08-22 |
-| ✅ HIT — 0-0 | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none offered | 2026-08-22 |
-| ✅ HIT — 3-0 | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | ✅ O2.75 59.4% +11.9%, half win | 2026-08-22 |
-| ✅ HIT — 2-2, half win | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | ❌ U3.75 77.1% +3.0%, half loss | 2026-08-22 |
-| ✅ HIT — 1-1 | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% | ✅ U4.25 93.8% +14.6% | 2026-08-22 |
-| ✅ HIT — 4-5 | Chinese Super League | Chengdu v Shenhua | O1.5 82.1% +0.2% | — none offered | 2026-08-22 |
-| ✅ HIT — 3-3 | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% | ✅ O1.75 93.1% +11.1% | 2026-08-22 |
-| ❌ MISS — 2-5 | Ligue 2 | Nantes v Rodez | U4.25 88.4% −0.3% | — none offered | 2026-08-22 |
-| ✅ HIT — 1-1 | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% | ✅ O1.75 78.8% +6.9%, half win | 2026-08-22 |
-| ✅ HIT — 1-1 | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | ✅ U3.75 72.9% +2.7% | 2026-08-22 |
-| ✅ HIT — 1-1 | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | ✅ U4.25 92.1% +9.2% | 2026-08-22 |
-| ✅ HIT — 2-0 | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | ✅ U3.75 70.9% +5.9% | 2026-08-22 |
-| ✅ HIT — 0-1 | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | ✅ U3.75 66.9% +2.0% | 2026-08-22 |
-| ✅ HIT — 2-1 | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | ✅ O1.75 77.5% +4.7% | 2026-08-22 |
-| ✅ HIT — 2-2, half win | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none offered | 2026-08-22 |
-| ✅ HIT — 1-3, half win | Championship | Preston v Wolves | U4.25 84.4% −3.7% | ✅ O1.75 77.3% +4.5% | 2026-08-22 |
-| ✅ HIT — 0-0 | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none offered | 2026-08-22 |
-| ✅ HIT — 3-1, half win | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | ✅ O1.75 78.4% +5.6% | 2026-08-22 |
-| ✅ HIT — 0-0 | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | ❌ O1.75 78.4% +5.6% | 2026-08-22 |
-| ✅ HIT — 1-2 | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | ✅ O2.75 70.5% +22.9%, half win | 2026-08-22 |
-| ✅ HIT — 1-1 | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | ✅ U3.75 78.9% +4.8% | 2026-08-22 |
-| ✅ HIT — 4-0, half win | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | ❌ U3.75 77.7% +7.7%, half loss | 2026-08-22 |
-| ✅ HIT — 0-2 | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | ❌ O2.75 66.4% +5.9% | 2026-08-22 |
-| ✅ HIT — 3-1 | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | ✅ O2.75 66.6% +12.9% | 2026-08-22 |
-| ❌ MISS — 1-3 | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | ✅ U4.25 91.3% +4.4%, half win | 2026-08-22 |
-| ✅ HIT — 0-1 | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | ✅ U4.25 94.5% +5.0% | 2026-08-22 |
-| ❌ MISS — 3-2 | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | ✅ U4.25 91.4% +9.5% | 2026-08-22 |
-| ✅ HIT — 2-0 | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | ✅ U3.75 78.7% +8.7% | 2026-08-22 |
-| ❌ MISS — 4-1 | Serie A | Inter v Monza | U4.25 84.9% −3.8% | ✅ O1.75 76.8% +4.9% | 2026-08-22 |
-| ✅ HIT — 1-1 | Serie A | Udinese v Como | O1.5 80.4% +8.5% | ❌ O2.75 58.2% +11.8% | 2026-08-22 |
-| ✅ HIT — 2-2 | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | — none offered | 2026-08-22 |
-| ✅ HIT — 4-0 | Saudi Pro League | Al-Ahli v Abha | O1.5 83.1% +3.3% | ✅ O2.25 62.3% +5.1% | 2026-08-22 |
-| ✅ HIT — 1-1 | Ekstraklasa | Piast v Legia | O1.5 84.9% +8.8% | ❌ O2.25 65.2% +13.4% | 2026-08-22 |
-| ❌ MISS — 0-1 | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | ❌ O2.75 61.3% +4.1% | 2026-08-22 |
-| ✅ HIT — 0-2 | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | ❌ O2.25 63.5% +10.2% | 2026-08-22 |
-| ❌ MISS — 1-0 | Swiss Super League | Luzern v Lausanne | O1.5 81.6% +2.7% | ❌ O2.25 60.0% +4.1% | 2026-08-22 |
-| ✅ HIT — 0-2 | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | ✅ U4.25 93.5% +5.8% | 2026-08-22 |
-| ✅ HIT — 3-0 | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% | ✅ U3.75 77.7% +12.7% | 2026-08-22 |
-| ✅ HIT — 1-2, half win | Serie B | Carrarese v Mantova | U3.0 74.2% −1.2% | ✅ O1.75 72.7% +1.1% | 2026-08-22 |
-| ✅ HIT — 1-0 | Serie B | Südtirol v Entella | U3.0 87.1% +11.8% | ✅ U2.75 69.9% +15.9% | 2026-08-22 |
-| ✅ HIT — 0-2 | LaLiga 2 | Ceuta v Las Palmas | U4.25 90.6% +1.1% | ✅ U3.75 78.2% +1.8% | 2026-08-22 |
-| ✅ HIT — 1-2 | LaLiga 2 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% | ✅ U3.75 78.0% +1.5% | 2026-08-22 |
-| ✅ HIT — 0-2 | Liga Portugal | Estoril v Rio Ave | U3.0 82.8% +11.3% | ✅ U4.25 93.2% +6.9% | 2026-08-22 |
-| ✅ HIT — 0-0 | LaLiga | Valencia v Celta | U4.25 87.1% +0.3% | — none offered | 2026-08-22 |
-| ✅ HIT — 4-4 | Belgian Pro League | Antwerp v Genk | O1.5 82.5% +6.3% | ✅ O2.25 61.5% +9.3% | 2026-08-22 |
-| ✅ HIT — 3-1 | Süper Lig | Fenerbahçe v Konyaspor | O1.5 87.7% +10.6% | ✅ O2.25 70.2% +16.9% | 2026-08-22 |
-| ✅ HIT — 4-0, half win | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | ✅ **Saint-Étienne O0.5** 82.0% +8.7% (team) | 2026-08-22 |
-| ✅ HIT — 0-0 | Saudi Pro League | Al-Khaleej v Al-Shabab | U4.25 86.1% +4.3% | ❌ **Al-Shabab O0.5** 80.8% +8.1% (team) | 2026-08-22 |
-| ❌ MISS — 3-3 | Ekstraklasa | Śląsk v Widzew | U3.0 84.3% +14.1% | ❌ U4.25 94.0% +8.5% (lower edge) | 2026-08-22 |
-| ❌ MISS — 1-3 | Peru Liga 1 | UTC v Comerciantes Unidos | U3.0 80.7% +7.1% | ✅ **UTC U1.5** 76.8% +24.1% (team) | 2026-08-22 |
-| ✅ HIT — 1-2 | Swiss Super League | Zürich v Basel | **O2.25 83.5% +27.6%** | ✅ **Basel O1.5** 78.8% +46.4% (team) | 2026-08-22 |
-| ✅ HIT — 1-1 (decided) | Serie B | Avellino v Arezzo | O1.5 76.9% +5.3% — below the floor | — none | 2026-08-22 |
-| ✅ HIT — 1-1 (decided) | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% | ✅ **Real Madrid O0.5** 83.6% +14.9% (team) | 2026-08-22 |
-| ✅ HIT — 0-0 | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% | ✅ **Nice U1.5** 76.3% +21.1% (team) | 2026-08-22 |
-| ✅ HIT — 0-2 | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% | ✅ U3.75 73.7% +5.1% (floor −5.3) | 2026-08-22 |
-| ✅ HIT — 0-0 | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% | ✅ **Troyes U1.5** 79.1% +23.9% (team) | 2026-08-22 |
-| ✅ HIT — 0-2 | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% | ✅ **Genoa U1.5** 75.1% +15.0% (team) | 2026-08-22 |
-| ✅ HIT — 0-1 | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% | ✅ **Parma U1.5** 81.6% +21.5% (team) | 2026-08-22 |
+| ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 82% +7.7% · buy≥1.28 | — none offered | 2026-08-20 |
+| ✅ HIT — 0-2 | Brasileirão Série B | Athletic v CRB | O1.0 90% +1.0% · buy≥1.21 | — none offered | 2026-08-21 |
+| ✅ HIT — 3-0 | Brasileirão Série B | Novorizontino v América-MG | O1.0 90% +1.1% · buy≥1.21 | — none offered | 2026-08-21 |
+| ✅ HIT — 2-0 | J1 League | FC Tokyo v JEF United | U4.25 89% +0.9% · buy≥1.19 | ✅ U3.75 76% +1.5% · buy≥1.29 | 2026-08-21 |
+| ❌ MISS — 4-2 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 86% −2.3% · buy≥1.24 | ✅ O1.75 75% +3.0% · buy≥1.47 | 2026-08-21 |
+| ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 91% +12% · buy≥1.15 | ✅ O2.75 77% +20.0% · buy≥1.41 | 2026-08-21 |
+| ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 80% +24% · buy≥1.23 | ✅ O1.75 93% +13.9% · buy≥1.13 | 2026-08-21 |
+| ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 89% +1% · buy≥1.19 | ❌ U3.75 75% +1.8% · buy≥1.30 | 2026-08-21 |
+| ✅ HIT — 2-0 | Premier League | Arsenal v Coventry | O1.5 82% +1.9% · buy≥1.28 | — none offered | 2026-08-21 |
+| ✅ HIT — 2-0 | LaLiga 2 | Córdoba v Girona | O1.5 80% +9.3% · buy≥1.31 | — none offered | 2026-08-21 |
+| ✅ HIT — 1-2 | Serie B | Vicenza v Catanzaro | O1.5 77% +5.2% · buy≥1.36 | — none offered | 2026-08-21 |
+| ✅ HIT — 1-0 | Ligue 2 | Sochaux v Guingamp | U3.0 84% +9.1% · buy≥1.31 | ✅ U4.25 94% +5.2% · buy≥1.12 | 2026-08-21 |
+| ✅ HIT — 0-1 | Ligue 2 | Pau v Nancy | U3.0 84% +8.6% · buy≥1.31 | ✅ U4.25 94% +5.0% · buy≥1.12 | 2026-08-21 |
+| ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 83% +7.9% · buy≥1.33 | ✅ U4.25 93% +4.6% · buy≥1.13 | 2026-08-21 |
+| ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 90% +1.1% · buy≥1.18 | ✅ U3.75 77% +1.7% · buy≥1.28 | 2026-08-21 |
+| ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 84% −5.1% · buy≥1.27 | ❌ O1.75 78% +6.2% · buy≥1.40 | 2026-08-21 |
+| ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 84% +6.6% · buy≥1.25 | — none offered | 2026-08-21 |
+| ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 89% +8.9% · buy≥1.18 | ❌ O2.75 72% +14.7% · buy≥1.53 | 2026-08-21 |
+| ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 84% −0.5% · buy≥1.27 | — none offered | 2026-08-21 |
+| ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 84% −1.0% · buy≥1.27 | ✅ O1.75 77% +1.1% · buy≥1.42 | 2026-08-21 |
+| ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 84% −2.9% · buy≥1.27 | — none offered | 2026-08-21 |
+| ✅ HIT — 3-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 83% +10% · buy≥1.27 | — none offered | 2026-08-21 |
+| ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 88% +7.8% · buy≥1.23 | ✅ U4.25 96% +4.1% · buy≥1.10 | 2026-08-21 |
+| ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 81% +21.7% · buy≥1.22 | ✅ U4.25 98% +6.7% · buy≥1.07 | 2026-08-22 |
+| ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 82% +12.6% · buy≥1.35 | ✅ U4.25 93% +7.8% · buy≥1.13 | 2026-08-22 |
+| ❌ MISS — 3-2 | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% · buy≥1.21 | ✅ O1.75 73.6% +1.2% · buy≥1.50 | 2026-08-22 |
+| ✅ HIT — 0-0 | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% · buy≥1.40 | ✅ U4.25 91.6% +3.3% · buy≥1.15 | 2026-08-22 |
+| ✅ HIT — 1-0 | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% · buy≥1.22 | ❌ O1.75 74.4% +2.0% · buy≥1.48 | 2026-08-22 |
+| ❌ MISS — 1-3 | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% · buy≥1.36 | ✅ U4.25 92.7% +4.4%, half win · buy≥1.14 | 2026-08-22 |
+| ✅ HIT — 3-1 | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% · buy≥1.25 | ✅ O2.75 63.3% +16.2% · buy≥1.79 | 2026-08-22 |
+| ✅ HIT — 1-1 | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% · buy≥1.29 | ❌ O2.75 60.2% +13.0% · buy≥1.90 | 2026-08-22 |
+| ✅ HIT — 1-0 | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% · buy≥1.23 | ❌ O1.75 74.7% +2.2% · buy≥1.48 | 2026-08-22 |
+| ✅ HIT — 0-0 | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% · buy≥1.36 | — none offered | 2026-08-22 |
+| ✅ HIT — 3-0 | Championship | Millwall v Norwich | O1.5 81.2% +8.4% · buy≥1.29 | ✅ O2.75 59.4% +11.9%, half win · buy≥1.93 | 2026-08-22 |
+| ✅ HIT — 2-2, half win | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% · buy≥1.18 | ❌ U3.75 77.1% +3.0%, half loss · buy≥1.27 | 2026-08-22 |
+| ✅ HIT — 1-1 | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% · buy≥1.31 | ✅ U4.25 93.8% +14.6% · buy≥1.12 | 2026-08-22 |
+| ✅ HIT — 4-5 | Chinese Super League | Chengdu v Shenhua | O1.5 82.1% +0.2% · buy≥1.28 | — none offered | 2026-08-22 |
+| ✅ HIT — 3-3 | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% · buy≥1.22 | ✅ O1.75 93.1% +11.1% · buy≥1.13 | 2026-08-22 |
+| ❌ MISS — 2-5 | Ligue 2 | Nantes v Rodez | U4.25 88.4% −0.3% · buy≥1.20 | — none offered | 2026-08-22 |
+| ✅ HIT — 1-1 | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% · buy≥1.29 | ✅ O1.75 78.8% +6.9%, half win · buy≥1.38 | 2026-08-22 |
+| ✅ HIT — 1-1 | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% · buy≥1.22 | ✅ U3.75 72.9% +2.7% · buy≥1.34 | 2026-08-22 |
+| ✅ HIT — 1-1 | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% · buy≥1.38 | ✅ U4.25 92.1% +9.2% · buy≥1.15 | 2026-08-22 |
+| ✅ HIT — 2-0 | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% · buy≥1.24 | ✅ U3.75 70.9% +5.9% · buy≥1.37 | 2026-08-22 |
+| ✅ HIT — 0-1 | Premier League | Forest v Leeds | U4.25 83.1% +1.4% · buy≥1.29 | ✅ U3.75 66.9% +2.0% · buy≥1.44 | 2026-08-22 |
+| ✅ HIT — 2-1 | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% · buy≥1.27 | ✅ O1.75 77.5% +4.7% · buy≥1.41 | 2026-08-22 |
+| ✅ HIT — 2-2, half win | Championship | Derby v Cardiff | U4.25 88.4% +0.4% · buy≥1.20 | — none offered | 2026-08-22 |
+| ✅ HIT — 1-3, half win | Championship | Preston v Wolves | U4.25 84.4% −3.7% · buy≥1.26 | ✅ O1.75 77.3% +4.5% · buy≥1.41 | 2026-08-22 |
+| ✅ HIT — 0-0 | Championship | QPR v Bolton | U4.25 87.4% −0.7% · buy≥1.21 | — none offered | 2026-08-22 |
+| ✅ HIT — 3-1, half win | Championship | Southampton v Stoke | U4.25 83.3% −4.8% · buy≥1.28 | ✅ O1.75 78.4% +5.6% · buy≥1.39 | 2026-08-22 |
+| ✅ HIT — 0-0 | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% · buy≥1.28 | ❌ O1.75 78.4% +5.6% · buy≥1.39 | 2026-08-22 |
+| ✅ HIT — 1-2 | Championship | West Ham v Charlton | O1.5 87.8% +15.0% · buy≥1.20 | ✅ O2.75 70.5% +22.9%, half win · buy≥1.57 | 2026-08-22 |
+| ✅ HIT — 1-1 | Championship | Wrexham v Watford | U4.25 91.0% +2.9% · buy≥1.16 | ✅ U3.75 78.9% +4.8% · buy≥1.25 | 2026-08-22 |
+| ✅ HIT — 4-0, half win | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% · buy≥1.17 | ❌ U3.75 77.7% +7.7%, half loss · buy≥1.27 | 2026-08-22 |
+| ✅ HIT — 0-2 | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% · buy≥1.23 | ❌ O2.75 66.4% +5.9% · buy≥1.69 | 2026-08-22 |
+| ✅ HIT — 3-1 | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% · buy≥1.23 | ✅ O2.75 66.6% +12.9% · buy≥1.68 | 2026-08-22 |
+| ❌ MISS — 1-3 | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% · buy≥1.42 | ✅ U4.25 91.3% +4.4%, half win · buy≥1.16 | 2026-08-22 |
+| ✅ HIT — 0-1 | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% · buy≥1.28 | ✅ U4.25 94.5% +5.0% · buy≥1.11 | 2026-08-22 |
+| ❌ MISS — 3-2 | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% · buy≥1.41 | ✅ U4.25 91.4% +9.5% · buy≥1.16 | 2026-08-22 |
+| ✅ HIT — 2-0 | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% · buy≥1.16 | ✅ U3.75 78.7% +8.7% · buy≥1.25 | 2026-08-22 |
+| ❌ MISS — 4-1 | Serie A | Inter v Monza | U4.25 84.9% −3.8% · buy≥1.26 | ✅ O1.75 76.8% +4.9% · buy≥1.43 | 2026-08-22 |
+| ✅ HIT — 1-1 | Serie A | Udinese v Como | O1.5 80.4% +8.5% · buy≥1.31 | ❌ O2.75 58.2% +11.8% · buy≥1.98 | 2026-08-22 |
+| ✅ HIT — 2-2 | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% · buy≥1.28 | — none offered | 2026-08-22 |
+| ✅ HIT — 4-0 | Saudi Pro League | Al-Ahli v Abha | O1.5 83.1% +3.3% · buy≥1.26 | ✅ O2.25 62.3% +5.1% · buy≥1.51 | 2026-08-22 |
+| ✅ HIT — 1-1 | Ekstraklasa | Piast v Legia | O1.5 84.9% +8.8% · buy≥1.24 | ❌ O2.25 65.2% +13.4% · buy≥1.45 | 2026-08-22 |
+| ❌ MISS — 0-1 | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% · buy≥1.27 | ❌ O2.75 61.3% +4.1% · buy≥1.86 | 2026-08-22 |
+| ✅ HIT — 0-2 | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% · buy≥1.25 | ❌ O2.25 63.5% +10.2% · buy≥1.49 | 2026-08-22 |
+| ❌ MISS — 1-0 | Swiss Super League | Luzern v Lausanne | O1.5 81.6% +2.7% · buy≥1.29 | ❌ O2.25 60.0% +4.1% · buy≥1.56 | 2026-08-22 |
+| ✅ HIT — 0-2 | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% · buy≥1.32 | ✅ U4.25 93.5% +5.8% · buy≥1.13 | 2026-08-22 |
+| ✅ HIT — 3-0 | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% · buy≥1.17 | ✅ U3.75 77.7% +12.7% · buy≥1.27 | 2026-08-22 |
+| ✅ HIT — 1-2, half win | Serie B | Carrarese v Mantova | U3.0 74.2% −1.2% · buy≥1.57 | ✅ O1.75 72.7% +1.1% · buy≥1.53 | 2026-08-22 |
+| ✅ HIT — 1-0 | Serie B | Südtirol v Entella | U3.0 87.1% +11.8% · buy≥1.24 | ✅ U2.75 69.9% +15.9% · buy≥1.37 | 2026-08-22 |
+| ✅ HIT — 0-2 | LaLiga 2 | Ceuta v Las Palmas | U4.25 90.6% +1.1% · buy≥1.17 | ✅ U3.75 78.2% +1.8% · buy≥1.26 | 2026-08-22 |
+| ✅ HIT — 1-2 | LaLiga 2 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% · buy≥1.17 | ✅ U3.75 78.0% +1.5% · buy≥1.26 | 2026-08-22 |
+| ✅ HIT — 0-2 | Liga Portugal | Estoril v Rio Ave | U3.0 82.8% +11.3% · buy≥1.33 | ✅ U4.25 93.2% +6.9% · buy≥1.13 | 2026-08-22 |
+| ✅ HIT — 0-0 | LaLiga | Valencia v Celta | U4.25 87.1% +0.3% · buy≥1.22 | — none offered | 2026-08-22 |
+| ✅ HIT — 4-4 | Belgian Pro League | Antwerp v Genk | O1.5 82.5% +6.3% · buy≥1.27 | ✅ O2.25 61.5% +9.3% · buy≥1.53 | 2026-08-22 |
+| ✅ HIT — 3-1 | Süper Lig | Fenerbahçe v Konyaspor | O1.5 87.7% +10.6% · buy≥1.20 | ✅ O2.25 70.2% +16.9% · buy≥1.36 | 2026-08-22 |
+| ✅ HIT — 4-0, half win | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% · buy≥1.23 | ✅ **Saint-Étienne O0.5** 82.0% +8.7% (team) · buy≥1.28 | 2026-08-22 |
+| ✅ HIT — 0-0 | Saudi Pro League | Al-Khaleej v Al-Shabab | U4.25 86.1% +4.3% · buy≥1.24 | ❌ **Al-Shabab O0.5** 80.8% +8.1% (team) · buy≥1.30 | 2026-08-22 |
+| ❌ MISS — 3-3 | Ekstraklasa | Śląsk v Widzew | U3.0 84.3% +14.1% · buy≥1.30 | ❌ U4.25 94.0% +8.5% (lower edge) · buy≥1.12 | 2026-08-22 |
+| ❌ MISS — 1-3 | Peru Liga 1 | UTC v Comerciantes Unidos | U3.0 80.7% +7.1% · buy≥1.38 | ✅ **UTC U1.5** 76.8% +24.1% (team) · buy≥1.37 | 2026-08-22 |
+| ✅ HIT — 1-2 | Swiss Super League | Zürich v Basel | **O2.25 83.5% +27.6%** · buy≥1.19 | ✅ **Basel O1.5** 78.8% +46.4% (team) · buy≥1.33 | 2026-08-22 |
+| ✅ HIT — 1-1 (decided) | Serie B | Avellino v Arezzo | O1.5 76.9% +5.3% — below the floor · buy≥1.37 | — none | 2026-08-22 |
+| ✅ HIT — 1-1 (decided) | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% · buy≥1.32 | ✅ **Real Madrid O0.5** 83.6% +14.9% (team) · buy≥1.26 | 2026-08-22 |
+| ✅ HIT — 0-0 | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% · buy≥1.38 | ✅ **Nice U1.5** 76.3% +21.1% (team) · buy≥1.38 | 2026-08-22 |
+| ✅ HIT — 0-2 | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% · buy≥1.21 | ✅ U3.75 73.7% +5.1% (floor −5.3) · buy≥1.32 | 2026-08-22 |
+| ✅ HIT — 0-0 | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% · buy≥1.17 | ✅ **Troyes U1.5** 79.1% +23.9% (team) · buy≥1.33 | 2026-08-22 |
+| ✅ HIT — 0-2 | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% · buy≥1.17 | ✅ **Genoa U1.5** 75.1% +15.0% (team) · buy≥1.40 | 2026-08-22 |
+| ✅ HIT — 0-1 | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% · buy≥1.23 | ✅ **Parma U1.5** 81.6% +21.5% (team) · buy≥1.29 | 2026-08-22 |
 
 
 ### Actual placed bets
@@ -140,6 +140,68 @@ Average odds of about 1.33 across the 26 (range 1.17–1.60) put break-even near
 **75%**. It is approximate: individual prices were only logged from the
 Sanfrecce bet onward, so the Three Towns swap cannot be applied exactly. Per-bet
 odds are recorded from here.
+
+#### Did the prices paid justify the bets? Mostly not
+
+`scripts/bet_prices.py` scores all 29 bets whose price was actually recorded.
+Every tip in the tables above now carries a `buy≥` figure too, backfilled by
+inverting the published probability back to a goal expectation and pricing the
+rung from it — nothing is re-predicted, the numbers already in the log are just
+translated into odds.
+
+The result is uncomfortable and it is the most useful thing measured today:
+
+    16 settled at 1 unit each, 11 won      strike rate 69%
+    staked 16   returned 14.98   P/L -1.02   ROI -6.4%
+    model EV of that same book before kickoff: +1.8% per bet
+
+**A 69% strike rate returned a loss.** That is not variance dressed up — the
+book was worth only +1.8% per bet going in, which is inside the noise, so it was
+never going to survive an ordinary bad run. The hit-rate column said the day
+went well. The money says it went slightly badly.
+
+**Eleven of the 29 bets — 38% — were bought below break-even**, meaning
+negative by the engine's own number whatever the match did:
+
+    Fenerbahçe (team)  O1.5   paid 1.32  needed 1.546   -14.6%
+    Genoa (team)       U1.5   paid 1.18  needed 1.332   -11.4%
+    Sanfrecce          O2.25  paid 1.35  needed 1.482    -8.9%
+    Al-Fateh           O2.5   paid 1.50  needed 1.631    -8.1%
+    Espanyol           O1.5   paid 1.17  needed 1.258    -7.0%
+    UTC                U3.5   paid 1.19  needed 1.239    -4.0%
+    Fluminense         O1.5   paid 1.33  needed 1.376    -3.3%
+    Toulouse           U4.5   paid 1.12  needed 1.139    -1.7%
+    Al-Shabab (team)   O0.5   paid 1.23  needed 1.238    -0.6%
+    Saint-Étienne      U4.5   paid 1.15  needed 1.155    -0.4%
+    Huachipato         U4.5   paid 1.16  needed 1.164    -0.4%
+
+Six of those eleven **won**, which is exactly why the problem stayed invisible.
+`Espanyol O1.5` at 1.17 won and was still a bad buy; `Genoa U1.5` at 1.18 won
+and was 11.4% under water. A won bet at a losing price is a losing bet that got
+away with it.
+
+Split by whether the price cleared the threshold:
+
+    bought AT or ABOVE buy-from   13 bets,  4 settled, ROI +16.0%
+    bought BELOW it               16 bets, 12 settled, ROI -13.8%
+
+The +16.0% rests on four bets and proves nothing on its own. The **-13.8% on
+twelve** is the half that does not need a large sample, because it is not really
+a measurement — pay less than break-even often enough and the arithmetic does
+the rest.
+
+**Two patterns account for almost all of it.** The first is buying the favourite
+rung at a short price: `U4.5` at 1.12–1.16 and `O1.5` at 1.17 are bets on 85%+
+reads where the book leaves nothing on the table. The tip is right and the price
+is not, and four of the eleven are this. The second is team lanes bought at
+match-lane prices: `Genoa U1.5` at 1.18 and `Fenerbahçe O1.5` at 1.32 are 75%
+and 65% claims priced as if they were 85% ones — the two worst buys in the book,
+and both won, which is how the lane escaped scrutiny.
+
+**What did work.** `Basel O1.5` at 1.83 against a break-even of 1.269 is the
+single best buy in the log and it landed. `Troyes U1.5` at 1.48 against 1.264
+is the second. Both are the same lane that produced `Genoa` and `Fenerbahçe` —
+the difference is entirely the price paid, not the read.
 
 #### Every tip now carries a "buy from" price
 
