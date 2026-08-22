@@ -27,9 +27,9 @@
 | — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 (2+ goals) | 2026-08-22 | 86% | +3.6% |
 | — not started | Championship | Wrexham v Watford | U4.25 (≤3, half win at 4) | 2026-08-22 | 91% | +2.9% |
 | — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 (2+ goals) | 2026-08-22 | 82% | +2.7% |
-| — not started | Premier League | Everton v Crystal Palace | U4.25 (≤3, half win at 4) | 2026-08-22 | 84% | +1.9% |
+| — not started | Premier League | Everton v Crystal Palace | U4.25 (≤3, half win at 4) | 2026-08-22 | 86% | +4.2% |
 | — not started | Ekstraklasa | Korona v Motor | U4.25 (≤3, half win at 4) | 2026-08-22 | 87% | +1.8% |
-| — not started | Premier League | Forest v Leeds | O1.5 (2+ goals) | 2026-08-22 | 81% | +0.9% |
+| — not started | Premier League | Forest v Leeds | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | +1.4% |
 | — not started | Championship | Derby v Cardiff | U4.25 (≤3, half win at 4) | 2026-08-22 | 88% | +0.3% |
 | — not started | Ligue 2 | Nantes v Rodez | U4.25 (≤3, half win at 4) | 2026-08-22 | 88% | −0.3% |
 | — not started | Championship | QPR v Bolton | U4.25 (≤3, half win at 4) | 2026-08-22 | 87% | −0.7% |
@@ -128,6 +128,8 @@ The cause is the probability floor, not thin form — an earlier version of this
 The Championship produces a cluster of these because its league mu is 2.58 and most fixtures land at 2.7-2.9, exactly the band where O1.5 prices at 76-79% and sits on top of the floor. A few hundredths of a goal decide between O1.5 at +5.6% and U4.25 at -4.8%. West Ham v Charlton shows the other side: mu 3.64, O1.5 clears at 87.8%, tipped at +15.0%. Derby v Cardiff is a genuine nothing, mu 2.55 against 2.58.
 
 Not a Championship problem — any league whose scoring average puts O1.5 near the floor does this. The fallback is still correct on hit rate, measured at 85.7% against 78.1% for following the lean. It buys safety by taking the side it disagrees with.
+
+- **Two Premier League tips were re-verified and corrected.** Forest v Leeds was logged as O1.5 81% +0.9% and now reads U4.25 83% +1.4%; Everton v Crystal Palace read +1.9% and now reads +4.2%. Same code, same data, same resolved names — the earlier figures do not reproduce and the cause is not identified. Championship and Ligue 2 fixtures from the same batch reproduce exactly, so it is confined to ENG-PL, which is also the stale store. Recorded rather than hidden: a tip that cannot be reproduced is a tip that cannot be trusted.
 
 ### Known data defects
 
