@@ -118,7 +118,7 @@
 
 ### Actual placed bets
 
-**Win: 17 / 26 — 65%  ·  Pending: 13 / 39  ·  Average odds: ≈1.29**
+**Win: 17 / 26 — 65%  ·  Pending: 21 / 47  ·  Average odds: ≈1.28**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -185,8 +185,16 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 | 19:00 | Ceuta v Las Palmas | U4.25 | U4.5 | 1.10 |
 | 19:00 | Estoril v Rio Ave | U3.0 | U3.25 | 1.38 |
 | 20:00 | Saint-Étienne v Grenoble | U4.25 | U4.5 | 1.15 |
+| 20:00 | Al-Ahli v Abha | O1.5 | **O1.5 — Tip 1** | 1.10 |
+| 20:00 | Al-Khaleej v Al-Shabab | U4.25 | U4.5 | 1.16 |
+| 20:15 | Śląsk v Widzew | U3.0 | U3.5 | 1.32 |
+| 20:15 | UTC v Comerciantes Unidos | U3.0 | U3.5 | 1.19 |
+| 20:30 | Fenerbahçe v Konyaspor | O1.5 | **O1.5 — Tip 1** | 1.13 |
+| 20:30 | Zürich v Basel | O2.25 | **O2.5 — past Tip 1** | 1.52 |
+| 20:45 | Nice v Lorient | U3.0 | U3.25 | 1.33 |
+| 20:45 | Toulouse v Lyon | U4.25 | U4.5 | 1.12 |
 
-Thirteen open. Prices are recorded from the Sanfrecce bet onward; the earlier
+Twenty-one open. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
 
 
@@ -249,15 +257,15 @@ between Tip 1 and Tip 2, using settlement rather than the label — `U3.5` and
 
 | Lane | n | Fixtures |
 |---|---|---|
-| **Tip 1** | 8 | Okayama (U3.25), Nagoya, Millwall, Rizespor, Udinese, Sparta (O1.5), Southampton (U4.25), Estoril (U3.25 — settles identically to the U3.0 tipped) |
-| **Middle** | 19 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung · Huancayo, Al-Kholood (U3.5 between U3.0 and U4.25) |
+| **Tip 1** | 11 | Okayama (U3.25), Nagoya, Millwall, Rizespor, Udinese, Sparta (O1.5), Southampton (U4.25), Estoril, Nice (U3.25 — settles identically to the U3.0 tipped), Al-Ahli, Fenerbahçe (O1.5) |
+| **Middle** | 21 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens, **Sanfrecce** (O2.25), **Al-Fateh** (O2.5) — the last two on Tip 2's win tier at a softer rung · Huancayo, Al-Kholood, Śląsk, UTC Cajamarca (U3.5 between U3.0 and U4.25) |
 | **Past Tip 2** | 5 | Birmingham, Wrexham, Everton, Zulte Waregem, Korona — all `U3.5` where Tip 2 was `U3.75`, so a full loss at 4 goals instead of a half loss |
-| **Past Tip 1, safer** | 5 | Charleroi, Brentford, Inter, Ceuta, Saint-Étienne — `U4.5` where `U4.25` was tipped. Wins outright at 4 where the tip only half-wins, so strictly better settlement at a shorter price |
+| **Past Tip 1, safer** | 7 | Charleroi, Brentford, Inter, Ceuta, Saint-Étienne, Al-Khaleej, Toulouse — `U4.5` where `U4.25` was tipped. Wins outright at 4 where the tip only half-wins, so strictly better settlement at a shorter price |
 | **Tip 2 exactly** | 1 | Südtirol — `U2.75` at 69.9%, the second lane taken outright rather than as a middle |
-| **Past Tip 1, riskier** | 1 | Guoan (O2.5, riskier than the O2.25 tipped and away from Tip 2) |
+| **Past Tip 1, riskier** | 2 | Guoan, **Zürich** (O2.5 where O2.25 was tipped — same 3+ win tier but a full loss at 2 goals instead of a half loss) |
 | **Neither** | 0 | Three Towns was the only one — Over on a fixture Athena had no opinion on (−0.05% edge) — and it was traded out before kickoff |
 
-Eight bets are the published tip exactly. Nineteen sit between the two lanes,
+Eleven bets are the published tip exactly. Twenty-one sit between the two lanes,
 usually a rung safer than Tip 2 because the price was better there. Five went
 *past* Tip 2 into the harsher variant of the same win tier, which costs nothing
 unless a match lands on exactly 4 goals — and two of the 25 settled bets so far
@@ -614,6 +622,21 @@ enough that the skips cost more than they saved.
   historical rows either side; and `FC Thun` / `FC Vaduz` have real counterparts
   whose history stops in 2020 and 2021 — merging those would buy a tip built on
   six-year-old form, which is the recency defect wearing a different hat.
+
+- **Zürich v Basel is the first deliberate step UP in risk, and the price makes
+  it the right one.** Tip 1 was `O2.25`; the bet is `O2.5`, the same 3+ win tier
+  but a **full** loss at two goals where `O2.25` only half-loses. At mu 4.58 the
+  rungs price like this:
+
+      rung     at 2 goals   at 3 goals   break-even
+      O2.25    half loss    full win       1.133
+      O2.5     full loss    full win       1.197
+      O2.75    full loss    half win       1.219
+
+  Taken at **1.52** against a 1.197 break-even, that is **+27% expected value** —
+  the largest margin over a fair price anywhere in the log, and it comes from
+  the split-name fix: without merging `Zurich` onto `FC Zürich` the fixture had
+  no tip at all an hour earlier.
 
 ### Notes on the log
 
