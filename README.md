@@ -10,13 +10,13 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 1-1** (57') | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 11:00 |
-| **LIVE: 0-0** (HT) | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 11:30 |
-| **LIVE: 1-1** (16') ✅ | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | O2.75 63.3% +16.2% (floor −15.7) | 2026-08-22 12:00 |
-| **LIVE: 0-0** (15') | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 12:00 |
-| **LIVE: 0-0** (16') | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
-| — not started | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% (floor −18.8) · **backed O2.25 @ 1.35** | 2026-08-22 12:15 |
-| — not started | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 12:30 |
+| **LIVE: 3-2** (89') ❌ | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 11:00 |
+| **LIVE: 0-0** (60') | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 11:30 |
+| **LIVE: 1-1** (HT) ✅ | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | O2.75 63.3% +16.2% (floor −15.7) | 2026-08-22 12:00 |
+| **LIVE: 0-2** (HT) | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 12:00 |
+| **LIVE: 0-0** (HT) | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
+| **LIVE: 1-0** (30') | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% (floor −18.8) · **backed O2.25 @ 1.35** | 2026-08-22 12:15 |
+| **LIVE: 1-0** (17') | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 12:30 |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none · **traded out for Al-Fateh** | 2026-08-22 13:00 |
 | — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | O2.75 59.4% +11.9% (floor −19.6) | 2026-08-22 13:30 |
 | — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 13:30 |
