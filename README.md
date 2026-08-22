@@ -103,25 +103,31 @@ would produce.
 Two questions the results will answer, recorded now so they can be graded rather
 than remembered.
 
-**1. Did taking Tip 2 help?** Of the 25 staked, **9 were Tip 1, 15 were Tip 2, 1 was
-neither.** Tip 2 was mostly taken because Tip 1's price was too short or the line
-was not offered — Wrexham's U4.25 at 1.34 became U3.5, Metz's U4.25 became O1.5.
-Graded on: how many Tip 2 bets won that Tip 1 would have lost, against how many
-lost that Tip 1 would have won.
+**1. Did the lane choice help?** Classified by where the line actually taken sits
+between Tip 1 and Tip 2, using settlement rather than the label — `U3.5` and
+`U3.75` win on the same totals but `U3.5` loses the full stake at 4 where
+`U3.75` loses half, so they are not the same bet.
 
-| Taken | Fixtures |
-|---|---|
-| **Tip 1** (9) | Okayama, Nagoya, Kyoto Sanga, Shenzhen, Guoan, Millwall, Örgryte, Athletic Bilbao, Real Oviedo |
-| **Tip 2** (15) | Kashima, Cerezo, Yokohama FM, Birmingham, West Ham, Wrexham, Preston, Blackburn, Swansea, Everton, Metz, Lens, Zulte Waregem, Fortuna Sittard, Korona |
-| **Neither** (1) | Three Towns — Over taken on a fixture Athena had no opinion on (−0.05% edge) |
+| Lane | n | Fixtures |
+|---|---|---|
+| **Tip 1** | 3 | Okayama (U3.25), Nagoya (O1.5), Millwall (O1.5) |
+| **Middle** | 15 | Kyoto, Shenzhen, Örgryte, Athletic Bilbao, Real Oviedo (U3.5 between U3.0 and U4.25) · Kashima, Cerezo, Yokohama FM, Preston, Blackburn, Swansea, Metz (O1.5, a safer rung than the O1.75 tipped) · West Ham, Fortuna (O2.5) · Lens (O2.25) |
+| **Past Tip 2** | 5 | Birmingham, Wrexham, Everton, Zulte Waregem, Korona — all `U3.5` where Tip 2 was `U3.75`, so a full loss at 4 goals instead of a half loss |
+| **Past Tip 1** | 1 | Guoan (O2.5, riskier than the O2.25 tipped and away from Tip 2) |
+| **Neither** | 1 | Three Towns — Over on a fixture Athena had no opinion on (−0.05% edge) |
 
-**2. Did skipping help?** Eight tipped fixtures went unbacked, mostly short odds
-with no playable Tip 2. Graded on whether the skip evaded a miss or cost a win.
+Only three bets are the published tip exactly. Fifteen sit between the two lanes,
+usually a rung safer than Tip 2 because the price was better there. Five went
+*past* Tip 2 into the harsher variant of the same win tier, which costs nothing
+unless a match lands on exactly 4 goals — and two of the 25 settled bets so far
+have done exactly that.
+
+**2. Did skipping help?** Seven tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
 
 | Skipped | Tip 1 | Tip 2 | Reason |
 |---|---|---|---|
 | Sanfrecce v Kawasaki | O1.5 81.7% +9.2% | — | short odds |
-| Southampton v Stoke | U4.25 83.3% −4.8% | O1.75 78.4% +5.6% | not taken |
+| Southampton v Stoke | U4.25 83.3% −4.8% | O1.75 78.4% +5.6% | **to be taken later** |
 | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% | unreproducible tip |
 | Chengdu v Shenhua | O1.5 82.1% +0.2% | — | flat fixture |
 | Derby v Cardiff | U4.25 88.4% +0.4% | — | short odds, no Tip 2 |
