@@ -461,6 +461,55 @@ tested as a *published* tip against real prices, where a market at 80% base rate
 will be priced accordingly. What it does establish is that the number carries
 real information, which is more than any Tip 2 lane currently manages.
 
+#### On a fallback U4.25, is a team total a better bet? Partly — and not the way expected
+
+366 fallback fixtures (Tip 1 = `U4.25` at negative edge) out of 2,675:
+
+    market                             n     hit     base    edge    fair   at 5% margin
+    Tip 1  U4.25 (the fallback)      366  88.25%  88.25%  -0.00%   1.133      1.076
+    team total OVER 0.5, floor 0.75  306  75.82%  72.28%  +3.53%   1.319      1.253
+    team total OVER 0.5, floor 0.79  143  74.83%  72.34%  +2.48%   1.336      1.270
+    team total OVER 0.5, floor 0.83   49  71.43%  72.08%  -0.65%   1.400      1.330
+    team total UNDER 0.5, P <= 0.60   31  22.58%  28.84%  -6.26%   4.429      4.207
+    team total UNDER 0.5, P <= 0.55    5  20.00%  32.79% -12.79%   5.000      4.750
+
+**The fallback's edge is exactly zero.** 88.25% hit against an 88.25% base rate —
+not approximately, identically. That is the cleanest possible statement of what
+a fallback is: the engine picks a rung that wins as often as picking it blind
+would. Priced at 1.13 fair, roughly 1.08 after margin, it is a bet with no
+information in it at a price that cannot pay.
+
+**The team total carries real information there, but much less than elsewhere,
+and the relationship inverts.** In the general population edge GREW with the
+floor (+5.80% at 0.70 rising to +20.90% at 0.87). On fallbacks it SHRINKS —
++3.53%, +2.48%, then **negative** at 0.83. Fallback fixtures are ones the engine
+cannot read, and it turns out it cannot read the sides on them either; the
+confident team-total calls are exactly where it is most wrong.
+
+So the floor has to run the opposite way here: **low (0.75) on fallbacks, high
+elsewhere.** Coverage at 0.75 is 306 of 366, or 84% of fallbacks.
+
+**Head to head on the fixtures a team total covers, the fallback still wins far
+more often:**
+
+    U4.25 fallback   130/143 = 90.91%
+    team total       107/143 = 74.83%
+
+Sixteen points. Anyone optimising hit rate alone should keep the fallback. The
+case for the team total is entirely that its number means something (+3.53%)
+where the fallback's means nothing (0.00%), and that its fair price of ~1.32
+leaves room a 1.08 does not.
+
+**But +3.53% does not clear a normal margin either.** It is better than zero and
+worse than enough. The honest conclusion is that a team total is a *less bad*
+fallback replacement, not a good bet — and the thing that would settle it is
+whether books price team totals more loosely than main totals, which is a
+question about the market rather than about football and cannot be answered
+from stored results.
+
+**The UNDER direction is dead and this buries it.** −6.26% and −12.79% on the
+one subset where a defensive read should have lived. Not offered.
+
 #### What Tip 2 actually is — three families, and two of them are settled by logic
 
 Every (Tip 1, Tip 2) pair is one of three kinds, decided by set containment on
