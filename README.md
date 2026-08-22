@@ -278,6 +278,42 @@ longer price.** Whether they land says nothing on its own; what they start is th
 separate column that has to be kept from here, because mixing 60% bets into a 92%
 hit rate without marking them makes the headline number mean two things at once.
 
+#### Discipline is the largest single effect in the bet log
+
+41 settled bets, split by the lane actually taken:
+
+    Tip 1 exactly              10/10   100.0%
+    safer rung of Tip 1's tier  3/4     75.0%
+    past Tip 2                  3/5     60.0%
+    FLIP (crossed the book)     4/7     57.1%
+    middle                      6/11    54.5%
+    sharpen                     0/1      0.0%
+
+    Tip 1 or one rung safer    13/14 = 92.9%   95% interval 68.2% .. 98.7%
+    everything else            16/27 = 59.3%   95% interval 40.7% .. 75.5%
+
+A **33.6-point** gap, and the two intervals barely overlap. Every independent
+measurement today pointed the same way — FLIP lanes at 73.6% against Tip 1's
+88.6%, the 4-goal trap punishing past-Tip-2 three times, sharpen rungs unable to
+rescue a loss by construction — and this is those findings showing up in the
+money rather than in a backtest.
+
+Chronologically the effect is real but smaller than the lane split implies:
+
+    first 22 settled   15/22 = 68.2%   disciplined 4/22 = 18%
+    last 19 settled    14/19 = 73.7%   disciplined 10/19 = 53%
+
+Discipline nearly tripled and the win rate rose 5.5 points. The gap between that
+and the 33.6-point lane difference is simply that half the later bets still were
+not disciplined.
+
+**Two honest deflations.** 10/10 on Tip 1 is above Tip 1's own 87.0% live rate —
+14 disciplined bets would be expected to return 12.2 and returned 13, so a
+little luck sits on top of a real effect. At the other end, 27 undisciplined
+bets returning 16 is below even the FLIP lane's measured 73.6%, so there is bad
+luck there too. The direction and rough size hold; the exact numbers will
+regress toward roughly 87% and roughly 70%.
+
 #### Graded so far — 14 settled placed bets, and the deviations are still losing
 
 | Fixture | Tip 1 | Lane taken | Total | Tip 1 | Bet |
