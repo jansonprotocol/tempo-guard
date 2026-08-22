@@ -34,7 +34,7 @@
 | — not started | MLS | Vancouver v Dallas | O1.5 88.8% +7.7% · buy≥1.18 | **Dallas O1.5** 59.5% +20.4% (team) · buy≥1.77 | 2026-08-23 03:30 |
 | — not started | MLS | Los Angeles FC v Portland | O1.5 88.9% +7.8% · buy≥1.18 | **Portland O1.5** 60.7% +21.6% (team) · buy≥1.73 | 2026-08-23 04:30 |
 | — not started | MLS | San Diego v Colorado | U4.25 84.5% +4.1% · buy≥1.26 | **Colorado U1.5** 78.3% +17.4% (team) · buy≥1.34 | 2026-08-23 04:30 |
-| — not started | MLS | San Jose v Minnesota | U4.25 82.5% +2.1% · buy≥1.30 | U3.75 66.1% +2.8% (floor −12.9) · buy≥1.46 | 2026-08-23 04:30 |
+| — not started | MLS | San Jose v Minnesota | U4.25 86.6% +6.2% · buy≥1.23 | U3.75 71.8% +8.6% (floor −7.2) · buy≥1.35 | 2026-08-23 04:30 |
 
 ## Completed FUTURE match bettips: Tip 1 85.3% hit · Tip 2 74.0% hit
 
@@ -141,7 +141,7 @@
 
 ### Actual placed bets
 
-**Win: 43 / 60 — 71.7%  ·  Pending: 10 / 70  ·  ROI −6.2%**
+**Win: 43 / 60 — 71.7%  ·  Pending: 19 / 79  ·  ROI −6.2%**
 
 Counts come from `config/bets.tsv` via `scripts/ledger.py`, not from prose. The
 earlier figures here undercounted: the whole afternoon block was backed and
@@ -356,6 +356,49 @@ worth re-checking at 100+ tips.
 bought was only **+1.1%** (1.20–1.29) and **+3.1%** (1.30–1.39), against the
 **+5% or better** that separated the profitable bets from the rest. The band did
 not lose because the tips were bad — it lost because it was bought thin.
+
+#### The MLS card — 9 bets, and the tier-up finally lands somewhere buyable
+
+Nine of thirteen backed, four skipped on price. Stake dropped to €1.00.
+
+| Fixture | Bought | P | Paid | Break-even | Buy from | EV |
+|---|---|---|---|---|---|---|
+| Vancouver v Dallas | **Dallas O0.5** (team) | 86.5% | **1.41** | 1.156 | 1.21 | **+22.0%** |
+| Los Angeles FC v Portland | **Portland O0.5** (team) | 87.1% | 1.30 | 1.148 | 1.21 | **+13.2%** |
+| Cincinnati v Seattle | **Cincinnati O1.5** (team) | 79.1% | 1.40 | 1.264 | 1.33 | +10.8% |
+| Montréal v LA Galaxy | U4.5 | — | 1.20 | 1.097 | 1.15 | +9.4% |
+| San Jose v Minnesota | U4.5 | — | 1.25 | 1.155 | 1.21 | +8.2% |
+| St. Louis v Houston | O1.5 — Tip 1 | — | 1.23 | 1.163 | 1.22 | +5.7% |
+| Nashville v Columbus | O1.5 — Tip 1 | — | 1.19 | 1.133 | 1.19 | +5.0% |
+| San Diego v Colorado | U4.5 | — | 1.23 | 1.183 | 1.24 | +4.0% ⚠ |
+| Austin v Philadelphia | **Philadelphia O0.5** (team) | 86.4% | 1.15 | 1.157 | 1.22 | **−0.6%** ⚠ |
+
+**Portfolio +8.6% per bet, 7 of 9 clearing the threshold** — comfortably the
+best-bought card in the log, against a book-wide ROI of −6.2%.
+
+**The tier-up works on the team ladder, and that is a genuine correction to the
+earlier retraction.** Three bets moved from the published `O1.5` team lane up to
+`O0.5` — Philadelphia, Dallas, Portland. On the MATCH ladder that move was shown
+to be unbuyable: those rungs price at a median break-even of 1.060 and 93% would
+need 1.15 or less. **A team `O0.5` does not price like that.** One side scoring
+is an 86–87% shot, not a 94% one, so break-even sits near 1.15 and the book
+still quotes 1.30 and 1.41 there.
+
+    match ladder tier-up:   median break-even 1.060   93% need <= 1.15   dead
+    team ladder tier-up:    break-even 1.148-1.157    got 1.15 / 1.30 / 1.41
+
+`Dallas O0.5` at **1.41** against a break-even of 1.156 is the largest edge on
+the card and one of the largest in the whole log. The retraction was right about
+the match ladder and should not have been generalised to the team ladder —
+different probability, different pricing, different answer.
+
+**`Philadelphia O0.5` at 1.15 is the one that missed**, and it missed narrowly:
+break-even 1.157, so the bet is fractionally negative. The same rung on the same
+night was available at 1.30 and 1.41 elsewhere. That is the shape of a rung
+bought without checking the number rather than a bad read.
+
+`San Diego U4.5` at 1.23 against a 1.24 threshold is inside rounding — positive
+EV, just short of the margin.
 
 #### On cash-outs
 
@@ -1555,6 +1598,49 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
 - **Two Premier League tips were re-verified and corrected.** Forest v Leeds was logged as O1.5 81% +0.9% and now reads U4.25 83% +1.4%; Everton v Crystal Palace read +1.9% and now reads +4.2%. Same code, same data, same resolved names — the earlier figures do not reproduce and the cause is not identified. Championship and Ligue 2 fixtures from the same batch reproduce exactly, so it is confined to ENG-PL, which is also the stale store. Recorded rather than hidden: a tip that cannot be reproduced is a tip that cannot be trusted.
 
 ### Known data defects
+
+- **FIXED — team-name resolution was non-deterministic across processes.** The
+  most serious bug found in this log, and it had been silently live the whole
+  time. `_team_names` returned `list(set(...))`, and inside `_match_team` two
+  spellings of one club collapse to the same lookup key, so exactly one of them
+  wins. Python randomises the string hash seed per process, so WHICH one won
+  changed from run to run:
+
+      run 1:  Montréal -> CF Montreal   (20 rows, to 2026-08-20)   mu 2.34
+      run 2:  Montréal -> CF Montréal   (149 rows, to 2025-05-03)  mu 1.62
+      run 3:  Montréal -> CF Montreal                              mu 2.34
+
+  The same fixture priced at `U3.0 79.1%` or `U3.0 91.8%` depending on nothing
+  but which process ran it. Every downstream number — probability, edge,
+  break-even, buy-from — inherited the coin flip. It was caught only because a
+  bet-pricing script disagreed with the tip table it was pricing against.
+
+  **Scope: 16 colliding name groups across 10 leagues**, every one a coin flip
+  before the fix — ARG-PD (4), ROU-L1 (3), SWE-AL (2), and one each in ARG-CLP,
+  BRA-SB, CHI-PD, COPA-L, MEX-LMX, MLS and UEL. MLS additionally has 6
+  collisions at the CANONICAL level (`Charlotte`/`Charlotte FC`, `Inter
+  Miami`/`Inter Miami CF`, `Minnesota United`/`Minnesota United FC`, …), all of
+  which resolved arbitrarily.
+
+  **The fix has two halves.** `_team_names` now returns names ordered most
+  recent match first, then row count, then name — deterministic, and it picks
+  the current half of a split club, which is what a project that ranks the last
+  two seasons above deep history should want. `_match_team` builds its lookup
+  maps with `setdefault` instead of a dict comprehension so the FIRST (most
+  preferred) spelling wins rather than the last. `_compute_features` had the
+  same `set()` union and now preserves order too.
+
+  **Blast radius on the live slate: 1 tip of 13.** Re-running MLS
+  deterministically changed only `San Jose v Minnesota` — `U4.25` moved from
+  82.5% / +2.1% to **86.6% / +6.2%**, because `Minnesota` had been landing on
+  the 2025 variant. The other twelve are byte-identical. The published table has
+  been corrected.
+
+  Worth stating plainly: this is a reason to treat every figure in this log that
+  predates the fix as carrying an unknown amount of this noise. The tips
+  themselves were mostly unaffected — 12 of 13 — but "mostly" is doing real work
+  in that sentence.
+
 
 - **No recency bound on team history — now measured, and it is the biggest one.** `_find_team_rows` takes a club's last ten matches with no limit on how old they are, so a side returning to a competition after years away is priced on ancient form. The history gate counts matches, not their age. Auditing every upcoming fixture put a number on it:
 

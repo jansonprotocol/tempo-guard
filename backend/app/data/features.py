@@ -186,8 +186,15 @@ def _match_team(target: str, candidates: List[str]) -> Optional[str]:
     """
     t_norm = _norm(target)
     t_accent = _norm_accent(target)
-    norm_map = {_norm(c): c for c in candidates}
-    accent_map = {_norm_accent(c): c for c in candidates}
+    # setdefault, not a dict comprehension: `candidates` arrives most-preferred
+    # first (see _team_names), and a comprehension would let the LAST colliding
+    # spelling win instead of the first. That is the difference between picking
+    # a club's current form and its abandoned historical variant.
+    norm_map: dict[str, str] = {}
+    accent_map: dict[str, str] = {}
+    for c in candidates:
+        norm_map.setdefault(_norm(c), c)
+        accent_map.setdefault(_norm_accent(c), c)
 
     if t_norm in norm_map:
         return norm_map[t_norm]
@@ -225,7 +232,37 @@ def _cutoff(match_date: date) -> datetime:
 
 
 def _team_names(df: pd.DataFrame) -> List[str]:
-    return list(set(df["home"].astype(str)) | set(df["away"].astype(str)))
+    """
+    Every club name in the frame, MOST PREFERRED FIRST.
+
+    This used to be `list(set(...))`, and that was a live defect rather than an
+    untidiness. Two spellings of one club — `CF Montreal` and `CF Montréal`,
+    `DC United` and `D.C. United` — collapse to the same key inside
+    `_match_team`, so exactly one of them wins the lookup. Set iteration order
+    depends on the per-process string hash seed, so WHICH one won changed from
+    run to run: the same fixture priced at mu 2.34 in one process and 1.62 in
+    the next, off 20 rows of current form or 149 rows stopping in May 2025.
+    Every downstream number inherited that coin flip.
+
+    Ordering is by most recent match first, then row count, then the name, so
+    the winner is both stable and the right half of a split club — this project
+    ranks the current and previous season above deep history. A thin-but-recent
+    variant that beats a fat-but-stale one on this ordering will usually fail
+    the history gate downstream and withhold the fixture, which is the safe
+    failure: no tip beats a tip built on year-old form.
+
+    The real repair for a split club is a merge in config/team_merges.json.
+    This only makes the unmerged case deterministic.
+    """
+    if df.empty:
+        return []
+    home = df[["home", "date"]].rename(columns={"home": "team"})
+    away = df[["away", "date"]].rename(columns={"away": "team"})
+    both = pd.concat([home, away])
+    both["team"] = both["team"].astype(str)
+    agg = both.groupby("team")["date"].agg(["max", "count"])
+    agg = agg.sort_values(["max", "count"], ascending=[False, False])
+    return list(agg.index)
 
 
 # ── Per-frame index cache ─────────────────────────────────────────────────────
@@ -613,7 +650,12 @@ def _compute_features(
     A_away: Optional[pd.DataFrame] = None,
     cutoff: Optional[datetime] = None,
 ) -> Dict[str, float]:
-    names = list(set(_team_names(H)) | set(_team_names(A)))
+    # Concatenate rather than union two sets: `_team_names` returns a preference
+    # ORDER, and a set would discard it and reintroduce the hash-seed coin flip
+    # this function's callers were just fixed for.
+    seen: set[str] = set()
+    names = [n for n in (*_team_names(H), *_team_names(A))
+             if not (n in seen or seen.add(n))]
     h_norm = _norm(_match_team(hname, names) or hname)
     a_norm = _norm(_match_team(aname, names) or aname)
 
