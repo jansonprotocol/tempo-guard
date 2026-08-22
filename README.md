@@ -128,7 +128,11 @@
 
 ### Actual placed bets
 
-**Win: 40 / 56 — 71%  ·  Pending: 10 / 66  ·  Average odds: ≈1.29**
+**Win: 43 / 60 — 71.7%  ·  Pending: 10 / 70  ·  ROI −6.2%**
+
+Counts come from `config/bets.tsv` via `scripts/ledger.py`, not from prose. The
+earlier figures here undercounted: the whole afternoon block was backed and
+logged without prices, so it never reached the bet tables.
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -141,68 +145,87 @@ Average odds of about 1.33 across the 26 (range 1.17–1.60) put break-even near
 Sanfrecce bet onward, so the Three Towns swap cannot be applied exactly. Per-bet
 odds are recorded from here.
 
-#### Did the prices paid justify the bets? Mostly not
+#### Did the prices paid justify the bets? The threshold separates them cleanly
 
-`scripts/bet_prices.py` scores all 29 bets whose price was actually recorded.
-Every tip in the tables above now carries a `buy≥` figure too, backfilled by
-inverting the published probability back to a goal expectation and pricing the
-rung from it — nothing is re-predicted, the numbers already in the log are just
-translated into odds.
+The bet log now lives in `config/bets.tsv` rather than in paragraphs, and
+`scripts/ledger.py` joins it to the fixture tables above — 70 bets, every price
+recorded, scored against the engine's own break-even for the rung actually
+bought. This is the fix for the defect that produced the mis-cut discipline
+buckets: nothing is re-derived by hand any more.
 
-The result is uncomfortable and it is the most useful thing measured today:
+    60 settled at 1 unit each
+    hit rate (push counts as a hit)   43/60 = 71.7%
+    returned 56.29 on 60 staked   P/L -3.71   ROI -6.2%
 
-    19 settled at 1 unit each, 13 won      strike rate 68%
-    staked 19   returned 17.56   P/L -1.44   ROI -7.6%
-    model EV of that same book before kickoff: +2.8% per bet
+**A 71.7% hit rate returned -6.2%.** That is the whole problem in one line, and
+splitting by the price paid says where it went:
 
-**A 68% strike rate returned a loss.** That is not variance dressed up — the
-book was worth only +2.8% per bet going in, which is inside the noise, so it was
-never going to survive an ordinary bad run. The hit-rate column said the day
-went well. The money says it went slightly badly.
+    bought AT or ABOVE buy-from    18 bets   ROI  +18.4%
+    bought BETWEEN break-even and buy-from
+                       ("thin")    17 bets   ROI  -17.6%
+    bought BELOW break-even        25 bets   ROI  -16.2%
 
-**Eleven of the 29 bets — 38% — were bought below break-even**, meaning
-negative by the engine's own number whatever the match did:
+**The threshold does its job.** The 18 bets that cleared it returned +18.4%; the
+42 that did not returned about -17% either way. That is not a subtle gradient —
+the bets above the line paid and the bets below it did not, on a sample large
+enough to take seriously.
 
-    Fenerbahçe (team)  O1.5   paid 1.32  needed 1.546   -14.6%
-    Genoa (team)       U1.5   paid 1.18  needed 1.332   -11.4%
-    Sanfrecce          O2.25  paid 1.35  needed 1.482    -8.9%
-    Al-Fateh           O2.5   paid 1.50  needed 1.631    -8.1%
-    Espanyol           O1.5   paid 1.17  needed 1.258    -7.0%
-    UTC                U3.5   paid 1.19  needed 1.239    -4.0%
-    Fluminense         O1.5   paid 1.33  needed 1.376    -3.3%
-    Toulouse           U4.5   paid 1.12  needed 1.139    -1.7%
-    Al-Shabab (team)   O0.5   paid 1.23  needed 1.238    -0.6%
-    Saint-Étienne      U4.5   paid 1.15  needed 1.155    -0.4%
-    Huachipato         U4.5   paid 1.16  needed 1.164    -0.4%
+The most useful column is the middle one. **`thin` bets are positive expected
+value** — above break-even, below break-even plus 5% — and they returned
+**-17.6%**, essentially the same as the negative-EV bucket. A 2% edge does not
+survive an ordinary day's variance. The margin is not a nicety; it is the
+difference between a bet that pays and a bet that merely is not stupid.
 
-Six of those eleven **won**, which is exactly why the problem stayed invisible.
-`Espanyol O1.5` at 1.17 won and was still a bad buy; `Genoa U1.5` at 1.18 won
-and was 11.4% under water. A won bet at a losing price is a losing bet that got
-away with it.
+**26 of 70 were bought below break-even**, negative by the engine's own number
+whatever the match did. The worst are all the same shape:
 
-Split by whether the price cleared the threshold:
+    Cerezo Osaka v Shimizu   O1.5   paid 1.22  needed 1.345   -9.3%
+    Sanfrecce v Kawasaki     O2.25  paid 1.35  needed 1.483   -9.0%
+    Al-Ahli v Abha           O1.5   paid 1.10  needed 1.203   -8.6%
+    Al-Fateh v Al-Ettifaq    O2.5   paid 1.50  needed 1.633   -8.1%
+    Fagiano Okayama          U3.25  paid 1.19  needed 1.288   -7.6%
+    Espanyol v Real Madrid   O1.5   paid 1.17  needed 1.258   -7.0%
+    Everton v Crystal Palace U3.5   paid 1.33  needed 1.412   -5.8%
+    Preston v Wolves         O1.5   paid 1.22  needed 1.294   -5.7%
+    Fenerbahçe (team)        O1.5   paid 1.32  needed 1.546  -14.6%
+    Genoa (team)             U1.5   paid 1.18  needed 1.332  -11.4%
 
-    bought AT or ABOVE buy-from   13 bets,  7 settled, ROI  +3.1%
-    bought BELOW it               16 bets, 12 settled, ROI -13.8%
+Many of them **won**, which is exactly why the habit survived a whole day
+unnoticed. `Al-Ahli O1.5` at 1.10 won. `Preston O1.5` at 1.22 won. `Everton
+U3.5` at 1.33 won. Each was a losing bet that got away with it, and the hit-rate
+column recorded all three as successes.
 
-The +3.1% rests on seven bets and proves nothing on its own — it was +16.0%
-three bets ago and fell when `Empoli O1.5` lost, which is what a seven-bet
-sample does. The **-13.8% on twelve** is the half that does not need a large
-sample, because it is not really a measurement — pay less than break-even often
-enough and the arithmetic does the rest.
+**The two team lanes are the widest misses in the book** and they are worth
+separating from the rest. `Fenerbahçe O1.5` at 1.32 needed 1.546; `Genoa U1.5`
+at 1.18 needed 1.332. Both won. Meanwhile `Basel O1.5` at 1.83 needed 1.269 and
+`Troyes U1.5` at 1.48 needed 1.264 — the same lane, the same engine, the same
+read quality, bought properly. **The team lane is not the problem; buying a 65%
+claim at an 85% price is.**
 
-**Two patterns account for almost all of it.** The first is buying the favourite
-rung at a short price: `U4.5` at 1.12–1.16 and `O1.5` at 1.17 are bets on 85%+
-reads where the book leaves nothing on the table. The tip is right and the price
-is not, and four of the eleven are this. The second is team lanes bought at
-match-lane prices: `Genoa U1.5` at 1.18 and `Fenerbahçe O1.5` at 1.32 are 75%
-and 65% claims priced as if they were 85% ones — the two worst buys in the book,
-and both won, which is how the lane escaped scrutiny.
+#### On cash-outs
 
-**What did work.** `Basel O1.5` at 1.83 against a break-even of 1.269 is the
-single best buy in the log and it landed. `Troyes U1.5` at 1.48 against 1.264
-is the second. Both are the same lane that produced `Genoa` and `Fenerbahçe` —
-the difference is entirely the price paid, not the read.
+Five positions were closed early and the ledger flags them. They are scored as
+if held to full time, because that is what tests the TIP — but it is not what
+happened to the money, and the bookmaker export does not carry the amount
+taken, so the two cannot be reconciled here.
+
+What the flags do show is that **all four of the cashed-out winners would have
+won anyway**:
+
+    Al-Khaleej v Al-Shabab   U4.5   1.16   cashed out — finished 0-0, would have won
+    Fenerbahçe v Konyaspor   O1.5   1.13   cashed out — finished 3-1, would have won
+    Zürich v Basel           O2.5   1.52   cashed out — finished 1-2, would have won
+    Three Towns v Jinmen     O1.5   1.25   cashed out — finished 0-0, would have LOST
+    Fortuna Sittard v AZ     O2.5   1.53   cashed out — finished 0-2, would have LOST
+
+Three of those four winners were cashed out at 20:23 to fund the team-lane
+swaps, and that trade is now fully settled: `Basel O1.5` at 1.83 won,
+`Fenerbahçe O1.5` at 1.32 won, `Al-Shabab O0.5` at 1.23 lost. Two from three,
+against three certain-ish winners given up. Only the Basel leg was clearly
+right on price, and it was flagged as such before kickoff.
+
+The two cash-outs that rescued money — Three Towns and Fortuna Sittard — were
+both on bets heading for a full loss, so exiting was correct there.
 
 #### Every tip now carries a "buy from" price
 
