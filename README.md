@@ -10,46 +10,46 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 0-1** (74') | Ekstraklasa | Piast v Legia | O1.5 84.9% +8.8% | O2.25 65.2% +13.4% (floor −13.8) | 2026-08-22 17:30 |
-| **LIVE: 0-0** (60') | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
-| **LIVE: 2+ goals** ✅ | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
+| **LIVE: 0-1** (74') | Ekstraklasa | Piast v Legia | O1.5 84.9% +8.8% | **Legia O1.5** 55.4% +22.0% (team) | 2026-08-22 17:30 |
+| **LIVE: 0-0** (60') | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | **Al-Ettifaq O1.5** 56.9% +18.7% (team) | 2026-08-22 17:45 |
+| **LIVE: 2+ goals** ✅ | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | **Samsunspor O0.5** 83.5% +14.1% (team) | 2026-08-22 18:00 |
 | **LIVE: 0-1** (HT) | Süper Lig | Çorum v Kasımpaşa | **NO TIP** — 1 match | — | 2026-08-22 18:00 |
 | **LIVE: 1-0** (46') | Swiss Super League | Luzern v Lausanne | O1.5 81.6% +2.7% | O2.25 60.0% +4.1% (floor −19.0) | 2026-08-22 18:00 |
-| **LIVE: 0-1** (HT) | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge) | 2026-08-22 18:00 |
-| **LIVE: 3-0** (HT) | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | U4.25 91.4% +9.5% (lower edge) | 2026-08-22 18:10 |
-| **LIVE: 1-0** (HT) | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **U3.75 78.7% +8.7%** (floor −0.3) | 2026-08-22 18:15 |
+| **LIVE: 0-1** (HT) | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | **Moquegua U1.5** 83.7% +11.3% (team) | 2026-08-22 18:00 |
+| **LIVE: 3-0** (HT) | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | **Al-Kholood U1.5** 77.2% +22.1% (team) | 2026-08-22 18:10 |
+| **LIVE: 1-0** (HT) | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **Mechelen U1.5** 76.7% +11.1% (team) | 2026-08-22 18:15 |
 | **LIVE: 2-0** (33') | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% | **U3.75 77.7% +12.7%** (floor −1.3) | 2026-08-22 18:30 |
-| **LIVE: 1-1** (30') | Serie A | Inter v Monza | U4.25 84.9% −3.8% | **O1.75 76.8% +4.9%** (floor −2.2) | 2026-08-22 18:30 |
-| **LIVE: 1-0** (30') | Serie A | Udinese v Como | O1.5 80.4% +8.5% | O2.25 58.2% +11.8% (floor −20.8) | 2026-08-22 18:30 |
-| **LIVE: 0-1** (18') | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | — none | 2026-08-22 18:45 |
+| **LIVE: 1-1** (30') | Serie A | Inter v Monza | U4.25 84.9% −3.8% | **Inter O1.5** 58.9% +19.0% (team) | 2026-08-22 18:30 |
+| **LIVE: 1-0** (30') | Serie A | Udinese v Como | O1.5 80.4% +8.5% | **Como O0.5** 82.6% +14.4% (team) | 2026-08-22 18:30 |
+| **LIVE: 0-1** (18') | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | **Utrecht O1.5** 59.5% +18.2% (team) | 2026-08-22 18:45 |
 | **LIVE: 0-0** (1') | Serie B | Carrarese v Mantova | U3.0 74.2% −1.2% — **no rung cleared the floor** | O1.75 72.7% +1.1% (floor −6.3) | 2026-08-22 19:00 |
-| **LIVE: 0-0** (2') | Serie B | Südtirol v Entella | U3.0 87.1% +11.8% | U2.75 69.9% +15.9% (floor −9.1) | 2026-08-22 19:00 |
+| **LIVE: 0-0** (2') | Serie B | Südtirol v Entella | U3.0 87.1% +11.8% | **Südtirol U1.5** 80.9% +21.8% (team) | 2026-08-22 19:00 |
 | **LIVE: 0-0** (2') | LaLiga 2 | Ceuta v Las Palmas | U4.25 90.6% +1.1% | **U3.75 78.2% +1.8%** (floor −0.8) | 2026-08-22 19:00 |
-| **LIVE: 0-0** (1') | LaLiga 2 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% | **U3.75 78.0% +1.5%** (floor −1.0) | 2026-08-22 19:00 |
+| **LIVE: 0-0** (1') | LaLiga 2 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% | **Real Sociedad B U1.5** 75.6% +4.1% (team) | 2026-08-22 19:00 |
 | **LIVE: 0-0** (1') | Liga Portugal | Estoril v Rio Ave | U3.0 82.8% +11.3% | U4.25 93.2% +6.9% (lower edge) | 2026-08-22 19:00 |
 | — not started | LaLiga | Valencia v Celta | U4.25 87.1% +0.3% | — none | 2026-08-22 19:30 |
-| — not started | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | **O1.75 74.7% +2.9%** (floor −4.3) | 2026-08-22 20:00 |
-| — not started | Saudi Pro League | Al-Ahli v Abha | O1.5 83.1% +3.3% | O2.25 62.3% +5.1% (floor −16.7) | 2026-08-22 20:00 |
-| — not started | Saudi Pro League | Al-Khaleej v Al-Shabab | U4.25 86.1% +4.3% | U3.75 71.2% +6.0% (floor −7.8) | 2026-08-22 20:00 |
+| — not started | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | **Saint-Étienne O0.5** 82.0% +8.7% (team) | 2026-08-22 20:00 |
+| — not started | Saudi Pro League | Al-Ahli v Abha | O1.5 83.1% +3.3% | **Al-Ahli O1.5** 61.5% +16.6% (team) | 2026-08-22 20:00 |
+| — not started | Saudi Pro League | Al-Khaleej v Al-Shabab | U4.25 86.1% +4.3% | **Al-Shabab O0.5** 80.8% +8.1% (team) | 2026-08-22 20:00 |
 | — not started | Ekstraklasa | Śląsk v Widzew | U3.0 84.3% +14.1% | U4.25 94.0% +8.5% (lower edge) | 2026-08-22 20:15 |
-| — not started | Peru Liga 1 | UTC v Comerciantes Unidos | U3.0 80.7% +7.1% | U4.25 92.0% +4.3% (lower edge) | 2026-08-22 20:15 |
-| — not started | Süper Lig | Fenerbahçe v Konyaspor | O1.5 87.7% +10.6% | O2.25 70.2% +16.9% (floor −8.8) | 2026-08-22 20:30 |
-| — not started | Swiss Super League | Zürich v Basel | **O2.25 83.5% +27.6%** | O1.75 94.2% +15.3% (lower edge) | 2026-08-22 20:30 |
+| — not started | Peru Liga 1 | UTC v Comerciantes Unidos | U3.0 80.7% +7.1% | **UTC U1.5** 76.8% +24.1% (team) | 2026-08-22 20:15 |
+| — not started | Süper Lig | Fenerbahçe v Konyaspor | O1.5 87.7% +10.6% | **Fenerbahçe O1.5** 64.7% +18.0% (team) | 2026-08-22 20:30 |
+| — not started | Swiss Super League | Zürich v Basel | **O2.25 83.5% +27.6%** | **Basel O1.5** 78.8% +46.4% (team) | 2026-08-22 20:30 |
 | — not started | Ligue 1 | Le Mans v Brest | **NO TIP** — 0 matches | — | 2026-08-22 20:45 |
-| — not started | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% | U4.25 92.0% +7.7% (lower edge) | 2026-08-22 20:45 |
+| — not started | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% | **Nice U1.5** 76.3% +21.1% (team) | 2026-08-22 20:45 |
 | — not started | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% | U3.75 73.7% +5.1% (floor −5.3) | 2026-08-22 20:45 |
-| — not started | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% | **U3.75 78.4% +9.8%** (floor −0.6) | 2026-08-22 20:45 |
-| — not started | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% | **U3.75 78.3% +3.2%** (floor −0.7) | 2026-08-22 20:45 |
-| — not started | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% | U4.25 95.8% +7.1% (lower edge) | 2026-08-22 20:45 |
-| — not started | Belgian Pro League | Antwerp v Genk | O1.5 82.5% +6.3% | O2.25 61.5% +9.3% (floor −17.5) | 2026-08-22 20:45 |
+| — not started | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% | **Troyes U1.5** 79.1% +23.9% (team) | 2026-08-22 20:45 |
+| — not started | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% | **Genoa U1.5** 75.1% +15.0% (team) | 2026-08-22 20:45 |
+| — not started | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% | **Parma U1.5** 81.6% +21.5% (team) | 2026-08-22 20:45 |
+| — not started | Belgian Pro League | Antwerp v Genk | O1.5 82.5% +6.3% | **Genk O0.5** 81.0% +11.6% (team) | 2026-08-22 20:45 |
 | — not started | Serie B | Benevento v Modena | U3.0 82.2% +6.9% | U2.75 62.7% +8.8% (floor −16.3) | 2026-08-22 21:00 |
-| — not started | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% | O2.25 59.5% +13.4% (floor −19.5) | 2026-08-22 21:00 |
+| — not started | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% | **Cremonese O0.5** 83.3% +14.5% (team) | 2026-08-22 21:00 |
 | — not started | Serie B | Avellino v Arezzo | O1.5 76.9% +5.3% — **below the floor** | — none | 2026-08-22 21:00 |
 | — not started | Eredivisie | Heerenveen v Zwolle | U4.25 84.5% +5.2% | U3.75 68.8% +7.0% (floor −10.2) | 2026-08-22 21:00 |
 | — not started | Brasileirão | Fluminense v Remo | U4.25 88.2% −0.7% | O1.75 72.7% +1.0% (floor −6.3) | 2026-08-22 21:00 |
-| — not started | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% | O2.25 56.8% +7.2% (floor −22.2) | 2026-08-22 21:30 |
-| — not started | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% | U4.25 94.8% +5.2% (lower edge) | 2026-08-22 21:30 |
-| — not started | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% | O2.25 63.8% +13.2% (floor −15.2) | 2026-08-22 21:30 |
+| — not started | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% | **Real Madrid O0.5** 83.6% +14.9% (team) | 2026-08-22 21:30 |
+| — not started | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% | **Cádiz U1.5** 77.5% +5.9% (team) | 2026-08-22 21:30 |
+| — not started | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% | **Sporting O1.5** 64.5% +22.3% (team) | 2026-08-22 21:30 |
 
 ## Completed FUTURE match bettips: Tip 1 89.5% hit · Tip 2 76.2% hit
 
@@ -792,6 +792,39 @@ enough that the skips cost more than they saved.
   the largest margin over a fair price anywhere in the log, and it comes from
   the split-name fix: without merging `Zurich` onto `FC Zürich` the fixture had
   no tip at all an hour earlier.
+
+- **Tip 2 re-derived at 21:00 with team totals in the candidate set.** Twenty-six
+  of the 38 pending fixtures moved to a team lane; twelve kept their match-ladder
+  rung, which is the check that it is not simply replacing everything. **Tip 1 is
+  byte-identical on all 38** — the team-total module is only ever consulted for
+  the runner-up.
+
+  The lanes are written with the club named rather than `TA`/`TB`, because a bet
+  slip says "Legia Over 1.5" and an abbreviation in the wrong column is how a
+  wrong bet gets placed.
+
+  Recorded honestly: these are **revised** second lanes, not the ones issued
+  before kickoff. The completed table keeps whatever was published at the time,
+  so the Tip 2 hit rate stays a record of what was actually called rather than
+  what a model built afterwards would have called.
+
+- **Two live fixtures already show the floors blocking their own best read.**
+  `Brentford v Tottenham` offered no team total because `Brentford U1.5` sat at
+  69.9% against a 0.75 floor — while carrying **+18.71%** edge, the largest
+  number on that fixture. `Toulouse v Lyon` blocked three positive-edge rungs the
+  same way, the best of them **+12.32%** against a match ladder whose own best
+  was +5.62%.
+
+  The cause is a design choice I got wrong: **the gate is on probability, but the
+  thing measured was edge.** The two correlate across 26,750 side-observations,
+  which is why the floors looked sound, and a proxy that holds on average still
+  discards individual cases — here, exactly the low-signal fixtures the idea was
+  built for.
+
+  The counter-evidence arrived within the hour: Brentford's blocked `U1.5` is
+  **already dead at 2-0**. So the fix is probably not a lower floor but a
+  two-condition gate — a lower probability floor with an edge floor doing the
+  real work. Unmeasured, and therefore unshipped.
 
 ### Notes on the log
 
