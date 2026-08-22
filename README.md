@@ -82,6 +82,16 @@
 | ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 81% +21.7% | ✅ U4.25 98% +6.7% | 2026-08-22 |
 | ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 82% +12.6% | ✅ U4.25 93% +7.8% | 2026-08-22 |
 
+
+### Actual placed bets
+
+**Win: 0 / 0 — · Pending: 25 / 25**
+
+Tracks what was actually staked, which is not the same as what was tipped. Of
+the 33 tipped fixtures on 22 Aug, 25 were backed, 8 skipped on price. Several
+were taken at Tip 2 rather than Tip 1, and a few at a line between the two, so
+this record grades the bet placed rather than the tip issued.
+
 ---
 
 ### Notes on the log
