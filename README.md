@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 92.0%
+## CURRENT CONFIRMED HITRATE: 88.2%
 
-**23 / 25 settled** · over/under markets only · live tips, not backtests
+**30 / 34 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,26 +10,17 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 3-2** (89') ❌ | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 11:00 |
-| **LIVE: 0-0** (60') | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 11:30 |
-| **LIVE: 1-1** (HT) ✅ | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | O2.75 63.3% +16.2% (floor −15.7) | 2026-08-22 12:00 |
-| **LIVE: 0-2** (HT) | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 12:00 |
-| **LIVE: 0-0** (HT) | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
-| **LIVE: 1-0** (30') | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | O2.75 60.2% +13.0% (floor −18.8) · **backed O2.25 @ 1.35** | 2026-08-22 12:15 |
-| **LIVE: 1-0** (17') | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | O1.75 74.7% +2.2% (floor −4.3) | 2026-08-22 12:30 |
-| — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none · **traded out for Al-Fateh** | 2026-08-22 13:00 |
-| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | O2.75 59.4% +11.9% (floor −19.6) | 2026-08-22 13:30 |
-| — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 13:30 |
-| — not started | Premier League | Hull v Man United | **WITHHELD** — form from 2017 | — | 2026-08-22 13:30 |
-| — not started | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 13:30 |
-| — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% | U4.25 93.8% +14.6% (lower edge) | 2026-08-22 13:35 |
-| — not started | Chinese Super League | Chengdu v Shenhua | O1.5 82.1% +0.2% | — none | 2026-08-22 13:35 |
-| — not started | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% | O1.75 93.1% +11.1% (lower edge) | 2026-08-22 14:00 |
-| — not started | Ligue 2 | Nantes v Rodez | U4.25 88.4% −0.3% | — none | 2026-08-22 14:00 |
-| — not started | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% | **O1.75 78.8% +6.9%** (floor −0.2) | 2026-08-22 14:00 |
-| — not started | Chinese Super League | Qingdao v Taishan | **WITHHELD** — form 1,682d old | — | 2026-08-22 14:00 |
-| — not started | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.75 72.9% +2.7% (floor −6.1) | 2026-08-22 14:45 |
-| — not started | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | U4.25 92.1% +9.2% (lower edge) | 2026-08-22 15:00 |
+| **LIVE: 1-1** (85') | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 13:30 |
+| **LIVE: 2-0** (84') | Premier League | Hull v Man United | **WITHHELD** — form from 2017 | — | 2026-08-22 13:30 |
+| **LIVE: 1-3** (84') | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 13:30 |
+| **LIVE: 0-0** (HT) | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% | U4.25 93.8% +14.6% (lower edge) | 2026-08-22 13:35 |
+| **LIVE: 2-5** (76') | Chinese Super League | Chengdu v Shenhua | O1.5 82.1% +0.2% | — none | 2026-08-22 13:35 |
+| **LIVE: 2-0** (52') | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% | O1.75 93.1% +11.1% (lower edge) | 2026-08-22 14:00 |
+| **LIVE: 2-2** (52') | Ligue 2 | Nantes v Rodez | U4.25 88.4% −0.3% | — none | 2026-08-22 14:00 |
+| **LIVE: 0-1** (54') | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% | **O1.75 78.8% +6.9%** (floor −0.2) | 2026-08-22 14:00 |
+| **LIVE: 1-0** (52') | Chinese Super League | Qingdao v Taishan | **WITHHELD** — form 1,682d old | — | 2026-08-22 14:00 |
+| **LIVE: 1-0** (27') | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.75 72.9% +2.7% (floor −6.1) | 2026-08-22 14:45 |
+| **LIVE: 0-0** (11') | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | U4.25 92.1% +9.2% (lower edge) | 2026-08-22 15:00 |
 | — not started | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 16:00 |
 | — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.75 77.7% +7.7% (floor −1.3) | 2026-08-22 16:00 |
 | — not started | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.75 70.9% +5.9% (floor −8.1) | 2026-08-22 16:00 |
@@ -50,9 +41,9 @@
 | — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
 | — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) · **backed O2.5 @ 1.50** | 2026-08-22 17:45 |
 
-## Completed FUTURE match bettips: Tip 1 92.0% hit · Tip 2 80.0% hit
+## Completed FUTURE match bettips: Tip 1 88.2% hit · Tip 2 73.9% hit
 
-**Tip 1 — 23 / 25**   ·   **Tip 2 — 12 / 15** (10 fixtures offered no second tip)
+**Tip 1 — 30 / 34**   ·   **Tip 2 — 17 / 23** (11 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
@@ -81,11 +72,20 @@
 | ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 88% +7.8% | ✅ U4.25 96% +4.1% | 2026-08-21 |
 | ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 81% +21.7% | ✅ U4.25 98% +6.7% | 2026-08-22 |
 | ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 82% +12.6% | ✅ U4.25 93% +7.8% | 2026-08-22 |
+| ❌ MISS — 3-2 | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | ✅ O1.75 73.6% +1.2% | 2026-08-22 |
+| ✅ HIT — 0-0 | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | ✅ U4.25 91.6% +3.3% | 2026-08-22 |
+| ✅ HIT — 1-0 | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | ❌ O1.75 74.4% +2.0% | 2026-08-22 |
+| ❌ MISS — 1-3 | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | ✅ U4.25 92.7% +4.4%, half win | 2026-08-22 |
+| ✅ HIT — 3-1 | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | ✅ O2.75 63.3% +16.2% | 2026-08-22 |
+| ✅ HIT — 1-1 | J1 League | Sanfrecce Hiroshima v Kawasaki Frontale | O1.5 81.7% +9.2% | ❌ O2.75 60.2% +13.0% | 2026-08-22 |
+| ✅ HIT — 1-0 | J1 League | Yokohama F. Marinos v Vissel Kobe | U4.25 86.7% −1.6% | ❌ O1.75 74.7% +2.2% | 2026-08-22 |
+| ✅ HIT — 0-0 | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none offered | 2026-08-22 |
+| ✅ HIT — 3-0 | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | ✅ O2.75 59.4% +11.9%, half win | 2026-08-22 |
 
 
 ### Actual placed bets
 
-**Win: 2 / 2 — 100%  ·  Pending: 24 / 26  ·  Average odds: ≈1.33**
+**Win: 4 / 8 — 50%  ·  Pending: 18 / 26  ·  Average odds: ≈1.33**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -163,34 +163,48 @@ longer price.** Whether they land says nothing on its own; what they start is th
 separate column that has to be kept from here, because mixing 60% bets into a 92%
 hit rate without marking them makes the headline number mean two things at once.
 
-#### Graded so far — the answer is yes, once, and clearly
+#### Graded so far — the lane deviations are LOSING, and the rule I proposed is dead
 
-| Fixture | Tip 1 | Lane taken | Result |
-|---|---|---|---|
-| Kashima v Fukuoka | `U4.25` 87.5% **−0.8%** ❌ | `O1.5` (middle, toward Tip 2's `O1.75`) | 3-2 · **saved** |
-| Nagoya v Gamba | `O1.5` 83.7% +11.2% ✅ | `O1.5` (Tip 1 exactly) | 1-1 · won on the tip |
+Eight placed bets have settled. Four won. Had every one of them simply been the
+published Tip 1, six would have won:
 
-**Kashima is the first case of the lane choice paying for itself.** The published
-Tip 1 was a `U4.25` needing four goals or fewer; the match finished on five, so
-the tip lost outright. The bet placed was an `O1.5` on the opposite side of the
-book, and it settled inside 57 minutes.
+    bet as placed      4 / 8      50%
+    Tip 1 as published 6 / 8      75%
 
-Nothing about that was luck, and the engine flagged it in advance: **Tip 1
-carried a negative edge of −0.8%.** A `U4.25` at a minus sign is not a read, it
-is the selector's fallback — the rung it reaches for when nothing on the ladder
-beats a typical fixture in that league. Tip 2 pointed the other way at +1.2%, and
-the other way was right.
+| Fixture | Tip 1 | Lane taken | Total | Tip 1 | Bet |
+|---|---|---|---|---|---|
+| Kashima v Fukuoka | `U4.25` 87.5% −0.8% | `O1.5` middle | 5 | ❌ | ✅ **saved** |
+| Okayama v Verdy | `U3.0` 79.9% +5.5% | `U3.25` Tip 1 | 0 | ✅ | ✅ |
+| Cerezo v Shimizu | `U4.25` 86.9% −1.5% | `O1.5` middle | 1 | ✅ | ❌ **cost** |
+| Kyoto v Mito | `U3.0` 81.9% +7.4% | `U3.5` middle | 4 | ❌ | ❌ |
+| Nagoya v Gamba | `O1.5` 83.7% +11.2% | `O1.5` Tip 1 | 4 | ✅ | ✅ |
+| Sanfrecce v Kawasaki | `O1.5` 81.7% +9.2% | `O2.25` middle | 2 | ✅ | ❌ **cost** |
+| Yokohama v Vissel | `U4.25` 86.7% −1.6% | `O1.5` middle | 1 | ✅ | ❌ **cost** |
+| Millwall v Norwich | `O1.5` 81.2% +8.4% | `O1.5` Tip 1 | 3 | ✅ | ✅ |
 
-This is now twice in two days in the same competition:
+Deviating from Tip 1 rescued **one** bet and cost **three**. Every one of the
+three losses is the same shape: Tip 1 said Under, the second lane said Over, the
+match finished on one or two goals, and the Over was bought.
 
-    Kashiwa v Nagasaki  21 Aug   Tip 1 U4.25 86.0%  edge −2.3%   4-2, six goals   MISS
-    Kashima v Fukuoka   22 Aug   Tip 1 U4.25 87.5%  edge −0.8%   3-2, five goals  MISS
+**And the rule proposed earlier today is refuted by the same batch.** After
+Kashima I wrote that a `U4.25` at negative edge is a fallback rather than a read,
+and that the second lane is the actual signal. Two more settled hours later:
 
-Both Tip 1 misses in J1 are negative-edge `U4.25` fallbacks, and on both the
-Over lane was available and correct. Two cases is an observation, not a finding —
-but it is the sharpest candidate rule the live log has produced: **when Tip 1 is
-a `U4.25` at negative edge, the second lane is not an alternative, it is the
-actual read.**
+    Kashima v Fukuoka    U4.25  −0.8%   5 goals   ❌ Tip 1 wrong, Over right
+    Cerezo v Shimizu     U4.25  −1.5%   1 goal    ✅ Tip 1 RIGHT, Over wrong
+    Yokohama v Vissel    U4.25  −1.6%   1 goal    ✅ Tip 1 RIGHT, Over wrong
+
+Across the whole log, negative-edge `U4.25` tips stand at **6 hits from 8**, or
+75% — barely below the book average and nowhere near a signal to fade. One
+observation became a rule in a single afternoon and was dead by evening, which is
+the sixth time in this project that something promising turned out to be noise.
+The pattern that keeps repeating is not about football, it is about sample size:
+**two cases never justified the word "rule", and writing it down as one was the
+mistake, not the reading of Kashima.**
+
+What survives is smaller and duller. Tip 1 is running at 88.2% over 34 settled
+tips; the lanes taken instead are running at 50% over 8. Until there is a
+measured reason to leave it, the published tip is the bet.
 
 **2. Did skipping help?** Six tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
 
