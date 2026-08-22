@@ -22,6 +22,19 @@
 | — not started | Peru Liga 1 | Deportivo Garcilaso v Cusco | U4.25 86.4% −1.3% · buy≥1.23 | O1.75 75.0% +1.7% (floor −4.0) · buy≥1.47 | 2026-08-23 02:00 |
 | — not started | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% · buy≥1.26 | O2.25 62.7% +10.3% (floor −16.3) · buy≥1.50 | 2026-08-23 02:00 |
 | — not started | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% · buy≥1.40 | — none | 2026-08-23 03:15 |
+| — not started | MLS | Montréal v LA Galaxy | **U3.0 79.1% +15.9%** · buy≥1.42 | U4.25 91.2% +10.7% (lower edge) · buy≥1.16 | 2026-08-23 01:30 |
+| — not started | MLS | Charlotte v DC United | O1.5 83.7% +2.7% · buy≥1.25 | O2.25 63.3% +4.2% (floor −15.7) · buy≥1.49 | 2026-08-23 01:30 |
+| — not started | MLS | Cincinnati v Seattle | O1.5 88.4% +7.3% · buy≥1.19 | **Cincinnati O1.5** 79.1% +27.0% (team) · buy≥1.33 | 2026-08-23 01:30 |
+| — not started | MLS | Inter Miami v Toronto | **O1.5 89.8% +8.7%** · buy≥1.17 | **Inter Miami O1.5** 76.8% +24.7% (team) · buy≥1.37 | 2026-08-23 01:30 |
+| — not started | MLS | NY Red Bulls v Chicago | O1.5 84.6% +3.5% · buy≥1.24 | **Chicago O1.5** 55.6% +16.5% (team) · buy≥1.89 | 2026-08-23 01:30 |
+| — not started | MLS | Orlando v Salt Lake | O1.5 84.8% +3.8% · buy≥1.24 | O2.25 65.1% +6.0% (floor −13.9) · buy≥1.45 | 2026-08-23 01:30 |
+| — not started | MLS | Nashville v Columbus | O1.5 88.2% +7.2% · buy≥1.19 | **Nashville O1.5** 65.8% +13.7% (team) · buy≥1.59 | 2026-08-23 02:30 |
+| — not started | MLS | St. Louis v Houston | O1.5 85.9% +4.9% · buy≥1.22 | O2.25 67.1% +8.0% (floor −11.9) · buy≥1.42 | 2026-08-23 02:30 |
+| — not started | MLS | Austin v Philadelphia | O1.5 82.4% +1.4% · buy≥1.27 | **Philadelphia O1.5** 59.3% +20.2% (team) · buy≥1.77 | 2026-08-23 03:00 |
+| — not started | MLS | Vancouver v Dallas | O1.5 88.8% +7.7% · buy≥1.18 | **Dallas O1.5** 59.5% +20.4% (team) · buy≥1.77 | 2026-08-23 03:30 |
+| — not started | MLS | Los Angeles FC v Portland | O1.5 88.9% +7.8% · buy≥1.18 | **Portland O1.5** 60.7% +21.6% (team) · buy≥1.73 | 2026-08-23 04:30 |
+| — not started | MLS | San Diego v Colorado | U4.25 84.5% +4.1% · buy≥1.26 | **Colorado U1.5** 78.3% +17.4% (team) · buy≥1.34 | 2026-08-23 04:30 |
+| — not started | MLS | San Jose v Minnesota | U4.25 82.5% +2.1% · buy≥1.30 | U3.75 66.1% +2.8% (floor −12.9) · buy≥1.46 | 2026-08-23 04:30 |
 
 ## Completed FUTURE match bettips: Tip 1 85.3% hit · Tip 2 74.0% hit
 
@@ -1570,6 +1583,35 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
   **One more feed-side abbreviation surfaced on the overnight Colombian slate.** `Ind. Medellín v Cúcuta` returned no tip, and only the first half of the name was at fault: the resolver strips accents perfectly well — `Cucuta` and `Cúcuta` both find `Cúcuta Deportivo` (448 rows, last 2026-08-19) — but `Ind.` is an abbreviation of `Independiente` and shares no scoreable text with it, exactly the `QPR` failure in a different alphabet. One entry added; the fixture prices at `U3.0` 80.1%. Worth stating that this is the *second* time an abbreviated prefix has cost a fixture, and both times the store already held a full, recent history.
 
   None of these is a naming fault, and no alias can help — there is nothing in the store to alias *to*. `Marítimo v Académico Viseu` is correct as logged: the store holds exactly two rows mentioning Viseu (Benfica 2-2 on 09 Aug, Viseu 0-1 Santa Clara on 15 Aug) and nothing under any other spelling. The fix is a second-tier source per country plus cross-division lookup — the same feature Hull and Ipswich need, approached from the other side.
+
+- **MLS is split nine ways, and it is the benign form of the defect.** The 2026
+  provider break hits `Atlanta`, `Montréal`, `Charlotte`, `DC United`, `Inter
+  Miami`, `Minnesota`, `New York City`, `New York Red Bulls` and `St. Louis`.
+  Each club now has a short-name variant carrying exactly **20 rows ending
+  2026-08-20** and a long-name variant carrying the deep history and stopping
+  **2025-05-03**:
+
+      D.C. United        679 rows -> 2025-05-03      DC United      20 -> 2026-08-20
+      New York RB        673 rows -> 2025-05-03      NY Red Bulls   20 -> 2026-08-20
+      Minnesota Utd FC   277 rows -> 2025-05-03      Minnesota Utd  20 -> 2026-08-20
+
+  **Checked before pricing the slate, and every feed name resolves to the
+  CURRENT variant**, not the stale one — the worst case here would have been
+  `Montréal` landing on `Impact de Montréal`, 305 rows ending 2020-11-20, and it
+  does not. So the split costs *depth*, not *recency*, and this project ranks
+  recency first: 20 rows is comfortably above the history gate and the form
+  window takes the last 10, all of which are 2026 matches.
+
+  **Deliberately not merged.** The served variant holds 20 rows, four times the
+  merge gate, so folding the history in WOULD change tips that are already
+  issued and backed — the opposite of the safety property the Poland and
+  Switzerland merges were accepted on. It also only adds seasons the project
+  calls "nice to have". Worth doing when the board is clear, not mid-slate.
+
+  Two names failed to resolve at all and are now aliased: `LA Galaxy` →
+  `Los Angeles Galaxy` and `NY Red Bulls` → `New York Red Bulls`. Note that
+  `Los Angeles` alone correctly resolves to `Los Angeles FC`, so the Galaxy
+  entry is load-bearing rather than cosmetic.
 
 - **`Piast v Legia` — confirmed a true split, and it is league-wide.** `Legia` holds 4 rows (2026-07-24 → 2026-08-14) and `Legia Warszawa` holds 68 (2023-07-21 → 2025-05-24). One club, 72 matches, and the engine sees 4. The same 2026-provider break splits **26 further clubs across Denmark, Mexico, Poland, Russia and Switzerland** — `CF Monterrey` 587 rows vs `Monterrey` 4, `CF Pachuca` 558 vs `Pachuca` 4, `FC Zürich` 220 vs `Zurich` 3. Those leagues have no fixtures in the current window, so nothing is being lost today, but every one of them would tip off three or four matches the moment their fixtures load.
 
