@@ -244,19 +244,43 @@ The hit rate moves much further than the ROI does, which matters here: this log
 is optimised for strike rate, and **+8.4 points of hit rate for +1.8 of ROI is
 the trade the project actually wants.**
 
-**And the price is available, which was the obvious objection.** Safer rungs are
-short, and books are supposed to be stingiest there. Measured against the real
-bet book, the opposite holds:
+**The price is NOT available, and this kills the idea.** The supporting figure
+first written here was wrong: it quoted the margin offered in the **1.15–1.24**
+fair-price band, which is where the TIPS price. The tier-jump alternatives price
+far shorter than that. Across the 54 fixtures where a jump exists:
 
-    fair price     n   avg margin offered   reached +5%
-    under 1.15     6         +3.6%             2/6
-    1.15-1.24     33         +6.5%            15/33
-    1.25-1.34     21         +2.6%             5/21
-    1.35+         10         -1.7%             2/10
+    break-even   price needed at +5%    n
+    1.00-1.08         1.05-1.13        43
+    1.08-1.12         1.13-1.18        10
+    1.12-1.16         1.18-1.22         1
 
-The most generous band is **1.15–1.24**, exactly where the safer rungs sit. The
-stingiest is 1.35+, where the tips themselves price. Whatever else is true, the
-bookmaker is leaving more on the table at short prices than at long ones.
+    median break-even 1.060  ->  need 1.112 to clear +5%
+    93% would need a price of 1.15 or lower
+     2% would need a price above 1.20
+
+**One fixture out of 54** — Carrarese v Mantova, `U3.0` → `U4.25` — would have
+needed as much as 1.20. Everything else sits in territory where the bookmaker's
+margin on a 94% shot consumes the entire edge, and in practice those lines are
+either unquoted or priced under 1.15 with nothing left in them.
+
+That is the correct band to have looked at all along: the **under 1.15** row of
+the table above offered **+3.6%** average margin on 6 observations, the thinnest
+in the book — not the +6.5% that was quoted here.
+
+**So the simulation was fantasy.** The +1.84 points assumed break-even + 5% was
+obtainable on every rung, and that assumption fails precisely where this
+strategy needs it. The measured boundary miscalibration is probably real and
+small; it is not reachable through the tier jump, because you cannot buy a 94%
+shot at a price that pays.
+
+**What this leaves standing** is the loss shape — losses are boundary events,
+not misreads — and the original discipline: buy the tip, demand +5% or better,
+skip when the book will not give it. The rescue is visible and unbuyable, which
+is a different thing from useful.
+
+A general lesson worth keeping: **the shorter the fair price, the less room the
+bookmaker has to leave value.** Any future idea that routes through very short
+lines should be price-checked before it is measured, not after.
 
 #### Chasing the 1.20–1.39 band, and why it did not become a rule
 

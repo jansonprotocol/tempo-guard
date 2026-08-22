@@ -35,21 +35,28 @@ points across 95 tips. Suggestive, not established, and measured in-sample.
 
 Hit rate moves further than ROI does: 85.3% -> roughly 93.7%.
 
-CAN THE PRICE BE HAD?
-=====================
-The obvious objection is that safer rungs are short and books are stingy there.
-Measured against the actual bet book, the opposite is true:
+CAN THE PRICE BE HAD? NO — AND THAT ENDS IT
+===========================================
+The tier-jump rungs price far shorter than the tips they replace. Across the 54
+fixtures where a jump exists, the median break-even is 1.060, so clearing +5%
+needs 1.112. **93% would need a price of 1.15 or lower and 2% a price above
+1.20** — exactly one fixture in 54.
 
-    fair price     n   avg margin offered   reached +5%
-    under 1.15     6         +3.6%             2/6
-    1.15-1.24     33         +6.5%            15/33
-    1.25-1.34     21         +2.6%             5/21
-    1.35+         10         -1.7%             2/10
+A bookmaker's margin on a 94% shot consumes the whole edge, and in practice
+those lines are unquoted or offered under 1.15 with nothing in them.
 
-The most generous band is 1.15-1.24, which is exactly where the safer rungs
-sit. The stingiest is 1.35+, where the tips themselves are priced.
+So the ROI table above is a simulation of a market that does not exist: it
+assumes break-even + 5% is obtainable on every rung, and that assumption fails
+precisely where this strategy needs it. The boundary miscalibration is probably
+real and small; it is not reachable this way.
 
-Usage:  python scripts/loss_shape.py
+An earlier version of this file argued the opposite from the margin offered in
+the 1.15-1.24 fair-price band. That is where the TIPS price, not the jumps —
+the wrong row. The right row is `under 1.15`, which offered +3.6% on 6
+observations, the thinnest in the book.
+
+Kept as a negative result. The loss SHAPE finding stands; the trade does not.
+
 """
 from __future__ import annotations
 
