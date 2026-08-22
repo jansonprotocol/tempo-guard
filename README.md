@@ -8,70 +8,70 @@
 
 ## Pending FUTURE match bettips
 
-| Live | League | Fixture | Play | Date | Modelled | Edge |
-|---|---|---|---|---|---|---|
-| — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 (≤3, half win at 4) | 2026-08-22 | 79% | +0.1% |
-| — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 (≤3 goals) | 2026-08-22 | 84% | +22.2% |
-| — not started | Championship | Millwall v Norwich | O1.5 (2+ goals) | 2026-08-22 | 81% | +8.4% |
-| — not started | Championship | Birmingham v Bristol City | U4.25 (≤3, half win at 4) | 2026-08-22 | 90% | +1.9% |
-| — not started | Chinese Super League | Chengdu v Shenhua | O1.5 (2+ goals) | 2026-08-22 | 82% | +0.1% |
-| — not started | Championship | Lincoln v Portsmouth | **NO TIP** | 2026-08-22 | — | — |
-| — not started | Premier League | Hull v Man United | **NO TIP — withheld** | 2026-08-22 | — | — |
-| — not started | Chinese Super League | Guoan v Yukun | O2.25 (3+, half loss at 2) | 2026-08-22 | 81% | +20.3% |
-| — not started | Championship | West Ham v Charlton | O1.5 (2+ goals) | 2026-08-22 | 88% | +15.0% |
-| — not started | Allsvenskan | Örgryte v Halmstad | U3.0 (≤3 goals) | 2026-08-22 | 81% | +14.2% |
-| — not started | LaLiga 2 | Real Oviedo v Leganés | U3.0 (≤3 goals) | 2026-08-22 | 85% | +8.9% |
-| — not started | Ligue 1 | Lens v Auxerre | O1.5 (2+ goals) | 2026-08-22 | 86% | +8.3% |
-| — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 (≤3 goals) | 2026-08-22 | 79% | +7.1% |
-| — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 (≤3, half win at 4) | 2026-08-22 | 90% | +5.0% |
-| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 (2+ goals) | 2026-08-22 | 86% | +3.6% |
-| — not started | Championship | Wrexham v Watford | U4.25 (≤3, half win at 4) | 2026-08-22 | 91% | +2.9% |
-| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 (2+ goals) | 2026-08-22 | 82% | +2.7% |
-| — not started | Premier League | Everton v Crystal Palace | U4.25 (≤3, half win at 4) | 2026-08-22 | 86% | +4.2% |
-| — not started | Ekstraklasa | Korona v Motor | U4.25 (≤3, half win at 4) | 2026-08-22 | 87% | +1.8% |
-| — not started | Premier League | Forest v Leeds | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | +1.4% |
-| — not started | Championship | Derby v Cardiff | U4.25 (≤3, half win at 4) | 2026-08-22 | 88% | +0.3% |
-| — not started | Ligue 2 | Nantes v Rodez | U4.25 (≤3, half win at 4) | 2026-08-22 | 88% | −0.3% |
-| — not started | Championship | QPR v Bolton | U4.25 (≤3, half win at 4) | 2026-08-22 | 87% | −0.7% |
-| — not started | Championship | Preston v Wolves | U4.25 (≤3, half win at 4) | 2026-08-22 | 84% | −3.7% |
-| — not started | Championship | Blackburn v Middlesbrough | U4.25 (≤3, half win at 4) | 2026-08-22 | 84% | −3.9% |
-| — not started | Championship | Swansea v Sheffield United | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | −4.7% |
-| — not started | Championship | Southampton v Stoke | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | −4.8% |
-| — not started | Ligue 2 | Metz v Laval | U4.25 (≤3, half win at 4) | 2026-08-22 | 83% | −5.8% |
-| — not started | Chinese Super League | Qingdao v Taishan | **NO TIP — withheld** | 2026-08-22 | — | — |
-| — not started | Premier League | Ipswich v Sunderland | **NO TIP — withheld** | 2026-08-22 | — | — |
-| — not started | Ekstraklasa | Piast v Legia | **NO TIP — withheld** | 2026-08-22 | — | — |
-| — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** | 2026-08-22 | — | — |
+| Live | League | Teams | Tip 1 | Tip 2 | Date |
+|---|---|---|---|---|---|
+| — not started | Chinese Super League | Shenzhen v Zhejiang | U4.25 97.4% +18.2% | U3.0 91.6% +29.9% | 2026-08-22 |
+| — not started | Chinese Super League | Guoan v Yukun | O1.5 93.1% +11.1% | O2.25 80.9% +20.3% | 2026-08-22 |
+| — not started | Allsvenskan | Örgryte v Halmstad | U4.25 92.1% +9.2% | U3.0 80.7% +14.2% | 2026-08-22 |
+| — not started | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.25 70.5% +22.9% | 2026-08-22 |
+| — not started | LaLiga 2 | Real Oviedo v Leganés | U4.25 94.5% +5.0% | U3.0 85.3% +8.9% | 2026-08-22 |
+| — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.25 66.6% +12.9% | 2026-08-22 |
+| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | O2.25 59.4% +11.9% | 2026-08-22 |
+| — not started | LaLiga | Athletic Bilbao v Sevilla | U4.25 91.3% +4.4% | U3.0 79.4% +7.1% | 2026-08-22 |
+| — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.0 77.7% +7.7% | 2026-08-22 |
+| — not started | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.0 70.9% +5.9% | 2026-08-22 |
+| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.25 66.4% +5.9% | 2026-08-22 |
+| — not started | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.0 78.9% +4.8% | 2026-08-22 |
+| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.25 61.3% +4.1% | 2026-08-22 |
+| — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.0 77.1% +3.0% | 2026-08-22 |
+| — not started | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.0 72.9% +2.7% | 2026-08-22 |
+| — not started | Ligue 2 | Metz v Laval | O1.5 78.8% +6.9% | O2.25 55.7% +9.4% | 2026-08-22 |
+| — not started | Championship | Southampton v Stoke | O1.5 78.4% +5.6% | O2.25 55.2% +7.7% | 2026-08-22 |
+| — not started | Championship | Swansea v Sheffield United | O1.5 78.4% +5.6% | O2.25 55.1% +7.6% | 2026-08-22 |
+| — not started | Championship | Blackburn v Middlesbrough | O1.5 77.5% +4.7% | O2.25 53.9% +6.3% | 2026-08-22 |
+| — not started | Championship | Preston v Wolves | O1.5 77.3% +4.5% | O2.25 53.6% +6.1% | 2026-08-22 |
+| — not started | Premier League | Forest v Leeds | **NO PLAY** (best +2.0%) | — | 2026-08-22 |
+| — not started | Championship | QPR v Bolton | **NO PLAY** (best +1.2%) | — | 2026-08-22 |
+| — not started | Championship | Derby v Cardiff | **NO PLAY** (best +0.6%) | — | 2026-08-22 |
+| — not started | Ligue 2 | Nantes v Rodez | **NO PLAY** (best +0.6%) | — | 2026-08-22 |
+| — not started | Chinese Super League | Chengdu v Shenhua | **NO PLAY** (best +0.2%) | — | 2026-08-22 |
+| — not started | Chinese Super League | Three Towns v Jinmen Tiger | **NO PLAY** (best +0.1%) | — | 2026-08-22 |
+| — not started | Chinese Super League | Qingdao v Taishan | **WITHHELD** — form 1,682d old | — | 2026-08-22 |
+| — not started | Premier League | Ipswich v Sunderland | **WITHHELD** — form 453d old | — | 2026-08-22 |
+| — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 |
+| — not started | Premier League | Hull v Man United | **WITHHELD** — form from 2017 | — | 2026-08-22 |
+| — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 |
+| — not started | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 |
 
 ## Completed FUTURE match bettips
 
-| Result | League | Fixture | Play | Date | Modelled | Edge |
-|---|---|---|---|---|---|---|
-| ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 | 2026-08-20 | 82% | +7.7% |
-| ✅ HIT | Brasileirão Série B | Athletic v CRB | O1.0 | 2026-08-21 | 90% | +1.0% |
-| ✅ HIT | Brasileirão Série B | Novorizontino v América-MG | O1.0 | 2026-08-21 | 90% | +1.1% |
-| ✅ HIT | J1 League | FC Tokyo v JEF United | U4.25 | 2026-08-21 | 89% | +0.9% |
-| ❌ MISS — 6 goals | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 | 2026-08-21 | 86% | −2.3% |
-| ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 | 2026-08-21 | 91% | +12% |
-| ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 | 2026-08-21 | 80% | +24% |
-| ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 | 2026-08-21 | 89% | +1% |
-| ✅ HIT — 2-0 | Premier League | Arsenal v Coventry | O1.5 | 2026-08-21 | 82% | +1.9% |
-| ✅ HIT — 2-0 | LaLiga 2 | Córdoba v Girona | O1.5 | 2026-08-21 | 80% | +9.3% |
-| ✅ HIT — 1-2 | Serie B | Vicenza v Catanzaro | O1.5 | 2026-08-21 | 77% | +5.2% |
-| ✅ HIT — 1-0 | Ligue 2 | Sochaux v Guingamp | U3.0 | 2026-08-21 | 84% | +9.1% |
-| ✅ HIT — 0-1 | Ligue 2 | Pau v Nancy | U3.0 | 2026-08-21 | 84% | +8.6% |
-| ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 | 2026-08-21 | 83% | +7.9% |
-| ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 | 2026-08-21 | 90% | +1.1% |
-| ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 | 2026-08-21 | 84% | −5.1% |
-| ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 | 2026-08-21 | 84% | +6.6% |
-| ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 | 2026-08-21 | 89% | +8.9% |
-| ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 | 2026-08-21 | 84% | −0.5% |
-| ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 | 2026-08-21 | 84% | −1.0% |
-| ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 | 2026-08-21 | 84% | −2.9% |
-| ✅ HIT — 3-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 | 2026-08-21 | 83% | +10% |
-| ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 | 2026-08-21 | 88% | +7.8% |
-| ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 | 2026-08-22 | 81% | +21.7% |
-| ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 | 2026-08-22 | 82% | +12.6% |
+| Result | League | Teams | Tip 1 | Tip 2 | Date |
+|---|---|---|---|---|---|
+| ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 82% +7.7% | — | 2026-08-20 |
+| ✅ HIT | Brasileirão Série B | Athletic v CRB | O1.0 90% +1.0% | — | 2026-08-21 |
+| ✅ HIT | Brasileirão Série B | Novorizontino v América-MG | O1.0 90% +1.1% | — | 2026-08-21 |
+| ✅ HIT | J1 League | FC Tokyo v JEF United | U4.25 89% +0.9% | — | 2026-08-21 |
+| ❌ MISS — 6 goals | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 86% −2.3% | — | 2026-08-21 |
+| ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 91% +12% | — | 2026-08-21 |
+| ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 80% +24% | — | 2026-08-21 |
+| ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 89% +1% | — | 2026-08-21 |
+| ✅ HIT — 2-0 | Premier League | Arsenal v Coventry | O1.5 82% +1.9% | — | 2026-08-21 |
+| ✅ HIT — 2-0 | LaLiga 2 | Córdoba v Girona | O1.5 80% +9.3% | — | 2026-08-21 |
+| ✅ HIT — 1-2 | Serie B | Vicenza v Catanzaro | O1.5 77% +5.2% | — | 2026-08-21 |
+| ✅ HIT — 1-0 | Ligue 2 | Sochaux v Guingamp | U3.0 84% +9.1% | — | 2026-08-21 |
+| ✅ HIT — 0-1 | Ligue 2 | Pau v Nancy | U3.0 84% +8.6% | — | 2026-08-21 |
+| ✅ HIT — 1-1 | Ligue 2 | Boulogne v Red Star | U3.0 83% +7.9% | — | 2026-08-21 |
+| ✅ HIT — 1-1 | Ligue 2 | Clermont v Dijon | U4.25 90% +1.1% | — | 2026-08-21 |
+| ✅ HIT — 0-1 | Ligue 2 | Dunkerque v Montpellier | U4.25 84% −5.1% | — | 2026-08-21 |
+| ✅ HIT — 2-0 | Ligue 1 | Marseille v Strasbourg | O1.5 84% +6.6% | — | 2026-08-21 |
+| ❌ MISS — 0-1, one short | Saudi Pro League | Al Qadsiah v Al Ittihad | O1.5 89% +8.9% | — | 2026-08-21 |
+| ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 84% −0.5% | — | 2026-08-21 |
+| ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 84% −1.0% | — | 2026-08-21 |
+| ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 84% −2.9% | — | 2026-08-21 |
+| ✅ HIT — 3-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 83% +10% | — | 2026-08-21 |
+| ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 88% +7.8% | — | 2026-08-21 |
+| ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 81% +21.7% | — | 2026-08-22 |
+| ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 82% +12.6% | — | 2026-08-22 |
 
 ---
 
@@ -108,6 +108,20 @@ last reported and go stale between updates.
 - **Al Nassr** — first tip where lean and market agreed. First sharp lane to land (O2.5). Finished 0-4.
 - **Sirius** — won, but least trustworthy of the batch: priced off 17 matches per side instead of 84 due to a naming split.
 - **Arsenal, Vicenza** — priced off stale stores (PL ends 2026-05-24, Serie B 2026-05-08). Last season's form only. Both landed; two matches prove nothing.
+
+### On the two-tip format
+
+**Tip 1** is the highest-probability market that still carries a real edge. **Tip 2** is the closest step down in probability whose edge is at least as good. Where nothing clears +2% edge, it says **NO PLAY** and names the best available call so you can see what was rejected.
+
+Completed rows show a dash under Tip 2 because no second tip was issued at the time. They are the historical record, not a re-scoring.
+
+That distinction matters, because the two-tip rule is **not** what the engine did. It excludes negative-edge markets; the engine's fallback allows them. Replayed across the 25 settled bets:
+
+    engine, as issued     23/25 = 92%
+    Tip 1 rule            17/20 = 85%   (5 fixtures become NO PLAY)
+    Tip 2 rule            15/20 = 75%
+
+Both rules would have flipped Kashiwa from a loss to a win — and flipped Dunkerque, Betis and Standard the other way, while declining Erzurumspor, Athletic, Novorizontino and FC Tokyo, all of which won. On the only live sample that exists, refusing to buy negative-edge fallbacks costs hit rate. That is consistent with the 88.0% measurement on negative-edge picks and with the override result. Recorded before acting on it.
 
 ### Saturday 22 Aug slate
 
