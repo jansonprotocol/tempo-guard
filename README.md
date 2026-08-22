@@ -461,6 +461,57 @@ tested as a *published* tip against real prices, where a market at 80% base rate
 will be priced accordingly. What it does establish is that the number carries
 real information, which is more than any Tip 2 lane currently manages.
 
+#### The team ladder — U0.5 was the wrong rung to judge the direction on
+
+The first version of this offered `O0.5` alone, having rejected the whole Under
+direction after measuring `U0.5` inside the extreme tail. That was a tail effect
+generalised into a rule, and it discarded the best rung available. Measured
+properly, all five calibrate:
+
+    rung    lands when          predicted   actual     gap
+    U0.5    side blanks           27.7%      25.3%    -2.4%
+    U1.5    side held to <=1      61.6%      59.7%    -1.9%
+    U2.5    side held to <=2      83.9%      83.7%    -0.2%
+    O0.5    side scores           72.3%      74.7%    +2.4%
+    O1.5    side scores twice+    38.4%      40.3%    +1.9%
+
+Chronologically split at 2026-04-21 — 17,387 train, 9,363 holdout side-obs:
+
+    rung  floor    train edge   holdout edge   holdout hit   fair
+    U1.5   0.75      +10.22%        +9.69%        70.48%    1.419
+    U1.5   0.80      +11.44%       +12.10%        73.40%    1.362
+    O1.5   0.55      +15.63%       +19.01%        60.77%    1.645
+    O1.5   0.60      +18.59%       +24.87%        67.44%    1.483
+    O0.5   0.80       +7.16%        +9.77%        85.64%    1.168
+    O0.5   0.85      +10.67%       +12.74%        88.97%    1.124
+    U2.5   0.85       +4.55%        +3.10%        87.51%    1.143
+    U2.5   0.90       +5.70%        +3.24%        87.70%    1.140
+
+**`U1.5` is roughly twice the rung `O0.5` is** — +9.69% holdout edge against
++5.01%, and it pays **1.419** where `O0.5` pays 1.239. More information at a
+longer price, which is the only combination that matters.
+
+**`O1.5` carries the largest edge on the board**, and a 42% base rate means its
+0.55 floor is already a strong claim rather than a loose one.
+
+**`U2.5` is the one rung whose edge shrinks out of sample** (+5.70% → +3.24%) and
+it is also the shortest-priced. 87% strike at 1.14 is the buying-certainty shape
+that has fooled this project five times. Not offered. `U0.5` never clears a
+floor in practice and is not offered either.
+
+Three rungs ship — `U1.5` for the weak-attack read, `O1.5` for the strong-signal
+read, `O0.5` as the safe one, ranked last on near-ties because its price leaves
+nothing after margin.
+
+**A caveat the first live outputs exposed.** `Zürich v Basel` returns
+`TB O1.5` at 78.8% and **+46.4%** edge, from a genuine mu of 4.58 — Basel have
+averaged 3.30 goals scored across their last ten. But those ten span
+**2025-04-12 to 2026-08-09**: three rows from this season merged onto seven from
+the last. The name fix was right and the window still has a ten-month hole in
+it, so an extreme number from a merged club is the recency defect showing
+through, not a clean read. Merged clubs should be treated with more caution than
+their edge suggests until the recency bound lands.
+
 #### On a fallback U4.25, is a team total a better bet? Partly — and not the way expected
 
 366 fallback fixtures (Tip 1 = `U4.25` at negative edge) out of 2,675:
