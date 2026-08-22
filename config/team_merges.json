@@ -28,29 +28,100 @@
     "it can add a fixture the engine withheld and can never change one it",
     "already prices. See store._apply_merges."
   ],
-
   "POL-EK": {
-    "Cracovia": ["KS Cracovia"],
-    "Gornik Zabrze": ["Górnik Zabrze"],
-    "Jagiellonia": ["Jagiellonia Białystok"],
-    "Lech Poznan": ["Lech Poznań"],
-    "Legia": ["Legia Warszawa"],
-    "Pogon Szczecin": ["Pogoń Szczecin"],
-    "Rakow": ["Raków Częstochowa"],
-    "Slask Wroclaw": ["Śląsk Wrocław"],
-    "Widzew Lodz": ["Widzew Łódź"],
-    "Zaglebie": ["Zagłębie Lubin"]
+    "Cracovia": [
+      "KS Cracovia"
+    ],
+    "Gornik Zabrze": [
+      "Górnik Zabrze"
+    ],
+    "Jagiellonia": [
+      "Jagiellonia Białystok"
+    ],
+    "Lech Poznan": [
+      "Lech Poznań"
+    ],
+    "Legia": [
+      "Legia Warszawa"
+    ],
+    "Pogon Szczecin": [
+      "Pogoń Szczecin"
+    ],
+    "Rakow": [
+      "Raków Częstochowa"
+    ],
+    "Slask Wroclaw": [
+      "Śląsk Wrocław"
+    ],
+    "Widzew Lodz": [
+      "Widzew Łódź"
+    ],
+    "Zaglebie": [
+      "Zagłębie Lubin"
+    ]
   },
   "SUI-SL": {
-    "Basel": ["FC Basel 1893"],
-    "Grasshoppers": ["Grasshopper Club Zürich"],
-    "Lausanne": ["FC Lausanne-Sport"],
-    "Lugano": ["FC Lugano"],
-    "Luzern": ["FC Luzern"],
-    "Servette": ["Servette FC"],
-    "Sion": ["FC Sion"],
-    "St. Gallen": ["FC St. Gallen"],
-    "Young Boys": ["BSC Young Boys"],
-    "Zurich": ["FC Zürich"]
+    "Basel": [
+      "FC Basel 1893"
+    ],
+    "Grasshoppers": [
+      "Grasshopper Club Zürich"
+    ],
+    "Lausanne": [
+      "FC Lausanne-Sport"
+    ],
+    "Lugano": [
+      "FC Lugano"
+    ],
+    "Luzern": [
+      "FC Luzern"
+    ],
+    "Servette": [
+      "Servette FC"
+    ],
+    "Sion": [
+      "FC Sion"
+    ],
+    "St. Gallen": [
+      "FC St. Gallen"
+    ],
+    "Young Boys": [
+      "BSC Young Boys"
+    ],
+    "Zurich": [
+      "FC Zürich"
+    ]
+  },
+  "DEN-SL": {
+    "Aarhus": [
+      "Aarhus GF"
+    ],
+    "Brondby": [
+      "Brøndby IF"
+    ],
+    "FC Copenhagen": [
+      "FC København"
+    ],
+    "Lyngby": [
+      "Lyngby BK"
+    ],
+    "Midtjylland": [
+      "FC Midtjylland"
+    ],
+    "Nordsjaelland": [
+      "FC Nordsjælland"
+    ],
+    "Odense": [
+      "Odense BK"
+    ],
+    "Silkeborg": [
+      "Silkeborg IF"
+    ],
+    "Sonderjyske": [
+      "SønderjyskE"
+    ],
+    "Viborg": [
+      "Viborg FF"
+    ]
   }
 }

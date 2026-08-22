@@ -142,9 +142,29 @@ def _domestic_fallback() -> List[str]:
 
 # ── Name normalisation ────────────────────────────────────────────────────────
 
+# Latin letters that are NOT an accented base plus a combining mark, so NFD
+# leaves them untouched and the Mn filter below never sees them. Without these
+# the accent-insensitive match silently fails on whole leagues: `Sønderjyske`
+# would not match `Sonderjyske`, `Widzew Łódź` not `Widzew Lodz`. The `å`, `é`,
+# `ş` family DO decompose and need no entry here.
+_UNDECOMPOSED = str.maketrans({
+    "ø": "o", "æ": "ae", "œ": "oe", "ł": "l", "đ": "d", "ð": "d",
+    "þ": "th", "ß": "ss", "ħ": "h", "ŧ": "t", "ı": "i", "ĸ": "k",
+})
+
+
 def _strip_accents(s: str) -> str:
+    """
+    Fold a name to plain ASCII letters for matching.
+
+    Two passes are needed. NFD splits an accented letter into base plus
+    combining mark and the mark is dropped; but a letter whose glyph carries the
+    modification INSIDE the codepoint — Scandinavian `ø`, Polish `ł`, Croatian
+    `đ` — has no decomposition at all and survives NFD unchanged. Those are
+    translated explicitly first.
+    """
     return "".join(
-        c for c in unicodedata.normalize("NFD", s)
+        c for c in unicodedata.normalize("NFD", s.translate(_UNDECOMPOSED))
         if unicodedata.category(c) != "Mn"
     )
 

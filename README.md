@@ -35,6 +35,9 @@
 | — not started | MLS | Los Angeles FC v Portland | O1.5 88.9% +7.8% · buy≥1.18 | **Portland O1.5** 60.7% +21.6% (team) · buy≥1.73 | 2026-08-23 04:30 |
 | — not started | MLS | San Diego v Colorado | U4.25 84.5% +4.1% · buy≥1.26 | **Colorado U1.5** 78.3% +17.4% (team) · buy≥1.34 | 2026-08-23 04:30 |
 | — not started | MLS | San Jose v Minnesota | U4.25 86.6% +6.2% · buy≥1.23 | U3.75 71.8% +8.6% (floor −7.2) · buy≥1.35 | 2026-08-23 04:30 |
+| — not started | Danish Superliga | Sønderjyske v Nordsjælland | U4.25 84.5% +2.1% · buy≥1.26 | U3.75 68.7% +2.8% (floor −10.3) · buy≥1.41 | 2026-08-23 12:00 |
+| — not started | Eredivisie | GA Eagles v ADO | U4.25 83.8% +4.5% · buy≥1.27 | **ADO U1.5** 77.4% +18.7% (team) · buy≥1.36 | 2026-08-23 12:15 |
+| — not started | J1 League | Machida Z v Urawa Reds | U4.25 83.1% **−5.2%** · buy≥1.29 | **O1.75 78.6% +6.1%** (floor −0.4) · buy≥1.39 | 2026-08-23 12:30 |
 
 ## Completed FUTURE match bettips: Tip 1 85.3% hit · Tip 2 74.0% hit
 
@@ -1698,6 +1701,42 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
   `Los Angeles Galaxy` and `NY Red Bulls` → `New York Red Bulls`. Note that
   `Los Angeles` alone correctly resolves to `Los Angeles FC`, so the Galaxy
   entry is load-bearing rather than cosmetic.
+
+- **FIXED — accent folding missed every letter that does not decompose.**
+  `_strip_accents` relied on NFD splitting a letter into base plus combining
+  mark, then dropped the mark. That works for `é`, `å`, `ş`. It does nothing at
+  all for a letter whose modification lives inside the codepoint: Scandinavian
+  `ø` and `æ`, Polish `ł`, Croatian `đ`, German `ß`, Icelandic `þ`/`ð`. NFD
+  leaves them unchanged and the filter never sees them.
+
+  So `Sønderjyske` did not match `Sonderjyske` and `Widzew Łódź` did not match
+  `Widzew Lodz` — the accent-insensitive pass, which exists precisely for this,
+  was blind to a whole class of European club names. A translation table now
+  runs before NFD.
+
+- **FIXED — Denmark merged, and it was the worst split found.** Ten clubs, and
+  unlike MLS the CURRENT variant is tiny: every 2026 name carries **3 or 4
+  rows** against 32–65 in the stale one:
+
+      Sonderjyske      4 rows -> 2026-08-17    SønderjyskE      32 -> 2025-05-24
+      Nordsjaelland    3 rows -> 2026-08-16    FC Nordsjælland  64 -> 2025-05-25
+      Midtjylland      3 rows -> 2026-08-16    FC Midtjylland   64 -> 2025-05-25
+
+  This is the dangerous configuration. The current half sits under the merge
+  gate so on its own it would be withheld — but the resolver was matching the
+  STALE half on an exact-name hit, which is above the gate, so Denmark was
+  quietly issuing tips off **fifteen-month-old form**. Worse than a no-tip and
+  invisible without looking.
+
+  All ten now merge (`Aarhus`, `Brondby`, `FC Copenhagen`, `Lyngby`,
+  `Midtjylland`, `Nordsjaelland`, `Odense`, `Silkeborg`, `Sonderjyske`,
+  `Viborg`), each satisfying the gate rule that the primary is under 5 rows.
+  `Sønderjyske` now resolves to 36 rows ending 2026-08-17. Not merged: Aalborg,
+  Hvidovre and Vejle have no current variant — relegated, correctly left alone —
+  and Randers FC was never split.
+
+  Timing was checked first: **no Danish fixture appears anywhere in this log**,
+  so the merge cannot disturb a tip already issued or backed.
 
 - **`Piast v Legia` — confirmed a true split, and it is league-wide.** `Legia` holds 4 rows (2026-07-24 → 2026-08-14) and `Legia Warszawa` holds 68 (2023-07-21 → 2025-05-24). One club, 72 matches, and the engine sees 4. The same 2026-provider break splits **26 further clubs across Denmark, Mexico, Poland, Russia and Switzerland** — `CF Monterrey` 587 rows vs `Monterrey` 4, `CF Pachuca` 558 vs `Pachuca` 4, `FC Zürich` 220 vs `Zurich` 3. Those leagues have no fixtures in the current window, so nothing is being lost today, but every one of them would tip off three or four matches the moment their fixtures load.
 
