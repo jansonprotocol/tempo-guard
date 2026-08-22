@@ -283,6 +283,20 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
 
 - **Feed names vs store names — FIXED for 20 clubs.** Results come from football-data.co.uk, which files clubs under trading names (`Man United`, `QPR`, `Nott'm Forest`, `M'gladbach`); fixtures arrive with full legal names (`Manchester United FC`, `Queens Park Rangers FC`). Fuzzy matching cannot bridge an abbreviation — `qpr` and `queens park rangers` share no text to score — so the resolver returned nothing and the fixture was withheld. It affected **38 of 164 upcoming fixtures (23%)**, including Man Utd, Man City, Inter, Atlético, Athletic Club, Lyon, PSV, Sporting CP, Gladbach and Eintracht Frankfurt. `PSV` failed for a separate reason: `psv` is in the generic club-token list, so canonicalising deleted the only identifying word in the name. `config/team_aliases.json` now maps the 20 the store already carries; each target was read off the store's own name list rather than guessed. Le Mans and Elversberg are omitted because they have no rows under any spelling — newly promoted, a data gap not a naming one.
 
+- **Every remaining no-tip is a promoted club.** After the alias layer, exactly **10 of 177** upcoming fixtures produce no tip, and all ten trace to five clubs newly arrived in their division — their history is real, it is just filed in a tier this store does not carry:
+
+      Lincoln City        1 match    up from League One
+      Racing Santander    1 match    up from Segunda
+      Académico Viseu     2 matches  up from Liga Portugal 2
+      Le Mans             0 rows     up from Ligue 2
+      Elversberg          0 rows     up from 2. Bundesliga
+
+  None of these is a naming fault, and no alias can help — there is nothing in the store to alias *to*. `Marítimo v Académico Viseu` is correct as logged: the store holds exactly two rows mentioning Viseu (Benfica 2-2 on 09 Aug, Viseu 0-1 Santa Clara on 15 Aug) and nothing under any other spelling. The fix is a second-tier source per country plus cross-division lookup — the same feature Hull and Ipswich need, approached from the other side.
+
+- **`Piast v Legia` — confirmed a true split, and it is league-wide.** `Legia` holds 4 rows (2026-07-24 → 2026-08-14) and `Legia Warszawa` holds 68 (2023-07-21 → 2025-05-24). One club, 72 matches, and the engine sees 4. The same 2026-provider break splits **26 further clubs across Denmark, Mexico, Poland, Russia and Switzerland** — `CF Monterrey` 587 rows vs `Monterrey` 4, `CF Pachuca` 558 vs `Pachuca` 4, `FC Zürich` 220 vs `Zurich` 3. Those leagues have no fixtures in the current window, so nothing is being lost today, but every one of them would tip off three or four matches the moment their fixtures load.
+
+  Worth noting for sequencing: a merge restricted to groups whose served variant is **below the 5-match gate** carries the same safety property the alias layer was accepted on — such a fixture has no tip to change, so the merge can only add. The stale-serving cases (Chapecoense, SC Internacional) sit above the gate and would still need the full fix.
+
 - **Era-split team names** — 15 leagues, ~73 names. `KS Cracovia` (2023-25) vs `Cracovia` (2026), `IK Sirius` vs `Sirius`, `AIK Solna` vs `AIK`. Cause: 2026 seasons arriving from a different provider. Effect: thin predictions and false refusals. Cracovia was refused on 4 matches when 72 exist. Detector is fuzzy and overcounts — needs a manual pass.
 - **Stale stores** — Premier League and Serie B end in May 2026.
 - **No-tips resolved** — Al Faisaly 0-2 Neom, Al Hazem 0-1 Al Diriyah, Cracovia **3-2** Wieczysta. An earlier version of this note said all three finished under three goals; that was wrong. Cracovia was read at 1-2 with fourteen minutes left and finished on five, which would have beaten a U4.25 and lost a U3.0. Two of three would have been safe Unders, not three. Still not counted either way — a refusal is not a bet — and the error is left visible because grading declined fixtures from partial scores is exactly the habit that turns a no-tip rule into a tip.
