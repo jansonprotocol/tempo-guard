@@ -10,8 +10,8 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| — not started | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 11:00 |
-| — not started | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 11:30 |
+| **LIVE: 1-1** (HT) | J1 League | Kashima Antlers v Avispa Fukuoka | U4.25 87.5% −0.8% | O1.75 73.6% +1.2% (floor −5.4) | 2026-08-22 11:00 |
+| **LIVE: 0-0** (18') | J1 League | Fagiano Okayama v Tokyo Verdy | U3.0 79.9% +5.5% | U4.25 91.6% +3.3% (lower edge) | 2026-08-22 11:30 |
 | — not started | J1 League | Nagoya Grampus v Gamba Osaka | O1.5 83.7% +11.2% | O2.75 63.3% +16.2% (floor −15.7) | 2026-08-22 12:00 |
 | — not started | J1 League | Kyoto Sanga v Mito Hollyhock | U3.0 81.9% +7.4% | U4.25 92.7% +4.4% (lower edge) | 2026-08-22 12:00 |
 | — not started | J1 League | Cerezo Osaka v Shimizu S-Pulse | U4.25 86.9% −1.5% | O1.75 74.4% +2.0% (floor −4.6) | 2026-08-22 12:00 |
