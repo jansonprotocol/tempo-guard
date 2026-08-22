@@ -28,6 +28,14 @@
 | **LIVE: 0-0** (1') | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% | **Real Madrid O0.5** 83.6% +14.9% (team) | 2026-08-22 21:30 |
 | **LIVE: 0-0** (1') | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% | **Cádiz U1.5** 77.5% +5.9% (team) | 2026-08-22 21:30 |
 | — not started | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% | **Sporting O1.5** 64.5% +22.3% (team) | 2026-08-22 21:30 |
+| — not started | Peru Liga 1 | Juan Pablo II v ADT | U3.0 83.1% +9.6% | **Juan Pablo II U1.5** 75.2% +22.4% (team) | 2026-08-22 22:30 |
+| — not started | Colombia Primera A | Águilas Doradas v Millonarios | U4.25 84.2% −7.2% | **O1.75 77.5% +10.2%** (floor −1.5) | 2026-08-22 22:30 |
+| — not started | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% | U2.75 66.4% +4.5% (floor −12.6) | 2026-08-22 23:00 |
+| — not started | Colombia Primera A | Tolima v Bucaramanga | U4.25 85.9% −5.6% | **O1.75 75.6% +8.4%** (floor −3.4) | 2026-08-22 23:05 |
+| — not started | Brasileirão | Internacional v Atlético-MG | U4.25 86.4% −2.5% | O1.75 75.0% +3.4% (floor −4.0) | 2026-08-22 23:30 |
+| — not started | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% | U2.75 64.6% +2.6% (floor −14.4) | 2026-08-22 23:30 |
+| — not started | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% | — none | 2026-08-22 23:30 |
+| — not started | Colombia Primera A | Santa Fe v América de Cali | **O1.5 80.8% +13.6%** | O2.25 58.8% +18.0% (floor −20.2) | 2026-08-23 01:10 |
 
 ## Completed FUTURE match bettips: Tip 1 87.0% hit · Tip 2 73.3% hit
 
@@ -958,6 +966,24 @@ nothing; the point of keeping this column separate is that in fifty it will.
   **`Espanyol O1.5` at 1.17 needs 85.5% against a tip modelled at 79.5%** — six
   points under water on the engine's own number, and only playable if Tip 1's
   live record beats its model probability, as it has done all day.
+
+- **Eight late fixtures added, and three are negative-edge fallbacks** — Águilas
+  Doradas at −7.2%, Tolima at −5.6%, Internacional at −2.5%. All three offer a
+  bold `O1.75` second lane between +3.4% and +10.2%, which is the FLIP shape
+  measured tonight at 73.6% against Tip 1's 88.6%. Worth knowing before backing
+  the alternative on any of them.
+
+- **Only one team lane fired across the eight.** `Juan Pablo II U1.5` at 75.2%
+  and +22.4%. The other seven either failed a floor or could not beat their
+  ladder rung on edge — which is the check that the module is selective rather
+  than simply replacing every second lane it can reach.
+
+- **`Internacional` resolved to the fresh side of its split** (10 rows,
+  2026-05-03 to 2026-08-18) rather than the `SC Internacional` variant that ends
+  in December 2025. That is luck rather than design: the club is split above the
+  match gate, so the merge guard does not fire and whichever spelling arrives
+  decides which history is used. Brazil remains on the list for the full
+  split-merge once the recency bound lands.
 
 ### Notes on the log
 
