@@ -43,17 +43,17 @@
 | — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 |
 | — not started | Championship | Lincoln v Portsmouth | **NO TIP** — 1 match | — | 2026-08-22 |
 
-## Completed FUTURE match bettips: Tip 1 92.0% hit · Tip 2 78.6% hit
+## Completed FUTURE match bettips: Tip 1 92.0% hit · Tip 2 80.0% hit
 
-**Tip 1 — 23 / 25**   ·   **Tip 2 — 11 / 14** (9 fixtures offered no second tip)
+**Tip 1 — 23 / 25**   ·   **Tip 2 — 12 / 15** (10 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
 | ✅ HIT — 1-1 | LaLiga | Rayo Vallecano v Alavés | O1.5 82% +7.7% | — none offered | 2026-08-20 |
-| ✅ HIT | Brasileirão Série B | Athletic v CRB | O1.0 90% +1.0% | — none offered | 2026-08-21 |
-| ✅ HIT | Brasileirão Série B | Novorizontino v América-MG | O1.0 90% +1.1% | — none offered | 2026-08-21 |
-| ✅ HIT | J1 League | FC Tokyo v JEF United | U4.25 89% +0.9% | ⏳ U3.75 76% +1.5% | 2026-08-21 |
-| ❌ MISS — 6 goals | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 86% −2.3% | ✅ O1.75 75% +3.0% | 2026-08-21 |
+| ✅ HIT — 0-2 | Brasileirão Série B | Athletic v CRB | O1.0 90% +1.0% | — none offered | 2026-08-21 |
+| ✅ HIT — 3-0 | Brasileirão Série B | Novorizontino v América-MG | O1.0 90% +1.1% | — none offered | 2026-08-21 |
+| ✅ HIT — 2-0 | J1 League | FC Tokyo v JEF United | U4.25 89% +0.9% | ✅ U3.75 76% +1.5% | 2026-08-21 |
+| ❌ MISS — 4-2 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 86% −2.3% | ✅ O1.75 75% +3.0% | 2026-08-21 |
 | ✅ HIT — 0-3 | Saudi Pro League | Al Riyadh v Al Nassr | O1.5 91% +12% | ✅ O2.75 77% +20.0% | 2026-08-21 |
 | ✅ HIT — 0-3 | Allsvenskan | Sirius v Häcken | O2.25 80% +24% | ✅ O1.75 93% +13.9% | 2026-08-21 |
 | ✅ HIT — 1-3, half win | Peru Liga 1 | FC Cajamarca v Atlético Grau | U4.25 89% +1% | ❌ U3.75 75% +1.8% | 2026-08-21 |
