@@ -10,22 +10,22 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 1-0** (27') | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.75 72.9% +2.7% (floor −6.1) | 2026-08-22 14:45 |
-| **LIVE: 0-0** (11') | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | U4.25 92.1% +9.2% (lower edge) | 2026-08-22 15:00 |
-| **LIVE: 0-1** (12') | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.75 77.7% +7.7% (floor −1.3) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.75 70.9% +5.9% (floor −8.1) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.75 78.9% +4.8% (floor −0.1) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 16:00 |
-| **LIVE: 1-0** (12') | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (11') | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 16:00 |
-| **LIVE: 0-1** (12') | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (12') | Premier League | Ipswich v Sunderland | **WITHHELD** — form 453d old | — | 2026-08-22 16:00 |
-| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.75 66.4% +5.9% (floor −12.6) | 2026-08-22 16:30 |
-| — not started | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 16:30 |
+| **LIVE: 1-1** (FT) | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.75 72.9% +2.7% (floor −6.1) | 2026-08-22 14:45 |
+| **LIVE: 1-1** (90'+) | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | U4.25 92.1% +9.2% (lower edge) | 2026-08-22 15:00 |
+| **LIVE: 0-1** (HT) | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 16:00 |
+| **LIVE: 2-0** (HT) | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.75 77.7% +7.7% (floor −1.3) | 2026-08-22 16:00 |
+| **LIVE: 1-0** (HT) | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.75 70.9% +5.9% (floor −8.1) | 2026-08-22 16:00 |
+| **LIVE: 1-1** (HT) | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.75 78.9% +4.8% (floor −0.1) | 2026-08-22 16:00 |
+| **LIVE: 0-0** (HT) | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 16:00 |
+| **LIVE: 1-2** (HT) | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 16:00 |
+| **LIVE: 0-0** (HT) | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 16:00 |
+| **LIVE: 1-1** (HT) | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
+| **LIVE: 0-0** (HT) | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
+| **LIVE: 0-1** (HT) | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 16:00 |
+| **LIVE: 0-1** (HT) | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 16:00 |
+| **LIVE: 1-1** (HT) | Premier League | Ipswich v Sunderland | **WITHHELD** — form 453d old | — | 2026-08-22 16:00 |
+| **LIVE: 0-0** (18') 🟥 | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.75 66.4% +5.9% (floor −12.6) | 2026-08-22 16:30 |
+| **LIVE: 0-0** (19') | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 16:30 |
 | — not started | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | U4.25 94.5% +5.0% (lower edge) | 2026-08-22 17:00 |
 | — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
 | — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
@@ -490,6 +490,22 @@ enough that the skips cost more than they saved.
 
 - **`Çorum v Kasımpaşa` is a real no-tip.** Çorum has one match in the Süper Lig
   store — newly promoted, nothing hidden under another name.
+
+- **Fortuna's red on 18 minutes is the red-card finding facing a live bet.** The
+  `O2.5` taken needs three goals and the score is 0-0. Instinct says a sending-off
+  kills a game; the measurement says the opposite — reds are worth **+0.15 goals**
+  across 1,795 fixtures, and Over tips score **85.7%** when one appears against
+  **79.1%** when none does. Ten men chasing a deficit opens space rather than
+  closing it. That is the engine's own number, not a read on this fixture, and it
+  points the same way as the fixture logic here: AZ carry the stronger attack and
+  now have a man more.
+
+- **Derby is the skip ledger's first clear cost of the evening.** Declined on
+  price, no Tip 2 available, and at 1-2 by half time. Tip 1 was `U4.25` at 88.4%
+  — three goals still wins it outright and four half-wins it, so as things stand
+  the skip has forgone a live winner. Balanced against Nantes, where the same
+  rule declined a fixture that went on to lose 2-5. Two skips, opposite outcomes,
+  both taken for the identical reason.
 
 ### Notes on the log
 
