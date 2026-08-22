@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 86.5%
+## CURRENT CONFIRMED HITRATE: 85.3%
 
-**77 / 89 settled** · over/under markets only · live tips, not backtests
+**81 / 95 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,12 +10,6 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 0-0** (26') | Serie B | Benevento v Modena | U3.0 82.2% +6.9% · buy≥1.35 | U2.75 62.7% +8.8% (floor −16.3) · buy≥1.51 | 2026-08-22 21:00 |
-| **LIVE: 1-0** (31') | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% · buy≥1.29 | **Cremonese O0.5** 83.3% +14.5% (team) · buy≥1.26 | 2026-08-22 21:00 |
-| **LIVE: 0-0** (31') | Eredivisie | Heerenveen v Zwolle | U4.25 84.5% +5.2% · buy≥1.26 | U3.75 68.8% +7.0% (floor −10.2) · buy≥1.41 | 2026-08-22 21:00 |
-| **LIVE: 1-1** (68') | Brasileirão | Fluminense v Remo | U4.25 88.2% −0.7% · buy≥1.20 | O1.75 72.7% +1.0% (floor −6.3) · buy≥1.53 | 2026-08-22 21:00 |
-| **LIVE: 0-0** (1') | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% · buy≥1.27 | **Cádiz U1.5** 77.5% +5.9% (team) · buy≥1.35 | 2026-08-22 21:30 |
-| — not started | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% · buy≥1.25 | **Sporting O1.5** 64.5% +22.3% (team) · buy≥1.63 | 2026-08-22 21:30 |
 | — not started | Peru Liga 1 | Juan Pablo II v ADT | U3.0 83.1% +9.6% · buy≥1.33 | **Juan Pablo II U1.5** 75.2% +22.4% (team) · buy≥1.40 | 2026-08-22 22:30 |
 | — not started | Colombia Primera A | Águilas Doradas v Millonarios | U4.25 84.2% −7.2% · buy≥1.27 | **O1.75 77.5% +10.2%** (floor −1.5) · buy≥1.41 | 2026-08-22 22:30 |
 | — not started | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% · buy≥1.29 | U2.75 66.4% +4.5% (floor −12.6) · buy≥1.44 | 2026-08-22 23:00 |
@@ -29,9 +23,9 @@
 | — not started | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% · buy≥1.26 | O2.25 62.7% +10.3% (floor −16.3) · buy≥1.50 | 2026-08-23 02:00 |
 | — not started | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% · buy≥1.40 | — none | 2026-08-23 03:15 |
 
-## Completed FUTURE match bettips: Tip 1 86.5% hit · Tip 2 76.1% hit
+## Completed FUTURE match bettips: Tip 1 85.3% hit · Tip 2 74.0% hit
 
-**Tip 1 — 77 / 89**   ·   **Tip 2 — 54 / 71** (18 fixtures offered no second tip)
+**Tip 1 — 81 / 95**   ·   **Tip 2 — 57 / 77** (18 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
@@ -117,18 +111,24 @@
 | ❌ MISS — 3-3 | Ekstraklasa | Śląsk v Widzew | U3.0 84.3% +14.1% · buy≥1.30 | ❌ U4.25 94.0% +8.5% (lower edge) · buy≥1.12 | 2026-08-22 |
 | ❌ MISS — 1-3 | Peru Liga 1 | UTC v Comerciantes Unidos | U3.0 80.7% +7.1% · buy≥1.38 | ✅ **UTC U1.5** 76.8% +24.1% (team) · buy≥1.37 | 2026-08-22 |
 | ✅ HIT — 1-2 | Swiss Super League | Zürich v Basel | **O2.25 83.5% +27.6%** · buy≥1.19 | ✅ **Basel O1.5** 78.8% +46.4% (team) · buy≥1.33 | 2026-08-22 |
-| ✅ HIT — 1-1 (decided) | Serie B | Avellino v Arezzo | O1.5 76.9% +5.3% — below the floor · buy≥1.37 | — none | 2026-08-22 |
+| ✅ HIT — 1-2 | Serie B | Avellino v Arezzo | O1.5 76.9% +5.3% — below the floor · buy≥1.37 | — none | 2026-08-22 |
 | ✅ HIT — 1-1 (decided) | LaLiga | Espanyol v Real Madrid | O1.5 79.5% +5.1% · buy≥1.32 | ✅ **Real Madrid O0.5** 83.6% +14.9% (team) · buy≥1.26 | 2026-08-22 |
 | ✅ HIT — 0-0 | Ligue 1 | Nice v Lorient | U3.0 80.7% +12.1% · buy≥1.38 | ✅ **Nice U1.5** 76.3% +21.1% (team) · buy≥1.38 | 2026-08-22 |
 | ✅ HIT — 0-2 | Ligue 1 | Toulouse v Lyon | U4.25 87.8% +3.4% · buy≥1.21 | ✅ U3.75 73.7% +5.1% (floor −5.3) · buy≥1.32 | 2026-08-22 |
 | ✅ HIT — 0-0 | Ligue 1 | Troyes v Paris FC | U4.25 90.7% +6.4% · buy≥1.17 | ✅ **Troyes U1.5** 79.1% +23.9% (team) · buy≥1.33 | 2026-08-22 |
 | ✅ HIT — 0-2 | Serie A | Genoa v Napoli | U4.25 90.7% +2.0% · buy≥1.17 | ✅ **Genoa U1.5** 75.1% +15.0% (team) · buy≥1.40 | 2026-08-22 |
 | ✅ HIT — 0-1 | Serie A | Parma v Cagliari | U3.0 87.9% +12.8% · buy≥1.23 | ✅ **Parma U1.5** 81.6% +21.5% (team) · buy≥1.29 | 2026-08-22 |
+| ✅ HIT — 1-2, push | Serie B | Benevento v Modena | U3.0 82.2% +6.9% · buy≥1.35 | ❌ U2.75 62.7% +8.8% (floor −16.3) · buy≥1.51 | 2026-08-22 |
+| ❌ MISS — 1-0 | Serie B | Empoli v Cremonese | O1.5 81.3% +9.7% · buy≥1.29 | ❌ **Cremonese O0.5** 83.3% +14.5% (team) · buy≥1.26 | 2026-08-22 |
+| ✅ HIT — 0-2 | Eredivisie | Heerenveen v Zwolle | U4.25 84.5% +5.2% · buy≥1.26 | ✅ U3.75 68.8% +7.0% (floor −10.2) · buy≥1.41 | 2026-08-22 |
+| ✅ HIT — 2-1 | Brasileirão | Fluminense v Remo | U4.25 88.2% −0.7% · buy≥1.20 | ✅ O1.75 72.7% +1.0% (floor −6.3) · buy≥1.53 | 2026-08-22 |
+| ❌ MISS — 2-2 | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% · buy≥1.27 | ❌ **Cádiz U1.5** 77.5% +5.9% (team) · buy≥1.35 | 2026-08-22 |
+| ✅ HIT — 3-0 (decided) | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% · buy≥1.25 | ✅ **Sporting O1.5** 64.5% +22.3% (team) · buy≥1.63 | 2026-08-22 |
 
 
 ### Actual placed bets
 
-**Win: 38 / 53 — 72%  ·  Pending: 13 / 66  ·  Average odds: ≈1.29**
+**Win: 40 / 56 — 71%  ·  Pending: 10 / 66  ·  Average odds: ≈1.29**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -151,12 +151,12 @@ translated into odds.
 
 The result is uncomfortable and it is the most useful thing measured today:
 
-    16 settled at 1 unit each, 11 won      strike rate 69%
-    staked 16   returned 14.98   P/L -1.02   ROI -6.4%
-    model EV of that same book before kickoff: +1.8% per bet
+    19 settled at 1 unit each, 13 won      strike rate 68%
+    staked 19   returned 17.56   P/L -1.44   ROI -7.6%
+    model EV of that same book before kickoff: +2.8% per bet
 
-**A 69% strike rate returned a loss.** That is not variance dressed up — the
-book was worth only +1.8% per bet going in, which is inside the noise, so it was
+**A 68% strike rate returned a loss.** That is not variance dressed up — the
+book was worth only +2.8% per bet going in, which is inside the noise, so it was
 never going to survive an ordinary bad run. The hit-rate column said the day
 went well. The money says it went slightly badly.
 
@@ -182,13 +182,14 @@ away with it.
 
 Split by whether the price cleared the threshold:
 
-    bought AT or ABOVE buy-from   13 bets,  4 settled, ROI +16.0%
+    bought AT or ABOVE buy-from   13 bets,  7 settled, ROI  +3.1%
     bought BELOW it               16 bets, 12 settled, ROI -13.8%
 
-The +16.0% rests on four bets and proves nothing on its own. The **-13.8% on
-twelve** is the half that does not need a large sample, because it is not really
-a measurement — pay less than break-even often enough and the arithmetic does
-the rest.
+The +3.1% rests on seven bets and proves nothing on its own — it was +16.0%
+three bets ago and fell when `Empoli O1.5` lost, which is what a seven-bet
+sample does. The **-13.8% on twelve** is the half that does not need a large
+sample, because it is not really a measurement — pay less than break-even often
+enough and the arithmetic does the rest.
 
 **Two patterns account for almost all of it.** The first is buying the favourite
 rung at a short price: `U4.5` at 1.12–1.16 and `O1.5` at 1.17 are bets on 85%+
