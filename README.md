@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 85.3%
+## CURRENT CONFIRMED HITRATE: 84.5%
 
-**81 / 95 settled** · over/under markets only · live tips, not backtests
+**82 / 97 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,13 +10,11 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| — not started | Peru Liga 1 | Juan Pablo II v ADT | U3.0 83.1% +9.6% · buy≥1.33 | **Juan Pablo II U1.5** 75.2% +22.4% (team) · buy≥1.40 | 2026-08-22 22:30 |
-| — not started | Colombia Primera A | Águilas Doradas v Millonarios | U4.25 84.2% −7.2% · buy≥1.27 | **O1.75 77.5% +10.2%** (floor −1.5) · buy≥1.41 | 2026-08-22 22:30 |
-| — not started | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% · buy≥1.29 | U2.75 66.4% +4.5% (floor −12.6) · buy≥1.44 | 2026-08-22 23:00 |
-| — not started | Colombia Primera A | Tolima v Bucaramanga | U4.25 85.9% −5.6% · buy≥1.24 | **O1.75 75.6% +8.4%** (floor −3.4) · buy≥1.45 | 2026-08-22 23:05 |
-| — not started | Brasileirão | Internacional v Atlético-MG | U4.25 86.4% −2.5% · buy≥1.23 | O1.75 75.0% +3.4% (floor −4.0) · buy≥1.47 | 2026-08-22 23:30 |
-| — not started | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% · buy≥1.32 | U2.75 64.6% +2.6% (floor −14.4) · buy≥1.47 | 2026-08-22 23:30 |
-| — not started | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% · buy≥1.24 | — none | 2026-08-22 23:30 |
+| **LIVE: 2-1** (90') | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% · buy≥1.29 | U2.75 66.4% +4.5% (floor −12.6) · buy≥1.44 | 2026-08-22 23:00 |
+| **LIVE: 0-0** (87') | Colombia Primera A | Tolima v Bucaramanga | U4.25 85.9% −5.6% · buy≥1.24 | **O1.75 75.6% +8.4%** (floor −3.4) · buy≥1.45 | 2026-08-22 23:05 |
+| **LIVE: 0-0** (63') | Brasileirão | Internacional v Atlético-MG | U4.25 86.4% −2.5% · buy≥1.23 | O1.75 75.0% +3.4% (floor −4.0) · buy≥1.47 | 2026-08-22 23:30 |
+| **LIVE: 0-1** (59') | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% · buy≥1.32 | U2.75 64.6% +2.6% (floor −14.4) · buy≥1.47 | 2026-08-22 23:30 |
+| **LIVE: 0-3** (59') | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% · buy≥1.24 | — none | 2026-08-22 23:30 |
 | — not started | Colombia Primera A | Santa Fe v América de Cali | **O1.5 80.8% +13.6%** · buy≥1.30 | O2.25 58.8% +18.0% (floor −20.2) · buy≥1.59 | 2026-08-23 01:10 |
 | — not started | Brasileirão | Cruzeiro v Flamengo | **O1.5 88.0% +16.4%** · buy≥1.19 | **Flamengo O1.5** 61.9% +33.6% (team) · buy≥1.70 | 2026-08-23 01:30 |
 | — not started | Peru Liga 1 | Deportivo Garcilaso v Cusco | U4.25 86.4% −1.3% · buy≥1.23 | O1.75 75.0% +1.7% (floor −4.0) · buy≥1.47 | 2026-08-23 02:00 |
@@ -39,9 +37,9 @@
 | — not started | Eredivisie | GA Eagles v ADO | U4.25 83.8% +4.5% · buy≥1.27 | **ADO U1.5** 77.4% +18.7% (team) · buy≥1.36 | 2026-08-23 12:15 |
 | — not started | J1 League | Machida Z v Urawa Reds | U4.25 83.1% **−5.2%** · buy≥1.29 | **O1.75 78.6% +6.1%** (floor −0.4) · buy≥1.39 | 2026-08-23 12:30 |
 
-## Completed FUTURE match bettips: Tip 1 85.3% hit · Tip 2 74.0% hit
+## Completed FUTURE match bettips: Tip 1 84.5% hit · Tip 2 73.4% hit
 
-**Tip 1 — 81 / 95**   ·   **Tip 2 — 57 / 77** (18 fixtures offered no second tip)
+**Tip 1 — 82 / 97**   ·   **Tip 2 — 58 / 79** (18 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
@@ -140,11 +138,13 @@
 | ✅ HIT — 2-1 | Brasileirão | Fluminense v Remo | U4.25 88.2% −0.7% · buy≥1.20 | ✅ O1.75 72.7% +1.0% (floor −6.3) · buy≥1.53 | 2026-08-22 |
 | ❌ MISS — 2-2 | LaLiga 2 | Eldense v Cádiz | U3.0 85.7% +9.3% · buy≥1.27 | ❌ **Cádiz U1.5** 77.5% +5.9% (team) · buy≥1.35 | 2026-08-22 |
 | ✅ HIT — 3-0 (decided) | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% · buy≥1.25 | ✅ **Sporting O1.5** 64.5% +22.3% (team) · buy≥1.63 | 2026-08-22 |
+| ❌ MISS — 5-1 | Peru Liga 1 | Juan Pablo II v ADT | U3.0 83.1% +9.6% · buy≥1.33 | ❌ **Juan Pablo II U1.5** 75.2% +22.4% (team) · buy≥1.40 | 2026-08-22 |
+| ✅ HIT — 1-1 | Colombia Primera A | Águilas Doradas v Millonarios | U4.25 84.2% −7.2% · buy≥1.27 | ✅ **O1.75 77.5% +10.2%**, half win (floor −1.5) · buy≥1.41 | 2026-08-22 |
 
 
 ### Actual placed bets
 
-**Win: 43 / 60 — 71.7%  ·  Pending: 22 / 82  ·  ROI −6.2%**
+**Win: 44 / 62 — 71.0%  ·  Pending: 20 / 82  ·  ROI −7.0%**
 
 Counts come from `config/bets.tsv` via `scripts/ledger.py`, not from prose. The
 earlier figures here undercounted: the whole afternoon block was backed and
@@ -169,20 +169,20 @@ recorded, scored against the engine's own break-even for the rung actually
 bought. This is the fix for the defect that produced the mis-cut discipline
 buckets: nothing is re-derived by hand any more.
 
-    60 settled at 1 unit each
-    hit rate (push counts as a hit)   43/60 = 71.7%
-    returned 56.29 on 60 staked   P/L -3.71   ROI -6.2%
+    62 settled at 1 unit each
+    hit rate (push counts as a hit)   44/62 = 71.0%
+    returned 57.63 on 62 staked   P/L -4.37   ROI -7.0%
 
 **A 71.7% hit rate returned -6.2%.** That is the whole problem in one line, and
 splitting by the price paid says where it went:
 
-    bought AT or ABOVE buy-from    18 bets   ROI  +18.4%
+    bought AT or ABOVE buy-from    19 bets   ROI  +12.2%
     bought BETWEEN break-even and buy-from
-                       ("thin")    17 bets   ROI  -17.6%
+                       ("thin")    18 bets   ROI  -14.7%
     bought BELOW break-even        25 bets   ROI  -16.2%
 
-**The threshold does its job.** The 18 bets that cleared it returned +18.4%; the
-42 that did not returned about -17% either way. That is not a subtle gradient —
+**The threshold does its job.** The 19 bets that cleared it returned +12.2%; the
+43 that did not returned about -15% either way. That is not a subtle gradient —
 the bets above the line paid and the bets below it did not, on a sample large
 enough to take seriously.
 
@@ -192,7 +192,7 @@ value** — above break-even, below break-even plus 5% — and they returned
 survive an ordinary day's variance. The margin is not a nicety; it is the
 difference between a bet that pays and a bet that merely is not stupid.
 
-**26 of 70 were bought below break-even**, negative by the engine's own number
+**27 of 82 were bought below break-even**, negative by the engine's own number
 whatever the match did. The worst are all the same shape:
 
     Cerezo Osaka v Shimizu   O1.5   paid 1.22  needed 1.345   -9.3%

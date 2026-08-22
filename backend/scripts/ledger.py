@@ -54,7 +54,11 @@ def read_fixtures() -> dict[str, dict]:
         m = TIP.search(tip)
         if not m:
             continue
-        s = SCORE.search(status)
+        # Only a SETTLED row carries a result. The pending table shows live
+        # scores too ("LIVE: 2-1 (90')"), and an earlier version matched those
+        # as final — settling bets off matches still being played, which is the
+        # same mistake that mis-graded Antwerp off an in-play 1-1.
+        s = SCORE.search(status) if status[:1] in ("✅", "❌") else None
         m2 = TIP.search(c[5])
         out[name] = {
             "rung": m.group(1),
