@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 90.9%
+## CURRENT CONFIRMED HITRATE: 92.0%
 
-**20 / 22 settled** · over/under markets only · live tips, not backtests
+**23 / 25 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,9 +10,6 @@
 
 | Live | League | Fixture | Play | Date | Modelled | Edge |
 |---|---|---|---|---|---|---|
-| ⏱ LIVE: 1-0 (11') — winning | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 (≤3 goals) | 2026-08-21 | 88% | +7.8% |
-| — not started | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 (≤2, half loss at 3) | 2026-08-22 | 81% | +21.7% |
-| — not started | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 (≤3 goals) | 2026-08-22 | 82% | +12.6% |
 | — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 (≤3, half win at 4) | 2026-08-22 | 79% | +0.1% |
 | — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 (≤3 goals) | 2026-08-22 | 84% | +22.2% |
 | — not started | Championship | Millwall v Norwich | O1.5 (2+ goals) | 2026-08-22 | 81% | +8.4% |
@@ -71,22 +68,25 @@
 | ✅ HIT — 0-4, half win | Süper Lig | Erzurumspor v Galatasaray | U4.25 | 2026-08-21 | 84% | −0.5% |
 | ✅ HIT — 2-0 | Belgian Pro League | Standard Liège v La Louvière | U4.25 | 2026-08-21 | 84% | −1.0% |
 | ✅ HIT — 1-0 | LaLiga | Real Betis v Real Sociedad | U4.25 | 2026-08-21 | 84% | −2.9% |
-| ✅ HIT — 1-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 | 2026-08-21 | 83% | +10% |
+| ✅ HIT — 3-1 | Peru Liga 1 | Alianza Atlético v Sporting Cristal | O1.5 | 2026-08-21 | 83% | +10% |
+| ✅ HIT — 1-0 | Colombia Primera A | Jaguares v Boyacá Chicó | U3.0 | 2026-08-21 | 88% | +7.8% |
+| ✅ HIT — 0-0 | Colombia Primera A | Alianza Valledupar v Deportivo Pereira | U2.75 | 2026-08-22 | 81% | +21.7% |
+| ✅ HIT — 0-0 | Chile Primera División | Audax Italiano v Unión La Calera | U3.0 | 2026-08-22 | 82% | +12.6% |
 
 ---
 
 ### Notes on the log
 
-- Sample is 22 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
+- Sample is 25 bets. Far too small to mean anything yet. Stage 1 is about accumulating live results.
 - All tips issued as-of the morning of the match. In-play fixtures run as if unstarted — no live information reaches them.
 - Retrosims are never logged here. Those are engine optimisation, not tips.
 - Pending → completed once a result is confirmed.
 
 ### On the 22 Aug batch
 
-- **Alianza Valledupar** — +21.7% edge, the largest issued, and the first `U2.75` in the log. Signal 0.83, the highest confidence so far, with the sharp lane agreeing on the same rung. Note it is a *half loss* at 3 goals, not a push.
-- **Colombia is a measured negative-edge league** (−2.07% over 300 fixtures) and was on the cut list before the cull failed its own test. Two tips here regardless, because league-level past performance does not persist (r = +0.153).
-- **Chile is new** — 6,240 matches from 2017, added via ESPN for this fixture. First tip from a league with no track record here at all.
+- **Alianza Valledupar landed 0-0.** The largest edge issued (+21.7%), the first `U2.75` in the log, the highest signal recorded (0.83), and the sharp lane agreeing on the same rung — the one call where every marker lined up at once, and it came in.
+- **Both Colombian tips won**, in a league measured at −2.07% edge that was on the cut list before the cull failed its own test. Consistent with that failure: past per-league performance does not predict the next fixture (r = +0.153).
+- **Chile's first tip landed** — Audax Italiano 0-0 on a U3.0 at +12.6%, from a league added hours earlier with no track record here at all.
 - **Three Towns** at +0.1% is a fallback, not a read: lean says over, selector took U4.25.
 
 ### Live scores
