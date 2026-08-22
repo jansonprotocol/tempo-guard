@@ -85,7 +85,7 @@
 
 ### Actual placed bets
 
-**Win: 0 / 0 —  ·  Pending: 26 / 26  ·  Average odds: ≈1.33**
+**Win: 2 / 2 — 100%  ·  Pending: 24 / 26  ·  Average odds: ≈1.33**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -162,6 +162,35 @@ trade this log has never had to grade: **a lower-probability bet bought for a
 longer price.** Whether they land says nothing on its own; what they start is the
 separate column that has to be kept from here, because mixing 60% bets into a 92%
 hit rate without marking them makes the headline number mean two things at once.
+
+#### Graded so far — the answer is yes, once, and clearly
+
+| Fixture | Tip 1 | Lane taken | Result |
+|---|---|---|---|
+| Kashima v Fukuoka | `U4.25` 87.5% **−0.8%** ❌ | `O1.5` (middle, toward Tip 2's `O1.75`) | 3-2 · **saved** |
+| Nagoya v Gamba | `O1.5` 83.7% +11.2% ✅ | `O1.5` (Tip 1 exactly) | 1-1 · won on the tip |
+
+**Kashima is the first case of the lane choice paying for itself.** The published
+Tip 1 was a `U4.25` needing four goals or fewer; the match finished on five, so
+the tip lost outright. The bet placed was an `O1.5` on the opposite side of the
+book, and it settled inside 57 minutes.
+
+Nothing about that was luck, and the engine flagged it in advance: **Tip 1
+carried a negative edge of −0.8%.** A `U4.25` at a minus sign is not a read, it
+is the selector's fallback — the rung it reaches for when nothing on the ladder
+beats a typical fixture in that league. Tip 2 pointed the other way at +1.2%, and
+the other way was right.
+
+This is now twice in two days in the same competition:
+
+    Kashiwa v Nagasaki  21 Aug   Tip 1 U4.25 86.0%  edge −2.3%   4-2, six goals   MISS
+    Kashima v Fukuoka   22 Aug   Tip 1 U4.25 87.5%  edge −0.8%   3-2, five goals  MISS
+
+Both Tip 1 misses in J1 are negative-edge `U4.25` fallbacks, and on both the
+Over lane was available and correct. Two cases is an observation, not a finding —
+but it is the sharpest candidate rule the live log has produced: **when Tip 1 is
+a `U4.25` at negative edge, the second lane is not an alternative, it is the
+actual read.**
 
 **2. Did skipping help?** Six tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
 
