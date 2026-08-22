@@ -405,6 +405,62 @@ and the reason the floor sits at 0.79 rather than wherever the strike rate peaks
 One caveat on the table itself: it is a sweep with no chronological holdout, so
 by this repository's own standard it generates candidates and settles nothing.
 
+#### Team totals as a second lane — the first candidate to survive a holdout
+
+Proposed from the betting side rather than the engine side: leave Tip 1 alone,
+but let Tip 2 be a **team** total when the match total is unreadable. "Nobody
+knows how many goals this game has, but Team A scoring at all is 80%."
+
+The structural argument is the strong part. Every existing Tip 2 sits on the
+same ladder as Tip 1, so the pair is always related by set containment —
+SHARPEN cannot rescue a loss, NET is Tip 1 bought safer, FLIP is the same bet
+mirrored at a 15-point discount. A team total is the **first genuinely
+orthogonal market** available: it can win where Tip 1 loses without being its
+opposite.
+
+The inputs already exist and nothing uses them. `features.asof_features`
+publishes `p_home_tt05` and `p_away_tt05` — Poisson P(side scores at least
+once), computed as-of like everything else. They feed one add-on gate and are
+otherwise dead.
+
+    TRAIN (2,054 fixtures, to 2026-04-06)     best floor 0.87   edge +12.75%
+    HOLDOUT (1,106 fixtures, from 2026-04-06) same floor 0.87   edge +20.87%
+
+    every floor on the holdout, none of them chosen there:
+      floor  picks     hit    base     edge   95% interval on hit
+       0.70    929   80.9%   75.1%   +5.80%   78.3% .. 83.3%
+       0.75    700   81.9%   75.3%   +6.60%   78.8% .. 84.5%
+       0.79    457   83.2%   75.5%   +7.70%   79.4% .. 86.3%
+       0.83    246   85.4%   75.8%   +9.60%   80.4% .. 89.2%
+       0.87     91   96.7%   75.8%  +20.90%   90.8% .. 98.9%
+
+**Every floor clears its base rate at the LOW end of its confidence interval**,
+and the match-total ladder manages +2.59% over 7,393 fixtures for comparison.
+
+Two things make this different from the five candidates that dissolved earlier:
+
+1. **Edge grows with the floor rather than collapsing.** Buying certainty always
+   showed the opposite — strike up, edge flat or down. Here 80.9% at +5.80%
+   climbs to 96.7% at +20.90%.
+2. **The whole curve survives out of sample.** Not one threshold got lucky; the
+   monotone relationship holds on 1,106 fixtures the floors were never fitted to.
+
+**Where it is aimed, it also works, though less well.** On fixtures where Tip 1
+is a negative-edge fallback — 15% of the book — a team total at floor 0.79
+returns +5.25%, against a Tip 1 carrying *less than nothing*.
+
+**One direction is dead and should not be built.** Team total UNDER 0.5 fails on
+calibration: the model says a weak side has a 49.7% chance of scoring and it
+happens 68.2% of the time, an 18.5-point miss. It is well calibrated above 0.75
+(−0.5%) and above 0.85 (−1.8%), so **Over 0.5 only**.
+
+Honest caveats: the 0.87 bucket is 91 holdout picks and 96.7% will regress; base
+rates were computed over the full pool rather than train-only, which flatters
+nothing in the prediction but is not strictly clean; and none of this has been
+tested as a *published* tip against real prices, where a market at 80% base rate
+will be priced accordingly. What it does establish is that the number carries
+real information, which is more than any Tip 2 lane currently manages.
+
 #### What Tip 2 actually is — three families, and two of them are settled by logic
 
 Every (Tip 1, Tip 2) pair is one of three kinds, decided by set containment on
