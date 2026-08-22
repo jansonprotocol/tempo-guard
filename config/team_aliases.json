@@ -20,7 +20,6 @@
     "so that is a data gap rather than a naming one. 'N.N.' (COPA-L) is the",
     "feed's placeholder for an undecided team and must stay unresolved."
   ],
-
   "ENG-PL": {
     "Manchester United FC": "Man United",
     "Manchester City FC": "Man City",
@@ -56,5 +55,11 @@
   "POR-PL": {
     "Sporting Clube de Braga": "Sp Braga",
     "Sporting Clube de Portugal": "Sp Lisbon"
+  },
+  "FRA-L2": {
+    "Saint-Étienne": "St Etienne",
+    "Saint-Etienne": "St Etienne",
+    "AS Saint-Étienne": "St Etienne",
+    "AS Saint-Etienne": "St Etienne"
   }
 }

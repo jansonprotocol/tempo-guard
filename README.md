@@ -31,6 +31,23 @@
 | — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
 | — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
 | — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) · **backed O2.5 @ 1.50** | 2026-08-22 17:45 |
+| — not started | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
+| — not started | Süper Lig | Çorum v Kasımpaşa | **NO TIP** — 1 match | — | 2026-08-22 18:00 |
+| — not started | Swiss Super League | Luzern v Lausanne | **WITHHELD** — split name | — | 2026-08-22 18:00 |
+| — not started | Peru Liga 1 | Sport Huancayo v Moquegua | U3.0 83.4% +9.8% | U4.25 93.5% +5.8% (lower edge) | 2026-08-22 18:00 |
+| — not started | Saudi Pro League | Al-Kholood v Al-Taawoun | U3.0 79.5% +14.3% | U4.25 91.4% +9.5% (lower edge) | 2026-08-22 18:10 |
+| — not started | Belgian Pro League | Charleroi v Mechelen | U4.25 90.9% +5.6% | **U3.75 78.7% +8.7%** (floor −0.3) | 2026-08-22 18:15 |
+| — not started | Premier League | Brentford v Tottenham | U4.25 90.3% +8.6% | **U3.75 77.7% +12.7%** (floor −1.3) | 2026-08-22 18:30 |
+| — not started | Serie A | Inter v Monza | U4.25 84.9% −3.8% | **O1.75 76.8% +4.9%** (floor −2.2) | 2026-08-22 18:30 |
+| — not started | Serie A | Udinese v Como | O1.5 80.4% +8.5% | O2.25 58.2% +11.8% (floor −20.8) | 2026-08-22 18:30 |
+| — not started | Eredivisie | Sparta Rotterdam v Utrecht | O1.5 82.1% +0.1% | — none | 2026-08-22 18:45 |
+| — not started | Serie B | Carrarese v Mantova | U3.0 74.2% −1.2% — **no rung cleared the floor** | O1.75 72.7% +1.1% (floor −6.3) | 2026-08-22 19:00 |
+| — not started | Serie B | Südtirol v Entella | U3.0 87.1% +11.8% | U2.75 69.9% +15.9% (floor −9.1) | 2026-08-22 19:00 |
+| — not started | LaLiga 2 | Ceuta v Las Palmas | U4.25 90.6% +1.1% | **U3.75 78.2% +1.8%** (floor −0.8) | 2026-08-22 19:00 |
+| — not started | LaLiga 2 | Albacete v Real Sociedad B | U4.25 90.5% +0.9% | **U3.75 78.0% +1.5%** (floor −1.0) | 2026-08-22 19:00 |
+| — not started | Liga Portugal | Estoril v Rio Ave | U3.0 82.8% +11.3% | U4.25 93.2% +6.9% (lower edge) | 2026-08-22 19:00 |
+| — not started | LaLiga | Valencia v Celta | U4.25 87.1% +0.3% | — none | 2026-08-22 19:30 |
+| — not started | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | **O1.75 74.7% +2.9%** (floor −4.3) | 2026-08-22 20:00 |
 
 ## Completed FUTURE match bettips: Tip 1 87.5% hit · Tip 2 74.1% hit
 
@@ -356,6 +373,21 @@ What the results settle is whether those short-priced favourites land often
 enough that the skips cost more than they saved.
 
 ---
+
+- **`Luzern v Lausanne` is the split-name defect costing a live tip.** Both clubs
+  are filed twice: `FC Luzern` 219 rows ending 2025-05-24 against `Luzern` 3
+  rows from this season, and `FC Lausanne-Sport` 112 against `Lausanne` 3. The
+  resolver serves the three-row side, so the fixture falls under the gate. Asked
+  against the deep variants it reads `O1.5` at **86.8% / +7.93%** — but off form
+  that stops in May 2025, so that number is not publishable either. Neither half
+  of a split is the right answer; the union is, and that fix is still queued.
+
+- **`Saint-Étienne v Grenoble` was the same shape and is now fixed.** The store
+  files them as `St Etienne` (226 rows). Added to `config/team_aliases.json`,
+  which only fires where resolution already fails, so nothing else moved.
+
+- **`Çorum v Kasımpaşa` is a real no-tip.** Çorum has one match in the Süper Lig
+  store — newly promoted, nothing hidden under another name.
 
 ### Notes on the log
 
