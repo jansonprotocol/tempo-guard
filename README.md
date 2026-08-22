@@ -144,7 +144,7 @@
 
 ### Actual placed bets
 
-**Win: 43 / 60 — 71.7%  ·  Pending: 19 / 79  ·  ROI −6.2%**
+**Win: 43 / 60 — 71.7%  ·  Pending: 22 / 82  ·  ROI −6.2%**
 
 Counts come from `config/bets.tsv` via `scripts/ledger.py`, not from prose. The
 earlier figures here undercounted: the whole afternoon block was backed and
@@ -402,6 +402,29 @@ bought without checking the number rather than a bad read.
 
 `San Diego U4.5` at 1.23 against a 1.24 threshold is inside rounding — positive
 EV, just short of the margin.
+
+#### The Sunday morning card — 3 bets, all three clearing the threshold
+
+| Fixture | Bought | P | Paid | Break-even | Buy from | EV |
+|---|---|---|---|---|---|---|
+| GA Eagles v ADO | **ADO Den Haag U1.5** (team) | 77.4% | 1.40 | 1.292 | 1.36 | **+8.3%** |
+| Sønderjyske v Nordsjælland | U4.5 | — | 1.25 | 1.184 | 1.24 | +5.6% |
+| Machida Z v Urawa Reds | O1.5 | — | 1.34 | 1.272 | 1.34 | +5.3% |
+
+**3 of 3 above the line, +6.4% per bet.** Small card, but the first with nothing
+bought below the threshold.
+
+`Machida Z` is worth naming: Tip 1 was a `U4.25` at **−5.2% edge** — the engine
+finding nothing and retreating — and the bet crossed to the Over side, taking
+`O1.5` rather than the `O1.75` published. Same tier, softer settlement, so the
+rung choice is free and correct. This is the crossing-off-a-negative-edge-
+fallback shape that worked on Fluminense and Kashima, taken deliberately for
+once rather than by feel.
+
+**Every one of these three fixtures needed an engine fix to price at all**, and
+two of them would have been priced WRONG rather than skipped — see the Danish
+merge and the accent-folding repair in the defects section. `Sønderjyske` in
+particular would have been tipped off form ending May 2025.
 
 #### On cash-outs
 
