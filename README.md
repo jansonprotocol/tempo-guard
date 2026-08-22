@@ -179,11 +179,11 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 | 19:00 | Ceuta v Las Palmas | U4.25 | U4.5 | 1.10 |
 | 19:00 | Estoril v Rio Ave | U3.0 | U3.25 | 1.38 |
 | 20:00 | Saint-Étienne v Grenoble | U4.25 | U4.5 | 1.15 |
-| 20:00 | Al-Khaleej v Al-Shabab | U4.25 | U4.5 | 1.16 |
+| 20:00 | Al-Khaleej v Al-Shabab | U4.25 | **Al-Shabab O0.5 — team lane** | 1.23 |
 | 20:15 | Śląsk v Widzew | U3.0 | U3.5 | 1.32 |
 | 20:15 | UTC v Comerciantes Unidos | U3.0 | U3.5 | 1.19 |
-| 20:30 | Fenerbahçe v Konyaspor | O1.5 | **O1.5 — Tip 1** | 1.13 |
-| 20:30 | Zürich v Basel | O2.25 | **O2.5 — past Tip 1** | 1.52 |
+| 20:30 | Fenerbahçe v Konyaspor | O1.5 | **Fenerbahçe O1.5 — team lane** | 1.32 |
+| 20:30 | Zürich v Basel | O2.25 | **Basel O1.5 — team lane** | 1.83 |
 | 20:45 | Nice v Lorient | U3.0 | U3.25 | 1.33 |
 | 20:45 | Toulouse v Lyon | U4.25 | U4.5 | 1.12 |
 
@@ -896,6 +896,33 @@ of the match ladder could have done that, because they all move together.
 `U1.5` at 77.2% and +22.1% edge on a side that scored three. Six fixtures decide
 nothing; the point of keeping this column separate is that in fifty it will.
 
+
+- **Three bets swapped onto team lanes at 20:23, and they do not all grade the
+  same way.** The swap-rule measurement was on hit rate alone; these were taken
+  for price, which is a different question and has to be scored differently:
+
+      fixture                   out                        in
+      Zürich v Basel            O2.5    83.5% @ 1.52       Basel O1.5   78.8% @ 1.83
+                                EV +26.9%                  EV +44.2%     BETTER by 17.3 pts
+      Fenerbahçe v Konyaspor    O1.5    87.7% @ 1.13       Fener O1.5   64.7% @ 1.32
+                                EV -0.9%                   EV -14.6%     WORSE by 13.7 pts
+      Al-Khaleej v Al-Shabab    U4.5    86.1% @ 1.16       Al-Shabab O0.5 80.8% @ 1.23
+                                EV -0.1%                   EV -0.6%      a wash
+
+  **Basel is the swap the lane exists for.** Giving up 4.7 points of probability
+  bought 0.31 of price, and 1.83 against a 54.6% break-even on a 78.8% read is
+  the largest expected value anywhere in this log.
+
+  **Fenerbahçe is the swap to learn from.** It gave up **23 points** of
+  probability — 87.7% down to 64.7% — to gain 0.19 of price. The break-even
+  moved from 88.5% to 75.8%, but the model's number fell further than the bar
+  did. A team lane is not automatically the better bet; it is better only when
+  the price moves further than the probability.
+
+  Note also that all three are NON-fallback fixtures, which is the control group
+  where swapping measured at **-11.15%** on hit rate. On price two of the three
+  agree with that and one strongly disagrees, which is the distinction the
+  hit-rate measurement could not see.
 
 ### Notes on the log
 
