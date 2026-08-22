@@ -79,11 +79,12 @@ def main() -> None:
                 continue
             hg, ag = int(hg), int(ag)
             goals[code].append((hg, ag))
+            d = req.match_date
             for p_tt05, g in ((float(ph), hg), (float(pa), ag)):
                 gf = -math.log(1 - p_tt05)
                 for name in ORDER:
                     prob, land = RUNGS[name]
-                    obs.append((code, name, prob(gf), land(g)))
+                    obs.append((code, name, prob(gf), land(g), d))
         print(f"  {code}: {len(pairs)}", flush=True)
 
     n_fx = sum(len(v) for v in goals.values())
@@ -100,7 +101,7 @@ def main() -> None:
     print("  CALIBRATION — predicted vs actual, by rung")
     print(f"  {'rung':>6s} {'predicted':>10s} {'actual':>8s} {'gap':>8s}")
     for name in ORDER:
-        sel = [(p, w) for _c, r, p, w in obs if r == name]
+        sel = [(p, w) for _c, r, p, w, _d in obs if r == name]
         pred = sum(p for p, _ in sel) / len(sel)
         act = sum(w for _p, w in sel) / len(sel)
         flag = "  <- unusable" if abs(act - pred) > 0.05 else ""
@@ -111,13 +112,43 @@ def main() -> None:
           f"{'edge':>8s} {'fair':>7s}")
     for name in ORDER:
         for floor in (0.60, 0.70, 0.75, 0.80, 0.85, 0.90):
-            sel = [(c, p, w) for c, r, p, w in obs if r == name and p >= floor]
+            sel = [(c, p, w) for c, r, p, w, _d in obs if r == name and p >= floor]
             if len(sel) < 60:
                 continue
             hit = sum(w for _c, _p, w in sel) / len(sel)
             bas = sum(base[(c, name)] for c, _p, _w in sel) / len(sel)
             print(f"  {name:>6s} {floor:6.2f} {len(sel):7d} {hit:8.2%} "
                   f"{bas:8.2%} {hit - bas:+8.2%} {1/hit if hit else 0:7.3f}")
+        print()
+
+
+    # ── Chronological holdout on the two rungs worth shipping ────────────
+    print("  CHRONOLOGICAL HOLDOUT")
+    obs.sort(key=lambda o: o[4])
+    cut = int(len(obs) * 0.65)
+    train, hold = obs[:cut], obs[cut:]
+    print(f"  train {len(train)} side-observations (to {train[-1][4]}), "
+          f"holdout {len(hold)} (from {hold[0][4]})\n")
+
+    def m(sel, name, floor):
+        s = [(c, p, w) for c, r, p, w, _d in sel if r == name and p >= floor]
+        if len(s) < 40:
+            return None
+        hit = sum(w for _c, _p, w in s) / len(s)
+        bas = sum(base[(c, name)] for c, _p, _w in s) / len(s)
+        return len(s), hit, bas, hit - bas
+
+    for name, floors in (("U1.5", (0.70, 0.75, 0.80)),
+                         ("O1.5", (0.55, 0.60, 0.65)),
+                         ("O0.5", (0.80, 0.85)),
+                         ("U2.5", (0.85, 0.90))):
+        for f in floors:
+            a, b = m(train, name, f), m(hold, name, f)
+            if not a or not b:
+                continue
+            print(f"  {name} floor {f:.2f}   train {a[0]:5d} edge {a[3]:+7.2%}"
+                  f"   |   HOLDOUT {b[0]:5d} hit {b[1]:6.2%} base {b[2]:6.2%} "
+                  f"edge {b[3]:+7.2%}")
         print()
 
 
