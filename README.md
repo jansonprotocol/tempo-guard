@@ -202,6 +202,62 @@ at 1.18 needed 1.332. Both won. Meanwhile `Basel O1.5` at 1.83 needed 1.269 and
 read quality, bought properly. **The team lane is not the problem; buying a 65%
 claim at an 85% price is.**
 
+#### What the losses actually have in common
+
+Run across all 95 settled tips rather than the fixtures that were backed, so
+nothing is selected on whether a bet was placed. `scripts/loss_shape.py`.
+
+**All 14 misses are boundary events.** Ten are Unders that went over, four are
+Overs that landed on exactly one goal, and there are only two genuine blowouts
+— Nantes 7 goals on a mu of 2.55, Śląsk 6 on 2.08. Six of the ten Under misses
+landed on exactly the first losing total. The engine is not misreading matches;
+it is losing by a goal.
+
+The four Over misses are their own small pattern: **every one finished on
+exactly 1 goal, and every one had mu above 3.0** — Empoli 3.08, Luzern 3.11,
+Al-Fateh 3.16, Al Qadsiah 3.77. Four fixtures is not a finding, but it is the
+tidiest cluster in the loss column and worth counting.
+
+**One rung safer rescues 8 of the 14 and breaks 0 winners.**
+
+Half of that sentence is worthless. A safer rung's winning totals are a strict
+superset of the tip's, so it *cannot* lose a match the tip won — "breaks 0" is
+arithmetic, the same set-containment trap that produced three fake zeros in the
+tip-pair families. The only real question is whether 8 rescues are worth the
+price given up, which averages **8.6%** (break-even 1.204 → 1.100).
+
+Holding the margin fixed so only the rung changes:
+
+    margin    as issued    one safer    diff
+       0%       +0.61%       +2.36%    +1.76
+       5%       +5.32%       +7.16%    +1.84
+      10%      +10.03%      +11.95%    +1.92
+
+    hit rate   85.3% (81/95)  ->  93.7% (89/95)
+
+**If the engine were perfectly calibrated this difference would be exactly
+zero** — the rescues would cost precisely what they are worth. The +1.84 IS the
+measured miscalibration at the boundary, and it is small against an overall
+calibration of +0.6 points. Suggestive, in-sample, not established.
+
+The hit rate moves much further than the ROI does, which matters here: this log
+is optimised for strike rate, and **+8.4 points of hit rate for +1.8 of ROI is
+the trade the project actually wants.**
+
+**And the price is available, which was the obvious objection.** Safer rungs are
+short, and books are supposed to be stingiest there. Measured against the real
+bet book, the opposite holds:
+
+    fair price     n   avg margin offered   reached +5%
+    under 1.15     6         +3.6%             2/6
+    1.15-1.24     33         +6.5%            15/33
+    1.25-1.34     21         +2.6%             5/21
+    1.35+         10         -1.7%             2/10
+
+The most generous band is **1.15–1.24**, exactly where the safer rungs sit. The
+stingiest is 1.35+, where the tips themselves price. Whatever else is true, the
+bookmaker is leaving more on the table at short prices than at long ones.
+
 #### Chasing the 1.20–1.39 band, and why it did not become a rule
 
 The odds bands split sharply, and the middle of the book is where the money
