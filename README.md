@@ -135,10 +135,26 @@ have done exactly that.
 | Nantes v Rodez | U4.25 88.4% −0.3% | — | short odds, no Tip 2 |
 | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | — | short odds, no Tip 2 |
 
-The skip logic is worth testing precisely because it is not free. Six of the
-eight carry a Tip 1 above 82%, so skipping them protects against a bad price and
-gives up a likely winner at the same time. Whether that trade pays depends
-entirely on how often the short-priced favourites actually land.
+Derby and Nantes are not really a judgement call, they are arithmetic. Both are
+`U4.25` at 88.4%, and a fair price at that probability is **1.131** — after a
+normal book margin it comes back at roughly **1.10**. There is no version of that
+bet worth making, and with no Tip 2 there is nothing else on the fixture.
+
+    model P     fair odds    at 3% margin
+    88.4%         1.131          1.10      Derby, Nantes
+    87.4%         1.144          1.11      QPR
+    82.4%         1.214          1.18      Al-Fateh
+    81.7%         1.224          1.19      Sanfrecce
+
+So the rule falls out of the numbers rather than being imposed: **a Tip 1 above
+about 87% with no Tip 2 is unbettable**, because the price it deserves is inside
+the margin. Sanfrecce at 81.7% is the borderline case — fair value 1.22, and
+1.19 offered is close enough to argue about.
+
+The skip is still not free. Six of the seven carry a Tip 1 above 82%, so
+declining them avoids a poor price and forgoes a likely winner in the same move.
+What the results settle is whether those short-priced favourites land often
+enough that the skips cost more than they saved.
 
 ---
 
