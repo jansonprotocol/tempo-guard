@@ -118,7 +118,7 @@
 
 ### Actual placed bets
 
-**Win: 22 / 33 — 67%  ·  Pending: 14 / 47  ·  Average odds: ≈1.28**
+**Win: 22 / 33 — 67%  ·  Pending: 23 / 56  ·  Average odds: ≈1.28**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -186,8 +186,17 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 | 20:30 | Zürich v Basel | O2.25 | **Basel O1.5 — team lane** | 1.83 |
 | 20:45 | Nice v Lorient | U3.0 | U3.25 | 1.33 |
 | 20:45 | Toulouse v Lyon | U4.25 | U4.5 | 1.12 |
+| 20:45 | Troyes v Paris FC | U4.25 | **Troyes U1.5 — team lane** | 1.48 |
+| 20:45 | Genoa v Napoli | U4.25 | **Genoa U1.5 — team lane** | 1.18 |
+| 20:45 | Parma v Cagliari | U3.0 | **Parma U1.5 — team lane** | 1.33 |
+| 20:45 | Antwerp v Genk | O1.5 | **O1.5 — Tip 1** | 1.24 |
+| 21:00 | Benevento v Modena | U3.0 | U3.5 | 1.29 |
+| 21:00 | Empoli v Cremonese | O1.5 | **O1.5 — Tip 1** | 1.34 |
+| 21:00 | Heerenveen v Zwolle | U4.25 | U4.5 | 1.29 |
+| 21:00 | Fluminense v Remo | U4.25 −0.7% | **O1.5 — flip off a fallback** | 1.33 |
+| 21:30 | Espanyol v Real Madrid | O1.5 | **O1.5 — Tip 1** | 1.17 |
 
-Fourteen open. Prices are recorded from the Sanfrecce bet onward; the earlier
+Twenty-three open by this log's count, 20 at the book — the difference is bets settled here on mathematical certainty before full time. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
 
 
@@ -923,6 +932,36 @@ nothing; the point of keeping this column separate is that in fifty it will.
   where swapping measured at **-11.15%** on hit rate. On price two of the three
   agree with that and one strongly disagrees, which is the distinction the
   hit-rate measurement could not see.
+
+- **Nine more bets, and three of them are priced against the model.** Scored on
+  the engine's own probability times the price taken:
+
+      bet                  lane                  P     odds  break-even     EV
+      Troyes U1.5 (team)   Tip 2              79.1%    1.48      67.6%   +17.1%
+      Heerenveen U4.5      safer rung         84.5%    1.29      77.5%    +9.0%
+      Empoli O1.5          Tip 1              81.3%    1.34      74.6%    +8.9%
+      Parma U1.5 (team)    Tip 2              81.6%    1.33      75.2%    +8.5%
+      Benevento U3.5       middle             82.2%    1.29      77.5%    +6.0%
+      Antwerp O1.5         Tip 1              82.5%    1.24      80.6%    +2.3%
+      Fluminense O1.5      flip off fallback  72.7%    1.33      75.2%    -3.3%
+      Espanyol O1.5        Tip 1              79.5%    1.17      85.5%    -7.0%
+      Genoa U1.5 (team)    Tip 2              75.1%    1.18      84.7%   -11.4%
+
+  **`Troyes U1.5` at 1.48 is the buy of the batch** — the same rung as Genoa and
+  Parma, taken 0.30 longer than one and 0.15 longer than the other.
+
+  **`Genoa U1.5` at 1.18 is the same read at a losing price.** 75.1% needs 1.332
+  to break even and 1.18 was paid; the lane being right does not make the bet
+  right, which is the distinction the Fenerbahçe swap made an hour earlier.
+
+  **`Fluminense` is a flip off a fallback** — Tip 1 was `U4.25` at −0.7%, and the
+  Over side was taken instead. That is the exact trade measured tonight at
+  **-21.74%** of bets on fallbacks. One fixture is not the measurement, but it is
+  the one bet on the card the evidence argues against.
+
+  **`Espanyol O1.5` at 1.17 needs 85.5% against a tip modelled at 79.5%** — six
+  points under water on the engine's own number, and only playable if Tip 1's
+  live record beats its model probability, as it has done all day.
 
 ### Notes on the log
 
