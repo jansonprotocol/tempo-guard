@@ -19,7 +19,7 @@
 | **LIVE: 0-0** (HT) | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 16:00 |
 | **LIVE: 1-2** (HT) | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 16:00 |
 | **LIVE: 0-0** (HT) | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 16:00 |
-| **LIVE: 1-1** (HT) | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
+| **LIVE: 1-1** (HT) | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) · **backed U4.25 @ 1.16** | 2026-08-22 16:00 |
 | **LIVE: 0-0** (HT) | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
 | **LIVE: 0-1** (HT) | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 16:00 |
 | **LIVE: 0-1** (HT) | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 16:00 |
@@ -99,7 +99,7 @@
 
 ### Actual placed bets
 
-**Win: 7 / 12 — 58%  ·  Pending: 22 / 34  ·  Average odds: ≈1.31**
+**Win: 7 / 12 — 58%  ·  Pending: 23 / 35  ·  Average odds: ≈1.31**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -445,11 +445,10 @@ So the two findings are of different strength, and should not be treated alike:
   those apart, and eight placed bets certainly cannot. What settles it is more
   results, not more reasoning.
 
-**2. Did skipping help?** Six tipped fixtures went unbacked, mostly short odds with no playable Tip 2; Southampton is still to be taken. Graded on whether the skip evaded a miss or cost a win.
+**2. Did skipping help?** Five tipped fixtures went unbacked, all on short odds with no playable Tip 2. Graded on whether the skip evaded a miss or cost a win.
 
 | Skipped | Tip 1 | Tip 2 | Reason |
 |---|---|---|---|
-| Southampton v Stoke | U4.25 83.3% −4.8% | O1.75 78.4% +5.6% | **to be taken later** |
 | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% | unreproducible tip |
 | Chengdu v Shenhua | O1.5 82.1% +0.2% | — | flat fixture |
 | Derby v Cardiff | U4.25 88.4% +0.4% | — | short odds, no Tip 2 |
@@ -469,7 +468,7 @@ So the rule falls out of the numbers rather than being imposed: **a Tip 1 above
 about 87% with no Tip 2 is unbettable**, because the price it deserves is inside
 the margin.
 
-The skip is still not free. All six carry a Tip 1 above 82%, so
+The skip is still not free. All five carry a Tip 1 above 82%, so
 declining them avoids a poor price and forgoes a likely winner in the same move.
 What the results settle is whether those short-priced favourites land often
 enough that the skips cost more than they saved.
@@ -506,6 +505,22 @@ enough that the skips cost more than they saved.
   the skip has forgone a live winner. Balanced against Nantes, where the same
   rule declined a fixture that went on to lose 2-5. Two skips, opposite outcomes,
   both taken for the identical reason.
+
+- **Southampton taken at Tip 1, `U4.25` @ 1.16 — the first bet placed against the
+  FLIP finding rather than with the price.** Tip 1 carried **−4.8% edge**, the
+  most negative of any bet in the log, and Tip 2 offered `O1.75` at +5.6%. Taking
+  the Under is the right side by strike rate: in FLIP pairs Tip 1 runs 88.6% and
+  Tip 2 73.6%. Whether it is the right side by *price* depends on which number
+  the 83.3% model probability should be replaced with:
+
+      break-even at 1.16          86.2%
+      model probability           83.3%   EV -3.4%
+      U4.25 base rate             88.2%   EV +2.3%
+      FLIP-family Tip 1, measured 88.6%   EV +2.8%
+
+  The model is the pessimistic estimate here and the only one that makes it a
+  losing bet. Worth recording precisely because it is a case where the engine's
+  own probability and the engine's own track record disagree about the same bet.
 
 ### Notes on the log
 
