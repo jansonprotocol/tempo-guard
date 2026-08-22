@@ -85,12 +85,17 @@
 
 ### Actual placed bets
 
-**Win: 0 / 0 — · Pending: 25 / 25**
+**Win: 0 / 0 —  ·  Pending: 25 / 25  ·  Average odds: 1.32**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 25 were backed, 8 skipped on price. Several
 were taken at Tip 2 rather than Tip 1, and a few at a line between the two, so
 this record grades the bet placed rather than the tip issued.
+
+Average odds of 1.32 across the 25 (range 1.17–1.60) put break-even at **75.6%**.
+That is the number the hit rate has to clear to make money, and it sits well
+below the 92% the tips have run at but well above what a single bad stretch
+would produce.
 
 ---
 
