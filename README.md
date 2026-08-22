@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 88.1%
+## CURRENT CONFIRMED HITRATE: 90.6%
 
-**37 / 42 settled** · over/under markets only · live tips, not backtests
+**48 / 53 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,25 +10,13 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 1-2** (75') ✅ | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 16:00 |
-| **LIVE: 4-0** (76') ❌ | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.75 77.7% +7.7% (floor −1.3) | 2026-08-22 16:00 |
-| **LIVE: 2-0** (72') | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.75 70.9% +5.9% (floor −8.1) | 2026-08-22 16:00 |
-| **LIVE: 1-1** (73') | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.75 78.9% +4.8% (floor −0.1) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (74') | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 16:00 |
-| **LIVE: 2-2** (74') | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 16:00 |
-| **LIVE: 0-0** (75') | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 16:00 |
-| **LIVE: 1-1** (75') | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
-| **LIVE: 0-0** (75') | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 16:00 |
-| **LIVE: 2-1** (75') ✅ | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 16:00 |
-| **LIVE: 0-2** (73') ✅ | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 16:00 |
-| **LIVE: 1-1** (75') | Premier League | Ipswich v Sunderland | **WITHHELD** — form 453d old | — | 2026-08-22 16:00 |
-| **LIVE: 0-0** (HT) 🟥 | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.75 66.4% +5.9% (floor −12.6) | 2026-08-22 16:30 |
-| **LIVE: 0-2** (HT) | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 16:30 |
-| **LIVE: 0-1** (33') 🟥 | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | U4.25 94.5% +5.0% (lower edge) | 2026-08-22 17:00 |
-| **LIVE: 0-1** (33') 🟥 | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
-| **LIVE: 1-0** (18') | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
-| — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
-| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
+| **LIVE: 0-1** (67') 🟥 | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.75 66.4% +5.9% (floor −12.6) | 2026-08-22 16:30 |
+| **LIVE: 0-2** (69') | Liga Portugal | Marítimo v Académico Viseu | **NO TIP** — 2 matches | — | 2026-08-22 16:30 |
+| **LIVE: 0-1** (HT) 🟥 | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | U4.25 94.5% +5.0% (lower edge) | 2026-08-22 17:00 |
+| **LIVE: 0-1** (HT) 🟥 | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 17:00 |
+| **LIVE: 1-0** (43') 🟥 | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 17:15 |
+| **LIVE: 0-1** (29') | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 17:30 |
+| **LIVE: 0-0** (14') | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.75 61.3% +4.1% (floor −17.7) | 2026-08-22 17:45 |
 | — not started | Süper Lig | Rizespor v Samsunspor | O1.5 83.8% +6.8% | O2.25 63.5% +10.2% (floor −15.5) | 2026-08-22 18:00 |
 | — not started | Süper Lig | Çorum v Kasımpaşa | **NO TIP** — 1 match | — | 2026-08-22 18:00 |
 | — not started | Swiss Super League | Luzern v Lausanne | **WITHHELD** — split name | — | 2026-08-22 18:00 |
@@ -47,9 +35,9 @@
 | — not started | LaLiga | Valencia v Celta | U4.25 87.1% +0.3% | — none | 2026-08-22 19:30 |
 | — not started | Ligue 2 | Saint-Étienne v Grenoble | U4.25 86.6% −2.1% | **O1.75 74.7% +2.9%** (floor −4.3) | 2026-08-22 20:00 |
 
-## Completed FUTURE match bettips: Tip 1 88.1% hit · Tip 2 75.9% hit
+## Completed FUTURE match bettips: Tip 1 90.6% hit · Tip 2 76.3% hit
 
-**Tip 1 — 37 / 42**   ·   **Tip 2 — 22 / 29** (13 fixtures offered no second tip)
+**Tip 1 — 48 / 53**   ·   **Tip 2 — 29 / 38** (15 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
@@ -95,11 +83,22 @@
 | ✅ HIT — 1-1 | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% | ✅ O1.75 78.8% +6.9%, half win | 2026-08-22 |
 | ✅ HIT — 1-1 | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | ✅ U3.75 72.9% +2.7% | 2026-08-22 |
 | ✅ HIT — 1-1 | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | ✅ U4.25 92.1% +9.2% | 2026-08-22 |
+| ✅ HIT — 2-0 | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | ✅ U3.75 70.9% +5.9% | 2026-08-22 |
+| ✅ HIT — 0-1 | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | ✅ U3.75 66.9% +2.0% | 2026-08-22 |
+| ✅ HIT — 2-1 | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | ✅ O1.75 77.5% +4.7% | 2026-08-22 |
+| ✅ HIT — 2-2, half win | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none offered | 2026-08-22 |
+| ✅ HIT — 1-3, half win | Championship | Preston v Wolves | U4.25 84.4% −3.7% | ✅ O1.75 77.3% +4.5% | 2026-08-22 |
+| ✅ HIT — 0-0 | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none offered | 2026-08-22 |
+| ✅ HIT — 3-1, half win | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | ✅ O1.75 78.4% +5.6% | 2026-08-22 |
+| ✅ HIT — 0-0 | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | ❌ O1.75 78.4% +5.6% | 2026-08-22 |
+| ✅ HIT — 1-2 | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | ✅ O2.75 70.5% +22.9%, half win | 2026-08-22 |
+| ✅ HIT — 1-1 | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | ✅ U3.75 78.9% +4.8% | 2026-08-22 |
+| ✅ HIT — 4-0, half win | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | ❌ U3.75 77.7% +7.7%, half loss | 2026-08-22 |
 
 
 ### Actual placed bets
 
-**Win: 9 / 14 — 64%  ·  Pending: 21 / 35  ·  Average odds: ≈1.31**
+**Win: 15 / 22 — 68%  ·  Pending: 13 / 35  ·  Average odds: ≈1.31**
 
 Tracks what was actually staked, which is not the same as what was tipped. Of
 the 33 tipped fixtures on 22 Aug, 26 are backed and 6 skipped on price. Three
@@ -153,14 +152,6 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds |
 |---|---|---|---|---|
-| 16:00 | Everton v Crystal Palace | U4.25 | U3.5 | — |
-| 16:00 | Wrexham v Watford | U4.25 | U3.5 | — |
-| 16:00 | Zulte Waregem v Beveren | U4.25 | U3.5 | — |
-| 16:00 | Blackburn v Middlesbrough | U4.25 | O1.5 | — |
-| 16:00 | Preston v Wolves | U4.25 | O1.5 | — |
-| 16:00 | Swansea v Sheffield United | U4.25 | O1.5 | — |
-| 16:00 | West Ham v Charlton | O1.5 | O2.5 | — |
-| 16:00 | Southampton v Stoke | U4.25 | **U4.25 — Tip 1** | 1.16 |
 | 16:30 | Fortuna Sittard v AZ | O1.5 | O2.5 | — |
 | 17:00 | Real Oviedo v Leganés | U3.0 | U3.5 | — |
 | 17:00 | Athletic Bilbao v Sevilla | U3.0 | U3.5 | — |
@@ -175,7 +166,7 @@ lane actually taken and the price paid, which is frequently not Tip 1.
 | 18:30 | Udinese v Como | O1.5 | **O1.5 — Tip 1** | 1.34 |
 | 18:45 | Sparta Rotterdam v Utrecht | O1.5 | **O1.5 — Tip 1** | 1.22 |
 
-Twenty-one open. Prices are recorded from the Sanfrecce bet onward; the earlier
+Thirteen open. Prices are recorded from the Sanfrecce bet onward; the earlier
 afternoon block was logged without them.
 
 
