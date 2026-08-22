@@ -29,6 +29,10 @@
 | — not started | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% | U2.75 64.6% +2.6% (floor −14.4) | 2026-08-22 23:30 |
 | — not started | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% | — none | 2026-08-22 23:30 |
 | — not started | Colombia Primera A | Santa Fe v América de Cali | **O1.5 80.8% +13.6%** | O2.25 58.8% +18.0% (floor −20.2) | 2026-08-23 01:10 |
+| — not started | Brasileirão | Cruzeiro v Flamengo | **O1.5 88.0% +16.4%** | **Flamengo O1.5** 61.9% +33.6% (team) | 2026-08-23 01:30 |
+| — not started | Peru Liga 1 | Deportivo Garcilaso v Cusco | U4.25 86.4% −1.3% | O1.75 75.0% +1.7% (floor −4.0) | 2026-08-23 02:00 |
+| — not started | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% | O2.25 62.7% +10.3% (floor −16.3) | 2026-08-23 02:00 |
+| — not started | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% | — none | 2026-08-23 03:15 |
 
 ## Completed FUTURE match bettips: Tip 1 85.7% hit · Tip 2 72.7% hit
 
@@ -1167,6 +1171,8 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
       Elversberg          0 rows     up from 2. Bundesliga
 
   **Accepted as-is.** Refusing a promoted club is the gate behaving correctly, and a tip built on one or two matches would be worse than no tip. Not to be confused with the split-name problem below, which fails the other way round — it *issues* a tip off three or four matches instead of withholding one.
+
+  **One more feed-side abbreviation surfaced on the overnight Colombian slate.** `Ind. Medellín v Cúcuta` returned no tip, and only the first half of the name was at fault: the resolver strips accents perfectly well — `Cucuta` and `Cúcuta` both find `Cúcuta Deportivo` (448 rows, last 2026-08-19) — but `Ind.` is an abbreviation of `Independiente` and shares no scoreable text with it, exactly the `QPR` failure in a different alphabet. One entry added; the fixture prices at `U3.0` 80.1%. Worth stating that this is the *second* time an abbreviated prefix has cost a fixture, and both times the store already held a full, recent history.
 
   None of these is a naming fault, and no alias can help — there is nothing in the store to alias *to*. `Marítimo v Académico Viseu` is correct as logged: the store holds exactly two rows mentioning Viseu (Benfica 2-2 on 09 Aug, Viseu 0-1 Santa Clara on 15 Aug) and nothing under any other spelling. The fix is a second-tier source per country plus cross-division lookup — the same feature Hull and Ipswich need, approached from the other side.
 
