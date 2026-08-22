@@ -269,7 +269,19 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
 
 ### Known data defects
 
-- **No recency bound on team history.** `_find_team_rows` takes a club's last ten matches with no limit on how old they are, so a side returning to a competition after years away is priced on ancient form. Hull v Man United exposed it: Hull last played in the Premier League in **2017**, and the engine produced a confident U4.25 at 84% built on ten matches from March–May 2017. The history gate counts matches, not their age. **Hull was withheld by hand** — the engine would have tipped it. This wants a real fix: either a recency window or a refusal when the newest match in a side's window is older than a season.
+- **No recency bound on team history — now measured, and it is the biggest one.** `_find_team_rows` takes a club's last ten matches with no limit on how old they are, so a side returning to a competition after years away is priced on ancient form. The history gate counts matches, not their age. Auditing every upcoming fixture put a number on it:
+
+      form older than    fixtures withheld
+        120 days             37 of 155   (24%)
+        300 days             21 of 155   (14%)
+
+  The worst are not marginal. Coventry v **Hull** would be priced off form **9,226 days** old; Real Madrid v **Málaga** off 3,017 days, from a club last in LaLiga in 2018. Hull v Man United is the case already caught by hand: Hull last played in the Premier League in **2017**, and the engine produces a confident U4.25 at 84% off ten matches from March–May 2017.
+
+  Two distinct causes sit underneath. Some clubs are simply long gone from the division. Others — **Hull, Ipswich** — are promoted sides whose recent form is real but filed in *another league's store*: Hull have **690 rows in ENG-CH** ending 2026-05-02, and a Premier League fixture never looks there. That half is not a naming bug and not a staleness bug; it needs cross-division lookup.
+
+  **This is the next fix, and it is deferred deliberately.** Unlike the alias layer it *withholds* tips, so it changes engine output on fixtures already tipped and bet. It waits until the 26 open bets settle.
+
+- **Feed names vs store names — FIXED for 20 clubs.** Results come from football-data.co.uk, which files clubs under trading names (`Man United`, `QPR`, `Nott'm Forest`, `M'gladbach`); fixtures arrive with full legal names (`Manchester United FC`, `Queens Park Rangers FC`). Fuzzy matching cannot bridge an abbreviation — `qpr` and `queens park rangers` share no text to score — so the resolver returned nothing and the fixture was withheld. It affected **38 of 164 upcoming fixtures (23%)**, including Man Utd, Man City, Inter, Atlético, Athletic Club, Lyon, PSV, Sporting CP, Gladbach and Eintracht Frankfurt. `PSV` failed for a separate reason: `psv` is in the generic club-token list, so canonicalising deleted the only identifying word in the name. `config/team_aliases.json` now maps the 20 the store already carries; each target was read off the store's own name list rather than guessed. Le Mans and Elversberg are omitted because they have no rows under any spelling — newly promoted, a data gap not a naming one.
 
 - **Era-split team names** — 15 leagues, ~73 names. `KS Cracovia` (2023-25) vs `Cracovia` (2026), `IK Sirius` vs `Sirius`, `AIK Solna` vs `AIK`. Cause: 2026 seasons arriving from a different provider. Effect: thin predictions and false refusals. Cracovia was refused on 4 matches when 72 exist. Detector is fuzzy and overcounts — needs a manual pass.
 - **Stale stores** — Premier League and Serie B end in May 2026.
@@ -278,6 +290,10 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
 ---
 
 ## Most recent key updates
+
+**Team-name aliases — 35 fixtures recovered, 0 tips changed.** 23% of upcoming fixtures had a team the engine could not resolve at all and were silently withheld. `config/team_aliases.json` maps 20 feed names onto the store names already present. An alias is consulted **only after the raw name fails**, so it can add a withheld fixture and never alter one already priced — verified by pricing all 164 upcoming fixtures with aliases off and on: **35 newly priced, 0 changed, 0 lost, 120 identical.**
+
+**Split names — 120 clubs, 21 leagues, 81 served the wrong side.** Separate from the alias problem and worse, because it does not withhold a tip, it *issues* one off stale form. Chapecoense is served 114 rows ending **2021-12-09** while 136 exist and the freshest is 2026-08-16; SC Internacional 114 rows ending 2025-12-07 against a 327-row union. Six Brazilian clubs playing this week are priced on form that stops eight months ago. Likely also the explanation for the two ENG-PL tips that never reproduced. **Fix deferred until the open bets settle**, since merging the variants changes live tips.
 
 **Season stage — enabled, all leagues.** First feature dial to default on. Inert for the first 92% of a season. Across the closing 9%: 81.3% → 82.7%, 47 rescued / 30 broken. Positive at every shift 0.05–0.30 and in both halves. No single test clears 2σ; older seasons contributed +4 of +17.
 
