@@ -10,32 +10,32 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
-| — not started | Chinese Super League | Shenzhen v Zhejiang | U4.25 97.4% +18.2% | U3.0 91.6% +29.9% | 2026-08-22 |
-| — not started | Chinese Super League | Guoan v Yukun | O1.5 93.1% +11.1% | O2.25 80.9% +20.3% | 2026-08-22 |
-| — not started | Allsvenskan | Örgryte v Halmstad | U4.25 92.1% +9.2% | U3.0 80.7% +14.2% | 2026-08-22 |
-| — not started | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.25 70.5% +22.9% | 2026-08-22 |
-| — not started | LaLiga 2 | Real Oviedo v Leganés | U4.25 94.5% +5.0% | U3.0 85.3% +8.9% | 2026-08-22 |
-| — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.25 66.6% +12.9% | 2026-08-22 |
-| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | O2.25 59.4% +11.9% | 2026-08-22 |
-| — not started | LaLiga | Athletic Bilbao v Sevilla | U4.25 91.3% +4.4% | U3.0 79.4% +7.1% | 2026-08-22 |
-| — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.0 77.7% +7.7% | 2026-08-22 |
-| — not started | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.0 70.9% +5.9% | 2026-08-22 |
-| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.25 66.4% +5.9% | 2026-08-22 |
-| — not started | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.0 78.9% +4.8% | 2026-08-22 |
-| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | O2.25 61.3% +4.1% | 2026-08-22 |
-| — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.0 77.1% +3.0% | 2026-08-22 |
-| — not started | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.0 72.9% +2.7% | 2026-08-22 |
-| — not started | Ligue 2 | Metz v Laval | O1.5 78.8% +6.9% | O2.25 55.7% +9.4% | 2026-08-22 |
-| — not started | Championship | Southampton v Stoke | O1.5 78.4% +5.6% | O2.25 55.2% +7.7% | 2026-08-22 |
-| — not started | Championship | Swansea v Sheffield United | O1.5 78.4% +5.6% | O2.25 55.1% +7.6% | 2026-08-22 |
-| — not started | Championship | Blackburn v Middlesbrough | O1.5 77.5% +4.7% | O2.25 53.9% +6.3% | 2026-08-22 |
-| — not started | Championship | Preston v Wolves | O1.5 77.3% +4.5% | O2.25 53.6% +6.1% | 2026-08-22 |
-| — not started | Premier League | Forest v Leeds | **NO PLAY** (best +2.0%) | — | 2026-08-22 |
-| — not started | Championship | QPR v Bolton | **NO PLAY** (best +1.2%) | — | 2026-08-22 |
-| — not started | Championship | Derby v Cardiff | **NO PLAY** (best +0.6%) | — | 2026-08-22 |
-| — not started | Ligue 2 | Nantes v Rodez | **NO PLAY** (best +0.6%) | — | 2026-08-22 |
-| — not started | Chinese Super League | Chengdu v Shenhua | **NO PLAY** (best +0.2%) | — | 2026-08-22 |
-| — not started | Chinese Super League | Three Towns v Jinmen Tiger | **NO PLAY** (best +0.1%) | — | 2026-08-22 |
+| — not started | Chinese Super League | Shenzhen v Zhejiang | U3.0 84.0% +22.2% | U4.25 93.8% +14.6% (lower edge) | 2026-08-22 |
+| — not started | Chinese Super League | Guoan v Yukun | O2.25 80.9% +20.3% | O1.75 93.1% +11.1% (lower edge) | 2026-08-22 |
+| — not started | Championship | West Ham v Charlton | O1.5 87.8% +15.0% | O2.75 70.5% +22.9% (floor −8.5) | 2026-08-22 |
+| — not started | Allsvenskan | Örgryte v Halmstad | U3.0 80.7% +14.2% | U4.25 92.1% +9.2% (lower edge) | 2026-08-22 |
+| — not started | LaLiga 2 | Real Oviedo v Leganés | U3.0 85.3% +8.9% | U4.25 94.5% +5.0% (lower edge) | 2026-08-22 |
+| — not started | Championship | Millwall v Norwich | O1.5 81.2% +8.4% | — none | 2026-08-22 |
+| — not started | Ligue 1 | Lens v Auxerre | O1.5 85.6% +8.3% | O2.75 66.6% +12.9% (floor −12.4) | 2026-08-22 |
+| — not started | LaLiga | Athletic Bilbao v Sevilla | U3.0 79.4% +7.1% | U4.25 91.3% +4.4% (lower edge) | 2026-08-22 |
+| — not started | Belgian Pro League | Zulte Waregem v Beveren | U4.25 90.3% +5.0% | U3.75 77.7% +7.7% (floor −1.3) | 2026-08-22 |
+| — not started | Premier League | Everton v Crystal Palace | U4.25 85.9% +4.2% | U3.75 70.9% +5.9% (floor −8.1) | 2026-08-22 |
+| — not started | Eredivisie | Fortuna Sittard v AZ | O1.5 85.5% +3.6% | O2.75 66.4% +5.9% (floor −12.6) | 2026-08-22 |
+| — not started | Championship | Wrexham v Watford | U4.25 91.0% +2.9% | U3.75 78.9% +4.8% (floor −0.1) | 2026-08-22 |
+| — not started | Saudi Pro League | Al-Fateh v Al-Ettifaq | O1.5 82.4% +2.7% | — none | 2026-08-22 |
+| — not started | Championship | Birmingham v Bristol City | U4.25 89.9% +1.8% | U3.75 77.1% +3.0% (floor −1.9) | 2026-08-22 |
+| — not started | Ekstraklasa | Korona v Motor | U4.25 87.3% +1.8% | U3.75 72.9% +2.7% (floor −6.1) | 2026-08-22 |
+| — not started | Premier League | Forest v Leeds | U4.25 83.1% +1.4% | U3.75 66.9% +2.0% (floor −12.1) | 2026-08-22 |
+| — not started | Championship | Derby v Cardiff | U4.25 88.4% +0.4% | — none | 2026-08-22 |
+| — not started | Chinese Super League | Chengdu v Shenhua | O1.5 82.1% +0.2% | — none | 2026-08-22 |
+| — not started | Chinese Super League | Three Towns v Jinmen Tiger | U4.25 79.3% +0.1% | — none | 2026-08-22 |
+| — not started | Ligue 2 | Nantes v Rodez | U4.25 88.4% −0.3% | — none | 2026-08-22 |
+| — not started | Championship | QPR v Bolton | U4.25 87.4% −0.7% | — none | 2026-08-22 |
+| — not started | Ligue 2 | Metz v Laval | U4.25 82.9% −5.8% | **O1.75 78.8% +6.9%** (floor −0.2) | 2026-08-22 |
+| — not started | Championship | Southampton v Stoke | U4.25 83.3% −4.8% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 |
+| — not started | Championship | Swansea v Sheffield United | U4.25 83.4% −4.7% | **O1.75 78.4% +5.6%** (floor −0.6) | 2026-08-22 |
+| — not started | Championship | Blackburn v Middlesbrough | U4.25 84.2% −3.9% | **O1.75 77.5% +4.7%** (floor −1.5) | 2026-08-22 |
+| — not started | Championship | Preston v Wolves | U4.25 84.4% −3.7% | **O1.75 77.3% +4.5%** (floor −1.7) | 2026-08-22 |
 | — not started | Chinese Super League | Qingdao v Taishan | **WITHHELD** — form 1,682d old | — | 2026-08-22 |
 | — not started | Premier League | Ipswich v Sunderland | **WITHHELD** — form 453d old | — | 2026-08-22 |
 | — not started | Ekstraklasa | Piast v Legia | **WITHHELD** — naming split | — | 2026-08-22 |
@@ -111,19 +111,18 @@ last reported and go stale between updates.
 
 ### On the two-tip format
 
-**Tip 1** is the highest-probability market that still carries a real edge. **Tip 2** is the closest step down in probability whose edge is at least as good. Where nothing clears +2% edge, it says **NO PLAY** and names the best available call so you can see what was rejected.
+**Tip 1 is exactly what the engine publishes.** Untouched, deliberately — it is the behaviour measured at 80.5% across 13,886 replays and 23/25 live, and any rule that overrides it drifts from the only number with evidence behind it.
 
-Completed rows show a dash under Tip 2 because no second tip was issued at the time. They are the historical record, not a re-scoring.
+**Tip 2 is the runner-up, with the single reason it did not surface.** Highest probability among the playable rungs the engine passed over, carrying a real edge. Two reasons cover almost every case:
 
-That distinction matters, because the two-tip rule is **not** what the engine did. It excludes negative-edge markets; the engine's fallback allows them. Replayed across the 25 settled bets:
+- **floor −X** — it lost only to the 0.79 probability floor, by X points. Wrexham's U3.75 missed by **0.1**.
+- **lower edge** — it is the safer rung and the engine took the sharper one. Useful when you want to trade edge for probability.
 
-    engine, as issued     23/25 = 92%
-    Tip 1 rule            17/20 = 85%   (5 fixtures become NO PLAY)
-    Tip 2 rule            15/20 = 75%
+Same-tier duplicates are excluded: `O1.75` wins on exactly the totals `O1.5` does, so offering it as an alternative is offering the same wager twice. Tip 2 also has to clear 65% or it is not an alternative, it is a different sport.
 
-Both rules would have flipped Kashiwa from a loss to a win — and flipped Dunkerque, Betis and Standard the other way, while declining Erzurumspor, Athletic, Novorizontino and FC Tokyo, all of which won. On the only live sample that exists, refusing to buy negative-edge fallbacks costs hit rate. That is consistent with the 88.0% measurement on negative-edge picks and with the override result. Recorded before acting on it.
+**The five bold Tip 2s are the ones worth reading closely.** Preston, Blackburn, Swansea, Southampton and Metz all publish a U4.25 carrying −3.7% to −5.8% edge, while an Over sits 0.2 to 1.7 points under the floor with +4.5% to +6.9%. On those five the engine is buying a line it disagrees with because the line it agrees with missed by a fraction.
 
-### Saturday 22 Aug slate
+### Saturday 22 Aug slate### Saturday 22 Aug slate
 
 Three tips withheld by hand, all on the recency defect rather than the gate:
 
