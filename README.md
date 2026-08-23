@@ -237,6 +237,40 @@ What is NOT worth doing is lowering `MIN_WIN_PROB` further. Measured: 0.70 pays
 **13 points of strike rate for 1.7 of edge**, and this project is optimised for
 strike.
 
+## Betting in play: what a rung is worth once it is 0-0 at half time
+
+Taking a drifted price on a tip Athena already issued is a reasonable instinct,
+and the log has five such bets. The pre-match probability cannot price them: it
+covered 90 minutes and the question is about 45. `scripts/live_ht_table.py`
+counts it straight from 57,092 matches that reached the break goalless, split by
+league tempo, which is the one thing that genuinely carries over:
+
+    league tempo        n     O0.5    buy≥     O1.5    buy≥     O2.5    buy≥
+    under 2.5       14740    70.3%    1.49    36.0%    2.92    13.0%    8.08
+    2.5 - 2.8       34479    75.4%    1.39    41.5%    2.53    16.9%    6.21
+    2.8 - 3.1        7873    79.0%    1.33    47.3%    2.22    19.7%    5.33
+
+**The rungs decay at completely different rates, and that is the whole thing.**
+One more goal still probably arrives; two is a coin flip that loses. Backing
+`O0.5` on a drift is sound and the price needed is close to what a book quotes.
+Backing `O1.5` needs about **2.5**, and no book pays that on a match it still
+rates as live.
+
+Two bets on this page make the point exactly:
+
+    Göteborg O0.5   1.22 paid, 1.39 needed    -3.5%    won
+    Porto    O1.5   1.63 paid, 2.53 needed   -33.5%    won
+
+Both won. Both were the same idea — Athena's own tip, at a longer price. One was
+nearly buyable and the other was not close, and nothing about the pre-match tip
+distinguished them. The published probability tells you the match was going to
+be high-scoring; it says nothing about how much of that chance is already spent.
+
+**Why a drifted price is not the same as a good one.** Porto's `O1.5` moved 1.30
+to 1.63, up 25%. The fair price moved 1.30 to 2.53, up 95%. The market repriced
+in the right direction and nowhere near far enough — which is exactly when a
+longer number feels like value and is not.
+
 ## Staking: 4% flat fits, but the stake is the second-order decision
 
 `scripts/staking.py` bootstraps real per-bet returns — 1,941 replayed tips,
