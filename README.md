@@ -1666,6 +1666,49 @@ That is thin history, unresolved names or no playable rung — the same family o
 defects the alias and merge work has been chipping at. It costs coverage rather
 than accuracy, and it has not been investigated.
 
+#### Season restart: it was a symptom of the over-spread mu, not a thing of its own
+
+Before recalibration `ENG-NL` and `FRA-L2` ran -8.3 and -7.8 across the summer
+break against -1.5 and -0.1 mid-season, and that was carried as an open defect.
+Investigated properly (`scripts/restart_effect.py`), it does not hold up.
+
+**"Early season" is not a measurable property of a fixture.** Two things that
+are: how long a team has been idle, and how far back the ten-match form window
+has to reach. Bucketing 2,982 replayed fixtures across ten leagues by both:
+
+    by days idle (larger of the two sides)      by age of the oldest form match
+      bucket     n    says    hit    gap          bucket     n    says    hit    gap
+       0-10   2358   82.2%  83.5%   +1.2           0-80   1329   82.1%  82.9%   +0.8
+      10-20    457   82.4%  84.5%   +2.1         80-120   1062   82.3%  83.7%   +1.4
+      20-40     75   82.6%  85.3%   +2.7        120-200    400   82.5%  84.0%   +1.5
+        40+     92   82.3%  79.3%   -2.9           200+    191   82.7%  85.9%   +3.2
+
+**The form-window axis shows no degradation at all — it gets BETTER as the
+window reaches further back.** That refutes the mechanism the defect was written
+on. The only negative cell is teams idle 40+ days, at -2.9 on 92 fixtures, and
+that is `z = -0.75`. Null.
+
+The original two leagues do still show a gap after recalibration — `ENG-NL`
+-6.1, `FRA-L2` -4.0, against +3.9 and +3.2 mid-season — but neither is
+significant, and both stated probabilities sit INSIDE the Wilson interval of
+what landed:
+
+    ENG-NL   hit 75.9%  interval [67-83]  claim 82.0%  ->  inside   z = -1.71
+    FRA-L2   hit 76.7%  interval [68-83]  claim 80.7%  ->  inside   z = -1.11
+
+Two windows of 120 fixtures are consistent with the same underlying rate; the
+ten-point swing between them is what noise looks like at that size. And the
+defect was originally raised from exactly those two leagues, chosen because they
+looked worst — the same selection trap as the 1.20-1.39 odds band.
+
+**What actually happened:** shrinkage absorbed it. Over-spread mu hurt most
+where form was least reliable, which is precisely the post-break fixtures, so
+fixing the spread fixed the symptom. Nothing further is warranted.
+
+Kept as a negative result, and `break_days` is worth re-checking once the 40+
+bucket has a few hundred fixtures rather than 92 — it is the one cell pointing
+the wrong way, even if it is currently indistinguishable from zero.
+
 #### The team lane, validated where it was not fitted — it holds
 
 `TEAM_SHRINK = 0.62` was measured on the most recent 200 fixtures of six
