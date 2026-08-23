@@ -62,7 +62,7 @@ def collect(lg: str, n: int, back: int) -> list:
         if not cands:
             continue
         market, p, _e = cands[0]
-        out.append((p, team_total.won(market, int(r["hg"]), int(r["ag"]))))
+        out.append((p, team_total.won(market, int(r["hg"]), int(r["ag"])), market))
     return out
 
 
@@ -98,6 +98,31 @@ def main() -> None:
           f"{(k/len(rows) - sum(r[0] for r in rows)/len(rows))*100:+8.1f}")
     print("\nA slope error shows as gap RISING across the buckets while ALL sits "
           "near zero.")
+
+    # By RUNG, because the floor sweep filters against each rung's own floor
+    # (U1.5 0.75, O1.5 0.55, O0.5 0.80) rather than an absolute probability.
+    # Raising the bump therefore changes which rungs survive, so an apparent
+    # confidence effect can really be one rung being mispriced.
+    print(f"\n{'rung':14}{'n':>7}{'says':>8}{'hit':>8}{'gap':>8}{'95% CI':>13}")
+    rungs = sorted({r[2].split()[1] for r in rows})
+    for rung in rungs:
+        b = [r for r in rows if r[2].split()[1] == rung]
+        if len(b) < 40:
+            continue
+        k = sum(1 for r in b if r[1])
+        hit, says = k / len(b), sum(r[0] for r in b) / len(b)
+        w = wilson(k, len(b))
+        print(f"{rung:14}{len(b):7}{says*100:7.1f}%{hit*100:7.1f}%"
+              f"{(hit-says)*100:+8.1f}   [{w[0]*100:.0f}-{w[1]*100:.0f}]")
+    print(f"\n{'side':14}{'n':>7}{'says':>8}{'hit':>8}{'gap':>8}")
+    for side in ("TA", "TB"):
+        b = [r for r in rows if r[2].split()[0] == side]
+        if len(b) < 40:
+            continue
+        k = sum(1 for r in b if r[1])
+        hit, says = k / len(b), sum(r[0] for r in b) / len(b)
+        print(f"{side + ' (home)' if side == 'TA' else side + ' (away)':14}"
+              f"{len(b):7}{says*100:7.1f}%{hit*100:7.1f}%{(hit-says)*100:+8.1f}")
 
 
 if __name__ == "__main__":
