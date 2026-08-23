@@ -3,7 +3,7 @@
 
 ## CURRENT CONFIRMED HITRATE: 82.9%
 
-**Tip 1 29 / 35 settled** · **Tip 2 16 / 24** · **bets 11 / 14, ROI -2.1%** · over/under markets only · live tips, not backtests
+**Tip 1 34 / 41 settled** · **Tip 2 21 / 30** · **bets 14 / 18, ROI -2.2%** · over/under markets only · live tips, not backtests
 
 The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
 from before that point are not comparable to numbers after it, so they are not
@@ -42,14 +42,7 @@ adding any; a test fails if a table drifts out of order.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE** 2-2 (86') | Ekstraklasa | Pogoń v Wisła Kraków | — no tip, Wisła Kraków has 4 rows | — | 2026-08-23 20:15 |
-| **LIVE** 1-0 (77') | Süper Lig | Alanyaspor v Beşiktaş | **O1.5 79.6% +2.5%** · buy≥1.32 | **Beşiktaş O0.5** 81.0% +11.6% (team) · buy≥1.30 | 2026-08-23 20:30 |
-| **LIVE** 0-1 (73') | Süper Lig | Göztepe v Gençlerbirliği | U4.25 85.5% +0.9% · buy≥1.25 | U3.75 70.2% +1.3% (floor −4.8) · buy≥1.38 | 2026-08-23 20:30 |
-| **LIVE** 2-0 (64') | Ligue 1 ⚠98d | Rennes v PSG | **O1.5 82.7% +5.4%** · buy≥1.27 (≥1.31 tail-adj) | **PSG O0.5** 82.6% +13.5% (team) · buy≥1.27 | 2026-08-23 20:45 |
-| **LIVE** 2-1 (66') | Serie A ⚠91d | Atalanta v Sassuolo | U4.25 89.5% +0.8% · buy≥1.18 | U3.75 76.4% +1.3% (runner-up) · buy≥1.28 | 2026-08-23 20:45 |
-| **LIVE** 0-0 (63') | Serie A ⚠91d | Torino v Milan | U4.25 89.4% +0.8% · buy≥1.18 | U3.75 76.3% +1.2% (runner-up) · buy≥1.29 | 2026-08-23 20:45 |
-| **LIVE** 1-0 (50') | Serie B ⚠107d | Cesena v Sampdoria | **U3.0 79.1% +3.7%** · buy≥1.42 | U2.75 58.5% +4.6% (floor −16.5) · buy≥1.61 | 2026-08-23 21:00 |
-| **LIVE** 1-0 (47') | Serie B ⚠107d | Palermo v Juve Stabia | U3.0 73.9% **−1.5%** · buy≥1.58 | O1.75 73.0% +1.4% (floor −2.0) · buy≥1.52 | 2026-08-23 21:00 |
+| **LIVE** 1-0 (90'+) | Serie B ⚠107d | Palermo v Juve Stabia | U3.0 73.9% **−1.5%** · buy≥1.58 | O1.75 73.0% +1.4% (floor −2.0) · buy≥1.52 | 2026-08-23 21:00 |
 | **LIVE** 1-0 (49') | Brasileirão Série A | Palmeiras v Vasco | U3.0 77.7% +2.4% · buy≥1.46 | **Vasco U1.5** 77.4% +5.7% (team) · buy≥1.36 | 2026-08-23 21:00 |
 | **LIVE** 0-0 (HT) | Brasileirão Série A | RB Bragantino v Grêmio | U3.0 78.2% +2.8% · buy≥1.45 | U4.25 90.6% +1.7% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
 | **LIVE** 0-0 (46') | Brasileirão Série A | Vitória v Bahia | U3.0 77.4% +2.0% · buy≥1.47 | U4.25 90.1% +1.3% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
@@ -119,10 +112,17 @@ adding any; a test fails if a table drifts out of order.
 | ✅ HIT — 1-0 | Liga Portugal | Santa Clara v Famalicão | U4.25 88.2% +1.9% · buy≥1.20 | ✅ U3.75 74.3% +2.8% (floor −0.7) · buy≥1.32 | 2026-08-23 19:00 |
 | — no tip — 1-0 | LaLiga | Getafe v R. Racing Club | — no tip, Racing has 1 row (336 in ESP-L2 — promoted) | — | 2026-08-23 19:30 |
 | ❌ MISS — 5-1 | Peruvian Liga 1 | Sport Boys v Cienciano | U4.25 87.9% **+0.2%** · buy≥1.21 | — none | 2026-08-23 20:00 |
+| — no tip — 2-2 | Ekstraklasa | Pogoń v Wisła Kraków | — no tip, Wisła Kraków has 4 rows | — | 2026-08-23 20:15 |
+| ❌ MISS — 1-0 | Süper Lig | Alanyaspor v Beşiktaş | **O1.5 79.6% +2.5%** · buy≥1.32 | ❌ **Beşiktaş O0.5** 81.0% +11.6% (team) · buy≥1.30 | 2026-08-23 20:30 |
+| ✅ HIT — 0-1 | Süper Lig | Göztepe v Gençlerbirliği | U4.25 85.5% +0.9% · buy≥1.25 | ✅ U3.75 70.2% +1.3% (floor −4.8) · buy≥1.38 | 2026-08-23 20:30 |
+| ✅ HIT — 2-2 | Ligue 1 ⚠98d | Rennes v PSG | **O1.5 82.7% +5.4%** · buy≥1.27 (≥1.31 tail-adj) | ✅ **PSG O0.5** 82.6% +13.5% (team) · buy≥1.27 | 2026-08-23 20:45 |
+| ✅ HIT — 2-1 | Serie A ⚠91d | Atalanta v Sassuolo | U4.25 89.5% +0.8% · buy≥1.18 | ✅ U3.75 76.4% +1.3% (runner-up) · buy≥1.28 | 2026-08-23 20:45 |
+| ✅ HIT — 1-2 | Serie A ⚠91d | Torino v Milan | U4.25 89.4% +0.8% · buy≥1.18 | ✅ U3.75 76.3% +1.2% (runner-up) · buy≥1.29 | 2026-08-23 20:45 |
+| ✅ HIT — 1-1 | Serie B ⚠107d | Cesena v Sampdoria | **U3.0 79.1% +3.7%** · buy≥1.42 | ✅ U2.75 58.5% +4.6% (floor −16.5) · buy≥1.61 | 2026-08-23 21:00 |
 
 ### Actual placed bets
 
-**Settled: 11 / 14 — ROI −2.1%  ·  Pending: 10**
+**Settled: 14 / 18 — ROI −2.2%  ·  Pending: 8**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
@@ -142,12 +142,14 @@ adding any; a test fails if a table drifts out of order.
 | 18:30 | Venezia v Lecce | **U3.0** | U3.5 — same tier, softer | 1.22 | 1.31 | −2.4% ✅ |
 | 18:30 | Club Brugge v Cercle Brugge | **O1.5** | O1.5 — the tip | 1.21 | 1.21 | +4.8% ❌ |
 | 19:00 | Verona v Ascoli | U3.0 | U3.0 — the tip | 1.45 | 1.47 | **+3.5%** ⟲ PUSH |
-| 20:45 | Atalanta v Sassuolo | U4.25 | U4.5 — same tier | 1.14 | 1.17 | +2.1% ⚠ |
+| 20:30 | Alanyaspor v Beşiktaş | O1.5 | **Beşiktaş O0.5 — team lane** | 1.30 | 1.30 | **+5.3%** ❌ |
+| 20:45 | Rennes v PSG | **O1.5** | **PSG O0.5 — team lane** | 1.40 | 1.27 | **+15.6%** ✅ |
+| 20:45 | Atalanta v Sassuolo | U4.25 | U4.5 — same tier | 1.14 | 1.17 | +2.1% ⚠ ✅ |
 | 21:00 | U. De Chile v Colo-Colo | **O1.5** | O1.5 — the tip | 1.27 | 1.26 | **+6.2%** |
 | 21:00 | Ponte Preta v Avaí | **U3.0** | U3.0 — the tip | 1.36 | 1.29 | **+11.0%** |
 | 21:00 | RB Bragantino v Grêmio | U3.0 | U3.25 — same tier | 1.42 | 1.39 | **+7.4%** |
 | 21:00 | Palmeiras v Vasco | U3.0 | U3.0 — the tip | 1.46 | 1.46 | +4.8% |
-| 21:00 | Cesena v Sampdoria | **U3.0** | U3.0 — the tip | 1.36 | 1.42 | +0.2% ⚠ |
+| 21:00 | Cesena v Sampdoria | **U3.0** | U3.0 — the tip | 1.36 | 1.42 | +0.2% ⚠ ✅ |
 | 22:30 | Melgar v Alianza Lima | **O1.5** | O1.5 — the tip | 1.37 | 1.34 | **+7.7%** |
 | 23:30 | Chapecoense v São Paulo | **U3.0** | U3.0 — the tip | 1.35 | 1.34 | **+6.1%** |
 
