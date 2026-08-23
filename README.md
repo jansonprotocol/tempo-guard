@@ -895,6 +895,47 @@ are reported for confirmation and never applied automatically.
   published edges on the slate. Not wrong, but far thinner than the row counts
   suggest, and worth knowing before sizing a Swedish bet.
 
+### FIXED — the team lane was split by venue, and four checks missed it
+
+Found on 23 Aug while answering a question about `TEAM_SHRINK`. Two separate
+bugs, both in how a side's scoring rate reaches the team lane, and both invisible
+to every aggregate check this project runs.
+
+**1. Both sides were shrunk toward `league_mu / 2`.** The code asserted that half
+the league mean is the per-side mean. It is not — home teams average **1.502**
+goals and away teams **1.154**, against a shared target of **1.328**. Every one of
+twelve leagues checked missed by the same **±0.174**, so home rates were dragged
+down and away rates pushed up, everywhere.
+
+**2. `VENUE_BLEND` left the input biased before shrinkage ran.** Both rates start
+from a team's last ten matches home AND away, with only 35% replaced by
+venue-specific form, so `gfh` lands about **0.113 goals** under the true home mean
+and `gfa` the same amount over. Correcting the shrink target could not reach
+this: the bias is already in the input.
+
+Measured on **13,872 side-observations with no selection in the sample at all** —
+every priceable fixture contributes `p_home_tt05` against whether the home side
+scored, and `p_away_tt05` against the away side:
+
+    original (shared shrink target)     HOME +4.1   AWAY -3.6   split 7.7
+    per-side shrink target              HOME +2.5   AWAY -1.8   split 4.3
+    + venue de-bias                     HOME +0.8   AWAY +0.3   split 0.5
+
+**Why four aggregate checks passed it.** Pooled, +4.1 and -3.6 average to +0.2,
+so the team lane reported near-perfect calibration. The full-lane retrosim, the
+`TEAM_SHRINK` sweep in both directions over ~6,900 fixtures, the by-probability
+calibration test and the by-rung breakdown all returned it clean. The defect only
+appears when the data is cut by the axis nobody was cutting on.
+
+The venue correction is applied **symmetrically**, so `mu_total = gfh + gfa` is
+exactly unchanged and the match lane — calibrated to a gap of ~0 — does not move
+to fix the team lane. Pinned by `test_venue_debias_leaves_mu_total_unchanged`.
+
+**Every team lane published before this was mispriced**: home lanes under-stated
+by ~4 points, away lanes over-stated by ~4. Today's published numbers stand as
+the record of what was actually issued; the corrected engine applies from the
+next slate on.
+
 ### Known data defects
 
 - **OPEN — half-time scores are censored on 0-0 finishes in 23 leagues.** In
