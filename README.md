@@ -78,6 +78,9 @@ adding any; a test fails if a table drifts out of order.
 | — not started | Brasileirão Série A | Coritiba v Corinthians | U4.25 87.9% **−1.0%** · buy≥1.21 | O1.75 73.1% +1.4% (floor −1.9) · buy≥1.52 | 2026-08-24 00:30 |
 | — not started | MLS | Atlanta v Kansas City | U4.25 82.9% +2.5% · buy≥1.29 | **Kansas City U1.5** 75.1% +14.1% (team) · buy≥1.40 | 2026-08-24 01:00 |
 | — not started | Chilean Primera División | O'Higgins v Palestino | U4.25 85.2% **+0.0%** · buy≥1.25 | — none | 2026-08-24 01:00 |
+| — not started | Categoría Primera A | Dep. Cali v Inter de Bogotá | U4.25 90.9% **−0.6%** · buy≥1.16 | O1.75 68.3% +1.1% (floor −6.7) · buy≥1.65 | 2026-08-24 01:10 |
+| — not started | Peruvian Liga 1 | Universitario v Los Chankas | U4.25 88.1% **+0.4%** · buy≥1.20 | — none | 2026-08-24 01:30 |
+| — not started | Categoría Primera A | Junior Barranquilla v Once Caldas | U4.25 88.6% **−2.9%** · buy≥1.20 | O1.75 72.0% +4.9% (floor −3.0) · buy≥1.54 | 2026-08-24 03:15 |
 
 ## Completed FUTURE match bettips
 
