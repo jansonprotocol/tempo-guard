@@ -1,9 +1,9 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
 
-## CURRENT CONFIRMED HITRATE: 81.8%
+## CURRENT CONFIRMED HITRATE: 86.7%
 
-**Tip 1 9 / 11 settled** · **Tip 2 7 / 9** · **bets 5 / 5, ROI +27.4%** · over/under markets only · live tips, not backtests
+**Tip 1 13 / 15 settled** · **Tip 2 10 / 12** · **bets 6 / 6, ROI +28.5%** · over/under markets only · live tips, not backtests
 
 The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
 from before that point are not comparable to numbers after it, so they are not
@@ -42,21 +42,16 @@ adding any; a test fails if a table drifts out of order.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE** 0-1 (81') | Chinese Super League | Tongliang Long v Dalian Yingbo | U4.25 83.4% +4.1% · buy≥1.28 | U3.75 67.2% +5.5% (floor −7.8) · buy≥1.44 | 2026-08-23 14:00 |
-| **LIVE** 3-0 (81') | Belgian Pro League | Lommel v Westerlo | O1.5 77.5% +1.3% · buy≥1.35 | — none | 2026-08-23 16:00 |
-| **LIVE** 1-1 (82') | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
-| **LIVE** 2-0 (56') | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
-| **LIVE** 0-0 (57') | Allsvenskan | BP v Degerfors | U4.25 85.8% +2.9% · buy≥1.24 | U3.75 70.7% +4.1% (floor −4.3) · buy≥1.37 | 2026-08-23 16:30 |
-| **LIVE** 1-0 (50') | Liga Portugal | Vitória v Nacional | U4.25 87.7% +1.3% · buy≥1.21 | U3.75 73.5% +2.0% (floor −1.5) · buy≥1.33 | 2026-08-23 16:30 |
-| **LIVE** 0-2 (27') | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
-| **LIVE** 0-0 (42') | LaLiga | Atl. Madrid v Villarreal | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-23 17:00 |
-| **LIVE** 0-0 (44') | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
-| **LIVE** 1-1 (29') | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
-| **LIVE** 1-0 (12') | Premier League | Newcastle v Liverpool | O1.5 80.5% **+0.6%** · buy≥1.30 | — none | 2026-08-23 17:30 |
-| **LIVE** 0-0 (13') | Ekstraklasa | GKS Katowice v Wisła Płock | — no tip, Wisła Płock has 3 rows | — | 2026-08-23 17:30 |
-| — not started | Danish Superliga | Viborg v København | **O1.5 84.6% +5.3%** · buy≥1.24 (≥1.28 tail-adj) | **København O1.5** 65.8% +24.5% (team) · buy≥1.59 | 2026-08-23 18:00 |
-| — not started | Süper Lig | Eyüpspor v Gaziantep | U4.25 86.4% +1.8% · buy≥1.23 | U3.75 71.6% +2.7% (floor −3.4) · buy≥1.36 | 2026-08-23 18:00 |
-| — not started | Süper Lig | Trabzonspor v Başakşehir | O1.5 77.3% **+0.3%** · buy≥1.36 | — none | 2026-08-23 18:00 |
+| **LIVE** 1-0 (90'+) | Liga Portugal | Vitória v Nacional | U4.25 87.7% +1.3% · buy≥1.21 | U3.75 73.5% +2.0% (floor −1.5) · buy≥1.33 | 2026-08-23 16:30 |
+| **LIVE** 0-4 (53') | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
+| **LIVE** 1-0 (62') | LaLiga | Atl. Madrid v Villarreal | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-23 17:00 |
+| **LIVE** 1-0 (67') | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
+| **LIVE** 0-1 (52') | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
+| **LIVE** 1-0 (HT) | Premier League | Newcastle v Liverpool | O1.5 80.5% **+0.6%** · buy≥1.30 | — none | 2026-08-23 17:30 |
+| **LIVE** 2-0 (HT) | Ekstraklasa | GKS Katowice v Wisła Płock | — no tip, Wisła Płock has 3 rows | — | 2026-08-23 17:30 |
+| **LIVE** 3-0 (27') | Danish Superliga | Viborg v København | **O1.5 84.6% +5.3%** · buy≥1.24 (≥1.28 tail-adj) | **København O1.5** 65.8% +24.5% (team) · buy≥1.59 | 2026-08-23 18:00 |
+| **LIVE** 0-0 (27') | Süper Lig | Eyüpspor v Gaziantep | U4.25 86.4% +1.8% · buy≥1.23 | U3.75 71.6% +2.7% (floor −3.4) · buy≥1.36 | 2026-08-23 18:00 |
+| **LIVE** 1-1 (28') | Süper Lig | Trabzonspor v Başakşehir | O1.5 77.3% **+0.3%** · buy≥1.36 | — none | 2026-08-23 18:00 |
 | — not started | Chilean Primera División | D. Concepción v Coquimbo | O1.5 78.0% +1.6% · buy≥1.35 | — none | 2026-08-23 18:00 |
 | — not started | Chilean Primera División | La Serena v Cobresal | O1.5 77.1% **+0.7%** · buy≥1.36 | — none | 2026-08-23 18:00 |
 | — not started | Serie A ⚠91d | Frosinone v Juventus | U4.25 86.7% **−2.0%** · buy≥1.23 | O1.75 74.6% +2.7% (floor −0.4) · buy≥1.48 | 2026-08-23 18:30 |
@@ -86,6 +81,7 @@ adding any; a test fails if a table drifts out of order.
 |---|---|---|---|---|---|
 | ✅ HIT — 1-1 (decided, 20') | Championship | West Brom v Burnley | O1.5 77.0% +4.2% · buy≥1.36 | ✅ **Burnley O0.5** 80.5% +11.4% (team) · buy≥1.30 | 2026-08-23 13:00 |
 | ✅ HIT — 2-1 | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | ✅ U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
+| ✅ HIT — 0-1 | Chinese Super League | Tongliang Long v Dalian Yingbo | U4.25 83.4% +4.1% · buy≥1.28 | ✅ U3.75 67.2% +5.5% (floor −7.8) · buy≥1.44 | 2026-08-23 14:00 |
 | ✅ HIT — 2-2 | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | ❌ U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
 | ❌ MISS — 1-0 | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | ❌ **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
 | ✅ HIT — 1-1 | Allsvenskan | Göteborg v Elfsborg | O1.5 78.9% **+0.1%** · buy≥1.33 | — none | 2026-08-23 14:00 |
@@ -96,19 +92,23 @@ adding any; a test fails if a table drifts out of order.
 | ✅ HIT — 4-0 | Premier League | Brighton v Aston Villa | O1.5 80.7% +0.8% · buy≥1.30 | ✅ O2.25 58.6% +1.2% (floor −16.4) · buy≥1.59 | 2026-08-23 15:00 |
 | ✅ HIT — 2-1 | Premier League | Man City v Bournemouth | O1.5 81.6% +1.7% · buy≥1.29 | ✅ **Man City O0.5** 83.7% +5.1% (team) · buy≥1.25 | 2026-08-23 15:00 |
 | ✅ HIT — 0-2 | Ligue 1 | Angers v Lille | U4.25 87.0% +2.6% · buy≥1.22 | ✅ U3.75 72.4% +3.8% (floor −2.6) · buy≥1.34 | 2026-08-23 15:00 |
+| ✅ HIT — 4-0 | Belgian Pro League | Lommel v Westerlo | O1.5 77.5% +1.3% · buy≥1.35 | — none | 2026-08-23 16:00 |
+| — no tip — 2-1 | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
+| ✅ HIT — 2-0 | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | ✅ **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
+| ✅ HIT — 2-0 | Allsvenskan | BP v Degerfors | U4.25 85.8% +2.9% · buy≥1.24 | ✅ U3.75 70.7% +4.1% (floor −4.3) · buy≥1.37 | 2026-08-23 16:30 |
 
 ### Actual placed bets
 
-**Settled: 5 / 5 — ROI +27.4%  ·  Pending: 7**
+**Settled: 6 / 6 — ROI +28.5%  ·  Pending: 6**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
 | 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** ✅ |
 | 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ ✅ |
 | 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
-| 14:00 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** ✅ |
 | 15:00 | Brighton v Aston Villa | **O1.5** | O2.0 — harsher rung | 1.35 | 1.40 | +1.6% ✅ |
 | 15:00 | Brighton v Aston Villa | **O1.5** | O1.5 — the tip | 1.24 | 1.30 | **+0.1%** ✅ |
+| 16:30 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** ✅ |
 | 16:45 | Cambuur v Feyenoord | U4.25 | U4.5 — same tier | 1.32 | 1.28 | **+8.7%** |
 | 17:00 | Eibar v Real Valladolid | U3.0 | **Valladolid U1.5 — team lane** | 1.24 | 1.32 | −1.4% |
 | 18:00 | Viborg v København | **O1.5** | O1.5 — the tip | 1.19 | 1.24 | +0.7% ⚠ |
@@ -116,10 +116,10 @@ adding any; a test fails if a table drifts out of order.
 | 18:30 | Venezia v Lecce | **U3.0** | U3.5 — same tier, softer | 1.22 | 1.31 | −2.4% |
 | 19:00 | Verona v Ascoli | U3.0 | U3.0 — the tip | 1.45 | 1.47 | **+3.5%** |
 
-Five settled, five won, **ROI +27.4%**. Worth separating what that shows from
+Six settled, six won, **ROI +28.5%**. Worth separating what that shows from
 what it does not.
 
-**Three of the five were bought at or above the line** — Port at +11.2%, and both
+**Four of the six were bought at or above the line** — Port at +11.2%, and both
 Brighton lanes. Those are the result the method predicts.
 
 **Two were not, and won anyway.** `Hammarby O1.5` at 1.34 against a 1.56
