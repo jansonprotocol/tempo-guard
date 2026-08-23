@@ -1,8 +1,8 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## CURRENT CONFIRMED HITRATE: 84.5%
+## CURRENT CONFIRMED HITRATE: 84.2%
 
-**82 / 97 settled** · over/under markets only · live tips, not backtests
+**101 / 120 settled** · over/under markets only · live tips, not backtests
 
 ---
 
@@ -10,36 +10,13 @@
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE: 2-1** (90') | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% · buy≥1.29 | U2.75 66.4% +4.5% (floor −12.6) · buy≥1.44 | 2026-08-22 23:00 |
-| **LIVE: 0-0** (87') | Colombia Primera A | Tolima v Bucaramanga | U4.25 85.9% −5.6% · buy≥1.24 | **O1.75 75.6% +8.4%** (floor −3.4) · buy≥1.45 | 2026-08-22 23:05 |
-| **LIVE: 0-0** (63') | Brasileirão | Internacional v Atlético-MG | U4.25 86.4% −2.5% · buy≥1.23 | O1.75 75.0% +3.4% (floor −4.0) · buy≥1.47 | 2026-08-22 23:30 |
-| **LIVE: 0-1** (59') | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% · buy≥1.32 | U2.75 64.6% +2.6% (floor −14.4) · buy≥1.47 | 2026-08-22 23:30 |
-| **LIVE: 0-3** (59') | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% · buy≥1.24 | — none | 2026-08-22 23:30 |
-| — not started | Colombia Primera A | Santa Fe v América de Cali | **O1.5 80.8% +13.6%** · buy≥1.30 | O2.25 58.8% +18.0% (floor −20.2) · buy≥1.59 | 2026-08-23 01:10 |
-| — not started | Brasileirão | Cruzeiro v Flamengo | **O1.5 88.0% +16.4%** · buy≥1.19 | **Flamengo O1.5** 61.9% +33.6% (team) · buy≥1.70 | 2026-08-23 01:30 |
-| — not started | Peru Liga 1 | Deportivo Garcilaso v Cusco | U4.25 86.4% −1.3% · buy≥1.23 | O1.75 75.0% +1.7% (floor −4.0) · buy≥1.47 | 2026-08-23 02:00 |
-| — not started | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% · buy≥1.26 | O2.25 62.7% +10.3% (floor −16.3) · buy≥1.50 | 2026-08-23 02:00 |
-| — not started | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% · buy≥1.40 | — none | 2026-08-23 03:15 |
-| — not started | MLS | Montréal v LA Galaxy | **U3.0 79.1% +15.9%** · buy≥1.42 | U4.25 91.2% +10.7% (lower edge) · buy≥1.16 | 2026-08-23 01:30 |
-| — not started | MLS | Charlotte v DC United | O1.5 83.7% +2.7% · buy≥1.25 | O2.25 63.3% +4.2% (floor −15.7) · buy≥1.49 | 2026-08-23 01:30 |
-| — not started | MLS | Cincinnati v Seattle | O1.5 88.4% +7.3% · buy≥1.19 | **Cincinnati O1.5** 79.1% +27.0% (team) · buy≥1.33 | 2026-08-23 01:30 |
-| — not started | MLS | Inter Miami v Toronto | **O1.5 89.8% +8.7%** · buy≥1.17 | **Inter Miami O1.5** 76.8% +24.7% (team) · buy≥1.37 | 2026-08-23 01:30 |
-| — not started | MLS | NY Red Bulls v Chicago | O1.5 84.6% +3.5% · buy≥1.24 | **Chicago O1.5** 55.6% +16.5% (team) · buy≥1.89 | 2026-08-23 01:30 |
-| — not started | MLS | Orlando v Salt Lake | O1.5 84.8% +3.8% · buy≥1.24 | O2.25 65.1% +6.0% (floor −13.9) · buy≥1.45 | 2026-08-23 01:30 |
-| — not started | MLS | Nashville v Columbus | O1.5 88.2% +7.2% · buy≥1.19 | **Nashville O1.5** 65.8% +13.7% (team) · buy≥1.59 | 2026-08-23 02:30 |
-| — not started | MLS | St. Louis v Houston | O1.5 85.9% +4.9% · buy≥1.22 | O2.25 67.1% +8.0% (floor −11.9) · buy≥1.42 | 2026-08-23 02:30 |
-| — not started | MLS | Austin v Philadelphia | O1.5 82.4% +1.4% · buy≥1.27 | **Philadelphia O1.5** 59.3% +20.2% (team) · buy≥1.77 | 2026-08-23 03:00 |
-| — not started | MLS | Vancouver v Dallas | O1.5 88.8% +7.7% · buy≥1.18 | **Dallas O1.5** 59.5% +20.4% (team) · buy≥1.77 | 2026-08-23 03:30 |
-| — not started | MLS | Los Angeles FC v Portland | O1.5 88.9% +7.8% · buy≥1.18 | **Portland O1.5** 60.7% +21.6% (team) · buy≥1.73 | 2026-08-23 04:30 |
-| — not started | MLS | San Diego v Colorado | U4.25 84.5% +4.1% · buy≥1.26 | **Colorado U1.5** 78.3% +17.4% (team) · buy≥1.34 | 2026-08-23 04:30 |
-| — not started | MLS | San Jose v Minnesota | U4.25 86.6% +6.2% · buy≥1.23 | U3.75 71.8% +8.6% (floor −7.2) · buy≥1.35 | 2026-08-23 04:30 |
 | — not started | Danish Superliga | Sønderjyske v Nordsjælland | U4.25 84.5% +2.1% · buy≥1.26 | U3.75 68.7% +2.8% (floor −10.3) · buy≥1.41 | 2026-08-23 12:00 |
 | — not started | Eredivisie | GA Eagles v ADO | U4.25 83.8% +4.5% · buy≥1.27 | **ADO U1.5** 77.4% +18.7% (team) · buy≥1.36 | 2026-08-23 12:15 |
 | — not started | J1 League | Machida Z v Urawa Reds | U4.25 83.1% **−5.2%** · buy≥1.29 | **O1.75 78.6% +6.1%** (floor −0.4) · buy≥1.39 | 2026-08-23 12:30 |
 
-## Completed FUTURE match bettips: Tip 1 84.5% hit · Tip 2 73.4% hit
+## Completed FUTURE match bettips: Tip 1 84.2% hit · Tip 2 67.0% hit
 
-**Tip 1 — 82 / 97**   ·   **Tip 2 — 58 / 79** (18 fixtures offered no second tip)
+**Tip 1 — 101 / 120**   ·   **Tip 2 — 67 / 100** (20 fixtures offered no second tip)
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
@@ -140,6 +117,29 @@
 | ✅ HIT — 3-0 (decided) | Liga Portugal | Sporting v Alverca | O1.5 84.0% +8.9% · buy≥1.25 | ✅ **Sporting O1.5** 64.5% +22.3% (team) · buy≥1.63 | 2026-08-22 |
 | ❌ MISS — 5-1 | Peru Liga 1 | Juan Pablo II v ADT | U3.0 83.1% +9.6% · buy≥1.33 | ❌ **Juan Pablo II U1.5** 75.2% +22.4% (team) · buy≥1.40 | 2026-08-22 |
 | ✅ HIT — 1-1 | Colombia Primera A | Águilas Doradas v Millonarios | U4.25 84.2% −7.2% · buy≥1.27 | ✅ **O1.75 77.5% +10.2%**, half win (floor −1.5) · buy≥1.41 | 2026-08-22 |
+| ✅ HIT — 2-1 | Brasileirão Série B | Ceará v Londrina | U3.0 84.9% +3.2% · buy≥1.29 | ❌ ❌ U2.75 66.4% +4.5% (floor −12.6) · buy≥1.44 | 2026-08-23 |
+| ✅ HIT — 0-0 | Colombia Primera A | Tolima v Bucaramanga | U4.25 85.9% −5.6% · buy≥1.24 | ❌ ❌ **O1.75 75.6% +8.4%** (floor −3.4) · buy≥1.45 | 2026-08-23 |
+| ✅ HIT — 0-0 | Brasileirão | Internacional v Atlético-MG | U4.25 86.4% −2.5% · buy≥1.23 | ❌ ❌ O1.75 75.0% +3.4% (floor −4.0) · buy≥1.47 | 2026-08-23 |
+| ✅ HIT — 1-1 | Brasileirão Série B | Cuiabá v Goiás | U3.0 83.6% +1.9% · buy≥1.32 | ✅ ✅ U2.75 64.6% +2.6% (floor −14.4) · buy≥1.47 | 2026-08-23 |
+| ✅ HIT — 1-3 | Chile Primera División | Huachipato v Deportes Limache | U4.25 85.9% +0.7% · buy≥1.24 | — none | 2026-08-23 |
+| ❌ MISS — 0-0 | Colombia Primera A | Santa Fe v América de Cali | **O1.5 80.8% +13.6%** · buy≥1.30 | ❌ ❌ O2.25 58.8% +18.0% (floor −20.2) · buy≥1.59 | 2026-08-23 |
+| ✅ HIT — 2-1 | Brasileirão | Cruzeiro v Flamengo | **O1.5 88.0% +16.4%** · buy≥1.19 | ❌ ❌ **Flamengo O1.5** 61.9% +33.6% (team) · buy≥1.70 | 2026-08-23 |
+| ❌ MISS — 4-1 | Peru Liga 1 | Deportivo Garcilaso v Cusco | U4.25 86.4% −1.3% · buy≥1.23 | ✅ ✅ O1.75 75.0% +1.7% (floor −4.0) · buy≥1.47 | 2026-08-23 |
+| ✅ HIT — 1-2 | Chile Primera División | Universidad Católica v Ñublense | O1.5 83.3% +6.9% · buy≥1.26 | ✅ ✅ O2.25 62.7% +10.3% (floor −16.3) · buy≥1.50 | 2026-08-23 |
+| ✅ HIT — 0-1 | Colombia Primera A | Ind. Medellín v Cúcuta | U3.0 80.1% +0.4% · buy≥1.40 | — none | 2026-08-23 |
+| ❌ MISS — 2-2 | MLS | Montréal v LA Galaxy | **U3.0 79.1% +15.9%** · buy≥1.42 | ✅ ✅ U4.25 91.2% +10.7% (lower edge) · buy≥1.16 | 2026-08-23 |
+| ✅ HIT — 3-1 | MLS | Charlotte v DC United | O1.5 83.7% +2.7% · buy≥1.25 | ✅ ✅ O2.25 63.3% +4.2% (floor −15.7) · buy≥1.49 | 2026-08-23 |
+| ✅ HIT — 1-1 | MLS | Cincinnati v Seattle | O1.5 88.4% +7.3% · buy≥1.19 | ❌ ❌ **Cincinnati O1.5** 79.1% +27.0% (team) · buy≥1.33 | 2026-08-23 |
+| ✅ HIT — 1-2 | MLS | Inter Miami v Toronto | **O1.5 89.8% +8.7%** · buy≥1.17 | ❌ ❌ **Inter Miami O1.5** 76.8% +24.7% (team) · buy≥1.37 | 2026-08-23 |
+| ✅ HIT — 1-1 | MLS | NY Red Bulls v Chicago | O1.5 84.6% +3.5% · buy≥1.24 | ❌ ❌ **Chicago O1.5** 55.6% +16.5% (team) · buy≥1.89 | 2026-08-23 |
+| ✅ HIT — 2-1 | MLS | Orlando v Salt Lake | O1.5 84.8% +3.8% · buy≥1.24 | ✅ ✅ O2.25 65.1% +6.0% (floor −13.9) · buy≥1.45 | 2026-08-23 |
+| ✅ HIT — 3-2 | MLS | Nashville v Columbus | O1.5 88.2% +7.2% · buy≥1.19 | ✅ ✅ **Nashville O1.5** 65.8% +13.7% (team) · buy≥1.59 | 2026-08-23 |
+| ✅ HIT — 2-1 | MLS | St. Louis v Houston | O1.5 85.9% +4.9% · buy≥1.22 | ✅ ✅ O2.25 67.1% +8.0% (floor −11.9) · buy≥1.42 | 2026-08-23 |
+| ✅ HIT — 1-1 | MLS | Austin v Philadelphia | O1.5 82.4% +1.4% · buy≥1.27 | ❌ ❌ **Philadelphia O1.5** 59.3% +20.2% (team) · buy≥1.77 | 2026-08-23 |
+| ✅ HIT — 5-0 | MLS | Vancouver v Dallas | O1.5 88.8% +7.7% · buy≥1.18 | ❌ ❌ **Dallas O1.5** 59.5% +20.4% (team) · buy≥1.77 | 2026-08-23 |
+| ✅ HIT — 1-1 | MLS | Los Angeles FC v Portland | O1.5 88.9% +7.8% · buy≥1.18 | ❌ ❌ **Portland O1.5** 60.7% +21.6% (team) · buy≥1.73 | 2026-08-23 |
+| ✅ HIT — 3-0 | MLS | San Diego v Colorado | U4.25 84.5% +4.1% · buy≥1.26 | ✅ ✅ **Colorado U1.5** 78.3% +17.4% (team) · buy≥1.34 | 2026-08-23 |
+| ❌ MISS — 1-5 | MLS | San Jose v Minnesota | U4.25 86.6% +6.2% · buy≥1.23 | ❌ ❌ U3.75 71.8% +8.6% (floor −7.2) · buy≥1.35 | 2026-08-23 |
 
 
 ### Actual placed bets
@@ -161,270 +161,67 @@ Average odds of about 1.33 across the 26 (range 1.17–1.60) put break-even near
 Sanfrecce bet onward, so the Three Towns swap cannot be applied exactly. Per-bet
 odds are recorded from here.
 
-#### Did the prices paid justify the bets? The threshold separates them cleanly
+#### The buy-from threshold does NOT hold up. Here is the honest version.
 
-The bet log now lives in `config/bets.tsv` rather than in paragraphs, and
-`scripts/ledger.py` joins it to the fixture tables above — 70 bets, every price
-recorded, scored against the engine's own break-even for the rung actually
-bought. This is the fix for the defect that produced the mis-cut discipline
-buckets: nothing is re-derived by hand any more.
+Earlier tonight this section reported the threshold separating bets cleanly:
++18.4% above it, about -17% below. **That was 60 settled bets and it has not
+survived 79.** The correct current numbers:
 
-    62 settled at 1 unit each
-    hit rate (push counts as a hit)   44/62 = 71.0%
-    returned 57.63 on 62 staked   P/L -4.37   ROI -7.0%
+    79 settled at 1 unit each
+    hit rate (push counts)   55/79 = 69.6%
+    returned 71.02 on 79     P/L -7.98     ROI -10.1%
 
-**A 71.7% hit rate returned -6.2%.** That is the whole problem in one line, and
-splitting by the price paid says where it went:
+    bought AT or ABOVE buy-from   30 bets   ROI  -4.2%
+    bought BETWEEN (thin)         22 bets   ROI -13.5%
+    bought BELOW break-even       27 bets   ROI -13.8%
 
-    bought AT or ABOVE buy-from    19 bets   ROI  +12.2%
-    bought BETWEEN break-even and buy-from
-                       ("thin")    18 bets   ROI  -14.7%
-    bought BELOW break-even        25 bets   ROI  -16.2%
+The ordering survives — clearing the threshold is still the best of the three —
+but **the winning bucket is now losing money**, and a margin sweep across the
+whole book is flat noise rather than a curve:
 
-**The threshold does its job.** The 19 bets that cleared it returned +12.2%; the
-43 that did not returned about -15% either way. That is not a subtle gradient —
-the bets above the line paid and the bets below it did not, on a sample large
-enough to take seriously.
+    require >= 0%   52 bets   -8.2%        require >= 10%   16 bets   -1.7%
+    require >= 2%   46 bets   -1.6%        require >= 12%   12 bets  +11.3%
+    require >= 5%   30 bets   -4.2%        require >= 15%    9 bets   +0.6%
+    require >= 8%   23 bets   -9.1%        require >= 20%    5 bets   -2.6%
 
-The most useful column is the middle one. **`thin` bets are positive expected
-value** — above break-even, below break-even plus 5% — and they returned
-**-17.6%**, essentially the same as the negative-EV bucket. A 2% edge does not
-survive an ordinary day's variance. The margin is not a nicety; it is the
-difference between a bet that pays and a bet that merely is not stupid.
+There is no threshold in there. The earlier +18.4% was a small-sample artefact
+and it should have been labelled as one more firmly than it was.
 
-**27 of 82 were bought below break-even**, negative by the engine's own number
-whatever the match did. The worst are all the same shape:
+**Why the threshold cannot work as built.** The diagnostic sweep found the
+engine overconfident by about 4 points across 26 leagues. On the bets actually
+placed the gap is far worse:
 
-    Cerezo Osaka v Shimizu   O1.5   paid 1.22  needed 1.345   -9.3%
-    Sanfrecce v Kawasaki     O2.25  paid 1.35  needed 1.483   -9.0%
-    Al-Ahli v Abha           O1.5   paid 1.10  needed 1.203   -8.6%
-    Al-Fateh v Al-Ettifaq    O2.5   paid 1.50  needed 1.633   -8.1%
-    Fagiano Okayama          U3.25  paid 1.19  needed 1.288   -7.6%
-    Espanyol v Real Madrid   O1.5   paid 1.17  needed 1.258   -7.0%
-    Everton v Crystal Palace U3.5   paid 1.33  needed 1.412   -5.8%
-    Preston v Wolves         O1.5   paid 1.22  needed 1.294   -5.7%
-    Fenerbahçe (team)        O1.5   paid 1.32  needed 1.546  -14.6%
-    Genoa (team)             U1.5   paid 1.18  needed 1.332  -11.4%
+    bucket           n   engine says   actually hit     gap      ROI
+    ALL             79       80.4%         69.6%      -10.8   -10.1%
+      match rungs   69       80.4%         69.6%      -10.9   -11.0%
+      team rungs    10       79.9%         70.0%       -9.9    -4.1%
 
-Many of them **won**, which is exactly why the habit survived a whole day
-unnoticed. `Al-Ahli O1.5` at 1.10 won. `Preston O1.5` at 1.22 won. `Everton
-U3.5` at 1.33 won. Each was a losing bet that got away with it, and the hit-rate
-column recorded all three as successes.
+    P >= 80%        48       84.3%         77.1%       -7.2    -4.0%
+    P 70-80%        25       76.5%         60.0%      -16.5   -18.6%
+    P < 70%          6       64.8%         50.0%      -14.8   -23.2%
 
-**The two team lanes are the widest misses in the book** and they are worth
-separating from the rest. `Fenerbahçe O1.5` at 1.32 needed 1.546; `Genoa U1.5`
-at 1.18 needed 1.332. Both won. Meanwhile `Basel O1.5` at 1.83 needed 1.269 and
-`Troyes U1.5` at 1.48 needed 1.264 — the same lane, the same engine, the same
-read quality, bought properly. **The team lane is not the problem; buying a 65%
-claim at an 85% price is.**
+**Break-even is computed from the engine's own probability, and that
+probability is too high — so break-even is too low, and a 5% margin on top of a
+number that is already 7-16 points optimistic buys nothing.** The margin was
+sized to be a cushion and it is being spent entirely on the calibration error.
 
-#### What the losses actually have in common
+The damage concentrates below 80%: bets at `P >= 80%` run -7.2 and lose 4%,
+while `P 70-80%` runs **-16.5** and loses 18.6%. That band is where Tip 2, the
+floor-breaking rungs and most of the team lanes live.
 
-Run across all 95 settled tips rather than the fixtures that were backed, so
-nothing is selected on whether a bet was placed. `scripts/loss_shape.py`.
+**What actually follows.** The threshold is not wrong in principle; it is
+computed off a broken input. Fixing the order matters:
 
-**All 14 misses are boundary events.** Ten are Unders that went over, four are
-Overs that landed on exactly one goal, and there are only two genuine blowouts
-— Nantes 7 goals on a mu of 2.55, Śląsk 6 on 2.08. Six of the ten Under misses
-landed on exactly the first losing total. The engine is not misreading matches;
-it is losing by a goal.
+1. Fix calibration first — per-league, and hardest below 80%.
+2. Only then re-derive `buy from`, since it inherits whatever the probability
+   does.
+3. Until both are done, treat `buy≥` as a floor to avoid obviously bad prices,
+   not as a signal that a bet is good.
 
-The four Over misses are their own small pattern: **every one finished on
-exactly 1 goal, and every one had mu above 3.0** — Empoli 3.08, Luzern 3.11,
-Al-Fateh 3.16, Al Qadsiah 3.77. Four fixtures is not a finding, but it is the
-tidiest cluster in the loss column and worth counting.
-
-**One rung safer rescues 8 of the 14 and breaks 0 winners.**
-
-Half of that sentence is worthless. A safer rung's winning totals are a strict
-superset of the tip's, so it *cannot* lose a match the tip won — "breaks 0" is
-arithmetic, the same set-containment trap that produced three fake zeros in the
-tip-pair families. The only real question is whether 8 rescues are worth the
-price given up, which averages **8.6%** (break-even 1.204 → 1.100).
-
-Holding the margin fixed so only the rung changes:
-
-    margin    as issued    one safer    diff
-       0%       +0.61%       +2.36%    +1.76
-       5%       +5.32%       +7.16%    +1.84
-      10%      +10.03%      +11.95%    +1.92
-
-    hit rate   85.3% (81/95)  ->  93.7% (89/95)
-
-**If the engine were perfectly calibrated this difference would be exactly
-zero** — the rescues would cost precisely what they are worth. The +1.84 IS the
-measured miscalibration at the boundary, and it is small against an overall
-calibration of +0.6 points. Suggestive, in-sample, not established.
-
-The hit rate moves much further than the ROI does, which matters here: this log
-is optimised for strike rate, and **+8.4 points of hit rate for +1.8 of ROI is
-the trade the project actually wants.**
-
-**The price is NOT available, and this kills the idea.** The supporting figure
-first written here was wrong: it quoted the margin offered in the **1.15–1.24**
-fair-price band, which is where the TIPS price. The tier-jump alternatives price
-far shorter than that. Across the 54 fixtures where a jump exists:
-
-    break-even   price needed at +5%    n
-    1.00-1.08         1.05-1.13        43
-    1.08-1.12         1.13-1.18        10
-    1.12-1.16         1.18-1.22         1
-
-    median break-even 1.060  ->  need 1.112 to clear +5%
-    93% would need a price of 1.15 or lower
-     2% would need a price above 1.20
-
-**One fixture out of 54** — Carrarese v Mantova, `U3.0` → `U4.25` — would have
-needed as much as 1.20. Everything else sits in territory where the bookmaker's
-margin on a 94% shot consumes the entire edge, and in practice those lines are
-either unquoted or priced under 1.15 with nothing left in them.
-
-That is the correct band to have looked at all along: the **under 1.15** row of
-the table above offered **+3.6%** average margin on 6 observations, the thinnest
-in the book — not the +6.5% that was quoted here.
-
-**So the simulation was fantasy.** The +1.84 points assumed break-even + 5% was
-obtainable on every rung, and that assumption fails precisely where this
-strategy needs it. The measured boundary miscalibration is probably real and
-small; it is not reachable through the tier jump, because you cannot buy a 94%
-shot at a price that pays.
-
-**What this leaves standing** is the loss shape — losses are boundary events,
-not misreads — and the original discipline: buy the tip, demand +5% or better,
-skip when the book will not give it. The rescue is visible and unbuyable, which
-is a different thing from useful.
-
-A general lesson worth keeping: **the shorter the fair price, the less room the
-bookmaker has to leave value.** Any future idea that routes through very short
-lines should be price-checked before it is measured, not after.
-
-#### Chasing the 1.20–1.39 band, and why it did not become a rule
-
-The odds bands split sharply, and the middle of the book is where the money
-went:
-
-    band         n   Athena says   actually hit     gap      ROI
-    1.00-1.19   14         84.8%          92.9%    +8.1    +6.6%
-    1.20-1.29   17         81.0%          58.8%   -22.2   -26.1%
-    1.30-1.39   19         76.4%          63.2%   -13.3   -12.7%
-    1.40+       10         74.4%          80.0%    +5.6   +22.1%
-
-**60% of the book sat in 1.20–1.39 and it returned -19.0%.** Tempting to make a
-rule of it. Three checks say don't.
-
-**First, the band is mostly a `U3.x` tier in disguise.** Splitting it:
-
-    BAND, U3.x rungs         13 bets   says 79.3%   hit 53.8%   ROI -27.6%
-    BAND, everything else    23 bets   says 78.2%   hit 65.2%   ROI -14.2%
-    ALL U3.x bets            18 bets   says 80.1%   hit 61.1%   ROI -18.4%
-    ALL non-U3.x bets        42 bets   says 79.0%   hit 76.2%   ROI  -1.0%
-
-`U3.0`, `U3.25` and `U3.5` price around 1.20–1.40, so "that band" and "that
-tier" are nearly the same set. The independent tip record agrees — across all
-95 settled Tip 1s, `U3.x` says 82.8% and lands 72.7%, a **-10.0** gap, while
-`U4.25` runs +2.8 and `O1.x` runs +3.1.
-
-**Second, the structural explanation is testable and it is false.** The natural
-story is overdispersion: real totals having fatter tails than Poisson, more 4+
-goal games than the model expects, which would hurt `U3.x` most because its
-boundary sits closest to the typical total. `scripts/dispersion.py` checks it on
-**272,857 matches**:
-
-    mean total 2.623   variance 2.713   var/mean 1.034   (Poisson => 1.000)
-
-    rung    Poisson says   actually     gap
-    U2.75          51.3%      51.2%    -0.1
-    U3.0           73.1%      72.9%    -0.2
-    U3.5           73.1%      72.9%    -0.2
-    U4.25          87.4%      87.1%    -0.4
-    O1.5           73.7%      73.3%    -0.4
-
-Mild overdispersion exists and is worth **less than half a point** at every rung
-traded. `U3.x` is not singled out; it is the best-calibrated under on the
-ladder. There is no shape correction to apply.
-
-**Third, the pattern was found by searching for it.** The band was selected
-because it looked bad, so testing it on the same 60 bets is circular. The
-shortfall is `z = -2.03` on 18 `U3.x` bets — suggestive, not established, and
-discounted further for having been fished out of a dozen possible slices.
-
-**What survives.** Overall calibration is excellent: across 95 settled tips the
-engine says **84.6%** and delivers **85.3%**, a gap of **+0.6 points**. The
-engine is not lying about its probabilities. The band effect is most likely
-variance sitting on top of a real but small `U3.x` wobble, and the honest
-response is to keep counting rather than to add a rule. `U3.x` calibration is
-worth re-checking at 100+ tips.
-
-**The pricing answer is the one that holds.** In that band the average margin
-bought was only **+1.1%** (1.20–1.29) and **+3.1%** (1.30–1.39), against the
-**+5% or better** that separated the profitable bets from the rest. The band did
-not lose because the tips were bad — it lost because it was bought thin.
-
-#### The MLS card — 9 bets, and the tier-up finally lands somewhere buyable
-
-Nine of thirteen backed, four skipped on price. Stake dropped to €1.00.
-
-| Fixture | Bought | P | Paid | Break-even | Buy from | EV |
-|---|---|---|---|---|---|---|
-| Vancouver v Dallas | **Dallas O0.5** (team) | 86.5% | **1.41** | 1.156 | 1.21 | **+22.0%** |
-| Los Angeles FC v Portland | **Portland O0.5** (team) | 87.1% | 1.30 | 1.148 | 1.21 | **+13.2%** |
-| Cincinnati v Seattle | **Cincinnati O1.5** (team) | 79.1% | 1.40 | 1.264 | 1.33 | +10.8% |
-| Montréal v LA Galaxy | U4.5 | — | 1.20 | 1.097 | 1.15 | +9.4% |
-| San Jose v Minnesota | U4.5 | — | 1.25 | 1.155 | 1.21 | +8.2% |
-| St. Louis v Houston | O1.5 — Tip 1 | — | 1.23 | 1.163 | 1.22 | +5.7% |
-| Nashville v Columbus | O1.5 — Tip 1 | — | 1.19 | 1.133 | 1.19 | +5.0% |
-| San Diego v Colorado | U4.5 | — | 1.23 | 1.183 | 1.24 | +4.0% ⚠ |
-| Austin v Philadelphia | **Philadelphia O0.5** (team) | 86.4% | 1.15 | 1.157 | 1.22 | **−0.6%** ⚠ |
-
-**Portfolio +8.6% per bet, 7 of 9 clearing the threshold** — comfortably the
-best-bought card in the log, against a book-wide ROI of −6.2%.
-
-**The tier-up works on the team ladder, and that is a genuine correction to the
-earlier retraction.** Three bets moved from the published `O1.5` team lane up to
-`O0.5` — Philadelphia, Dallas, Portland. On the MATCH ladder that move was shown
-to be unbuyable: those rungs price at a median break-even of 1.060 and 93% would
-need 1.15 or less. **A team `O0.5` does not price like that.** One side scoring
-is an 86–87% shot, not a 94% one, so break-even sits near 1.15 and the book
-still quotes 1.30 and 1.41 there.
-
-    match ladder tier-up:   median break-even 1.060   93% need <= 1.15   dead
-    team ladder tier-up:    break-even 1.148-1.157    got 1.15 / 1.30 / 1.41
-
-`Dallas O0.5` at **1.41** against a break-even of 1.156 is the largest edge on
-the card and one of the largest in the whole log. The retraction was right about
-the match ladder and should not have been generalised to the team ladder —
-different probability, different pricing, different answer.
-
-**`Philadelphia O0.5` at 1.15 is the one that missed**, and it missed narrowly:
-break-even 1.157, so the bet is fractionally negative. The same rung on the same
-night was available at 1.30 and 1.41 elsewhere. That is the shape of a rung
-bought without checking the number rather than a bad read.
-
-`San Diego U4.5` at 1.23 against a 1.24 threshold is inside rounding — positive
-EV, just short of the margin.
-
-#### The Sunday morning card — 3 bets, all three clearing the threshold
-
-| Fixture | Bought | P | Paid | Break-even | Buy from | EV |
-|---|---|---|---|---|---|---|
-| GA Eagles v ADO | **ADO Den Haag U1.5** (team) | 77.4% | 1.40 | 1.292 | 1.36 | **+8.3%** |
-| Sønderjyske v Nordsjælland | U4.5 | — | 1.25 | 1.184 | 1.24 | +5.6% |
-| Machida Z v Urawa Reds | O1.5 | — | 1.34 | 1.272 | 1.34 | +5.3% |
-
-**3 of 3 above the line, +6.4% per bet.** Small card, but the first with nothing
-bought below the threshold.
-
-`Machida Z` is worth naming: Tip 1 was a `U4.25` at **−5.2% edge** — the engine
-finding nothing and retreating — and the bet crossed to the Over side, taking
-`O1.5` rather than the `O1.75` published. Same tier, softer settlement, so the
-rung choice is free and correct. This is the crossing-off-a-negative-edge-
-fallback shape that worked on Fluminense and Kashima, taken deliberately for
-once rather than by feel.
-
-**Every one of these three fixtures needed an engine fix to price at all**, and
-two of them would have been priced WRONG rather than skipped — see the Danish
-merge and the accent-folding repair in the defects section. `Sønderjyske` in
-particular would have been tipped off form ending May 2025.
+The one instruction that survives everything measured today is the simplest:
+**Tip 1 at 84.2% is the only number in this project with real evidence behind
+it.** Every deviation measured — Tip 2, team lanes, thin rungs, price-chasing —
+has done worse.
 
 #### On cash-outs
 
