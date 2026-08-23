@@ -122,10 +122,12 @@ adding any; a test fails if a table drifts out of order.
 
 ### Actual placed bets
 
-**Settled: 10 / 13 — ROI −2.3%  ·  Pending: 7**
+**Settled: 10 / 13 — ROI −2.3%  ·  Pending: 11**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
+| 01:00 | Atlanta v Kansas City | U4.25 | U4.5 — same tier | 1.23 | 1.27 | +2.0% ⚠ |
+| 01:00 | Atlanta v Kansas City | U4.25 | **Kansas City U1.5 — team lane** | 1.43 | 1.40 | **+7.4%** |
 | 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** ✅ |
 | 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ ✅ |
 | 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
@@ -146,6 +148,8 @@ adding any; a test fails if a table drifts out of order.
 | 21:00 | RB Bragantino v Grêmio | U3.0 | U3.25 — same tier | 1.42 | 1.39 | **+7.4%** |
 | 21:00 | Palmeiras v Vasco | U3.0 | U3.0 — the tip | 1.46 | 1.46 | +4.8% |
 | 21:00 | Cesena v Sampdoria | **U3.0** | U3.0 — the tip | 1.36 | 1.42 | +0.2% ⚠ |
+| 22:30 | Melgar v Alianza Lima | **O1.5** | O1.5 — the tip | 1.37 | 1.34 | **+7.7%** |
+| 23:30 | Chapecoense v São Paulo | **U3.0** | U3.0 — the tip | 1.35 | 1.34 | **+6.1%** |
 
 **All three losses were bets bought at or above the line.** `Le Havre O1.5` at
 +5.1% finished 0-1; `Cambuur U4.5` at **+8.7%** went 2-5; `Club Brugge O1.5` at
