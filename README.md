@@ -1,9 +1,9 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
 
-## CURRENT CONFIRMED HITRATE: — no settled tips yet
+## CURRENT CONFIRMED HITRATE: 100%
 
-**0 / 0 settled** · over/under markets only · live tips, not backtests
+**1 / 1 settled** · over/under markets only · live tips, not backtests
 
 The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
 from before that point are not comparable to numbers after it, so they are not
@@ -37,7 +37,6 @@ the recalibrated probability.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE** (4') | Championship | West Brom v Burnley | O1.5 77.0% +4.2% · buy≥1.36 | **Burnley O0.5** 80.5% +11.4% (team) · buy≥1.30 | 2026-08-23 13:00 |
 | — not started | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
 | — not started | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
 | — not started | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
@@ -54,10 +53,11 @@ the recalibrated probability.
 
 ## Completed FUTURE match bettips
 
-**Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+**Tip 1 — 1 / 1**   ·   **Tip 2 — 1 / 1**
 
 | Result | League | Teams | Tip 1 | Tip 2 | Date |
 |---|---|---|---|---|---|
+| ✅ HIT — 1-1 (decided, 20') | Championship | West Brom v Burnley | O1.5 77.0% +4.2% · buy≥1.36 | ✅ **Burnley O0.5** 80.5% +11.4% (team) · buy≥1.30 | 2026-08-23 |
 
 ### Actual placed bets
 
