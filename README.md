@@ -37,6 +37,7 @@ the recalibrated probability.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
+| **LIVE** (4') | Championship | West Brom v Burnley | O1.5 77.0% +4.2% · buy≥1.36 | **Burnley O0.5** 80.5% +11.4% (team) · buy≥1.30 | 2026-08-23 13:00 |
 | — not started | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
 | — not started | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
 | — not started | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |

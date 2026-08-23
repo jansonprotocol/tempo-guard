@@ -10,6 +10,32 @@ a record of what was published at the time, and of how the defects were found.
 
 ---
 
+## Three bets were still open when this closed
+
+`Sønderjyske v Nordsjælland` `U4.5` @1.25, `GA Eagles v ADO` — `ADO U1.5` @1.40,
+and `Machida Z v Urawa Reds` `O1.5` @1.34 were placed on 23 Aug against
+pre-calibration tips and had not kicked off when the log was reset. They stay
+here rather than moving to the new ledger: they were priced against
+probabilities now known to be optimistic, and against `buy≥` thresholds that
+re-price about 7% higher, so scoring them under the new engine would flatter it
+with bets it never issued. Settle them into `bets.tsv` here.
+
+Worth recording what the calibrated engine says about those same three
+fixtures, because one changed materially:
+
+    fixture                    as tipped (old)              re-priced (new)
+    Sønderjyske v Nordsj.      U4.25 84.5% +2.1%            U4.25 83.1% +0.7%
+    Machida Z v Urawa          U4.25 83.1% -5.2%            U4.25 86.6% -1.7%
+                               Tip 2 O1.75 78.6% +6.1%      Tip 2 O1.75 74.8% +2.3%
+    GA Eagles v ADO            U4.25 83.8% +4.5%            U4.25 80.9% +1.6%
+                               Tip 2 ADO U1.5 77.4% +18.7%  Tip 2 U3.75 — team lane GONE
+
+**`ADO U1.5` no longer surfaces at all.** It was Tip 2 at 77.4% and +18.7% edge
+under the old engine; the team shrink cut the side's rate enough that it no
+longer beats the ladder runner-up. That bet was taken at 1.40 against a
+published threshold of 1.36 — a bet the calibrated engine would not have
+offered. It is the clearest single example of what the recalibration removed.
+
 ## The numbers as published
 
     Tip 1     101 / 120 settled     84.2%
