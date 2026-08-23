@@ -136,9 +136,17 @@ def collect(lg: str, n: int, back: int) -> list:
 
 
 def score(rows: list, k: float) -> tuple:
-    """(n, mean stated p, hit rate, fixtures with a side across the O2.5 gate)."""
+    """(n, mean stated p, hit rate, hits, O2.5 gate crossings, mean base rate).
+
+    The base rate is what decides whether a rising hit rate is real. Lowering k
+    means fewer lanes clear their floors, so the survivors are the most extreme
+    fixtures — inherently safer bets at shorter prices. A hit rate that climbs
+    only because the base rate climbed with it is selection, not skill, and the
+    price moves to match. Edge over base rate is the part that cannot be bought
+    by retreating to safer rungs.
+    """
     n = hits = gate = 0
-    p_sum = 0.0
+    p_sum = base_sum = 0.0
     for lg, d, lmu, gfh, gfa, hg, ag in rows:
         ph = shrunk_p(gfh, lmu, k)
         pa = shrunk_p(gfa, lmu, k)
@@ -149,25 +157,26 @@ def score(rows: list, k: float) -> tuple:
             continue
         if not cands:
             continue
-        market, p, _e = cands[0]
+        market, p, e = cands[0]
         n += 1
         p_sum += p
+        base_sum += p - e                      # candidates() returns p - base
         hits += team_total.won(market, hg, ag)
-    return n, (p_sum / n if n else 0.0), (hits / n if n else 0.0), hits, gate
+    return (n, (p_sum / n if n else 0.0), (hits / n if n else 0.0), hits, gate,
+            (base_sum / n if n else 0.0))
 
 
 def report(label: str, rows: list) -> None:
     print(f"\n=== {label} — {len(rows)} fixtures ===")
-    print(f"{'k':>6}{'n':>7}{'says':>8}{'hit':>8}{'gap':>8}{'95% CI':>13}"
-          f"{'O2.5 gate':>11}")
+    print(f"{'k':>6}{'n':>7}{'says':>8}{'hit':>8}{'gap':>8}{'base':>8}"
+          f"{'EDGE':>8}{'needs':>8}")
     for k in CANDIDATES:
-        n, says, hit, hits, gate = score(rows, k)
+        n, says, hit, hits, gate, base = score(rows, k)
         if not n:
             continue
-        lo, hi = wilson(hits, n)
         mark = "  <- current" if abs(k - features.TEAM_SHRINK) < 1e-9 else ""
         print(f"{k:6.2f}{n:7}{says*100:7.1f}%{hit*100:7.1f}%{(hit-says)*100:+8.1f}"
-              f"   [{lo*100:.0f}-{hi*100:.0f}]{gate:11}{mark}")
+              f"{base*100:7.1f}%{(hit-base)*100:+8.1f}{1/hit:8.3f}{mark}")
 
 
 def main() -> None:
