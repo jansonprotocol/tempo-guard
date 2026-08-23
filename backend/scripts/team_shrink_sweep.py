@@ -16,10 +16,26 @@ over-rung match lanes — and not in the lane as a whole, which this scores in
 full. A real number on a real slice that generalised to nothing: the project's
 own recorded trap, walked into while checking something else.
 
-Kept because it is the instrument that settles the question, and because the
-volume finding underneath is worth knowing. Relaxing to 1.00 raises team-lane
-offers from 1,086 to 1,954 — but those extra lanes arrive 5 points
-overconfident, which is volume bought by miscalibration rather than earned.
+Swept downward afterwards to check 0.62 was a crossover and not just the edge
+of the range tested. It is:
+
+    k       lanes   hit R   hit H   mean gap
+    0.38      561   83.3%   83.7%     +5.30
+    0.46      712   81.4%   81.0%     +3.90
+    0.54      880   78.9%   78.4%     +2.50
+    0.62     1079   75.3%   76.0%     +0.30   <- current
+    0.70     1279   73.1%   74.7%     -0.70
+
+The zero crossing sits between 0.62 and 0.70, and at a standard error of about
+1.3 points those two are not distinguishable on calibration. They ARE
+distinguishable on the two things that decide it. **Raw hit rate falls
+monotonically as k rises** — 0.62 delivers 75.3/76.0 against 0.70's 73.1/74.7 —
+and this project optimises for hit rate over edge. Volume runs the other way,
+0.70 offering about 18% more lanes. Hit rate wins, so 0.62 stays.
+
+Relaxing all the way to 1.00 raises team-lane offers from 1,086 to 1,954, but
+those extra lanes arrive 5 points overconfident: volume bought by
+miscalibration rather than earned.
 
 **One replay pass serves every candidate.** The shrink is invertible: the
 published probability is `1 - exp(-gf')` where `gf' = league_mu/2 + k*(gf -
