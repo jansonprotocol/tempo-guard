@@ -1420,6 +1420,88 @@ Not a Championship problem — any league whose scoring average puts O1.5 near t
 
 - **Two Premier League tips were re-verified and corrected.** Forest v Leeds was logged as O1.5 81% +0.9% and now reads U4.25 83% +1.4%; Everton v Crystal Palace read +1.9% and now reads +4.2%. Same code, same data, same resolved names — the earlier figures do not reproduce and the cause is not identified. Championship and Ligue 2 fixtures from the same batch reproduce exactly, so it is confined to ENG-PL, which is also the stale store. Recorded rather than hidden: a tip that cannot be reproduced is a tip that cannot be trusted.
 
+### Recalibration — the cause found and half-fixed
+
+#### The cause: mu is over-spread by 2.4x
+
+Poisson was ruled out first: real totals match it to within half a point at
+every rung traded, on 272,857 matches. If mu were right the probabilities would
+be right. So the error is in mu, and regressing what happened on what was
+predicted across ~2,000 replayed fixtures says which kind:
+
+    actual_total = 1.640 + 0.424 * mu
+
+**Slope 0.42 where 1.0 would be correct.** Level is fine — pooled bias +0.08
+goals — so this is not the engine reading leagues too high or too low. It is
+reading individual fixtures far too confidently:
+
+    lowest mu fifth    says 1.99 goals   actually 2.54   miss +0.55
+    highest mu fifth   says 3.60 goals   actually 3.26   miss -0.34
+
+That shape explains everything at once. Every tip is selected on exactly the
+extremes that are wrong, so the league average looks fine while the tip book
+inherits the whole error — 85.7% claimed against 81.2% delivered across 26
+leagues, and 80.4% against 69.6% on the bets actually placed, which chase the
+extremes harder still.
+
+#### The fix, and why 0.60 rather than the measured 0.42
+
+`mu' = league_mu + k * (mu - league_mu)`, applied where mu is produced so tips,
+break-even prices and buy-from thresholds all inherit it. Measured over 1,487
+replays:
+
+    k      says     hit      gap    base rate   realised edge   U4.25 share
+    1.00   85.7%   81.2%    -4.5      79.8%        +1.35           39%
+    0.80   85.6%   82.5%    -3.1      81.2%        +1.34           46%
+    0.60   85.6%   83.9%    -1.7      82.4%        +1.50           54%
+    0.42   85.8%   84.3%    -1.5      83.6%        +0.71           62%
+
+Full shrinkage buys the last 0.2 of the gap with certainty: the base rate of
+the markets it picks climbs to 83.6% and realised edge — strike minus base, the
+one figure that cannot be bought by retreating to a safer rung — halves. **0.60
+takes almost all the calibration gain and leaves the edge intact.** The edge
+difference between 1.00 and 0.60 is inside the noise; the honest claim is that
+shrinkage preserves edge while fixing calibration, not that it improves it.
+
+Shipped as `MU_SHRINK = 0.60` in `app/data/features.py`. 101 tests pass.
+
+#### What it actually bought
+
+Re-running the same ten leagues at n=200:
+
+    weighted gap   -4.4  ->  -2.3     halved
+    CHN-SL  -9.6 -> -5.5      SAU-PL  -7.2 -> better than -4
+    CHI-PD  -9.6 -> better    JPN-J1  -5.3 -> -3.2
+    COL-PA  -5.6 -> -5.0      PER-L1  -4.2 -> -1.9
+    ENG-CH  -0.9 -> +1.3      MLS     -3.1 -> -4.8  (worse)
+
+#### The uncomfortable part: after shrinkage, edge is about zero
+
+Per-league realised edge at k=0.60, each against its OWN base rate, n≈200:
+
+    TUR-SL  +5.74      ENG-CH  +0.09      PER-L1  -0.78
+    SAU-PL  +3.01      CHN-SL  +0.08      JPN-J1  -0.99
+    MLS     +0.61      CHI-PD  -0.22      COL-PA  -1.10
+    ESP-L2  +0.59      BRA-SB  -0.29
+
+At n=200 anything inside about ±2 points is noise, so **only TUR-SL clearly
+beats its base rate.** Everything else is indistinguishable from picking the
+same market blind.
+
+And the market mix has concentrated hard: `U4.25` is now **95%** of JPN-J1 tips,
+94% of PER-L1, 93% of CHI-PD, 88% of ENG-CH, 82% of ESP-L2. In those leagues
+the engine has largely stopped differentiating between fixtures.
+
+So the honest position after recalibration:
+
+- **The calibration defect is real and now half-fixed.** The engine no longer
+  claims 85% and delivers 81%; it claims 85% and delivers 83%.
+- **The high hit rate is mostly base rate, not skill.** `U4.25` lands ~87% of
+  the time in most leagues whoever picks it.
+- **The next question is not how to bet better, it is whether the selector adds
+  anything at all** outside Turkey. That is measurable and it has not been
+  measured honestly until now.
+
 ### Diagnostics — 23 Aug, full sweep
 
 Run across every league: freshness, configuration, and a per-league retrosim

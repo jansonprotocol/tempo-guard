@@ -86,6 +86,58 @@ SHOT_BLEND = 0.60
 TEMPO_BASE = 1.5
 TEMPO_SPAN = 3.0
 
+# ── Shrinkage of the per-fixture goal expectation ─────────────────────────────
+# Ten teams' worth of recent scoring rates make a confident-looking mu, and it
+# is far too confident. Regressing what actually happened on what was predicted
+# across ~2,000 replayed fixtures gives:
+#
+#     actual_total = 1.640 + 0.424 * mu
+#
+# A slope of 1.0 would mean the spread is right. 0.42 means the engine's
+# per-fixture reads are about two and a half times too extreme. By quintile:
+#
+#     lowest mu fifth     says 1.99 goals   actually 2.54   miss +0.55
+#     highest mu fifth    says 3.60 goals   actually 3.26   miss -0.34
+#
+# Level is fine — pooled bias is +0.08 goals. It is purely SPREAD, and that is
+# the worst possible shape, because every tip is selected on exactly the
+# extremes that are wrong. It explains the whole symptom: the engine claimed
+# 85.7% across 26 leagues and delivered 81.2%, and on the bets actually placed
+# — which skew to the extremes harder still — it claimed 80.4% and delivered
+# 69.6%.
+#
+# Poisson is not the culprit: on 272,857 matches real totals match Poisson to
+# within half a point at every rung traded (scripts/dispersion.py). If mu were
+# right the probabilities would be right.
+#
+# WHY 0.60 AND NOT THE MEASURED 0.42. Shrinking pulls every fixture toward the
+# league mean, so the engine differentiates less and retreats toward the safest
+# rung. Measured over 1,487 replays (scripts/shrink_ab.py):
+#
+#     k      says     hit      gap    base rate   realised edge   U4.25 share
+#     1.00   85.7%   81.2%    -4.5      79.8%        +1.35           39%
+#     0.80   85.6%   82.5%    -3.1      81.2%        +1.34           46%
+#     0.60   85.6%   83.9%    -1.7      82.4%        +1.50           54%
+#     0.42   85.8%   84.3%    -1.5      83.6%        +0.71           62%
+#
+# Full shrinkage closes the last 0.2 of the gap by buying certainty: the base
+# rate of the markets it picks climbs to 83.6% and realised edge — strike minus
+# base, the only figure that cannot be bought by retreating — halves. 0.60
+# takes almost all of the calibration gain while leaving the edge intact.
+#
+# Edge at 0.60 is +1.50 against +1.35 unshrunk. That difference is inside the
+# noise on 1,487 fixtures; the honest claim is that shrinkage PRESERVES edge
+# while fixing calibration, not that it improves edge.
+MU_SHRINK = 0.60
+
+
+def _shrink_mu(mu: float, league_mu: Optional[float]) -> float:
+    """Pull a fixture's goal expectation toward its league mean. See MU_SHRINK."""
+    if not league_mu or league_mu <= 0:
+        return mu
+    return max(0.2, league_mu + MU_SHRINK * (mu - league_mu))
+
+
 # ── Recency window for league-wide aggregates ─────────────────────────────────
 # League means and shot-conversion rates describe "what this league is like
 # now", so they are computed over a trailing window rather than all of stored
@@ -697,6 +749,7 @@ def _compute_features(
     shots_blended = conversion is not None
 
     mu_total = max(0.2, gfh + gfa)
+    mu_total = _shrink_mu(mu_total, league_mu)
     p0 = math.exp(-mu_total)
     p1 = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
