@@ -721,6 +721,24 @@ Nothing is being switched off mid-slate. Ranked by what the evidence supports:
 
 ### Known data defects
 
+- **OPEN — half-time scores are censored on 0-0 finishes in 23 leagues.** In
+  ALG-L1, ARG-PD, BRA-SA, COPA-L, CRO-1L, CZE-FL, DEN-SL, EGY-PL, MAR-BP,
+  MEX-LMX, MLS, NOR-EL, POL-EK, ROU-L1, RSA-PL, RUS-PL, SUI-SL, SWE-AL, UCL,
+  UCL-Q, UECL-Q, UEL-Q and UKR-PL, **every match that finished 0-0 is missing
+  its half-time score** — 2,524 matches in total, and not one of them kept a
+  half-time row. Drop the nulls and you have deleted exactly the goalless
+  results, so any half-time question answers itself: every one of those leagues
+  reported that a 0-0 at the break produced a second-half goal **100.0% of the
+  time**. It is survivorship, not football.
+
+  Nothing in the tip path reads `hthg`/`htag`, so no published tip is affected.
+  It matters for live questions, which is where it was found — pricing an
+  `O0.5` bought at half time. `scripts/ht_zero.py` detects the censoring by
+  comparing 0-0 finishes inside the half-time subset against the league as a
+  whole and excludes any league that shows none, rather than trying to repair
+  rows that cannot be recovered. Twenty-three clean leagues remain, 57,092
+  goalless halves, which is enough.
+
 - **FIXED — team-name resolution was non-deterministic across processes.** The
   most serious bug found in this log, and it had been silently live the whole
   time. `_team_names` returned `list(set(...))`, and inside `_match_team` two
