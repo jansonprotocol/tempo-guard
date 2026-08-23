@@ -64,6 +64,10 @@ adding any; a test fails if a table drifts out of order.
 | — not started | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
 | — not started | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
 | — not started | Premier League | Newcastle v Liverpool | O1.5 80.5% **+0.6%** · buy≥1.30 | — none | 2026-08-23 17:30 |
+| — not started | Ekstraklasa | GKS Katowice v Wisła Płock | — no tip, Wisła Płock has 3 rows | — | 2026-08-23 17:30 |
+| — not started | Danish Superliga | Viborg v København | **O1.5 84.6% +5.3%** · buy≥1.24 (≥1.28 tail-adj) | **København O1.5** 65.8% +24.5% (team) · buy≥1.59 | 2026-08-23 18:00 |
+| — not started | Süper Lig | Eyüpspor v Gaziantep | U4.25 86.4% +1.8% · buy≥1.23 | U3.75 71.6% +2.7% (floor −3.4) · buy≥1.36 | 2026-08-23 18:00 |
+| — not started | Süper Lig | Trabzonspor v Başakşehir | O1.5 77.3% **+0.3%** · buy≥1.36 | — none | 2026-08-23 18:00 |
 
 ## Completed FUTURE match bettips
 

@@ -81,10 +81,16 @@
   },
   "DEN-SL": {
     "AGF": "Aarhus",
-    "OB": "Odense"
+    "OB": "Odense",
+    "København": "FC Copenhagen",
+    "Kobenhavn": "FC Copenhagen"
   },
   "SWE-AL": {
     "VSK": "Vasteras SK",
     "BP": "Brommapojkarna"
+  },
+  "TUR-SL": {
+    "Başakşehir": "Buyuksehyr",
+    "Basaksehir": "Buyuksehyr"
   }
 }
