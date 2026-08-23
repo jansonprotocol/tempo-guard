@@ -148,6 +148,56 @@ What is NOT worth doing is lowering `MIN_WIN_PROB` further. Measured: 0.70 pays
 **13 points of strike rate for 1.7 of edge**, and this project is optimised for
 strike.
 
+## Staking: 4% flat fits, but the stake is the second-order decision
+
+`scripts/staking.py` bootstraps real per-bet returns — 1,941 replayed tips,
+settled through the actual push and half-win fractions at each tip's own price —
+down 4,000 simulated 200-bet sequences per rule. Bankroll starts at 1.00.
+
+**Bought at `buy from`, the flat rules behave well and Kelly does not:**
+
+    rule               median   5th pct   max DD   halved
+    flat 1%             1.11x     0.98x       5%       0%
+    flat 2%             1.22x     0.96x      10%       0%
+    flat 4%             1.46x     0.90x      20%       0%
+    flat 8%             1.97x     0.74x      37%       4%
+    quarter Kelly       1.47x     0.72x      30%       2%
+    half Kelly          1.78x     0.42x      55%      23%
+    full Kelly          1.31x     0.06x      86%      64%
+
+**Flat 4% matches quarter Kelly's growth for two-thirds of its drawdown** — 1.46x
+against 1.47x, 20% against 30% — and never halved the bankroll in 4,000 runs
+where quarter Kelly did. Kelly sizes UP on short prices (about 6% on a 1.21 tip,
+2.8% on a 1.45 one), which is right only if the probability is right. Ours is
+measured, with a -1.5 point residual, so sizing up on the shortest prices
+concentrates risk exactly where a small calibration error does most damage. Full
+Kelly is instructive: a HIGHER median than half Kelly and a 5th percentile of
+0.06x, which is volatility drag consuming the edge.
+
+**Then the same rules with the margin surrendered:**
+
+    regime                        return/bet   flat 4% median   5th pct   halved
+    bought at buy-from               +5.32%        1.46x         0.90x      0%
+    bought at break-even             +0.65%        1.01x         0.64x      1%
+    bought 2% under break-even       -1.22%        0.87x         0.56x      4%
+
+**The whole edge lives in the 5% margin.** Moving the stake from 2% to 8% at a
+good price changes the outcome 1.22x to 1.97x. Moving the PRICE from `buy from`
+to break-even at an unchanged 4% stake changes it 1.46x to 1.01x — it deletes
+the system. Two percent under, which is what taking a 1.28 against a 1.30
+break-even looks like, turns it into a 13% loss with a 30% drawdown on the way.
+
+So the ranking is settled: **buying at the threshold is first-order, the stake
+size is second-order.** A bigger stake on a bad price does not rescue it, it
+accelerates it — at 8% in the losing regime, 39% of runs halve the bankroll.
+
+Caveats worth keeping: the pool is the Tip 1 match-total lane only, since that
+is what `predict_fixture` returns, so the team lanes are not represented here.
+And every path assumes bets are independent — checked, and they nearly are: the
+observed variance of a day's hit rate is **1.10x** the binomial across 4,703
+match-days, so ten bets on one slate behave like about nine independent ones
+rather than one large position.
+
 ## Engine state at reset — 23 Aug 2026
 
     MU_SHRINK              0.35        per-fixture goal expectation, shrunk
