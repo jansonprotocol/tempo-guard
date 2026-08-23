@@ -106,3 +106,16 @@ def test_readme_fixture_tables_are_in_kickoff_order():
     assert sort_tables.sort_tables(text) == text, (
         "README fixture tables are out of kickoff order; "
         "run python scripts/sort_tables.py")
+
+
+def test_readme_headline_matches_the_log():
+    """The header carried `1 / 1 settled · 100%` while eleven fixtures sat
+    graded in the table below it. It is derived now, and pinned here so it
+    cannot drift again — `python scripts/headline.py` regenerates it."""
+    from scripts import headline
+
+    text = headline.README.read_text()
+    start = text.index("## CURRENT CONFIRMED HITRATE")
+    end = text.index("live tips, not backtests") + len("live tips, not backtests")
+    assert text[start:end] == headline.render(), (
+        "README headline is stale; run python scripts/headline.py")

@@ -1,9 +1,9 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
 
-## CURRENT CONFIRMED HITRATE: 100%
+## CURRENT CONFIRMED HITRATE: 81.8%
 
-**1 / 1 settled** · over/under markets only · live tips, not backtests
+**Tip 1 9 / 11 settled** · **Tip 2 7 / 9** · **bets 5 / 5, ROI +27.4%** · over/under markets only · live tips, not backtests
 
 The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
 from before that point are not comparable to numbers after it, so they are not
@@ -17,7 +17,7 @@ calibrated engine:
     lane        as published        re-run calibrated
     Tip 1     101/120   84.2%       99/118   83.9%
     Tip 2      67/100   67.0%       56/80    70.0%
-    Bets       55/79    69.6%       ROI -10.1%
+    Bets       58/82    70.7%       ROI  -8.5%
 
 Strike rate is near-identical; realised edge over base rate went **+1.35 to
 +2.23**, and the market mix came off a `U4.25` monoculture. The old number was
