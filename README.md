@@ -1530,21 +1530,76 @@ funnelling every league into the same rung, not a property of the engine. With
 the floor set correctly the selector beats its own base rate in all six leagues
 measured.
 
-#### The cost, stated plainly
+#### Third pass: the floor had been masking how much shrinkage was warranted
 
-    weighted   says 82.6%   hit 80.1%   gap -2.5
+Fixing the floor changed the answer to the shrink question. The first pass
+shipped `MU_SHRINK = 0.60` and rejected the measured 0.42 because full
+shrinkage collapsed the mix onto `U4.25` and halved edge. **That reasoning was
+wrong.** The collapse was the 0.79 floor, not the shrinkage — and once the
+floor came down there was no longer a reason to hold shrinkage back.
 
-Hit rate falls from 83.2% to **80.1%** — that is the price of not buying
-certainty, and it is the right trade: the 83.2% was mostly base rate. Realised
-edge is what improved, and edge is the part that cannot be bought by retreating
-to a safer rung.
+Re-swept at floor 0.75:
 
-Calibration gap is essentially unchanged at -2.5 (from -4.4 originally), so the
-remaining overconfidence is a separate problem from the mix. `COL-PA -6.2`,
-`CHN-SL -5.5`, `MLS -5.1`, `SAU-PL -4.7` and `CHI-PD -4.0` still need per-league
-work.
+    MU_SHRINK    says     hit     gap    base    realised edge   top line
+      0.60      83.2%   81.4%   -1.7   79.5%       +1.99           34%
+      0.45      83.2%   82.4%   -0.8   80.4%       +1.97           37%
+      0.35      83.2%   83.3%   +0.0   81.0%       +2.23           41%
 
-### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep
+**0.35 is best on both axes at once** — gap to zero, highest realised edge
+measured — with the top line still under half of calls. Shipped.
+
+#### Per-league result, n=250 each
+
+    league     gap before    gap now
+    SAU-PL       -4.7        +0.2
+    CHI-PD       -4.0        -2.8
+    JPN-J1       -3.2        -1.1
+    PER-L1       -1.9        -1.1
+    ENG-CH       +1.3        +2.9
+    ESP-L2       -0.1        +1.1
+    TUR-SL       +3.2        +5.4
+    MLS          -5.1        -4.2  ->  -2.7 after per-league override
+
+    weighted     -4.4  ->  -0.6
+
+**Four of the five problem leagues were fixed by the global change alone.**
+COL-PA and CHN-SL both dropped under the 4-point threshold; SAU-PL landed at
++0.2. Only MLS needed individual treatment.
+
+#### The one per-league override, and why only one
+
+`MU_SHRINK_BY_LEAGUE = {"MLS": 0.15}`. MLS residual slope is **0.325** on 262
+replays — its remaining spread is still three times too wide — and it was the
+only league still worse than -4 after the global fix. The arithmetic gives
+0.35 x 0.325 = 0.11; it is set to **0.15**, pulled toward the global to blunt
+the over-fit. Gap -4.2 -> -2.7.
+
+This is kept deliberately sparse. Every entry is a fitted parameter on ~250
+fixtures and will over-fit if added freely, so a league earns one only when it
+BOTH measures far off AND still fails the retrosim at the global setting.
+COL-PA measures a residual slope of **-0.06** — no usable signal left at all —
+but shrinking it to the league mean already produces an acceptable gap, so it
+gets no entry. Its read is worthless; the global shrink is what makes that
+harmless.
+
+MLS is also the league whose current-season history is thinnest: nine clubs
+carry 20 rows each after the 2026 provider split. A weak read there is what the
+data supports.
+
+#### Where recalibration ended up
+
+    weighted calibration gap    -4.4  ->  -0.6
+    realised edge               +1.35 -> +2.23
+    top market share             39%  ->   41%   (was 54% mid-way, and 88-95%
+                                                  per-league at the worst point)
+    hit rate                    81.2% -> 83.3%
+
+All four moved the right way at once, which is the part worth trusting — a
+change that improved hit rate while concentrating the book would have been the
+certainty trap again. Two constants, one per-league override, and the coupling
+between them pinned in a test so neither can move alone.
+
+### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep
 
 Run across every league: freshness, configuration, and a per-league retrosim
 scoring 120–260 fixtures each strictly as-of. `scripts/retrosim.py`,

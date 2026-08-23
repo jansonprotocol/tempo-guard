@@ -41,7 +41,7 @@ from app.engine.types import ModuleFlags
 from app.predict import build_request, predict_fixture
 from app.util.asian_lines import evaluate_market
 
-KS = (0.60,)
+KS = (1.00,)
 
 
 def run(codes: list[str], n: int) -> None:

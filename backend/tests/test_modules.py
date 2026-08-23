@@ -78,8 +78,11 @@ def test_prob_select_is_on_with_the_measured_floor():
     in five leagues, breaking the floor's own stated criterion of keeping the
     top line under half of calls.
 
-    Re-swept at MU_SHRINK = 0.60, 0.75 restores the mix (top line 54% -> 34%)
-    and improves realised edge (+1.50 -> +1.99) while holding strike above 80%.
+    0.75 restores the mix (top line 54% -> 34%) and improves realised edge
+    while holding strike above 80%. Once the floor was fixed, the shrink could
+    be tightened too — 0.79 had been masking how much shrinkage was warranted —
+    and MU_SHRINK moved 0.60 -> 0.35, taking the weighted calibration gap to
+    -0.6 with realised edge at +2.23.
 
     If either constant moves, re-run scripts/floor_after_shrink.py — changing
     one without the other silently breaks the market mix.
@@ -89,7 +92,7 @@ def test_prob_select_is_on_with_the_measured_floor():
 
     assert ModuleFlags().prob_select is True
     assert market_select.MIN_WIN_PROB == 0.75
-    assert features.MU_SHRINK == 0.60
+    assert features.MU_SHRINK == 0.35
 
 
 def test_prob_select_never_offers_a_market_below_the_floor():

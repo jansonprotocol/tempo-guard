@@ -110,32 +110,57 @@ TEMPO_SPAN = 3.0
 # within half a point at every rung traded (scripts/dispersion.py). If mu were
 # right the probabilities would be right.
 #
-# WHY 0.60 AND NOT THE MEASURED 0.42. Shrinking pulls every fixture toward the
-# league mean, so the engine differentiates less and retreats toward the safest
-# rung. Measured over 1,487 replays (scripts/shrink_ab.py):
+# HOW 0.35 WAS ARRIVED AT, AND WHY IT IS COUPLED TO market_select.MIN_WIN_PROB.
+# The first pass shipped 0.60, rejecting the measured 0.42 because full
+# shrinkage collapsed the market mix onto U4.25 and halved realised edge. That
+# reasoning was wrong, and instructively so: the collapse was not caused by
+# shrinkage, it was caused by the ABSOLUTE probability floor of 0.79. Pulling
+# fixtures toward the league mean meant fewer rungs cleared 79%, so the selector
+# fell through to the safest buyable one. Lowering the floor to 0.75 removed the
+# funnel, and with it removed the reason to hold shrinkage back.
 #
-#     k      says     hit      gap    base rate   realised edge   U4.25 share
-#     1.00   85.7%   81.2%    -4.5      79.8%        +1.35           39%
-#     0.80   85.6%   82.5%    -3.1      81.2%        +1.34           46%
-#     0.60   85.6%   83.9%    -1.7      82.4%        +1.50           54%
-#     0.42   85.8%   84.3%    -1.5      83.6%        +0.71           62%
+# Re-swept at floor 0.75 over 1,487 replays (scripts/shrink_ab.py):
 #
-# Full shrinkage closes the last 0.2 of the gap by buying certainty: the base
-# rate of the markets it picks climbs to 83.6% and realised edge — strike minus
-# base, the only figure that cannot be bought by retreating — halves. 0.60
-# takes almost all of the calibration gain while leaving the edge intact.
+#     MU_SHRINK    says     hit     gap   base    realised edge   top line
+#       0.60       83.2%   81.4%   -1.7  79.5%       +1.99          34%
+#       0.45       83.2%   82.4%   -0.8  80.4%       +1.97          37%
+#       0.35       83.2%   83.3%   +0.0  81.0%       +2.23          41%
 #
-# Edge at 0.60 is +1.50 against +1.35 unshrunk. That difference is inside the
-# noise on 1,487 fixtures; the honest claim is that shrinkage PRESERVES edge
-# while fixing calibration, not that it improves edge.
-MU_SHRINK = 0.60
+# 0.35 is best on BOTH axes at once — the calibration gap closes to zero and
+# realised edge is the highest measured — while the top line stays under half of
+# calls. Neither constant can be tuned without the other; test_modules pins them
+# together for that reason.
+#
+# Across ten leagues at n=250 this took the weighted gap from -4.4 to **-0.6**.
+MU_SHRINK = 0.35
+
+# Per-league overrides, for leagues whose residual slope stays far from 1.0
+# after the global shrink. Re-measure with scripts/calibrate_mu.py: a residual
+# slope of b means this league's remaining spread is still b times too wide, so
+# its shrink should be MU_SHRINK * b.
+#
+# Deliberately sparse. Every entry here is a fitted parameter on ~250 fixtures
+# and will over-fit if added freely, so a league only earns one when it BOTH
+# measures far off AND still fails the retrosim at the global setting.
+#
+#   MLS   residual slope 0.325 on 262 replays, and the only league still worse
+#         than -4 points after the global fix (-4.2). 0.35 * 0.325 = 0.11;
+#         set to 0.15, pulled toward the global to blunt the over-fit. MLS is
+#         also the league whose current-season history is thinnest — nine clubs
+#         carry 20 rows each after the 2026 provider split — so a weak read
+#         there is what the data supports.
+MU_SHRINK_BY_LEAGUE: Dict[str, float] = {
+    "MLS": 0.15,
+}
 
 
-def _shrink_mu(mu: float, league_mu: Optional[float]) -> float:
+def _shrink_mu(mu: float, league_mu: Optional[float],
+               league_code: Optional[str] = None) -> float:
     """Pull a fixture's goal expectation toward its league mean. See MU_SHRINK."""
     if not league_mu or league_mu <= 0:
         return mu
-    return max(0.2, league_mu + MU_SHRINK * (mu - league_mu))
+    k = MU_SHRINK_BY_LEAGUE.get(league_code or "", MU_SHRINK)
+    return max(0.2, league_mu + k * (mu - league_mu))
 
 
 # ── Recency window for league-wide aggregates ─────────────────────────────────
@@ -749,7 +774,7 @@ def _compute_features(
     shots_blended = conversion is not None
 
     mu_total = max(0.2, gfh + gfa)
-    mu_total = _shrink_mu(mu_total, league_mu)
+    mu_total = _shrink_mu(mu_total, league_mu, league_code)
     p0 = math.exp(-mu_total)
     p1 = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
