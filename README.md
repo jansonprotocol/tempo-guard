@@ -68,6 +68,16 @@ adding any; a test fails if a table drifts out of order.
 | — not started | LaLiga | Elche v Barcelona | O1.5 75.7% +1.2% · buy≥1.39 | — none | 2026-08-23 21:30 |
 | — not started | LaLiga 2 | Tenerife v Almería | U4.25 88.9% **−0.7%** · buy≥1.19 | O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 21:30 |
 | — not started | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | — none | 2026-08-23 21:30 |
+| — not started | MLS | New England v NY City | U4.25 81.2% **+0.8%** · buy≥1.32 | U3.75 64.3% +1.0% (floor −10.7) · buy≥1.50 | 2026-08-23 22:30 |
+| — not started | Peruvian Liga 1 | Melgar v Alianza Lima | **O1.5 78.6% +5.3%** · buy≥1.34 (≥1.38 tail-adj) | **Melgar O1.5** 55.4% +8.2% (team) · buy≥1.89 | 2026-08-23 22:30 |
+| — not started | Brasileirão Série B | Operário-PR v Vila Nova | O1.0 90.3% +1.3% · buy≥1.20 — *dead market, base rate 90.6%* | O1.75 67.8% +3.0% (floor −7.2) · buy≥1.67 | 2026-08-23 23:00 |
+| — not started | Categoría Primera A | Dep. Pasto v Llaneros | U3.0 80.8% +1.1% · buy≥1.38 | U2.75 60.7% +1.5% (floor −14.3) · buy≥1.56 | 2026-08-23 23:05 |
+| — not started | Brasileirão Série A | Chapecoense v São Paulo | **U3.0 82.7% +7.3%** · buy≥1.34 (≥1.38 tail-adj) | **Chapecoense U1.5** 75.4% +18.4% (team) · buy≥1.39 | 2026-08-23 23:30 |
+| — not started | Brasileirão Série A | Santos v Mirassol | U4.25 88.4% **−0.5%** · buy≥1.20 | — none | 2026-08-23 23:30 |
+| — not started | Brasileirão Série B | Criciúma v Fortaleza | U3.0 83.2% +1.5% · buy≥1.33 | U2.75 64.0% +2.0% (floor −11.0) · buy≥1.48 | 2026-08-23 23:30 |
+| — not started | Brasileirão Série A | Coritiba v Corinthians | U4.25 87.9% **−1.0%** · buy≥1.21 | O1.75 73.1% +1.4% (floor −1.9) · buy≥1.52 | 2026-08-24 00:30 |
+| — not started | MLS | Atlanta v Kansas City | U4.25 82.9% +2.5% · buy≥1.29 | **Kansas City U1.5** 75.1% +14.1% (team) · buy≥1.40 | 2026-08-24 01:00 |
+| — not started | Chilean Primera División | O'Higgins v Palestino | U4.25 85.2% **+0.0%** · buy≥1.25 | — none | 2026-08-24 01:00 |
 
 ## Completed FUTURE match bettips
 
