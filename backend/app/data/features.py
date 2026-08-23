@@ -153,6 +153,34 @@ MU_SHRINK_BY_LEAGUE: Dict[str, float] = {
     "MLS": 0.15,
 }
 
+# The team-total lane needs its OWN shrink, and this was missed on the first
+# pass. `p_home_tt05` / `p_away_tt05` are built from the raw per-side rates
+# `gfh` / `gfa`, not from the shrunk mu_total, so the match-total fix never
+# reached them — the whole team lane was still running on unshrunk spread.
+#
+# Measured the same way, regressing a side's actual goals on its predicted rate
+# over 2,376 side-observations:
+#
+#     actual_side_goals = 0.572 + 0.621 * gf
+#
+#     lowest gf fifth    says 0.90 goals   actually 1.14
+#     highest gf fifth   says 1.92 goals   actually 1.79
+#
+# Less extreme than the match total's 0.42 but the same defect, and it lands on
+# the lane that has been offered as Tip 2. Per league: JPN-J1 0.149, MLS 0.378,
+# ENG-CH 0.644, CHI-PD 0.710, ESP-L2 0.806, TUR-SL 0.823.
+#
+# Shrunk toward the per-side league mean, which is league_mu / 2. Applied only
+# where the team probabilities are derived, so mu_total is not shrunk twice.
+TEAM_SHRINK = 0.62
+
+
+def _shrink_side(gf: float, league_mu: Optional[float]) -> float:
+    """Shrink one side's scoring rate toward half the league mean."""
+    if not league_mu or league_mu <= 0:
+        return gf
+    return max(0.05, league_mu / 2 + TEAM_SHRINK * (gf - league_mu / 2))
+
 
 def _shrink_mu(mu: float, league_mu: Optional[float],
                league_code: Optional[str] = None) -> float:
@@ -791,8 +819,10 @@ def _compute_features(
 
     return {
         "p_two_plus":             round(float(p_two_plus), 3),
-        "p_home_tt05":            round(float(1.0 - _poisson_p0(gfh)), 3),
-        "p_away_tt05":            round(float(1.0 - _poisson_p0(gfa)), 3),
+        "p_home_tt05":            round(float(1.0 - _poisson_p0(
+            _shrink_side(gfh, league_mu))), 3),
+        "p_away_tt05":            round(float(1.0 - _poisson_p0(
+            _shrink_side(gfa, league_mu))), 3),
         # Tempo is normalised so a typical fixture lands near the middle of the
         # range. The previous mapping (mu/3.0 clipped at 0.9) saturated: league
         # means sit at 2.4-3.2 goals, so ~63% of matches pinned to the ceiling

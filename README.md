@@ -1586,20 +1586,54 @@ MLS is also the league whose current-season history is thinnest: nine clubs
 carry 20 rows each after the 2026 provider split. A weak read there is what the
 data supports.
 
-#### Where recalibration ended up
+#### The team lane was never shrunk at all — fixed
 
-    weighted calibration gap    -4.4  ->  -0.6
-    realised edge               +1.35 -> +2.23
-    top market share             39%  ->   41%   (was 54% mid-way, and 88-95%
-                                                  per-league at the worst point)
-    hit rate                    81.2% -> 83.3%
+Missed on the first two passes. `p_home_tt05` / `p_away_tt05` are built from
+the raw per-side rates `gfh` / `gfa`, **not** from the shrunk `mu_total`, so
+none of the match-total work reached them. The entire team-total lane — the one
+offered as Tip 2 all weekend, which went 2/9 on Sunday — was still running on
+unshrunk spread.
 
-All four moved the right way at once, which is the part worth trusting — a
-change that improved hit rate while concentrating the book would have been the
-certainty trap again. Two constants, one per-league override, and the coupling
-between them pinned in a test so neither can move alone.
+Measured the same way over 2,376 side-observations:
 
-### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep
+    actual_side_goals = 0.572 + 0.621 * gf
+
+    lowest gf fifth    says 0.90 goals   actually 1.14
+    highest gf fifth   says 1.92 goals   actually 1.79
+
+Less extreme than the match total's 0.42, same defect. `TEAM_SHRINK = 0.62`,
+shrinking each side toward half the league mean, applied only where the team
+probabilities are derived so `mu_total` is not shrunk twice.
+
+    residual slope   0.621  ->  0.933      (1.0 = calibrated)
+
+    rung     says     actual     gap
+    O0.5    73.4%     75.8%     +2.3
+    O1.5    38.9%     40.9%     +2.0
+    U1.5    61.1%     59.1%     -2.0
+
+All three rungs now sit within 2.3 points, slightly conservative on the Over
+side.
+
+#### Out-of-sample: the fix generalises, but the in-sample number was optimistic
+
+Everything above was tuned and validated on the same recent window. Re-scored on
+the 250 fixtures immediately BEFORE that window, which had no influence on any
+constant:
+
+    in-sample      weighted gap  -0.6
+    out-of-sample  weighted gap  -1.5
+
+    SAU-PL  +3.3     ENG-CH  +0.3     PER-L1  -2.4
+    JPN-J1  -0.4     TUR-SL  -1.5     CHI-PD  -2.5
+    ESP-L2  -2.9     COL-PA  -4.7     MLS     -5.2
+
+**-1.5 out-of-sample against -4.4 before any of this**, so roughly two thirds of
+the defect is genuinely fixed rather than fitted. But it is not zero, and
+`MLS -5.2` and `COL-PA -4.7` still fail out of sample — the MLS override was
+fitted on the recent window and does not fully carry.
+
+#### Where recalibration ended up### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep
 
 Run across every league: freshness, configuration, and a per-league retrosim
 scoring 120–260 fixtures each strictly as-of. `scripts/retrosim.py`,
