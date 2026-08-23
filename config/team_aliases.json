@@ -56,7 +56,8 @@
     "Sporting Clube de Braga": "Sp Braga",
     "Sporting Clube de Portugal": "Sp Lisbon",
     "Sporting": "Sp Lisbon",
-    "Sporting CP": "Sp Lisbon"
+    "Sporting CP": "Sp Lisbon",
+    "Vitória": "Guimaraes"
   },
   "FRA-L2": {
     "Saint-Étienne": "St Etienne",
@@ -83,6 +84,7 @@
     "OB": "Odense"
   },
   "SWE-AL": {
-    "VSK": "Vasteras SK"
+    "VSK": "Vasteras SK",
+    "BP": "Brommapojkarna"
   }
 }

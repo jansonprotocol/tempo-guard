@@ -37,6 +37,14 @@ the recalibrated probability.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
+| — not started | Belgian Pro League | Lommel v Westerlo | O1.5 77.5% +1.3% · buy≥1.35 | — none | 2026-08-23 16:00 |
+| — not started | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
+| — not started | Allsvenskan | BP v Degerfors | U4.25 85.8% +2.9% · buy≥1.24 | U3.75 70.7% +4.1% (floor −4.3) · buy≥1.37 | 2026-08-23 16:30 |
+| — not started | Liga Portugal | Vitória v Nacional | U4.25 87.7% +1.3% · buy≥1.21 | U3.75 73.5% +2.0% (floor −1.5) · buy≥1.33 | 2026-08-23 16:30 |
+| — not started | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
+| — not started | LaLiga | Atl. Madrid v Villarreal | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-23 17:00 |
+| — not started | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
+| — not started | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
 | — not started | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
 | — not started | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
 | — not started | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
