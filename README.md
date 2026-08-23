@@ -1666,6 +1666,53 @@ That is thin history, unresolved names or no playable rung — the same family o
 defects the alias and merge work has been chipping at. It costs coverage rather
 than accuracy, and it has not been investigated.
 
+#### `buy from` re-derived: every published threshold was too LOW
+
+The thresholds are `break_even x 1.05`, and break-even comes from the engine's
+probability — which has moved twice (`MU_SHRINK`, `MIN_WIN_PROB`) and gained a
+third input the team lane never had (`TEAM_SHRINK`). Re-pricing all 80 logged
+bets with the current engine, as of their own match dates
+(`scripts/rederive_buyfrom.py`):
+
+    threshold drift, new break-even vs published
+      mean  +6.8%     median +5.7%     range  -3.7% to +24.6%
+      moved UP (stricter) on 76 of 80 bets
+
+    West Ham v Charlton    O2.5    paid 1.60   1.420 -> 1.769   +24.6%
+    Zürich v Basel         O2.5    paid 1.52   1.196 -> 1.471   +22.9%
+    Shenzhen v Zhejiang    U3.5    paid 1.52   1.190 -> 1.431   +20.2%
+    Guoan v Yukun          O2.5    paid 1.25   1.235 -> 1.448   +17.2%
+    Zürich v Basel         O1.5    paid 1.83   1.269 -> 1.463   +15.2%
+
+**The drift is larger than the margin it was supposed to protect.** A mean
++6.8% correction against a 5% cushion means the cushion never existed — the
+"buy at break-even plus 5%" rule was in practice buying at roughly break-even
+minus 2%. That is the mechanism behind the threshold finding dissolving at 79
+settled bets, and it is now measured rather than inferred.
+
+Re-scored on honest probabilities, the bet book looks materially worse:
+
+    bought below break-even    27 of 82  (33%)  ->  51 of 80  (64%)
+    mean break-even                              1.332
+
+**Nearly two thirds of every bet placed was negative expected value**, not one
+third.
+
+**The margin cannot be re-derived from this data.** The sweep on recalibrated
+break-even runs 27 bets at 0%, 11 at +5%, 5 at +8%, 2 at +10% — the samples
+collapse before any threshold could show, and the ROI figures across them
+(-0.3%, -10.3%, -10.2%, -8.5%) are noise on single digits. What can be said is
+structural: with break-even now honest, a margin is a genuine cushion rather
+than a correction, so **5% on the new number is a real 5%** in a way it was
+never a real 5% before.
+
+**Nothing needs regenerating in the tooling.** `two_tips.py` computes
+`buy>=` from the live engine, so every threshold it prints from here is already
+correct. The stale figures are the `buy≥` annotations in the fixture tables
+above, and those are deliberately left as published: they record what the log
+actually said at the time, and rewriting them would falsify the record. Read
+any `buy≥` dated before this section as **roughly 7% too low**.
+
 #### Season restart: it was a symptom of the over-spread mu, not a thing of its own
 
 Before recalibration `ENG-NL` and `FRA-L2` ran -8.3 and -7.8 across the summer
