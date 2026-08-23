@@ -138,6 +138,22 @@ def main() -> None:
               f"{(hit-says)*100:+7.1f}{base*100:7.1f}%{(hit-base)*100:+7.1f}"
               f"   [{w[0]*100:.0f}-{w[1]*100:.0f}]{1/hit:8.3f}")
 
+    # By MARKET, because the edge bands are largely a proxy for rung hardness:
+    # `says` barely moves across them (83.4% to 81.6%) while the base rate
+    # collapses ten points, so a high-edge tip is mostly a tip on a harder rung.
+    # The team lane hid its worst defect this way - pooled +0.4, U1.5 at -5.3
+    # and O1.5 at +5.8 - and the match lane has never been cut this way.
+    print(f"\n{'market':>8}{'n':>7}{'says':>8}{'hit':>8}{'gap':>8}{'base':>8}")
+    for m in sorted({r[4] for r in rows}):
+        b = [r for r in rows if r[4] == m]
+        if len(b) < 80:
+            continue
+        h = sum(1 for r in b if r[2]) / len(b)
+        s = sum(r[1] for r in b) / len(b)
+        bs = sum(r[3] for r in b) / len(b)
+        print(f"{m:>8}{len(b):7}{s*100:7.1f}%{h*100:7.1f}%{(h-s)*100:+8.1f}"
+              f"{bs*100:7.1f}%")
+
     k = sum(1 for r in rows if r[2])
     hit = k / len(rows)
     base = sum(r[3] for r in rows) / len(rows)
