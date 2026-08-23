@@ -61,13 +61,74 @@ the recalibrated probability.
 
 ### Actual placed bets
 
-**Win: 0 / 0  ·  Pending: 0 / 0**
+**Win: 0 / 0  ·  Pending: 3 / 3**
+
+| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
+|---|---|---|---|---|---|---|
+| 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** |
+| 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | **O2.0 — harsher rung** | 1.35 | 1.40 | +1.2% ⚠ |
+
+Only Port cleared its threshold. Brighton is the one to note: the tip was `O1.5`
+needing 1.30, and `O2.0` was bought instead — a different market that wins on 3+
+rather than 2+, needing 1.40 and paid at 1.35.
 
 Recorded in `config/bets.tsv` and scored by `scripts/ledger.py`. Every `buy≥`
 figure printed by `two_tips.py` is now computed from the recalibrated
 probability; thresholds in the archive predate that and read roughly 7% too low.
 
 ---
+
+## On volume: where the bets are, and what a margin actually costs
+
+Three bets out of eleven tips is thin, and the instinct is to cut the margin.
+Measured across 581 replayed fixtures, the volume is somewhere else.
+
+**Tip 2 is where the prices live.** 76% of fixtures produce a second tip, and it
+needs a longer price than Tip 1 does:
+
+    threshold needed      Tip 1    Tip 2
+    1.00 - 1.20             8%       5%
+    1.20 - 1.30            45%      28%
+    1.30 - 1.45            43%      32%
+    1.45 - 1.70             4%      22%
+    1.70 +                  0%      13%
+
+**Tip 1 essentially never needs more than 1.45; a third of Tip 2s need 1.45 or
+better and 13% need 1.70+.** Those are prices a book quotes readily. Tip 1
+competes for the 1.20-1.45 band where the book is tightest.
+
+**And at its own threshold Tip 2 is exactly as good a bet as Tip 1.** Its lower
+strike rate — 70.0% against 83.9% — is already inside its higher break-even
+(1.393 against 1.211). Both return +5% when bought at buy-from. The old-era
+finding that Tip 2 underperformed was the miscalibration, not the lane: it was
+being bought at Tip 1 prices.
+
+**What cutting the margin actually costs.** The residual calibration gap is
+**-1.5 points out of sample**. At an ~83% read that is worth about 1.8% of
+price, and it comes off the top of any margin:
+
+    margin set     real cushion after the residual error
+       5%                     ~3.2%
+       4%                     ~2.2%
+       3%                     ~1.2%
+       2%                     ~0.2%
+
+So **4% is about the floor**, and below 3% the margin stops being a cushion and
+becomes rounding. The 5% is not conservatism; roughly a third of it is paying
+for calibration that is not perfect yet.
+
+**Three ways to widen, in order of what the evidence supports:**
+
+1. **Take Tip 2 at its own price.** Biggest single source of volume, no EV cost,
+   and it is available at prices Tip 1 never reaches.
+2. **Price more fixtures.** Only what gets screenshotted is being tipped; 37
+   leagues are tippable and a full Sunday runs to hundreds of fixtures.
+3. **Drop the margin to 4%,** not lower. Worth roughly a fifth more bets.
+
+What is NOT worth doing is lowering `MIN_WIN_PROB` further. Measured: 0.70 pays
+**13 points of strike rate for 1.7 of edge**, and this project is optimised for
+strike.
 
 ## Engine state at reset — 23 Aug 2026
 
