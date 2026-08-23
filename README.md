@@ -948,10 +948,33 @@ The venue correction is applied **symmetrically**, so `mu_total = gfh + gfa` is
 exactly unchanged and the match lane — calibrated to a gap of ~0 — does not move
 to fix the team lane. Pinned by `test_venue_debias_leaves_mu_total_unchanged`.
 
+**It was withholding lanes, not just mispricing them.** `Porto v Arouca`
+published no second tip at all under the old engine — Porto sat at 0.779 against
+an `O0.5` floor of 0.80. Corrected, it is 0.807 and the lane appears at +5.1%.
+Counted across 1,349 fixtures that produce a lane under either engine:
+
+    gained by the fix     479   35.5%
+    lost to the fix       196   14.5%
+    unchanged             674   50.0%
+
+    lanes offered, old engine   870
+    lanes offered, new engine  1153      +32.5%
+
+**Half the team-lane population changed.** The fix is not a refinement of prices
+on a stable set of offers — it moved which fixtures produce a lane at all, and
+raised team-lane volume by about a third. Lanes were being suppressed where a
+home side sat just under a floor, and manufactured where an away side was held
+just above one.
+
 **Every team lane published before this was mispriced**: home lanes under-stated
 by ~4 points, away lanes over-stated by ~4. Today's published numbers stand as
 the record of what was actually issued; the corrected engine applies from the
 next slate on.
+
+**Still unmeasured:** the FEATURE is now calibrated (home +0.8, away +0.3 on
+13,872 observations), but lane-level calibration has not been re-measured on the
+new population, and half of it is new. That is the next check, not a closed
+question.
 
 ### Known data defects
 

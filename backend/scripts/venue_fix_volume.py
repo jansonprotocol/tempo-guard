@@ -86,7 +86,14 @@ def main() -> None:
     print(f"  lanes GAINED by the fix   {g:5}  ({g/t*100:.1f}%)")
     print(f"  lanes LOST to the fix     {l:5}  ({l/t*100:.1f}%)")
     print(f"  unchanged                 {k:5}  ({k/t*100:.1f}%)")
-    print(f"\n  net change in team-lane volume: {(g-l)/max(1,t-g+l)*100:+.1f}%")
+    # Old and new totals from the three disjoint buckets, rather than from the
+    # union: a lane in BOTH engines counts once, so the union is not a valid
+    # denominator for either arm.
+    old_total, new_total = k + l, k + g
+    print(f"\n  lanes offered, old engine  {old_total:5}")
+    print(f"  lanes offered, new engine  {new_total:5}")
+    print(f"  net change in team-lane volume: "
+          f"{(new_total - old_total) / max(1, old_total) * 100:+.1f}%")
 
 
 if __name__ == "__main__":
