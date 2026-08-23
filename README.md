@@ -59,7 +59,7 @@ adding any; a test fails if a table drifts out of order.
 | **LIVE** 1-0 (47') | Categoría Primera A | Fortaleza v Atl. Nacional | U4.25 89.8% **−1.6%** · buy≥1.18 | O1.75 70.2% +2.9% (floor −4.8) · buy≥1.60 | 2026-08-23 21:00 |
 | **LIVE** 0-1 (36') | LaLiga | Elche v Barcelona | O1.5 75.7% +1.2% · buy≥1.39 | — none | 2026-08-23 21:30 |
 | **LIVE** 1-0 (34') | LaLiga 2 | Tenerife v Almería | U4.25 88.9% **−0.7%** · buy≥1.19 | O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 21:30 |
-| **LIVE** 0-0 (36') | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | — none | 2026-08-23 21:30 |
+| **LIVE** 0-0 (36') | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | **Porto O0.5** 80.7% +5.1% (team) · buy≥1.30 — *re-priced on the venue fix* | 2026-08-23 21:30 |
 | — not started | MLS | New England v NY City | U4.25 81.2% **+0.8%** · buy≥1.32 | U3.75 64.3% +1.0% (floor −10.7) · buy≥1.50 | 2026-08-23 22:30 |
 | — not started | Peruvian Liga 1 | Melgar v Alianza Lima | **O1.5 78.6% +5.3%** · buy≥1.34 (≥1.38 tail-adj) | **Melgar O1.5** 55.4% +8.2% (team) · buy≥1.89 | 2026-08-23 22:30 |
 | — not started | Brasileirão Série B | Operário-PR v Vila Nova | O1.0 90.3% +1.3% · buy≥1.20 — *dead market, base rate 90.6%* | O1.75 67.8% +3.0% (floor −7.2) · buy≥1.67 | 2026-08-23 23:00 |
