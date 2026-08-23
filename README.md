@@ -971,10 +971,34 @@ by ~4 points, away lanes over-stated by ~4. Today's published numbers stand as
 the record of what was actually issued; the corrected engine applies from the
 next slate on.
 
-**Still unmeasured:** the FEATURE is now calibrated (home +0.8, away +0.3 on
-13,872 observations), but lane-level calibration has not been re-measured on the
-new population, and half of it is new. That is the next check, not a closed
-question.
+**The added lanes are real, not filler.** Scored separately, since 674 kept
+lanes would otherwise carry the average and hide whatever the additions do:
+
+    bucket        n    says     hit     gap    z
+    KEPT        674   71.5%   76.4%    +4.9   +3.00
+    GAINED      479   78.2%   76.8%    -1.4   -0.73
+    LOST        196   80.1%   75.5%    -4.6   -1.50
+
+**GAINED hits 76.8% against KEPT's 76.4%** — a 0.4 point difference on a
+standard error of 2.5, which is no difference at all — and its calibration gap is
+inside noise. The extra third of volume performs like the lanes that were already
+there. The removed lanes point the other way at -4.6, which is short of
+significance but consistent with them having been offers that should not have
+qualified.
+
+Pooled lane calibration on the corrected engine is **+0.4 on 2,942 lanes**.
+
+**Left open, and larger than the volume question.** By rung the same run gives
+`O0.5` +0.7 (n=1,234), `O1.5` **+5.8** (n=834) and `U1.5` **-5.3** (n=874), both
+at z = 3.5. `U1.5` and `O1.5` are complements for one side, so that is a single
+error seen twice: too much mass on exactly one goal. Side-level over-dispersion
+was the obvious cause and is measured and rejected — 293,114 side-observations
+give var/mean 1.087, but the rung effect is 0.62 points and points the wrong way.
+Leading candidate is now selection, since `candidates()` takes a max over rungs
+and sides and these two rungs select opposite tails. Not diagnosed, not acted on.
+
+**Practical consequence:** `O0.5` is the trustworthy team rung. `U1.5` currently
+over-states by ~5 points, so its published `buy≥` is about 5% too low.
 
 ### Known data defects
 
