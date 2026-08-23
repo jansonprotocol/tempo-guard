@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import sys
 from collections import Counter
+from copy import deepcopy
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -66,6 +67,12 @@ def run(k: float, n: int, codes: list[str]) -> dict:
     features.MU_SHRINK = k
     features._INDEX_CACHE.clear()
     rows: dict[float, list] = {f: [] for f in FLOORS}
+    # Counted, not swallowed. The first version wrapped the whole call in a
+    # bare `except Exception: continue` and passed the floor as a keyword
+    # predict_fixture does not take — so every iteration raised TypeError,
+    # every one was silently skipped, and the sweep printed an empty table
+    # rather than an error. A failure that produces no rows must say so.
+    skipped = 0
     for lg in codes:
         df = store.load_results(lg)
         if df is None or len(df) < 200:
@@ -83,10 +90,15 @@ def run(k: float, n: int, codes: list[str]) -> dict:
                 continue
             total = int(r["hg"]) + int(r["ag"])
             for f in FLOORS:
+                # The floor is a LeagueConfig field, not a predict_fixture
+                # argument, so it is varied on a copy of the config.
+                c = deepcopy(cfg)
+                c.min_win_prob = f
                 try:
-                    mk = predict_fixture(req, cfg, module_flags=flags,
-                                         min_win_prob=f).translated_play.market
+                    mk = predict_fixture(
+                        req, c, module_flags=flags).translated_play.market
                 except Exception:
+                    skipped += 1
                     continue
                 if not mk:
                     continue
@@ -96,6 +108,11 @@ def run(k: float, n: int, codes: list[str]) -> dict:
                 p = market_select.p_win(mk, req.mu_total)
                 rows[f].append((mk, p, res is True or res == "half_win",
                                 rates.get(mk, 0.0), total))
+    got = sum(len(v) for v in rows.values())
+    if skipped > got:
+        print(f"  WARNING k={k}: {skipped} pricing failures against {got} "
+              f"successes — the sweep is measuring almost nothing",
+              file=sys.stderr)
     return rows
 
 
