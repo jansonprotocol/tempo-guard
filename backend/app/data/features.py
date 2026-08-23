@@ -185,11 +185,61 @@ MU_SHRINK_BY_LEAGUE: Dict[str, float] = {
 TEAM_SHRINK = 0.62
 
 
-def _shrink_side(gf: float, league_mu: Optional[float]) -> float:
-    """Shrink one side's scoring rate toward half the league mean."""
+# Fraction of a league's goals scored by the home side. Both sides used to be
+# shrunk toward `league_mu / 2`, on the stated reasoning that half the league
+# mean IS the per-side mean. It is not: home teams average 1.502 goals and away
+# teams 1.154 across the twelve leagues checked, against a shared target of
+# 1.328. Every league showed the same +0.174 / -0.174 miss, so home rates were
+# dragged down and away rates pushed up, systematically and in the same
+# direction everywhere.
+#
+# Measured on 2,158 offered lanes, that is worth a SEVEN point split: home lanes
+# delivered 78.8% against 74.7% claimed (+4.1), away lanes 73.0% against 75.9%
+# (-2.9). It hid because the two halves cancel — pooled, the team lane reports a
+# gap of +0.3 and looks perfectly calibrated.
+DEFAULT_HOME_SHARE = 0.565
+_HOME_SHARE_CACHE: dict[tuple[Optional[str], Optional[int]], float] = {}
+
+
+def _home_share(df: pd.DataFrame, league_code: Optional[str],
+                cutoff: Optional[datetime]) -> float:
+    """Share of this league's goals scored at home, counted before `cutoff`.
+
+    Windowed and cached exactly like `_league_conversion`, and for the same
+    reason: `_compute_features` is handed the whole unfiltered league frame, so
+    an unguarded mean here would read seasons that had not happened yet.
+    """
+    year = cutoff.year if cutoff is not None else None
+    key = (league_code, year)
+    if league_code is not None and key in _HOME_SHARE_CACHE:
+        return _HOME_SHARE_CACHE[key]
+
+    rows = df
+    if cutoff is not None and len(rows):
+        rows = rows[rows["date"] < datetime(year, 1, 1)]
+    h = float(rows["hg"].fillna(0).sum()) if len(rows) else 0.0
+    a = float(rows["ag"].fillna(0).sum()) if len(rows) else 0.0
+    share = h / (h + a) if (h + a) > 200 else DEFAULT_HOME_SHARE
+    # Guard against a thin or freak window inverting the split.
+    share = min(0.65, max(0.50, share))
+
+    if league_code is not None:
+        _HOME_SHARE_CACHE[key] = share
+    return share
+
+
+def _shrink_side(gf: float, league_mu: Optional[float],
+                 share: float = 0.5) -> float:
+    """Shrink one side's scoring rate toward that SIDE's league mean.
+
+    `share` is the fraction of league goals this side scores — see
+    `_home_share`. Passing 0.5 reproduces the old behaviour of shrinking both
+    sides toward the same midpoint.
+    """
     if not league_mu or league_mu <= 0:
         return gf
-    return max(0.05, league_mu / 2 + TEAM_SHRINK * (gf - league_mu / 2))
+    target = league_mu * share
+    return max(0.05, target + TEAM_SHRINK * (gf - target))
 
 
 def _shrink_mu(mu: float, league_mu: Optional[float],
@@ -827,12 +877,14 @@ def _compute_features(
             (full_df["hg"].fillna(0) + full_df["ag"].fillna(0)).mean() or 2.5
         )
 
+    _hshare = _home_share(full_df, league_code, cutoff)
+
     return {
         "p_two_plus":             round(float(p_two_plus), 3),
         "p_home_tt05":            round(float(1.0 - _poisson_p0(
-            _shrink_side(gfh, league_mu))), 3),
+            _shrink_side(gfh, league_mu, _hshare))), 3),
         "p_away_tt05":            round(float(1.0 - _poisson_p0(
-            _shrink_side(gfa, league_mu))), 3),
+            _shrink_side(gfa, league_mu, 1.0 - _hshare))), 3),
         # Tempo is normalised so a typical fixture lands near the middle of the
         # range. The previous mapping (mu/3.0 clipped at 0.9) saturated: league
         # means sit at 2.4-3.2 goals, so ~63% of matches pinned to the ceiling
