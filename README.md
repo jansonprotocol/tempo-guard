@@ -1475,34 +1475,76 @@ Re-running the same ten leagues at n=200:
     COL-PA  -5.6 -> -5.0      PER-L1  -4.2 -> -1.9
     ENG-CH  -0.9 -> +1.3      MLS     -3.1 -> -4.8  (worse)
 
-#### The uncomfortable part: after shrinkage, edge is about zero
+#### The second half: the floor had to move with it
 
-Per-league realised edge at k=0.60, each against its OWN base rate, n≈200:
+Shrinkage alone left `U4.25` taking **88-95%** of tips in five leagues, and a
+book that only buys U4.25 is not a tipping engine. The cause was not the
+shrinkage — it was `MIN_WIN_PROB = 0.79`, whose own justification in
+`market_select` reads:
 
-    TUR-SL  +5.74      ENG-CH  +0.09      PER-L1  -0.78
-    SAU-PL  +3.01      CHN-SL  +0.08      JPN-J1  -0.99
-    MLS     +0.61      CHI-PD  -0.22      COL-PA  -1.10
-    ESP-L2  +0.59      BRA-SB  -0.29
+    "the highest floor that clears 80% strike while keeping the most-picked
+     line under half of all calls"
 
-At n=200 anything inside about ±2 points is noise, so **only TUR-SL clearly
-beats its base rate.** Everything else is indistinguishable from picking the
-same market blind.
+That was measured against an over-spread mu. **The floor is absolute, so its
+behaviour depends entirely on how spread out mu is.** Pulling every fixture
+toward its league mean meant far fewer rungs clear 79%, and the selector fell
+through to the safest buyable one every time. The constant did not change; what
+it was applied to did, and it silently stopped meeting its own criterion.
 
-And the market mix has concentrated hard: `U4.25` is now **95%** of JPN-J1 tips,
-94% of PER-L1, 93% of CHI-PD, 88% of ENG-CH, 82% of ESP-L2. In those leagues
-the engine has largely stopped differentiating between fixtures.
+Swept at `MU_SHRINK = 0.60` over 1,487 replays:
 
-So the honest position after recalibration:
+    floor    hit     base    realised edge   top line   mix
+    0.79    83.9%   82.4%       +1.50          54%      U4.25 54  O1.5 23  U3.0 16
+    0.75    81.4%   79.5%       +1.99          34%      O1.5 34   U4.25 32  U3.0 27
+    0.70    77.9%   75.9%       +2.08          45%      O1.5 45   U3.0 35   U4.25 11
+    0.65    73.9%   71.4%       +2.54          47%      O1.5 46   U3.0 38   O2.25 7
+    0.60    70.3%   67.0%       +3.24          39%      O1.5 38   U3.0 32   O2.25 16
 
-- **The calibration defect is real and now half-fixed.** The engine no longer
-  claims 85% and delivers 81%; it claims 85% and delivers 83%.
-- **The high hit rate is mostly base rate, not skill.** `U4.25` lands ~87% of
-  the time in most leagues whoever picks it.
-- **The next question is not how to bet better, it is whether the selector adds
-  anything at all** outside Turkey. That is measurable and it has not been
-  measured honestly until now.
+Lower floors keep buying edge with strike rate — 0.60 pays **13 points of hit
+rate for 1.7 of edge**, which this project should not take. **0.75 is the only
+setting that improves edge while holding strike above 80% and restoring the
+original criterion**: the top line falls from 54% to 34% and the book becomes a
+genuine three-way spread. At 0.70 concentration returns from the other side,
+with `O1.5` at 45%.
 
-### Diagnostics — 23 Aug, full sweep
+Shipped as `MIN_WIN_PROB = 0.75`.
+
+#### What both changes did, per league
+
+    league    U4.25 share            realised edge
+              before -> after        before -> after
+    JPN-J1     95%  ->  35%           -0.99  ->  +0.45
+    PER-L1     94%  ->  43%           -0.78  ->  +2.36
+    CHI-PD     93%  ->  43%           -0.22  ->  +3.77
+    ENG-CH     88%  ->  36%           +0.09  ->  +1.48
+    ESP-L2     82%  ->  52%           +0.59  ->  +5.12
+    TUR-SL     68%  ->  44%           +5.74  ->  +7.10
+
+**Every league improved on both axes.** Three went from zero or negative edge to
+clearly positive, and the mix diversified everywhere — `U3.0` leads in Japan,
+`O1.5` in Chile and (jointly) Turkey.
+
+**This retracts last night's gloomiest conclusion.** The claim that "the
+selector adds nothing outside Turkey" was an artefact of a mis-tuned floor
+funnelling every league into the same rung, not a property of the engine. With
+the floor set correctly the selector beats its own base rate in all six leagues
+measured.
+
+#### The cost, stated plainly
+
+    weighted   says 82.6%   hit 80.1%   gap -2.5
+
+Hit rate falls from 83.2% to **80.1%** — that is the price of not buying
+certainty, and it is the right trade: the 83.2% was mostly base rate. Realised
+edge is what improved, and edge is the part that cannot be bought by retreating
+to a safer rung.
+
+Calibration gap is essentially unchanged at -2.5 (from -4.4 originally), so the
+remaining overconfidence is a separate problem from the mix. `COL-PA -6.2`,
+`CHN-SL -5.5`, `MLS -5.1`, `SAU-PL -4.7` and `CHI-PD -4.0` still need per-league
+work.
+
+### Diagnostics — 23 Aug, full sweep### Diagnostics — 23 Aug, full sweep
 
 Run across every league: freshness, configuration, and a per-league retrosim
 scoring 120–260 fixtures each strictly as-of. `scripts/retrosim.py`,
