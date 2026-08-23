@@ -49,7 +49,8 @@
   },
   "NED-ED": {
     "GA Eagles": "Go Ahead Eagles",
-    "ADO": "Den Haag"
+    "ADO": "Den Haag",
+    "PSV": "PSV Eindhoven"
   },
   "POR-PL": {
     "Sporting Clube de Braga": "Sp Braga",
@@ -73,5 +74,15 @@
   "JPN-J1": {
     "Machida Z": "Machida Zelvia",
     "Urawa Reds": "Urawa Red Diamonds"
+  },
+  "CHN-SL": {
+    "Tongliang Long": "Chongqing Tonglianglong"
+  },
+  "DEN-SL": {
+    "AGF": "Aarhus",
+    "OB": "Odense"
+  },
+  "SWE-AL": {
+    "VSK": "Vasteras SK"
   }
 }

@@ -32,10 +32,24 @@ the count again rather than continuing it.
 
 ## Pending FUTURE match bettips
 
-_None yet — first tips on the calibrated engine will be logged here._
+First tips on the calibrated engine. `buy≥` is break-even + 5%, computed from
+the recalibrated probability.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
+| — not started | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
+| — not started | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
+| — not started | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
+| — not started | Allsvenskan | Göteborg v Elfsborg | O1.5 78.9% **+0.1%** · buy≥1.33 | — none | 2026-08-23 14:00 |
+| — not started | Allsvenskan | VSK v Kalmar | U4.25 83.6% +0.8% · buy≥1.28 | U3.75 67.6% +1.1% (floor −7.4) · buy≥1.43 | 2026-08-23 14:00 |
+| — not started | Chinese Super League | Tongliang Long v Dalian Yingbo | U4.25 83.4% +4.1% · buy≥1.28 | U3.75 67.2% +5.5% (floor −7.8) · buy≥1.44 | 2026-08-23 14:00 |
+| — not started | Swiss Super League | Young Boys v Vaduz | — no tip, Vaduz has 3 rows | — | 2026-08-23 14:00 |
+| — not started | Eredivisie | PSV v Groningen | **O1.5 87.8% +5.8%** · buy≥1.20 | **PSV O1.5** 64.9% +15.2% (team) · buy≥1.62 | 2026-08-23 14:30 |
+| — not started | Ekstraklasa | Radomiak v Zagłębie | O1.5 76.7% **+0.7%** · buy≥1.37 | — none | 2026-08-23 14:45 |
+| — not started | Premier League | Brighton v Aston Villa | O1.5 80.7% +0.8% · buy≥1.30 | O2.25 58.6% +1.2% (floor −16.4) · buy≥1.59 | 2026-08-23 15:00 |
+| — not started | Premier League | Man City v Bournemouth | O1.5 81.6% +1.7% · buy≥1.29 | **Man City O0.5** 83.7% +5.1% (team) · buy≥1.25 | 2026-08-23 15:00 |
+| — not started | Ligue 1 | Angers v Lille | U4.25 87.0% +2.6% · buy≥1.22 | U3.75 72.4% +3.8% (floor −2.6) · buy≥1.34 | 2026-08-23 15:00 |
+| — not started | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
 
 ## Completed FUTURE match bettips
 
