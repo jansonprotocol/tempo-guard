@@ -68,6 +68,16 @@ adding any; a test fails if a table drifts out of order.
 | — not started | LaLiga 2 | Sporting Gijón v Burgos | U4.25 88.9% **−0.7%** · buy≥1.19 | O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 19:00 |
 | — not started | Liga Portugal | Santa Clara v Famalicão | U4.25 88.2% +1.9% · buy≥1.20 | U3.75 74.3% +2.8% (floor −0.7) · buy≥1.32 | 2026-08-23 19:00 |
 
+| — not started | LaLiga | Getafe v R. Racing Club | — no tip, Racing has 1 row (336 in ESP-L2 — promoted) | — | 2026-08-23 19:30 |
+| — not started | Peruvian Liga 1 | Sport Boys v Cienciano | U4.25 87.9% **+0.2%** · buy≥1.21 | — none | 2026-08-23 20:00 |
+| — not started | Ekstraklasa | Pogoń v Wisła Kraków | — no tip, Wisła Kraków has 4 rows | — | 2026-08-23 20:15 |
+| — not started | Süper Lig | Alanyaspor v Beşiktaş | **O1.5 79.6% +2.5%** · buy≥1.32 | **Beşiktaş O0.5** 81.0% +11.6% (team) · buy≥1.30 | 2026-08-23 20:30 |
+| — not started | Süper Lig | Göztepe v Gençlerbirliği | U4.25 85.5% +0.9% · buy≥1.25 | U3.75 70.2% +1.3% (floor −4.8) · buy≥1.38 | 2026-08-23 20:30 |
+| — not started | Ligue 1 ⚠98d | Rennes v PSG | **O1.5 82.7% +5.4%** · buy≥1.27 (≥1.31 tail-adj) | **PSG O0.5** 82.6% +13.5% (team) · buy≥1.27 | 2026-08-23 20:45 |
+| — not started | Serie A ⚠91d | Atalanta v Sassuolo | U4.25 89.5% +0.8% · buy≥1.18 | U3.75 76.4% +1.3% (runner-up) · buy≥1.28 | 2026-08-23 20:45 |
+| — not started | Serie A ⚠91d | Torino v Milan | U4.25 89.4% +0.8% · buy≥1.18 | U3.75 76.3% +1.2% (runner-up) · buy≥1.29 | 2026-08-23 20:45 |
+| — not started | Serie B ⚠107d | Cesena v Sampdoria | **U3.0 79.1% +3.7%** · buy≥1.42 | U2.75 58.5% +4.6% (floor −16.5) · buy≥1.61 | 2026-08-23 21:00 |
+| — not started | Serie B ⚠107d | Palermo v Juve Stabia | U3.0 73.9% **−1.5%** · buy≥1.58 | O1.75 73.0% +1.4% (floor −2.0) · buy≥1.52 | 2026-08-23 21:00 |
 ## Completed FUTURE match bettips
 
 **Tip 1 — 9 / 11**   ·   **Tip 2 — 7 / 9**

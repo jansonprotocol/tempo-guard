@@ -37,7 +37,8 @@
   "FRA-L1": {
     "Olympique Lyonnais": "Lyon",
     "Stade Brestois 29": "Brest",
-    "Stade Rennais FC 1901": "Rennes"
+    "Stade Rennais FC 1901": "Rennes",
+    "PSG": "Paris SG"
   },
   "GER-BL": {
     "Borussia Mönchengladbach": "M'gladbach",
@@ -100,5 +101,8 @@
     "Sporting": "Sp Gijon",
     "Sporting Gijón": "Sp Gijon",
     "Sporting Gijon": "Sp Gijon"
+  },
+  "PER-L1": {
+    "Cienciano": "Cienciano del Cusco"
   }
 }
