@@ -104,5 +104,10 @@
   },
   "PER-L1": {
     "Cienciano": "Cienciano del Cusco"
+  },
+  "CHI-PD": {
+    "U. de Chile": "Universidad de Chile",
+    "U. De Chile": "Universidad de Chile",
+    "Colo-Colo": "Colo Colo"
   }
 }

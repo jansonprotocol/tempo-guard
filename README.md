@@ -72,6 +72,16 @@ adding any; a test fails if a table drifts out of order.
 | — not started | Serie A ⚠91d | Torino v Milan | U4.25 89.4% +0.8% · buy≥1.18 | U3.75 76.3% +1.2% (runner-up) · buy≥1.29 | 2026-08-23 20:45 |
 | — not started | Serie B ⚠107d | Cesena v Sampdoria | **U3.0 79.1% +3.7%** · buy≥1.42 | U2.75 58.5% +4.6% (floor −16.5) · buy≥1.61 | 2026-08-23 21:00 |
 | — not started | Serie B ⚠107d | Palermo v Juve Stabia | U3.0 73.9% **−1.5%** · buy≥1.58 | O1.75 73.0% +1.4% (floor −2.0) · buy≥1.52 | 2026-08-23 21:00 |
+| — not started | Brasileirão Série A | Palmeiras v Vasco | U3.0 77.7% +2.4% · buy≥1.46 | **Vasco U1.5** 77.4% +5.7% (team) · buy≥1.36 | 2026-08-23 21:00 |
+| — not started | Brasileirão Série A | RB Bragantino v Grêmio | U3.0 78.2% +2.8% · buy≥1.45 | U4.25 90.6% +1.7% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
+| — not started | Brasileirão Série A | Vitória v Bahia | U3.0 77.4% +2.0% · buy≥1.47 | U4.25 90.1% +1.3% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
+| — not started | Brasileirão Série B | Ponte Preta v Avaí | **U3.0 85.0% +3.3%** · buy≥1.29 | **Ponte Preta U1.5** 76.8% +14.7% (team) · buy≥1.37 | 2026-08-23 21:00 |
+| — not started | Brasileirão Série B | São Bernardo v Náutico | O1.0 90.3% +1.2% · buy≥1.20 — *dead market, base rate 90.6%* | O1.75 67.6% +2.8% (floor −7.4) · buy≥1.67 | 2026-08-23 21:00 |
+| — not started | Chilean Primera División | U. De Chile v Colo-Colo | **O1.5 83.6% +7.2%** · buy≥1.26 (≥1.30 tail-adj) | **Colo-Colo O1.5** 58.5% +25.0% (team) · buy≥1.80 | 2026-08-23 21:00 |
+| — not started | Categoría Primera A | Fortaleza v Atl. Nacional | U4.25 89.8% **−1.6%** · buy≥1.18 | O1.75 70.2% +2.9% (floor −4.8) · buy≥1.60 | 2026-08-23 21:00 |
+| — not started | LaLiga | Elche v Barcelona | O1.5 75.7% +1.2% · buy≥1.39 | — none | 2026-08-23 21:30 |
+| — not started | LaLiga 2 | Tenerife v Almería | U4.25 88.9% **−0.7%** · buy≥1.19 | O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 21:30 |
+| — not started | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | — none | 2026-08-23 21:30 |
 
 ## Completed FUTURE match bettips
 
