@@ -95,7 +95,7 @@ def collect(league: str, n: int) -> list[tuple[float, float, bool, float, str]]:
         if base is None:
             continue
         rows.append(((p - base) * 100, p, res is True or res == "half_win",
-                     base, mk))
+                     base, mk, league))
     return rows
 
 
@@ -153,6 +153,29 @@ def main() -> None:
         bs = sum(r[3] for r in b) / len(b)
         print(f"{m:>8}{len(b):7}{s*100:7.1f}%{h*100:7.1f}%{(h-s)*100:+8.1f}"
               f"{bs*100:7.1f}%")
+
+    # Every market came back calibrated (+0.2, -0.5, -0.5), so the tail is not
+    # a mispriced rung. Inside one league and market `base` is a constant, so
+    # high EDGE is simply high P — the band selects the extremes within each
+    # rung. Two things could do that, and they separate cleanly:
+    #
+    #   by stated P    a spread error inside each rung, cancelling per market
+    #   by base rate   composition — the band concentrating in leagues whose
+    #                  base rate for that market is low, nothing to do with p
+    for label, idx, edges in (("STATED PROBABILITY", 1,
+                               [(0.0, 0.78), (0.78, 0.83), (0.83, 0.88), (0.88, 1.01)]),
+                              ("LEAGUE BASE RATE FOR THAT MARKET", 3,
+                               [(0.0, 0.76), (0.76, 0.82), (0.82, 0.87), (0.87, 1.01)])):
+        print(f"\n{label}")
+        print(f"{'band':14}{'n':>7}{'says':>8}{'hit':>8}{'gap':>8}")
+        for lo, hi in edges:
+            b = [r for r in rows if lo <= r[idx] < hi]
+            if len(b) < 80:
+                continue
+            h = sum(1 for r in b if r[2]) / len(b)
+            s = sum(r[1] for r in b) / len(b)
+            print(f"{lo*100:.0f}-{hi*100:.0f}%{'':<8}{len(b):7}"
+                  f"{s*100:7.1f}%{h*100:7.1f}%{(h-s)*100:+8.1f}")
 
     k = sum(1 for r in rows if r[2])
     hit = k / len(rows)
