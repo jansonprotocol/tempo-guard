@@ -17,7 +17,12 @@ selection. If the feature is honest, both sides sit on the diagonal.
     hit    how often that side actually scored
     gap    hit - says, per side and per probability band
 
-Usage:  python scripts/tt05_calibration.py [--n 150] [--leagues A,B]
+`--old` restores the pre-fix behaviour — both sides shrunk toward `league_mu/2`
+— by forcing the home share to 0.5. Run with and without it to A/B the per-side
+shrink target on identical fixtures, which is the only way to tell whether that
+change helped, since the lane-level test moves its own population.
+
+Usage:  python scripts/tt05_calibration.py [--n 150] [--leagues A,B] [--old]
 """
 from __future__ import annotations
 
@@ -26,7 +31,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.data import store
+from app.data import features, store
 from app.predict import build_request
 from scripts.team_shrink_sweep import LEAGUES, wilson
 
@@ -69,6 +74,9 @@ def main() -> None:
     n = int(args[args.index("--n") + 1]) if "--n" in args else 150
     codes = (args[args.index("--leagues") + 1].split(",")
              if "--leagues" in args else LEAGUES)
+    if "--old" in args:
+        features._home_share = lambda df, code, cutoff: 0.5
+        print("OLD BEHAVIOUR: both sides shrunk toward league_mu / 2\n")
     rows = []
     for back in (0, n):
         for lg in codes:
