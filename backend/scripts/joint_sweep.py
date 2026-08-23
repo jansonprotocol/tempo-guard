@@ -43,10 +43,16 @@ from app.engine.types import ModuleFlags
 from app.predict import build_request, predict_fixture
 from app.util.asian_lines import evaluate_market, hit_weight
 
-KS = [0.25, 0.30, 0.35]
-FLOORS = [0.70, 0.72, 0.75]
-LEAGUES = ["ENG-PL", "ENG-CH", "GER-BL", "ESP-LL", "ESP-L2", "ITA-SA",
-           "FRA-L1", "NED-ED", "POR-PL", "BEL-PL", "TUR-SL", "BRA-SA"]
+KS = [0.25, 0.35]
+FLOORS = [0.75]
+
+# ALL leagues, not a hand-picked subset. The first run used twelve big European
+# leagues and reported the tail at +2.1 where scripts/edge_bands.py, over all
+# 62, reports -2.5 on the same constants. Same engine, opposite sign: on that
+# subset the engine is under-confident and there is no defect to fix, so the
+# sweep was answering a question nobody asked. A tuning run has to be measured
+# on the population the defect was found in.
+LEAGUES: list[str] = []
 
 
 def base_rates(code: str) -> dict[str, float]:
@@ -120,7 +126,7 @@ def main() -> None:
     args = sys.argv[1:]
     n = int(args[args.index("--n") + 1]) if "--n" in args else 120
     codes = (args[args.index("--leagues") + 1].split(",")
-             if "--leagues" in args else LEAGUES)
+             if "--leagues" in args else (LEAGUES or sorted(store.available_leagues())))
     k0 = features.MU_SHRINK
 
     print(f"{'k':>6}{'floor':>7}{'n':>7}{'says':>8}{'hit':>8}{'gap':>7}"
