@@ -155,6 +155,11 @@ def main() -> None:
         print(f"{name[:37]:38}{label:9}{odds:6.2f}{b:>11}{tag or '':>9}"
               f"{g:>7}{r:>8}{flag}")
 
+    if not n_settled:
+        # An empty or all-open book is the normal state right after a reset,
+        # not an error. Reporting zero settled bets beats dividing by it.
+        print(f"\nno settled bets yet ({len(rows)} in the ledger)")
+        return
     print(f"\n{n_settled} match-rung bets settled at 1 unit")
     print(f"  hit rate (push counts)  {n_hit}/{n_settled} = "
           f"{n_hit / n_settled * 100:.1f}%")

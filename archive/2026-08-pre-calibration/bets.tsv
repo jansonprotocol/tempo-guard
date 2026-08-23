@@ -1,0 +1,101 @@
+# Every bet actually placed, as a data file rather than prose.
+#
+# The bet log used to live in paragraphs, so every cross-cut of it was
+# re-derived by hand — and one of them was re-derived wrong: `U3.5` off a
+# `U3.0` tip was filed as a deviation for a whole day before the tier grouping
+# showed it is the same bet. This file exists so buckets are computed from the
+# engine's own numbers instead of from a label typed at the time.
+#
+# fixture   must match the fixture name in README.md's tables exactly; the
+#           score, Tip 1 rung and Tip 1 probability are joined from there
+# rung      the market ACTUALLY bought, which is often neither Tip 1 nor Tip 2
+# odds      decimal price paid
+# side      H or A for a team total, - for a match total
+# cashout   1 if the position was closed early; the ledger still scores the bet
+#           as if held to full time, because that is what tests the tip. The
+#           money actually taken differs and is not recorded by the bookmaker
+#           export.
+#
+# fixture	rung	odds	side	cashout	[p_override]
+Fagiano Okayama v Tokyo Verdy	U3.25	1.19	-	0
+Kashima Antlers v Avispa Fukuoka	O1.5	1.41	-	0
+Nagoya Grampus v Gamba Osaka	O1.5	1.25	-	0
+Kyoto Sanga v Mito Hollyhock	U3.5	1.22	-	0
+Cerezo Osaka v Shimizu S-Pulse	O1.5	1.22	-	0
+Yokohama F. Marinos v Vissel Kobe	O1.5	1.34	-	0
+Sanfrecce Hiroshima v Kawasaki Frontale	O2.25	1.35	-	0
+Three Towns v Jinmen Tiger	O1.5	1.25	-	1
+Shenzhen v Zhejiang	U3.5	1.52	-	0
+Guoan v Yukun	O2.5	1.25	-	0
+Millwall v Norwich	O1.5	1.29	-	0
+Birmingham v Bristol City	U3.5	1.32	-	0
+Metz v Laval	O1.5	1.30	-	0
+Korona v Motor	U3.5	1.36	-	0
+Örgryte v Halmstad	U3.5	1.40	-	0
+Everton v Crystal Palace	U3.5	1.33	-	0
+Fortuna Sittard v AZ	O2.5	1.53	-	1
+Preston v Wolves	O1.5	1.22	-	0
+Blackburn v Middlesbrough	O1.5	1.27	-	0
+Swansea v Sheffield United	O1.5	1.27	-	0
+Wrexham v Watford	U3.5	1.34	-	0
+Zulte Waregem v Beveren	U3.5	1.34	-	0
+West Ham v Charlton	O2.5	1.60	-	0
+Southampton v Stoke	U4.5	1.16	-	0
+Real Oviedo v Leganés	U3.5	1.17	-	0
+Athletic Bilbao v Sevilla	U3.5	1.22	-	0
+Lens v Auxerre	O2.25	1.45	-	0
+Al-Fateh v Al-Ettifaq	O2.5	1.50	-	0
+Brentford v Tottenham	U4.5	1.17	-	0
+Inter v Monza	U4.5	1.23	-	0
+Udinese v Como	O1.5	1.34	-	0
+Sparta Rotterdam v Utrecht	O1.5	1.22	-	0
+Rizespor v Samsunspor	O1.5	1.25	-	0
+Sport Huancayo v Moquegua	U3.5	1.38	-	0
+Al-Kholood v Al-Taawoun	U3.5	1.36	-	0
+Charleroi v Mechelen	U4.5	1.13	-	0
+Al-Ahli v Abha	O1.5	1.10	-	0
+Südtirol v Entella	U2.75	1.34	-	0
+Ceuta v Las Palmas	U4.5	1.10	-	0
+Estoril v Rio Ave	U3.25	1.38	-	0
+Antwerp v Genk	O1.5	1.24	-	0
+Saint-Étienne v Grenoble	U4.5	1.15	-	0
+Al-Khaleej v Al-Shabab	U4.5	1.16	-	1
+Al-Khaleej v Al-Shabab	O0.5	1.23	A	0
+Śląsk v Widzew	U3.5	1.32	-	0
+UTC v Comerciantes Unidos	U3.5	1.19	-	0
+Fenerbahçe v Konyaspor	O1.5	1.13	-	1
+Fenerbahçe v Konyaspor	O1.5	1.32	H	0	64.7
+Zürich v Basel	O2.5	1.52	-	1
+Zürich v Basel	O1.5	1.83	A	0
+Nice v Lorient	U3.25	1.33	-	0
+Toulouse v Lyon	U4.5	1.12	-	0
+Troyes v Paris FC	U1.5	1.48	H	0
+Genoa v Napoli	U1.5	1.18	H	0
+Parma v Cagliari	U1.5	1.33	H	0
+Benevento v Modena	U3.5	1.29	-	0
+Empoli v Cremonese	O1.5	1.34	-	0
+Heerenveen v Zwolle	U4.5	1.29	-	0
+Fluminense v Remo	O1.5	1.33	-	0
+Espanyol v Real Madrid	O1.5	1.17	-	0
+Juan Pablo II v ADT	U3.25	1.42	-	0
+Águilas Doradas v Millonarios	O1.5	1.34	-	0
+Ceará v Londrina	U3.0	1.37	-	0
+Tolima v Bucaramanga	O1.5	1.40	-	0
+Internacional v Atlético-MG	O1.5	1.34	-	0
+Huachipato v Deportes Limache	U4.5	1.16	-	0
+Santa Fe v América de Cali	O1.5	1.49	-	0
+Cruzeiro v Flamengo	O1.5	1.32	-	0
+Universidad Católica v Ñublense	O1.5	1.25	-	0
+Ind. Medellín v Cúcuta	U3.5	1.36	-	0
+Montréal v LA Galaxy	U4.5	1.20	-	0
+Cincinnati v Seattle	O1.5	1.40	H	0	79.1
+Nashville v Columbus	O1.5	1.19	-	0
+St. Louis v Houston	O1.5	1.23	-	0
+Austin v Philadelphia	O0.5	1.15	A	0	86.4
+Vancouver v Dallas	O0.5	1.41	A	0	86.5
+Los Angeles FC v Portland	O0.5	1.30	A	0	87.1
+San Diego v Colorado	U4.5	1.23	-	0
+San Jose v Minnesota	U4.5	1.25	-	0
+Sønderjyske v Nordsjælland	U4.5	1.25	-	0
+GA Eagles v ADO	U1.5	1.40	A	0	77.4
+Machida Z v Urawa Reds	O1.5	1.34	-	0
