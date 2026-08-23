@@ -15,9 +15,12 @@ of five losers is ordinary rather than alarming, and the stake has to survive it
 assumes the probability is right. Ours is measured at -1.5 points out of sample
 overall and -2.5 in the high-edge band, and over-betting a Kelly fraction
 computed from an optimistic p does not merely reduce growth, it reverses it.
-So the simulation is run twice: once believing the published probability, and
-once with the measured error applied. A rule that only survives the first is not
-a rule worth using.
+So the simulation is run across three PRICE regimes rather than one. Stressing
+the probability alone would have proved nothing about a flat stake, which never
+reads the probability — the returns come from real results at real prices and
+come out identical. What actually gives way in practice is the price: the
+market declines to offer `buy from`, and the margin gets surrendered to get a
+bet on. That is the stress that matters.
 
 Method — no distributional assumptions:
 
@@ -56,9 +59,8 @@ LEAGUES = ["ENG-PL", "ENG-CH", "GER-BL", "GER-B2", "ESP-LL", "ESP-L2",
            "BEL-PL", "TUR-SL", "SCO-PL", "DEN-SL", "POL-EK", "JPN-J1",
            "BRA-SA", "MEX-LMX"]
 
-# The measured out-of-sample calibration gap. Applied to the WIN PROBABILITY in
-# the pessimistic arm, not to the price: the price is what it is, the
-# probability is what we might be wrong about.
+# The measured out-of-sample calibration gap, applied to the win probability so
+# the Kelly rules size off an honest number rather than the published one.
 CALIB_GAP = 0.015
 
 RULES = [
@@ -72,8 +74,17 @@ RULES = [
 ]
 
 
-def pool(n: int, gap: float) -> list[tuple[float, float, float]]:
-    """(return per unit staked, win probability, decimal price) for each tip."""
+def pool(n: int, gap: float, mult: float = 1.0) -> list[tuple[float, float, float]]:
+    """(return per unit staked, win probability, decimal price) for each tip.
+
+    `mult` scales the price paid away from `buy from`. Shrinking the win
+    probability alone does NOT stress a flat rule — a flat stake never reads the
+    probability, so the returns, which come from real results at real prices,
+    come out identical. The honest stress is on the PRICE, because that is the
+    thing that actually gives way in practice: mult=1.0 pays break-even exactly
+    (the whole 5% margin surrendered), and mult below that is the Radomiak case,
+    buying under the zero line to get a bet on.
+    """
     out = []
     for lg in LEAGUES:
         df = store.load_results(lg)
@@ -91,7 +102,7 @@ def pool(n: int, gap: float) -> list[tuple[float, float, float]]:
                     req, cfg, module_flags=flags).translated_play.market
                 if not mk:
                     continue
-                price = pricing.buy_from(mk, req.mu_total)
+                price = pricing.buy_from(mk, req.mu_total) * mult
                 p = market_select.p_win(mk, req.mu_total)
             except Exception:
                 continue
@@ -193,9 +204,14 @@ def main() -> None:
 
     same_day_correlation()
 
-    for label, gap in (("published probability", 0.0),
-                       ("with the measured -1.5pt calibration gap", CALIB_GAP)):
-        pl = pool(n, gap)
+    # Three price regimes, because the price is what gives way in practice.
+    ARMS = [
+        ("bought at buy-from (break-even + 5%)", 0.0, 1.000),
+        ("bought at break-even exactly (margin surrendered)", CALIB_GAP, 1 / 1.05),
+        ("bought 2% UNDER break-even (the Radomiak case)", CALIB_GAP, 0.98 / 1.05),
+    ]
+    for label, gap, mult in ARMS:
+        pl = pool(n, gap, mult)
         if not pl:
             print("no tips in pool")
             return
