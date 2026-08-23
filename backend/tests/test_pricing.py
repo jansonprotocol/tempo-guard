@@ -93,3 +93,16 @@ def test_shorter_lines_are_never_dearer():
 def test_rejects_non_total_markets():
     with pytest.raises(ValueError):
         pricing.settle_fraction("BTTS", 2)
+
+
+def test_readme_fixture_tables_are_in_kickoff_order():
+    """The log is read top-down to decide what to look at next, so both fixture
+    tables and the bet table must run earliest kickoff first. Rows get appended
+    in the order fixtures are PRICED, which is not that order, so this pins it —
+    `python scripts/sort_tables.py` fixes any drift."""
+    from scripts import sort_tables
+
+    text = sort_tables.README.read_text()
+    assert sort_tables.sort_tables(text) == text, (
+        "README fixture tables are out of kickoff order; "
+        "run python scripts/sort_tables.py")
