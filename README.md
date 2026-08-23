@@ -1666,6 +1666,48 @@ That is thin history, unresolved names or no playable rung — the same family o
 defects the alias and merge work has been chipping at. It costs coverage rather
 than accuracy, and it has not been investigated.
 
+#### The team lane, validated where it was not fitted — it holds
+
+`TEAM_SHRINK = 0.62` was measured on the most recent 200 fixtures of six
+leagues, which is exactly the setup that made the first match-side pass look
+better than it was. Re-tested against two independent moves away from the fit,
+`scripts/team_validate.py`:
+
+    cell                                slope    O0.5    O1.5    U1.5
+    fitted leagues, fit window          0.933    +2.3    +2.0    -2.0
+    fitted leagues, earlier window      0.830    -0.3    -1.9    +1.9
+    HELD-OUT leagues, fit window        1.095    +0.3    +1.3    -1.3
+    HELD-OUT leagues, earlier window    1.158    -0.0    +0.1    -0.1
+
+**It passes on both axes.** Slopes span 0.83-1.16 around a target of 1.0, and
+every rung sits inside 2.3 points. More telling than the size is the SIGN: the
+gaps flip direction between windows (+2.0 then -1.9 on `O1.5`), which is noise
+around zero rather than a bias the fit absorbed. The cleanest cell is the one
+furthest from the fit — held-out leagues on the earlier window come in at
+**-0.0, +0.1, -0.1**.
+
+This is a better result than the match side, where MLS, COL-PA and IRL-PD still
+fail out of sample.
+
+#### Per-league, because pooled numbers hid IRL-PD once already
+
+    league     slope    O1.5 gap        league     slope    O1.5 gap
+    ENG-CH     1.063     +1.1           JPN-J1     0.380     +1.0
+    ESP-L2     1.313     +1.3           MLS        0.449     +1.7
+    TUR-SL     1.324     -1.4           CHI-PD     0.876     +3.5
+    ENG-L1     1.356     +1.8           BEL-PL     1.176     +1.2
+
+Slopes range widely — 0.38 to 1.36 — but **no league is broken the way IRL-PD
+is on the match side**, and every rung gap lands inside 3.5 points. `MLS 0.449`
+and `JPN-J1 0.380` are still over-spread on the team side, MLS in the same
+direction as its match-side problem.
+
+Deliberately not tuned per-league. The rung gaps are the thing a bet settles
+on, and at +1.7 and +1.0 they are already inside the noise on 500
+side-observations; fitting a constant to a slope that does not show up in the
+settlements would be over-fitting for its own sake. Logged so it can be
+re-checked when the sample doubles.
+
 #### Out-of-sample: the fix generalises, but the in-sample number was optimistic
 
 Everything above was tuned and validated on the same recent window. Re-scored on
