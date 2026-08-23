@@ -1,9 +1,9 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
 
-## CURRENT CONFIRMED HITRATE: 86.7%
+## CURRENT CONFIRMED HITRATE: 81.2%
 
-**Tip 1 13 / 15 settled** · **Tip 2 10 / 12** · **bets 6 / 6, ROI +28.5%** · over/under markets only · live tips, not backtests
+**Tip 1 13 / 16 settled** · **Tip 2 10 / 12** · **bets 6 / 7, ROI +10.1%** · over/under markets only · live tips, not backtests
 
 The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
 from before that point are not comparable to numbers after it, so they are not
@@ -46,18 +46,17 @@ adding any; a test fails if a table drifts out of order.
 | **LIVE** 0-4 (53') | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
 | **LIVE** 1-0 (62') | LaLiga | Atl. Madrid v Villarreal | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-23 17:00 |
 | **LIVE** 1-0 (67') | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
-| **LIVE** 0-1 (52') | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
 | **LIVE** 1-0 (HT) | Premier League | Newcastle v Liverpool | O1.5 80.5% **+0.6%** · buy≥1.30 | — none | 2026-08-23 17:30 |
 | **LIVE** 2-0 (HT) | Ekstraklasa | GKS Katowice v Wisła Płock | — no tip, Wisła Płock has 3 rows | — | 2026-08-23 17:30 |
 | **LIVE** 3-0 (27') | Danish Superliga | Viborg v København | **O1.5 84.6% +5.3%** · buy≥1.24 (≥1.28 tail-adj) | **København O1.5** 65.8% +24.5% (team) · buy≥1.59 | 2026-08-23 18:00 |
 | **LIVE** 0-0 (27') | Süper Lig | Eyüpspor v Gaziantep | U4.25 86.4% +1.8% · buy≥1.23 | U3.75 71.6% +2.7% (floor −3.4) · buy≥1.36 | 2026-08-23 18:00 |
 | **LIVE** 1-1 (28') | Süper Lig | Trabzonspor v Başakşehir | O1.5 77.3% **+0.3%** · buy≥1.36 | — none | 2026-08-23 18:00 |
-| — not started | Chilean Primera División | D. Concepción v Coquimbo | O1.5 78.0% +1.6% · buy≥1.35 | — none | 2026-08-23 18:00 |
+| **LIVE** 1-1 (65') | Chilean Primera División | D. Concepción v Coquimbo | O1.5 78.0% +1.6% · buy≥1.35 | — none | 2026-08-23 18:00 |
 | — not started | Chilean Primera División | La Serena v Cobresal | O1.5 77.1% **+0.7%** · buy≥1.36 | — none | 2026-08-23 18:00 |
 | — not started | Serie A ⚠91d | Frosinone v Juventus | U4.25 86.7% **−2.0%** · buy≥1.23 | O1.75 74.6% +2.7% (floor −0.4) · buy≥1.48 | 2026-08-23 18:30 |
-| — not started | Serie A ⚠91d | Venezia v Lecce | **U3.0 80.0% +4.9%** · buy≥1.40 | U4.25 91.6% +3.0% (lower edge) · buy≥1.15 | 2026-08-23 18:30 |
-| — not started | Belgian Pro League | Club Brugge v Cercle Brugge | **O1.5 86.6% +10.3%** · buy≥1.21 (≥1.25 tail-adj) | **Club Brugge O1.5** 66.3% +22.5% (team) · buy≥1.58 | 2026-08-23 18:30 |
-| — not started | Serie B ⚠107d | Verona v Ascoli | U3.0 77.4% +2.0% · buy≥1.47 | U2.75 56.4% +2.5% (floor −18.6) · buy≥1.67 | 2026-08-23 19:00 |
+| **LIVE** 0-0 (HT) | Serie A ⚠91d | Venezia v Lecce | **U3.0 80.0% +4.9%** · buy≥1.40 | U4.25 91.6% +3.0% (lower edge) · buy≥1.15 | 2026-08-23 18:30 |
+| **LIVE** 1-0 (HT) | Belgian Pro League | Club Brugge v Cercle Brugge | **O1.5 86.6% +10.3%** · buy≥1.21 (≥1.25 tail-adj) | **Club Brugge O1.5** 66.3% +22.5% (team) · buy≥1.58 | 2026-08-23 18:30 |
+| **LIVE** 1-0 (23') | Serie B ⚠107d | Verona v Ascoli | U3.0 77.4% +2.0% · buy≥1.47 | U2.75 56.4% +2.5% (floor −18.6) · buy≥1.67 | 2026-08-23 19:00 |
 | — not started | Serie B ⚠107d | Pisa v Padova | U3.0 75.2% **−0.2%** · buy≥1.53 | — none | 2026-08-23 19:00 |
 | — not started | LaLiga 2 | Castellón v Sabadell | U4.25 88.3% **−1.3%** · buy≥1.20 | **Castellón O0.5** 80.0% +3.6% (team) · buy≥1.31 | 2026-08-23 19:00 |
 | — not started | LaLiga 2 | Sporting Gijón v Burgos | U4.25 88.9% **−0.7%** · buy≥1.19 | O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 19:00 |
@@ -106,10 +105,11 @@ adding any; a test fails if a table drifts out of order.
 | — no tip — 2-1 | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
 | ✅ HIT — 2-0 | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | ✅ **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
 | ✅ HIT — 2-0 | Allsvenskan | BP v Degerfors | U4.25 85.8% +2.9% · buy≥1.24 | ✅ U3.75 70.7% +4.1% (floor −4.3) · buy≥1.37 | 2026-08-23 16:30 |
+| ❌ MISS — 0-1 | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
 
 ### Actual placed bets
 
-**Settled: 6 / 6 — ROI +28.5%  ·  Pending: 6**
+**Settled: 6 / 7 — ROI +10.1%  ·  Pending: 13**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
@@ -121,30 +121,33 @@ adding any; a test fails if a table drifts out of order.
 | 16:30 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** ✅ |
 | 16:45 | Cambuur v Feyenoord | U4.25 | U4.5 — same tier | 1.32 | 1.28 | **+8.7%** |
 | 17:00 | Eibar v Real Valladolid | U3.0 | **Valladolid U1.5 — team lane** | 1.24 | 1.32 | −1.4% |
+| 17:15 | Le Havre v AS Monaco | O1.5 | O1.5 — the tip | 1.35 | 1.35 | **+5.1%** ❌ |
 | 18:00 | Viborg v København | **O1.5** | O1.5 — the tip | 1.19 | 1.24 | +0.7% ⚠ |
 | 18:00 | D. Concepción v Coquimbo | O1.5 | O1.5 — the tip | 1.34 | 1.35 | **+4.5%** |
 | 18:30 | Venezia v Lecce | **U3.0** | U3.5 — same tier, softer | 1.22 | 1.31 | −2.4% |
+| 18:30 | Club Brugge v Cercle Brugge | **O1.5** | O1.5 — the tip | 1.21 | 1.21 | +4.8% |
 | 19:00 | Verona v Ascoli | U3.0 | U3.0 — the tip | 1.45 | 1.47 | **+3.5%** |
+| 20:45 | Atalanta v Sassuolo | U4.25 | U4.5 — same tier | 1.14 | 1.17 | +2.1% ⚠ |
+| 21:00 | U. De Chile v Colo-Colo | **O1.5** | O1.5 — the tip | 1.27 | 1.26 | **+6.2%** |
+| 21:00 | Ponte Preta v Avaí | **U3.0** | U3.0 — the tip | 1.36 | 1.29 | **+11.0%** |
+| 21:00 | RB Bragantino v Grêmio | U3.0 | U3.25 — same tier | 1.42 | 1.39 | **+7.4%** |
+| 21:00 | Palmeiras v Vasco | U3.0 | U3.0 — the tip | 1.46 | 1.46 | +4.8% |
+| 21:00 | Cesena v Sampdoria | **U3.0** | U3.0 — the tip | 1.36 | 1.42 | +0.2% ⚠ |
 
-Six settled, six won, **ROI +28.5%**. Worth separating what that shows from
-what it does not.
+**The first loss, and it was a well-bought bet.** `Le Havre v AS Monaco` `O1.5`
+at 1.35 against a 1.285 break-even was **+5.1%** — one of the better buys in the
+book — and the match finished 0-1. That is what a 78% tip missing looks like,
+and it will happen roughly one time in five. Nothing to fix.
 
-**Four of the six were bought at or above the line** — Port at +11.2%, and both
-Brighton lanes. Those are the result the method predicts.
+**The discipline shifted sharply for the better in the evening.** Of the eleven
+bets placed after 18:00, **eight cleared their threshold** — Ponte Preta at
++11.0%, RB Bragantino +7.4%, U. De Chile +6.2%, Club Brugge +4.8%. Compare the
+afternoon, where Hammarby went in 14% under and two team lanes were taken at
+match-total prices.
 
-**Two were not, and won anyway.** `Hammarby O1.5` at 1.34 against a 1.56
-break-even is a **−14.1%** bet; Hammarby scored twice inside 45 minutes and it
-paid. `Göteborg O0.5`, bought in play at 0-0, was −3.5% and also paid. A 64%
-shot landing is the ordinary case, not a vindication of the price — the same
-logic that applies to `ADO U1.5` in the archive, which also won a bet the engine
-would not have offered. **Five settled bets cannot distinguish a good price from
-a lucky one**; the price stress in the staking section needed 1,941 tips and
-4,000 paths to say anything, and it says a book bought 2% under break-even
-returns 0.87x.
-
-The later batch is the encouraging part, and for a reason unrelated to the
-results: **Concepción at +4.5%, Verona at +3.5% and Cambuur at +8.7% were bought
-at the line rather than through it.** That is the behaviour that compounds.
+**Two to watch.** `Atalanta U4.5` at 1.14 is the shortest price in the book and
+clears break-even by 2.1% — there is almost no room in it. `Cesena U3.0` at 1.36
+against 1.357 is functionally break-even.
 
 Earlier note — Brighton: the tip was `O1.5`
 needing 1.30, and `O2.0` was bought instead — a different market that wins on 3+
