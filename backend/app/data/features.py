@@ -849,10 +849,13 @@ def _compute_features(
 
     # Venue blend: a home side's attack is better described by its home scoring
     # rate, an away side's by its away rate.
+    venue_h = venue_a = 0.0
     if H_home is not None and len(H_home) >= VENUE_MIN:
         gfh = gfh * (1 - VENUE_BLEND) + _goals_per_game(H_home, h_norm, "scored") * VENUE_BLEND
+        venue_h = VENUE_BLEND
     if A_away is not None and len(A_away) >= VENUE_MIN:
         gfa = gfa * (1 - VENUE_BLEND) + _goals_per_game(A_away, a_norm, "scored") * VENUE_BLEND
+        venue_a = VENUE_BLEND
 
     # Blend in what each side's shot volume implies it should be scoring.
     # Applied after the venue split so the two adjustments compose.
@@ -860,6 +863,22 @@ def _compute_features(
     gfh = _blended_scoring_rate(H, h_norm, gfh, conversion)
     gfa = _blended_scoring_rate(A, a_norm, gfa, conversion)
     shots_blended = conversion is not None
+
+    # Residual venue de-bias. Both scoring rates start from a team's form over
+    # its last ten matches HOME AND AWAY, and only VENUE_BLEND of that is
+    # replaced by venue-specific form. So `gfh` keeps leaning on a venue-neutral
+    # number and lands about 0.113 goals under the true home mean, with `gfa`
+    # the same amount over — measured across twelve leagues, and present before
+    # any shrinkage runs. Correcting the shrink TARGET could not reach it,
+    # because the bias is already in the input.
+    #
+    # Applied symmetrically so `mu_total = gfh + gfa` is exactly unchanged: the
+    # match lane is calibrated to a gap of ~0 and must not move to fix the team
+    # lane. Only the split between the two sides shifts.
+    if league_mu and league_mu > 0:
+        edge = league_mu * (_home_share(full_df, league_code, cutoff) - 0.5)
+        c = edge * (1 - (venue_h + venue_a) / 2)
+        gfh, gfa = max(0.05, gfh + c), max(0.05, gfa - c)
 
     mu_total = max(0.2, gfh + gfa)
     mu_total = _shrink_mu(mu_total, league_mu, league_code)
