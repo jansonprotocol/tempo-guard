@@ -8,6 +8,19 @@ which is exactly what `TEAM_SHRINK = 0.62` does. If so, relaxing it should close
 the gap — and if the gap does not close as the constant moves, the diagnosis is
 wrong and the constant should be left alone.
 
+**RESULT: the diagnosis was wrong and 0.62 stands.** Across ~6,900 fixtures in
+two independent windows the current value lands at a gap of -0.1 and +0.8, and
+every relaxation degrades it monotonically, to -5.3 at k = 1.00. The +2.7 lives
+in the SUBSET nested_lanes selected — over-rung team lanes sitting inside
+over-rung match lanes — and not in the lane as a whole, which this scores in
+full. A real number on a real slice that generalised to nothing: the project's
+own recorded trap, walked into while checking something else.
+
+Kept because it is the instrument that settles the question, and because the
+volume finding underneath is worth knowing. Relaxing to 1.00 raises team-lane
+offers from 1,086 to 1,954 — but those extra lanes arrive 5 points
+overconfident, which is volume bought by miscalibration rather than earned.
+
 **One replay pass serves every candidate.** The shrink is invertible: the
 published probability is `1 - exp(-gf')` where `gf' = league_mu/2 + k*(gf -
 league_mu/2)`, so the raw per-side rate comes back as
@@ -49,7 +62,10 @@ LEAGUES = ["ENG-PL", "ENG-CH", "GER-BL", "GER-B2", "ESP-LL", "ESP-L2",
            "BEL-PL", "TUR-SL", "SCO-PL", "DEN-SL", "POL-EK", "JPN-J1",
            "BRA-SA", "MEX-LMX", "SWE-AL", "NOR-EL", "CHI-PD", "ARG-PD"]
 
-CANDIDATES = [0.62, 0.70, 0.78, 0.86, 0.94, 1.00]
+# Spans both directions: the first run only went upward, which would have
+# left 0.62 sitting at the boundary of the tested range rather than shown
+# to be a crossover.
+CANDIDATES = [0.38, 0.46, 0.54, 0.62, 0.70, 0.78, 0.86, 0.94, 1.00]
 
 
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
