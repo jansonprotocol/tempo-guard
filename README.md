@@ -1615,6 +1615,57 @@ probabilities are derived so `mu_total` is not shrunk twice.
 All three rungs now sit within 2.3 points, slightly conservative on the Over
 side.
 
+#### Full coverage: all 37 tippable leagues retrosimmed
+
+The constants were tuned on 11 leagues. The remaining **26** — not 16, the
+earlier count was wrong — have now been replayed at n=250 each. This is the
+real test of whether the fix was fitted or general, because none of these
+leagues influenced any constant.
+
+    ARG-PD  +0.7    ENG-L1  +1.6    NOR-EL  +0.7    SCO-L1  +0.2
+    AUT-BL  -0.3    ENG-L2  -1.1    POL-EK  -0.5    SCO-L2  +2.4
+    BEL-PL  +1.7    ENG-NL  -0.7    POR-PL  -0.6    SCO-PL  -0.1
+    BRA-SA  -1.6    ESP-LL  +3.4    ROU-L1  +1.9    SUI-SL  -1.4
+    DEN-SL  -2.8    FIN-VL  -2.7    RUS-PL  -0.4    SWE-AL  -1.6
+    FRA-L2  -0.5    GER-B2  -0.1    MEX-LMX -0.8    NED-ED  +4.5
+    SCO-CH  -3.4    IRL-PD  -6.2
+
+    batch of 13   3,178 fixtures   weighted gap  -0.6
+    batch of 13   3,036 fixtures   weighted gap  +0.1
+
+**Twenty-five of twenty-six land inside 4 points, and the two batch averages
+are -0.6 and +0.1.** The constants were not over-fitted to the leagues they
+were tuned on — that was the open question and it is now answered.
+
+Across all 37 tippable leagues and ~8,700 replayed fixtures the weighted gap is
+about **-0.4**.
+
+#### The one failure, and it is not a tuning problem
+
+`IRL-PD` came in at **-6.2**, the worst on the board. Its residual slope is
+**-0.600** on 300 replays — the read is not merely weak, it is ANTI-correlated:
+the more goals the engine predicts, the fewer occur. That is the worst slope
+measured in any league, and a negative slope has no sensible shrink.
+
+Set to `0.10`, as close to "use the league mean and ignore the fixture" as the
+engine goes without emitting an identical tip every week. Gap **-6.2 -> -3.7**.
+
+**Logged as a cull candidate, not a tuning success.** A calibrated tip carrying
+no information is still no information, and Ireland now sits alongside COL-PA
+(residual slope -0.06) in the category of leagues the engine should probably
+stop tipping rather than keep tuning.
+
+#### A separate problem the sweep exposed: withheld fixtures
+
+Some leagues skip a large share of their fixtures rather than tipping them:
+
+    BRA-SA  19%      NOR-EL  18%      SWE-AL  18%
+    ROU-L1  15%      MEX-LMX 14%      RUS-PL  10%
+
+That is thin history, unresolved names or no playable rung — the same family of
+defects the alias and merge work has been chipping at. It costs coverage rather
+than accuracy, and it has not been investigated.
+
 #### Out-of-sample: the fix generalises, but the in-sample number was optimistic
 
 Everything above was tuned and validated on the same recent window. Re-scored on

@@ -143,6 +143,15 @@ MU_SHRINK = 0.35
 # and will over-fit if added freely, so a league only earns one when it BOTH
 # measures far off AND still fails the retrosim at the global setting.
 #
+#   IRL-PD  residual slope **-0.600** on 300 replays — the read is not merely
+#           weak, it is ANTI-correlated: the more goals the engine predicts, the
+#           fewer occur. The worst slope measured in any league. A negative
+#           slope has no sensible k, so this is set to 0.10, which is as close
+#           to "use the league mean and ignore the fixture" as the engine goes
+#           without producing an identical tip every week. Flagged as a cull
+#           candidate rather than a tuning success: a calibrated tip carrying no
+#           information is still no information.
+#
 #   MLS   residual slope 0.325 on 262 replays, and the only league still worse
 #         than -4 points after the global fix (-4.2). 0.35 * 0.325 = 0.11;
 #         set to 0.15, pulled toward the global to blunt the over-fit. MLS is
@@ -151,6 +160,7 @@ MU_SHRINK = 0.35
 #         there is what the data supports.
 MU_SHRINK_BY_LEAGUE: Dict[str, float] = {
     "MLS": 0.15,
+    "IRL-PD": 0.10,
 }
 
 # The team-total lane needs its OWN shrink, and this was missed on the first
