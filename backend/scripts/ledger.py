@@ -108,7 +108,13 @@ def main() -> None:
 
         label = rung if side == "-" else f"{rung}({side})"
         if side == "-":
-            be = pricing.break_even(rung, mu)
+            # An IN-PLAY bet must be priced against the probability that was
+            # true when it was struck, not the pre-match one. Backing `O0.5` at
+            # half time in a goalless match is a 79% shot; the pre-match mu says
+            # 95%, and scoring it that way marks a losing bet as a good buy.
+            # A p_override on a match total means exactly that: price this off
+            # the supplied probability, because the fixture had moved.
+            be = 1 / p_over if p_over else pricing.break_even(rung, mu)
             goals = None if fx["hg"] is None else fx["hg"] + fx["ag"]
         else:
             # A team rung is priced off that SIDE's expectation, which the

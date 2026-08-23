@@ -10,7 +10,21 @@ a record of what was published at the time, and of how the defects were found.
 
 ---
 
-## Three bets were still open when this closed
+## SETTLED — all three open bets won
+
+They came in on 23 Aug: **€3.60 staked returned €4.79, +33.1%**. `Sønderjyske
+v Nordsjælland` `U4.5`, `GA Eagles v ADO` — `ADO U1.5`, and `Machida Z v Urawa`
+`O1.5` all landed, so the pre-calibration book closes at **58 / 82**.
+
+Worth being precise about what that does and does not show. `ADO U1.5` is the
+bet the calibrated engine **would not have offered** — the team shrink removed
+it from the ladder entirely. It won anyway. One bet settling in favour of a
+market that has been measured wrong across hundreds of fixtures is not evidence
+the removal was a mistake; it is what a 77% shot does three times in four. The
+reason to record it is the opposite one: this is exactly the result that would
+tempt a rule back in, and the temptation is worth naming.
+
+## The three bets as they stood
 
 `Sønderjyske v Nordsjælland` `U4.5` @1.25, `GA Eagles v ADO` — `ADO U1.5` @1.40,
 and `Machida Z v Urawa Reds` `O1.5` @1.34 were placed on 23 Aug against
@@ -18,7 +32,7 @@ pre-calibration tips and had not kicked off when the log was reset. They stay
 here rather than moving to the new ledger: they were priced against
 probabilities now known to be optimistic, and against `buy≥` thresholds that
 re-price about 7% higher, so scoring them under the new engine would flatter it
-with bets it never issued. Settle them into `bets.tsv` here.
+with bets it never issued. They are settled into `bets.tsv` here instead.
 
 Worth recording what the calibrated engine says about those same three
 fixtures, because one changed materially:
@@ -40,7 +54,7 @@ offered. It is the clearest single example of what the recalibration removed.
 
     Tip 1     101 / 120 settled     84.2%
     Tip 2      67 / 100 settled     67.0%
-    Bets       55 /  79 settled     69.6%   ROI -10.1%
+    Bets       58 /  82 settled     70.7%   ROI  -8.5%
 
 Twenty-three leagues, three days, one full Saturday slate.
 
@@ -60,7 +74,7 @@ Three findings, each measured, each of which alone would have been enough:
 
 **1. The probabilities were 10.8 points optimistic on the bets actually
 placed.** Across 26 leagues the engine claimed 85.7% and delivered 81.2%; on
-this bet book it claimed 80.4% and delivered 69.6%, because the bets chased the
+this bet book it claimed 80.4% and delivered 70.7%, because the bets chased the
 extremes where the error was worst. The cause was mu being over-spread by 2.4x
 — `actual_total = 1.640 + 0.424 * mu` — with the level fine and only the spread
 wrong.

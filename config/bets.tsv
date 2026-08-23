@@ -17,3 +17,12 @@
 Port v Hainiu	U4.5	1.38	-	0
 AGF v OB	U4.5	1.18	-	0
 Brighton v Aston Villa	O2.0	1.35	-	0
+Brighton v Aston Villa	O1.5	1.24	-	0
+Cambuur v Feyenoord	U4.5	1.32	-	0
+Eibar v Real Valladolid	U1.5	1.24	A	0
+# Bought IN-PLAY at half time, 0-0. The pre-match read is irrelevant by then,
+# so the probability column carries the half-time one: 79.1%, measured over
+# 57,092 goalless halves in leagues of this scoring rate (scripts/ht_zero.py).
+Göteborg v Elfsborg	O0.5	1.22	-	0	79.1
+Hammarby v GAIS	O1.5	1.34	H	0
+Viborg v København	O1.5	1.19	-	0

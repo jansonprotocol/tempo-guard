@@ -42,18 +42,17 @@ adding any; a test fails if a table drifts out of order.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| — not started | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
-| — not started | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
-| — not started | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
-| — not started | Allsvenskan | Göteborg v Elfsborg | O1.5 78.9% **+0.1%** · buy≥1.33 | — none | 2026-08-23 14:00 |
-| — not started | Allsvenskan | VSK v Kalmar | U4.25 83.6% +0.8% · buy≥1.28 | U3.75 67.6% +1.1% (floor −7.4) · buy≥1.43 | 2026-08-23 14:00 |
-| — not started | Chinese Super League | Tongliang Long v Dalian Yingbo | U4.25 83.4% +4.1% · buy≥1.28 | U3.75 67.2% +5.5% (floor −7.8) · buy≥1.44 | 2026-08-23 14:00 |
-| — not started | Swiss Super League | Young Boys v Vaduz | — no tip, Vaduz has 3 rows | — | 2026-08-23 14:00 |
-| — not started | Eredivisie | PSV v Groningen | **O1.5 87.8% +5.8%** · buy≥1.20 | **PSV O1.5** 64.9% +15.2% (team) · buy≥1.62 | 2026-08-23 14:30 |
-| — not started | Ekstraklasa | Radomiak v Zagłębie | O1.5 76.7% **+0.7%** · buy≥1.37 | — none | 2026-08-23 14:45 |
-| — not started | Premier League | Brighton v Aston Villa | O1.5 80.7% +0.8% · buy≥1.30 | O2.25 58.6% +1.2% (floor −16.4) · buy≥1.59 | 2026-08-23 15:00 |
-| — not started | Premier League | Man City v Bournemouth | O1.5 81.6% +1.7% · buy≥1.29 | **Man City O0.5** 83.7% +5.1% (team) · buy≥1.25 | 2026-08-23 15:00 |
-| — not started | Ligue 1 | Angers v Lille | U4.25 87.0% +2.6% · buy≥1.22 | U3.75 72.4% +3.8% (floor −2.6) · buy≥1.34 | 2026-08-23 15:00 |
+| **LIVE** 2-2 (79') | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
+| **LIVE** 1-0 (77') | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
+| **LIVE** 1-0 (82') | Allsvenskan | Göteborg v Elfsborg | O1.5 78.9% **+0.1%** · buy≥1.33 | — none | 2026-08-23 14:00 |
+| **LIVE** 0-0 (84') | Allsvenskan | VSK v Kalmar | U4.25 83.6% +0.8% · buy≥1.28 | U3.75 67.6% +1.1% (floor −7.4) · buy≥1.43 | 2026-08-23 14:00 |
+| **LIVE** 0-1 (81') | Chinese Super League | Tongliang Long v Dalian Yingbo | U4.25 83.4% +4.1% · buy≥1.28 | U3.75 67.2% +5.5% (floor −7.8) · buy≥1.44 | 2026-08-23 14:00 |
+| **LIVE** 3-2 (83') | Swiss Super League | Young Boys v Vaduz | — no tip, Vaduz has 3 rows | — | 2026-08-23 14:00 |
+| **LIVE** 3-1 (48') | Eredivisie | PSV v Groningen | **O1.5 87.8% +5.8%** · buy≥1.20 | **PSV O1.5** 64.9% +15.2% (team) · buy≥1.62 | 2026-08-23 14:30 |
+| **LIVE** 0-0 (HT) | Ekstraklasa | Radomiak v Zagłębie | O1.5 76.7% **+0.7%** · buy≥1.37 | — none | 2026-08-23 14:45 |
+| **LIVE** 4-0 (40') | Premier League | Brighton v Aston Villa | O1.5 80.7% +0.8% · buy≥1.30 | O2.25 58.6% +1.2% (floor −16.4) · buy≥1.59 | 2026-08-23 15:00 |
+| **LIVE** 0-1 (37') | Premier League | Man City v Bournemouth | O1.5 81.6% +1.7% · buy≥1.29 | **Man City O0.5** 83.7% +5.1% (team) · buy≥1.25 | 2026-08-23 15:00 |
+| **LIVE** 0-2 (40') | Ligue 1 | Angers v Lille | U4.25 87.0% +2.6% · buy≥1.22 | U3.75 72.4% +3.8% (floor −2.6) · buy≥1.34 | 2026-08-23 15:00 |
 | — not started | Belgian Pro League | Lommel v Westerlo | O1.5 77.5% +1.3% · buy≥1.35 | — none | 2026-08-23 16:00 |
 | — not started | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
 | — not started | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
@@ -71,23 +70,44 @@ adding any; a test fails if a table drifts out of order.
 
 ## Completed FUTURE match bettips
 
-**Tip 1 — 1 / 1**   ·   **Tip 2 — 1 / 1**
+**Tip 1 — 2 / 2**   ·   **Tip 2 — 2 / 2**
 
 | Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
 | ✅ HIT — 1-1 (decided, 20') | Championship | West Brom v Burnley | O1.5 77.0% +4.2% · buy≥1.36 | ✅ **Burnley O0.5** 80.5% +11.4% (team) · buy≥1.30 | 2026-08-23 13:00 |
+| ✅ HIT — 2-1 | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | ✅ U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
 
 ### Actual placed bets
 
-**Win: 0 / 0  ·  Pending: 3 / 3**
+**Win: 1 / 1  ·  Pending: 8 / 8**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
-| 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** |
+| 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** ✅ |
 | 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ |
+| 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — bought IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
+| 14:00 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** |
 | 15:00 | Brighton v Aston Villa | **O1.5** | **O2.0 — harsher rung** | 1.35 | 1.40 | +1.2% ⚠ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | O1.5 — the tip | 1.24 | 1.30 | **0.0%** ✅ |
+| 16:45 | Cambuur v Feyenoord | U4.25 | U4.5 — same tier | 1.32 | 1.28 | **+8.7%** |
+| 17:00 | Eibar v Real Valladolid | U3.0 | **Valladolid U1.5 — team lane** | 1.24 | 1.32 | −1.4% |
+| 18:00 | Viborg v København | **O1.5** | O1.5 — the tip | 1.19 | 1.24 | +0.7% ⚠ |
 
-Only Port cleared its threshold. Brighton is the one to note: the tip was `O1.5`
+**Three of nine were bought below break-even**, and the two team lanes are the
+worst of them. `Hammarby O1.5` at 1.34 against a 1.56 break-even is **−14.1%** —
+the single worst buy since the recalibration. The team lane is the highest-edge
+market the engine produces and the one that most needs its own price; taken at a
+match-total price it stops being a bet and becomes a donation.
+
+`Göteborg O0.5` is scored against its HALF-TIME probability (79.1%), not the
+pre-match one. The ledger now honours a probability override on match totals for
+exactly this reason — priced off the pre-match mu it read as a 1.06 break-even
+and scored as a good buy, which is nonsense for a bet struck at 0-0 with 45
+minutes left.
+
+Cambuur is the best buy of the batch: `U4.5` at 1.32 against a 1.21 break-even.
+
+Earlier note — Brighton: the tip was `O1.5`
 needing 1.30, and `O2.0` was bought instead — a different market that wins on 3+
 rather than 2+, needing 1.40 and paid at 1.35.
 
