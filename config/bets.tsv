@@ -43,3 +43,7 @@ Atlanta v Kansas City	U4.5	1.23	-	0
 Atlanta v Kansas City	U1.5	1.43	A	0
 Alanyaspor v Beşiktaş	O0.5	1.30	A	0
 Rennes v PSG	O0.5	1.40	A	0
+# Bought IN-PLAY at half time, 0-0, at a drifted price of 1.63. The probability
+# column carries the half-time one: 40.8%, measured over 57,092 goalless halves
+# (scripts/ht_zero.py), not the 76.8% the pre-match tip carried.
+Porto v Arouca	O1.5	1.63	-	0	40.8
