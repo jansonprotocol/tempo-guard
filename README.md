@@ -1666,6 +1666,52 @@ That is thin history, unresolved names or no playable rung — the same family o
 defects the alias and merge work has been chipping at. It costs coverage rather
 than accuracy, and it has not been investigated.
 
+#### The freshness gate should NOT be made binding — staleness costs ~1 point
+
+Seven leagues are 86-107 days behind and are being tipped anyway, with
+`league_status.py` flagging them as not cleared for futurematch and nothing
+enforcing it. The obvious fix is to make the gate bite. Measured first, and the
+measurement says don't.
+
+Retrosimming those leagues answers the wrong question — replaying their own
+history prices each fixture with data that was FRESH at the time. So
+`scripts/staleness_cost.py` prices the same fixture twice instead: once as of
+the match date, once as of the match date minus N days, forcing the form window
+to end early exactly as a lagging store does. Both arms are scored against the
+same real result, so the only thing that varies is the lag.
+
+1,200 fixtures across eight leagues, each priced at every lag:
+
+    lag      n    says     hit     gap    vs fresh
+     0d   1190   81.8%   83.2%    +1.4      +0.0
+    30d   1190   82.1%   81.9%    -0.2      -1.3
+    60d   1190   82.4%   82.3%    -0.1      -0.9
+    90d   1190   82.6%   82.8%    +0.2      -0.4
+   120d   1190   82.4%   82.2%    -0.2      -1.0
+
+**A four-month-old store costs about one point of hit rate, and calibration
+holds at every lag** — the gap stays inside 1.4 points throughout, and there is
+no monotone decay: 90 days scores better than 30. The live evidence agreed
+without being able to prove it: the stale-league tips went 17/19 last weekend.
+
+**Why it is so cheap is now obvious.** After shrinkage the fixture's own form
+contributes only 35% of the read — the rest is the league mean, which barely
+moves over a few months. Staleness can only degrade the 35%. Before
+recalibration this would have cost considerably more, which is probably why the
+gate was written in the first place.
+
+**So the gate stays advisory, and that was the right call all along.** Making it
+binding would drop seven leagues, including the Premier League, Serie A and
+Ligue 1, to buy back roughly one point of strike rate.
+
+**One thing this test does NOT cover.** It moves the as-of date back but keeps
+the same clubs. Real season-boundary staleness also brings PROMOTED clubs the
+store has never seen in that division — Hull, Ipswich, Lincoln, Racing
+Santander. That is a genuinely different failure and it is already logged
+separately under the cross-division and promoted-club defects, where the
+history gate withholds rather than guesses. Freshness and promotion look alike
+on a calendar and are not the same problem.
+
 #### `buy from` re-derived: every published threshold was too LOW
 
 The thresholds are `break_even x 1.05`, and break-even comes from the engine's
