@@ -68,11 +68,30 @@ def sort_tables(text: str) -> str:
         i += 1
         out.append(lines[i])                      # the |---|---| separator
         i += 1
-        block = []
-        while i < len(lines) and lines[i].startswith("|"):
-            block.append(lines[i])
-            i += 1
+        # Collect the body, stepping OVER stray blank lines that sit between
+        # rows. Appending a batch of fixtures just before the next heading tends
+        # to leave one behind, and a blank line ends a markdown table: the page
+        # then renders two tables, and this sorter used to sort each half
+        # separately and report the result as correctly ordered. Absorbing the
+        # blank here means the fault repairs itself and `--check` catches it.
+        block: list[str] = []
+        while i < len(lines):
+            if lines[i].startswith("|"):
+                block.append(lines[i])
+                i += 1
+                continue
+            j = i
+            while j < len(lines) and not lines[j].strip():
+                j += 1
+            if j < len(lines) and lines[j].startswith("|"):
+                i = j                              # blank line inside the table
+                continue
+            break
         out.extend(sorted(block, key=lambda r: key(r, col)))
+        # And exactly one blank line after the table, so the next heading is not
+        # glued to the final row.
+        if i < len(lines) and lines[i].strip():
+            out.append("")
     return "\n".join(out) + "\n"
 
 
