@@ -723,6 +723,59 @@ Nothing is being switched off mid-slate. Ranked by what the evidence supports:
    points in the leagues where it shows.
 4. Re-check the global -3.9 after 1–3; some of it is those four leagues.
 
+### Do name failures cost markets? Mostly no — measured
+
+`scripts/name_audit.py` runs every upcoming fixture through the resolver the
+engine actually uses, so an abstain can be sorted into the two causes that hide
+behind one message:
+
+    GENUINE   the club really is new. Wisla Plock has 3 rows because it was
+              promoted this month, and no name work invents a fourth.
+    NAME      the history exists under a spelling the resolver cannot reach.
+
+Across 4,161 upcoming fixtures, **78 are blocked — 1.9%**, and after this pass
+**not one of them is a name**. Two were, and are now fixed: `NEC` resolves to
+`Nijmegen` (716 rows) and `Fortuna Sittard` to `For Sittard` (334 rows), both
+recovered by alias. What remains is a different problem wearing the same error
+message:
+
+    Le Mans FC          Ligue 1 fixture list, 328 rows sitting in FRA-L2
+    SV 07 Elversberg    Bundesliga fixture list, 102 rows sitting in GER-B2
+
+**Both are promoted clubs, and no alias can fix them** — the spelling is right,
+the history is one division down. That is a cross-division lookup, and it
+recurs for roughly three clubs per league every summer.
+
+**The audit's blind spot is the vocabulary that actually fails in practice.** It
+compares the fixture feed against the results store, and 24 of 62 leagues ship a
+fixture list at all. The names typed off a screenshot are a *third* naming
+system that neither half contains — `København` for `FC Copenhagen`, `Başakşehir`
+for `Buyuksehyr`, `BP`, `VSK`, `ADO`. Those cannot be audited ahead of time;
+`config/team_aliases.json` is the accumulating record of them, and it only grows
+when a fixture is actually missed. An alias is consulted only when the raw name
+resolves to nothing, so adding one can rescue a withheld fixture and can never
+change a tip already issued.
+
+**Split clubs are the larger residue and need judgement, not automation.** The
+audit proposes candidate groups; many are false positives that would be actively
+harmful to merge — `Nacional` (Uruguay) against `Club Nacional Potosí`
+(Bolivia), `Santos FC` against `Santos Laguna`, `Celta` against `Celta B`. They
+are reported for confirmation and never applied automatically.
+
+- **OPEN — Allsvenskan is missing most of the 2025 season.** Found while
+  checking why eight Swedish clubs appear under two spellings. The two spellings
+  are real but harmless on their own — one provider covers 2023 to May 2025
+  (`IFK Göteborg`), another covers 2026 (`Goteborg`) — and the resolver already
+  picks the current one. The gap underneath is the problem:
+
+      2023  240 rows      2024  240 rows      2025  53 rows      2026  135 rows
+
+  A full Allsvenskan season is 240 matches, so **roughly 187 matches of 2025 are
+  simply absent**. Every Swedish tip is therefore priced on ~17 matches per club
+  — the current season alone — including the team lanes, which carry the largest
+  published edges on the slate. Not wrong, but far thinner than the row counts
+  suggest, and worth knowing before sizing a Swedish bet.
+
 ### Known data defects
 
 - **OPEN — half-time scores are censored on 0-0 finishes in 23 leagues.** In
