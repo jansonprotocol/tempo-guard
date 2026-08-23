@@ -55,12 +55,12 @@ adding any; a test fails if a table drifts out of order.
 | **LIVE** 0-2 (40') | Ligue 1 | Angers v Lille | U4.25 87.0% +2.6% · buy≥1.22 | U3.75 72.4% +3.8% (floor −2.6) · buy≥1.34 | 2026-08-23 15:00 |
 | — not started | Belgian Pro League | Lommel v Westerlo | O1.5 77.5% +1.3% · buy≥1.35 | — none | 2026-08-23 16:00 |
 | — not started | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
-| — not started | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
+| **LIVE** 2-0 (HT) | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
 | — not started | Allsvenskan | BP v Degerfors | U4.25 85.8% +2.9% · buy≥1.24 | U3.75 70.7% +4.1% (floor −4.3) · buy≥1.37 | 2026-08-23 16:30 |
 | — not started | Liga Portugal | Vitória v Nacional | U4.25 87.7% +1.3% · buy≥1.21 | U3.75 73.5% +2.0% (floor −1.5) · buy≥1.33 | 2026-08-23 16:30 |
-| — not started | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
+| **LIVE** 0-0 (12') | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
 | — not started | LaLiga | Atl. Madrid v Villarreal | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-23 17:00 |
-| — not started | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
+| **LIVE** 0-0 (29') | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
 | — not started | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
 | — not started | Premier League | Newcastle v Liverpool | O1.5 80.5% **+0.6%** · buy≥1.30 | — none | 2026-08-23 17:30 |
 | — not started | Ekstraklasa | GKS Katowice v Wisła Płock | — no tip, Wisła Płock has 3 rows | — | 2026-08-23 17:30 |
@@ -89,33 +89,41 @@ adding any; a test fails if a table drifts out of order.
 
 ### Actual placed bets
 
-**Win: 1 / 1  ·  Pending: 8 / 8**
+**Settled: 5 / 5  ·  Pending: 7**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
 | 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** ✅ |
 | 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ |
-| 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — bought IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
-| 14:00 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** |
-| 15:00 | Brighton v Aston Villa | **O1.5** | **O2.0 — harsher rung** | 1.35 | 1.40 | +1.2% ⚠ |
-| 15:00 | Brighton v Aston Villa | **O1.5** | O1.5 — the tip | 1.24 | 1.30 | **0.0%** ✅ |
+| 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
+| 14:00 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** ✅ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | O2.0 — harsher rung | 1.35 | 1.40 | +1.6% ✅ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | O1.5 — the tip | 1.24 | 1.30 | **+0.1%** ✅ |
 | 16:45 | Cambuur v Feyenoord | U4.25 | U4.5 — same tier | 1.32 | 1.28 | **+8.7%** |
 | 17:00 | Eibar v Real Valladolid | U3.0 | **Valladolid U1.5 — team lane** | 1.24 | 1.32 | −1.4% |
 | 18:00 | Viborg v København | **O1.5** | O1.5 — the tip | 1.19 | 1.24 | +0.7% ⚠ |
+| 18:00 | D. Concepción v Coquimbo | O1.5 | O1.5 — the tip | 1.34 | 1.35 | **+4.5%** |
+| 18:30 | Venezia v Lecce | **U3.0** | U3.5 — same tier, softer | 1.22 | 1.31 | −2.4% |
+| 19:00 | Verona v Ascoli | U3.0 | U3.0 — the tip | 1.45 | 1.47 | **+3.5%** |
 
-**Three of nine were bought below break-even**, and the two team lanes are the
-worst of them. `Hammarby O1.5` at 1.34 against a 1.56 break-even is **−14.1%** —
-the single worst buy since the recalibration. The team lane is the highest-edge
-market the engine produces and the one that most needs its own price; taken at a
-match-total price it stops being a bet and becomes a donation.
+Five settled, five won. Worth separating what that shows from what it does not.
 
-`Göteborg O0.5` is scored against its HALF-TIME probability (79.1%), not the
-pre-match one. The ledger now honours a probability override on match totals for
-exactly this reason — priced off the pre-match mu it read as a 1.06 break-even
-and scored as a good buy, which is nonsense for a bet struck at 0-0 with 45
-minutes left.
+**Three of the five were bought at or above the line** — Port at +11.2%, and both
+Brighton lanes. Those are the result the method predicts.
 
-Cambuur is the best buy of the batch: `U4.5` at 1.32 against a 1.21 break-even.
+**Two were not, and won anyway.** `Hammarby O1.5` at 1.34 against a 1.56
+break-even is a **−14.1%** bet; Hammarby scored twice inside 45 minutes and it
+paid. `Göteborg O0.5`, bought in play at 0-0, was −3.5% and also paid. A 64%
+shot landing is the ordinary case, not a vindication of the price — the same
+logic that applies to `ADO U1.5` in the archive, which also won a bet the engine
+would not have offered. **Five settled bets cannot distinguish a good price from
+a lucky one**; the price stress in the staking section needed 1,941 tips and
+4,000 paths to say anything, and it says a book bought 2% under break-even
+returns 0.87x.
+
+The later batch is the encouraging part, and for a reason unrelated to the
+results: **Concepción at +4.5%, Verona at +3.5% and Cambuur at +8.7% were bought
+at the line rather than through it.** That is the behaviour that compounds.
 
 Earlier note — Brighton: the tip was `O1.5`
 needing 1.30, and `O2.0` was bought instead — a different market that wins on 3+
