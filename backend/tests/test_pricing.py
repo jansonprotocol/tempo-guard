@@ -128,6 +128,21 @@ def test_readme_headline_matches_the_log():
         "run python scripts/headline.py")
 
 
+def test_header_played_row_agrees_with_the_playable_block():
+    """The header now carries three lines, and the middle one restates what the
+    playable block counts. Two renderers reading the same tables is exactly how
+    the old hand-typed counters drifted, so they are pinned to each other: both
+    must apply the same MIN_EDGE to the same lanes."""
+    from scripts import headline, playable
+
+    lanes = playable.collect(playable.README.read_text())
+    p1, q1, p2, q2 = headline.played()
+    for which, (h, n) in ((1, (p1, q1)), (2, (p2, q2))):
+        b = [r for r in lanes if r[3] == which]
+        assert h == sum(1 for r in b if r[9] == "✅")
+        assert n == sum(1 for r in b if r[9] in ("✅", "❌"))
+
+
 def test_readme_playable_lanes_match_the_tables():
     """The playable-lanes block is a filtered view of the two fixture tables,
     so it can only be right while it is regenerated — `python

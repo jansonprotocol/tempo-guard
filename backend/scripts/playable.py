@@ -43,11 +43,11 @@ COMPLETED = "| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |"
 # stale one in place and appended a second. A prefix cannot go stale that way.
 ANCHOR = "## Playable lanes"
 HEADING = f"{ANCHOR} — edge above +{MIN_EDGE:.0f}%"
-# The block goes after the placed-bets table, which is where it reads: what was
-# buyable, then what was bought. It is the only anchor that does not reparent an
-# existing heading — `### Actual placed bets` is nested under the completed
-# table, so slotting a `##` in front of it would silently move it here.
-NEXT = "## Engine state"
+# The block sits at the top, above the two tables it is derived from. It reads
+# backwards on the page — the summary before its source — and that is the point:
+# it is the number the bankroll acts on, so it is the one that should be read
+# first.
+NEXT = "## Pending FUTURE match bettips"
 
 # "U4.25 80.6% +1.4% · buy≥1.33"  ·  "**Burnley O0.5** 80.5% +11.4% (team)"
 # The market may carry a team prefix and either half may be bold, so the label
@@ -129,13 +129,13 @@ def render(text: str) -> str:
     lanes = collect(text)
     head = [
         HEADING, "",
-        "The two tables above measure the ENGINE: every fixture Athena priced, "
-        "bet or no bet. That number answers *is the model right*, and it stays "
-        "as it is. This block answers the different question the bankroll "
-        "asks — **of the lanes that were actually buyable, how many landed?** "
-        "A tip at zero edge is the base rate wearing a probability; it is "
-        "correctly skipped, and it does not belong in a hit rate that claims "
-        "to describe what can be played.", "",
+        "The two fixture tables below measure the ENGINE: every fixture Athena "
+        "priced, bet or no bet. That number answers *is the model right*, and "
+        "it stays as it is. This block answers the different question the "
+        "bankroll asks — **of the lanes that were actually buyable, how many "
+        "landed?** A tip at zero edge is the base rate wearing a probability; "
+        "it is correctly skipped, and it does not belong in a hit rate that "
+        "claims to describe what can be played.", "",
         f"So: every lane from both tables carrying an edge above "
         f"**+{MIN_EDGE:.0f}%**, Tip 1 and Tip 2 alike, which means one fixture "
         f"can appear twice, once, or not at all. The threshold is not zero on "

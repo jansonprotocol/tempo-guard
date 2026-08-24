@@ -3,7 +3,12 @@
 
 ## CURRENT CONFIRMED HITRATE: 0.0%
 
-**Tip 1 0 / 0 settled** · over/under markets only · live tips, not backtests
+    lane                        Tip 1              Tip 2
+    all matches              0 / 0               0 / 0
+    played lanes  >+1%       0 / 0               0 / 0
+    placed bets              0 / 0             ROI +0.0%
+
+**All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Derived by `python scripts/headline.py`, never typed · over/under markets only · live tips, not backtests
 
 Reset on **24 Aug 2026**, after the first full slate on the calibrated engine.
 That day is archived at
@@ -45,15 +50,48 @@ you are buying.
     Tip 1    break-even 1.211    at +5% margin  1.27
     Tip 2    break-even 1.393    at +5% margin  1.46
 
+## Playable lanes — edge above +1%
+
+The two fixture tables below measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
+
+So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, which means one fixture can appear twice, once, or not at all. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
+
+**Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+
+| Result | League | Fixture | Lane | Edge | buy≥ | Kickoff |
+|---|---|---|---|---|---|---|
+| — not started | Saudi Pro League | Neom v Al-Qadsiah | Tip 1 · O1.5 84.2% | **+4.4%** | 1.25 | 2026-08-24 18:40 |
+| — not started | Saudi Pro League | Neom v Al-Qadsiah | Tip 2 · Al-Qadsiah O1.5 56.5% | **+18.4%** | 1.86 | 2026-08-24 18:40 |
+| — not started | Danish Superliga | Brøndby v Silkeborg | Tip 1 · O1.5 80.8% | **+1.6%** | 1.30 | 2026-08-24 19:00 |
+| — not started | Danish Superliga | Brøndby v Silkeborg | Tip 2 · O2.25 58.8% | **+2.3%** | 1.59 | 2026-08-24 19:00 |
+| — not started | Allsvenskan | Malmö v Djurgården | Tip 1 · O1.5 84.8% | **+5.9%** | 1.24 | 2026-08-24 19:00 |
+| — not started | Allsvenskan | Malmö v Djurgården | Tip 2 · Malmö O1.5 60.1% | **+12.8%** | 1.75 | 2026-08-24 19:00 |
+| — not started | LaLiga | Osasuna v Levante | Tip 1 · O1.5 75.5% | **+1.1%** | 1.39 | 2026-08-24 19:30 |
+| — not started | Ligue 2 | Reims v Annecy | Tip 1 · O1.5 75.4% | **+3.5%** | 1.39 | 2026-08-24 20:45 |
+| — not started | Ligue 2 | Reims v Annecy | Tip 2 · Reims O0.5 80.3% | **+7.0%** | 1.31 | 2026-08-24 20:45 |
+| — not started | Serie A | Roma v Fiorentina | Tip 1 · O1.5 74.1% | **+2.2%** | 1.42 | 2026-08-24 20:45 |
+| — not started | Serie A | Roma v Fiorentina | Tip 2 · Roma O0.5 80.9% | **+7.5%** | 1.30 | 2026-08-24 20:45 |
+| — not started | Premier League | Fulham v Chelsea | Tip 1 · U4.25 86.1% | **+4.4%** | 1.24 | 2026-08-24 21:00 |
+| — not started | Premier League | Fulham v Chelsea | Tip 2 · U3.75 71.1% | **+6.2%** | 1.37 | 2026-08-24 21:00 |
+| — not started | Liga Portugal | Gil Vicente v Casa Pia | Tip 1 · U3.0 76.1% | **+4.6%** | 1.51 | 2026-08-24 21:15 |
+| — not started | Liga Portugal | Gil Vicente v Casa Pia | Tip 2 · Casa Pia U1.5 79.2% | **+13.9%** | 1.33 | 2026-08-24 21:15 |
+| — not started | LaLiga 2 | Málaga v Deportivo | Tip 1 · O1.5 76.9% | **+6.2%** | 1.37 | 2026-08-24 21:30 |
+| — not started | LaLiga 2 | Málaga v Deportivo | Tip 2 · Málaga O0.5 83.8% | **+7.4%** | 1.25 | 2026-08-24 21:30 |
+| — not started | LaLiga 2 | Granada v Mallorca | Tip 2 · U2.75 56.3% | **+1.1%** | 1.67 | 2026-08-24 21:30 |
+| — not started | Brasileirão Série B | Sport Recife v América-MG | Tip 1 · U3.0 83.1% | **+1.4%** | 1.33 | 2026-08-25 00:30 |
+| — not started | Brasileirão Série B | Sport Recife v América-MG | Tip 2 · América-MG U1.5 82.3% | **+4.7%** | 1.28 | 2026-08-25 00:30 |
+| — not started | Liga de Primera | Everton v U. de Concepción | Tip 2 · Everton O0.5 83.5% | **+5.5%** | 1.26 | 2026-08-25 01:30 |
+
 ## Pending FUTURE match bettips
 
 **Every fixture table below is sorted by kickoff, earliest first** — pending,
 completed and placed bets alike. New rows arrive in the order fixtures are
 priced, which is not that order, so run `python scripts/sort_tables.py` after
-adding any; a test fails if a table drifts out of order. The counts above and
-below are derived by `python scripts/headline.py`, and the playable-lanes block
-by `python scripts/playable.py` — never typed. After editing any table, run all
-three; each has a `--check` mode and each is pinned by a test.
+adding any; a test fails if a table drifts out of order. **These two tables are
+the only thing on this page that is typed.** Everything above them reads from
+them: the header counts by `python scripts/headline.py`, the playable-lanes
+block by `python scripts/playable.py`. After editing a table run all three
+scripts; each has a `--check` mode and each is pinned by a test.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
@@ -89,38 +127,6 @@ three; each has a `--check` mode and each is pinned by a test.
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
-
-## Playable lanes — edge above +1%
-
-The two tables above measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
-
-So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, which means one fixture can appear twice, once, or not at all. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
-
-**Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
-
-| Result | League | Fixture | Lane | Edge | buy≥ | Kickoff |
-|---|---|---|---|---|---|---|
-| — not started | Saudi Pro League | Neom v Al-Qadsiah | Tip 1 · O1.5 84.2% | **+4.4%** | 1.25 | 2026-08-24 18:40 |
-| — not started | Saudi Pro League | Neom v Al-Qadsiah | Tip 2 · Al-Qadsiah O1.5 56.5% | **+18.4%** | 1.86 | 2026-08-24 18:40 |
-| — not started | Danish Superliga | Brøndby v Silkeborg | Tip 1 · O1.5 80.8% | **+1.6%** | 1.30 | 2026-08-24 19:00 |
-| — not started | Danish Superliga | Brøndby v Silkeborg | Tip 2 · O2.25 58.8% | **+2.3%** | 1.59 | 2026-08-24 19:00 |
-| — not started | Allsvenskan | Malmö v Djurgården | Tip 1 · O1.5 84.8% | **+5.9%** | 1.24 | 2026-08-24 19:00 |
-| — not started | Allsvenskan | Malmö v Djurgården | Tip 2 · Malmö O1.5 60.1% | **+12.8%** | 1.75 | 2026-08-24 19:00 |
-| — not started | LaLiga | Osasuna v Levante | Tip 1 · O1.5 75.5% | **+1.1%** | 1.39 | 2026-08-24 19:30 |
-| — not started | Ligue 2 | Reims v Annecy | Tip 1 · O1.5 75.4% | **+3.5%** | 1.39 | 2026-08-24 20:45 |
-| — not started | Ligue 2 | Reims v Annecy | Tip 2 · Reims O0.5 80.3% | **+7.0%** | 1.31 | 2026-08-24 20:45 |
-| — not started | Serie A | Roma v Fiorentina | Tip 1 · O1.5 74.1% | **+2.2%** | 1.42 | 2026-08-24 20:45 |
-| — not started | Serie A | Roma v Fiorentina | Tip 2 · Roma O0.5 80.9% | **+7.5%** | 1.30 | 2026-08-24 20:45 |
-| — not started | Premier League | Fulham v Chelsea | Tip 1 · U4.25 86.1% | **+4.4%** | 1.24 | 2026-08-24 21:00 |
-| — not started | Premier League | Fulham v Chelsea | Tip 2 · U3.75 71.1% | **+6.2%** | 1.37 | 2026-08-24 21:00 |
-| — not started | Liga Portugal | Gil Vicente v Casa Pia | Tip 1 · U3.0 76.1% | **+4.6%** | 1.51 | 2026-08-24 21:15 |
-| — not started | Liga Portugal | Gil Vicente v Casa Pia | Tip 2 · Casa Pia U1.5 79.2% | **+13.9%** | 1.33 | 2026-08-24 21:15 |
-| — not started | LaLiga 2 | Málaga v Deportivo | Tip 1 · O1.5 76.9% | **+6.2%** | 1.37 | 2026-08-24 21:30 |
-| — not started | LaLiga 2 | Málaga v Deportivo | Tip 2 · Málaga O0.5 83.8% | **+7.4%** | 1.25 | 2026-08-24 21:30 |
-| — not started | LaLiga 2 | Granada v Mallorca | Tip 2 · U2.75 56.3% | **+1.1%** | 1.67 | 2026-08-24 21:30 |
-| — not started | Brasileirão Série B | Sport Recife v América-MG | Tip 1 · U3.0 83.1% | **+1.4%** | 1.33 | 2026-08-25 00:30 |
-| — not started | Brasileirão Série B | Sport Recife v América-MG | Tip 2 · América-MG U1.5 82.3% | **+4.7%** | 1.28 | 2026-08-25 00:30 |
-| — not started | Liga de Primera | Everton v U. de Concepción | Tip 2 · Everton O0.5 83.5% | **+5.5%** | 1.26 | 2026-08-25 01:30 |
 
 ## Engine state — 24 Aug 2026
 

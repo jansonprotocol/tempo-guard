@@ -25,7 +25,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts import ledger
+from scripts import ledger, playable
 
 ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "README.md"
@@ -95,18 +95,47 @@ def counter_line() -> str:
     return f"**Tip 1 — {h1} / {n1}**   ·   **Tip 2 — {h2} / {n2}**"
 
 
+def played() -> tuple[int, int, int, int]:
+    """The same count over the lanes that could actually be bought.
+
+    Deliberately a second number rather than a replacement for the first. The
+    engine is judged on every fixture it priced, which is the only honest test
+    of the model; the bankroll is judged on the subset carrying enough edge to
+    be worth a stake. They answer different questions and they will not agree.
+    """
+    lanes = playable.collect(README.read_text())
+
+    def side(which: int) -> tuple[int, int]:
+        b = [r for r in lanes if r[3] == which]
+        return (sum(1 for r in b if r[9] == "✅"),
+                sum(1 for r in b if r[9] in ("✅", "❌")))
+
+    return side(1) + side(2)
+
+
+def _cell(h: int, n: int) -> str:
+    return f"{h:3} / {n:<3}" + (f"{h / n * 100:6.1f}%" if n else "       ")
+
+
 def render() -> str:
     h1, n1, h2, n2 = tally()
+    p1, q1, p2, q2 = played()
     bh, bn, roi = bets()
     pct = h1 / n1 * 100 if n1 else 0.0
-    head = [f"## CURRENT CONFIRMED HITRATE: {pct:.1f}%", ""]
-    line = f"**Tip 1 {h1} / {n1} settled**"
-    if n2:
-        line += f" · **Tip 2 {h2} / {n2}**"
-    if bn:
-        line += f" · **bets {bh} / {bn}, ROI {roi:+.1f}%**"
-    head.append(line + " · over/under markets only · live tips, not backtests")
-    return "\n".join(head)
+    return "\n".join([ln.rstrip() for ln in [
+        f"## CURRENT CONFIRMED HITRATE: {pct:.1f}%",
+        "",
+        f"    lane                        Tip 1              Tip 2",
+        f"    all matches            {_cell(h1, n1)}    {_cell(h2, n2)}",
+        f"    played lanes  >+1%     {_cell(p1, q1)}    {_cell(p2, q2)}",
+        f"    placed bets            {_cell(bh, bn)}    ROI {roi:+.1f}%",
+        "",
+        "**All matches** is the engine: every fixture priced, bet or not. "
+        "**Played lanes** is the same count over the lanes with real edge — "
+        "what was buyable, tracked in its own block below. **Placed bets** is "
+        "the book. Derived by `python scripts/headline.py`, never typed · "
+        "over/under markets only · live tips, not backtests",
+    ]])
 
 
 def main() -> None:
