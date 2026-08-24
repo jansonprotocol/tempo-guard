@@ -99,24 +99,52 @@ def _mark(f: Fixture) -> str:
     return f.status or ""
 
 
-def _card(f: Fixture, glyph: str, tip1: str, tip2: str) -> str:
-    head = f"{glyph} {_stamp(f)} — **{f.teams}**"
+def _head(f: Fixture, glyph: str) -> str:
     if f.settled:
-        head = f"{f.status[:1]} {_mark(f)} — {_stamp(f)} — **{f.teams}**"
-    elif f.status:                      # LIVE
-        head = f"🔴 {f.status} — **{f.teams}**"
-    return "\n".join([
-        f"| {head} | Tip 1 | Tip 2 |",
-        "|:--|:--|:--|",
-        f"| {_badge(f)} | {tip1} | {tip2} |",
-    ])
+        return f"{f.status[:1]} {_mark(f)} · {_stamp(f)} **{f.teams}**"
+    if f.status:                        # LIVE
+        return f"🔴 {f.status} **{f.teams}**"
+    return f"{glyph} {_stamp(f)} **{f.teams}**"
+
+
+def _cards(entries: list[tuple[Fixture, str, str, str]]) -> list[str]:
+    """Cards laid out two abreast, the way the example sketches them.
+
+    Each PAIR is one six-column table: two fixture headers with their Tip
+    columns, one value row beneath. Markdown has no side-by-side tables, so
+    the pairing has to live inside a single table — which also means an odd
+    last fixture gets a three-column card of its own rather than an empty
+    twin beside it.
+    """
+    out = []
+    for i in range(0, len(entries), 2):
+        pair = entries[i:i + 2]
+        heads, cells = [], []
+        for f, glyph, t1, t2 in pair:
+            heads += [_head(f, glyph), "Tip 1", "Tip 2"]
+            cells += [_badge(f), t1, t2]
+        out += ["| " + " | ".join(heads) + " |",
+                "|" + ":--|" * len(heads),
+                "| " + " | ".join(cells) + " |",
+                ""]
+    return out
 
 
 def _cell(raw: str) -> str:
-    """One tip cell, buy-from dropped to its own line like the example."""
+    """One tip cell: probability line on top, buy-from below, annotation last.
+
+    `(team)`, `(floor −9.1)`, `(lower edge)` widen the top line unevenly, so
+    they ride the second line instead — the top line stays `RUNG P% +E%`
+    across every card, which is what keeps a six-column row readable.
+    """
     if raw.startswith("—") or not raw:
         return raw or "—"
-    return raw.replace(" · buy≥", "<br>buy≥")
+    import re
+    m = re.match(r"^(.*?)\s*(\([^)]*\))?\s*· (buy≥\S+)\s*$", raw)
+    if not m:
+        return raw.replace(" · buy≥", "<br>buy≥")
+    top, note, buy = m.groups()
+    return f"{top}<br>{buy}" + (f" · {note[1:-1]}" if note else "")
 
 
 def _tallies(fixtures: list[Fixture]):
@@ -189,6 +217,7 @@ def render_board(fixtures: list[Fixture]) -> str:
         counter("Playable", ph, pn) + "   ·   " + counter("Tip 1", p1, q1)
         + "   ·   " + counter("Tip 2", p2, q2), "",
     ]
+    entries = []
     for f in fixtures:
         l1, l2 = f.lane(1), f.lane(2)
         if not l1 and not l2:
@@ -197,7 +226,8 @@ def render_board(fixtures: list[Fixture]) -> str:
                                        else f"— under +{MIN_EDGE:.0f}%")
         c2 = _cell(f.tip2) if l2 else (f.tip2 if f.tip2.startswith("—")
                                        else f"— under +{MIN_EDGE:.0f}%")
-        out += [_card(f, "🟢", c1, c2), ""]
+        entries.append((f, "🟢", c1, c2))
+    out += _cards(entries)
 
     pending = [f for f in fixtures if not f.settled]
     out += [
@@ -210,8 +240,7 @@ def render_board(fixtures: list[Fixture]) -> str:
         "league are its **(hit gap)** over its last 200 replayed matches — "
         "read the gap before trusting a row.", "",
     ]
-    for f in pending:
-        out += [_card(f, "🔵", _cell(f.tip1), _cell(f.tip2)), ""]
+    out += _cards([(f, "🔵", _cell(f.tip1), _cell(f.tip2)) for f in pending])
     if not pending:
         out += ["*(no open fixtures)*", ""]
 
@@ -221,8 +250,7 @@ def render_board(fixtures: list[Fixture]) -> str:
         "## ⚪ Completed FUTURE match bettips", "",
         counter("Tip 1", *t[1]) + "   ·   " + counter("Tip 2", *t[2]), "",
     ]
-    for f in done:
-        out += [_card(f, "⚪", _cell(f.tip1), _cell(f.tip2)), ""]
+    out += _cards([(f, "⚪", _cell(f.tip1), _cell(f.tip2)) for f in done])
     if not done:
         out += ["*(nothing settled yet on this slate)*", ""]
 
