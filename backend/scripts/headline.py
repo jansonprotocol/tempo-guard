@@ -72,9 +72,17 @@ def bets() -> tuple[int, int, float]:
         fx = fixtures.get(name)
         if fx is None or fx["hg"] is None:
             continue
-        goals = (fx["hg"] + fx["ag"]) if side == "-" else (
-            fx["hg"] if side == "H" else fx["ag"])
-        s = ledger.pricing.settle_fraction(rung, goals)
+        if rung == "DNB":
+            # Draw No Bet settles on the match RESULT, which no total carries:
+            # full win, push on a draw, full loss. Tracked because bets exist
+            # against it; the engine still neither tips nor prices 1X2.
+            gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
+                      else (fx["ag"], fx["hg"]))
+            s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        else:
+            goals = (fx["hg"] + fx["ag"]) if side == "-" else (
+                fx["hg"] if side == "H" else fx["ag"])
+            s = ledger.pricing.settle_fraction(rung, goals)
         returned += max(s, 0.0) * odds + (1 - abs(s))
         staked += 1
         n += 1

@@ -107,6 +107,23 @@ def main() -> None:
             continue
 
         label = rung if side == "-" else f"{rung}({side})"
+        if rung == "DNB":
+            # Draw No Bet: settles on the match result — win, push on a draw,
+            # loss. The engine neither tips nor prices 1X2, so break-even here
+            # is only the bettor's own record; no buy-from judgement applies.
+            gf = None if fx["hg"] is None else (
+                fx["hg"] if side == "H" else fx["ag"])
+            ga = None if fx["hg"] is None else (
+                fx["ag"] if side == "H" else fx["hg"])
+            out.append((name, rung, odds, None, None, gf, cash, label))
+            if gf is not None:
+                s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+                staked += 1
+                returned += max(s, 0.0) * odds + (1 - abs(s))
+                n_settled += 1
+                n_hit += s >= 0
+            continue
+
         if side == "-":
             # An IN-PLAY bet must be priced against the probability that was
             # true when it was struck, not the pre-match one. Backing `O0.5` at
