@@ -212,4 +212,4 @@ def test_fixtures_tsv_is_well_formed():
         assert len(f.kickoff) == 16 and f.kickoff[4] == "-", f.kickoff
         assert " v " in f.teams, f.teams
         assert (f.status == "" or f.status.startswith(("✅", "❌", "LIVE"))
-                or f.status.startswith("🔴")), f.status
+                or f.status.startswith(("🔴", "FT"))), f.status

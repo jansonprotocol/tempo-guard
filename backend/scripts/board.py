@@ -62,7 +62,9 @@ class Fixture:
 
     @property
     def settled(self) -> bool:
-        return self.status[:1] in ("✅", "❌")
+        # "FT ..." is finished with nothing to grade — an abstained fixture
+        # that played out. It moves to the completed block but feeds no tally.
+        return self.status[:1] in ("✅", "❌") or self.status.startswith("FT")
 
     def lane(self, which: int):
         cell = self.tip1 if which == 1 else self.tip2
@@ -100,6 +102,8 @@ def _mark(f: Fixture) -> str:
 
 
 def _head(f: Fixture, glyph: str) -> str:
+    if f.status.startswith("FT"):
+        return f"⚪ {f.status[3:] or f.status} · {_stamp(f)} **{f.teams}**"
     if f.settled:
         return f"{f.status[:1]} {_mark(f)} · {_stamp(f)} **{f.teams}**"
     if f.status:                        # LIVE
