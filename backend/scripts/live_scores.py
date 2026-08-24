@@ -11,9 +11,10 @@ loose token match, and a row it cannot pair is listed rather than guessed.
 
 Read-only: nothing is written. Grading stays a human act in fixtures.tsv.
 
-Usage:  python scripts/live_scores.py             sweep the whole board
-        python scripts/live_scores.py Malmö       one match, full stat sheet
-                                                  and the goal/card timeline
+Usage:  python scripts/live_scores.py             sweep: every in-play match
+                                                  gets its full sheet, the rest
+                                                  one line each
+        python scripts/live_scores.py Malmö       one match, full sheet
 """
 from __future__ import annotations
 
@@ -36,22 +37,17 @@ ESPN = {
 }
 
 
-def fetch(slug: str) -> list[tuple[str, str, str, str]]:
+def fetch(slug: str) -> list[dict]:
     url = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{slug}/scoreboard"
     try:
         with urllib.request.urlopen(url, timeout=12) as r:
-            d = json.load(r)
+            return json.load(r).get("events", [])
     except Exception:
         return []
-    out = []
-    for e in d.get("events", []):
-        c = e["competitions"][0]
-        a, b = c["competitors"]
-        h, aw = (a, b) if a["homeAway"] == "home" else (b, a)
-        out.append((h["team"]["displayName"], aw["team"]["displayName"],
-                    f"{h.get('score', '?')}-{aw.get('score', '?')}",
-                    e["status"]["type"]["shortDetail"]))
-    return out
+
+
+def _live(ev: dict) -> bool:
+    return ev["status"]["type"].get("state") == "in"
 
 
 def tokens(s: str) -> set[str]:
@@ -67,6 +63,43 @@ STATS = [
     ("totalPasses", "Passes"), ("passPct", "Pass accuracy"),
     ("totalTackles", "Tackles"), ("interceptions", "Interceptions"),
 ]
+
+
+def sheet(slug: str, ev: dict) -> None:
+    """Sofascore-style sheet for one ESPN event."""
+    base = f"https://site.api.espn.com/apis/site/v2/sports/soccer/{slug}"
+    with urllib.request.urlopen(f"{base}/summary?event={ev['id']}",
+                                timeout=12) as r:
+        s = json.load(r)
+    c = ev["competitions"][0]
+    a, b = c["competitors"]
+    h, aw = (a, b) if a["homeAway"] == "home" else (b, a)
+    print(f"{h['team']['displayName']} {h.get('score','?')}-"
+          f"{aw.get('score','?')} {aw['team']['displayName']}   "
+          f"[{ev['status']['type']['shortDetail']}]")
+    teams = s.get("boxscore", {}).get("teams", [])
+    if len(teams) == 2:
+        cols = [{st.get("name"): st.get("displayValue", "-")
+                 for st in tm.get("statistics", [])} for tm in teams]
+        th, ta = ((cols[0], cols[1])
+                  if teams[0]["team"]["displayName"] == h["team"]["displayName"]
+                  else (cols[1], cols[0]))
+        for key, label in STATS:
+            if key in th or key in ta:
+                print(f"  {th.get(key,'-'):>8}   {label:<16}"
+                      f"{ta.get(key,'-'):>8}")
+    NOISE = ("Delay", "Substitution", "Halftime", "Kickoff", "Half begins",
+             "ready to continue", "End Delay", "Start Delay")
+    keys = [k for k in s.get("keyEvents", [])
+            if not any(n in k.get("text", "") for n in NOISE)
+            and k.get("text", "").strip()]
+    if keys:
+        print("  timeline:")
+        for k in keys:
+            mins = k.get("clock", {}).get("displayValue", "?")
+            print(f"    {mins:>4}  "
+                  f"{k.get('text', k.get('type',{}).get('text',''))[:70]}")
+    print()
 
 
 def detail(query: str) -> None:
@@ -89,37 +122,7 @@ def detail(query: str) -> None:
     if ev is None:
         print(f"{fx.teams}: not on ESPN's current board")
         return
-    with urllib.request.urlopen(f"{base}/summary?event={ev['id']}",
-                                timeout=12) as r:
-        s = json.load(r)
-
-    c = ev["competitions"][0]
-    a, b = c["competitors"]
-    h, aw = (a, b) if a["homeAway"] == "home" else (b, a)
-    print(f"{h['team']['displayName']} {h.get('score','?')}-"
-          f"{aw.get('score','?')} {aw['team']['displayName']}   "
-          f"[{ev['status']['type']['shortDetail']}]\n")
-
-    teams = s.get("boxscore", {}).get("teams", [])
-    if len(teams) == 2:
-        cols = []
-        for tm in teams:
-            cols.append({st.get("name"): st.get("displayValue", "-")
-                         for st in tm.get("statistics", [])})
-        th, ta = ((cols[0], cols[1])
-                  if teams[0]["team"]["displayName"] == h["team"]["displayName"]
-                  else (cols[1], cols[0]))
-        for key, label in STATS:
-            if key in th or key in ta:
-                print(f"  {th.get(key,'-'):>8}   {label:<16}"
-                      f"{ta.get(key,'-'):>8}")
-
-    keys = s.get("keyEvents", [])
-    if keys:
-        print("\n  timeline:")
-        for k in keys:
-            mins = k.get("clock", {}).get("displayValue", "?")
-            print(f"    {mins:>4}  {k.get('text', k.get('type',{}).get('text',''))[:70]}")
+    sheet(slug, ev)
 
 
 def main() -> None:
@@ -137,13 +140,23 @@ def main() -> None:
         slug = ESPN.get(code)
         board = {id(f): f for f in rows}
         if slug:
-            for h, a, score, state in fetch(slug):
+            for ev in fetch(slug):
+                c = ev["competitions"][0]
+                a, b = c["competitors"]
+                h, aw = (a, b) if a["homeAway"] == "home" else (b, a)
                 hit = next((f for f in board.values()
-                            if tokens(h) & tokens(f.teams)
-                            or tokens(a) & tokens(f.teams)), None)
-                if hit is not None:
-                    print(f"  {score:>5}  {state:12}  {hit.teams}  ({hit.league})")
-                    del board[id(hit)]
+                            if tokens(h["team"]["displayName"]) & tokens(f.teams)
+                            or tokens(aw["team"]["displayName"]) & tokens(f.teams)),
+                           None)
+                if hit is None:
+                    continue
+                del board[id(hit)]
+                if _live(ev):
+                    sheet(slug, ev)
+                else:
+                    print(f"  {h.get('score','?')}-{aw.get('score','?'):>3}  "
+                          f"{ev['status']['type']['shortDetail']:12}  "
+                          f"{hit.teams}  ({hit.league})")
         unmatched += [f for f in board.values()]
 
     if unmatched:
