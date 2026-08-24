@@ -1,9 +1,10 @@
-# Every bet actually placed on the CALIBRATED engine (from 23 Aug 2026).
+# Every bet actually placed, from 24 Aug 2026.
 #
-# Bets from before the recalibration are archived at
-# archive/2026-08-pre-calibration/bets.tsv and are deliberately not mixed in:
-# they were priced against probabilities now known to be ~10.8 points
-# optimistic, so pooling them would corrupt every cut of this file.
+# Earlier books are archived and deliberately not mixed in:
+#   archive/2026-08-23-first-calibrated-slate/bets.tsv   the calibrated engine's
+#     first slate, 22/27 at ROI +6.1%
+#   archive/2026-08-pre-calibration/bets.tsv             priced against
+#     probabilities now known to be ~10.8 points optimistic
 #
 # fixture   must match the fixture name in README.md's tables exactly; the
 #           score, Tip 1 rung and Tip 1 probability are joined from there
@@ -12,38 +13,7 @@
 # side      H or A for a team total, - for a match total
 # cashout   1 if the position was closed early; the ledger still scores the bet
 #           as if held to full time, because that is what tests the tip
+# p_override  the probability to price against, for a bet struck IN PLAY where
+#           the pre-match number no longer describes it
 #
 # fixture	rung	odds	side	cashout	[p_override]
-Port v Hainiu	U4.5	1.38	-	0
-AGF v OB	U4.5	1.18	-	0
-Brighton v Aston Villa	O2.0	1.35	-	0
-Brighton v Aston Villa	O1.5	1.24	-	0
-Cambuur v Feyenoord	U4.5	1.32	-	0
-Eibar v Real Valladolid	U1.5	1.24	A	0
-# Bought IN-PLAY at half time, 0-0. The pre-match read is irrelevant by then,
-# so the probability column carries the half-time one: 79.1%, measured over
-# 57,092 goalless halves in leagues of this scoring rate (scripts/ht_zero.py).
-Göteborg v Elfsborg	O0.5	1.22	-	0	79.1
-Hammarby v GAIS	O1.5	1.34	H	0
-Viborg v København	O1.5	1.19	-	0
-Venezia v Lecce	U3.5	1.22	-	0
-D. Concepción v Coquimbo	O1.5	1.34	-	0
-Verona v Ascoli	U3.0	1.45	-	0
-Le Havre v AS Monaco	O1.5	1.35	-	0
-Club Brugge v Cercle Brugge	O1.5	1.21	-	0
-Atalanta v Sassuolo	U4.5	1.14	-	0
-Cesena v Sampdoria	U3.0	1.36	-	0
-U. De Chile v Colo-Colo	O1.5	1.27	-	0
-Ponte Preta v Avaí	U3.0	1.36	-	0
-RB Bragantino v Grêmio	U3.25	1.42	-	0
-Palmeiras v Vasco	U3.0	1.46	-	0
-Melgar v Alianza Lima	O1.5	1.37	-	0
-Chapecoense v São Paulo	U3.0	1.35	-	0
-Atlanta v Kansas City	U4.5	1.23	-	0
-Atlanta v Kansas City	U1.5	1.43	A	0
-Alanyaspor v Beşiktaş	O0.5	1.30	A	0
-Rennes v PSG	O0.5	1.40	A	0
-# Bought IN-PLAY at half time, 0-0, at a drifted price of 1.63. The probability
-# column carries the half-time one: 40.8%, measured over 57,092 goalless halves
-# (scripts/ht_zero.py), not the 76.8% the pre-match tip carried.
-Porto v Arouca	O1.5	1.63	-	0	40.8
