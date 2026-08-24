@@ -696,6 +696,28 @@ built from `_shrink_side` and `mu_total` is not, so the match ladder cannot be
 touched; a test pins that. On the live slate every `mu` is unchanged, `Casa Pia
 U1.5` moved 79.2% → 75.4% and one `U1.5` dropped under its offer floor.
 
+#### CLOSED — `VENUE_BLEND` swept for the first time: it is a dead knob
+
+The last constant in the engine that had never been validated. Swept 0.0 to
+0.8 on 6,891 fixtures, both windows, both lanes scored — the per-side split it
+exists to fix, and the match total it is allowed to touch:
+
+    blend        |split| recent   |split| held-back   match gap
+    0.00              0.2              1.2              1.50 / 0.32
+    0.20              0.1              1.3              1.50 / 0.32
+    0.35  (live)      0.1              1.4              1.49 / 0.33
+    0.50              0.2              1.6              1.49 / 0.33
+    0.80              0.6              1.9              1.50 / 0.34
+
+Nothing moves outside noise (each side's gap carries ~0.9 points of standard
+error at this n). The reason is structural: the residual de-bias is written as
+`edge * (1 - blend)`, so the two mechanisms are redundant — turn the blend off
+and the de-bias runs at full strength and closes the split by itself; turn it
+up and the de-bias hands the job to the venue-specific rates, which do it
+slightly worse on held-back data. The de-bias is doing the work. The blend is
+along for the ride, and no value in the range beats 0.35 by anything a bet
+would notice. **0.35 stays, and the constant is no longer unvalidated.**
+
 #### Two things the window split made WEAKER, not stronger
 
 Pooling hid this, and both correct claims made earlier in this section:
