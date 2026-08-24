@@ -98,19 +98,15 @@ def stamp(text: str) -> str:
 
 
 def main() -> None:
-    text = README.read_text()
-    new = stamp(text)
-    if "--check" in sys.argv:
-        if new != text:
-            print("League badges are STALE. Run: python scripts/league_badges.py")
-            sys.exit(1)
-        print("league badges match the stored run")
-        return
-    if new == text:
-        print("league badges already current")
-        return
-    README.write_text(new)
-    print("league badges stamped; now run scripts/playable.py")
+    """Retired from README duty — badges render inside each board card now.
+
+    `rates()` above is still the reader for config/league_hitrates.tsv and the
+    board imports it; only the README-stamping is gone, because the tables it
+    stamped are gone."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from scripts import board
+
+    board.main()
 
 
 if __name__ == "__main__":

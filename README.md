@@ -12,7 +12,7 @@
     played lanes  >+1%       0 / 0               0 / 0
     placed bets              0 / 0             ROI +0.0%
 
-**All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Derived by `python scripts/headline.py`, never typed · over/under markets only · live tips, not backtests
+**All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
 Reset on **24 Aug 2026**, after the first full slate on the calibrated engine.
 That day is archived at
@@ -57,93 +57,223 @@ you are buying.
     Tip 1    break-even 1.211    at +5% margin  1.27
     Tip 2    break-even 1.393    at +5% margin  1.46
 
-## Playable lanes — edge above +1%
+## 🟢 Playable lanes — edge above +1%
 
-The two fixture tables below measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
-
-So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, laid out exactly as the tables below are. A fixture is listed when either lane clears the threshold and the other cell says why it did not, so both lanes, one lane or neither can be in play on any given row — the counter above the table counts lanes, not rows. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
+> [!TIP]
+> The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
 **Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
 
-| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
-|---|---|---|---|---|---|
-| — | Serie A (80.5 +0.0) | Bologna v Lazio | U3.0 77.4% +2.3% · buy≥1.47 | U4.25 90.1% +1.4% (lower edge) · buy≥1.17 | 2026-08-24 18:30 |
-| — | Saudi Pro League (82.7 −0.8) | Neom v Al-Qadsiah | O1.5 83.9% +4.3% · buy≥1.29 | **Al-Qadsiah O1.5** 57.1% +19.0% (team) · buy≥1.90 | 2026-08-24 18:40 |
-| — | Danish Superliga (84.7 +0.8) | Brøndby v Silkeborg | U4.25 82.2% +1.1% · buy≥1.30 | U3.75 65.6% +1.4% (floor −9.4) · buy≥1.47 | 2026-08-24 19:00 |
-| — | Allsvenskan (78.7 −4.6) | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80 | 2026-08-24 19:00 |
-| — | LaLiga (80.5 −0.1) | Osasuna v Levante | O1.5 75.7% +1.4% · buy≥1.39 | — none | 2026-08-24 19:30 |
-| — | Ligue 2 (79.5 −3.0) | Reims v Annecy | O1.5 77.4% +5.5% · buy≥1.40 | **Reims O0.5** 81.4% +7.6% (team) · buy≥1.33 | 2026-08-24 20:45 |
-| — | Premier League (83.5 +0.1) | Fulham v Chelsea | O1.5 81.3% +1.4% · buy≥1.29 | **Chelsea O0.5** 84.0% +9.2% (team) · buy≥1.29 | 2026-08-24 21:00 |
-| — | LaLiga 2 (81.6 −5.5) | Málaga v Deportivo | U3.0 79.1% +1.1% · buy≥1.42 | U2.75 58.5% +1.4% (floor −16.5) · buy≥1.61 | 2026-08-24 21:30 |
-| — | Brasileirão Série B (82.8 −1.0) | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48 | 2026-08-25 00:30 |
-| — | Liga de Primera (81.5 +0.2) | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.6% (team) · buy≥1.30 | 2026-08-25 01:30 |
-| — | Saudi Pro League (82.7 −0.8) | Abha v Al-Khaleej | U4.25 85.8% +3.9% · buy≥1.28 | U3.75 70.7% +5.5% (floor −4.3) · buy≥1.42 | 2026-08-25 18:05 |
-| — | Saudi Pro League (82.7 −0.8) | Al-Taawoun v Al-Fayha | U4.25 85.4% +3.5% · buy≥1.25 | U3.75 70.0% +4.8% (floor −5.0) · buy≥1.43 | 2026-08-25 18:10 |
-| — | Saudi Pro League (82.7 −0.8) | Al-Ettifaq v Al-Nassr | O1.5 86.0% +6.2% · buy≥1.26 | **Al-Nassr O1.5** 57.7% +19.5% (team) · buy≥1.88 | 2026-08-25 20:00 |
-| — | Saudi Pro League (82.7 −0.8) | Al-Shabab v Al-Riyadh | — under +1% | **Al-Shabab O0.5** 80.7% +2.6% (team) · buy≥1.30 | 2026-08-25 20:00 |
-| — | LaLiga (80.5 −0.1) | Valencia v Real Betis | U4.25 88.0% +1.1% · buy≥1.21 | U3.75 74.0% +1.7% (floor −1.0) · buy≥1.32 | 2026-08-25 21:00 |
-| — | Brasileirão Série B (82.8 −1.0) | Juventude v CRB | — under +1% | O1.75 66.5% +1.8% (floor −8.5) · buy≥1.71 | 2026-08-26 00:30 |
-| — | Categoría Primera A (83.0 −4.0) | Cúcuta v Alianza Valledupar | U3.0 83.0% +3.3% · buy≥1.33 | U4.25 93.3% +1.8% (lower edge) · buy≥1.13 | 2026-08-26 03:00 |
+| 🟢 24-08 18:30 — **Bologna v Lazio** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Serie A (80.5 +0.0) | U3.0 77.4% +2.3%<br>buy≥1.47 | U4.25 90.1% +1.4% (lower edge)<br>buy≥1.17 |
 
-## Pending FUTURE match bettips
+| 🟢 24-08 18:40 — **Neom v Al-Qadsiah** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | O1.5 83.9% +4.3%<br>buy≥1.29 | **Al-Qadsiah O1.5** 57.1% +19.0% (team)<br>buy≥1.90 |
 
-**Every fixture table below is sorted by kickoff, earliest first** — pending,
-completed and placed bets alike. New rows arrive in the order fixtures are
-priced, which is not that order, so run `python scripts/sort_tables.py` after
-adding any; a test fails if a table drifts out of order. **These two tables are
-the only thing on this page that is typed.** Everything above them reads from
-them: the header counts by `python scripts/headline.py`, the playable-lanes
-block by `python scripts/playable.py`, and the numbers after each league name
-by `python scripts/league_badges.py` — **(hit gap)**, that league's Tip 1 hit
-rate over its last 200 replayed matches and how far it landed from what the
-engine claimed, from `config/league_hitrates.tsv`. Read the gap before
-trusting a row: (70.7 −11.6) means the league's probabilities are broken
-however good the tip looks. After editing a table run all four scripts; each
-has a `--check` mode.
+| 🟢 24-08 19:00 — **Brøndby v Silkeborg** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Danish Superliga (84.7 +0.8) | U4.25 82.2% +1.1%<br>buy≥1.30 | U3.75 65.6% +1.4% (floor −9.4)<br>buy≥1.47 |
 
-**Slate re-priced ~12:00, before any kickoff, on a store refresh** — six leagues
-were missing most of their 2025 season (~1,240 matches recovered) and the top
-European leagues were missing their 2026-27 opening rounds. Eight tips changed;
-the morning prices are in the git history.
+| 🟢 24-08 19:00 — **Malmö v Djurgården** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Allsvenskan (78.7 −4.6) | O1.5 84.8% +5.9%<br>buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team)<br>buy≥1.80 |
 
-| Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
-|---|---|---|---|---|---|
-| — | Serie A (80.5 +0.0) | Bologna v Lazio | U3.0 77.4% +2.3% · buy≥1.47 | U4.25 90.1% +1.4% (lower edge) · buy≥1.17 | 2026-08-24 18:30 |
-| — | Saudi Pro League (82.7 −0.8) | Neom v Al-Qadsiah | O1.5 83.9% +4.3% · buy≥1.29 | **Al-Qadsiah O1.5** 57.1% +19.0% (team) · buy≥1.90 | 2026-08-24 18:40 |
-| — | Danish Superliga (84.7 +0.8) | Brøndby v Silkeborg | U4.25 82.2% +1.1% · buy≥1.30 | U3.75 65.6% +1.4% (floor −9.4) · buy≥1.47 | 2026-08-24 19:00 |
-| — | Allsvenskan (78.7 −4.6) | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80 | 2026-08-24 19:00 |
-| — | LaLiga 2 (81.6 −5.5) | Celta Fortuna v FC Andorra | — no tip, Celta B has 1 row (reserve side, promoted) | — | 2026-08-24 19:00 |
-| — | LaLiga (80.5 −0.1) | Osasuna v Levante | O1.5 75.7% +1.4% · buy≥1.39 | — none | 2026-08-24 19:30 |
-| — | Saudi Pro League (82.7 −0.8) | Al-Ittihad v Al-Hazem | U4.25 82.5% +0.5% · buy≥1.30 | — none | 2026-08-24 20:00 |
-| — | Trendyol Süper Lig (80.2 −2.9) | Kocaelispor v Amed | — no tip, Amedspor has 1 row (promoted) | — | 2026-08-24 20:30 |
-| — | Ligue 2 (79.5 −3.0) | Reims v Annecy | O1.5 77.4% +5.5% · buy≥1.40 | **Reims O0.5** 81.4% +7.6% (team) · buy≥1.33 | 2026-08-24 20:45 |
-| — | Serie A (80.5 +0.0) | Roma v Fiorentina | U4.25 88.4% **−0.3%** · buy≥1.20 | — none | 2026-08-24 20:45 |
-| — | Premier League (83.5 +0.1) | Fulham v Chelsea | O1.5 81.3% +1.4% · buy≥1.29 | **Chelsea O0.5** 84.0% +9.2% (team) · buy≥1.29 | 2026-08-24 21:00 |
-| — | Liga Portugal (79.5 −0.9) | Gil Vicente v Casa Pia | U4.25 86.8% +0.5% · buy≥1.22 | — none | 2026-08-24 21:15 |
-| — | LaLiga 2 (81.6 −5.5) | Málaga v Deportivo | U3.0 79.1% +1.1% · buy≥1.42 | U2.75 58.5% +1.4% (floor −16.5) · buy≥1.61 | 2026-08-24 21:30 |
-| — | LaLiga 2 (81.6 −5.5) | Granada v Mallorca | U3.0 78.1% +0.1% · buy≥1.45 | — none | 2026-08-24 21:30 |
-| — | Brasileirão Série B (82.8 −1.0) | Athletic v Novorizontino | O1.0 89.2% +0.2% · buy≥1.22 | — none | 2026-08-25 00:30 |
-| — | Brasileirão Série B (82.8 −1.0) | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48 | 2026-08-25 00:30 |
-| — | Brasileirão (82.7 +0.9) | Botafogo v Athletico | U4.25 88.5% **−0.4%** · buy≥1.20 | — none | 2026-08-25 01:00 |
-| — | Liga de Primera (81.5 +0.2) | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.6% (team) · buy≥1.30 | 2026-08-25 01:30 |
-| — | Saudi Pro League (82.7 −0.8) | Abha v Al-Khaleej | U4.25 85.8% +3.9% · buy≥1.28 | U3.75 70.7% +5.5% (floor −4.3) · buy≥1.42 | 2026-08-25 18:05 |
-| — | Saudi Pro League (82.7 −0.8) | Al-Taawoun v Al-Fayha | U4.25 85.4% +3.5% · buy≥1.25 | U3.75 70.0% +4.8% (floor −5.0) · buy≥1.43 | 2026-08-25 18:10 |
-| — | UCL Playoff | Sabah v H. Be'er Sheva | — no tip, qualifier history only | — | 2026-08-25 18:45 |
-| — | Saudi Pro League (82.7 −0.8) | Al-Ettifaq v Al-Nassr | O1.5 86.0% +6.2% · buy≥1.26 | **Al-Nassr O1.5** 57.7% +19.5% (team) · buy≥1.88 | 2026-08-25 20:00 |
-| — | Saudi Pro League (82.7 −0.8) | Al-Shabab v Al-Riyadh | O1.5 79.9% +0.2% · buy≥1.31 | **Al-Shabab O0.5** 80.7% +2.6% (team) · buy≥1.30 | 2026-08-25 20:00 |
-| — | LaLiga (80.5 −0.1) | Valencia v Real Betis | U4.25 88.0% +1.1% · buy≥1.21 | U3.75 74.0% +1.7% (floor −1.0) · buy≥1.32 | 2026-08-25 21:00 |
-| — | UCL Playoff | Bodø/Glimt v NEC | — no tip, qualifier history only | — | 2026-08-25 21:00 |
-| — | UCL Playoff | LASK v Celtic | — no tip, qualifier history only | — | 2026-08-25 21:00 |
-| — | Brasileirão Série B (82.8 −1.0) | Atlético-GO v Botafogo-SP | U3.0 81.9% +0.1% · buy≥1.36 | — none | 2026-08-26 00:30 |
-| — | Brasileirão Série B (82.8 −1.0) | Juventude v CRB | O1.0 89.8% +0.8% · buy≥1.21 | O1.75 66.5% +1.8% (floor −8.5) · buy≥1.71 | 2026-08-26 00:30 |
-| — | Categoría Primera A (83.0 −4.0) | Cúcuta v Alianza Valledupar | U3.0 83.0% +3.3% · buy≥1.33 | U4.25 93.3% +1.8% (lower edge) · buy≥1.13 | 2026-08-26 03:00 |
+| 🟢 24-08 19:30 — **Osasuna v Levante** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga (80.5 −0.1) | O1.5 75.7% +1.4%<br>buy≥1.39 | — none |
 
-## Completed FUTURE match bettips
+| 🟢 24-08 20:00 — **Jong FC Utrecht v Heracles** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Eerste Divisie | O1.5 83.9% +2.3%<br>buy≥1.25 | **Heracles O0.5** 83.8% +11.1% (team)<br>buy≥1.29 |
+
+| 🟢 24-08 20:00 — **Jong PSV v TOP Oss** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Eerste Divisie | U4.25 82.4% +2.6%<br>buy≥1.30 | U3.75 65.9% +3.5% (floor −9.1)<br>buy≥1.46 |
+
+| 🟢 24-08 20:45 — **Reims v Annecy** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Ligue 2 (79.5 −3.0) | O1.5 77.4% +5.5%<br>buy≥1.40 | **Reims O0.5** 81.4% +7.6% (team)<br>buy≥1.33 |
+
+| 🟢 24-08 21:00 — **Fulham v Chelsea** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Premier League (83.5 +0.1) | O1.5 81.3% +1.4%<br>buy≥1.29 | **Chelsea O0.5** 84.0% +9.2% (team)<br>buy≥1.29 |
+
+| 🟢 24-08 21:30 — **Málaga v Deportivo** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga 2 (81.6 −5.5) | U3.0 79.1% +1.1%<br>buy≥1.42 | U2.75 58.5% +1.4% (floor −16.5)<br>buy≥1.61 |
+
+| 🟢 25-08 00:30 — **Sport Recife v América-MG** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Brasileirão Série B (82.8 −1.0) | U3.0 83.1% +1.4%<br>buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1)<br>buy≥1.48 |
+
+| 🟢 25-08 01:30 — **Everton v U. de Concepción** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Liga de Primera (81.5 +0.2) | — under +1% | **Everton O0.5** 83.5% +5.6% (team)<br>buy≥1.30 |
+
+| 🟢 25-08 18:05 — **Abha v Al-Khaleej** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | U4.25 85.8% +3.9%<br>buy≥1.28 | U3.75 70.7% +5.5% (floor −4.3)<br>buy≥1.42 |
+
+| 🟢 25-08 18:10 — **Al-Taawoun v Al-Fayha** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | U4.25 85.4% +3.5%<br>buy≥1.25 | U3.75 70.0% +4.8% (floor −5.0)<br>buy≥1.43 |
+
+| 🟢 25-08 20:00 — **Al-Ettifaq v Al-Nassr** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | O1.5 86.0% +6.2%<br>buy≥1.26 | **Al-Nassr O1.5** 57.7% +19.5% (team)<br>buy≥1.88 |
+
+| 🟢 25-08 20:00 — **Al-Shabab v Al-Riyadh** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | — under +1% | **Al-Shabab O0.5** 80.7% +2.6% (team)<br>buy≥1.30 |
+
+| 🟢 25-08 21:00 — **Valencia v Real Betis** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga (80.5 −0.1) | U4.25 88.0% +1.1%<br>buy≥1.21 | U3.75 74.0% +1.7% (floor −1.0)<br>buy≥1.32 |
+
+| 🟢 26-08 00:30 — **Juventude v CRB** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Brasileirão Série B (82.8 −1.0) | — under +1% | O1.75 66.5% +1.8% (floor −8.5)<br>buy≥1.71 |
+
+| 🟢 26-08 03:00 — **Cúcuta v Alianza Valledupar** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Categoría Primera A (83.0 −4.0) | U3.0 83.0% +3.3%<br>buy≥1.33 | U4.25 93.3% +1.8% (lower edge)<br>buy≥1.13 |
+
+## 🔵 Pending FUTURE match bettips
+
+> [!NOTE]
+> Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
+
+| 🔵 24-08 18:30 — **Bologna v Lazio** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Serie A (80.5 +0.0) | U3.0 77.4% +2.3%<br>buy≥1.47 | U4.25 90.1% +1.4% (lower edge)<br>buy≥1.17 |
+
+| 🔵 24-08 18:40 — **Neom v Al-Qadsiah** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | O1.5 83.9% +4.3%<br>buy≥1.29 | **Al-Qadsiah O1.5** 57.1% +19.0% (team)<br>buy≥1.90 |
+
+| 🔵 24-08 19:00 — **Brøndby v Silkeborg** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Danish Superliga (84.7 +0.8) | U4.25 82.2% +1.1%<br>buy≥1.30 | U3.75 65.6% +1.4% (floor −9.4)<br>buy≥1.47 |
+
+| 🔵 24-08 19:00 — **Celta Fortuna v FC Andorra** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga 2 (81.6 −5.5) | — no tip, Celta B has 1 row (reserve side, promoted) | — |
+
+| 🔵 24-08 19:00 — **Malmö v Djurgården** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Allsvenskan (78.7 −4.6) | O1.5 84.8% +5.9%<br>buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team)<br>buy≥1.80 |
+
+| 🔵 24-08 19:30 — **Osasuna v Levante** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga (80.5 −0.1) | O1.5 75.7% +1.4%<br>buy≥1.39 | — none |
+
+| 🔵 24-08 20:00 — **Jong FC Utrecht v Heracles** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Eerste Divisie | O1.5 83.9% +2.3%<br>buy≥1.25 | **Heracles O0.5** 83.8% +11.1% (team)<br>buy≥1.29 |
+
+| 🔵 24-08 20:00 — **Jong PSV v TOP Oss** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Eerste Divisie | U4.25 82.4% +2.6%<br>buy≥1.30 | U3.75 65.9% +3.5% (floor −9.1)<br>buy≥1.46 |
+
+| 🔵 24-08 20:00 — **Al-Ittihad v Al-Hazem** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | U4.25 82.5% +0.5%<br>buy≥1.30 | — none |
+
+| 🔵 24-08 20:30 — **Kocaelispor v Amed** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Trendyol Süper Lig (80.2 −2.9) | — no tip, Amedspor has 1 row (promoted) | — |
+
+| 🔵 24-08 20:45 — **Reims v Annecy** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Ligue 2 (79.5 −3.0) | O1.5 77.4% +5.5%<br>buy≥1.40 | **Reims O0.5** 81.4% +7.6% (team)<br>buy≥1.33 |
+
+| 🔵 24-08 20:45 — **Roma v Fiorentina** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Serie A (80.5 +0.0) | U4.25 88.4% **−0.3%**<br>buy≥1.20 | — none |
+
+| 🔵 24-08 21:00 — **Fulham v Chelsea** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Premier League (83.5 +0.1) | O1.5 81.3% +1.4%<br>buy≥1.29 | **Chelsea O0.5** 84.0% +9.2% (team)<br>buy≥1.29 |
+
+| 🔵 24-08 21:15 — **Gil Vicente v Casa Pia** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Liga Portugal (79.5 −0.9) | U4.25 86.8% +0.5%<br>buy≥1.22 | — none |
+
+| 🔵 24-08 21:30 — **Granada v Mallorca** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga 2 (81.6 −5.5) | U3.0 78.1% +0.1%<br>buy≥1.45 | — none |
+
+| 🔵 24-08 21:30 — **Málaga v Deportivo** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga 2 (81.6 −5.5) | U3.0 79.1% +1.1%<br>buy≥1.42 | U2.75 58.5% +1.4% (floor −16.5)<br>buy≥1.61 |
+
+| 🔵 25-08 00:30 — **Athletic v Novorizontino** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Brasileirão Série B (82.8 −1.0) | O1.0 89.2% +0.2%<br>buy≥1.22 | — none |
+
+| 🔵 25-08 00:30 — **Sport Recife v América-MG** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Brasileirão Série B (82.8 −1.0) | U3.0 83.1% +1.4%<br>buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1)<br>buy≥1.48 |
+
+| 🔵 25-08 01:00 — **Botafogo v Athletico** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Brasileirão (82.7 +0.9) | U4.25 88.5% **−0.4%**<br>buy≥1.20 | — none |
+
+| 🔵 25-08 01:30 — **Everton v U. de Concepción** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Liga de Primera (81.5 +0.2) | O1.5 76.5% +0.1%<br>buy≥1.37 | **Everton O0.5** 83.5% +5.6% (team)<br>buy≥1.30 |
+
+| 🔵 25-08 18:05 — **Abha v Al-Khaleej** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | U4.25 85.8% +3.9%<br>buy≥1.28 | U3.75 70.7% +5.5% (floor −4.3)<br>buy≥1.42 |
+
+| 🔵 25-08 18:10 — **Al-Taawoun v Al-Fayha** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | U4.25 85.4% +3.5%<br>buy≥1.25 | U3.75 70.0% +4.8% (floor −5.0)<br>buy≥1.43 |
+
+| 🔵 25-08 18:45 — **Sabah v H. Be'er Sheva** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| UCL Playoff | — no tip, qualifier history only | — |
+
+| 🔵 25-08 20:00 — **Al-Ettifaq v Al-Nassr** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | O1.5 86.0% +6.2%<br>buy≥1.26 | **Al-Nassr O1.5** 57.7% +19.5% (team)<br>buy≥1.88 |
+
+| 🔵 25-08 20:00 — **Al-Shabab v Al-Riyadh** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Saudi Pro League (82.7 −0.8) | O1.5 79.9% +0.2%<br>buy≥1.31 | **Al-Shabab O0.5** 80.7% +2.6% (team)<br>buy≥1.30 |
+
+| 🔵 25-08 21:00 — **Valencia v Real Betis** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| LaLiga (80.5 −0.1) | U4.25 88.0% +1.1%<br>buy≥1.21 | U3.75 74.0% +1.7% (floor −1.0)<br>buy≥1.32 |
+
+| 🔵 25-08 21:00 — **Bodø/Glimt v NEC** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| UCL Playoff | — no tip, qualifier history only | — |
+
+| 🔵 25-08 21:00 — **LASK v Celtic** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| UCL Playoff | — no tip, qualifier history only | — |
+
+| 🔵 26-08 00:30 — **Atlético-GO v Botafogo-SP** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Brasileirão Série B (82.8 −1.0) | U3.0 81.9% +0.1%<br>buy≥1.36 | — none |
+
+| 🔵 26-08 00:30 — **Juventude v CRB** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Brasileirão Série B (82.8 −1.0) | O1.0 89.8% +0.8%<br>buy≥1.21 | O1.75 66.5% +1.8% (floor −8.5)<br>buy≥1.71 |
+
+| 🔵 26-08 03:00 — **Cúcuta v Alianza Valledupar** | Tip 1 | Tip 2 |
+|:--|:--|:--|
+| Categoría Primera A (83.0 −4.0) | U3.0 83.0% +3.3%<br>buy≥1.33 | U4.25 93.3% +1.8% (lower edge)<br>buy≥1.13 |
+
+## ⚪ Completed FUTURE match bettips
 
 **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
 
-| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
-|---|---|---|---|---|---|
+*(nothing settled yet on this slate)*
 
 ### Actual placed bets
 

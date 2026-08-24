@@ -95,74 +95,6 @@ def test_rejects_non_total_markets():
         pricing.settle_fraction("BTTS", 2)
 
 
-def test_readme_fixture_tables_are_in_kickoff_order():
-    """The log is read top-down to decide what to look at next, so both fixture
-    tables and the bet table must run earliest kickoff first. Rows get appended
-    in the order fixtures are PRICED, which is not that order, so this pins it —
-    `python scripts/sort_tables.py` fixes any drift."""
-    from scripts import sort_tables
-
-    text = sort_tables.README.read_text()
-    assert sort_tables.sort_tables(text) == text, (
-        "README fixture tables are out of kickoff order; "
-        "run python scripts/sort_tables.py")
-
-
-def test_readme_headline_matches_the_log():
-    """The header carried `1 / 1 settled · 100%` while eleven fixtures sat
-    graded in the table below it. It is derived now, and pinned here so it
-    cannot drift again — `python scripts/headline.py` regenerates it."""
-    from scripts import headline
-
-    text = headline.README.read_text()
-    start = text.index("## CURRENT CONFIRMED HITRATE")
-    end = text.index("live tips, not backtests") + len("live tips, not backtests")
-    assert text[start:end] == headline.render(), (
-        "README headline is stale; run python scripts/headline.py")
-
-    # The tally above the completed table is the same count, and went stale the
-    # same way: it read 2/2 with eleven fixtures graded below it.
-    cs = text.index(headline.COUNTER)
-    assert text[cs:text.index("\n", cs)] == headline.counter_line(), (
-        "README completed-table counter is stale; "
-        "run python scripts/headline.py")
-
-
-def test_header_played_row_agrees_with_the_playable_block():
-    """The header now carries three lines, and the middle one restates what the
-    playable block counts. Two renderers reading the same tables is exactly how
-    the old hand-typed counters drifted, so they are pinned to each other: both
-    must apply the same MIN_EDGE to the same lanes."""
-    from scripts import headline, playable
-
-    lanes = playable.collect(playable.README.read_text())
-    p1, q1, p2, q2 = headline.played()
-    for which, (h, n) in ((1, (p1, q1)), (2, (p2, q2))):
-        b = [r for r in lanes if r[3] == which]
-        assert h == sum(1 for r in b if r[9] == "✅")
-        assert n == sum(1 for r in b if r[9] in ("✅", "❌"))
-
-
-def test_readme_playable_lanes_match_the_tables():
-    """The playable-lanes block is a filtered view of the two fixture tables,
-    so it can only be right while it is regenerated — `python
-    scripts/playable.py`. Same reason the headline is pinned above."""
-    from scripts import playable
-
-    text = playable.README.read_text()
-    assert playable.rewrite(text) == text, (
-        "README playable-lanes block is stale; run python scripts/playable.py")
-    assert text.count("\n" + playable.ANCHOR) == 1
-
-    # Raising MIN_EDGE changes the heading, and the rewrite has to still find
-    # the block it wrote under the old one. It did not the first time: it
-    # matched on the full heading, missed, and appended a second block below
-    # the first. Renaming the heading must replace, not duplicate.
-    renamed = text.replace(playable.HEADING, playable.ANCHOR + " — edge above +9%")
-    assert renamed != text
-    assert playable.rewrite(renamed).count("\n" + playable.ANCHOR) == 1
-
-
 def test_playable_parses_a_full_slate():
     """The live tables are usually short or empty, so the parser is pinned
     against the archived 23 Aug log instead: 70 graded fixtures carrying every
@@ -257,12 +189,27 @@ def test_curse_haircut_reprices_toward_the_measured_hit_rate():
     assert pricing.CURSE_HAIRCUT == pytest.approx(1 / (79.1 / 81.6) - 1, abs=0.004)
 
 
-def test_readme_league_badges_match_the_stored_run():
-    """The (hit gap) after each league name is derived from
-    config/league_hitrates.tsv, and pinned like every other derived number —
-    a hand-edited badge or a re-run tsv without a re-stamp fails here."""
-    from scripts import league_badges
+def test_board_matches_fixtures_tsv():
+    """Every block on the page renders from config/fixtures.tsv — header
+    counts, playable cards, pending and completed cards, league badges. One
+    pin replaces the five that guarded the old pipe tables: if any rendered
+    number drifts from the data, this fails and `python scripts/board.py`
+    fixes it."""
+    from scripts import board
 
-    text = league_badges.README.read_text()
-    assert league_badges.stamp(text) == text, (
-        "README league badges are stale; run python scripts/league_badges.py")
+    text = board.README.read_text()
+    assert board.rewrite(text) == text, (
+        "README board is stale; run python scripts/board.py")
+
+
+def test_fixtures_tsv_is_well_formed():
+    """The typed source: seven tab-separated columns per row, kickoff parseable,
+    status either empty, LIVE, or a graded mark. A malformed row here is the
+    new version of a broken pipe table, so it fails loudly."""
+    from scripts import board
+
+    for f in board.load():
+        assert len(f.kickoff) == 16 and f.kickoff[4] == "-", f.kickoff
+        assert " v " in f.teams, f.teams
+        assert (f.status == "" or f.status.startswith(("✅", "❌", "LIVE"))
+                or f.status.startswith("🔴")), f.status
