@@ -126,8 +126,25 @@ the morning prices are in the git history.
 
 **Settled: 0 / 0  ·  Pending: 0**
 
+
+Seven bets, €0.90 flat. **Four were struck before the midday store refresh**
+(marked †: the buy-from shown is the morning number they were checked against).
+The refresh then flipped three of those fixtures, so two positions now carry
+negative EV against the engine's current read — not a discipline error, the
+information arrived after the price was taken. The two ✳ Brøndby bets were
+placed on the post-refresh tip. EV is priced against the CURRENT mu in every
+row, which is the honest number even where it hurts.
+
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
+| 00:30 | Sport Recife v América-MG | U3.0 | U3.5 — same tier | 1.28 | 1.26 | **+6.4%** |
+| 19:00 | Brøndby v Silkeborg | U4.25 | U3.75 — Tip 2 | 1.50 | 1.47 | **+6.7%** ✳ |
+| 19:00 | Brøndby v Silkeborg | U4.25 | U4.5 — same tier | 1.26 | 1.28 | +3.5% ⚠ ✳ |
+| 19:00 | Malmö v Djurgården | O1.5 | **Malmö O1.5 — team lane** | 1.93 | 1.80 | **+15.9%** |
+| 21:00 | Fulham v Chelsea | O1.5 *(was U4.25)* | U3.75 — pre-refresh Tip 2 | 1.36 | 1.41† | **−5.9%** ✗ |
+| 21:30 | Málaga v Deportivo | U3.0 *(was O1.5)* | O1.5 — pre-refresh Tip 1 | 1.48 | 1.41† | +0.4% |
+| 21:30 | Málaga v Deportivo | U3.0 *(was O1.5)* | **Málaga O0.5 — pre-refresh team lane** | 1.35 | 1.29† | −5.6% ✗ |
+
 
 ## Engine state — 24 Aug 2026
 
