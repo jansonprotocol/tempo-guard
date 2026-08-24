@@ -4,7 +4,8 @@ One day. Sixty-five settled tips across twenty-two leagues, twenty-seven bets,
 and five engine defects found and fixed while the slate ran. Closed on 24 Aug
 so the next stretch starts on a clean count.
 
-    log.md      the live log, verbatim as it stood in README.md
+    log.md      the live log as it stood in README.md, plus one block added
+                after the fact — see "What the playable filter would have done"
     bets.tsv    every bet placed, with the price paid
 
 ---
@@ -14,6 +15,43 @@ so the next stretch starts on a clean count.
     Tip 1     56 / 65     86.2%
     Tip 2     37 / 50     74.0%
     Bets      22 / 27     81.5%     ROI +6.1%
+
+## What the playable filter would have done, run backwards
+
+The playable-lanes block was built on 24 Aug and this slate predates it, so it
+was applied retroactively to the tables in `log.md` — the block is there now,
+above the fixture tables. Every lane carrying more than +1% stated edge:
+
+    lane                        all matches        playable +1%      delta
+    Tip 1                    56 / 65   86.2%    33 / 39   84.6%      -1.6
+    Tip 2                    37 / 50   74.0%    36 / 47   76.6%      +2.6
+    both                     93 / 115  80.9%    69 / 86   80.2%      -0.7
+
+**It filters Tip 1 hard and Tip 2 barely.** Twenty-six of 65 Tip 1s fell below
+the threshold against three of 50 Tip 2s, which is the ladder doing what it is
+built to do: Tip 1 takes the safest rung it can find, and the safest rung is
+most often the one the base rate already wins. Tip 2 is chosen for edge in the
+first place, so almost all of it survives a filter on edge.
+
+And the direction is the point. Filtering **cost** Tip 1 1.6 points and **gained**
+Tip 2 2.6, so on this slate the edge number sorts Tip 2 and does not sort Tip 1.
+One day, and 39 lanes is thin — but it is the first evidence either way, and it
+argues that the stated edge is worth acting on where it is a genuine ranking
+between markets rather than a by-product of picking the softest line.
+
+### Against the bets actually placed
+
+**Twenty-five of the 27 bets were on fixtures the filter keeps.** The two it
+would have vetoed:
+
+    Göteborg v Elfsborg   O1.5 78.9%  +0.1%    won   (bought in play, EV -3.5%)
+    Le Havre v AS Monaco  O1.5 77.8%  +0.4%    lost  (bought at the tip, 1.35)
+
+Neither had a Tip 2. One won and one lost, so the filter neither rescues nor
+damages the book here — but note *which* bets it caught: both sat between +0.1%
+and +0.4%, the band measured at **+0.3 points of real edge** over 7,576 tips.
+The filter found the two thinnest positions on the slate without being told
+anything about them, which is the behaviour it was built for.
 
 Comparable to the pre-calibration era only in shape, not in level — that book
 ran 84.2% on Tip 1 and **-10.1% ROI**, because the strike rate was bought with
