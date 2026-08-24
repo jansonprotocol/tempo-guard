@@ -220,6 +220,12 @@ TEAM_SHRINK = 0.62
 # already validated. The conservative one ships.
 TEAM_RATE_FLOOR = 0.95
 
+# Weight of opponent defense in the team-lane side rate. 0.0 = attack-only,
+# today's engine. See the stage-1 measurement at the tt05 assembly site; a
+# non-zero value ships only if the two-window sweep (defense_sweep.py) earns
+# it, the same bar TEAM_SHRINK and TEAM_RATE_FLOOR cleared.
+DEFENSE_BLEND = 0.0
+
 
 # Fraction of a league's goals scored by the home side. Both sides used to be
 # shrunk toward `league_mu / 2`, on the stated reasoning that half the league
@@ -1026,12 +1032,27 @@ def _compute_features(
 
     _hshare = _home_share(full_df, league_code, cutoff)
 
+    # Opponent defense, for the TEAM lanes only. The side rate is attack-only
+    # today, and stage-1 measurement over 206,676 fixture-sides says that is
+    # the largest untapped signal in the store: holding own attack fixed, the
+    # opponent's conceded rate still moves P(side scores) by 7-11 points. The
+    # factor is each side's rate scaled by how leaky its opponent is relative
+    # to a typical opponent on that side of the venue split, raised to
+    # DEFENSE_BLEND — at 0.0 (the shipped value until the two-window sweep
+    # says otherwise) everything below is exactly the attack-only engine.
+    gfh_t, gfa_t = gfh, gfa
+    if DEFENSE_BLEND > 0 and league_mu and league_mu > 0:
+        d_h = _goals_per_game(A, a_norm, "conceded") / (league_mu * _hshare)
+        d_a = _goals_per_game(H, h_norm, "conceded") / (league_mu * (1 - _hshare))
+        gfh_t = gfh * (max(0.2, min(3.0, d_h)) ** DEFENSE_BLEND)
+        gfa_t = gfa * (max(0.2, min(3.0, d_a)) ** DEFENSE_BLEND)
+
     return {
         "p_two_plus":             round(float(p_two_plus), 3),
         "p_home_tt05":            round(float(1.0 - _poisson_p0(
-            _shrink_side(gfh, league_mu, _hshare))), 3),
+            _shrink_side(gfh_t, league_mu, _hshare))), 3),
         "p_away_tt05":            round(float(1.0 - _poisson_p0(
-            _shrink_side(gfa, league_mu, 1.0 - _hshare))), 3),
+            _shrink_side(gfa_t, league_mu, 1.0 - _hshare))), 3),
         # Tempo is normalised so a typical fixture lands near the middle of the
         # range. The previous mapping (mu/3.0 clipped at 0.9) saturated: league
         # means sit at 2.4-3.2 goals, so ~63% of matches pinned to the ceiling
