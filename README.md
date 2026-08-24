@@ -51,7 +51,9 @@ you are buying.
 completed and placed bets alike. New rows arrive in the order fixtures are
 priced, which is not that order, so run `python scripts/sort_tables.py` after
 adding any; a test fails if a table drifts out of order. The counts above and
-below are derived by `python scripts/headline.py`, never typed.
+below are derived by `python scripts/headline.py`, and the playable-lanes block
+by `python scripts/playable.py` — never typed. After editing any table, run all
+three; each has a `--check` mode and each is pinned by a test.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
@@ -68,6 +70,17 @@ below are derived by `python scripts/headline.py`, never typed.
 **Settled: 0 / 0  ·  Pending: 0**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
+|---|---|---|---|---|---|---|
+
+## Playable lanes — positive edge only
+
+The two tables above measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
+
+So: every lane from both tables carrying a positive edge, Tip 1 and Tip 2 alike, which means one fixture can appear twice, once, or not at all. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
+
+**Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+
+| Result | League | Fixture | Lane | Edge | buy≥ | Kickoff |
 |---|---|---|---|---|---|---|
 
 ## Engine state — 24 Aug 2026

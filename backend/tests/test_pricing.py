@@ -126,3 +126,54 @@ def test_readme_headline_matches_the_log():
     assert text[cs:text.index("\n", cs)] == headline.counter_line(), (
         "README completed-table counter is stale; "
         "run python scripts/headline.py")
+
+
+def test_readme_playable_lanes_match_the_tables():
+    """The playable-lanes block is a filtered view of the two fixture tables,
+    so it can only be right while it is regenerated — `python
+    scripts/playable.py`. Same reason the headline is pinned above."""
+    from scripts import playable
+
+    text = playable.README.read_text()
+    assert playable.rewrite(text) == text, (
+        "README playable-lanes block is stale; run python scripts/playable.py")
+
+
+def test_playable_parses_a_full_slate():
+    """The live tables are usually short or empty, so the parser is pinned
+    against the archived 23 Aug log instead: 70 graded fixtures carrying every
+    cell format the block has to read — team lanes with a club prefix, bold
+    markup on either half, floor annotations, `— none`, `— no tip, X has 3
+    rows`, and both result conventions (Tip 1 graded by the status cell, Tip 2
+    carrying its own tick).
+
+    Those counts are frozen history and cannot move, so a change in them is a
+    parser change, not a data change.
+    """
+    from scripts import playable
+
+    log = (playable.ROOT / "archive" / "2026-08-23-first-calibrated-slate"
+           / "log.md").read_text()
+
+    # An empty pending table must not run the scan on into the completed one.
+    assert playable.rows_of(log, playable.PENDING) == []
+    assert len(playable.rows_of(log, playable.COMPLETED)) == 70
+
+    lanes = playable.collect(log)
+    assert len(lanes) == 103
+    assert sum(1 for r in lanes if r[9] == "✅") == 81
+    assert all(r[7] > playable.MIN_EDGE for r in lanes)
+    # Sorted by kickoff, like every other table in the log.
+    assert [r[0] for r in lanes] == sorted(r[0] for r in lanes)
+
+    # And the filter is doing real work rather than just dropping empty cells.
+    # 140 cells: 25 held no tip at all, 12 were published at zero or negative
+    # edge — every one a U4.25 or U3.0 rung around 88%, which wins constantly
+    # and cannot be bought at a price that pays for it. That is the whole point
+    # of the block: those twelve flatter the engine's hit rate and are
+    # unbuyable, so they belong in the log above and not in this count.
+    dropped = [cell for c in playable.rows_of(log, playable.COMPLETED)
+               for w, cell in ((1, c[4]), (2, c[5]))
+               if playable.lane(cell, c[1], w) is None]
+    assert len(dropped) == 37
+    assert sum(1 for cell in dropped if playable.LANE.match(cell)) == 12
