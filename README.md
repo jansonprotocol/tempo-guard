@@ -729,6 +729,28 @@ built from `_shrink_side` and `mu_total` is not, so the match ladder cannot be
 touched; a test pins that. On the live slate every `mu` is unchanged, `Casa Pia
 U1.5` moved 79.2% → 75.4% and one `U1.5` dropped under its offer floor.
 
+#### SHIPPED — cross-division fallback, validated on 608 historical tips
+
+The archive's "largest single volume fix still outstanding": a promoted club
+abstains with a full season of history one division down. Form does not
+transfer raw — measured over 789 club-seasons crossing a stored boundary, a
+promoted side scores **×0.754** and concedes **×1.516** of its lower-division
+rates, near-reciprocal with relegation (×1.345 / ×0.727), while the match
+TOTAL transfers almost clean (×1.025). So the fallback pulls the club's rows
+from the adjacent division with every goal rescaled by those constants, and
+the fixture's own league supplies every baseline. Rescue-only, like the merge
+gate: it fires only under `MIN_MATCHES` and can never move an existing tip.
+
+Replayed on every fixture since 2015 where the live guard would fire:
+
+    FALLBACK fixtures        608 tips   says 82.4%   hit 83.1%   gap +0.7
+    control (same leagues) 18,229 tips  says 82.2%   hit 81.7%   gap -0.4
+
+Indistinguishable from ordinary tips, which is the pass mark. Le Mans, Racing
+Santander, Elversberg and Dep. A Coruña all price immediately; Celta B and
+Amedspor stay abstained because their lower divisions are not stored, which is
+the honest boundary of the method.
+
 #### CLOSED — `VENUE_BLEND` swept for the first time: it is a dead knob
 
 The last constant in the engine that had never been validated. Swept 0.0 to
