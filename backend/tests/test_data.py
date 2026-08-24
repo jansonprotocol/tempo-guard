@@ -754,3 +754,100 @@ def test_the_floor_cannot_reach_the_match_lane():
     for line in src.splitlines():
         if "mu_total" in line and "=" in line:
             assert "_shrink_side" not in line
+
+
+def _division_frame(rows):
+    import pandas as pd
+
+    return pd.DataFrame({
+        "date": pd.to_datetime([r[0] for r in rows]),
+        "home": [r[1] for r in rows], "away": [r[2] for r in rows],
+        "hg": [float(r[3]) for r in rows], "ag": [float(r[4]) for r in rows]})
+
+
+def test_cross_division_rows_apply_the_measured_exchange_rate(monkeypatch):
+    """A promoted club's goals are rescaled to the upper division's level —
+    scored x0.754, conceded x1.516, measured on 789 crossing club-seasons —
+    and the away-venue perspective scales the same numbers from the other
+    column."""
+    from datetime import datetime
+
+    from app.data import features, store
+
+    lower = _division_frame([
+        ("2026-03-01", "Promoted FC", "Rival", 2, 1),   # scored 2 at home
+        ("2026-03-08", "Rival", "Promoted FC", 0, 3),   # scored 3 away
+        ("2026-03-15", "Promoted FC", "Other", 1, 0),
+        ("2026-03-22", "Other", "Promoted FC", 2, 2),
+        ("2026-03-29", "Promoted FC", "Rival", 0, 0),
+    ])
+    monkeypatch.setattr(store, "load_results",
+                        lambda code, season=None: lower if code == "ESP-L2"
+                        else _division_frame([]))
+
+    got = features._cross_division_rows(
+        "ESP-LL", "Promoted FC", datetime(2026, 8, 25), 5, "home")
+    assert got is not None
+    name, rows, _venue = got
+    assert name == "Promoted FC"
+    # Home rows: own goals scaled down, opponent goals scaled up.
+    first = rows[rows["date"] == "2026-03-01"].iloc[0]
+    assert first["hg"] == pytest.approx(2 * features.PROMOTED_SCORED)
+    assert first["ag"] == pytest.approx(1 * features.PROMOTED_CONCEDED)
+    # Away rows: same factors from the other column.
+    away = rows[rows["date"] == "2026-03-08"].iloc[0]
+    assert away["ag"] == pytest.approx(3 * features.PROMOTED_SCORED)
+    assert away["hg"] == pytest.approx(0.0)
+
+
+def test_cross_division_directions_are_reciprocal(monkeypatch):
+    """A club found in the division ABOVE the fixture's league is relegated
+    into it, and the same exchange rate applies crossed the other way."""
+    from datetime import datetime
+
+    from app.data import features, store
+
+    upper = _division_frame([
+        ("2026-03-01", "Dropped FC", "Rival", 1, 2),
+        ("2026-03-08", "Rival", "Dropped FC", 1, 1),
+        ("2026-03-15", "Dropped FC", "Other", 0, 1),
+        ("2026-03-22", "Other", "Dropped FC", 3, 0),
+        ("2026-03-29", "Dropped FC", "Rival", 2, 2),
+    ])
+    monkeypatch.setattr(store, "load_results",
+                        lambda code, season=None: upper if code == "ESP-LL"
+                        else _division_frame([]))
+
+    got = features._cross_division_rows(
+        "ESP-L2", "Dropped FC", datetime(2026, 8, 25), 5, "home")
+    assert got is not None
+    _name, rows, _venue = got
+    first = rows[rows["date"] == "2026-03-01"].iloc[0]
+    assert first["hg"] == pytest.approx(1 / features.PROMOTED_SCORED)
+    assert first["ag"] == pytest.approx(2 / features.PROMOTED_CONCEDED)
+
+
+def test_fallback_is_rescue_only():
+    """The guard mirrors the merge gate: a club its own league can already
+    describe never goes cross-division, so no existing tip can move. Pinned
+    at the call site — the fallback runs only inside `len(H) < min_matches`."""
+    import inspect
+
+    from app.data import features
+
+    src = inspect.getsource(features.asof_features)
+    h = src.index("_cross_division_rows(league_code, home_team")
+    assert "if len(H) < min_matches:" in src[:h]
+    a = src.index("_cross_division_rows(league_code, away_team")
+    assert "if len(A) < min_matches:" in src[:a]
+
+
+def test_no_ladder_means_no_fallback():
+    """A league outside every ladder (its neighbours are not stored) returns
+    no siblings, so the fallback cannot invent one."""
+    from app.data import features
+
+    assert features._adjacent_divisions("TUR-SL") == []
+    assert features._adjacent_divisions("ESP-LL") == [("ESP-L2", True)]
+    assert features._adjacent_divisions("ENG-CH") == [
+        ("ENG-L1", True), ("ENG-PL", False)]

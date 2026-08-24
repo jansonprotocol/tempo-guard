@@ -1064,6 +1064,24 @@ def asof_features(
 
     H = _find_team_rows(df, home_team, cutoff)
     A = _find_team_rows(df, away_team, cutoff)
+    H_home = _find_venue_rows(df, home_team, cutoff, "home")
+    A_away = _find_venue_rows(df, away_team, cutoff, "away")
+
+    # A club its own league cannot describe may have just arrived from the
+    # division above or below — see the fallback's header for the measured
+    # exchange rate. Rescue-only: this branch is unreachable for any club the
+    # league already has `min_matches` rows for.
+    if len(H) < min_matches:
+        got = _cross_division_rows(league_code, home_team, cutoff,
+                                   min_matches, "home")
+        if got is not None:
+            home_team, H, H_home = got
+    if len(A) < min_matches:
+        got = _cross_division_rows(league_code, away_team, cutoff,
+                                   min_matches, "away")
+        if got is not None:
+            away_team, A, A_away = got
+
     if len(H) < min_matches or len(A) < min_matches:
         return {}
 
@@ -1071,10 +1089,100 @@ def asof_features(
         H, A, home_team, away_team, df,
         league_code=league_code,
         league_mu=league_mu_asof,
-        H_home=_find_venue_rows(df, home_team, cutoff, "home"),
-        A_away=_find_venue_rows(df, away_team, cutoff, "away"),
+        H_home=H_home,
+        A_away=A_away,
         cutoff=cutoff,
     )
+
+
+# ── Cross-division fallback ───────────────────────────────────────────────────
+#
+# A promoted club abstains with a full season of history one division down —
+# Le Mans with 328 rows in FRA-L2, Racing Santander with 336 in ESP-L2 — and
+# recurs for ~3 clubs per league every August. No alias or merge can reach it,
+# because the rows genuinely live in another competition's file.
+#
+# The reason it was never simply "look one division down" is that the form does
+# not transfer raw. Measured over 789 club-seasons that crossed a stored
+# boundary (15+ matches before, 10+ after):
+#
+#     PROMOTED  (415)   goals for  x0.754    against x1.516    total x1.025
+#     RELEGATED (374)   goals for  x1.345    against x0.727    total x0.948
+#
+# A promoted side scores a quarter less and concedes half again more, so its
+# raw lower-division rates would overstate the team lane badly. But the two
+# directions are near-reciprocal (0.754 up against 1/1.345 = 0.743 down), which
+# is what one stable exchange rate between adjacent divisions looks like — so
+# the correction is those constants applied to the rows, and the fixture's own
+# league then supplies every baseline (league_mu, base rates, shrink targets)
+# exactly as it would for any other club. The match TOTAL transfers almost
+# clean (x1.025), which is why the scaled read is usable at all: this engine
+# prices totals.
+#
+# GUARDED like the merge table: the fallback fires only when the club's own
+# league yields fewer than `min_matches` rows, so it can convert an abstention
+# into a tip and can never move a tip the engine already issues.
+DIVISION_LADDERS = [
+    ["ENG-PL", "ENG-CH", "ENG-L1", "ENG-L2", "ENG-NL"],
+    ["ESP-LL", "ESP-L2"],
+    ["GER-BL", "GER-B2"],
+    ["ITA-SA", "ITA-SB"],
+    ["FRA-L1", "FRA-L2"],
+    ["SCO-PL", "SCO-CH", "SCO-L1", "SCO-L2"],
+    ["BRA-SA", "BRA-SB"],
+    ["SUI-SL", "SUI-CL"],
+]
+PROMOTED_SCORED = 0.754
+PROMOTED_CONCEDED = 1.516
+
+
+def _adjacent_divisions(league_code: str) -> List[Tuple[str, bool]]:
+    """(sibling code, promoted) — promoted=True when the sibling sits BELOW
+    the fixture's league, so a club found there is moving up into it."""
+    for ladder in DIVISION_LADDERS:
+        if league_code in ladder:
+            i = ladder.index(league_code)
+            out = []
+            if i + 1 < len(ladder):
+                out.append((ladder[i + 1], True))
+            if i > 0:
+                out.append((ladder[i - 1], False))
+            return out
+    return []
+
+
+def _cross_division_rows(
+    league_code: str, team: str, cutoff: datetime, min_matches: int,
+    venue: str,
+) -> Optional[Tuple[str, pd.DataFrame, pd.DataFrame]]:
+    """(matched name, rows, venue rows) from an adjacent division, with every
+    goal rescaled to the fixture league's level. None when the club is not
+    there either — the abstention then stands, which is the honest end."""
+    for code, promoted in _adjacent_divisions(league_code):
+        df = store.load_results(code)
+        if df.empty:
+            continue
+        matched = _resolve_in_frame(df, _aliased(code, df, team))
+        if matched is None:
+            continue
+        rows = _find_team_rows(df, matched, cutoff)
+        if len(rows) < min_matches:
+            continue
+        sf = PROMOTED_SCORED if promoted else 1.0 / PROMOTED_SCORED
+        cf = PROMOTED_CONCEDED if promoted else 1.0 / PROMOTED_CONCEDED
+
+        def scale(frame: pd.DataFrame) -> pd.DataFrame:
+            out = frame.copy()
+            is_home = out["home"].astype(str) == matched
+            out.loc[is_home, "hg"] = out.loc[is_home, "hg"] * sf
+            out.loc[is_home, "ag"] = out.loc[is_home, "ag"] * cf
+            out.loc[~is_home, "ag"] = out.loc[~is_home, "ag"] * sf
+            out.loc[~is_home, "hg"] = out.loc[~is_home, "hg"] * cf
+            return out
+
+        return (matched, scale(rows),
+                scale(_find_venue_rows(df, matched, cutoff, venue)))
+    return None
 
 
 def validate_match_existed(
