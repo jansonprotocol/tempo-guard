@@ -674,3 +674,45 @@ def test_venue_debias_leaves_mu_total_unchanged():
     calibrated to a gap of ~0 — the team lane does not get to disturb it."""
     gfh, gfa, c = 1.40, 1.25, 0.113
     assert (gfh + c) + (gfa - c) == pytest.approx(gfh + gfa)
+
+
+def test_alias_overrules_a_confident_wrong_match():
+    """An alias has to beat the resolver, not merely fill in for it.
+
+    The resolver does not fail by returning nothing. It fails by matching the
+    wrong club with confidence — `Celta Fortuna` onto Celta Vigo's 2004-2012
+    rows, `U. de Concepción` onto Deportes Concepción, `América-MG` onto a
+    spelling retired in 2013. While the alias table was consulted only for
+    names that matched nothing, none of those entries could fire.
+    """
+    import pandas as pd
+
+    from app.data import features
+
+    df = pd.DataFrame({
+        "date": pd.to_datetime(["2020-01-01"] * 4),
+        "home": ["Celta", "Celta B", "Celta", "Celta B"],
+        "away": ["Celta B", "Celta", "Celta B", "Celta"],
+        "hg": [1, 1, 1, 1], "ag": [1, 1, 1, 1]})
+
+    # Precondition: the raw name resolves, and resolves to the wrong club.
+    assert features._resolve_in_frame(df, "Celta Fortuna") == "Celta"
+    # The alias overrules it anyway.
+    assert features._aliased("ESP-L2", df, "Celta Fortuna") == "Celta B"
+
+
+def test_alias_pointing_at_a_missing_name_is_ignored():
+    """The staleness guard is what makes the override safe: an alias naming a
+    club this store does not carry must fall back to the resolver rather than
+    steer a fixture into an empty row set."""
+    import pandas as pd
+
+    from app.data import features
+
+    df = pd.DataFrame({
+        "date": pd.to_datetime(["2020-01-01"] * 2),
+        "home": ["Celta", "Celta"], "away": ["Vigo", "Vigo"],
+        "hg": [1, 1], "ag": [1, 1]})
+
+    # `Celta B` is not in this frame, so the alias must not be applied.
+    assert features._aliased("ESP-L2", df, "Celta Fortuna") == "Celta Fortuna"

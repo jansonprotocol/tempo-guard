@@ -3,7 +3,12 @@
 
 ## CURRENT CONFIRMED HITRATE: 0.0%
 
-**Tip 1 0 / 0 settled** · over/under markets only · live tips, not backtests
+    lane                        Tip 1              Tip 2
+    all matches              0 / 0               0 / 0
+    played lanes  >+1%       0 / 0               0 / 0
+    placed bets              0 / 0             ROI +0.0%
+
+**All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Derived by `python scripts/headline.py`, never typed · over/under markets only · live tips, not backtests
 
 Reset on **24 Aug 2026**, after the first full slate on the calibrated engine.
 That day is archived at
@@ -45,16 +50,60 @@ you are buying.
     Tip 1    break-even 1.211    at +5% margin  1.27
     Tip 2    break-even 1.393    at +5% margin  1.46
 
+## Playable lanes — edge above +1%
+
+The two fixture tables below measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
+
+So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, laid out exactly as the tables below are. A fixture is listed when either lane clears the threshold and the other cell says why it did not, so both lanes, one lane or neither can be in play on any given row — the counter above the table counts lanes, not rows. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
+
+**Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+
+| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
+|---|---|---|---|---|---|
+| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.25 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.86 | 2026-08-24 18:40 |
+| — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
+| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.24 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.75 | 2026-08-24 19:00 |
+| — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
+| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.39 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.31 | 2026-08-24 20:45 |
+| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.30 | 2026-08-24 20:45 |
+| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.24 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.37 | 2026-08-24 21:00 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.51 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.33 | 2026-08-24 21:15 |
+| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.37 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.25 | 2026-08-24 21:30 |
+| — | LaLiga 2 | Granada v Mallorca | — under +1% | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.28 | 2026-08-25 00:30 |
+| — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.26 | 2026-08-25 01:30 |
+
 ## Pending FUTURE match bettips
 
 **Every fixture table below is sorted by kickoff, earliest first** — pending,
 completed and placed bets alike. New rows arrive in the order fixtures are
 priced, which is not that order, so run `python scripts/sort_tables.py` after
-adding any; a test fails if a table drifts out of order. The counts above and
-below are derived by `python scripts/headline.py`, never typed.
+adding any; a test fails if a table drifts out of order. **These two tables are
+the only thing on this page that is typed.** Everything above them reads from
+them: the header counts by `python scripts/headline.py`, the playable-lanes
+block by `python scripts/playable.py`. After editing a table run all three
+scripts; each has a `--check` mode and each is pinned by a test.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
+| — | Serie A | Bologna v Lazio | U4.25 89.1% +0.5% · buy≥1.19 | — none | 2026-08-24 18:30 |
+| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.25 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.86 | 2026-08-24 18:40 |
+| — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
+| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.24 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.75 | 2026-08-24 19:00 |
+| — | LaLiga 2 | Celta Fortuna v FC Andorra | — no tip, Celta B has 1 row (reserve side, promoted) | — | 2026-08-24 19:00 |
+| — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
+| — | Saudi Pro League | Al-Ittihad v Al-Hazem | U4.25 81.9% **+0.0%** · buy≥1.31 | — none | 2026-08-24 20:00 |
+| — | Trendyol Süper Lig | Kocaelispor v Amed | — no tip, Amedspor has 1 row (promoted) | — | 2026-08-24 20:30 |
+| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.39 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.31 | 2026-08-24 20:45 |
+| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.30 | 2026-08-24 20:45 |
+| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.24 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.37 | 2026-08-24 21:00 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.51 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.33 | 2026-08-24 21:15 |
+| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.37 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.25 | 2026-08-24 21:30 |
+| — | LaLiga 2 | Granada v Mallorca | U3.0 77.3% +0.9% · buy≥1.47 | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
+| — | Brasileirão Série B | Athletic v Novorizontino | O1.0 89.2% +0.2% · buy≥1.22 | — none | 2026-08-25 00:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.28 | 2026-08-25 00:30 |
+| — | Brasileirão | Botafogo v Athletico | U3.0 76.2% +0.8% · buy≥1.51 | — none | 2026-08-25 01:00 |
+| — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.26 | 2026-08-25 01:30 |
 
 ## Completed FUTURE match bettips
 
@@ -787,6 +836,40 @@ and sides and these two rungs select opposite tails. Not diagnosed, not acted on
 over-states by ~5 points, so its published `buy≥` is about 5% too low.
 
 ### Known data defects
+
+- **FIXED — the resolver matched the wrong club, confidently, three times on
+  one slate.** Found on 24 Aug by auditing every name on the board against the
+  store before publishing, rather than trusting the tips that came back:
+
+      Celta Fortuna     ->  Celta                  Celta Vigo's 2004-2012 rows
+      U. de Concepción  ->  Deportes Concepcion    a different club entirely
+      América-MG        ->  América (MG)           a spelling retired in 2013
+
+  None abstained. All three priced and published a probability, and the first
+  was carrying **+12.1% on Tip 1 and +23.9% on Tip 2** — the largest stated
+  edge on the slate, built on a first team's history for a reserve side's
+  fixture. Corrected, `Celta Fortuna` resolves to `Celta B` and abstains with
+  one row; `Everton v U. de Concepción` fell from +2.6% to +0.1% and left the
+  playable block entirely.
+
+  The cause was the alias table's ordering, not the alias table's contents.
+  `_aliased` consulted `config/team_aliases.json` **only when the raw name
+  matched nothing**, on the reasoning that an alias could then never change a
+  tip the engine already issues. That protected the wrong failure: the resolver
+  does not fail by returning blanks, it fails by returning the wrong club, and
+  no alias could reach any of the three. An alias now overrules the resolver,
+  guarded by an exact membership test against the store's own name list — the
+  guard used to be a resolver call, which answers "yes, `Celta B` exists" in a
+  store that only carries `Celta`.
+
+- **OPEN — two clubs are split across spellings by era, like Cienciano was.**
+  `Deportes Concepcion` (19 rows, 2026) and `Deportes Concepción` (79 rows,
+  2005-2008) are one club in CHI-PD under two spellings; `América (MG)` (114
+  rows to 2013) and `América Mineiro` (289 rows to 2026) are one club in
+  BRA-SB. Both currently work because the recent spelling carries the recent
+  rows, which is the half that matters — but a resolver landing on the older
+  half prices a fixture on decade-old form, which is exactly what happened
+  above. The fix is a merge at load time, not an alias.
 
 - **OPEN — half-time scores are censored on 0-0 finishes in 23 leagues.** In
   ALG-L1, ARG-PD, BRA-SA, COPA-L, CRO-1L, CZE-FL, DEN-SL, EGY-PL, MAR-BP,

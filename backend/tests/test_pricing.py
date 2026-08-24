@@ -126,3 +126,104 @@ def test_readme_headline_matches_the_log():
     assert text[cs:text.index("\n", cs)] == headline.counter_line(), (
         "README completed-table counter is stale; "
         "run python scripts/headline.py")
+
+
+def test_header_played_row_agrees_with_the_playable_block():
+    """The header now carries three lines, and the middle one restates what the
+    playable block counts. Two renderers reading the same tables is exactly how
+    the old hand-typed counters drifted, so they are pinned to each other: both
+    must apply the same MIN_EDGE to the same lanes."""
+    from scripts import headline, playable
+
+    lanes = playable.collect(playable.README.read_text())
+    p1, q1, p2, q2 = headline.played()
+    for which, (h, n) in ((1, (p1, q1)), (2, (p2, q2))):
+        b = [r for r in lanes if r[3] == which]
+        assert h == sum(1 for r in b if r[9] == "✅")
+        assert n == sum(1 for r in b if r[9] in ("✅", "❌"))
+
+
+def test_readme_playable_lanes_match_the_tables():
+    """The playable-lanes block is a filtered view of the two fixture tables,
+    so it can only be right while it is regenerated — `python
+    scripts/playable.py`. Same reason the headline is pinned above."""
+    from scripts import playable
+
+    text = playable.README.read_text()
+    assert playable.rewrite(text) == text, (
+        "README playable-lanes block is stale; run python scripts/playable.py")
+    assert text.count("\n" + playable.ANCHOR) == 1
+
+    # Raising MIN_EDGE changes the heading, and the rewrite has to still find
+    # the block it wrote under the old one. It did not the first time: it
+    # matched on the full heading, missed, and appended a second block below
+    # the first. Renaming the heading must replace, not duplicate.
+    renamed = text.replace(playable.HEADING, playable.ANCHOR + " — edge above +9%")
+    assert renamed != text
+    assert playable.rewrite(renamed).count("\n" + playable.ANCHOR) == 1
+
+
+def test_playable_parses_a_full_slate():
+    """The live tables are usually short or empty, so the parser is pinned
+    against the archived 23 Aug log instead: 70 graded fixtures carrying every
+    cell format the block has to read — team lanes with a club prefix, bold
+    markup on either half, floor annotations, `— none`, `— no tip, X has 3
+    rows`, and both result conventions (Tip 1 graded by the status cell, Tip 2
+    carrying its own tick).
+
+    Those counts are frozen history and cannot move, so a change in them is a
+    parser change, not a data change.
+    """
+    from scripts import playable
+
+    log = (playable.ROOT / "archive" / "2026-08-23-first-calibrated-slate"
+           / "log.md").read_text()
+
+    # An empty pending table must not run the scan on into the completed one.
+    assert playable.rows_of(log, playable.PENDING) == []
+    assert len(playable.rows_of(log, playable.COMPLETED)) == 70
+
+    lanes = playable.collect(log)
+    assert len(lanes) == 86
+    # 86 lanes over 51 fixtures: most rows carry both, some only one.
+    assert len(playable.fixtures(log)) == 51
+    assert sum(1 for r in lanes if r[9] == "✅") == 69
+    assert all(r[7] > playable.MIN_EDGE for r in lanes)
+    # Sorted by kickoff, like every other table in the log.
+    assert [r[0] for r in lanes] == sorted(r[0] for r in lanes)
+
+    # And the filter is doing real work rather than just dropping empty cells.
+    # 140 cells: 25 held no tip at all, 29 were published under the threshold —
+    # mostly U4.25 and U3.0 rungs around 88%, which win constantly and cannot
+    # be bought at a price that pays for them. That is the whole point of the
+    # block: they flatter the engine's hit rate and are unbuyable, so they
+    # belong in the log above and not in this count.
+    dropped = [cell for c in playable.rows_of(log, playable.COMPLETED)
+               for w, cell in ((1, c[4]), (2, c[5]))
+               if playable.lane(cell, c[1], w) is None]
+    assert len(dropped) == 54
+    assert sum(1 for cell in dropped if playable.LANE.match(cell)) == 29
+
+
+def test_playable_block_does_not_feed_on_itself():
+    """The block renders the completed table's own header and sits ABOVE it.
+
+    Read without scoping, a search for that header finds the block's copy first
+    and the block is derived from its own previous output. That failure passes
+    `--check` — a block built from itself is trivially up to date — so nothing
+    but the counts would ever show it. Spliced in above the tables, the derived
+    lanes must be identical to the ones derived without it.
+    """
+    from scripts import playable
+
+    log = (playable.ROOT / "archive" / "2026-08-23-first-calibrated-slate"
+           / "log.md").read_text()
+    assert playable.NEXT in log
+
+    at = log.index(playable.NEXT)
+    spliced = log[:at] + playable.render(log) + "\n" + log[at:]
+    assert playable.collect(spliced) == playable.collect(log)
+    assert playable.fixtures(spliced) == playable.fixtures(log)
+    # And the header counts read the table below, not the block above it.
+    assert playable.rows_of(spliced, playable.COMPLETED) == \
+        playable.rows_of(log, playable.COMPLETED)
