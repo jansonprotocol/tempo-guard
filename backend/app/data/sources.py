@@ -134,6 +134,12 @@ LEAGUES: dict[str, LeagueSource] = {
         "NED-ED", "Dutch Eredivisie", "europe", "netherlands/{season}_nl1.txt",
         fd_div="N1"
     ),
+    # openfootball carries nl2 only to 2024-25 and football-data not at all, so
+    # this is ESPN-only like COL-PA — the current season is the point of it.
+    "NED-D2": LeagueSource(
+        "NED-D2", "Dutch Eerste Divisie", "", "",
+        provider="espn", espn_code="ned.2",
+    ),
     "POR-PL": LeagueSource(
         "POR-PL", "Portuguese Primeira Liga", "europe", "portugal/{season}_pt1.txt",
         fd_div="P1"
