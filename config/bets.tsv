@@ -17,21 +17,21 @@
 #           the pre-match number no longer describes it
 #
 # fixture	rung	odds	side	cashout	[p_override]
-Fulham v Chelsea	U3.75	1.36	-	0
-Málaga v Deportivo	O0.5	1.35	H	0
-Málaga v Deportivo	O1.5	1.48	-	0
-Sport Recife v América-MG	U3.5	1.28	-	0
-Brøndby v Silkeborg	U3.75	1.50	-	0
-Brøndby v Silkeborg	U4.5	1.26	-	0
-Malmö v Djurgården	O1.5	1.93	H	0
-Osasuna v Levante	O1.5	1.30	-	0
-Al-Ittihad v Al-Hazem	U4.5	1.22	-	0
-Fulham v Chelsea	O1.5	1.23	-	0
-Bologna v Lazio	U3.5	1.22	-	0
-Cúcuta v Alianza Valledupar	U3.0	1.24	-	0
-Reims v Annecy	DNB	1.35	H	0
-Al-Shabab v Al-Riyadh	DNB	1.27	H	0
-Neom v Al-Qadsiah	DNB	1.22	A	0
-Everton v U. de Concepción	DNB	1.22	H	0
-Jong FC Utrecht v Heracles	DNB	1.23	A	0
-Jong PSV v TOP Oss	U4.5	1.30	-	0
+Fulham v Chelsea	U3.75	1.36	-	0		pre-refresh Tip 2; the refresh flipped the fixture
+Málaga v Deportivo	O0.5	1.35	H	0		pre-refresh team lane; later dropped off the fixture
+Málaga v Deportivo	O1.5	1.48	-	0		pre-refresh Tip 1
+Sport Recife v América-MG	U3.5	1.28	-	0		same tier as the U3.0 tip
+Brøndby v Silkeborg	U3.75	1.50	-	0		Tip 2
+Brøndby v Silkeborg	U4.5	1.26	-	0		same tier, softer settlement
+Malmö v Djurgården	O1.5	1.93	H	0		the star lane, bought at 1.93 vs buy≥1.80
+Osasuna v Levante	O1.5	1.30	-	0		filler, under buy-from
+Al-Ittihad v Al-Hazem	U4.5	1.22	-	0		filler
+Fulham v Chelsea	O1.5	1.23	-	0		the tip, at break-even
+Bologna v Lazio	U3.5	1.22	-	0		filler, under buy-from
+Cúcuta v Alianza Valledupar	U3.0	1.24	-	0		the tip, 9 cents under buy-from
+Reims v Annecy	DNB	1.35	H	0		experimental
+Al-Shabab v Al-Riyadh	DNB	1.27	H	0		experimental
+Neom v Al-Qadsiah	DNB	1.22	A	0		experimental
+Everton v U. de Concepción	DNB	1.22	H	0		experimental
+Jong FC Utrecht v Heracles	DNB	1.23	A	0		experimental, engine's steepest DNB verdict
+Jong PSV v TOP Oss	U4.5	1.30	-	0		clean buy, +7.1% at strike

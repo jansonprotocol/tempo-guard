@@ -132,48 +132,30 @@ you are buying.
 
 <br clear="all">
 
-### Actual placed bets
+### 🟡 Actual placed bets
 
-**Settled: 0 / 0  ·  Pending: 0**
+**Settled: 7 / 11  ·  ROI -15.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
-
-Sixteen bets, €0.90 flat. The 24-25 Aug additions split three ways, the
-bettor's own words: the tip-priced buys, the **fillers** (bought under or at
-break-even, EV −5.6% to +0.6% — small change traded for variance), and four
-**experimental Draw No Bets** on team-over-tagged sides, following the 28-lane
-archive study that found no measurable edge in exactly this crossover. The
-engine neither tips nor prices 1X2, so they ride unpriced; its uncalibrated
-side-rate view puts them −8% to −23% against the book. † = Tuesday kickoff.
-
-Seven bets before that, €0.90 flat. **Four were struck before the midday store refresh**
-(marked †: the buy-from shown is the morning number they were checked against).
-The refresh then flipped three of those fixtures, so two positions now carry
-negative EV against the engine's current read — not a discipline error, the
-information arrived after the price was taken. The two ✳ Brøndby bets were
-placed on the post-refresh tip. EV is priced against the CURRENT mu in every
-row, which is the honest number even where it hurts.
-
-| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
-|---|---|---|---|---|---|---|
-| 20:00 | Jong FC Utrecht v Heracles | U4.25 | **DNB Heracles — experimental** | 1.23 | — | unpriced |
-| 20:00 | Jong PSV v TOP Oss | U4.25 | U4.5 — same tier | 1.30 | 1.26 | **+7.1%** |
-| 20:00† | Al-Shabab v Al-Riyadh | O1.5 | **DNB Al-Shabab — experimental** | 1.27 | — | unpriced |
-| 01:30† | Everton v U. de Concepción | O1.5 | **DNB Everton — experimental** | 1.22 | — | unpriced |
-| 03:00† | Cúcuta v Alianza Valledupar | U3.0 | U3.0 — the tip | 1.24 | 1.33 | −1.7% ⚠ |
-| 00:30 | Sport Recife v América-MG | U3.0 | U3.5 — same tier | 1.28 | 1.26 | **+6.4%** |
-| 18:30 | Bologna v Lazio | U3.0 | U3.5 — same tier | 1.22 | 1.29 | −5.6% ✗ filler |
-| 18:40 | Neom v Al-Qadsiah | O1.5 | **DNB Al-Qadsiah — experimental** | 1.22 | — | unpriced |
-| 19:00 | Brøndby v Silkeborg | U4.25 | U3.75 — Tip 2 | 1.50 | 1.47 | **+6.7%** ✳ |
-| 19:00 | Brøndby v Silkeborg | U4.25 | U4.5 — same tier | 1.26 | 1.28 | +3.5% ⚠ ✳ |
-| 19:00 | Malmö v Djurgården | O1.5 | **Malmö O1.5 — team lane** | 1.93 | 1.80 | **+15.9%** |
-| 19:30 | Osasuna v Levante | O1.5 | O1.5 — the tip | 1.30 | 1.39 | −1.6% ⚠ filler |
-| 20:00 | Al-Ittihad v Al-Hazem | U4.25 | U4.5 — same tier | 1.22 | 1.27 | +0.6% filler |
-| 20:45 | Reims v Annecy | O1.5 | **DNB Reims — experimental** | 1.35 | — | unpriced |
-| 21:00 | Fulham v Chelsea | O1.5 | O1.5 — the tip | 1.23 | 1.29 | −0.0% filler |
-| 21:00 | Fulham v Chelsea | O1.5 *(was U4.25)* | U3.75 — pre-refresh Tip 2 | 1.36 | 1.41† | **−5.9%** ✗ |
-| 21:30 | Málaga v Deportivo | U3.0 *(was O1.5)* | O1.5 — pre-refresh Tip 1 | 1.48 | 1.41† | +0.4% |
-| 21:30 | Málaga v Deportivo | U3.0 *(was O1.5)* | **Málaga O0.5 — pre-refresh team lane** | 1.35 | 1.29† | −5.6% ✗ |
-
+| Result | Fixture | Lane | Odds | Return | Note |
+|---|---|---|---|---|---|
+| ❌ | Fulham v Chelsea | U3.75 | 1.36 | 0.00x | pre-refresh Tip 2; the refresh flipped the fixture |
+| — open | Málaga v Deportivo | O0.5 (home) | 1.35 | — | pre-refresh team lane; later dropped off the fixture |
+| — open | Málaga v Deportivo | O1.5 | 1.48 | — | pre-refresh Tip 1 |
+| — open | Sport Recife v América-MG | U3.5 | 1.28 | — | same tier as the U3.0 tip |
+| ❌½ | Brøndby v Silkeborg | U3.75 | 1.50 | 0.50x | Tip 2 |
+| ✅ | Brøndby v Silkeborg | U4.5 | 1.26 | 1.26x | same tier, softer settlement |
+| ❌ | Malmö v Djurgården | O1.5 (home) | 1.93 | 0.00x | the star lane, bought at 1.93 vs buy≥1.80 |
+| ❌ | Osasuna v Levante | O1.5 | 1.30 | 0.00x | filler, under buy-from |
+| — open | Al-Ittihad v Al-Hazem | U4.5 | 1.22 | — | filler |
+| ✅ | Fulham v Chelsea | O1.5 | 1.23 | 1.23x | the tip, at break-even |
+| ✅ | Bologna v Lazio | U3.5 | 1.22 | 1.22x | filler, under buy-from |
+| — open | Cúcuta v Alianza Valledupar | U3.0 | 1.24 | — | the tip, 9 cents under buy-from |
+| ✅ | Reims v Annecy | DNB (home) | 1.35 | 1.35x | experimental |
+| — open | Al-Shabab v Al-Riyadh | DNB (home) | 1.27 | — | experimental |
+| ✅ | Neom v Al-Qadsiah | DNB (away) | 1.22 | 1.22x | experimental |
+| — open | Everton v U. de Concepción | DNB (home) | 1.22 | — | experimental |
+| ✅ | Jong FC Utrecht v Heracles | DNB (away) | 1.23 | 1.23x | experimental, engine's steepest DNB verdict |
+| ✅ | Jong PSV v TOP Oss | U4.5 | 1.30 | 1.30x | clean buy, +7.1% at strike |
 
 ## Engine state — 24 Aug 2026
 

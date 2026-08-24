@@ -47,7 +47,8 @@ MIN_EDGE = playable.MIN_EDGE
 # START spellings, because the first render REPLACES the heading it anchored
 # on — the same trap the playable block hit when its threshold renamed it.
 STARTS = ("## 🟢 Playable lanes", "## Playable lanes")
-END = "### Actual placed bets"
+ENDS = ("### 🟡 Actual placed bets", "### Actual placed bets")
+TAIL = "## Engine state"
 HEAD_START = "## CURRENT CONFIRMED HITRATE"
 HEAD_END = "live tips, not backtests"
 
@@ -271,6 +272,57 @@ def render_board(fixtures: list[Fixture]) -> str:
     return "\n".join(out)
 
 
+def render_bets() -> list[str]:
+    """The placed-bets block, settled by the ledger's own rules.
+
+    This was the last hand-typed block on the page and it went stale the
+    same way every hand-typed number here has: the counter read 0 / 0 while
+    eleven bets sat settled. Now bets.tsv carries the bet and its note, the
+    fixture result comes from fixtures.tsv, and the settlement marks are
+    computed — full/half win, push, half/full loss, DNB included.
+    """
+    from scripts import headline, ledger
+
+    fixtures = ledger.read_fixtures()
+    bh, bn, roi = headline.bets()
+    out = [
+        "### 🟡 Actual placed bets", "",
+        f"**Settled: {bh} / {bn}  ·  ROI {roi:+.1f}%  ·  flat stakes** — "
+        "settled through real settlement fractions by the ledger; a push or "
+        "half-win counts as a hit, a half-loss does not. Notes travel with "
+        "the bet in `config/bets.tsv`.", "",
+        "| Result | Fixture | Lane | Odds | Return | Note |",
+        "|---|---|---|---|---|---|",
+    ]
+    MARK = {1.0: ("✅", "won"), 0.5: ("✅½", "half won"), 0.0: ("◦", "push"),
+            -0.5: ("❌½", "half lost"), -1.0: ("❌", "lost")}
+    for ln in ledger.BETS.read_text().splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        parts = ln.split("\t")
+        name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
+        note = parts[6] if len(parts) > 6 else ""
+        lane = rung if side == "-" else f"{rung} ({'home' if side == 'H' else 'away'})"
+        fx = fixtures.get(name)
+        if fx is None or fx["hg"] is None:
+            out.append(f"| — open | {name} | {lane} | {odds:.2f} | — | {note} |")
+            continue
+        if rung == "DNB":
+            gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
+                      else (fx["ag"], fx["hg"]))
+            s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        else:
+            goals = (fx["hg"] + fx["ag"]) if side == "-" else (
+                fx["hg"] if side == "H" else fx["ag"])
+            s = ledger.pricing.settle_fraction(rung, goals)
+        ret = max(s, 0.0) * odds + (1 - abs(s))
+        mark, _w = MARK[s]
+        out.append(f"| {mark} | {name} | {lane} | {odds:.2f} "
+                   f"| {ret:.2f}x | {note} |")
+    out.append("")
+    return out
+
+
 def rewrite(text: str) -> str:
     hs = text.index(HEAD_START)
     he = text.index(HEAD_END, hs) + len(HEAD_END)
@@ -280,8 +332,10 @@ def rewrite(text: str) -> str:
     s = min((text.index(m) for m in STARTS if m in text), default=None)
     if s is None:
         raise ValueError("board region not found in README")
-    e = text.index(END, s)
-    return text[:s] + render_board(fixtures) + "\n" + text[e:]
+    e = min(text.index(m, s) for m in ENDS if m in text)
+    e2 = text.index(TAIL, e)
+    return (text[:s] + render_board(fixtures) + "\n"
+            + "\n".join(render_bets()) + "\n" + text[e2:])
 
 
 def main() -> None:
