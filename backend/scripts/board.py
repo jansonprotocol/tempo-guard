@@ -108,26 +108,36 @@ def _head(f: Fixture, glyph: str) -> str:
 
 
 def _cards(entries: list[tuple[Fixture, str, str, str]]) -> list[str]:
-    """Cards laid out two abreast, the way the example sketches them.
+    """Every match its own card, floated so they flow two abreast.
 
-    Each PAIR is one six-column table: two fixture headers with their Tip
-    columns, one value row beneath. Markdown has no side-by-side tables, so
-    the pairing has to live inside a single table — which also means an odd
-    last fixture gets a three-column card of its own rather than an empty
-    twin beside it.
+    Markdown tables are block elements — two of them can only stack — so each
+    card is a small HTML table carrying `align="left"`, the one layout
+    attribute GitHub's sanitizer allows through. Floated cards sit side by
+    side where the viewport is wide and wrap underneath each other where it
+    is narrow, which is exactly the mobile behaviour asked for, with no CSS
+    anywhere. `<br clear="all">` ends the float so the next section's text
+    cannot ride up alongside the last card.
     """
     out = []
-    for i in range(0, len(entries), 2):
-        pair = entries[i:i + 2]
-        heads, cells = [], []
-        for f, glyph, t1, t2 in pair:
-            heads += [_head(f, glyph), "Tip 1", "Tip 2"]
-            cells += [_badge(f), t1, t2]
-        out += ["| " + " | ".join(heads) + " |",
-                "|" + ":--|" * len(heads),
-                "| " + " | ".join(cells) + " |",
-                ""]
+    for f, glyph, t1, t2 in entries:
+        out.append(
+            '<table align="left">'
+            f'<tr><th align="left">{_html(_head(f, glyph))}</th>'
+            '<th align="left">Tip 1</th><th align="left">Tip 2</th></tr>'
+            f'<tr><td>{_html(_badge(f))}</td>'
+            f'<td>{_html(t1)}</td><td>{_html(t2)}</td></tr>'
+            '</table>')
+    if out:
+        out += ['', '<br clear="all">', '']
     return out
+
+
+def _html(s: str) -> str:
+    """Markdown bold does not render inside an HTML table, so ** becomes <b>."""
+    parts = s.split("**")
+    for i in range(1, len(parts), 2):
+        parts[i] = f"<b>{parts[i]}</b>"
+    return "".join(parts)
 
 
 def _cell(raw: str) -> str:
