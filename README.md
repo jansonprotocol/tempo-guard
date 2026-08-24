@@ -157,6 +157,8 @@ you are buying.
 | — open | Everton v U. de Concepción | DNB (home) | 1.22 | — | experimental |
 | ✅ | Jong FC Utrecht v Heracles | DNB (away) | 1.23 | 1.23x | experimental, engine's steepest DNB verdict |
 | ✅ | Jong PSV v TOP Oss | U4.5 | 1.30 | 1.30x | clean buy, +7.1% at strike |
+| — open | Juventude v CRB | U3.5 | 1.20 | — | same tier as the flipped U3.0 tip, extra cushion; U3.0 unavailable |
+| — open | Athletic v Novorizontino | DNB (away) | 1.63 | — | experimental, derived from the Athletic U1.5 team lane |
 
 ## Engine state — 24 Aug 2026
 
