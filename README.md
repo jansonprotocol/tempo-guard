@@ -72,11 +72,11 @@ three; each has a `--check` mode and each is pinned by a test.
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
 
-## Playable lanes — positive edge only
+## Playable lanes — edge above +1%
 
 The two tables above measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
 
-So: every lane from both tables carrying a positive edge, Tip 1 and Tip 2 alike, which means one fixture can appear twice, once, or not at all. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
+So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, which means one fixture can appear twice, once, or not at all. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
 
 **Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
 

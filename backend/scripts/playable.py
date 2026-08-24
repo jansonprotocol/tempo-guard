@@ -17,12 +17,12 @@ count does.
     python scripts/playable.py --check    exit 1 if stale, change nothing
 
 MIN_EDGE is the filter, and it is deliberately a single constant rather than a
-judgement made row by row. Set at 0.0 it means what it says: every lane the
-engine believes beats a typical fixture of its own kind. Worth knowing before
-raising it — measured over 7,576 tips on 23 Aug, the band under +1% stated edge
-delivered **+0.3 points** of real edge over base rate, against +4.3 for the band
-over +3.5%. A lane at +0.2% is positive and very nearly meaningless; the
-threshold is one edit if that turns out to matter.
+judgement made row by row. It sits at **+1.0%**, not at zero, and the reason is
+measured: over 7,576 tips on 23 Aug the band under +1% stated edge delivered
+**+0.3 points** of real edge over base rate, against +1.7, +2.7 and +4.3 for the
+bands above it. A lane at +0.4% is arithmetically positive and worth nothing —
+it is the base rate wearing a probability, and counting it would put lanes in
+this block that no one would sensibly buy.
 """
 from __future__ import annotations
 
@@ -33,11 +33,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 README = ROOT / "README.md"
 
-MIN_EDGE = 0.0
+MIN_EDGE = 1.0
 
 PENDING = "| Live | League | Teams | Tip 1 | Tip 2 | Kickoff |"
 COMPLETED = "| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |"
-HEADING = "## Playable lanes — positive edge only"
+# ANCHOR, not HEADING, is what finds the existing block. Raising MIN_EDGE
+# changes the heading text, and matching on the full heading meant the rewrite
+# could not see the block it had written under the old threshold: it left the
+# stale one in place and appended a second. A prefix cannot go stale that way.
+ANCHOR = "## Playable lanes"
+HEADING = f"{ANCHOR} — edge above +{MIN_EDGE:.0f}%"
 # The block goes after the placed-bets table, which is where it reads: what was
 # buyable, then what was bought. It is the only anchor that does not reparent an
 # existing heading — `### Actual placed bets` is nested under the completed
@@ -131,11 +136,15 @@ def render(text: str) -> str:
         "A tip at zero edge is the base rate wearing a probability; it is "
         "correctly skipped, and it does not belong in a hit rate that claims "
         "to describe what can be played.", "",
-        "So: every lane from both tables carrying a positive edge, Tip 1 and "
-        "Tip 2 alike, which means one fixture can appear twice, once, or not "
-        "at all. Derived from those tables by `python scripts/playable.py` and "
-        "pinned by a test — nothing here is typed, so it cannot drift out of "
-        "step with the rows it counts.", "",
+        f"So: every lane from both tables carrying an edge above "
+        f"**+{MIN_EDGE:.0f}%**, Tip 1 and Tip 2 alike, which means one fixture "
+        f"can appear twice, once, or not at all. The threshold is not zero on "
+        f"purpose — measured over 7,576 tips, lanes under +1% stated edge "
+        f"returned **+0.3 points** of real edge over the base rate, against "
+        f"+1.7 to +4.3 for everything above. Arithmetically positive, worth "
+        f"nothing. Derived from those tables by `python scripts/playable.py` "
+        f"and pinned by a test — nothing here is typed, so it cannot drift out "
+        f"of step with the rows it counts.", "",
         counter_line(lanes), "",
         "| Result | League | Fixture | Lane | Edge | buy≥ | Kickoff |",
         "|---|---|---|---|---|---|---|",
@@ -150,8 +159,8 @@ def render(text: str) -> str:
 
 def rewrite(text: str) -> str:
     block = render(text)
-    if HEADING in text:
-        start = text.index(HEADING)
+    if ANCHOR in text:
+        start = text.index(ANCHOR)
         end = text.index(NEXT, start)
         return text[:start] + block + "\n" + text[end:]
     # First run: the block goes between the completed table and the bet table.

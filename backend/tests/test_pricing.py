@@ -137,6 +137,15 @@ def test_readme_playable_lanes_match_the_tables():
     text = playable.README.read_text()
     assert playable.rewrite(text) == text, (
         "README playable-lanes block is stale; run python scripts/playable.py")
+    assert text.count("\n" + playable.ANCHOR) == 1
+
+    # Raising MIN_EDGE changes the heading, and the rewrite has to still find
+    # the block it wrote under the old one. It did not the first time: it
+    # matched on the full heading, missed, and appended a second block below
+    # the first. Renaming the heading must replace, not duplicate.
+    renamed = text.replace(playable.HEADING, playable.ANCHOR + " — edge above +9%")
+    assert renamed != text
+    assert playable.rewrite(renamed).count("\n" + playable.ANCHOR) == 1
 
 
 def test_playable_parses_a_full_slate():
@@ -160,20 +169,20 @@ def test_playable_parses_a_full_slate():
     assert len(playable.rows_of(log, playable.COMPLETED)) == 70
 
     lanes = playable.collect(log)
-    assert len(lanes) == 103
-    assert sum(1 for r in lanes if r[9] == "✅") == 81
+    assert len(lanes) == 86
+    assert sum(1 for r in lanes if r[9] == "✅") == 69
     assert all(r[7] > playable.MIN_EDGE for r in lanes)
     # Sorted by kickoff, like every other table in the log.
     assert [r[0] for r in lanes] == sorted(r[0] for r in lanes)
 
     # And the filter is doing real work rather than just dropping empty cells.
-    # 140 cells: 25 held no tip at all, 12 were published at zero or negative
-    # edge — every one a U4.25 or U3.0 rung around 88%, which wins constantly
-    # and cannot be bought at a price that pays for it. That is the whole point
-    # of the block: those twelve flatter the engine's hit rate and are
-    # unbuyable, so they belong in the log above and not in this count.
+    # 140 cells: 25 held no tip at all, 29 were published under the threshold —
+    # mostly U4.25 and U3.0 rungs around 88%, which win constantly and cannot
+    # be bought at a price that pays for them. That is the whole point of the
+    # block: they flatter the engine's hit rate and are unbuyable, so they
+    # belong in the log above and not in this count.
     dropped = [cell for c in playable.rows_of(log, playable.COMPLETED)
                for w, cell in ((1, c[4]), (2, c[5]))
                if playable.lane(cell, c[1], w) is None]
-    assert len(dropped) == 37
-    assert sum(1 for cell in dropped if playable.LANE.match(cell)) == 12
+    assert len(dropped) == 54
+    assert sum(1 for cell in dropped if playable.LANE.match(cell)) == 29
