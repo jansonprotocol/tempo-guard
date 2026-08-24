@@ -83,6 +83,7 @@ So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 
 | — | Saudi Pro League (82.7 −0.8) | Al-Shabab v Al-Riyadh | — under +1% | **Al-Shabab O0.5** 80.7% +2.6% (team) · buy≥1.30 | 2026-08-25 20:00 |
 | — | LaLiga (80.5 −0.1) | Valencia v Real Betis | U4.25 88.0% +1.1% · buy≥1.21 | U3.75 74.0% +1.7% (floor −1.0) · buy≥1.32 | 2026-08-25 21:00 |
 | — | Brasileirão Série B (82.8 −1.0) | Juventude v CRB | — under +1% | O1.75 66.5% +1.8% (floor −8.5) · buy≥1.71 | 2026-08-26 00:30 |
+| — | Categoría Primera A (83.0 −4.0) | Cúcuta v Alianza Valledupar | U3.0 83.0% +3.3% · buy≥1.33 | U4.25 93.3% +1.8% (lower edge) · buy≥1.13 | 2026-08-26 03:00 |
 
 ## Pending FUTURE match bettips
 
@@ -135,6 +136,7 @@ the morning prices are in the git history.
 | — | UCL Playoff | LASK v Celtic | — no tip, qualifier history only | — | 2026-08-25 21:00 |
 | — | Brasileirão Série B (82.8 −1.0) | Atlético-GO v Botafogo-SP | U3.0 81.9% +0.1% · buy≥1.36 | — none | 2026-08-26 00:30 |
 | — | Brasileirão Série B (82.8 −1.0) | Juventude v CRB | O1.0 89.8% +0.8% · buy≥1.21 | O1.75 66.5% +1.8% (floor −8.5) · buy≥1.71 | 2026-08-26 00:30 |
+| — | Categoría Primera A (83.0 −4.0) | Cúcuta v Alianza Valledupar | U3.0 83.0% +3.3% · buy≥1.33 | U4.25 93.3% +1.8% (lower edge) · buy≥1.13 | 2026-08-26 03:00 |
 
 ## Completed FUTURE match bettips
 
