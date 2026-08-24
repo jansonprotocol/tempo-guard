@@ -154,6 +154,8 @@ row, which is the honest number even where it hurts.
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
+| 20:00 | Jong FC Utrecht v Heracles | U4.25 | **DNB Heracles — experimental** | 1.23 | — | unpriced |
+| 20:00 | Jong PSV v TOP Oss | U4.25 | U4.5 — same tier | 1.30 | 1.26 | **+7.1%** |
 | 20:00† | Al-Shabab v Al-Riyadh | O1.5 | **DNB Al-Shabab — experimental** | 1.27 | — | unpriced |
 | 01:30† | Everton v U. de Concepción | O1.5 | **DNB Everton — experimental** | 1.22 | — | unpriced |
 | 03:00† | Cúcuta v Alianza Valledupar | U3.0 | U3.0 — the tip | 1.24 | 1.33 | −1.7% ⚠ |
