@@ -3,7 +3,7 @@
 # Grade a fixture by filling `status` (e.g. "✅ HIT — 2-1"), then re-render.
 # kickoff	code	league	teams	tip1	tip2	status
 2026-08-24 18:30	ITA-SA	Serie A	Bologna v Lazio	U3.0 77.4% +2.3% · buy≥1.47	U4.25 90.1% +1.4% (lower edge) · buy≥1.17	LIVE 0-1 (62')
-2026-08-24 18:40	SAU-PL	Saudi Pro League	Neom v Al-Qadsiah	O1.5 83.9% +4.3% · buy≥1.29	**Al-Qadsiah O1.5** 57.1% +19.0% (team) · buy≥1.90	LIVE 0-1 (55')
+2026-08-24 18:40	SAU-PL	Saudi Pro League	Neom v Al-Qadsiah	O1.5 83.9% +4.3% · buy≥1.29	**Al-Qadsiah O1.5** 57.1% +19.0% (team) · buy≥1.90	LIVE 0-2 (57')
 2026-08-24 19:00	DEN-SL	Danish Superliga	Brøndby v Silkeborg	U4.25 82.2% +1.1% · buy≥1.30	U3.75 65.6% +1.4% (floor −9.4) · buy≥1.47	LIVE 0-1 (HT)
 2026-08-24 19:00	ESP-L2	LaLiga 2	Celta Fortuna v FC Andorra	— no tip, Celta B has 1 row (reserve side, promoted)	—	LIVE 0-0 (HT)
 2026-08-24 19:00	SWE-AL	Allsvenskan	Malmö v Djurgården	O1.5 84.8% +5.9% · buy≥1.28	**Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80	LIVE 0-1 (HT)
