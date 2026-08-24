@@ -255,3 +255,14 @@ def test_curse_haircut_reprices_toward_the_measured_hit_rate():
     the honest probability is 0.969 of stated and the price it needs is 1/0.969
     of the quoted one. The constant must stay within a rounding of that."""
     assert pricing.CURSE_HAIRCUT == pytest.approx(1 / (79.1 / 81.6) - 1, abs=0.004)
+
+
+def test_readme_league_badges_match_the_stored_run():
+    """The (hit gap) after each league name is derived from
+    config/league_hitrates.tsv, and pinned like every other derived number —
+    a hand-edited badge or a re-run tsv without a re-stamp fails here."""
+    from scripts import league_badges
+
+    text = league_badges.README.read_text()
+    assert league_badges.stamp(text) == text, (
+        "README league badges are stale; run python scripts/league_badges.py")
