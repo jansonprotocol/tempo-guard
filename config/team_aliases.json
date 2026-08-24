@@ -97,12 +97,19 @@
   },
   "TUR-SL": {
     "Başakşehir": "Buyuksehyr",
-    "Basaksehir": "Buyuksehyr"
+    "Basaksehir": "Buyuksehyr",
+    "Amed": "Amedspor"
   },
   "ESP-L2": {
     "Sporting": "Sp Gijon",
     "Sporting Gijón": "Sp Gijon",
-    "Sporting Gijon": "Sp Gijon"
+    "Sporting Gijon": "Sp Gijon",
+    "Málaga": "Malaga",
+    "Deportivo": "La Coruna",
+    "Deportivo La Coruña": "La Coruna",
+    "Dep. La Coruña": "La Coruna",
+    "Celta Fortuna": "Celta B",
+    "Celta B Fortuna": "Celta B"
   },
   "PER-L1": {
     "Cienciano": "Cienciano del Cusco"
@@ -110,6 +117,14 @@
   "CHI-PD": {
     "U. de Chile": "Universidad de Chile",
     "U. De Chile": "Universidad de Chile",
-    "Colo-Colo": "Colo Colo"
+    "Colo-Colo": "Colo Colo",
+    "U. de Concepción": "Universidad de Concepción",
+    "U. De Concepción": "Universidad de Concepción",
+    "U. de Concepcion": "Universidad de Concepción"
+  },
+  "BRA-SB": {
+    "América-MG": "América Mineiro",
+    "America-MG": "América Mineiro",
+    "América (MG)": "América Mineiro"
   }
 }

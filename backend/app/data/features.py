@@ -562,19 +562,31 @@ def _aliased(league_code: str, df: pd.DataFrame, team: str) -> str:
     """
     The name this league's store files `team` under.
 
-    Ordered so the alias table is a fallback and never an override: if the
-    resolver can already match the raw name, that match stands untouched. An
-    alias therefore only ever converts a fixture the engine WITHHELD into one it
-    can price, and can never change a tip it already issues — which is what
-    makes config/team_aliases.json safe to extend mid-season.
+    An alias WINS over the resolver, and that is a deliberate reversal. The
+    table used to be consulted only when the raw name matched nothing, on the
+    reasoning that it could then never change a tip the engine already issues.
+    That protected the wrong failure. The resolver's mistakes are not blanks,
+    they are confident matches on the wrong club:
 
-    Guards against a stale entry too: an alias pointing at a name the store no
-    longer carries is ignored rather than trusted into an empty row set.
+        Celta Fortuna     -> Celta           Celta Vigo, 2004-2012
+        U. de Concepción  -> Deportes Concepcion    a different club entirely
+        América-MG        -> América (MG)    a spelling retired in 2013
+
+    All three priced, none abstained, and one of them was carrying the largest
+    stated edge on its slate. A missing tip is recoverable; a tip built on
+    another club's form is not — so the hand-written statement "this feed name
+    IS that store name" has to be able to overrule a guess.
+
+    The staleness guard is what keeps that safe, and it still runs first: an
+    alias pointing at a name the store does not carry is ignored, and the
+    resolver is left to do what it would have done anyway. That guard is now an
+    EXACT membership test rather than a resolver call, which matters more than
+    it looks — asked whether `Celta B` exists in a store that only has `Celta`,
+    the resolver says yes. Every target in the table was read off the store's
+    own name list, so exact is the test that was always meant.
     """
-    if _resolve_in_frame(df, team) is not None:
-        return team
     mapped = aliases.get(league_code, team)
-    if mapped and _resolve_in_frame(df, mapped) is not None:
+    if mapped and mapped != team and mapped in _frame_index(df)["names"]:
         return mapped
     return team
 
