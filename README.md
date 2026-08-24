@@ -77,6 +77,12 @@ So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 
 | — | LaLiga 2 | Málaga v Deportivo | U3.0 79.1% +1.1% · buy≥1.42 | U2.75 58.5% +1.4% (floor −16.5) · buy≥1.61 | 2026-08-24 21:30 |
 | — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48 | 2026-08-25 00:30 |
 | — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.6% (team) · buy≥1.30 | 2026-08-25 01:30 |
+| — | Saudi Pro League | Abha v Al-Khaleej | U4.25 85.8% +3.9% · buy≥1.28 | U3.75 70.7% +5.5% (floor −4.3) · buy≥1.42 | 2026-08-25 18:05 |
+| — | Saudi Pro League | Al-Taawoun v Al-Fayha | U4.25 85.4% +3.5% · buy≥1.25 | U3.75 70.0% +4.8% (floor −5.0) · buy≥1.43 | 2026-08-25 18:10 |
+| — | Saudi Pro League | Al-Ettifaq v Al-Nassr | O1.5 86.0% +6.2% · buy≥1.26 | **Al-Nassr O1.5** 57.7% +19.5% (team) · buy≥1.88 | 2026-08-25 20:00 |
+| — | Saudi Pro League | Al-Shabab v Al-Riyadh | — under +1% | **Al-Shabab O0.5** 80.7% +2.6% (team) · buy≥1.30 | 2026-08-25 20:00 |
+| — | LaLiga | Valencia v Real Betis | U4.25 88.0% +1.1% · buy≥1.21 | U3.75 74.0% +1.7% (floor −1.0) · buy≥1.32 | 2026-08-25 21:00 |
+| — | Brasileirão Série B | Juventude v CRB | — under +1% | O1.75 66.5% +1.8% (floor −8.5) · buy≥1.71 | 2026-08-26 00:30 |
 
 ## Pending FUTURE match bettips
 
@@ -114,6 +120,16 @@ the morning prices are in the git history.
 | — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48 | 2026-08-25 00:30 |
 | — | Brasileirão | Botafogo v Athletico | U4.25 88.5% **−0.4%** · buy≥1.20 | — none | 2026-08-25 01:00 |
 | — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.6% (team) · buy≥1.30 | 2026-08-25 01:30 |
+| — | Saudi Pro League | Abha v Al-Khaleej | U4.25 85.8% +3.9% · buy≥1.28 | U3.75 70.7% +5.5% (floor −4.3) · buy≥1.42 | 2026-08-25 18:05 |
+| — | Saudi Pro League | Al-Taawoun v Al-Fayha | U4.25 85.4% +3.5% · buy≥1.25 | U3.75 70.0% +4.8% (floor −5.0) · buy≥1.43 | 2026-08-25 18:10 |
+| — | UCL Playoff | Sabah v H. Be'er Sheva | — no tip, qualifier history only | — | 2026-08-25 18:45 |
+| — | Saudi Pro League | Al-Ettifaq v Al-Nassr | O1.5 86.0% +6.2% · buy≥1.26 | **Al-Nassr O1.5** 57.7% +19.5% (team) · buy≥1.88 | 2026-08-25 20:00 |
+| — | Saudi Pro League | Al-Shabab v Al-Riyadh | O1.5 79.9% +0.2% · buy≥1.31 | **Al-Shabab O0.5** 80.7% +2.6% (team) · buy≥1.30 | 2026-08-25 20:00 |
+| — | LaLiga | Valencia v Real Betis | U4.25 88.0% +1.1% · buy≥1.21 | U3.75 74.0% +1.7% (floor −1.0) · buy≥1.32 | 2026-08-25 21:00 |
+| — | UCL Playoff | Bodø/Glimt v NEC | — no tip, qualifier history only | — | 2026-08-25 21:00 |
+| — | UCL Playoff | LASK v Celtic | — no tip, qualifier history only | — | 2026-08-25 21:00 |
+| — | Brasileirão Série B | Atlético-GO v Botafogo-SP | U3.0 81.9% +0.1% · buy≥1.36 | — none | 2026-08-26 00:30 |
+| — | Brasileirão Série B | Juventude v CRB | O1.0 89.8% +0.8% · buy≥1.21 | O1.75 66.5% +1.8% (floor −8.5) · buy≥1.71 | 2026-08-26 00:30 |
 
 ## Completed FUTURE match bettips
 
