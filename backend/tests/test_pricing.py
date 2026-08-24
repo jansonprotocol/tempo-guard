@@ -227,3 +227,31 @@ def test_playable_block_does_not_feed_on_itself():
     # And the header counts read the table below, not the block above it.
     assert playable.rows_of(spliced, playable.COMPLETED) == \
         playable.rows_of(log, playable.COMPLETED)
+
+
+def test_curse_haircut_only_touches_the_top_edge_band():
+    """Ranking by an estimate selects the fixtures whose estimate came in high,
+    so the top band is overconfident by construction. Measured at -2.5 on
+    7,576 tips and -2.9 on a second population, against ~0 in every band below
+    it, so the correction is a step at CURSE_EDGE and not a curve."""
+    mu = 2.60
+    plain = pricing.buy_from("O1.5", mu)
+
+    # No edge given: the caller never claimed one, so nothing is applied.
+    assert pricing.buy_from("O1.5", mu, stated_edge=None) == plain
+    # Below the threshold, unchanged — those bands measured within noise of 0.
+    assert pricing.buy_from("O1.5", mu, stated_edge=0.02) == plain
+    assert pricing.buy_from("O1.5", mu, stated_edge=pricing.CURSE_EDGE) == plain
+    # Above it, dearer by exactly the measured haircut.
+    dear = pricing.buy_from("O1.5", mu, stated_edge=0.05)
+    assert dear == pytest.approx(plain * (1 + pricing.CURSE_HAIRCUT))
+    # It only ever raises the bar. A haircut that could lower a price would be
+    # manufacturing value out of a known overconfidence.
+    assert dear > plain
+
+
+def test_curse_haircut_reprices_toward_the_measured_hit_rate():
+    """The size is not a guess: the top band said 81.6% and returned 79.1%, so
+    the honest probability is 0.969 of stated and the price it needs is 1/0.969
+    of the quoted one. The constant must stay within a rounding of that."""
+    assert pricing.CURSE_HAIRCUT == pytest.approx(1 / (79.1 / 81.6) - 1, abs=0.004)

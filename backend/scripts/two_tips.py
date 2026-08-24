@@ -83,21 +83,30 @@ def tips(lg: str, h: str, a: str, d: date):
     return dict(mu=req.mu_total, lmu=req.league_mu, t1=(t1, p1, e1), t2=t2)
 
 
-def _buy(market: str, mu: float, p: float) -> str:
+def _buy(market: str, mu: float, p: float, edge: float | None = None) -> str:
     """
-    The price to check the book against: break-even plus a margin.
+    The price to check the book against: break-even, margin, curse haircut.
 
     Match rungs are priced from the goal distribution, because a quarter or
     whole line can push and `1 / p` would misprice it. Every team rung on offer
     (`U1.5`, `O1.5`, `O0.5`) is a `.5` line, which cannot push — there `1 / p`
     IS the break-even, so the same margin is applied to it directly rather
     than leaving the column blank.
+
+    `edge` carries the tip's stated edge through to `pricing.buy_from`, which
+    adds ~3% for anything above +3.5%. That was a rule applied by hand on every
+    bet; the printed number now already includes it.
     """
     try:
-        be = pricing.break_even(market, mu)
+        return (f"buy>={pricing.buy_from(market, mu, stated_edge=edge):.2f}")
     except (ValueError, IndexError):
-        be = 1 / p if p > 0 else None
-    return f"buy>={be * (1 + pricing.DEFAULT_MARGIN):.2f}" if be else "buy>=  — "
+        pass
+    if p <= 0:
+        return "buy>=  — "
+    be = (1 / p) * (1 + pricing.DEFAULT_MARGIN)
+    if edge is not None and edge > pricing.CURSE_EDGE:
+        be *= 1 + pricing.CURSE_HAIRCUT
+    return f"buy>={be:.2f}"
 
 
 def main() -> None:
@@ -122,10 +131,11 @@ def main() -> None:
         m1, p1, e1 = r["t1"]
         line = (f"{lg:8s} {h[:22]:22.22s} v {a[:20]:20.20s} "
                 f"mu {r['mu']:4.2f}/{r['lmu']:4.2f}  "
-                f"TIP1 {m1:6s} {p1:5.1%} {e1:+6.2%} {_buy(m1, r['mu'], p1)}")
+                f"TIP1 {m1:6s} {p1:5.1%} {e1:+6.2%} {_buy(m1, r['mu'], p1, e1)}")
         if r["t2"]:
             m2, p2, e2, why = r["t2"]
-            line += f"   TIP2 {m2:6s} {p2:5.1%} {e2:+6.2%} {_buy(m2, r['mu'], p2)} ({why})"
+            line += (f"   TIP2 {m2:6s} {p2:5.1%} {e2:+6.2%} "
+                     f"{_buy(m2, r['mu'], p2, e2)} ({why})")
         else:
             line += "   TIP2 — none"
         print(line)

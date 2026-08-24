@@ -126,9 +126,45 @@ def break_even(market: str, mu: float) -> float:
     return (1 - push) / won
 
 
-def buy_from(market: str, mu: float, margin: float = DEFAULT_MARGIN) -> float:
-    """The lowest price worth taking: break-even plus a margin."""
-    return break_even(market, mu) * (1 + margin)
+# The winner's-curse haircut. Ranking tips by an ESTIMATE of edge selects the
+# fixtures whose estimate came in high, so the top band is overconfident by
+# construction rather than by defect — it cannot be shrunk away, only priced.
+# Measured twice on separate populations, and stable to a tenth of a point:
+#
+#     stated edge        n    says    hit    gap        23 Aug     24 Aug
+#     under +1%       2704   83.3%  84.7%   +1.4          +1.4       +1.5
+#     +1 to +2%        807   82.9%  83.1%   +0.2          +0.2       -0.6
+#     +2 to +3.5%     1193   82.0%  81.9%   -0.1          -0.1       +1.2
+#     over +3.5%      2872   81.6%  79.1%   -2.5          -2.5       -2.9
+#
+# Only the top band is out. 79.1 / 81.6 = 0.969 of the stated probability, and
+# break-even moves as roughly 1/p, so the price it needs is about 3.2% higher.
+# That was README rule 3 — "high-edge tips need about 3% more price" — applied
+# by hand on every bet. It is applied here instead, so `buy>=` already carries
+# it and the published number is the number to buy at.
+#
+# Deliberately a step and not a curve: the three bands below the threshold sit
+# within noise of zero on both measurements, and fitting a slope through four
+# points, two of which disagree in sign between runs, would be fitting noise.
+CURSE_EDGE = 0.035
+CURSE_HAIRCUT = 0.032
+
+
+def buy_from(market: str, mu: float, margin: float = DEFAULT_MARGIN,
+             stated_edge: float | None = None) -> float:
+    """
+    The lowest price worth taking: break-even, a margin, and the curse haircut.
+
+    `stated_edge` is the tip's own published edge over its market's base rate,
+    as a fraction. Pass it and a tip above CURSE_EDGE is quoted the extra price
+    the top band has twice been measured to need. Omit it and the haircut does
+    not apply — callers that do not compute an edge get the old number, so this
+    can never silently reprice a lane that never claimed an edge at all.
+    """
+    price = break_even(market, mu) * (1 + margin)
+    if stated_edge is not None and stated_edge > CURSE_EDGE:
+        price *= 1 + CURSE_HAIRCUT
+    return price
 
 
 def expected_value(market: str, mu: float, odds: float) -> float:

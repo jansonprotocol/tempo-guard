@@ -40,9 +40,12 @@ under 0.87x. The margin is the entire edge.
 drawdown, and never halved the bankroll in 4,000 runs. Bigger stakes on a bad
 price accelerate the loss rather than rescue it.
 
-**3. High-edge tips need about 3% more price than published.** Tips over +3.5%
-stated edge come in 2.5 points overconfident — the winner's curse of ranking by
-an estimate, not a defect that can be fixed. `buy≥1.30` on such a tip means 1.34.
+**3. ~~High-edge tips need about 3% more price than published.~~ Now applied
+automatically — `buy≥` already carries it.** Tips over +3.5% stated edge come in
+2.5 points overconfident — the winner's curse of ranking by an estimate, not a
+defect that can be fixed. Measured twice on separate populations at −2.5 and
+−2.9, against roughly zero in every band below, so `pricing.buy_from` adds 3.2%
+to those tips and nothing to the rest. **Do not add it again by hand.**
 
 **4. In play, price the rung and not the tip.** At 0-0 half time a 2.7-goal
 league gives `O0.5` 75.4% (needs 1.39) and `O1.5` 41.5% (needs 2.53). The
@@ -64,18 +67,18 @@ So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 
 
 | Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.25 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.86 | 2026-08-24 18:40 |
+| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.29 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.92 | 2026-08-24 18:40 |
 | — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
-| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.24 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.75 | 2026-08-24 19:00 |
+| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80 | 2026-08-24 19:00 |
 | — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
-| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.39 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.31 | 2026-08-24 20:45 |
-| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.30 | 2026-08-24 20:45 |
-| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.24 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.37 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.51 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.33 | 2026-08-24 21:15 |
-| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.37 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.25 | 2026-08-24 21:30 |
+| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.44 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.35 | 2026-08-24 20:45 |
+| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.34 | 2026-08-24 20:45 |
+| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.28 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.41 | 2026-08-24 21:00 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.37 | 2026-08-24 21:15 |
+| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.41 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.29 | 2026-08-24 21:30 |
 | — | LaLiga 2 | Granada v Mallorca | — under +1% | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.28 | 2026-08-25 00:30 |
-| — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.26 | 2026-08-25 01:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.32 | 2026-08-25 00:30 |
+| — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.30 | 2026-08-25 01:30 |
 
 ## Pending FUTURE match bettips
 
@@ -91,23 +94,23 @@ scripts; each has a `--check` mode and each is pinned by a test.
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
 | — | Serie A | Bologna v Lazio | U4.25 89.1% +0.5% · buy≥1.19 | — none | 2026-08-24 18:30 |
-| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.25 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.86 | 2026-08-24 18:40 |
+| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.29 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.92 | 2026-08-24 18:40 |
 | — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
-| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.24 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.75 | 2026-08-24 19:00 |
+| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80 | 2026-08-24 19:00 |
 | — | LaLiga 2 | Celta Fortuna v FC Andorra | — no tip, Celta B has 1 row (reserve side, promoted) | — | 2026-08-24 19:00 |
 | — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
 | — | Saudi Pro League | Al-Ittihad v Al-Hazem | U4.25 81.9% **+0.0%** · buy≥1.31 | — none | 2026-08-24 20:00 |
 | — | Trendyol Süper Lig | Kocaelispor v Amed | — no tip, Amedspor has 1 row (promoted) | — | 2026-08-24 20:30 |
-| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.39 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.31 | 2026-08-24 20:45 |
-| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.30 | 2026-08-24 20:45 |
-| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.24 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.37 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.51 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.33 | 2026-08-24 21:15 |
-| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.37 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.25 | 2026-08-24 21:30 |
+| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.44 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.35 | 2026-08-24 20:45 |
+| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.34 | 2026-08-24 20:45 |
+| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.28 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.41 | 2026-08-24 21:00 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.37 | 2026-08-24 21:15 |
+| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.41 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.29 | 2026-08-24 21:30 |
 | — | LaLiga 2 | Granada v Mallorca | U3.0 77.3% +0.9% · buy≥1.47 | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
 | — | Brasileirão Série B | Athletic v Novorizontino | O1.0 89.2% +0.2% · buy≥1.22 | — none | 2026-08-25 00:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.28 | 2026-08-25 00:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.32 | 2026-08-25 00:30 |
 | — | Brasileirão | Botafogo v Athletico | U3.0 76.2% +0.8% · buy≥1.51 | — none | 2026-08-25 01:00 |
-| — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.26 | 2026-08-25 01:30 |
+| — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.30 | 2026-08-25 01:30 |
 
 ## Completed FUTURE match bettips
 
@@ -595,6 +598,106 @@ change that improved hit rate while concentrating the book would have been the
 certainty trap again. Three constants (`MU_SHRINK`, `TEAM_SHRINK`,
 `MIN_WIN_PROB`), two per-league overrides, and the coupling between the first
 and last pinned in a test so neither can move alone.
+
+### Diagnostics — 24 Aug, full re-run
+
+Every instrument re-run on the current engine. Two things worth saying before
+the numbers: **the engine reproduced its 23 Aug figures to a tenth of a point**,
+which is the first time a rebuild here has been boringly stable, and **the one
+open defect that looked like two defects turned out to be one, in the place
+nobody was looking.**
+
+#### The venue fix holds, and the "side split" it left behind is not real
+
+`tt05_calibration`, 13,872 side-observations, no lane selection:
+
+    HOME    +0.8      (was +4.1 before the fix)
+    AWAY    +0.3      (was -3.6)
+    BOTH    +0.5      split 0.5, from 7.7
+
+But `team_calibration` still reported the lane-level sides split — TA +2.9,
+TB −3.0 — which read as the fix not having taken. It has. `team_rung_side.py`
+cross-tabulates rung against side and the margin dissolves:
+
+    rung          HOME (TA)              AWAY (TB)
+                n    says   hit  gap    n    says   hit  gap
+    O0.5      884   82.1%  82.8% +0.8  350   81.7%  82.3% +0.5
+    O1.5      721   60.3%  66.2% +5.9  113   59.6%  64.6% +5.0
+    U1.5       61   79.9%  78.7% -1.2  813   78.6%  73.1% -5.6
+
+**`O1.5` runs +5.9 at home and +5.0 away — the same on both sides**, so it is
+not venue. The side margin was pure composition: `O1.5` is 86.5% home lanes and
+`U1.5` is 93.0% away lanes, because home teams score more. Two apparent defects,
+one real one, and it lives in the rung.
+
+#### The rung defect is NOT a Poisson shape error — sixth hypothesis dead
+
+The obvious mechanism was over-dispersion. `team_total` recovers
+`gf = -ln(1 - p_tt05)` and prices every rung as Poisson(`gf`), which pins
+`P(≥1)` by construction — so `O0.5` cannot be wrong however wrong the shape is,
+and every shape error is pushed onto the `≥2` boundary. That predicts exactly
+what was seen, including why `O0.5` is clean.
+
+`side_shape.py` tested it selection-free on 13,872 observations. It is wrong:
+
+    P(side scores >= 2)      poisson   actual    gap
+      fitted gf 0.0-0.9       19.3%    26.0%    +6.7
+      fitted gf 0.9-1.2       29.1%    30.7%    +1.6
+      fitted gf 1.2-1.5       38.9%    38.5%    -0.4
+      fitted gf 1.5-1.9       49.1%    49.5%    +0.4
+      fitted gf 1.9-9.9       61.3%    64.9%    +3.5
+      ALL                     39.1%    39.9%    +0.8
+
+    one side's goals: mean 1.376  var 1.441  var/mean 1.047  (Poisson = 1.000)
+
+**Pooled +0.8 and the middle bands flat.** The Poisson ladder is sound and the
+dispersion is 1.047, near enough to 1.000 to price with. What the table does
+show is a different thing: **both extreme bands run high at every threshold**
+(+6.8 / +2.6 at `≥1`, +6.7 / +3.5 at `≥2`, +3.3 / +3.6 at `≥3`). That is the
+FEATURE being under-dispersed — estimates squeezed too hard toward the league
+mean, so the extremes are not extreme enough — and `TEAM_SHRINK` is the knob
+that does the squeezing. **Open, and the most promising lead on the board.**
+
+#### The match lane reproduced exactly
+
+`edge_bands`, 7,576 tips across 62 leagues:
+
+    stated edge        n    says    hit    gap    base   REAL    23 Aug
+    under +1%       2704   83.3%  84.7%   +1.4   84.4%  +0.3      +1.4
+    +1 to +2%        807   82.9%  83.1%   +0.2   81.4%  +1.7      +0.2
+    +2 to +3.5%     1193   82.0%  81.9%   -0.1   79.2%  +2.7      -0.1
+    over +3.5%      2872   81.6%  79.1%   -2.5   74.8%  +4.3      -2.5
+
+Identical to the archived run. Every market still calibrated (`O1.5` +0.2,
+`U3.0` −0.5, `U4.25` −0.5). Realised edge over base **+2.4**.
+
+**This is now priced rather than noted** — see rule 3. `mu_mismatch` re-measured
+at 0.2 points (tail −2.9 → −2.7), confirming it is real, tiny, and not the tail.
+
+#### Team histories: four clubs served less than a rolling window
+
+Scanning every club active in the last 120 days against `ROLLING_MATCHES = 10`:
+
+    1081 clubs   full window
+     129 clubs   5-9 rows — priced on a PARTIAL window
+     192 clubs   under 5 — withheld outright
+
+Most of the thin ones are cup competitions (`UCL-Q`, `UEL-Q`, `UECL-Q`), where
+a club genuinely plays 2–8 matches and there is nothing to fix. The domestic
+cases are real:
+
+- **`ROU-L1` — eleven clubs sit at exactly 5 rows.** They price, on half a
+  rolling window. Three of them (`Dinamo Bucuresti`, `FC Botosani`,
+  `Farul Constanta`) have 78–79 further rows under an accented spelling that
+  the merge table cannot reach, because `_MERGE_GATE = 5` and `5 < 5` is false.
+  The gate is one off from rescuing them.
+- **`MEX-LMX` is effectively dark** — fourteen clubs at 4 rows, withheld. Only
+  one has a twin spelling, so this is missing data rather than naming.
+
+An accent-variant scan across all 61 leagues found 18 split clubs, 14 of which
+serve the THINNER half. Most are harmless (`Malmö FF` serves 17 rows against a
+twin that stops in April 2025 — the rolling window never reaches back that far).
+The four that matter are listed above.
 
 ### Diagnostics — 23 Aug, full sweep
 
