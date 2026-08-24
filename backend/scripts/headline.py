@@ -81,6 +81,20 @@ def bets() -> tuple[int, int, float]:
     return hits, n, roi
 
 
+COUNTER = "**Tip 1 — "
+
+
+def counter_line() -> str:
+    """The tally printed above the completed table.
+
+    Same defect as the header had, one section lower: a count maintained by
+    hand next to the rows it counts. It read 2/2 while eleven fixtures sat
+    graded beneath it.
+    """
+    h1, n1, h2, n2 = tally()
+    return f"**Tip 1 — {h1} / {n1}**   ·   **Tip 2 — {h2} / {n2}**"
+
+
 def render() -> str:
     h1, n1, h2, n2 = tally()
     bh, bn, roi = bets()
@@ -100,6 +114,11 @@ def main() -> None:
     start = text.index("## CURRENT CONFIRMED HITRATE")
     end = text.index("live tips, not backtests") + len("live tips, not backtests")
     new = text[:start] + render() + text[end:]
+
+    # And the tally above the completed table, from the same count.
+    cs = new.index(COUNTER)
+    ce = new.index("\n", cs)
+    new = new[:cs] + counter_line() + new[ce:]
     if "--check" in sys.argv:
         if new != text:
             print("README headline is STALE. Run: python scripts/headline.py")

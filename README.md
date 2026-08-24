@@ -1,9 +1,9 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
 
-## CURRENT CONFIRMED HITRATE: 83.7%
+## CURRENT CONFIRMED HITRATE: 86.2%
 
-**Tip 1 41 / 49 settled** · **Tip 2 28 / 38** · **bets 17 / 22, ROI -1.6%** · over/under markets only · live tips, not backtests
+**Tip 1 56 / 65 settled** · **Tip 2 37 / 50** · **bets 22 / 27, ROI +6.1%** · over/under markets only · live tips, not backtests
 
 The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
 from before that point are not comparable to numbers after it, so they are not
@@ -42,26 +42,10 @@ adding any; a test fails if a table drifts out of order.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| **LIVE** 0-5 (86') | LaLiga | Elche v Barcelona | O1.5 75.7% +1.2% · buy≥1.39 | — none | 2026-08-23 21:30 |
-| **LIVE** 1-0 (89') | LaLiga 2 | Tenerife v Almería | U4.25 88.9% **−0.7%** · buy≥1.19 | O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 21:30 |
-| **LIVE** 2-0 (89') | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | **Porto O0.5** 80.7% +5.1% (team) · buy≥1.30 — *re-priced on the venue fix* | 2026-08-23 21:30 |
-| **LIVE** 1-0 (39') | MLS | New England v NY City | U4.25 81.2% **+0.8%** · buy≥1.32 | U3.75 64.3% +1.0% (floor −10.7) · buy≥1.50 | 2026-08-23 22:30 |
-| **LIVE** 1-1 (HT) | Peruvian Liga 1 | Melgar v Alianza Lima | **O1.5 78.6% +5.3%** · buy≥1.34 (≥1.38 tail-adj) | **Melgar O1.5** 55.4% +8.2% (team) · buy≥1.89 | 2026-08-23 22:30 |
-| **LIVE** 0-0 (17') | Brasileirão Série B | Operário-PR v Vila Nova | O1.0 90.3% +1.3% · buy≥1.20 — *dead market, base rate 90.6%* | O1.75 67.8% +3.0% (floor −7.2) · buy≥1.67 | 2026-08-23 23:00 |
-| **LIVE** 0-0 (14') | Categoría Primera A | Dep. Pasto v Llaneros | U3.0 80.8% +1.1% · buy≥1.38 | U2.75 60.7% +1.5% (floor −14.3) · buy≥1.56 | 2026-08-23 23:05 |
-| — not started | Brasileirão Série A | Chapecoense v São Paulo | **U3.0 82.7% +7.3%** · buy≥1.34 (≥1.38 tail-adj) | **Chapecoense U1.5** 75.4% +18.4% (team) · buy≥1.39 | 2026-08-23 23:30 |
-| — not started | Brasileirão Série A | Santos v Mirassol | U4.25 88.4% **−0.5%** · buy≥1.20 | — none | 2026-08-23 23:30 |
-| — not started | Brasileirão Série B | Criciúma v Fortaleza | U3.0 83.2% +1.5% · buy≥1.33 | U2.75 64.0% +2.0% (floor −11.0) · buy≥1.48 | 2026-08-23 23:30 |
-| — not started | Brasileirão Série A | Coritiba v Corinthians | U4.25 87.9% **−1.0%** · buy≥1.21 | O1.75 73.1% +1.4% (floor −1.9) · buy≥1.52 | 2026-08-24 00:30 |
-| — not started | MLS | Atlanta v Kansas City | U4.25 82.9% +2.5% · buy≥1.29 | **Kansas City U1.5** 75.1% +14.1% (team) · buy≥1.40 | 2026-08-24 01:00 |
-| — not started | Chilean Primera División | O'Higgins v Palestino | U4.25 85.2% **+0.0%** · buy≥1.25 | — none | 2026-08-24 01:00 |
-| — not started | Categoría Primera A | Dep. Cali v Inter de Bogotá | U4.25 90.9% **−0.6%** · buy≥1.16 | O1.75 68.3% +1.1% (floor −6.7) · buy≥1.65 | 2026-08-24 01:10 |
-| — not started | Peruvian Liga 1 | Universitario v Los Chankas | U4.25 88.1% **+0.4%** · buy≥1.20 | — none | 2026-08-24 01:30 |
-| — not started | Categoría Primera A | Junior Barranquilla v Once Caldas | U4.25 88.6% **−2.9%** · buy≥1.20 | O1.75 72.0% +4.9% (floor −3.0) · buy≥1.54 | 2026-08-24 03:15 |
 
 ## Completed FUTURE match bettips
 
-**Tip 1 — 9 / 11**   ·   **Tip 2 — 7 / 9**
+**Tip 1 — 56 / 65**   ·   **Tip 2 — 37 / 50**
 
 | Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
@@ -119,15 +103,31 @@ adding any; a test fails if a table drifts out of order.
 | ✅ HIT — 1-2 | Chilean Primera División | U. De Chile v Colo-Colo | **O1.5 83.6% +7.2%** · buy≥1.26 (≥1.30 tail-adj) | ✅ **Colo-Colo O1.5** 58.5% +25.0% (team) · buy≥1.80 | 2026-08-23 21:00 |
 | ✅ HIT — 1-2 | Categoría Primera A | Fortaleza v Atl. Nacional | U4.25 89.8% **−1.6%** · buy≥1.18 | ✅ O1.75 70.2% +2.9% (floor −4.8) · buy≥1.60 | 2026-08-23 21:00 |
 | ✅ HIT — 1-1 | Serie B ⚠107d | Cesena v Sampdoria | **U3.0 79.1% +3.7%** · buy≥1.42 | ✅ U2.75 58.5% +4.6% (floor −16.5) · buy≥1.61 | 2026-08-23 21:00 |
+| ✅ HIT — 0-5 | LaLiga | Elche v Barcelona | O1.5 75.7% +1.2% · buy≥1.39 | — none | 2026-08-23 21:30 |
+| ✅ HIT — 1-0 | LaLiga 2 | Tenerife v Almería | U4.25 88.9% **−0.7%** · buy≥1.19 | ❌ O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 21:30 |
+| ✅ HIT — 2-0 | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | ✅ **Porto O0.5** 80.7% +5.1% (team) · buy≥1.30 — *re-priced on the venue fix* | 2026-08-23 21:30 |
+| ✅ HIT — 1-1 | MLS | New England v NY City | U4.25 81.2% **+0.8%** · buy≥1.32 | ✅ U3.75 64.3% +1.0% (floor −10.7) · buy≥1.50 | 2026-08-23 22:30 |
+| ✅ HIT — 1-1 | Peruvian Liga 1 | Melgar v Alianza Lima | **O1.5 78.6% +5.3%** · buy≥1.34 (≥1.38 tail-adj) | ❌ **Melgar O1.5** 55.4% +8.2% (team) · buy≥1.89 | 2026-08-23 22:30 |
+| ❌ MISS — 0-0 | Brasileirão Série B | Operário-PR v Vila Nova | O1.0 90.3% +1.3% · buy≥1.20 — *dead market, base rate 90.6%* | ❌ O1.75 67.8% +3.0% (floor −7.2) · buy≥1.67 | 2026-08-23 23:00 |
+| ✅ HIT — 0-1 | Categoría Primera A | Dep. Pasto v Llaneros | U3.0 80.8% +1.1% · buy≥1.38 | ✅ U2.75 60.7% +1.5% (floor −14.3) · buy≥1.56 | 2026-08-23 23:05 |
+| ✅ HIT — 1-0 | Brasileirão Série A | Chapecoense v São Paulo | **U3.0 82.7% +7.3%** · buy≥1.34 (≥1.38 tail-adj) | ✅ **Chapecoense U1.5** 75.4% +18.4% (team) · buy≥1.39 | 2026-08-23 23:30 |
+| ✅ HIT — 1-1 | Brasileirão Série A | Santos v Mirassol | U4.25 88.4% **−0.5%** · buy≥1.20 | — none | 2026-08-23 23:30 |
+| ✅ HIT — 0-2 | Brasileirão Série B | Criciúma v Fortaleza | U3.0 83.2% +1.5% · buy≥1.33 | ✅ U2.75 64.0% +2.0% (floor −11.0) · buy≥1.48 | 2026-08-23 23:30 |
+| ✅ HIT — 2-1 | Brasileirão Série A | Coritiba v Corinthians | U4.25 87.9% **−1.0%** · buy≥1.21 | ✅ O1.75 73.1% +1.4% (floor −1.9) · buy≥1.52 | 2026-08-24 00:30 |
+| ✅ HIT — 2-1 | MLS | Atlanta v Kansas City | U4.25 82.9% +2.5% · buy≥1.29 | ✅ **Kansas City U1.5** 75.1% +14.1% (team) · buy≥1.40 | 2026-08-24 01:00 |
+| ✅ HIT — 0-1 | Chilean Primera División | O'Higgins v Palestino | U4.25 85.2% **+0.0%** · buy≥1.25 | — none | 2026-08-24 01:00 |
+| ✅ HIT — 2-2 | Categoría Primera A | Dep. Cali v Inter de Bogotá | U4.25 90.9% **−0.6%** · buy≥1.16 | ✅ O1.75 68.3% +1.1% (floor −6.7) · buy≥1.65 | 2026-08-24 01:10 |
+| ✅ HIT — 3-0 | Peruvian Liga 1 | Universitario v Los Chankas | U4.25 88.1% **+0.4%** · buy≥1.20 | — none | 2026-08-24 01:30 |
+| ✅ HIT — 1-1 | Categoría Primera A | Junior Barranquilla v Once Caldas | U4.25 88.6% **−2.9%** · buy≥1.20 | ✅ O1.75 72.0% +4.9% (floor −3.0) · buy≥1.54 | 2026-08-24 03:15 |
 
 ### Actual placed bets
 
-**Settled: 17 / 22 — ROI −1.6%  ·  Pending: 5**
+**Settled: 22 / 27 — ROI +6.1%  ·  Pending: 1**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
-| 01:00 | Atlanta v Kansas City | U4.25 | U4.5 — same tier | 1.23 | 1.27 | +2.0% ⚠ |
-| 01:00 | Atlanta v Kansas City | U4.25 | **Kansas City U1.5 — team lane** | 1.43 | 1.40 | **+7.4%** |
+| 01:00 | Atlanta v Kansas City | U4.25 | U4.5 — same tier | 1.23 | 1.27 | +2.0% ⚠ ✅ |
+| 01:00 | Atlanta v Kansas City | U4.25 | **Kansas City U1.5 — team lane** | 1.43 | 1.40 | **+7.4%** ✅ |
 | 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** ✅ |
 | 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ ✅ |
 | 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
@@ -151,8 +151,8 @@ adding any; a test fails if a table drifts out of order.
 | 21:00 | Palmeiras v Vasco | U3.0 | U3.0 — the tip | 1.46 | 1.46 | +4.8% ❌ |
 | 21:00 | Cesena v Sampdoria | **U3.0** | U3.0 — the tip | 1.36 | 1.42 | +0.2% ⚠ ✅ |
 | 21:31 | Porto v Arouca | O1.5 | **O1.5 — bought IN-PLAY at 0-0 HT** | 1.63 | **2.57** | **−33.5%** ✅ |
-| 22:30 | Melgar v Alianza Lima | **O1.5** | O1.5 — the tip | 1.37 | 1.34 | **+7.7%** |
-| 23:30 | Chapecoense v São Paulo | **U3.0** | U3.0 — the tip | 1.35 | 1.34 | **+6.1%** |
+| 22:30 | Melgar v Alianza Lima | **O1.5** | O1.5 — the tip | 1.37 | 1.34 | **+7.7%** ✅ |
+| 23:30 | Chapecoense v São Paulo | **U3.0** | U3.0 — the tip | 1.35 | 1.34 | **+6.1%** ✅ |
 
 **All three losses were bets bought at or above the line.** `Le Havre O1.5` at
 +5.1% finished 0-1; `Cambuur U4.5` at **+8.7%** went 2-5; `Club Brugge O1.5` at

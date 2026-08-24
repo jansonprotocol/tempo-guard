@@ -119,3 +119,10 @@ def test_readme_headline_matches_the_log():
     end = text.index("live tips, not backtests") + len("live tips, not backtests")
     assert text[start:end] == headline.render(), (
         "README headline is stale; run python scripts/headline.py")
+
+    # The tally above the completed table is the same count, and went stale the
+    # same way: it read 2/2 with eleven fixtures graded below it.
+    cs = text.index(headline.COUNTER)
+    assert text[cs:text.index("\n", cs)] == headline.counter_line(), (
+        "README completed-table counter is stale; "
+        "run python scripts/headline.py")
