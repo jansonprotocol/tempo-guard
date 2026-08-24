@@ -1,76 +1,327 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 1
 
 
-## CURRENT CONFIRMED HITRATE: 0.0%
+## CURRENT CONFIRMED HITRATE: 86.2%
 
-**Tip 1 0 / 0 settled** · over/under markets only · live tips, not backtests
+**Tip 1 56 / 65 settled** · **Tip 2 37 / 50** · **bets 22 / 27, ROI +6.1%** · over/under markets only · live tips, not backtests
 
-Reset on **24 Aug 2026**, after the first full slate on the calibrated engine.
-That day is archived at
-**[archive/2026-08-23-first-calibrated-slate/](archive/2026-08-23-first-calibrated-slate/)**
-— sixty-five settled tips, twenty-seven bets, five engine defects found and
-fixed while it ran, and the measurements behind every rule below.
+The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
+from before that point are not comparable to numbers after it, so they are not
+mixed: see **[archive/2026-08-pre-calibration/](archive/2026-08-pre-calibration/)**
+for the full previous log, every bet placed, and a summary of what it
+established.
 
-    lane        23 Aug, calibrated engine
-    Tip 1       56 / 65     86.2%
-    Tip 2       37 / 50     74.0%
-    Bets        22 / 27     81.5%     ROI +6.1%
+What that era ended on, for reference — and what the same tips score on the
+calibrated engine:
 
-The era before that — 20 to 23 Aug, pre-calibration — is at
-**[archive/2026-08-pre-calibration/](archive/2026-08-pre-calibration/)**. It ran
-84.2% on Tip 1 and **-10.1% ROI**: a strike rate bought with prices that could
-not pay for it.
+    lane        as published        re-run calibrated
+    Tip 1     101/120   84.2%       99/118   83.9%
+    Tip 2      67/100   67.0%       56/80    70.0%
+    Bets       58/82    70.7%       ROI  -8.5%
 
-## The four rules the last slate established
+Strike rate is near-identical; realised edge over base rate went **+1.35 to
++2.23**, and the market mix came off a `U4.25` monoculture. The old number was
+substantially bought rather than earned, which is the whole reason for starting
+the count again rather than continuing it.
 
-**1. Buy at `buy≥` or do not buy.** Measured over 1,941 tips and 4,000 simulated
-sequences: at threshold a book returns 1.46x, at break-even 1.01x, two percent
-under 0.87x. The margin is the entire edge.
-
-**2. Flat 4% of bankroll.** Matches quarter Kelly's growth at two-thirds the
-drawdown, and never halved the bankroll in 4,000 runs. Bigger stakes on a bad
-price accelerate the loss rather than rescue it.
-
-**3. High-edge tips need about 3% more price than published.** Tips over +3.5%
-stated edge come in 2.5 points overconfident — the winner's curse of ranking by
-an estimate, not a defect that can be fixed. `buy≥1.30` on such a tip means 1.34.
-
-**4. In play, price the rung and not the tip.** At 0-0 half time a 2.7-goal
-league gives `O0.5` 75.4% (needs 1.39) and `O1.5` 41.5% (needs 2.53). The
-pre-match probability priced 90 minutes and says nothing about which of those
-you are buying.
-
-**Minimum average odds, from settlement rather than `1 / hit-rate`:**
+**Minimum average odds needed, computed from settlement rather than
+`1 / hit-rate`** (pushes and half-wins return the stake, not the price):
 
     Tip 1    break-even 1.211    at +5% margin  1.27
     Tip 2    break-even 1.393    at +5% margin  1.46
 
 ## Pending FUTURE match bettips
 
+First tips on the calibrated engine. `buy≥` is break-even + 5%, computed from
+the recalibrated probability.
+
 **Every fixture table below is sorted by kickoff, earliest first** — pending,
 completed and placed bets alike. New rows arrive in the order fixtures are
 priced, which is not that order, so run `python scripts/sort_tables.py` after
-adding any; a test fails if a table drifts out of order. The counts above and
-below are derived by `python scripts/headline.py`, never typed.
+adding any; a test fails if a table drifts out of order.
 
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
 
 ## Completed FUTURE match bettips
 
-**Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+**Tip 1 — 56 / 65**   ·   **Tip 2 — 37 / 50**
 
 | Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
+| ✅ HIT — 1-1 (decided, 20') | Championship | West Brom v Burnley | O1.5 77.0% +4.2% · buy≥1.36 | ✅ **Burnley O0.5** 80.5% +11.4% (team) · buy≥1.30 | 2026-08-23 13:00 |
+| ✅ HIT — 2-1 | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | ✅ U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
+| ✅ HIT — 0-1 | Chinese Super League | Tongliang Long v Dalian Yingbo | U4.25 83.4% +4.1% · buy≥1.28 | ✅ U3.75 67.2% +5.5% (floor −7.8) · buy≥1.44 | 2026-08-23 14:00 |
+| ✅ HIT — 2-2 | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | ❌ U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
+| ❌ MISS — 1-0 | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | ❌ **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
+| ✅ HIT — 1-1 | Allsvenskan | Göteborg v Elfsborg | O1.5 78.9% **+0.1%** · buy≥1.33 | — none | 2026-08-23 14:00 |
+| ✅ HIT — 0-0 | Allsvenskan | VSK v Kalmar | U4.25 83.6% +0.8% · buy≥1.28 | ✅ U3.75 67.6% +1.1% (floor −7.4) · buy≥1.43 | 2026-08-23 14:00 |
+| — no tip — 4-2 | Swiss Super League | Young Boys v Vaduz | — no tip, Vaduz has 3 rows | — | 2026-08-23 14:00 |
+| ✅ HIT — 5-1 | Eredivisie | PSV v Groningen | **O1.5 87.8% +5.8%** · buy≥1.20 | ✅ **PSV O1.5** 64.9% +15.2% (team) · buy≥1.62 | 2026-08-23 14:30 |
+| ❌ MISS — 0-0 | Ekstraklasa | Radomiak v Zagłębie | O1.5 76.7% **+0.7%** · buy≥1.37 | — none | 2026-08-23 14:45 |
+| ✅ HIT — 4-0 | Premier League | Brighton v Aston Villa | O1.5 80.7% +0.8% · buy≥1.30 | ✅ O2.25 58.6% +1.2% (floor −16.4) · buy≥1.59 | 2026-08-23 15:00 |
+| ✅ HIT — 2-1 | Premier League | Man City v Bournemouth | O1.5 81.6% +1.7% · buy≥1.29 | ✅ **Man City O0.5** 83.7% +5.1% (team) · buy≥1.25 | 2026-08-23 15:00 |
+| ✅ HIT — 0-2 | Ligue 1 | Angers v Lille | U4.25 87.0% +2.6% · buy≥1.22 | ✅ U3.75 72.4% +3.8% (floor −2.6) · buy≥1.34 | 2026-08-23 15:00 |
+| ✅ HIT — 4-0 | Belgian Pro League | Lommel v Westerlo | O1.5 77.5% +1.3% · buy≥1.35 | — none | 2026-08-23 16:00 |
+| — no tip — 2-1 | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
+| ✅ HIT — 1-0 | Liga Portugal | Vitória v Nacional | U4.25 87.7% +1.3% · buy≥1.21 | ✅ U3.75 73.5% +2.0% (floor −1.5) · buy≥1.33 | 2026-08-23 16:30 |
+| ✅ HIT — 2-0 | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | ✅ **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
+| ✅ HIT — 2-0 | Allsvenskan | BP v Degerfors | U4.25 85.8% +2.9% · buy≥1.24 | ✅ U3.75 70.7% +4.1% (floor −4.3) · buy≥1.37 | 2026-08-23 16:30 |
+| ❌ MISS — 2-5 | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | ✅ **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
+| ✅ HIT — 2-2 | LaLiga | Atl. Madrid v Villarreal | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-23 17:00 |
+| ✅ HIT — 1-0 | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | ✅ **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
+| ❌ MISS — 0-1 | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
+| ✅ HIT — 2-2 | Premier League | Newcastle v Liverpool | O1.5 80.5% **+0.6%** · buy≥1.30 | — none | 2026-08-23 17:30 |
+| — no tip — 5-0 | Ekstraklasa | GKS Katowice v Wisła Płock | — no tip, Wisła Płock has 3 rows | — | 2026-08-23 17:30 |
+| ✅ HIT — 4-0 | Danish Superliga | Viborg v København | **O1.5 84.6% +5.3%** · buy≥1.24 (≥1.28 tail-adj) | ❌ **København O1.5** 65.8% +24.5% (team) · buy≥1.59 | 2026-08-23 18:00 |
+| ✅ HIT — 0-1 | Süper Lig | Eyüpspor v Gaziantep | U4.25 86.4% +1.8% · buy≥1.23 | ✅ U3.75 71.6% +2.7% (floor −3.4) · buy≥1.36 | 2026-08-23 18:00 |
+| ✅ HIT — 2-1 | Süper Lig | Trabzonspor v Başakşehir | O1.5 77.3% **+0.3%** · buy≥1.36 | — none | 2026-08-23 18:00 |
+| ✅ HIT — 1-1 | Chilean Primera División | D. Concepción v Coquimbo | O1.5 78.0% +1.6% · buy≥1.35 | — none | 2026-08-23 18:00 |
+| ✅ HIT — 3-3 | Chilean Primera División | La Serena v Cobresal | O1.5 77.1% **+0.7%** · buy≥1.36 | — none | 2026-08-23 18:00 |
+| ✅ HIT — 0-1 | Serie A ⚠91d | Frosinone v Juventus | U4.25 86.7% **−2.0%** · buy≥1.23 | ❌ O1.75 74.6% +2.7% (floor −0.4) · buy≥1.48 | 2026-08-23 18:30 |
+| ✅ HIT — 0-2 | Serie A ⚠91d | Venezia v Lecce | **U3.0 80.0% +4.9%** · buy≥1.40 | ✅ U4.25 91.6% +3.0% (lower edge) · buy≥1.15 | 2026-08-23 18:30 |
+| ❌ MISS — 1-0 | Belgian Pro League | Club Brugge v Cercle Brugge | **O1.5 86.6% +10.3%** · buy≥1.21 (≥1.25 tail-adj) | ❌ **Club Brugge O1.5** 66.3% +22.5% (team) · buy≥1.58 | 2026-08-23 18:30 |
+| ✅ PUSH — 1-2 (U3.0 at 3) | Serie B ⚠107d | Verona v Ascoli | U3.0 77.4% +2.0% · buy≥1.47 | ❌ U2.75 56.4% +2.5% (floor −18.6) · buy≥1.67 | 2026-08-23 19:00 |
+| ✅ HIT — 0-1 | Serie B ⚠107d | Pisa v Padova | U3.0 75.2% **−0.2%** · buy≥1.53 | — none | 2026-08-23 19:00 |
+| ✅ HIT — 0-0 | LaLiga 2 | Castellón v Sabadell | U4.25 88.3% **−1.3%** · buy≥1.20 | ❌ **Castellón O0.5** 80.0% +3.6% (team) · buy≥1.31 | 2026-08-23 19:00 |
+| ✅ HIT — 1-0 | LaLiga 2 | Sporting Gijón v Burgos | U4.25 88.9% **−0.7%** · buy≥1.19 | ❌ O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 19:00 |
+| ✅ HIT — 1-0 | Liga Portugal | Santa Clara v Famalicão | U4.25 88.2% +1.9% · buy≥1.20 | ✅ U3.75 74.3% +2.8% (floor −0.7) · buy≥1.32 | 2026-08-23 19:00 |
+| — no tip — 1-0 | LaLiga | Getafe v R. Racing Club | — no tip, Racing has 1 row (336 in ESP-L2 — promoted) | — | 2026-08-23 19:30 |
+| ❌ MISS — 5-1 | Peruvian Liga 1 | Sport Boys v Cienciano | U4.25 87.9% **+0.2%** · buy≥1.21 | — none | 2026-08-23 20:00 |
+| — no tip — 2-2 | Ekstraklasa | Pogoń v Wisła Kraków | — no tip, Wisła Kraków has 4 rows | — | 2026-08-23 20:15 |
+| ❌ MISS — 1-0 | Süper Lig | Alanyaspor v Beşiktaş | **O1.5 79.6% +2.5%** · buy≥1.32 | ❌ **Beşiktaş O0.5** 81.0% +11.6% (team) · buy≥1.30 | 2026-08-23 20:30 |
+| ✅ HIT — 0-1 | Süper Lig | Göztepe v Gençlerbirliği | U4.25 85.5% +0.9% · buy≥1.25 | ✅ U3.75 70.2% +1.3% (floor −4.8) · buy≥1.38 | 2026-08-23 20:30 |
+| ✅ HIT — 2-2 | Ligue 1 ⚠98d | Rennes v PSG | **O1.5 82.7% +5.4%** · buy≥1.27 (≥1.31 tail-adj) | ✅ **PSG O0.5** 82.6% +13.5% (team) · buy≥1.27 | 2026-08-23 20:45 |
+| ✅ HIT — 2-1 | Serie A ⚠91d | Atalanta v Sassuolo | U4.25 89.5% +0.8% · buy≥1.18 | ✅ U3.75 76.4% +1.3% (runner-up) · buy≥1.28 | 2026-08-23 20:45 |
+| ✅ HIT — 1-2 | Serie A ⚠91d | Torino v Milan | U4.25 89.4% +0.8% · buy≥1.18 | ✅ U3.75 76.3% +1.2% (runner-up) · buy≥1.29 | 2026-08-23 20:45 |
+| ✅ HIT — 1-0 | Serie B ⚠107d | Palermo v Juve Stabia | U3.0 73.9% **−1.5%** · buy≥1.58 | ❌ O1.75 73.0% +1.4% (floor −2.0) · buy≥1.52 | 2026-08-23 21:00 |
+| ❌ MISS — 4-1 | Brasileirão Série A | Palmeiras v Vasco | U3.0 77.7% +2.4% · buy≥1.46 | ✅ **Vasco U1.5** 77.4% +5.7% (team) · buy≥1.36 | 2026-08-23 21:00 |
+| ✅ HIT — 1-0 | Brasileirão Série A | RB Bragantino v Grêmio | U3.0 78.2% +2.8% · buy≥1.45 | ✅ U4.25 90.6% +1.7% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
+| ✅ HIT — 0-2 | Brasileirão Série A | Vitória v Bahia | U3.0 77.4% +2.0% · buy≥1.47 | ✅ U4.25 90.1% +1.3% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
+| ✅ HIT — 0-2 | Brasileirão Série B | Ponte Preta v Avaí | **U3.0 85.0% +3.3%** · buy≥1.29 | ✅ **Ponte Preta U1.5** 76.8% +14.7% (team) · buy≥1.37 | 2026-08-23 21:00 |
+| ✅ HIT — 1-1 | Brasileirão Série B | São Bernardo v Náutico | O1.0 90.3% +1.2% · buy≥1.20 — *dead market, base rate 90.6%* | ✅ O1.75 67.6% +2.8% (floor −7.4) · buy≥1.67 | 2026-08-23 21:00 |
+| ✅ HIT — 1-2 | Chilean Primera División | U. De Chile v Colo-Colo | **O1.5 83.6% +7.2%** · buy≥1.26 (≥1.30 tail-adj) | ✅ **Colo-Colo O1.5** 58.5% +25.0% (team) · buy≥1.80 | 2026-08-23 21:00 |
+| ✅ HIT — 1-2 | Categoría Primera A | Fortaleza v Atl. Nacional | U4.25 89.8% **−1.6%** · buy≥1.18 | ✅ O1.75 70.2% +2.9% (floor −4.8) · buy≥1.60 | 2026-08-23 21:00 |
+| ✅ HIT — 1-1 | Serie B ⚠107d | Cesena v Sampdoria | **U3.0 79.1% +3.7%** · buy≥1.42 | ✅ U2.75 58.5% +4.6% (floor −16.5) · buy≥1.61 | 2026-08-23 21:00 |
+| ✅ HIT — 0-5 | LaLiga | Elche v Barcelona | O1.5 75.7% +1.2% · buy≥1.39 | — none | 2026-08-23 21:30 |
+| ✅ HIT — 1-0 | LaLiga 2 | Tenerife v Almería | U4.25 88.9% **−0.7%** · buy≥1.19 | ❌ O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 21:30 |
+| ✅ HIT — 2-0 | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | ✅ **Porto O0.5** 80.7% +5.1% (team) · buy≥1.30 — *re-priced on the venue fix* | 2026-08-23 21:30 |
+| ✅ HIT — 1-1 | MLS | New England v NY City | U4.25 81.2% **+0.8%** · buy≥1.32 | ✅ U3.75 64.3% +1.0% (floor −10.7) · buy≥1.50 | 2026-08-23 22:30 |
+| ✅ HIT — 1-1 | Peruvian Liga 1 | Melgar v Alianza Lima | **O1.5 78.6% +5.3%** · buy≥1.34 (≥1.38 tail-adj) | ❌ **Melgar O1.5** 55.4% +8.2% (team) · buy≥1.89 | 2026-08-23 22:30 |
+| ❌ MISS — 0-0 | Brasileirão Série B | Operário-PR v Vila Nova | O1.0 90.3% +1.3% · buy≥1.20 — *dead market, base rate 90.6%* | ❌ O1.75 67.8% +3.0% (floor −7.2) · buy≥1.67 | 2026-08-23 23:00 |
+| ✅ HIT — 0-1 | Categoría Primera A | Dep. Pasto v Llaneros | U3.0 80.8% +1.1% · buy≥1.38 | ✅ U2.75 60.7% +1.5% (floor −14.3) · buy≥1.56 | 2026-08-23 23:05 |
+| ✅ HIT — 1-0 | Brasileirão Série A | Chapecoense v São Paulo | **U3.0 82.7% +7.3%** · buy≥1.34 (≥1.38 tail-adj) | ✅ **Chapecoense U1.5** 75.4% +18.4% (team) · buy≥1.39 | 2026-08-23 23:30 |
+| ✅ HIT — 1-1 | Brasileirão Série A | Santos v Mirassol | U4.25 88.4% **−0.5%** · buy≥1.20 | — none | 2026-08-23 23:30 |
+| ✅ HIT — 0-2 | Brasileirão Série B | Criciúma v Fortaleza | U3.0 83.2% +1.5% · buy≥1.33 | ✅ U2.75 64.0% +2.0% (floor −11.0) · buy≥1.48 | 2026-08-23 23:30 |
+| ✅ HIT — 2-1 | Brasileirão Série A | Coritiba v Corinthians | U4.25 87.9% **−1.0%** · buy≥1.21 | ✅ O1.75 73.1% +1.4% (floor −1.9) · buy≥1.52 | 2026-08-24 00:30 |
+| ✅ HIT — 2-1 | MLS | Atlanta v Kansas City | U4.25 82.9% +2.5% · buy≥1.29 | ✅ **Kansas City U1.5** 75.1% +14.1% (team) · buy≥1.40 | 2026-08-24 01:00 |
+| ✅ HIT — 0-1 | Chilean Primera División | O'Higgins v Palestino | U4.25 85.2% **+0.0%** · buy≥1.25 | — none | 2026-08-24 01:00 |
+| ✅ HIT — 2-2 | Categoría Primera A | Dep. Cali v Inter de Bogotá | U4.25 90.9% **−0.6%** · buy≥1.16 | ✅ O1.75 68.3% +1.1% (floor −6.7) · buy≥1.65 | 2026-08-24 01:10 |
+| ✅ HIT — 3-0 | Peruvian Liga 1 | Universitario v Los Chankas | U4.25 88.1% **+0.4%** · buy≥1.20 | — none | 2026-08-24 01:30 |
+| ✅ HIT — 1-1 | Categoría Primera A | Junior Barranquilla v Once Caldas | U4.25 88.6% **−2.9%** · buy≥1.20 | ✅ O1.75 72.0% +4.9% (floor −3.0) · buy≥1.54 | 2026-08-24 03:15 |
 
 ### Actual placed bets
 
-**Settled: 0 / 0  ·  Pending: 0**
+**Settled: 22 / 27 — ROI +6.1%  ·  Pending: 1**
 
 | Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
 |---|---|---|---|---|---|---|
+| 01:00 | Atlanta v Kansas City | U4.25 | U4.5 — same tier | 1.23 | 1.27 | +2.0% ⚠ ✅ |
+| 01:00 | Atlanta v Kansas City | U4.25 | **Kansas City U1.5 — team lane** | 1.43 | 1.40 | **+7.4%** ✅ |
+| 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** ✅ |
+| 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ ✅ |
+| 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | O2.0 — harsher rung | 1.35 | 1.40 | +1.6% ✅ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | O1.5 — the tip | 1.24 | 1.30 | **+0.1%** ✅ |
+| 16:30 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** ✅ |
+| 16:45 | Cambuur v Feyenoord | U4.25 | U4.5 — same tier | 1.32 | 1.28 | **+8.7%** ❌ |
+| 17:00 | Eibar v Real Valladolid | U3.0 | **Valladolid U1.5 — team lane** | 1.24 | 1.32 | −1.4% ✅ |
+| 17:15 | Le Havre v AS Monaco | O1.5 | O1.5 — the tip | 1.35 | 1.35 | **+5.1%** ❌ |
+| 18:00 | Viborg v København | **O1.5** | O1.5 — the tip | 1.19 | 1.24 | +0.7% ⚠ ✅ |
+| 18:00 | D. Concepción v Coquimbo | O1.5 | O1.5 — the tip | 1.34 | 1.35 | **+4.5%** ✅ |
+| 18:30 | Venezia v Lecce | **U3.0** | U3.5 — same tier, softer | 1.22 | 1.31 | −2.4% ✅ |
+| 18:30 | Club Brugge v Cercle Brugge | **O1.5** | O1.5 — the tip | 1.21 | 1.21 | +4.8% ❌ |
+| 19:00 | Verona v Ascoli | U3.0 | U3.0 — the tip | 1.45 | 1.47 | **+3.5%** ⟲ PUSH |
+| 20:30 | Alanyaspor v Beşiktaş | O1.5 | **Beşiktaş O0.5 — team lane** | 1.30 | 1.30 | **+5.3%** ❌ |
+| 20:45 | Rennes v PSG | **O1.5** | **PSG O0.5 — team lane** | 1.40 | 1.27 | **+15.6%** ✅ |
+| 20:45 | Atalanta v Sassuolo | U4.25 | U4.5 — same tier | 1.14 | 1.17 | +2.1% ⚠ ✅ |
+| 21:00 | U. De Chile v Colo-Colo | **O1.5** | O1.5 — the tip | 1.27 | 1.26 | **+6.2%** ✅ |
+| 21:00 | Ponte Preta v Avaí | **U3.0** | U3.0 — the tip | 1.36 | 1.29 | **+11.0%** ✅ |
+| 21:00 | RB Bragantino v Grêmio | U3.0 | U3.25 — same tier | 1.42 | 1.39 | **+7.4%** ✅ |
+| 21:00 | Palmeiras v Vasco | U3.0 | U3.0 — the tip | 1.46 | 1.46 | +4.8% ❌ |
+| 21:00 | Cesena v Sampdoria | **U3.0** | U3.0 — the tip | 1.36 | 1.42 | +0.2% ⚠ ✅ |
+| 21:31 | Porto v Arouca | O1.5 | **O1.5 — bought IN-PLAY at 0-0 HT** | 1.63 | **2.57** | **−33.5%** ✅ |
+| 22:30 | Melgar v Alianza Lima | **O1.5** | O1.5 — the tip | 1.37 | 1.34 | **+7.7%** ✅ |
+| 23:30 | Chapecoense v São Paulo | **U3.0** | U3.0 — the tip | 1.35 | 1.34 | **+6.1%** ✅ |
 
-## Engine state — 24 Aug 2026
+**All three losses were bets bought at or above the line.** `Le Havre O1.5` at
++5.1% finished 0-1; `Cambuur U4.5` at **+8.7%** went 2-5; `Club Brugge O1.5` at
++4.8% finished 1-0. Meanwhile all four bets bought BELOW break-even have won.
+
+That inversion is worth naming precisely, because it is the most misleading
+pattern on this page. Nine settled bets split three ways gives three per bucket,
+and three results cannot distinguish a good price from a bad one — the price
+simulation needed 1,941 tips and 4,000 paths before it could say anything at
+all. **Read the `by price paid` table as noise until it holds fifty per
+bucket.** It is printed because it will matter later, not because it means
+anything now.
+
+**The discipline shifted sharply for the better in the evening.** Of the eleven
+bets placed after 18:00, **eight cleared their threshold** — Ponte Preta at
++11.0%, RB Bragantino +7.4%, U. De Chile +6.2%, Club Brugge +4.8%. Compare the
+afternoon, where Hammarby went in 14% under and two team lanes were taken at
+match-total prices.
+
+**Two to watch.** `Atalanta U4.5` at 1.14 is the shortest price in the book and
+clears break-even by 2.1% — there is almost no room in it. `Cesena U3.0` at 1.36
+against 1.357 is functionally break-even.
+
+Earlier note — Brighton: the tip was `O1.5`
+needing 1.30, and `O2.0` was bought instead — a different market that wins on 3+
+rather than 2+, needing 1.40 and paid at 1.35.
+
+Recorded in `config/bets.tsv` and scored by `scripts/ledger.py`. Every `buy≥`
+figure printed by `two_tips.py` is now computed from the recalibrated
+probability; thresholds in the archive predate that and read roughly 7% too low.
+
+---
+
+## On volume: where the bets are, and what a margin actually costs
+
+Three bets out of eleven tips is thin, and the instinct is to cut the margin.
+Measured across 581 replayed fixtures, the volume is somewhere else.
+
+**Tip 2 is where the prices live.** 76% of fixtures produce a second tip, and it
+needs a longer price than Tip 1 does:
+
+    threshold needed      Tip 1    Tip 2
+    1.00 - 1.20             8%       5%
+    1.20 - 1.30            45%      28%
+    1.30 - 1.45            43%      32%
+    1.45 - 1.70             4%      22%
+    1.70 +                  0%      13%
+
+**Tip 1 essentially never needs more than 1.45; a third of Tip 2s need 1.45 or
+better and 13% need 1.70+.** Those are prices a book quotes readily. Tip 1
+competes for the 1.20-1.45 band where the book is tightest.
+
+**And at its own threshold Tip 2 is exactly as good a bet as Tip 1.** Its lower
+strike rate — 70.0% against 83.9% — is already inside its higher break-even
+(1.393 against 1.211). Both return +5% when bought at buy-from. The old-era
+finding that Tip 2 underperformed was the miscalibration, not the lane: it was
+being bought at Tip 1 prices.
+
+**What cutting the margin actually costs.** The residual calibration gap is
+**-1.5 points out of sample**. At an ~83% read that is worth about 1.8% of
+price, and it comes off the top of any margin:
+
+    margin set     real cushion after the residual error
+       5%                     ~3.2%
+       4%                     ~2.2%
+       3%                     ~1.2%
+       2%                     ~0.2%
+
+So **4% is about the floor**, and below 3% the margin stops being a cushion and
+becomes rounding. The 5% is not conservatism; roughly a third of it is paying
+for calibration that is not perfect yet.
+
+**Three ways to widen, in order of what the evidence supports:**
+
+1. **Take Tip 2 at its own price.** Biggest single source of volume, no EV cost,
+   and it is available at prices Tip 1 never reaches.
+2. **Price more fixtures.** Only what gets screenshotted is being tipped; 37
+   leagues are tippable and a full Sunday runs to hundreds of fixtures.
+3. **Drop the margin to 4%,** not lower. Worth roughly a fifth more bets.
+
+What is NOT worth doing is lowering `MIN_WIN_PROB` further. Measured: 0.70 pays
+**13 points of strike rate for 1.7 of edge**, and this project is optimised for
+strike.
+
+## Betting in play: what a rung is worth once it is 0-0 at half time
+
+Taking a drifted price on a tip Athena already issued is a reasonable instinct,
+and the log has five such bets. The pre-match probability cannot price them: it
+covered 90 minutes and the question is about 45. `scripts/live_ht_table.py`
+counts it straight from 57,092 matches that reached the break goalless, split by
+league tempo, which is the one thing that genuinely carries over:
+
+    league tempo        n     O0.5    buy≥     O1.5    buy≥     O2.5    buy≥
+    under 2.5       14740    70.3%    1.49    36.0%    2.92    13.0%    8.08
+    2.5 - 2.8       34479    75.4%    1.39    41.5%    2.53    16.9%    6.21
+    2.8 - 3.1        7873    79.0%    1.33    47.3%    2.22    19.7%    5.33
+
+**The rungs decay at completely different rates, and that is the whole thing.**
+One more goal still probably arrives; two is a coin flip that loses. Backing
+`O0.5` on a drift is sound and the price needed is close to what a book quotes.
+Backing `O1.5` needs about **2.5**, and no book pays that on a match it still
+rates as live.
+
+Two bets on this page make the point exactly:
+
+    Göteborg O0.5   1.22 paid, 1.39 needed    -3.5%    won
+    Porto    O1.5   1.63 paid, 2.53 needed   -33.5%    won
+
+Both won. Both were the same idea — Athena's own tip, at a longer price. One was
+nearly buyable and the other was not close, and nothing about the pre-match tip
+distinguished them. The published probability tells you the match was going to
+be high-scoring; it says nothing about how much of that chance is already spent.
+
+**Why a drifted price is not the same as a good one.** Porto's `O1.5` moved 1.30
+to 1.63, up 25%. The fair price moved 1.30 to 2.53, up 95%. The market repriced
+in the right direction and nowhere near far enough — which is exactly when a
+longer number feels like value and is not.
+
+## Staking: 4% flat fits, but the stake is the second-order decision
+
+`scripts/staking.py` bootstraps real per-bet returns — 1,941 replayed tips,
+settled through the actual push and half-win fractions at each tip's own price —
+down 4,000 simulated 200-bet sequences per rule. Bankroll starts at 1.00.
+
+**Bought at `buy from`, the flat rules behave well and Kelly does not:**
+
+    rule               median   5th pct   max DD   halved
+    flat 1%             1.11x     0.98x       5%       0%
+    flat 2%             1.22x     0.96x      10%       0%
+    flat 4%             1.46x     0.90x      20%       0%
+    flat 8%             1.97x     0.74x      37%       4%
+    quarter Kelly       1.47x     0.72x      30%       2%
+    half Kelly          1.78x     0.42x      55%      23%
+    full Kelly          1.31x     0.06x      86%      64%
+
+**Flat 4% matches quarter Kelly's growth for two-thirds of its drawdown** — 1.46x
+against 1.47x, 20% against 30% — and never halved the bankroll in 4,000 runs
+where quarter Kelly did. Kelly sizes UP on short prices (about 6% on a 1.21 tip,
+2.8% on a 1.45 one), which is right only if the probability is right. Ours is
+measured, with a -1.5 point residual, so sizing up on the shortest prices
+concentrates risk exactly where a small calibration error does most damage. Full
+Kelly is instructive: a HIGHER median than half Kelly and a 5th percentile of
+0.06x, which is volatility drag consuming the edge.
+
+**Then the same rules with the margin surrendered:**
+
+    regime                        return/bet   flat 4% median   5th pct   halved
+    bought at buy-from               +5.32%        1.46x         0.90x      0%
+    bought at break-even             +0.65%        1.01x         0.64x      1%
+    bought 2% under break-even       -1.22%        0.87x         0.56x      4%
+
+**The whole edge lives in the 5% margin.** Moving the stake from 2% to 8% at a
+good price changes the outcome 1.22x to 1.97x. Moving the PRICE from `buy from`
+to break-even at an unchanged 4% stake changes it 1.46x to 1.01x — it deletes
+the system. Two percent under, which is what taking a 1.28 against a 1.30
+break-even looks like, turns it into a 13% loss with a 30% drawdown on the way.
+
+So the ranking is settled: **buying at the threshold is first-order, the stake
+size is second-order.** A bigger stake on a bad price does not rescue it, it
+accelerates it — at 8% in the losing regime, 39% of runs halve the bankroll.
+
+Caveats worth keeping: the pool is the Tip 1 match-total lane only, since that
+is what `predict_fixture` returns, so the team lanes are not represented here.
+And every path assumes bets are independent — checked, and they nearly are: the
+observed variance of a day's hit rate is **1.10x** the binomial across 4,703
+match-days, so ten bets on one slate behave like about nine independent ones
+rather than one large position.
+
+## Engine state at reset — 23 Aug 2026
 
     MU_SHRINK              0.35        per-fixture goal expectation, shrunk
                                        toward the league mean
