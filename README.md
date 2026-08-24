@@ -744,6 +744,26 @@ built from `_shrink_side` and `mu_total` is not, so the match ladder cannot be
 touched; a test pins that. On the live slate every `mu` is unchanged, `Casa Pia
 U1.5` moved 79.2% → 75.4% and one `U1.5` dropped under its offer floor.
 
+#### MEASURED — the big-match effect has a season-phase structure
+
+Cutting the 268,912-fixture measurement by season third:
+
+    vs phase control       early      mid       late
+    top-4 clash            +0.02     −0.07     −0.075
+    bottom-4 clash         −0.044    −0.067    −0.104
+
+The top-clash compression is ABSENT in the first third of a season and
+switches on from mid-season — stakes must be concrete before two top sides
+suppress each other. The shipped `BIG_MATCH_DEBIT` flag validated pooled and
+stays as-is; phase-gating it to mid-season onward is a logged refinement
+candidate that needs its own engine-relative cut (the flagged population is
+too thin to split three ways today). Bottom clashes run tight at EVERY phase
+with a late-season fear premium on top — a February six-pointer is the
+tightest fixture type in football — but no knob ships for it: engine-relative
+the effect sign-flips across windows, because form already sees bad teams'
+thin rates. The engine absorbs relegation culture for free; it was only blind
+to the top-clash kind.
+
 #### SHIPPED — cross-division fallback, validated on 608 historical tips
 
 The archive's "largest single volume fix still outstanding": a promoted club
