@@ -729,6 +729,19 @@ built from `_shrink_side` and `mu_total` is not, so the match ladder cannot be
 touched; a test pins that. On the live slate every `mu` is unchanged, `Casa Pia
 U1.5` moved 79.2% → 75.4% and one `U1.5` dropped under its offer floor.
 
+#### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
+
+The team-lane defense blend invited the obvious sequel: `mu_total` is also
+attack-only. Measured the same way over 103,338 fixtures — combined leakiness
+within a combined-attack bucket — the strand is dead: ~+1 point of O2.5 and
+under a tenth of a goal at the extremes, against the team lanes' 7-11 points.
+The reason is structural: at match level defense nearly double-counts, because
+a team's conceded rate largely IS its opponents' scoring. A side's rate needs
+its specific opponent; a match total mostly does not — which is why the match
+ladder always calibrated clean while the team lanes hid the hole, and why the
+residual-mu-spread hypothesis died. No knob; the Over-side edge lives in the
+team lanes and long rungs, where DEFENSE_BLEND now sharpens it honestly.
+
 #### MEASURED — the big-match effect has a season-phase structure
 
 Cutting the 268,912-fixture measurement by season third:
