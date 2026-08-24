@@ -54,7 +54,7 @@ NAMES = {
     "Ukrainian Premier League": "UKR-PL", "Swiss Super League": "SUI-SL",
     "Austrian Bundesliga": "AUT-BL", "Greek Super League": "GRE-SL",
     "Czech First League": "CZE-FL", "Croatian First League": "CRO-1L",
-    "Eerste Divisie": "NED-ED",
+    "Eerste Divisie": "NED-D2",   # the SECOND tier — NED-ED is the Eredivisie
 }
 
 # An existing badge, so re-stamping replaces rather than stacks.

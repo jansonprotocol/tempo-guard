@@ -1125,6 +1125,7 @@ def asof_features(
 DIVISION_LADDERS = [
     ["ENG-PL", "ENG-CH", "ENG-L1", "ENG-L2", "ENG-NL"],
     ["ESP-LL", "ESP-L2"],
+    ["NED-ED", "NED-D2"],
     ["GER-BL", "GER-B2"],
     ["ITA-SA", "ITA-SB"],
     ["FRA-L1", "FRA-L2"],
