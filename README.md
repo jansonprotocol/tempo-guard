@@ -67,18 +67,16 @@ So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 
 
 | Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.29 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.92 | 2026-08-24 18:40 |
-| — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
+| — | Serie A | Bologna v Lazio | U3.0 77.4% +2.3% · buy≥1.47 | U4.25 90.1% +1.4% (lower edge) · buy≥1.17 | 2026-08-24 18:30 |
+| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 83.9% +4.3% · buy≥1.29 | **Al-Qadsiah O1.5** 57.1% +19.0% (team) · buy≥1.90 | 2026-08-24 18:40 |
+| — | Danish Superliga | Brøndby v Silkeborg | U4.25 82.2% +1.1% · buy≥1.30 | U3.75 65.6% +1.4% (floor −9.4) · buy≥1.47 | 2026-08-24 19:00 |
 | — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80 | 2026-08-24 19:00 |
-| — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
-| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.44 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.35 | 2026-08-24 20:45 |
-| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.34 | 2026-08-24 20:45 |
-| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.28 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.41 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 75.4% +10.1% (team) · buy≥1.44 | 2026-08-24 21:15 |
-| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.41 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.29 | 2026-08-24 21:30 |
-| — | LaLiga 2 | Granada v Mallorca | — under +1% | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.49 | 2026-08-25 00:30 |
-| — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.30 | 2026-08-25 01:30 |
+| — | LaLiga | Osasuna v Levante | O1.5 75.7% +1.4% · buy≥1.39 | — none | 2026-08-24 19:30 |
+| — | Ligue 2 | Reims v Annecy | O1.5 77.4% +5.5% · buy≥1.40 | **Reims O0.5** 81.4% +7.6% (team) · buy≥1.33 | 2026-08-24 20:45 |
+| — | Premier League | Fulham v Chelsea | O1.5 81.3% +1.4% · buy≥1.29 | **Chelsea O0.5** 84.0% +9.2% (team) · buy≥1.29 | 2026-08-24 21:00 |
+| — | LaLiga 2 | Málaga v Deportivo | U3.0 79.1% +1.1% · buy≥1.42 | U2.75 58.5% +1.4% (floor −16.5) · buy≥1.61 | 2026-08-24 21:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48 | 2026-08-25 00:30 |
+| — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.6% (team) · buy≥1.30 | 2026-08-25 01:30 |
 
 ## Pending FUTURE match bettips
 
@@ -91,26 +89,31 @@ them: the header counts by `python scripts/headline.py`, the playable-lanes
 block by `python scripts/playable.py`. After editing a table run all three
 scripts; each has a `--check` mode and each is pinned by a test.
 
+**Slate re-priced ~12:00, before any kickoff, on a store refresh** — six leagues
+were missing most of their 2025 season (~1,240 matches recovered) and the top
+European leagues were missing their 2026-27 opening rounds. Eight tips changed;
+the morning prices are in the git history.
+
 | Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| — | Serie A | Bologna v Lazio | U4.25 89.1% +0.5% · buy≥1.19 | — none | 2026-08-24 18:30 |
-| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.29 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.92 | 2026-08-24 18:40 |
-| — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
+| — | Serie A | Bologna v Lazio | U3.0 77.4% +2.3% · buy≥1.47 | U4.25 90.1% +1.4% (lower edge) · buy≥1.17 | 2026-08-24 18:30 |
+| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 83.9% +4.3% · buy≥1.29 | **Al-Qadsiah O1.5** 57.1% +19.0% (team) · buy≥1.90 | 2026-08-24 18:40 |
+| — | Danish Superliga | Brøndby v Silkeborg | U4.25 82.2% +1.1% · buy≥1.30 | U3.75 65.6% +1.4% (floor −9.4) · buy≥1.47 | 2026-08-24 19:00 |
 | — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.28 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80 | 2026-08-24 19:00 |
 | — | LaLiga 2 | Celta Fortuna v FC Andorra | — no tip, Celta B has 1 row (reserve side, promoted) | — | 2026-08-24 19:00 |
-| — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
-| — | Saudi Pro League | Al-Ittihad v Al-Hazem | U4.25 81.9% **+0.0%** · buy≥1.31 | — none | 2026-08-24 20:00 |
+| — | LaLiga | Osasuna v Levante | O1.5 75.7% +1.4% · buy≥1.39 | — none | 2026-08-24 19:30 |
+| — | Saudi Pro League | Al-Ittihad v Al-Hazem | U4.25 82.5% +0.5% · buy≥1.30 | — none | 2026-08-24 20:00 |
 | — | Trendyol Süper Lig | Kocaelispor v Amed | — no tip, Amedspor has 1 row (promoted) | — | 2026-08-24 20:30 |
-| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.44 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.35 | 2026-08-24 20:45 |
-| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.34 | 2026-08-24 20:45 |
-| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.28 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.41 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 75.4% +10.1% (team) · buy≥1.44 | 2026-08-24 21:15 |
-| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.41 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.29 | 2026-08-24 21:30 |
-| — | LaLiga 2 | Granada v Mallorca | U3.0 77.3% +0.9% · buy≥1.47 | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
+| — | Ligue 2 | Reims v Annecy | O1.5 77.4% +5.5% · buy≥1.40 | **Reims O0.5** 81.4% +7.6% (team) · buy≥1.33 | 2026-08-24 20:45 |
+| — | Serie A | Roma v Fiorentina | U4.25 88.4% **−0.3%** · buy≥1.20 | — none | 2026-08-24 20:45 |
+| — | Premier League | Fulham v Chelsea | O1.5 81.3% +1.4% · buy≥1.29 | **Chelsea O0.5** 84.0% +9.2% (team) · buy≥1.29 | 2026-08-24 21:00 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U4.25 86.8% +0.5% · buy≥1.22 | — none | 2026-08-24 21:15 |
+| — | LaLiga 2 | Málaga v Deportivo | U3.0 79.1% +1.1% · buy≥1.42 | U2.75 58.5% +1.4% (floor −16.5) · buy≥1.61 | 2026-08-24 21:30 |
+| — | LaLiga 2 | Granada v Mallorca | U3.0 78.1% +0.1% · buy≥1.45 | — none | 2026-08-24 21:30 |
 | — | Brasileirão Série B | Athletic v Novorizontino | O1.0 89.2% +0.2% · buy≥1.22 | — none | 2026-08-25 00:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.49 | 2026-08-25 00:30 |
-| — | Brasileirão | Botafogo v Athletico | U3.0 76.2% +0.8% · buy≥1.51 | — none | 2026-08-25 01:00 |
-| — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.30 | 2026-08-25 01:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48 | 2026-08-25 00:30 |
+| — | Brasileirão | Botafogo v Athletico | U4.25 88.5% **−0.4%** · buy≥1.20 | — none | 2026-08-25 01:00 |
+| — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.6% (team) · buy≥1.30 | 2026-08-25 01:30 |
 
 ## Completed FUTURE match bettips
 
