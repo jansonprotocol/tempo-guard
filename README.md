@@ -78,7 +78,7 @@ you are buying.
 <table align="left"><tr><th align="left">🟢 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>— under +1%</td><td><b>Everton O0.5</b> 83.5% +5.6%<br>buy≥1.30 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
-<table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 86.0% +6.2%<br>buy≥1.26</td><td><b>Al-Nassr O1.5</b> 57.7% +19.5%<br>buy≥1.88 · team</td></tr></table>
+<table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td><b>Al-Nassr O1.5</b> 57.7% +19.5%<br>buy≥1.88 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— under +1%</td><td><b>Al-Shabab O0.5</b> 80.7% +2.6%<br>buy≥1.30 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>— under +1%</td><td>O1.75 66.5% +1.8%<br>buy≥1.71 · floor −8.5</td></tr></table>
@@ -114,7 +114,7 @@ you are buying.
 <table align="left"><tr><th align="left">🔵 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 18:45 <b>Sabah v H. Be'er Sheva</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff</td><td>— no tip, qualifier history only</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 86.0% +6.2%<br>buy≥1.26</td><td><b>Al-Nassr O1.5</b> 57.7% +19.5%<br>buy≥1.88 · team</td></tr></table>
+<table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td><b>Al-Nassr O1.5</b> 57.7% +19.5%<br>buy≥1.88 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 79.9% +0.2%<br>buy≥1.31</td><td><b>Al-Shabab O0.5</b> 80.7% +2.6%<br>buy≥1.30 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Bodø/Glimt v NEC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff</td><td>— no tip, qualifier history only</td><td>—</td></tr></table>
@@ -178,6 +178,11 @@ row, which is the honest number even where it hurts.
                                        toward the league mean
     MU_SHRINK_BY_LEAGUE    MLS 0.15, IRL-PD 0.10
     TEAM_SHRINK            0.62        the team-total lane, shrunk separately
+    BIG_MATCH_DEBIT        0.15        both sides top-6 as-of: two fat form
+                                       rates price a top clash UP exactly when
+                                       the occasion pushes it down; validated
+                                       on two windows (−0.13 / −0.16), and the
+                                       relegation mirror case died a sign-flip
     TEAM_RATE_FLOOR        0.95        floor on the shrunk per-side rate; the
                                        low end needed a level fix, not a spread
                                        one, and the two ends pull opposite ways

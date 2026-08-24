@@ -264,6 +264,75 @@ def _home_share(df: pd.DataFrame, league_code: Optional[str],
     return share
 
 
+# ── The top-clash debit ───────────────────────────────────────────────────────
+#
+# Born from the 0-0 Manchester derby retrosim and measured before being
+# believed. Stage 1, selection-free over 268,912 stored fixtures with league
+# tables computed strictly as-of: big matches run under their own league's
+# mean, monotone in stakes (top6 −0.02, top4 −0.05, 1v2 −0.11). Stage 2, the
+# ENGINE-relative residual on 24 leagues and two separate windows:
+#
+#     actual − mu        recent           held-back
+#     control            +0.027           +0.025
+#     both top-6         −0.131 ±0.085    −0.155 ±0.091    replicates
+#     both top-4         −0.217 ±0.129    −0.363 ±0.141    replicates
+#     both bottom-4      −0.180           +0.237           SIGN FLIP — dead
+#
+# The engine reads two fat attacking rates and prices a top clash UP exactly
+# when the occasion pushes it down — form cannot see stakes. The relegation
+# mirror case died the two-window death: bad teams already arrive with thin
+# rates, so the engine absorbs that one on its own.
+#
+# 0.15 is the pooled top-6 effect shaded conservative (−0.15 to −0.17 across
+# both windows, z ≈ 2.5 against control). One tier, not two: top-4 measures
+# stronger but noisier, and a second constant can earn its place with more
+# data. Applied to the MATCH mu only — the team lanes were not measured.
+#
+# The flag replicates the measurement exactly, quirk included: points within
+# the CALENDAR year to date, both sides with six-plus rounds played, both in
+# the top six. For autumn rounds of a European season that is the season table;
+# for spring rounds it is a half-season form table. That is what validated on
+# both windows, so that is what ships — refining the boundary is a new
+# measurement, not a free edit.
+BIG_MATCH_DEBIT = 0.15
+_TOP_CLASH_MIN_ROUNDS = 6
+_TOP_CLASH_TOP_N = 6
+_TOP_CLASH_CACHE: dict[tuple, frozenset] = {}
+
+
+def _is_top_clash(df: pd.DataFrame, h_norm: str, a_norm: str,
+                  cutoff: datetime, league_code: str) -> bool:
+    key = (league_code, cutoff.date() if hasattr(cutoff, "date") else cutoff)
+    top = _TOP_CLASH_CACHE.get(key)
+    if top is None:
+        year_start = datetime(cutoff.year, 1, 1)
+        block = df[(df["date"] >= year_start) & (df["date"] < cutoff)]
+        pts: dict[str, int] = {}
+        played: dict[str, int] = {}
+        for r in block.itertuples():
+            if pd.isna(r.hg) or pd.isna(r.ag):
+                continue
+            h, a = _norm(str(r.home)), _norm(str(r.away))
+            hw = 3 if r.hg > r.ag else 1 if r.hg == r.ag else 0
+            pts[h] = pts.get(h, 0) + hw
+            pts[a] = pts.get(a, 0) + (3 if hw == 0 else 1 if hw == 1 else 0)
+            played[h] = played.get(h, 0) + 1
+            played[a] = played.get(a, 0) + 1
+        # Measured on full-size leagues. In a frame with few clubs — a cup
+        # fallback, a tiny sample — "top six" is everybody and means nothing,
+        # so the flag stands down rather than firing on all of them.
+        if len(pts) < 2 * _TOP_CLASH_TOP_N:
+            top = frozenset()
+        else:
+            table = sorted(pts, key=lambda t: -pts[t])[:_TOP_CLASH_TOP_N]
+            top = frozenset(t for t in table
+                            if played.get(t, 0) >= _TOP_CLASH_MIN_ROUNDS)
+        if len(_TOP_CLASH_CACHE) > 4096:
+            _TOP_CLASH_CACHE.clear()
+        _TOP_CLASH_CACHE[key] = top
+    return h_norm in top and a_norm in top
+
+
 def _shrink_side(gf: float, league_mu: Optional[float],
                  share: float = 0.5) -> float:
     """Shrink one side's scoring rate toward that SIDE's league mean.
@@ -933,6 +1002,14 @@ def _compute_features(
 
     mu_total = max(0.2, gfh + gfa)
     mu_total = _shrink_mu(mu_total, league_mu, league_code)
+    # Two top sides suppress each other in a way form cannot see — the engine
+    # reads two fat attacking rates and prices the fixture UP when the occasion
+    # pushes it down. See _is_top_clash for the measurement; applied after the
+    # shrink because it is an occasion effect, not a spread error, and to
+    # mu_total only because only the match residual was measured.
+    if (league_code and cutoff is not None
+            and _is_top_clash(full_df, h_norm, a_norm, cutoff, league_code)):
+        mu_total = max(0.2, mu_total - BIG_MATCH_DEBIT)
     p0 = math.exp(-mu_total)
     p1 = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)

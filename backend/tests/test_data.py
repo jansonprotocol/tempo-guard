@@ -851,3 +851,65 @@ def test_no_ladder_means_no_fallback():
     assert features._adjacent_divisions("ESP-LL") == [("ESP-L2", True)]
     assert features._adjacent_divisions("ENG-CH") == [
         ("ENG-L1", True), ("ENG-PL", False)]
+
+
+def _clash_frame():
+    import pandas as pd
+
+    rows = []
+    # A 12-club league: four strong sides beating eight fillers for 7 rounds.
+    # Size matters — the flag stands down in frames under twice its top-N,
+    # because "top six" of six clubs is everybody.
+    strong = ["Alpha", "Beta", "Gamma", "Delta"]
+    weak = [f"Filler{i}" for i in range(1, 9)]
+    d = pd.Timestamp("2026-02-01")
+    for rnd in range(7):
+        for i, s in enumerate(strong):
+            rows.append((d, s, weak[(rnd + i) % 8], 2, 0))
+        # Draws only among fillers 3-8, so Filler1 and Filler2 finish on
+        # zero points — genuinely OUTSIDE the top six, which a 12-team league
+        # needs constructing deliberately: 5th place is top-6 by definition.
+        rows.append((d, weak[2 + (rnd % 3) * 2], weak[3 + (rnd % 3) * 2], 0, 0))
+        d += pd.Timedelta(days=7)
+    return pd.DataFrame(rows, columns=["date", "home", "away", "hg", "ag"])
+
+
+def test_top_clash_flag_matches_the_measurement():
+    """Both sides top-6 by calendar-year points with 6+ rounds each — the flag
+    the two-window validation was run on, quirk included."""
+    from datetime import datetime
+
+    from app.data import features
+
+    df = _clash_frame()
+    cutoff = datetime(2026, 8, 1)
+    features._TOP_CLASH_CACHE.clear()
+    top = [t for t in ("alpha", "beta", "gamma", "delta")
+           if features._is_top_clash(df, t, t, cutoff, "TEST-LG")]
+    assert top, "strong clubs should reach the top table"
+    # A clash needs BOTH sides up there.
+    assert features._is_top_clash(df, top[0], top[-1], cutoff, "TEST-LG") \
+        == (len(top) >= 2)
+    assert not features._is_top_clash(df, top[0], "filler1", cutoff, "TEST-LG")
+    # Before six rounds exist, nobody is flagged — a table that early is noise.
+    features._TOP_CLASH_CACHE.clear()
+    early = datetime(2026, 2, 20)
+    assert not features._is_top_clash(df, top[0], top[-1], early, "TEST-LG")
+
+
+def test_big_match_debit_only_lowers_and_only_matches():
+    """The debit is a subtraction on the MATCH mu, sized from the pooled
+    top-6 effect (−0.15 to −0.17 in both windows). It must never raise a mu,
+    and the team lanes — which were never measured — must not carry it."""
+    import inspect
+
+    from app.data import features
+
+    assert 0 < features.BIG_MATCH_DEBIT <= 0.2
+    src = inspect.getsource(features._compute_features)
+    at = src.index("BIG_MATCH_DEBIT")
+    # Applied to mu_total after the shrink, before anything else reads it...
+    assert "mu_total = max(0.2, mu_total - BIG_MATCH_DEBIT)" in src
+    # ...and never to the per-side rates that feed p_*_tt05.
+    assert "gfh - BIG_MATCH_DEBIT" not in src
+    assert "gfa - BIG_MATCH_DEBIT" not in src
