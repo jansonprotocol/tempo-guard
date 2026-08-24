@@ -2,7 +2,7 @@
   <img src="docs/athena-logo.png" alt="" width="120">
 </p>
 
-# ATHENA — TEMPO GUARD · BETA STAGE 1
+# ATHENA — TEMPO GUARD · BETA STAGE 2
 
 
 ## CURRENT CONFIRMED HITRATE: 0.0%
