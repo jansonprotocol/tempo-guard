@@ -184,6 +184,42 @@ MU_SHRINK_BY_LEAGUE: Dict[str, float] = {
 # where the team probabilities are derived, so mu_total is not shrunk twice.
 TEAM_SHRINK = 0.62
 
+# A FLOOR on the shrunk per-side rate, and it is not a second shrink — the two
+# ends of the range need opposite corrections and one scalar cannot give them.
+# Swept on 13,872 selection-free side-observations, membership frozen:
+#
+#     TEAM_SHRINK      0.62    0.70    0.78    0.86
+#     gf 0.0-0.9      +6.7    +7.9    +9.2   +10.4     P(>=2), worse
+#     gf 1.9-9.9      +3.5    +2.0    +0.5    -0.9     P(>=2), better
+#
+# Less shrink fixes the top and wrecks the bottom, so 0.62 stays. The bottom is
+# not a spread problem at all: the weakest sides are simply rated too low, which
+# the regression that SET the shrink already showed and nobody read as a
+# separate fault — "lowest gf fifth says 0.90 goals, actually 1.14". A slope
+# fitted with an intercept of 0.572 cannot be applied as a slope alone without
+# leaving exactly this residual at the low end.
+#
+# What the floor is worth, held-back window scored with the value picked on the
+# recent one, and both rungs it could touch measured alongside:
+#
+#     P(side scores >= 2), gf < 0.9      recent   held-back
+#       no floor                          +6.8       +6.5
+#       floor 0.95                        +1.5       +1.4
+#
+#     lane        no floor              floor 0.95
+#     U1.5     -6.7 / -4.0            -4.3 / -0.1     n 421->381, 453->413
+#     O1.5     +8.6 / +2.7            +8.5 / +2.9     untouched
+#     O0.5     +2.5 / -0.9            +2.4 / -0.7     untouched
+#
+# It replicates in both windows, costs about 9% of `U1.5` lanes, and leaves the
+# other two rungs alone — `U1.5` needs p >= 0.75, so P(>=2) <= 0.25, so gf <=
+# 0.96, which is why that lane and only that lane sits inside the floored band.
+#
+# 1.00 scores marginally better on the shape metric (-0.4 / -0.5) but was never
+# measured at lane level, and 0.95 moves half as many observations for a gain
+# already validated. The conservative one ships.
+TEAM_RATE_FLOOR = 0.95
+
 
 # Fraction of a league's goals scored by the home side. Both sides used to be
 # shrunk toward `league_mu / 2`, on the stated reasoning that half the league
@@ -239,7 +275,10 @@ def _shrink_side(gf: float, league_mu: Optional[float],
     if not league_mu or league_mu <= 0:
         return gf
     target = league_mu * share
-    return max(0.05, target + TEAM_SHRINK * (gf - target))
+    # The floor is applied last, so it binds on the SHRUNK rate rather than the
+    # raw one — it is a statement about what the engine ends up believing, not
+    # about what the form data said before shrinkage.
+    return max(TEAM_RATE_FLOOR, target + TEAM_SHRINK * (gf - target))
 
 
 def _shrink_mu(mu: float, league_mu: Optional[float],

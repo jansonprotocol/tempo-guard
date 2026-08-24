@@ -74,10 +74,10 @@ So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 
 | — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.44 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.35 | 2026-08-24 20:45 |
 | — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.34 | 2026-08-24 20:45 |
 | — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.28 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.41 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.37 | 2026-08-24 21:15 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 75.4% +10.1% (team) · buy≥1.44 | 2026-08-24 21:15 |
 | — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.41 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.29 | 2026-08-24 21:30 |
 | — | LaLiga 2 | Granada v Mallorca | — under +1% | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.32 | 2026-08-25 00:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.49 | 2026-08-25 00:30 |
 | — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.30 | 2026-08-25 01:30 |
 
 ## Pending FUTURE match bettips
@@ -104,11 +104,11 @@ scripts; each has a `--check` mode and each is pinned by a test.
 | — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.44 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.35 | 2026-08-24 20:45 |
 | — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.34 | 2026-08-24 20:45 |
 | — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.28 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.41 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.37 | 2026-08-24 21:15 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.56 | **Casa Pia U1.5** 75.4% +10.1% (team) · buy≥1.44 | 2026-08-24 21:15 |
 | — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.41 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.29 | 2026-08-24 21:30 |
 | — | LaLiga 2 | Granada v Mallorca | U3.0 77.3% +0.9% · buy≥1.47 | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
 | — | Brasileirão Série B | Athletic v Novorizontino | O1.0 89.2% +0.2% · buy≥1.22 | — none | 2026-08-25 00:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.32 | 2026-08-25 00:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | U2.75 63.9% +1.9% (floor −11.1) · buy≥1.49 | 2026-08-25 00:30 |
 | — | Brasileirão | Botafogo v Athletico | U3.0 76.2% +0.8% · buy≥1.51 | — none | 2026-08-25 01:00 |
 | — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.30 | 2026-08-25 01:30 |
 
@@ -132,6 +132,9 @@ scripts; each has a `--check` mode and each is pinned by a test.
                                        toward the league mean
     MU_SHRINK_BY_LEAGUE    MLS 0.15, IRL-PD 0.10
     TEAM_SHRINK            0.62        the team-total lane, shrunk separately
+    TEAM_RATE_FLOOR        0.95        floor on the shrunk per-side rate; the
+                                       low end needed a level fix, not a spread
+                                       one, and the two ends pull opposite ways
     MIN_WIN_PROB           0.75        probability floor, re-tuned with the shrink
 
     weighted calibration gap    -0.6 in-sample, -1.5 out-of-sample  (was -4.4)
@@ -652,11 +655,56 @@ what was seen, including why `O0.5` is clean.
 
 **Pooled +0.8 and the middle bands flat.** The Poisson ladder is sound and the
 dispersion is 1.047, near enough to 1.000 to price with. What the table does
-show is a different thing: **both extreme bands run high at every threshold**
-(+6.8 / +2.6 at `≥1`, +6.7 / +3.5 at `≥2`, +3.3 / +3.6 at `≥3`). That is the
-FEATURE being under-dispersed — estimates squeezed too hard toward the league
-mean, so the extremes are not extreme enough — and `TEAM_SHRINK` is the knob
-that does the squeezing. **Open, and the most promising lead on the board.**
+show is a different thing: **both extreme bands run high**, and the two ends
+turn out to need OPPOSITE corrections.
+
+#### FIXED — the weakest sides were rated too low. `TEAM_RATE_FLOOR = 0.95`
+
+Sweeping `TEAM_SHRINK` with band membership frozen settles which end is which:
+
+    TEAM_SHRINK      0.62    0.70    0.78    0.86     P(>=2) gap
+    gf 0.0-0.9      +6.7    +7.9    +9.2   +10.4     gets WORSE
+    gf 1.9-9.9      +3.5    +2.0    +0.5    -0.9     gets better
+    ALL             +0.8    +0.9    +1.0    +1.1     sd(gf) 0.304 -> 0.375
+
+Less shrink fixes the top and wrecks the bottom, and pooled degrades all the
+way, so **0.62 stays** — which independently re-confirms the sweep that set it.
+The bottom band is not a spread problem at all. It is a level error, and the
+regression that SET the shrink had already printed it without anyone reading it
+as a separate fault: *"lowest gf fifth says 0.90 goals, actually 1.14"*. A slope
+fitted with an intercept of 0.572 cannot be applied as a slope alone.
+
+So the correction is a floor, not a scalar. Picked on the recent window and
+scored on the held-back one:
+
+    P(side scores >= 2), gf < 0.9      recent   held-back
+      no floor                          +6.8       +6.5
+      floor 0.95                        +1.5       +1.4
+
+    lane        no floor           floor 0.95        volume
+    U1.5     -6.7 / -4.0        -4.3 / -0.1      421->381, 453->413
+    O1.5     +8.6 / +2.7        +8.5 / +2.9      untouched
+    O0.5     +2.5 / -0.9        +2.4 / -0.7      untouched
+
+**`U1.5` improves in both windows for about 9% of its lanes**, and nothing else
+moves — `U1.5` needs `p ≥ 0.75`, so `P(≥2) ≤ 0.25`, so `gf ≤ 0.96`, which is
+why that lane and only that lane sits inside the floored band. `p_*_tt05` is
+built from `_shrink_side` and `mu_total` is not, so the match ladder cannot be
+touched; a test pins that. On the live slate every `mu` is unchanged, `Casa Pia
+U1.5` moved 79.2% → 75.4% and one `U1.5` dropped under its offer floor.
+
+#### Two things the window split made WEAKER, not stronger
+
+Pooling hid this, and both correct claims made earlier in this section:
+
+- **The `≥1` under-statement does not replicate.** Recent +11.4, held-back +2.8
+  on n≈300 a side. Only the `≥2` signal survives the split (+6.8 / +6.5), which
+  is the one the rungs are cut on — but "both thresholds are under-stated" was
+  a pooled-data artefact and is withdrawn.
+- **`O1.5` at +5.8 is softer than it looks.** Recent +8.6, held-back +2.7. That
+  is about 1.8 standard errors apart on n≈420 each, so the rung's over-delivery
+  is partly window noise. `U1.5` by contrast holds (−6.7 / −4.0, under 1 SE),
+  which is why the floor was validated on `U1.5` and not on the pair.
 
 #### The match lane reproduced exactly
 

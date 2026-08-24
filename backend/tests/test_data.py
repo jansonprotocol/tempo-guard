@@ -716,3 +716,41 @@ def test_alias_pointing_at_a_missing_name_is_ignored():
 
     # `Celta B` is not in this frame, so the alias must not be applied.
     assert features._aliased("ESP-L2", df, "Celta Fortuna") == "Celta Fortuna"
+
+
+def test_weak_sides_are_floored_and_ordinary_ones_are_not():
+    """The floor is a patch on the low end, not a second shrink.
+
+    The shrink's own fitting regression already showed it — "lowest gf fifth
+    says 0.90 goals, actually 1.14" — but a slope fitted with an intercept of
+    0.572 cannot be applied as a slope alone without leaving that residual.
+    Sweeping TEAM_SHRINK makes the low band worse in every direction that
+    helps the high band, so the two ends get different corrections.
+    """
+    from app.data import features
+
+    mu, share = 2.66, 0.565
+    # A side with almost no attack lands ON the floor rather than below it.
+    assert features._shrink_side(0.10, mu, 1 - share) == features.TEAM_RATE_FLOOR
+    # An ordinary side is untouched by it.
+    assert features._shrink_side(2.20, mu, share) > features.TEAM_RATE_FLOOR
+    # And the floor never LOWERS a rate — it can only make a weak side look
+    # stronger, which is the direction the measurement asked for.
+    for gf in (0.05, 0.5, 1.0, 1.5, 2.5):
+        for s in (share, 1 - share):
+            assert features._shrink_side(gf, mu, s) >= features.TEAM_RATE_FLOOR
+
+
+def test_the_floor_cannot_reach_the_match_lane():
+    """`p_*_tt05` are built from `_shrink_side`; `mu_total` is not. The team
+    lane has its own shrink precisely so the match lane is not shrunk twice,
+    and the floor inherits that isolation — the match ladder is calibrated to
+    a gap of ~0 and a team-lane patch does not get to disturb it."""
+    import inspect
+
+    from app.data import features
+
+    src = inspect.getsource(features._compute_features)
+    for line in src.splitlines():
+        if "mu_total" in line and "=" in line:
+            assert "_shrink_side" not in line
