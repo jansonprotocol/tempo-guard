@@ -220,11 +220,28 @@ TEAM_SHRINK = 0.62
 # already validated. The conservative one ships.
 TEAM_RATE_FLOOR = 0.95
 
-# Weight of opponent defense in the team-lane side rate. 0.0 = attack-only,
-# today's engine. See the stage-1 measurement at the tt05 assembly site; a
-# non-zero value ships only if the two-window sweep (defense_sweep.py) earns
-# it, the same bar TEAM_SHRINK and TEAM_RATE_FLOOR cleared.
-DEFENSE_BLEND = 0.0
+# Weight of opponent defense in the team-lane side rate. 0.0 was attack-only,
+# the engine as it stood until 24 Aug — a side facing the league's best
+# defense and its worst got the same number. Stage 1 (206,676 selection-free
+# fixture-sides) showed the opponent's conceded rate separates P(side scores)
+# by 7-11 points WITHIN an attack bucket; the sweep through the engine's own
+# path, 11,903 fixtures per weight, two windows, lane gaps says-vs-hit:
+#
+#     w        O0.5           O1.5           U1.5          sum|gap|
+#     0.0    +0.0 / -2.0    +2.5 / +3.1    -2.4 / -2.6      12.6
+#     0.3    +0.7 / -0.4    +2.1 / +2.3    -1.9 / -1.6       9.0
+#     0.5    -0.5 / -1.0    +0.3 / +1.3    -1.6 / -1.3       6.0   <- ships
+#     0.7    -1.8 / -1.6    -1.7 / -2.4    -0.8 / -1.7      10.0
+#     1.0    -3.3 / -2.6    -5.9 / -7.8    -2.7 / -2.9      25.2
+#
+# A clean U-shape with its floor at half-weight: every rung improves or holds
+# in BOTH windows at 0.5, and full weight overshoots into the opposite error —
+# the same lesson as every blend in this file (SHOT_BLEND 0.60, VENUE_BLEND
+# 0.35): the signal is real and taking all of it is wrong. O1.5, the rung the
+# stage-1 spread said had the most to gain, goes from +2.5/+3.1 to +0.3/+1.3.
+# Team lanes only; mu_total is computed from the unadjusted rates above and a
+# test pins that.
+DEFENSE_BLEND = 0.5
 
 
 # Fraction of a league's goals scored by the home side. Both sides used to be

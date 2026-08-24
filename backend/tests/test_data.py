@@ -913,3 +913,20 @@ def test_big_match_debit_only_lowers_and_only_matches():
     # ...and never to the per-side rates that feed p_*_tt05.
     assert "gfh - BIG_MATCH_DEBIT" not in src
     assert "gfa - BIG_MATCH_DEBIT" not in src
+
+
+def test_defense_blend_touches_team_lanes_only():
+    """The defense adjustment feeds `p_*_tt05` and nothing else: `mu_total`
+    is assembled from the unadjusted attack rates, so the match ladder —
+    calibrated to ~0 — cannot move. Pinned the same way as the floor."""
+    import inspect
+
+    from app.data import features
+
+    assert 0.0 <= features.DEFENSE_BLEND <= 0.7
+    src = inspect.getsource(features._compute_features)
+    # The adjusted rates exist and are consumed by the tt05 lines only.
+    assert "gfh_t" in src and "gfa_t" in src
+    for line in src.splitlines():
+        if "mu_total" in line and "=" in line:
+            assert "gfh_t" not in line and "gfa_t" not in line
