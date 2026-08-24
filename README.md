@@ -1,36 +1,1271 @@
-# ATHENA: Tempo Guard
+# ATHENA — TEMPO GUARD · BETA STAGE 1
 
-## Completed FUTURE match bettips
 
-| Date | League | Fixture | Play | Modelled | Edge | Result |
-|---|---|---|---|---|---|---|
-| 2026-08-20 | LaLiga | Rayo Vallecano v Alavés | O1.5 (2+ goals) | 82% | +7.7% | ✅ HIT — 1-1 |
-| 2026-08-21 | Brasileirão Série B | Athletic v CRB | O1.0 (2+ goals) | 90% | +1.0% | ✅ HIT |
-| 2026-08-21 | Brasileirão Série B | Novorizontino v América-MG | O1.0 (2+ goals) | 90% | +1.1% | ✅ HIT |
+## CURRENT CONFIRMED HITRATE: 83.7%
 
-**3 / 3**
+**Tip 1 41 / 49 settled** · **Tip 2 28 / 38** · **bets 17 / 22, ROI -1.6%** · over/under markets only · live tips, not backtests
+
+The log was reset on **23 Aug 2026** when the engine was recalibrated. Numbers
+from before that point are not comparable to numbers after it, so they are not
+mixed: see **[archive/2026-08-pre-calibration/](archive/2026-08-pre-calibration/)**
+for the full previous log, every bet placed, and a summary of what it
+established.
+
+What that era ended on, for reference — and what the same tips score on the
+calibrated engine:
+
+    lane        as published        re-run calibrated
+    Tip 1     101/120   84.2%       99/118   83.9%
+    Tip 2      67/100   67.0%       56/80    70.0%
+    Bets       58/82    70.7%       ROI  -8.5%
+
+Strike rate is near-identical; realised edge over base rate went **+1.35 to
++2.23**, and the market mix came off a `U4.25` monoculture. The old number was
+substantially bought rather than earned, which is the whole reason for starting
+the count again rather than continuing it.
+
+**Minimum average odds needed, computed from settlement rather than
+`1 / hit-rate`** (pushes and half-wins return the stake, not the price):
+
+    Tip 1    break-even 1.211    at +5% margin  1.27
+    Tip 2    break-even 1.393    at +5% margin  1.46
 
 ## Pending FUTURE match bettips
 
-| Date | League | Fixture | Play | Modelled | Edge |
+First tips on the calibrated engine. `buy≥` is break-even + 5%, computed from
+the recalibrated probability.
+
+**Every fixture table below is sorted by kickoff, earliest first** — pending,
+completed and placed bets alike. New rows arrive in the order fixtures are
+priced, which is not that order, so run `python scripts/sort_tables.py` after
+adding any; a test fails if a table drifts out of order.
+
+| Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
 |---|---|---|---|---|---|
-| 2026-08-21 | J1 League | Kashiwa Reysol v V-Varen Nagasaki | U4.25 (≤3 goals, half win at 4) | 86% | −2.3% |
-| 2026-08-21 | J1 League | FC Tokyo v JEF United Ichihara-Chiba | U4.25 (≤3 goals, half win at 4) | 89% | +0.9% |
+| **LIVE** 0-5 (86') | LaLiga | Elche v Barcelona | O1.5 75.7% +1.2% · buy≥1.39 | — none | 2026-08-23 21:30 |
+| **LIVE** 1-0 (89') | LaLiga 2 | Tenerife v Almería | U4.25 88.9% **−0.7%** · buy≥1.19 | O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 21:30 |
+| **LIVE** 2-0 (89') | Liga Portugal | Porto v Arouca | O1.5 76.8% +1.7% · buy≥1.37 | **Porto O0.5** 80.7% +5.1% (team) · buy≥1.30 — *re-priced on the venue fix* | 2026-08-23 21:30 |
+| **LIVE** 1-0 (39') | MLS | New England v NY City | U4.25 81.2% **+0.8%** · buy≥1.32 | U3.75 64.3% +1.0% (floor −10.7) · buy≥1.50 | 2026-08-23 22:30 |
+| **LIVE** 1-1 (HT) | Peruvian Liga 1 | Melgar v Alianza Lima | **O1.5 78.6% +5.3%** · buy≥1.34 (≥1.38 tail-adj) | **Melgar O1.5** 55.4% +8.2% (team) · buy≥1.89 | 2026-08-23 22:30 |
+| **LIVE** 0-0 (17') | Brasileirão Série B | Operário-PR v Vila Nova | O1.0 90.3% +1.3% · buy≥1.20 — *dead market, base rate 90.6%* | O1.75 67.8% +3.0% (floor −7.2) · buy≥1.67 | 2026-08-23 23:00 |
+| **LIVE** 0-0 (14') | Categoría Primera A | Dep. Pasto v Llaneros | U3.0 80.8% +1.1% · buy≥1.38 | U2.75 60.7% +1.5% (floor −14.3) · buy≥1.56 | 2026-08-23 23:05 |
+| — not started | Brasileirão Série A | Chapecoense v São Paulo | **U3.0 82.7% +7.3%** · buy≥1.34 (≥1.38 tail-adj) | **Chapecoense U1.5** 75.4% +18.4% (team) · buy≥1.39 | 2026-08-23 23:30 |
+| — not started | Brasileirão Série A | Santos v Mirassol | U4.25 88.4% **−0.5%** · buy≥1.20 | — none | 2026-08-23 23:30 |
+| — not started | Brasileirão Série B | Criciúma v Fortaleza | U3.0 83.2% +1.5% · buy≥1.33 | U2.75 64.0% +2.0% (floor −11.0) · buy≥1.48 | 2026-08-23 23:30 |
+| — not started | Brasileirão Série A | Coritiba v Corinthians | U4.25 87.9% **−1.0%** · buy≥1.21 | O1.75 73.1% +1.4% (floor −1.9) · buy≥1.52 | 2026-08-24 00:30 |
+| — not started | MLS | Atlanta v Kansas City | U4.25 82.9% +2.5% · buy≥1.29 | **Kansas City U1.5** 75.1% +14.1% (team) · buy≥1.40 | 2026-08-24 01:00 |
+| — not started | Chilean Primera División | O'Higgins v Palestino | U4.25 85.2% **+0.0%** · buy≥1.25 | — none | 2026-08-24 01:00 |
+| — not started | Categoría Primera A | Dep. Cali v Inter de Bogotá | U4.25 90.9% **−0.6%** · buy≥1.16 | O1.75 68.3% +1.1% (floor −6.7) · buy≥1.65 | 2026-08-24 01:10 |
+| — not started | Peruvian Liga 1 | Universitario v Los Chankas | U4.25 88.1% **+0.4%** · buy≥1.20 | — none | 2026-08-24 01:30 |
+| — not started | Categoría Primera A | Junior Barranquilla v Once Caldas | U4.25 88.6% **−2.9%** · buy≥1.20 | O1.75 72.0% +4.9% (floor −3.0) · buy≥1.54 | 2026-08-24 03:15 |
 
-Both are thin calls. The Kashiwa edge is *negative* — the engine found no line
-that beats a typical J1 fixture and took the safest available, which is a
-fallback rather than a read. Recorded as issued, not as recommended.
+## Completed FUTURE match bettips
 
-Prediction made as-of the morning of the match; Kashiwa was already in play when
-the tip was generated and was run as if unstarted, so no live information
-reached it.
+**Tip 1 — 9 / 11**   ·   **Tip 2 — 7 / 9**
 
-### How this log works
+| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
+|---|---|---|---|---|---|
+| ✅ HIT — 1-1 (decided, 20') | Championship | West Brom v Burnley | O1.5 77.0% +4.2% · buy≥1.36 | ✅ **Burnley O0.5** 80.5% +11.4% (team) · buy≥1.30 | 2026-08-23 13:00 |
+| ✅ HIT — 2-1 | Chinese Super League | Port v Hainiu | U4.25 80.6% +1.4% · buy≥1.33 | ✅ U3.75 63.5% +1.8% (floor −11.5) · buy≥1.51 | 2026-08-23 13:35 |
+| ✅ HIT — 0-1 | Chinese Super League | Tongliang Long v Dalian Yingbo | U4.25 83.4% +4.1% · buy≥1.28 | ✅ U3.75 67.2% +5.5% (floor −7.8) · buy≥1.44 | 2026-08-23 14:00 |
+| ✅ HIT — 2-2 | Danish Superliga | AGF v OB | U4.25 85.6% +3.2% · buy≥1.24 | ❌ U3.75 70.4% +4.5% (floor −4.6) · buy≥1.38 | 2026-08-23 14:00 |
+| ❌ MISS — 1-0 | Danish Superliga | Midtjylland v Randers | **O1.5 84.2% +4.9%** · buy≥1.25 | ❌ **Midtjylland O1.5** 63.4% +16.7% (team) · buy≥1.66 | 2026-08-23 14:00 |
+| ✅ HIT — 1-1 | Allsvenskan | Göteborg v Elfsborg | O1.5 78.9% **+0.1%** · buy≥1.33 | — none | 2026-08-23 14:00 |
+| ✅ HIT — 0-0 | Allsvenskan | VSK v Kalmar | U4.25 83.6% +0.8% · buy≥1.28 | ✅ U3.75 67.6% +1.1% (floor −7.4) · buy≥1.43 | 2026-08-23 14:00 |
+| — no tip — 4-2 | Swiss Super League | Young Boys v Vaduz | — no tip, Vaduz has 3 rows | — | 2026-08-23 14:00 |
+| ✅ HIT — 5-1 | Eredivisie | PSV v Groningen | **O1.5 87.8% +5.8%** · buy≥1.20 | ✅ **PSV O1.5** 64.9% +15.2% (team) · buy≥1.62 | 2026-08-23 14:30 |
+| ❌ MISS — 0-0 | Ekstraklasa | Radomiak v Zagłębie | O1.5 76.7% **+0.7%** · buy≥1.37 | — none | 2026-08-23 14:45 |
+| ✅ HIT — 4-0 | Premier League | Brighton v Aston Villa | O1.5 80.7% +0.8% · buy≥1.30 | ✅ O2.25 58.6% +1.2% (floor −16.4) · buy≥1.59 | 2026-08-23 15:00 |
+| ✅ HIT — 2-1 | Premier League | Man City v Bournemouth | O1.5 81.6% +1.7% · buy≥1.29 | ✅ **Man City O0.5** 83.7% +5.1% (team) · buy≥1.25 | 2026-08-23 15:00 |
+| ✅ HIT — 0-2 | Ligue 1 | Angers v Lille | U4.25 87.0% +2.6% · buy≥1.22 | ✅ U3.75 72.4% +3.8% (floor −2.6) · buy≥1.34 | 2026-08-23 15:00 |
+| ✅ HIT — 4-0 | Belgian Pro League | Lommel v Westerlo | O1.5 77.5% +1.3% · buy≥1.35 | — none | 2026-08-23 16:00 |
+| — no tip — 2-1 | Danish Superliga | Horsens v Lyngby | — no tip, Horsens has 4 rows | — | 2026-08-23 16:00 |
+| ✅ HIT — 1-0 | Liga Portugal | Vitória v Nacional | U4.25 87.7% +1.3% · buy≥1.21 | ✅ U3.75 73.5% +2.0% (floor −1.5) · buy≥1.33 | 2026-08-23 16:30 |
+| ✅ HIT — 2-0 | Allsvenskan | Hammarby v GAIS | **O1.5 83.2% +4.4%** · buy≥1.26 | ✅ **Hammarby O1.5** 64.1% +16.8% (team) · buy≥1.64 | 2026-08-23 16:30 |
+| ✅ HIT — 2-0 | Allsvenskan | BP v Degerfors | U4.25 85.8% +2.9% · buy≥1.24 | ✅ U3.75 70.7% +4.1% (floor −4.3) · buy≥1.37 | 2026-08-23 16:30 |
+| ❌ MISS — 2-5 | Eredivisie | Cambuur v Feyenoord | U4.25 82.4% +3.1% · buy≥1.30 | ✅ **Feyenoord O0.5** 80.6% +8.5% (team) · buy≥1.30 | 2026-08-23 16:45 |
+| ✅ HIT — 2-2 | LaLiga | Atl. Madrid v Villarreal | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-23 17:00 |
+| ✅ HIT — 1-0 | LaLiga 2 | Eibar v Real Valladolid | **U3.0 80.8% +4.4%** · buy≥1.38 | ✅ **Valladolid U1.5** 79.5% +8.0% (team) · buy≥1.32 | 2026-08-23 17:00 |
+| ❌ MISS — 0-1 | Ligue 1 | Le Havre v AS Monaco | O1.5 77.8% **+0.4%** · buy≥1.35 | — none | 2026-08-23 17:15 |
+| ✅ HIT — 2-2 | Premier League | Newcastle v Liverpool | O1.5 80.5% **+0.6%** · buy≥1.30 | — none | 2026-08-23 17:30 |
+| — no tip — 5-0 | Ekstraklasa | GKS Katowice v Wisła Płock | — no tip, Wisła Płock has 3 rows | — | 2026-08-23 17:30 |
+| ✅ HIT — 4-0 | Danish Superliga | Viborg v København | **O1.5 84.6% +5.3%** · buy≥1.24 (≥1.28 tail-adj) | ❌ **København O1.5** 65.8% +24.5% (team) · buy≥1.59 | 2026-08-23 18:00 |
+| ✅ HIT — 0-1 | Süper Lig | Eyüpspor v Gaziantep | U4.25 86.4% +1.8% · buy≥1.23 | ✅ U3.75 71.6% +2.7% (floor −3.4) · buy≥1.36 | 2026-08-23 18:00 |
+| ✅ HIT — 2-1 | Süper Lig | Trabzonspor v Başakşehir | O1.5 77.3% **+0.3%** · buy≥1.36 | — none | 2026-08-23 18:00 |
+| ✅ HIT — 1-1 | Chilean Primera División | D. Concepción v Coquimbo | O1.5 78.0% +1.6% · buy≥1.35 | — none | 2026-08-23 18:00 |
+| ✅ HIT — 3-3 | Chilean Primera División | La Serena v Cobresal | O1.5 77.1% **+0.7%** · buy≥1.36 | — none | 2026-08-23 18:00 |
+| ✅ HIT — 0-1 | Serie A ⚠91d | Frosinone v Juventus | U4.25 86.7% **−2.0%** · buy≥1.23 | ❌ O1.75 74.6% +2.7% (floor −0.4) · buy≥1.48 | 2026-08-23 18:30 |
+| ✅ HIT — 0-2 | Serie A ⚠91d | Venezia v Lecce | **U3.0 80.0% +4.9%** · buy≥1.40 | ✅ U4.25 91.6% +3.0% (lower edge) · buy≥1.15 | 2026-08-23 18:30 |
+| ❌ MISS — 1-0 | Belgian Pro League | Club Brugge v Cercle Brugge | **O1.5 86.6% +10.3%** · buy≥1.21 (≥1.25 tail-adj) | ❌ **Club Brugge O1.5** 66.3% +22.5% (team) · buy≥1.58 | 2026-08-23 18:30 |
+| ✅ PUSH — 1-2 (U3.0 at 3) | Serie B ⚠107d | Verona v Ascoli | U3.0 77.4% +2.0% · buy≥1.47 | ❌ U2.75 56.4% +2.5% (floor −18.6) · buy≥1.67 | 2026-08-23 19:00 |
+| ✅ HIT — 0-1 | Serie B ⚠107d | Pisa v Padova | U3.0 75.2% **−0.2%** · buy≥1.53 | — none | 2026-08-23 19:00 |
+| ✅ HIT — 0-0 | LaLiga 2 | Castellón v Sabadell | U4.25 88.3% **−1.3%** · buy≥1.20 | ❌ **Castellón O0.5** 80.0% +3.6% (team) · buy≥1.31 | 2026-08-23 19:00 |
+| ✅ HIT — 1-0 | LaLiga 2 | Sporting Gijón v Burgos | U4.25 88.9% **−0.7%** · buy≥1.19 | ❌ O1.75 71.7% +1.0% (floor −3.3) · buy≥1.56 | 2026-08-23 19:00 |
+| ✅ HIT — 1-0 | Liga Portugal | Santa Clara v Famalicão | U4.25 88.2% +1.9% · buy≥1.20 | ✅ U3.75 74.3% +2.8% (floor −0.7) · buy≥1.32 | 2026-08-23 19:00 |
+| — no tip — 1-0 | LaLiga | Getafe v R. Racing Club | — no tip, Racing has 1 row (336 in ESP-L2 — promoted) | — | 2026-08-23 19:30 |
+| ❌ MISS — 5-1 | Peruvian Liga 1 | Sport Boys v Cienciano | U4.25 87.9% **+0.2%** · buy≥1.21 | — none | 2026-08-23 20:00 |
+| — no tip — 2-2 | Ekstraklasa | Pogoń v Wisła Kraków | — no tip, Wisła Kraków has 4 rows | — | 2026-08-23 20:15 |
+| ❌ MISS — 1-0 | Süper Lig | Alanyaspor v Beşiktaş | **O1.5 79.6% +2.5%** · buy≥1.32 | ❌ **Beşiktaş O0.5** 81.0% +11.6% (team) · buy≥1.30 | 2026-08-23 20:30 |
+| ✅ HIT — 0-1 | Süper Lig | Göztepe v Gençlerbirliği | U4.25 85.5% +0.9% · buy≥1.25 | ✅ U3.75 70.2% +1.3% (floor −4.8) · buy≥1.38 | 2026-08-23 20:30 |
+| ✅ HIT — 2-2 | Ligue 1 ⚠98d | Rennes v PSG | **O1.5 82.7% +5.4%** · buy≥1.27 (≥1.31 tail-adj) | ✅ **PSG O0.5** 82.6% +13.5% (team) · buy≥1.27 | 2026-08-23 20:45 |
+| ✅ HIT — 2-1 | Serie A ⚠91d | Atalanta v Sassuolo | U4.25 89.5% +0.8% · buy≥1.18 | ✅ U3.75 76.4% +1.3% (runner-up) · buy≥1.28 | 2026-08-23 20:45 |
+| ✅ HIT — 1-2 | Serie A ⚠91d | Torino v Milan | U4.25 89.4% +0.8% · buy≥1.18 | ✅ U3.75 76.3% +1.2% (runner-up) · buy≥1.29 | 2026-08-23 20:45 |
+| ✅ HIT — 1-0 | Serie B ⚠107d | Palermo v Juve Stabia | U3.0 73.9% **−1.5%** · buy≥1.58 | ❌ O1.75 73.0% +1.4% (floor −2.0) · buy≥1.52 | 2026-08-23 21:00 |
+| ❌ MISS — 4-1 | Brasileirão Série A | Palmeiras v Vasco | U3.0 77.7% +2.4% · buy≥1.46 | ✅ **Vasco U1.5** 77.4% +5.7% (team) · buy≥1.36 | 2026-08-23 21:00 |
+| ✅ HIT — 1-0 | Brasileirão Série A | RB Bragantino v Grêmio | U3.0 78.2% +2.8% · buy≥1.45 | ✅ U4.25 90.6% +1.7% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
+| ✅ HIT — 0-2 | Brasileirão Série A | Vitória v Bahia | U3.0 77.4% +2.0% · buy≥1.47 | ✅ U4.25 90.1% +1.3% (lower edge) · buy≥1.17 | 2026-08-23 21:00 |
+| ✅ HIT — 0-2 | Brasileirão Série B | Ponte Preta v Avaí | **U3.0 85.0% +3.3%** · buy≥1.29 | ✅ **Ponte Preta U1.5** 76.8% +14.7% (team) · buy≥1.37 | 2026-08-23 21:00 |
+| ✅ HIT — 1-1 | Brasileirão Série B | São Bernardo v Náutico | O1.0 90.3% +1.2% · buy≥1.20 — *dead market, base rate 90.6%* | ✅ O1.75 67.6% +2.8% (floor −7.4) · buy≥1.67 | 2026-08-23 21:00 |
+| ✅ HIT — 1-2 | Chilean Primera División | U. De Chile v Colo-Colo | **O1.5 83.6% +7.2%** · buy≥1.26 (≥1.30 tail-adj) | ✅ **Colo-Colo O1.5** 58.5% +25.0% (team) · buy≥1.80 | 2026-08-23 21:00 |
+| ✅ HIT — 1-2 | Categoría Primera A | Fortaleza v Atl. Nacional | U4.25 89.8% **−1.6%** · buy≥1.18 | ✅ O1.75 70.2% +2.9% (floor −4.8) · buy≥1.60 | 2026-08-23 21:00 |
+| ✅ HIT — 1-1 | Serie B ⚠107d | Cesena v Sampdoria | **U3.0 79.1% +3.7%** · buy≥1.42 | ✅ U2.75 58.5% +4.6% (floor −16.5) · buy≥1.61 | 2026-08-23 21:00 |
 
-Every `futurematch` run is written here as **pending** when issued, and moved to
-**completed** with its result once confirmed. Retrosims are not logged — those
-are engine optimisation, not tips.
+### Actual placed bets
 
+**Settled: 17 / 22 — ROI −1.6%  ·  Pending: 5**
+
+| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
+|---|---|---|---|---|---|---|
+| 01:00 | Atlanta v Kansas City | U4.25 | U4.5 — same tier | 1.23 | 1.27 | +2.0% ⚠ |
+| 01:00 | Atlanta v Kansas City | U4.25 | **Kansas City U1.5 — team lane** | 1.43 | 1.40 | **+7.4%** |
+| 13:35 | Port v Hainiu | U4.25 | U4.5 — same tier | 1.38 | 1.30 | **+11.2%** ✅ |
+| 14:00 | AGF v OB | U4.25 | U4.5 — same tier | 1.18 | 1.23 | +1.0% ⚠ ✅ |
+| 14:00 | Göteborg v Elfsborg | O1.5 | **O0.5 — IN-PLAY at 0-0 HT** | 1.22 | 1.33 | **−3.5%** ✅ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | O2.0 — harsher rung | 1.35 | 1.40 | +1.6% ✅ |
+| 15:00 | Brighton v Aston Villa | **O1.5** | O1.5 — the tip | 1.24 | 1.30 | **+0.1%** ✅ |
+| 16:30 | Hammarby v GAIS | O1.5 | **Hammarby O1.5 — team lane** | 1.34 | **1.64** | **−14.1%** ✅ |
+| 16:45 | Cambuur v Feyenoord | U4.25 | U4.5 — same tier | 1.32 | 1.28 | **+8.7%** ❌ |
+| 17:00 | Eibar v Real Valladolid | U3.0 | **Valladolid U1.5 — team lane** | 1.24 | 1.32 | −1.4% ✅ |
+| 17:15 | Le Havre v AS Monaco | O1.5 | O1.5 — the tip | 1.35 | 1.35 | **+5.1%** ❌ |
+| 18:00 | Viborg v København | **O1.5** | O1.5 — the tip | 1.19 | 1.24 | +0.7% ⚠ ✅ |
+| 18:00 | D. Concepción v Coquimbo | O1.5 | O1.5 — the tip | 1.34 | 1.35 | **+4.5%** ✅ |
+| 18:30 | Venezia v Lecce | **U3.0** | U3.5 — same tier, softer | 1.22 | 1.31 | −2.4% ✅ |
+| 18:30 | Club Brugge v Cercle Brugge | **O1.5** | O1.5 — the tip | 1.21 | 1.21 | +4.8% ❌ |
+| 19:00 | Verona v Ascoli | U3.0 | U3.0 — the tip | 1.45 | 1.47 | **+3.5%** ⟲ PUSH |
+| 20:30 | Alanyaspor v Beşiktaş | O1.5 | **Beşiktaş O0.5 — team lane** | 1.30 | 1.30 | **+5.3%** ❌ |
+| 20:45 | Rennes v PSG | **O1.5** | **PSG O0.5 — team lane** | 1.40 | 1.27 | **+15.6%** ✅ |
+| 20:45 | Atalanta v Sassuolo | U4.25 | U4.5 — same tier | 1.14 | 1.17 | +2.1% ⚠ ✅ |
+| 21:00 | U. De Chile v Colo-Colo | **O1.5** | O1.5 — the tip | 1.27 | 1.26 | **+6.2%** ✅ |
+| 21:00 | Ponte Preta v Avaí | **U3.0** | U3.0 — the tip | 1.36 | 1.29 | **+11.0%** ✅ |
+| 21:00 | RB Bragantino v Grêmio | U3.0 | U3.25 — same tier | 1.42 | 1.39 | **+7.4%** ✅ |
+| 21:00 | Palmeiras v Vasco | U3.0 | U3.0 — the tip | 1.46 | 1.46 | +4.8% ❌ |
+| 21:00 | Cesena v Sampdoria | **U3.0** | U3.0 — the tip | 1.36 | 1.42 | +0.2% ⚠ ✅ |
+| 21:31 | Porto v Arouca | O1.5 | **O1.5 — bought IN-PLAY at 0-0 HT** | 1.63 | **2.57** | **−33.5%** ✅ |
+| 22:30 | Melgar v Alianza Lima | **O1.5** | O1.5 — the tip | 1.37 | 1.34 | **+7.7%** |
+| 23:30 | Chapecoense v São Paulo | **U3.0** | U3.0 — the tip | 1.35 | 1.34 | **+6.1%** |
+
+**All three losses were bets bought at or above the line.** `Le Havre O1.5` at
++5.1% finished 0-1; `Cambuur U4.5` at **+8.7%** went 2-5; `Club Brugge O1.5` at
++4.8% finished 1-0. Meanwhile all four bets bought BELOW break-even have won.
+
+That inversion is worth naming precisely, because it is the most misleading
+pattern on this page. Nine settled bets split three ways gives three per bucket,
+and three results cannot distinguish a good price from a bad one — the price
+simulation needed 1,941 tips and 4,000 paths before it could say anything at
+all. **Read the `by price paid` table as noise until it holds fifty per
+bucket.** It is printed because it will matter later, not because it means
+anything now.
+
+**The discipline shifted sharply for the better in the evening.** Of the eleven
+bets placed after 18:00, **eight cleared their threshold** — Ponte Preta at
++11.0%, RB Bragantino +7.4%, U. De Chile +6.2%, Club Brugge +4.8%. Compare the
+afternoon, where Hammarby went in 14% under and two team lanes were taken at
+match-total prices.
+
+**Two to watch.** `Atalanta U4.5` at 1.14 is the shortest price in the book and
+clears break-even by 2.1% — there is almost no room in it. `Cesena U3.0` at 1.36
+against 1.357 is functionally break-even.
+
+Earlier note — Brighton: the tip was `O1.5`
+needing 1.30, and `O2.0` was bought instead — a different market that wins on 3+
+rather than 2+, needing 1.40 and paid at 1.35.
+
+Recorded in `config/bets.tsv` and scored by `scripts/ledger.py`. Every `buy≥`
+figure printed by `two_tips.py` is now computed from the recalibrated
+probability; thresholds in the archive predate that and read roughly 7% too low.
+
+---
+
+## On volume: where the bets are, and what a margin actually costs
+
+Three bets out of eleven tips is thin, and the instinct is to cut the margin.
+Measured across 581 replayed fixtures, the volume is somewhere else.
+
+**Tip 2 is where the prices live.** 76% of fixtures produce a second tip, and it
+needs a longer price than Tip 1 does:
+
+    threshold needed      Tip 1    Tip 2
+    1.00 - 1.20             8%       5%
+    1.20 - 1.30            45%      28%
+    1.30 - 1.45            43%      32%
+    1.45 - 1.70             4%      22%
+    1.70 +                  0%      13%
+
+**Tip 1 essentially never needs more than 1.45; a third of Tip 2s need 1.45 or
+better and 13% need 1.70+.** Those are prices a book quotes readily. Tip 1
+competes for the 1.20-1.45 band where the book is tightest.
+
+**And at its own threshold Tip 2 is exactly as good a bet as Tip 1.** Its lower
+strike rate — 70.0% against 83.9% — is already inside its higher break-even
+(1.393 against 1.211). Both return +5% when bought at buy-from. The old-era
+finding that Tip 2 underperformed was the miscalibration, not the lane: it was
+being bought at Tip 1 prices.
+
+**What cutting the margin actually costs.** The residual calibration gap is
+**-1.5 points out of sample**. At an ~83% read that is worth about 1.8% of
+price, and it comes off the top of any margin:
+
+    margin set     real cushion after the residual error
+       5%                     ~3.2%
+       4%                     ~2.2%
+       3%                     ~1.2%
+       2%                     ~0.2%
+
+So **4% is about the floor**, and below 3% the margin stops being a cushion and
+becomes rounding. The 5% is not conservatism; roughly a third of it is paying
+for calibration that is not perfect yet.
+
+**Three ways to widen, in order of what the evidence supports:**
+
+1. **Take Tip 2 at its own price.** Biggest single source of volume, no EV cost,
+   and it is available at prices Tip 1 never reaches.
+2. **Price more fixtures.** Only what gets screenshotted is being tipped; 37
+   leagues are tippable and a full Sunday runs to hundreds of fixtures.
+3. **Drop the margin to 4%,** not lower. Worth roughly a fifth more bets.
+
+What is NOT worth doing is lowering `MIN_WIN_PROB` further. Measured: 0.70 pays
+**13 points of strike rate for 1.7 of edge**, and this project is optimised for
+strike.
+
+## Betting in play: what a rung is worth once it is 0-0 at half time
+
+Taking a drifted price on a tip Athena already issued is a reasonable instinct,
+and the log has five such bets. The pre-match probability cannot price them: it
+covered 90 minutes and the question is about 45. `scripts/live_ht_table.py`
+counts it straight from 57,092 matches that reached the break goalless, split by
+league tempo, which is the one thing that genuinely carries over:
+
+    league tempo        n     O0.5    buy≥     O1.5    buy≥     O2.5    buy≥
+    under 2.5       14740    70.3%    1.49    36.0%    2.92    13.0%    8.08
+    2.5 - 2.8       34479    75.4%    1.39    41.5%    2.53    16.9%    6.21
+    2.8 - 3.1        7873    79.0%    1.33    47.3%    2.22    19.7%    5.33
+
+**The rungs decay at completely different rates, and that is the whole thing.**
+One more goal still probably arrives; two is a coin flip that loses. Backing
+`O0.5` on a drift is sound and the price needed is close to what a book quotes.
+Backing `O1.5` needs about **2.5**, and no book pays that on a match it still
+rates as live.
+
+Two bets on this page make the point exactly:
+
+    Göteborg O0.5   1.22 paid, 1.39 needed    -3.5%    won
+    Porto    O1.5   1.63 paid, 2.53 needed   -33.5%    won
+
+Both won. Both were the same idea — Athena's own tip, at a longer price. One was
+nearly buyable and the other was not close, and nothing about the pre-match tip
+distinguished them. The published probability tells you the match was going to
+be high-scoring; it says nothing about how much of that chance is already spent.
+
+**Why a drifted price is not the same as a good one.** Porto's `O1.5` moved 1.30
+to 1.63, up 25%. The fair price moved 1.30 to 2.53, up 95%. The market repriced
+in the right direction and nowhere near far enough — which is exactly when a
+longer number feels like value and is not.
+
+## Staking: 4% flat fits, but the stake is the second-order decision
+
+`scripts/staking.py` bootstraps real per-bet returns — 1,941 replayed tips,
+settled through the actual push and half-win fractions at each tip's own price —
+down 4,000 simulated 200-bet sequences per rule. Bankroll starts at 1.00.
+
+**Bought at `buy from`, the flat rules behave well and Kelly does not:**
+
+    rule               median   5th pct   max DD   halved
+    flat 1%             1.11x     0.98x       5%       0%
+    flat 2%             1.22x     0.96x      10%       0%
+    flat 4%             1.46x     0.90x      20%       0%
+    flat 8%             1.97x     0.74x      37%       4%
+    quarter Kelly       1.47x     0.72x      30%       2%
+    half Kelly          1.78x     0.42x      55%      23%
+    full Kelly          1.31x     0.06x      86%      64%
+
+**Flat 4% matches quarter Kelly's growth for two-thirds of its drawdown** — 1.46x
+against 1.47x, 20% against 30% — and never halved the bankroll in 4,000 runs
+where quarter Kelly did. Kelly sizes UP on short prices (about 6% on a 1.21 tip,
+2.8% on a 1.45 one), which is right only if the probability is right. Ours is
+measured, with a -1.5 point residual, so sizing up on the shortest prices
+concentrates risk exactly where a small calibration error does most damage. Full
+Kelly is instructive: a HIGHER median than half Kelly and a 5th percentile of
+0.06x, which is volatility drag consuming the edge.
+
+**Then the same rules with the margin surrendered:**
+
+    regime                        return/bet   flat 4% median   5th pct   halved
+    bought at buy-from               +5.32%        1.46x         0.90x      0%
+    bought at break-even             +0.65%        1.01x         0.64x      1%
+    bought 2% under break-even       -1.22%        0.87x         0.56x      4%
+
+**The whole edge lives in the 5% margin.** Moving the stake from 2% to 8% at a
+good price changes the outcome 1.22x to 1.97x. Moving the PRICE from `buy from`
+to break-even at an unchanged 4% stake changes it 1.46x to 1.01x — it deletes
+the system. Two percent under, which is what taking a 1.28 against a 1.30
+break-even looks like, turns it into a 13% loss with a 30% drawdown on the way.
+
+So the ranking is settled: **buying at the threshold is first-order, the stake
+size is second-order.** A bigger stake on a bad price does not rescue it, it
+accelerates it — at 8% in the losing regime, 39% of runs halve the bankroll.
+
+Caveats worth keeping: the pool is the Tip 1 match-total lane only, since that
+is what `predict_fixture` returns, so the team lanes are not represented here.
+And every path assumes bets are independent — checked, and they nearly are: the
+observed variance of a day's hit rate is **1.10x** the binomial across 4,703
+match-days, so ten bets on one slate behave like about nine independent ones
+rather than one large position.
+
+## Engine state at reset — 23 Aug 2026
+
+    MU_SHRINK              0.35        per-fixture goal expectation, shrunk
+                                       toward the league mean
+    MU_SHRINK_BY_LEAGUE    MLS 0.15, IRL-PD 0.10
+    TEAM_SHRINK            0.62        the team-total lane, shrunk separately
+    MIN_WIN_PROB           0.75        probability floor, re-tuned with the shrink
+
+    weighted calibration gap    -0.6 in-sample, -1.5 out-of-sample  (was -4.4)
+    realised edge over base     +2.23                               (was +1.35)
+    top market share            41%                                 (was 54%)
+
+All 37 tippable leagues retrosimmed. Three remain cull candidates rather than
+tuning targets — `IRL-PD` (residual slope -0.600, anti-correlated), `COL-PA`
+(-0.06, no usable signal) and `MLS` (-5.2 out of sample).
+
+
+### Recalibration — the cause found and half-fixed
+
+#### The cause: mu is over-spread by 2.4x
+
+Poisson was ruled out first: real totals match it to within half a point at
+every rung traded, on 272,857 matches. If mu were right the probabilities would
+be right. So the error is in mu, and regressing what happened on what was
+predicted across ~2,000 replayed fixtures says which kind:
+
+    actual_total = 1.640 + 0.424 * mu
+
+**Slope 0.42 where 1.0 would be correct.** Level is fine — pooled bias +0.08
+goals — so this is not the engine reading leagues too high or too low. It is
+reading individual fixtures far too confidently:
+
+    lowest mu fifth    says 1.99 goals   actually 2.54   miss +0.55
+    highest mu fifth   says 3.60 goals   actually 3.26   miss -0.34
+
+That shape explains everything at once. Every tip is selected on exactly the
+extremes that are wrong, so the league average looks fine while the tip book
+inherits the whole error — 85.7% claimed against 81.2% delivered across 26
+leagues, and 80.4% against 69.6% on the bets actually placed, which chase the
+extremes harder still.
+
+#### The fix, and why 0.60 rather than the measured 0.42
+
+`mu' = league_mu + k * (mu - league_mu)`, applied where mu is produced so tips,
+break-even prices and buy-from thresholds all inherit it. Measured over 1,487
+replays:
+
+    k      says     hit      gap    base rate   realised edge   U4.25 share
+    1.00   85.7%   81.2%    -4.5      79.8%        +1.35           39%
+    0.80   85.6%   82.5%    -3.1      81.2%        +1.34           46%
+    0.60   85.6%   83.9%    -1.7      82.4%        +1.50           54%
+    0.42   85.8%   84.3%    -1.5      83.6%        +0.71           62%
+
+Full shrinkage buys the last 0.2 of the gap with certainty: the base rate of
+the markets it picks climbs to 83.6% and realised edge — strike minus base, the
+one figure that cannot be bought by retreating to a safer rung — halves. **0.60
+takes almost all the calibration gain and leaves the edge intact.** The edge
+difference between 1.00 and 0.60 is inside the noise; the honest claim is that
+shrinkage preserves edge while fixing calibration, not that it improves it.
+
+Shipped as `MU_SHRINK = 0.60` in `app/data/features.py`. 101 tests pass.
+
+#### What it actually bought
+
+Re-running the same ten leagues at n=200:
+
+    weighted gap   -4.4  ->  -2.3     halved
+    CHN-SL  -9.6 -> -5.5      SAU-PL  -7.2 -> better than -4
+    CHI-PD  -9.6 -> better    JPN-J1  -5.3 -> -3.2
+    COL-PA  -5.6 -> -5.0      PER-L1  -4.2 -> -1.9
+    ENG-CH  -0.9 -> +1.3      MLS     -3.1 -> -4.8  (worse)
+
+#### The second half: the floor had to move with it
+
+Shrinkage alone left `U4.25` taking **88-95%** of tips in five leagues, and a
+book that only buys U4.25 is not a tipping engine. The cause was not the
+shrinkage — it was `MIN_WIN_PROB = 0.79`, whose own justification in
+`market_select` reads:
+
+    "the highest floor that clears 80% strike while keeping the most-picked
+     line under half of all calls"
+
+That was measured against an over-spread mu. **The floor is absolute, so its
+behaviour depends entirely on how spread out mu is.** Pulling every fixture
+toward its league mean meant far fewer rungs clear 79%, and the selector fell
+through to the safest buyable one every time. The constant did not change; what
+it was applied to did, and it silently stopped meeting its own criterion.
+
+Swept at `MU_SHRINK = 0.60` over 1,487 replays:
+
+    floor    hit     base    realised edge   top line   mix
+    0.79    83.9%   82.4%       +1.50          54%      U4.25 54  O1.5 23  U3.0 16
+    0.75    81.4%   79.5%       +1.99          34%      O1.5 34   U4.25 32  U3.0 27
+    0.70    77.9%   75.9%       +2.08          45%      O1.5 45   U3.0 35   U4.25 11
+    0.65    73.9%   71.4%       +2.54          47%      O1.5 46   U3.0 38   O2.25 7
+    0.60    70.3%   67.0%       +3.24          39%      O1.5 38   U3.0 32   O2.25 16
+
+Lower floors keep buying edge with strike rate — 0.60 pays **13 points of hit
+rate for 1.7 of edge**, which this project should not take. **0.75 is the only
+setting that improves edge while holding strike above 80% and restoring the
+original criterion**: the top line falls from 54% to 34% and the book becomes a
+genuine three-way spread. At 0.70 concentration returns from the other side,
+with `O1.5` at 45%.
+
+Shipped as `MIN_WIN_PROB = 0.75`.
+
+#### What both changes did, per league
+
+    league    U4.25 share            realised edge
+              before -> after        before -> after
+    JPN-J1     95%  ->  35%           -0.99  ->  +0.45
+    PER-L1     94%  ->  43%           -0.78  ->  +2.36
+    CHI-PD     93%  ->  43%           -0.22  ->  +3.77
+    ENG-CH     88%  ->  36%           +0.09  ->  +1.48
+    ESP-L2     82%  ->  52%           +0.59  ->  +5.12
+    TUR-SL     68%  ->  44%           +5.74  ->  +7.10
+
+**Every league improved on both axes.** Three went from zero or negative edge to
+clearly positive, and the mix diversified everywhere — `U3.0` leads in Japan,
+`O1.5` in Chile and (jointly) Turkey.
+
+**This retracts last night's gloomiest conclusion.** The claim that "the
+selector adds nothing outside Turkey" was an artefact of a mis-tuned floor
+funnelling every league into the same rung, not a property of the engine. With
+the floor set correctly the selector beats its own base rate in all six leagues
+measured.
+
+#### Third pass: the floor had been masking how much shrinkage was warranted
+
+Fixing the floor changed the answer to the shrink question. The first pass
+shipped `MU_SHRINK = 0.60` and rejected the measured 0.42 because full
+shrinkage collapsed the mix onto `U4.25` and halved edge. **That reasoning was
+wrong.** The collapse was the 0.79 floor, not the shrinkage — and once the
+floor came down there was no longer a reason to hold shrinkage back.
+
+Re-swept at floor 0.75:
+
+    MU_SHRINK    says     hit     gap    base    realised edge   top line
+      0.60      83.2%   81.4%   -1.7   79.5%       +1.99           34%
+      0.45      83.2%   82.4%   -0.8   80.4%       +1.97           37%
+      0.35      83.2%   83.3%   +0.0   81.0%       +2.23           41%
+
+**0.35 is best on both axes at once** — gap to zero, highest realised edge
+measured — with the top line still under half of calls. Shipped.
+
+#### Per-league result, n=250 each
+
+    league     gap before    gap now
+    SAU-PL       -4.7        +0.2
+    CHI-PD       -4.0        -2.8
+    JPN-J1       -3.2        -1.1
+    PER-L1       -1.9        -1.1
+    ENG-CH       +1.3        +2.9
+    ESP-L2       -0.1        +1.1
+    TUR-SL       +3.2        +5.4
+    MLS          -5.1        -4.2  ->  -2.7 after per-league override
+
+    weighted     -4.4  ->  -0.6
+
+**Four of the five problem leagues were fixed by the global change alone.**
+COL-PA and CHN-SL both dropped under the 4-point threshold; SAU-PL landed at
++0.2. Only MLS needed individual treatment.
+
+#### The one per-league override, and why only one
+
+`MU_SHRINK_BY_LEAGUE = {"MLS": 0.15}`. MLS residual slope is **0.325** on 262
+replays — its remaining spread is still three times too wide — and it was the
+only league still worse than -4 after the global fix. The arithmetic gives
+0.35 x 0.325 = 0.11; it is set to **0.15**, pulled toward the global to blunt
+the over-fit. Gap -4.2 -> -2.7.
+
+This is kept deliberately sparse. Every entry is a fitted parameter on ~250
+fixtures and will over-fit if added freely, so a league earns one only when it
+BOTH measures far off AND still fails the retrosim at the global setting.
+COL-PA measures a residual slope of **-0.06** — no usable signal left at all —
+but shrinking it to the league mean already produces an acceptable gap, so it
+gets no entry. Its read is worthless; the global shrink is what makes that
+harmless.
+
+MLS is also the league whose current-season history is thinnest: nine clubs
+carry 20 rows each after the 2026 provider split. A weak read there is what the
+data supports.
+
+#### The team lane was never shrunk at all — fixed
+
+Missed on the first two passes. `p_home_tt05` / `p_away_tt05` are built from
+the raw per-side rates `gfh` / `gfa`, **not** from the shrunk `mu_total`, so
+none of the match-total work reached them. The entire team-total lane — the one
+offered as Tip 2 all weekend, which went 2/9 on Sunday — was still running on
+unshrunk spread.
+
+Measured the same way over 2,376 side-observations:
+
+    actual_side_goals = 0.572 + 0.621 * gf
+
+    lowest gf fifth    says 0.90 goals   actually 1.14
+    highest gf fifth   says 1.92 goals   actually 1.79
+
+Less extreme than the match total's 0.42, same defect. `TEAM_SHRINK = 0.62`,
+shrinking each side toward half the league mean, applied only where the team
+probabilities are derived so `mu_total` is not shrunk twice.
+
+    residual slope   0.621  ->  0.933      (1.0 = calibrated)
+
+    rung     says     actual     gap
+    O0.5    73.4%     75.8%     +2.3
+    O1.5    38.9%     40.9%     +2.0
+    U1.5    61.1%     59.1%     -2.0
+
+All three rungs now sit within 2.3 points, slightly conservative on the Over
+side.
+
+#### Full coverage: all 37 tippable leagues retrosimmed
+
+The constants were tuned on 11 leagues. The remaining **26** — not 16, the
+earlier count was wrong — have now been replayed at n=250 each. This is the
+real test of whether the fix was fitted or general, because none of these
+leagues influenced any constant.
+
+    ARG-PD  +0.7    ENG-L1  +1.6    NOR-EL  +0.7    SCO-L1  +0.2
+    AUT-BL  -0.3    ENG-L2  -1.1    POL-EK  -0.5    SCO-L2  +2.4
+    BEL-PL  +1.7    ENG-NL  -0.7    POR-PL  -0.6    SCO-PL  -0.1
+    BRA-SA  -1.6    ESP-LL  +3.4    ROU-L1  +1.9    SUI-SL  -1.4
+    DEN-SL  -2.8    FIN-VL  -2.7    RUS-PL  -0.4    SWE-AL  -1.6
+    FRA-L2  -0.5    GER-B2  -0.1    MEX-LMX -0.8    NED-ED  +4.5
+    SCO-CH  -3.4    IRL-PD  -6.2
+
+    batch of 13   3,178 fixtures   weighted gap  -0.6
+    batch of 13   3,036 fixtures   weighted gap  +0.1
+
+**Twenty-five of twenty-six land inside 4 points, and the two batch averages
+are -0.6 and +0.1.** The constants were not over-fitted to the leagues they
+were tuned on — that was the open question and it is now answered.
+
+Across all 37 tippable leagues and ~8,700 replayed fixtures the weighted gap is
+about **-0.4**.
+
+#### The one failure, and it is not a tuning problem
+
+`IRL-PD` came in at **-6.2**, the worst on the board. Its residual slope is
+**-0.600** on 300 replays — the read is not merely weak, it is ANTI-correlated:
+the more goals the engine predicts, the fewer occur. That is the worst slope
+measured in any league, and a negative slope has no sensible shrink.
+
+Set to `0.10`, as close to "use the league mean and ignore the fixture" as the
+engine goes without emitting an identical tip every week. Gap **-6.2 -> -3.7**.
+
+**Logged as a cull candidate, not a tuning success.** A calibrated tip carrying
+no information is still no information, and Ireland now sits alongside COL-PA
+(residual slope -0.06) in the category of leagues the engine should probably
+stop tipping rather than keep tuning.
+
+#### A separate problem the sweep exposed: withheld fixtures
+
+Some leagues skip a large share of their fixtures rather than tipping them:
+
+    BRA-SA  19%      NOR-EL  18%      SWE-AL  18%
+    ROU-L1  15%      MEX-LMX 14%      RUS-PL  10%
+
+That is thin history, unresolved names or no playable rung — the same family of
+defects the alias and merge work has been chipping at. It costs coverage rather
+than accuracy, and it has not been investigated.
+
+#### The freshness gate should NOT be made binding — staleness costs ~1 point
+
+Seven leagues are 86-107 days behind and are being tipped anyway, with
+`league_status.py` flagging them as not cleared for futurematch and nothing
+enforcing it. The obvious fix is to make the gate bite. Measured first, and the
+measurement says don't.
+
+Retrosimming those leagues answers the wrong question — replaying their own
+history prices each fixture with data that was FRESH at the time. So
+`scripts/staleness_cost.py` prices the same fixture twice instead: once as of
+the match date, once as of the match date minus N days, forcing the form window
+to end early exactly as a lagging store does. Both arms are scored against the
+same real result, so the only thing that varies is the lag.
+
+1,200 fixtures across eight leagues, each priced at every lag:
+
+    lag      n    says     hit     gap    vs fresh
+     0d   1190   81.8%   83.2%    +1.4      +0.0
+    30d   1190   82.1%   81.9%    -0.2      -1.3
+    60d   1190   82.4%   82.3%    -0.1      -0.9
+    90d   1190   82.6%   82.8%    +0.2      -0.4
+   120d   1190   82.4%   82.2%    -0.2      -1.0
+
+**A four-month-old store costs about one point of hit rate, and calibration
+holds at every lag** — the gap stays inside 1.4 points throughout, and there is
+no monotone decay: 90 days scores better than 30. The live evidence agreed
+without being able to prove it: the stale-league tips went 17/19 last weekend.
+
+**Why it is so cheap is now obvious.** After shrinkage the fixture's own form
+contributes only 35% of the read — the rest is the league mean, which barely
+moves over a few months. Staleness can only degrade the 35%. Before
+recalibration this would have cost considerably more, which is probably why the
+gate was written in the first place.
+
+**So the gate stays advisory, and that was the right call all along.** Making it
+binding would drop seven leagues, including the Premier League, Serie A and
+Ligue 1, to buy back roughly one point of strike rate.
+
+**One thing this test does NOT cover.** It moves the as-of date back but keeps
+the same clubs. Real season-boundary staleness also brings PROMOTED clubs the
+store has never seen in that division — Hull, Ipswich, Lincoln, Racing
+Santander. That is a genuinely different failure and it is already logged
+separately under the cross-division and promoted-club defects, where the
+history gate withholds rather than guesses. Freshness and promotion look alike
+on a calendar and are not the same problem.
+
+#### `buy from` re-derived: every published threshold was too LOW
+
+The thresholds are `break_even x 1.05`, and break-even comes from the engine's
+probability — which has moved twice (`MU_SHRINK`, `MIN_WIN_PROB`) and gained a
+third input the team lane never had (`TEAM_SHRINK`). Re-pricing all 80 logged
+bets with the current engine, as of their own match dates
+(`scripts/rederive_buyfrom.py`):
+
+    threshold drift, new break-even vs published
+      mean  +6.8%     median +5.7%     range  -3.7% to +24.6%
+      moved UP (stricter) on 76 of 80 bets
+
+    West Ham v Charlton    O2.5    paid 1.60   1.420 -> 1.769   +24.6%
+    Zürich v Basel         O2.5    paid 1.52   1.196 -> 1.471   +22.9%
+    Shenzhen v Zhejiang    U3.5    paid 1.52   1.190 -> 1.431   +20.2%
+    Guoan v Yukun          O2.5    paid 1.25   1.235 -> 1.448   +17.2%
+    Zürich v Basel         O1.5    paid 1.83   1.269 -> 1.463   +15.2%
+
+**The drift is larger than the margin it was supposed to protect.** A mean
++6.8% correction against a 5% cushion means the cushion never existed — the
+"buy at break-even plus 5%" rule was in practice buying at roughly break-even
+minus 2%. That is the mechanism behind the threshold finding dissolving at 79
+settled bets, and it is now measured rather than inferred.
+
+Re-scored on honest probabilities, the bet book looks materially worse:
+
+    bought below break-even    27 of 82  (33%)  ->  51 of 80  (64%)
+    mean break-even                              1.332
+
+**Nearly two thirds of every bet placed was negative expected value**, not one
+third.
+
+**The margin cannot be re-derived from this data.** The sweep on recalibrated
+break-even runs 27 bets at 0%, 11 at +5%, 5 at +8%, 2 at +10% — the samples
+collapse before any threshold could show, and the ROI figures across them
+(-0.3%, -10.3%, -10.2%, -8.5%) are noise on single digits. What can be said is
+structural: with break-even now honest, a margin is a genuine cushion rather
+than a correction, so **5% on the new number is a real 5%** in a way it was
+never a real 5% before.
+
+**Nothing needs regenerating in the tooling.** `two_tips.py` computes
+`buy>=` from the live engine, so every threshold it prints from here is already
+correct. The stale figures are the `buy≥` annotations in the fixture tables
+above, and those are deliberately left as published: they record what the log
+actually said at the time, and rewriting them would falsify the record. Read
+any `buy≥` dated before this section as **roughly 7% too low**.
+
+#### Season restart: it was a symptom of the over-spread mu, not a thing of its own
+
+Before recalibration `ENG-NL` and `FRA-L2` ran -8.3 and -7.8 across the summer
+break against -1.5 and -0.1 mid-season, and that was carried as an open defect.
+Investigated properly (`scripts/restart_effect.py`), it does not hold up.
+
+**"Early season" is not a measurable property of a fixture.** Two things that
+are: how long a team has been idle, and how far back the ten-match form window
+has to reach. Bucketing 2,982 replayed fixtures across ten leagues by both:
+
+    by days idle (larger of the two sides)      by age of the oldest form match
+      bucket     n    says    hit    gap          bucket     n    says    hit    gap
+       0-10   2358   82.2%  83.5%   +1.2           0-80   1329   82.1%  82.9%   +0.8
+      10-20    457   82.4%  84.5%   +2.1         80-120   1062   82.3%  83.7%   +1.4
+      20-40     75   82.6%  85.3%   +2.7        120-200    400   82.5%  84.0%   +1.5
+        40+     92   82.3%  79.3%   -2.9           200+    191   82.7%  85.9%   +3.2
+
+**The form-window axis shows no degradation at all — it gets BETTER as the
+window reaches further back.** That refutes the mechanism the defect was written
+on. The only negative cell is teams idle 40+ days, at -2.9 on 92 fixtures, and
+that is `z = -0.75`. Null.
+
+The original two leagues do still show a gap after recalibration — `ENG-NL`
+-6.1, `FRA-L2` -4.0, against +3.9 and +3.2 mid-season — but neither is
+significant, and both stated probabilities sit INSIDE the Wilson interval of
+what landed:
+
+    ENG-NL   hit 75.9%  interval [67-83]  claim 82.0%  ->  inside   z = -1.71
+    FRA-L2   hit 76.7%  interval [68-83]  claim 80.7%  ->  inside   z = -1.11
+
+Two windows of 120 fixtures are consistent with the same underlying rate; the
+ten-point swing between them is what noise looks like at that size. And the
+defect was originally raised from exactly those two leagues, chosen because they
+looked worst — the same selection trap as the 1.20-1.39 odds band.
+
+**What actually happened:** shrinkage absorbed it. Over-spread mu hurt most
+where form was least reliable, which is precisely the post-break fixtures, so
+fixing the spread fixed the symptom. Nothing further is warranted.
+
+Kept as a negative result, and `break_days` is worth re-checking once the 40+
+bucket has a few hundred fixtures rather than 92 — it is the one cell pointing
+the wrong way, even if it is currently indistinguishable from zero.
+
+#### The team lane, validated where it was not fitted — it holds
+
+`TEAM_SHRINK = 0.62` was measured on the most recent 200 fixtures of six
+leagues, which is exactly the setup that made the first match-side pass look
+better than it was. Re-tested against two independent moves away from the fit,
+`scripts/team_validate.py`:
+
+    cell                                slope    O0.5    O1.5    U1.5
+    fitted leagues, fit window          0.933    +2.3    +2.0    -2.0
+    fitted leagues, earlier window      0.830    -0.3    -1.9    +1.9
+    HELD-OUT leagues, fit window        1.095    +0.3    +1.3    -1.3
+    HELD-OUT leagues, earlier window    1.158    -0.0    +0.1    -0.1
+
+**It passes on both axes.** Slopes span 0.83-1.16 around a target of 1.0, and
+every rung sits inside 2.3 points. More telling than the size is the SIGN: the
+gaps flip direction between windows (+2.0 then -1.9 on `O1.5`), which is noise
+around zero rather than a bias the fit absorbed. The cleanest cell is the one
+furthest from the fit — held-out leagues on the earlier window come in at
+**-0.0, +0.1, -0.1**.
+
+This is a better result than the match side, where MLS, COL-PA and IRL-PD still
+fail out of sample.
+
+#### Per-league, because pooled numbers hid IRL-PD once already
+
+    league     slope    O1.5 gap        league     slope    O1.5 gap
+    ENG-CH     1.063     +1.1           JPN-J1     0.380     +1.0
+    ESP-L2     1.313     +1.3           MLS        0.449     +1.7
+    TUR-SL     1.324     -1.4           CHI-PD     0.876     +3.5
+    ENG-L1     1.356     +1.8           BEL-PL     1.176     +1.2
+
+Slopes range widely — 0.38 to 1.36 — but **no league is broken the way IRL-PD
+is on the match side**, and every rung gap lands inside 3.5 points. `MLS 0.449`
+and `JPN-J1 0.380` are still over-spread on the team side, MLS in the same
+direction as its match-side problem.
+
+Deliberately not tuned per-league. The rung gaps are the thing a bet settles
+on, and at +1.7 and +1.0 they are already inside the noise on 500
+side-observations; fitting a constant to a slope that does not show up in the
+settlements would be over-fitting for its own sake. Logged so it can be
+re-checked when the sample doubles.
+
+#### Out-of-sample: the fix generalises, but the in-sample number was optimistic
+
+Everything above was tuned and validated on the same recent window. Re-scored on
+the 250 fixtures immediately BEFORE that window, which had no influence on any
+constant:
+
+    in-sample      weighted gap  -0.6
+    out-of-sample  weighted gap  -1.5
+
+    SAU-PL  +3.3     ENG-CH  +0.3     PER-L1  -2.4
+    JPN-J1  -0.4     TUR-SL  -1.5     CHI-PD  -2.5
+    ESP-L2  -2.9     COL-PA  -4.7     MLS     -5.2
+
+**-1.5 out-of-sample against -4.4 before any of this**, so roughly two thirds of
+the defect is genuinely fixed rather than fitted. But it is not zero, and
+`MLS -5.2` and `COL-PA -4.7` still fail out of sample — the MLS override was
+fitted on the recent window and does not fully carry.
+
+#### Where recalibration ended up
+
+    weighted calibration gap    -4.4  ->  -0.6 in-sample, -1.5 out-of-sample
+    realised edge               +1.35 -> +2.23
+    top market share             39%  ->   41%   (54% mid-way, and 88-95%
+                                                  per-league at the worst point)
+    hit rate                    81.2% -> 83.3%
+
+All four moved the right way at once, which is the part worth trusting — a
+change that improved hit rate while concentrating the book would have been the
+certainty trap again. Three constants (`MU_SHRINK`, `TEAM_SHRINK`,
+`MIN_WIN_PROB`), two per-league overrides, and the coupling between the first
+and last pinned in a test so neither can move alone.
+
+### Diagnostics — 23 Aug, full sweep
+
+Run across every league: freshness, configuration, and a per-league retrosim
+scoring 120–260 fixtures each strictly as-of. `scripts/retrosim.py`,
+`scripts/league_status.py`.
+
+#### 1. The engine is systematically overconfident, by about 4 points
+
+Twenty-six leagues, ~3,000 priced fixtures replayed:
+
+    weighted   says 85.7%   actually hit 81.8%   gap -3.9
+
+The live log's 84.5% on 97 tips is a small, favourable sample. **The engine's
+stated probability is not what it delivers**, and the `MIN_WIN_PROB = 0.79`
+floor is really buying something closer to 0.75.
+
+#### 2. Four leagues are genuinely broken, and it is not a small effect
+
+Re-run at n≈260 so the intervals mean something. In all four the stated
+probability sits OUTSIDE the 95% interval of what actually landed:
+
+    league     n    says     hit      gap    95% interval
+    CHN-SL   251   84.9%   75.3%    -9.6      [70-80]
+    CHI-PD   255   85.3%   75.7%    -9.6      [70-81]
+    SAU-PL   258   85.5%   78.3%    -7.2      [73-83]
+    COL-PA   260   86.4%   80.8%    -5.6      [76-85]
+
+    ENG-CH   259   85.1%   84.2%    -0.9      [79-88]   control
+    ESP-L2   259   85.1%   84.9%    -0.2      [80-89]   control
+    TUR-SL   258   84.9%   85.7%    +0.8      [81-89]   control
+
+The controls are near-perfect, so this is not the engine being globally
+miscalibrated in a way that excuses the four. **China, Chile, Saudi and
+Colombia are individually bad**, and all four are currently being tipped —
+Saudi has 6 settled tips in the live log at 50%, Colombia 3 settled and 3
+pending, Chile 1 settled and 2 pending.
+
+The live log agreed before the retrosim ran: Saudi 3/6, J1 6/9, Peru 3/5 were
+the three worst there, and the retrosim independently puts SAU-PL at -7.2,
+JPN-J1 at -5.3 and PER-L1 at -4.2 on 120+ fixtures each. Two independent reads,
+same answer.
+
+#### 3. Season-restart is a separate effect and it is real
+
+Some leagues look bad only in the most recent window. Scoring the 120 matches
+BEFORE the last 120:
+
+    league     last 120    prior 120
+    ENG-NL       -8.3        -1.5      restart effect
+    FRA-L2       -7.8        -0.1      restart effect
+    CHN-SL      -10.7        -9.3      persistent
+    CHI-PD       -8.1       -11.9      persistent
+    SAU-PL       -7.6        -6.9      persistent
+    COL-PA       -6.9        -6.0      persistent
+
+`ENG-NL` and `FRA-L2` recover completely mid-season. Their last-120 window
+straddles the summer break, where the rolling form window reaches across it and
+describes teams that no longer exist in that shape. **The engine is materially
+worse in the first weeks of a season and does not know it** — that is most of
+today's slate.
+
+#### 4. Configuration: 13 of 52 leagues are actually tuned
+
+    tuned (a dial moved off default)   13   ENG-CH, ENG-PL, ESP-L2, ESP-LL,
+                                            FRA-L1, FRA-L2, GER-B2, GER-BL,
+                                            ITA-SA, ITA-SB, NED-ED, POR-PL, UCL
+    registered only                    39   means filled in, every dial default
+    no config at all                    9   CHI-PD, SAU-PL, PER-L1, AUT-BL, ...
+
+**All three unconfigured leagues that are being tipped underperform** — CHI-PD
+-9.6, SAU-PL -7.2, PER-L1 -4.2. But configuration is not sufficient: CHN-SL and
+COL-PA are registered and still run -9.6 and -5.6, while TUR-SL is equally
+untuned and calibrates perfectly. Being unconfigured is a risk marker, not the
+cause.
+
+#### 5. Seven leagues are being tipped on stale data
+
+`league_status.py` already flags these as not cleared for futurematch, and the
+tip path does not enforce it:
+
+    ENG-PL   90 days stale      ITA-SA   90 days
+    FRA-L1   97 days            ITA-SB  106 days
+    GER-BL   98 days            GRE-SL   93 days
+    COPA-L   86 days
+
+Four of them were tipped this weekend (Brentford, Genoa/Parma/Inter/Udinese,
+Toulouse/Nice/Troyes, five Serie B fixtures). Those tips ran on form ending in
+May 2026. **They went 17/19 — better than the fresh leagues** — so this is a
+governance gap rather than a demonstrated harm, but nineteen fixtures prove
+nothing and the status tool's own verdict is being ignored.
+
+#### What this changes
+
+Nothing is being switched off mid-slate. Ranked by what the evidence supports:
+
+1. **Stop tipping CHN-SL, CHI-PD, SAU-PL, COL-PA** until re-calibrated. Four
+   leagues, ~1,000 fixtures of evidence, intervals excluding their own claim.
+2. **Make the freshness gate binding** rather than advisory.
+3. **Damp confidence early in a season** — the restart effect is worth 6–8
+   points in the leagues where it shows.
+4. Re-check the global -3.9 after 1–3; some of it is those four leagues.
+
+### Do name failures cost markets? Mostly no — measured
+
+`scripts/name_audit.py` runs every upcoming fixture through the resolver the
+engine actually uses, so an abstain can be sorted into the two causes that hide
+behind one message:
+
+    GENUINE   the club really is new. Wisla Plock has 3 rows because it was
+              promoted this month, and no name work invents a fourth.
+    NAME      the history exists under a spelling the resolver cannot reach.
+
+Across 4,161 upcoming fixtures, **78 are blocked — 1.9%**, and after this pass
+**not one of them is a name**. Two were, and are now fixed: `NEC` resolves to
+`Nijmegen` (716 rows) and `Fortuna Sittard` to `For Sittard` (334 rows), both
+recovered by alias. What remains is a different problem wearing the same error
+message:
+
+    Le Mans FC          Ligue 1 fixture list, 328 rows sitting in FRA-L2
+    SV 07 Elversberg    Bundesliga fixture list, 102 rows sitting in GER-B2
+
+**Both are promoted clubs, and no alias can fix them** — the spelling is right,
+the history is one division down. That is a cross-division lookup, and it
+recurs for roughly three clubs per league every summer.
+
+**The audit's blind spot is the vocabulary that actually fails in practice.** It
+compares the fixture feed against the results store, and 24 of 62 leagues ship a
+fixture list at all. The names typed off a screenshot are a *third* naming
+system that neither half contains — `København` for `FC Copenhagen`, `Başakşehir`
+for `Buyuksehyr`, `BP`, `VSK`, `ADO`. Those cannot be audited ahead of time;
+`config/team_aliases.json` is the accumulating record of them, and it only grows
+when a fixture is actually missed. An alias is consulted only when the raw name
+resolves to nothing, so adding one can rescue a withheld fixture and can never
+change a tip already issued.
+
+**Split clubs are the larger residue and need judgement, not automation.** The
+audit proposes candidate groups; many are false positives that would be actively
+harmful to merge — `Nacional` (Uruguay) against `Club Nacional Potosí`
+(Bolivia), `Santos FC` against `Santos Laguna`, `Celta` against `Celta B`. They
+are reported for confirmation and never applied automatically.
+
+- **OPEN — Allsvenskan is missing most of the 2025 season.** Found while
+  checking why eight Swedish clubs appear under two spellings. The two spellings
+  are real but harmless on their own — one provider covers 2023 to May 2025
+  (`IFK Göteborg`), another covers 2026 (`Goteborg`) — and the resolver already
+  picks the current one. The gap underneath is the problem:
+
+      2023  240 rows      2024  240 rows      2025  53 rows      2026  135 rows
+
+  A full Allsvenskan season is 240 matches, so **roughly 187 matches of 2025 are
+  simply absent**. Every Swedish tip is therefore priced on ~17 matches per club
+  — the current season alone — including the team lanes, which carry the largest
+  published edges on the slate. Not wrong, but far thinner than the row counts
+  suggest, and worth knowing before sizing a Swedish bet.
+
+### FIXED — the team lane was split by venue, and four checks missed it
+
+Found on 23 Aug while answering a question about `TEAM_SHRINK`. Two separate
+bugs, both in how a side's scoring rate reaches the team lane, and both invisible
+to every aggregate check this project runs.
+
+**1. Both sides were shrunk toward `league_mu / 2`.** The code asserted that half
+the league mean is the per-side mean. It is not — home teams average **1.502**
+goals and away teams **1.154**, against a shared target of **1.328**. Every one of
+twelve leagues checked missed by the same **±0.174**, so home rates were dragged
+down and away rates pushed up, everywhere.
+
+**2. `VENUE_BLEND` left the input biased before shrinkage ran.** Both rates start
+from a team's last ten matches home AND away, with only 35% replaced by
+venue-specific form, so `gfh` lands about **0.113 goals** under the true home mean
+and `gfa` the same amount over. Correcting the shrink target could not reach
+this: the bias is already in the input.
+
+Measured on **13,872 side-observations with no selection in the sample at all** —
+every priceable fixture contributes `p_home_tt05` against whether the home side
+scored, and `p_away_tt05` against the away side:
+
+    original (shared shrink target)     HOME +4.1   AWAY -3.6   split 7.7
+    per-side shrink target              HOME +2.5   AWAY -1.8   split 4.3
+    + venue de-bias                     HOME +0.8   AWAY +0.3   split 0.5
+
+**Why four aggregate checks passed it.** Pooled, +4.1 and -3.6 average to +0.2,
+so the team lane reported near-perfect calibration. The full-lane retrosim, the
+`TEAM_SHRINK` sweep in both directions over ~6,900 fixtures, the by-probability
+calibration test and the by-rung breakdown all returned it clean. The defect only
+appears when the data is cut by the axis nobody was cutting on.
+
+The venue correction is applied **symmetrically**, so `mu_total = gfh + gfa` is
+exactly unchanged and the match lane — calibrated to a gap of ~0 — does not move
+to fix the team lane. Pinned by `test_venue_debias_leaves_mu_total_unchanged`.
+
+**It was withholding lanes, not just mispricing them.** `Porto v Arouca`
+published no second tip at all under the old engine — Porto sat at 0.779 against
+an `O0.5` floor of 0.80. Corrected, it is 0.807 and the lane appears at +5.1%.
+Counted across 1,349 fixtures that produce a lane under either engine:
+
+    gained by the fix     479   35.5%
+    lost to the fix       196   14.5%
+    unchanged             674   50.0%
+
+    lanes offered, old engine   870
+    lanes offered, new engine  1153      +32.5%
+
+**Half the team-lane population changed.** The fix is not a refinement of prices
+on a stable set of offers — it moved which fixtures produce a lane at all, and
+raised team-lane volume by about a third. Lanes were being suppressed where a
+home side sat just under a floor, and manufactured where an away side was held
+just above one.
+
+**Every team lane published before this was mispriced**: home lanes under-stated
+by ~4 points, away lanes over-stated by ~4. Today's published numbers stand as
+the record of what was actually issued; the corrected engine applies from the
+next slate on.
+
+**The added lanes are real, not filler.** Scored separately, since 674 kept
+lanes would otherwise carry the average and hide whatever the additions do:
+
+    bucket        n    says     hit     gap    z
+    KEPT        674   71.5%   76.4%    +4.9   +3.00
+    GAINED      479   78.2%   76.8%    -1.4   -0.73
+    LOST        196   80.1%   75.5%    -4.6   -1.50
+
+**GAINED hits 76.8% against KEPT's 76.4%** — a 0.4 point difference on a
+standard error of 2.5, which is no difference at all — and its calibration gap is
+inside noise. The extra third of volume performs like the lanes that were already
+there. The removed lanes point the other way at -4.6, which is short of
+significance but consistent with them having been offers that should not have
+qualified.
+
+Pooled lane calibration on the corrected engine is **+0.4 on 2,942 lanes**.
+
+**Left open, and larger than the volume question.** By rung the same run gives
+`O0.5` +0.7 (n=1,234), `O1.5` **+5.8** (n=834) and `U1.5` **-5.3** (n=874), both
+at z = 3.5. `U1.5` and `O1.5` are complements for one side, so that is a single
+error seen twice: too much mass on exactly one goal. Side-level over-dispersion
+was the obvious cause and is measured and rejected — 293,114 side-observations
+give var/mean 1.087, but the rung effect is 0.62 points and points the wrong way.
+Leading candidate is now selection, since `candidates()` takes a max over rungs
+and sides and these two rungs select opposite tails. Not diagnosed, not acted on.
+
+**Practical consequence:** `O0.5` is the trustworthy team rung. `U1.5` currently
+over-states by ~5 points, so its published `buy≥` is about 5% too low.
+
+### Known data defects
+
+- **OPEN — half-time scores are censored on 0-0 finishes in 23 leagues.** In
+  ALG-L1, ARG-PD, BRA-SA, COPA-L, CRO-1L, CZE-FL, DEN-SL, EGY-PL, MAR-BP,
+  MEX-LMX, MLS, NOR-EL, POL-EK, ROU-L1, RSA-PL, RUS-PL, SUI-SL, SWE-AL, UCL,
+  UCL-Q, UECL-Q, UEL-Q and UKR-PL, **every match that finished 0-0 is missing
+  its half-time score** — 2,524 matches in total, and not one of them kept a
+  half-time row. Drop the nulls and you have deleted exactly the goalless
+  results, so any half-time question answers itself: every one of those leagues
+  reported that a 0-0 at the break produced a second-half goal **100.0% of the
+  time**. It is survivorship, not football.
+
+  Nothing in the tip path reads `hthg`/`htag`, so no published tip is affected.
+  It matters for live questions, which is where it was found — pricing an
+  `O0.5` bought at half time. `scripts/ht_zero.py` detects the censoring by
+  comparing 0-0 finishes inside the half-time subset against the league as a
+  whole and excludes any league that shows none, rather than trying to repair
+  rows that cannot be recovered. Twenty-three clean leagues remain, 57,092
+  goalless halves, which is enough.
+
+- **FIXED — team-name resolution was non-deterministic across processes.** The
+  most serious bug found in this log, and it had been silently live the whole
+  time. `_team_names` returned `list(set(...))`, and inside `_match_team` two
+  spellings of one club collapse to the same lookup key, so exactly one of them
+  wins. Python randomises the string hash seed per process, so WHICH one won
+  changed from run to run:
+
+      run 1:  Montréal -> CF Montreal   (20 rows, to 2026-08-20)   mu 2.34
+      run 2:  Montréal -> CF Montréal   (149 rows, to 2025-05-03)  mu 1.62
+      run 3:  Montréal -> CF Montreal                              mu 2.34
+
+  The same fixture priced at `U3.0 79.1%` or `U3.0 91.8%` depending on nothing
+  but which process ran it. Every downstream number — probability, edge,
+  break-even, buy-from — inherited the coin flip. It was caught only because a
+  bet-pricing script disagreed with the tip table it was pricing against.
+
+  **Scope: 16 colliding name groups across 10 leagues**, every one a coin flip
+  before the fix — ARG-PD (4), ROU-L1 (3), SWE-AL (2), and one each in ARG-CLP,
+  BRA-SB, CHI-PD, COPA-L, MEX-LMX, MLS and UEL. MLS additionally has 6
+  collisions at the CANONICAL level (`Charlotte`/`Charlotte FC`, `Inter
+  Miami`/`Inter Miami CF`, `Minnesota United`/`Minnesota United FC`, …), all of
+  which resolved arbitrarily.
+
+  **The fix has two halves.** `_team_names` now returns names ordered most
+  recent match first, then row count, then name — deterministic, and it picks
+  the current half of a split club, which is what a project that ranks the last
+  two seasons above deep history should want. `_match_team` builds its lookup
+  maps with `setdefault` instead of a dict comprehension so the FIRST (most
+  preferred) spelling wins rather than the last. `_compute_features` had the
+  same `set()` union and now preserves order too.
+
+  **Blast radius on the live slate: 1 tip of 13.** Re-running MLS
+  deterministically changed only `San Jose v Minnesota` — `U4.25` moved from
+  82.5% / +2.1% to **86.6% / +6.2%**, because `Minnesota` had been landing on
+  the 2025 variant. The other twelve are byte-identical. The published table has
+  been corrected.
+
+  Worth stating plainly: this is a reason to treat every figure in this log that
+  predates the fix as carrying an unknown amount of this noise. The tips
+  themselves were mostly unaffected — 12 of 13 — but "mostly" is doing real work
+  in that sentence.
+
+
+- **No recency bound on team history — now measured, and it is the biggest one.** `_find_team_rows` takes a club's last ten matches with no limit on how old they are, so a side returning to a competition after years away is priced on ancient form. The history gate counts matches, not their age. Auditing every upcoming fixture put a number on it:
+
+      form older than    fixtures withheld
+        120 days             37 of 155   (24%)
+        300 days             21 of 155   (14%)
+
+  The worst are not marginal. Coventry v **Hull** would be priced off form **9,226 days** old; Real Madrid v **Málaga** off 3,017 days, from a club last in LaLiga in 2018. Hull v Man United is the case already caught by hand: Hull last played in the Premier League in **2017**, and the engine produces a confident U4.25 at 84% off ten matches from March–May 2017.
+
+  Two distinct causes sit underneath. Some clubs are simply long gone from the division. Others — **Hull, Ipswich** — are promoted sides whose recent form is real but filed in *another league's store*: Hull have **690 rows in ENG-CH** ending 2026-05-02, and a Premier League fixture never looks there. That half is not a naming bug and not a staleness bug; it needs cross-division lookup.
+
+  **This is the next fix, and it is deferred deliberately.** Unlike the alias layer it *withholds* tips, so it changes engine output on fixtures already tipped and bet. It waits until the 26 open bets settle.
+
+- **Feed names vs store names — FIXED for 20 clubs.** Results come from football-data.co.uk, which files clubs under trading names (`Man United`, `QPR`, `Nott'm Forest`, `M'gladbach`); fixtures arrive with full legal names (`Manchester United FC`, `Queens Park Rangers FC`). Fuzzy matching cannot bridge an abbreviation — `qpr` and `queens park rangers` share no text to score — so the resolver returned nothing and the fixture was withheld. It affected **38 of 164 upcoming fixtures (23%)**, including Man Utd, Man City, Inter, Atlético, Athletic Club, Lyon, PSV, Sporting CP, Gladbach and Eintracht Frankfurt. `PSV` failed for a separate reason: `psv` is in the generic club-token list, so canonicalising deleted the only identifying word in the name. `config/team_aliases.json` now maps the 20 the store already carries; each target was read off the store's own name list rather than guessed. Le Mans and Elversberg are omitted because they have no rows under any spelling — newly promoted, a data gap not a naming one.
+
+- **Every remaining no-tip is a promoted club.** After the alias layer, exactly **10 of 177** upcoming fixtures produce no tip, and all ten trace to five clubs newly arrived in their division — their history is real, it is just filed in a tier this store does not carry:
+
+      Lincoln City        1 match    up from League One
+      Racing Santander    1 match    up from Segunda
+      Académico Viseu     2 matches  up from Liga Portugal 2
+      Le Mans             0 rows     up from Ligue 2
+      Elversberg          0 rows     up from 2. Bundesliga
+
+  **Accepted as-is.** Refusing a promoted club is the gate behaving correctly, and a tip built on one or two matches would be worse than no tip. Not to be confused with the split-name problem below, which fails the other way round — it *issues* a tip off three or four matches instead of withholding one.
+
+  **One more feed-side abbreviation surfaced on the overnight Colombian slate.** `Ind. Medellín v Cúcuta` returned no tip, and only the first half of the name was at fault: the resolver strips accents perfectly well — `Cucuta` and `Cúcuta` both find `Cúcuta Deportivo` (448 rows, last 2026-08-19) — but `Ind.` is an abbreviation of `Independiente` and shares no scoreable text with it, exactly the `QPR` failure in a different alphabet. One entry added; the fixture prices at `U3.0` 80.1%. Worth stating that this is the *second* time an abbreviated prefix has cost a fixture, and both times the store already held a full, recent history.
+
+  None of these is a naming fault, and no alias can help — there is nothing in the store to alias *to*. `Marítimo v Académico Viseu` is correct as logged: the store holds exactly two rows mentioning Viseu (Benfica 2-2 on 09 Aug, Viseu 0-1 Santa Clara on 15 Aug) and nothing under any other spelling. The fix is a second-tier source per country plus cross-division lookup — the same feature Hull and Ipswich need, approached from the other side.
+
+- **MLS is split nine ways, and it is the benign form of the defect.** The 2026
+  provider break hits `Atlanta`, `Montréal`, `Charlotte`, `DC United`, `Inter
+  Miami`, `Minnesota`, `New York City`, `New York Red Bulls` and `St. Louis`.
+  Each club now has a short-name variant carrying exactly **20 rows ending
+  2026-08-20** and a long-name variant carrying the deep history and stopping
+  **2025-05-03**:
+
+      D.C. United        679 rows -> 2025-05-03      DC United      20 -> 2026-08-20
+      New York RB        673 rows -> 2025-05-03      NY Red Bulls   20 -> 2026-08-20
+      Minnesota Utd FC   277 rows -> 2025-05-03      Minnesota Utd  20 -> 2026-08-20
+
+  **Checked before pricing the slate, and every feed name resolves to the
+  CURRENT variant**, not the stale one — the worst case here would have been
+  `Montréal` landing on `Impact de Montréal`, 305 rows ending 2020-11-20, and it
+  does not. So the split costs *depth*, not *recency*, and this project ranks
+  recency first: 20 rows is comfortably above the history gate and the form
+  window takes the last 10, all of which are 2026 matches.
+
+  **Deliberately not merged.** The served variant holds 20 rows, four times the
+  merge gate, so folding the history in WOULD change tips that are already
+  issued and backed — the opposite of the safety property the Poland and
+  Switzerland merges were accepted on. It also only adds seasons the project
+  calls "nice to have". Worth doing when the board is clear, not mid-slate.
+
+  Two names failed to resolve at all and are now aliased: `LA Galaxy` →
+  `Los Angeles Galaxy` and `NY Red Bulls` → `New York Red Bulls`. Note that
+  `Los Angeles` alone correctly resolves to `Los Angeles FC`, so the Galaxy
+  entry is load-bearing rather than cosmetic.
+
+- **FIXED — accent folding missed every letter that does not decompose.**
+  `_strip_accents` relied on NFD splitting a letter into base plus combining
+  mark, then dropped the mark. That works for `é`, `å`, `ş`. It does nothing at
+  all for a letter whose modification lives inside the codepoint: Scandinavian
+  `ø` and `æ`, Polish `ł`, Croatian `đ`, German `ß`, Icelandic `þ`/`ð`. NFD
+  leaves them unchanged and the filter never sees them.
+
+  So `Sønderjyske` did not match `Sonderjyske` and `Widzew Łódź` did not match
+  `Widzew Lodz` — the accent-insensitive pass, which exists precisely for this,
+  was blind to a whole class of European club names. A translation table now
+  runs before NFD.
+
+- **FIXED — Denmark merged, and it was the worst split found.** Ten clubs, and
+  unlike MLS the CURRENT variant is tiny: every 2026 name carries **3 or 4
+  rows** against 32–65 in the stale one:
+
+      Sonderjyske      4 rows -> 2026-08-17    SønderjyskE      32 -> 2025-05-24
+      Nordsjaelland    3 rows -> 2026-08-16    FC Nordsjælland  64 -> 2025-05-25
+      Midtjylland      3 rows -> 2026-08-16    FC Midtjylland   64 -> 2025-05-25
+
+  This is the dangerous configuration. The current half sits under the merge
+  gate so on its own it would be withheld — but the resolver was matching the
+  STALE half on an exact-name hit, which is above the gate, so Denmark was
+  quietly issuing tips off **fifteen-month-old form**. Worse than a no-tip and
+  invisible without looking.
+
+  All ten now merge (`Aarhus`, `Brondby`, `FC Copenhagen`, `Lyngby`,
+  `Midtjylland`, `Nordsjaelland`, `Odense`, `Silkeborg`, `Sonderjyske`,
+  `Viborg`), each satisfying the gate rule that the primary is under 5 rows.
+  `Sønderjyske` now resolves to 36 rows ending 2026-08-17. Not merged: Aalborg,
+  Hvidovre and Vejle have no current variant — relegated, correctly left alone —
+  and Randers FC was never split.
+
+  Timing was checked first: **no Danish fixture appears anywhere in this log**,
+  so the merge cannot disturb a tip already issued or backed.
+
+- **`Piast v Legia` — confirmed a true split, and it is league-wide.** `Legia` holds 4 rows (2026-07-24 → 2026-08-14) and `Legia Warszawa` holds 68 (2023-07-21 → 2025-05-24). One club, 72 matches, and the engine sees 4. The same 2026-provider break splits **26 further clubs across Denmark, Mexico, Poland, Russia and Switzerland** — `CF Monterrey` 587 rows vs `Monterrey` 4, `CF Pachuca` 558 vs `Pachuca` 4, `FC Zürich` 220 vs `Zurich` 3. Those leagues have no fixtures in the current window, so nothing is being lost today, but every one of them would tip off three or four matches the moment their fixtures load.
+
+  Worth noting for sequencing: a merge restricted to groups whose served variant is **below the 5-match gate** carries the same safety property the alias layer was accepted on — such a fixture has no tip to change, so the merge can only add. The stale-serving cases (Chapecoense, SC Internacional) sit above the gate and would still need the full fix.
+
+- **Era-split team names** — 15 leagues, ~73 names. `KS Cracovia` (2023-25) vs `Cracovia` (2026), `IK Sirius` vs `Sirius`, `AIK Solna` vs `AIK`. Cause: 2026 seasons arriving from a different provider. Effect: thin predictions and false refusals. Cracovia was refused on 4 matches when 72 exist. Detector is fuzzy and overcounts — needs a manual pass.
+- **Stale stores** — Premier League and Serie B end in May 2026.
+- **No-tips resolved** — Al Faisaly 0-2 Neom, Al Hazem 0-1 Al Diriyah, Cracovia **3-2** Wieczysta. An earlier version of this note said all three finished under three goals; that was wrong. Cracovia was read at 1-2 with fourteen minutes left and finished on five, which would have beaten a U4.25 and lost a U3.0. Two of three would have been safe Unders, not three. Still not counted either way — a refusal is not a bet — and the error is left visible because grading declined fixtures from partial scores is exactly the habit that turns a no-tip rule into a tip.
+
+---
+
+## Most recent key updates
+
+**Team-name aliases — 35 fixtures recovered, 0 tips changed.** 23% of upcoming fixtures had a team the engine could not resolve at all and were silently withheld. `config/team_aliases.json` maps 20 feed names onto the store names already present. An alias is consulted **only after the raw name fails**, so it can add a withheld fixture and never alter one already priced — verified by pricing all 164 upcoming fixtures with aliases off and on: **35 newly priced, 0 changed, 0 lost, 120 identical.**
+
+**Split names — 120 clubs, 21 leagues, 81 served the wrong side.** Separate from the alias problem and worse, because it does not withhold a tip, it *issues* one off stale form. Chapecoense is served 114 rows ending **2021-12-09** while 136 exist and the freshest is 2026-08-16; SC Internacional 114 rows ending 2025-12-07 against a 327-row union. Six Brazilian clubs playing this week are priced on form that stops eight months ago. Likely also the explanation for the two ENG-PL tips that never reproduced. **Fix deferred until the open bets settle**, since merging the variants changes live tips.
+
+**Season stage — enabled, all leagues.** First feature dial to default on. Inert for the first 92% of a season. Across the closing 9%: 81.3% → 82.7%, 47 rescued / 30 broken. Positive at every shift 0.05–0.30 and in both halves. No single test clears 2σ; older seasons contributed +4 of +17.
+
+**Module layer found dead.** `burst_sentinel`, `det`, `ulr`, `deg`, `mfr` change **zero** markets out of 998. They move the old flowchart's lean scores; probability selection no longer reads them. All 128 on/off combinations score identically: 1326/1630 = 81.35%.
+
+**Reconnecting them fails both ways.** Adding their opinion to `mu` is monotonically harmful (−22 net at scale 2.0, >4σ). Inverting it collapses the market mix to 82% U4.25 — buying certainty, not information. Wire kept at 0.0.
+
+**Ceiling measured.** Perfect knowledge of both teams' season-long scoring rates is worth **+2.3%** (81.3% → 83.6%). Knowing the actual result is worth +18.7%. Team-quality features are effectively exhausted.
+
+**Eight ideas rejected on holdout.** BurstSentinel · probability ceiling · probability sharp lane · goal variance · additive mismatch · multiplicative mu blend · possession · referee tendency · rest days.
+
+**Three of my own recommendations withdrawn after measurement.** Abstention lane (92.8% tail was 83 fixtures; 86.6% at 851, and the slope was entirely O1.0). Edge gate (backwards — dropping low-edge fixtures costs 9.5 points). League cull (league quality does not persist: r = +0.153).
+
+**History gate confirmed already correct.** `MIN_MATCHES = 5` sits on the real cliff (1-4 matches → 72.8%). Raising it moves kept strike by 0.4 points while discarding a fifth of the book.
+
+**Two leagues added** — Saudi Pro League (1,169 matches), Peru Liga 1 (6,860), both via ESPN.
+
+**Recurring pattern worth naming.** Five separate times, something that raised hit rate turned out to be buying near-certain lines rather than predicting: floor sweep, O1.0 tail, abstention lane, league cull, inverted module tilt. Strike up, edge down, market mix collapsing to U4.25 is the signature.
+
+---
+
+## Athena's main mission
+
+**Give the highest hit rate in bet tips. Over/under markets only. Nothing else.**
+
+- Hit rate is the objective. Edge is diagnostic, not the target.
+- No live odds, ever. Bookmaker lines would saturate the model and bias it toward following the market instead of pricing football.
+- Recent data matters most. Current and last season carry the weight.
+- Fewer, sharper plays beat more plays at a lower hit rate.
+- A net gain counts even if it breaks some winners: 7 rescued for 2 broken is progress.
+
+## Athena engine — key features
+
+**Probability-based market selection.** For every rung on the Asian ladder, `P(win | mu)` from Poisson, scored against a typical fixture in the same league. Picks the best edge subject to a probability floor (0.79 default, per-league overridable). Confirmed on 29,762 unseen matches: 80.60% strike, +213 net wins, 18/27 leagues ≥80%.
+
+**As-of everything.** Every feature reads only matches strictly before the fixture date. No lookahead anywhere in the pipeline.
+
+**Chronological holdout on every claim.** Tune on the earlier portion, verify on the later. Nothing is written unless the gain survives data the search never saw.
+
+**Full-win grading convention.** Half-wins count as wins — the bettor offsets the line. `U4.25` at 4 goals is a win.
+
+**Per-league playability caps.** `max_under_line` / `min_over_line`. Low-tempo leagues capped at U3.5; `O1.0` restricted to four declared low-tempo competitions. This is a judgement about market prices the engine has no access to.
+
+**Season stage.** Closing-stretch lift of +0.15 goals, placed as-of from matches played versus the league's typical season length.
+
+**Sharp lane with a confidence veto.** Fires at 0.7σ from league norm with the lean agreeing, vetoed below 0.70 win probability. Strike 60.2% → 65.6%, edge +4.86% → +6.79%.
+
+**History gate.** Refuses a fixture when either side has fewer than 5 prior matches. Produces genuine no-tips rather than guesses.
+
+**Team tags in output.** Attack, defence, possession, form, table position — descriptive only, never fed back into selection.
+
+**Three data providers.** openfootball, football-data.co.uk, ESPN. 52 leagues.
+
+**No odds anywhere.** `assert_no_odds` fails loudly if a bookmaker-shaped column ever reaches a frame.
+
+---
+
+## Reference
 
 A local over/under goals engine for football. It reads match results, computes
 point-in-time form features, and produces a total-goals tip on the Asian line
@@ -132,8 +1367,33 @@ a full replay. Run across nine leagues and ~2,900 matches, the result was blunt:
 | `det` volatility | −0.45% | **off** — cost accuracy in 4 leagues |
 | `burst_sentinel` chaos → force Over | **−1.91%** | **off** — cost accuracy in *all nine* |
 
-Disabling the five non-earners is worth **+2.4%** in-sample and **+1.5%** on a
+Disabling the five non-earners was worth **+2.4%** in-sample and **+1.5%** on a
 chronological holdout (7 of 9 leagues improve).
+
+### Those figures are now obsolete — every module contributes exactly 0.00%
+
+They were measured before probability selection existed, and probability
+selection changed what a module can reach. The market now comes from
+`market_select.choose(mu, league_mu, …)`, while `burst_sentinel`, `det`, `ulr`,
+`deg` and `mfr` all adjust the **old flowchart's lean and corridor scores** — and
+the flowchart no longer picks the market. They still compute, they still shape
+the corridor shown in the output, and nothing they produce reaches the tip.
+
+Measured directly over 998 fixtures across five leagues:
+
+| toggle | markets changed |
+|---|---|
+| `burst_sentinel`, `det`, `ulr`, `deg`, `mfr` | **0 each** |
+| `use_possession` | 14 |
+| `use_season_stage` | 17 |
+
+A search over all 128 on/off combinations of those seven returned the identical
+holdout score for every one of them — 1326/1630 = 81.35% — because only the two
+that move `mu` can change anything at all. See `scripts/combo_search.py`.
+
+The modules are not worthless, they are unplugged: they encode real football
+logic and whisper it into a corridor nothing reads. Reconnecting them would mean
+letting them move `mu` rather than the lean.
 
 Two further modules, `InlineVeto` and `S-LOCK`, were deleted outright: both were
 unreachable. `InlineVeto` was fed a hardcoded `quality_ok = True`, and `S-LOCK`
@@ -304,3 +1564,4 @@ cd backend && python -m pytest tests/ -q
 ```
 
 Pure logic only — no data files, no network.
+

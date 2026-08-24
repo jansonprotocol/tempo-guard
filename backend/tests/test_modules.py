@@ -63,19 +63,36 @@ def test_disabled_lists_the_pruned_set():
 
 def test_prob_select_is_on_with_the_measured_floor():
     """
-    Enabled on measurement, not preference: 80.57% strike and +1.15% edge over
-    3,716 unseen matches, against the flowchart's 79.66% and +0.72%, with 21 of
-    32 leagues clearing 80% rather than 14.
+    Enabled on measurement, not preference.
 
-    The floor is the load-bearing number. Edge is widest for lines in the
-    middle of the goal distribution, so without one the selector chases the
-    most volatile line available — at 0.55 it won only 60% of the time. Anyone
-    lowering it should expect the strike rate to follow.
+    The floor is load-bearing: edge is widest for lines in the middle of the
+    goal distribution, so without one the selector chases the most volatile
+    line available — at 0.55 it won only 60% of the time. Anyone lowering it
+    should expect the strike rate to follow.
+
+    IT IS ALSO COUPLED TO `features.MU_SHRINK`, and that coupling is why this
+    test exists rather than a bare constant check. The floor is ABSOLUTE, so
+    its behaviour depends entirely on how spread out mu is. 0.79 was correct
+    against an unshrunk mu. Once mu was pulled toward the league mean, the same
+    0.79 stopped being a floor and became a funnel: `U4.25` took 88-95% of tips
+    in five leagues, breaking the floor's own stated criterion of keeping the
+    top line under half of calls.
+
+    0.75 restores the mix (top line 54% -> 34%) and improves realised edge
+    while holding strike above 80%. Once the floor was fixed, the shrink could
+    be tightened too — 0.79 had been masking how much shrinkage was warranted —
+    and MU_SHRINK moved 0.60 -> 0.35, taking the weighted calibration gap to
+    -0.6 with realised edge at +2.23.
+
+    If either constant moves, re-run scripts/floor_after_shrink.py — changing
+    one without the other silently breaks the market mix.
     """
+    from app.data import features
     from app.engine import market_select
 
     assert ModuleFlags().prob_select is True
-    assert market_select.MIN_WIN_PROB == 0.79
+    assert market_select.MIN_WIN_PROB == 0.75
+    assert features.MU_SHRINK == 0.35
 
 
 def test_prob_select_never_offers_a_market_below_the_floor():

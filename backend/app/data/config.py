@@ -92,6 +92,25 @@ class LeagueConfig:
     # call overrides, so they no longer change a tip. These four do.
     min_win_prob: Optional[float] = None     # per-league floor; None = global 0.79
     use_possession: bool = False             # apply the fitted possession shift
+    # Season stage lifts the goal expectation in a campaign's closing stretch.
+    # Unlike every other feature dial this describes what the match is WORTH
+    # rather than how good the sides are, so it is the one input the goal model
+    # does not already carry in some form.
+    #
+    # ON by default, which no other feature dial here has earned. It is inert
+    # for the first 92% of a season and changes nothing there; across the 9% of
+    # fixtures in a closing stretch it took 81.3% to 82.7%, rescuing 47 bets and
+    # breaking 30. The net stayed positive at every shift from 0.05 to 0.30 and
+    # in both halves of the sample, so it is not a constant fitted to its own
+    # data — see scripts/season_stage_validate.py for the full ledger and for
+    # the honest weakness, which is that older seasons contributed +4 of the +17.
+    use_season_stage: bool = True
+    # How far the modules' net opinion may move the goal expectation, in goals
+    # per unit of lean score. Zero disconnects them, which is what they have
+    # effectively been since probability selection took over the market choice:
+    # toggling any of burst_sentinel, det, ulr, deg or mfr changes zero markets
+    # out of 998. Non-zero is the only route by which they can reach a tip.
+    module_mu_scale: float = 0.0
     max_under_line: Optional[float] = None
     min_over_line: Optional[float] = None
 

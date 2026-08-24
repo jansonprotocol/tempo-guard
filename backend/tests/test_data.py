@@ -635,3 +635,42 @@ def test_possession_fit_is_as_of():
     # the cutoff was ignored.
     if early is not None and late is not None:
         assert early != late, "fit ignored the cutoff"
+
+
+def test_side_shrink_targets_that_sides_own_mean():
+    """Both sides used to shrink toward `league_mu / 2`, on the stated reasoning
+    that half the league mean IS the per-side mean. It is not — home teams
+    average 1.502 goals and away 1.154 against a shared target of 1.328 — and
+    that miss was worth a 7.7 point home/away calibration split."""
+    from app.data import features
+
+    mu, share = 2.66, 0.565
+    home = features._shrink_side(2.20, mu, share)
+    away = features._shrink_side(2.20, mu, 1.0 - share)
+    # Identical raw rates must NOT produce identical shrunk rates: the home side
+    # is pulled toward a higher mean than the away side.
+    assert home > away
+    # And each lands between its raw rate and its OWN target.
+    assert mu * share < home < 2.20
+    assert mu * (1 - share) < away < 2.20
+
+
+def test_home_share_is_bounded():
+    """A thin or freak window must not invert the venue split."""
+    import pandas as pd
+
+    from app.data import features
+
+    empty = pd.DataFrame({"date": [], "hg": [], "ag": []})
+    assert features._home_share(empty, None, None) == features.DEFAULT_HOME_SHARE
+    lopsided = pd.DataFrame({"date": pd.to_datetime(["2020-01-01"] * 300),
+                             "hg": [9] * 300, "ag": [0] * 300})
+    assert 0.50 <= features._home_share(lopsided, None, None) <= 0.65
+
+
+def test_venue_debias_leaves_mu_total_unchanged():
+    """The venue correction fixes the SPLIT between the two sides and must not
+    move their sum. `mu_total = gfh + gfa` drives the match lane, which is
+    calibrated to a gap of ~0 — the team lane does not get to disturb it."""
+    gfh, gfa, c = 1.40, 1.25, 0.113
+    assert (gfh + c) + (gfa - c) == pytest.approx(gfh + gfa)

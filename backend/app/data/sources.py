@@ -179,6 +179,13 @@ LEAGUES: dict[str, LeagueSource] = {
         "AUT-BL", "Austrian Bundesliga", "", "",
         provider="espn", espn_code="aut.1",
     ),
+    # Saudi runs August to May, so calendar_year stays False — fetching it as a
+    # calendar year would splice the back half of one season onto the front half
+    # of the next and label every one of them wrong.
+    "SAU-PL": LeagueSource(
+        "SAU-PL", "Saudi Pro League", "", "",
+        provider="espn", espn_code="ksa.1",
+    ),
     "SUI-SL": LeagueSource(
         "SUI-SL", "Swiss Super League", "europe", "switzerland/{season}_ch1.txt",
         fd_country="SWZ", fd_league="Super League"
@@ -244,6 +251,19 @@ LEAGUES: dict[str, LeagueSource] = {
     "COL-PA": LeagueSource(
         "COL-PA", "Colombian Primera A", "", "",
         calendar_year=True, provider="espn", espn_code="col.1",
+    ),
+    # Chile runs February to December like its neighbours, so the season is the
+    # calendar year and the Clausura is the back half of one campaign.
+    "CHI-PD": LeagueSource(
+        "CHI-PD", "Chilean Primera División", "", "",
+        calendar_year=True, provider="espn", espn_code="chi.1",
+    ),
+    # Peru runs February to December, so the season IS the calendar year. The
+    # Clausura is the back half of that single campaign rather than a separate
+    # competition, and ESPN publishes both halves under per.1.
+    "PER-L1": LeagueSource(
+        "PER-L1", "Peruvian Liga 1", "", "",
+        calendar_year=True, provider="espn", espn_code="per.1",
     ),
     "ECU-S1": LeagueSource(
         "ECU-S1", "Ecuadorian Serie A", "south-america",

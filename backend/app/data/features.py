@@ -40,7 +40,7 @@ from typing import Dict, List, Optional, Tuple
 import pandas as pd
 from rapidfuzz import fuzz, process
 
-from app.data import store
+from app.data import aliases, store
 
 # ── Constants (unchanged from the tuned FBref implementation) ─────────────────
 ROLLING_MATCHES = 10
@@ -85,6 +85,171 @@ SHOT_BLEND = 0.60
 # at a ceiling. See the tempo_index note in _compute_features.
 TEMPO_BASE = 1.5
 TEMPO_SPAN = 3.0
+
+# ── Shrinkage of the per-fixture goal expectation ─────────────────────────────
+# Ten teams' worth of recent scoring rates make a confident-looking mu, and it
+# is far too confident. Regressing what actually happened on what was predicted
+# across ~2,000 replayed fixtures gives:
+#
+#     actual_total = 1.640 + 0.424 * mu
+#
+# A slope of 1.0 would mean the spread is right. 0.42 means the engine's
+# per-fixture reads are about two and a half times too extreme. By quintile:
+#
+#     lowest mu fifth     says 1.99 goals   actually 2.54   miss +0.55
+#     highest mu fifth    says 3.60 goals   actually 3.26   miss -0.34
+#
+# Level is fine — pooled bias is +0.08 goals. It is purely SPREAD, and that is
+# the worst possible shape, because every tip is selected on exactly the
+# extremes that are wrong. It explains the whole symptom: the engine claimed
+# 85.7% across 26 leagues and delivered 81.2%, and on the bets actually placed
+# — which skew to the extremes harder still — it claimed 80.4% and delivered
+# 69.6%.
+#
+# Poisson is not the culprit: on 272,857 matches real totals match Poisson to
+# within half a point at every rung traded (scripts/dispersion.py). If mu were
+# right the probabilities would be right.
+#
+# HOW 0.35 WAS ARRIVED AT, AND WHY IT IS COUPLED TO market_select.MIN_WIN_PROB.
+# The first pass shipped 0.60, rejecting the measured 0.42 because full
+# shrinkage collapsed the market mix onto U4.25 and halved realised edge. That
+# reasoning was wrong, and instructively so: the collapse was not caused by
+# shrinkage, it was caused by the ABSOLUTE probability floor of 0.79. Pulling
+# fixtures toward the league mean meant fewer rungs cleared 79%, so the selector
+# fell through to the safest buyable one. Lowering the floor to 0.75 removed the
+# funnel, and with it removed the reason to hold shrinkage back.
+#
+# Re-swept at floor 0.75 over 1,487 replays (scripts/shrink_ab.py):
+#
+#     MU_SHRINK    says     hit     gap   base    realised edge   top line
+#       0.60       83.2%   81.4%   -1.7  79.5%       +1.99          34%
+#       0.45       83.2%   82.4%   -0.8  80.4%       +1.97          37%
+#       0.35       83.2%   83.3%   +0.0  81.0%       +2.23          41%
+#
+# 0.35 is best on BOTH axes at once — the calibration gap closes to zero and
+# realised edge is the highest measured — while the top line stays under half of
+# calls. Neither constant can be tuned without the other; test_modules pins them
+# together for that reason.
+#
+# Across ten leagues at n=250 this took the weighted gap from -4.4 to **-0.6**.
+MU_SHRINK = 0.35
+
+# Per-league overrides, for leagues whose residual slope stays far from 1.0
+# after the global shrink. Re-measure with scripts/calibrate_mu.py: a residual
+# slope of b means this league's remaining spread is still b times too wide, so
+# its shrink should be MU_SHRINK * b.
+#
+# Deliberately sparse. Every entry here is a fitted parameter on ~250 fixtures
+# and will over-fit if added freely, so a league only earns one when it BOTH
+# measures far off AND still fails the retrosim at the global setting.
+#
+#   IRL-PD  residual slope **-0.600** on 300 replays — the read is not merely
+#           weak, it is ANTI-correlated: the more goals the engine predicts, the
+#           fewer occur. The worst slope measured in any league. A negative
+#           slope has no sensible k, so this is set to 0.10, which is as close
+#           to "use the league mean and ignore the fixture" as the engine goes
+#           without producing an identical tip every week. Flagged as a cull
+#           candidate rather than a tuning success: a calibrated tip carrying no
+#           information is still no information.
+#
+#   MLS   residual slope 0.325 on 262 replays, and the only league still worse
+#         than -4 points after the global fix (-4.2). 0.35 * 0.325 = 0.11;
+#         set to 0.15, pulled toward the global to blunt the over-fit. MLS is
+#         also the league whose current-season history is thinnest — nine clubs
+#         carry 20 rows each after the 2026 provider split — so a weak read
+#         there is what the data supports.
+MU_SHRINK_BY_LEAGUE: Dict[str, float] = {
+    "MLS": 0.15,
+    "IRL-PD": 0.10,
+}
+
+# The team-total lane needs its OWN shrink, and this was missed on the first
+# pass. `p_home_tt05` / `p_away_tt05` are built from the raw per-side rates
+# `gfh` / `gfa`, not from the shrunk mu_total, so the match-total fix never
+# reached them — the whole team lane was still running on unshrunk spread.
+#
+# Measured the same way, regressing a side's actual goals on its predicted rate
+# over 2,376 side-observations:
+#
+#     actual_side_goals = 0.572 + 0.621 * gf
+#
+#     lowest gf fifth    says 0.90 goals   actually 1.14
+#     highest gf fifth   says 1.92 goals   actually 1.79
+#
+# Less extreme than the match total's 0.42 but the same defect, and it lands on
+# the lane that has been offered as Tip 2. Per league: JPN-J1 0.149, MLS 0.378,
+# ENG-CH 0.644, CHI-PD 0.710, ESP-L2 0.806, TUR-SL 0.823.
+#
+# Shrunk toward the per-side league mean, which is league_mu / 2. Applied only
+# where the team probabilities are derived, so mu_total is not shrunk twice.
+TEAM_SHRINK = 0.62
+
+
+# Fraction of a league's goals scored by the home side. Both sides used to be
+# shrunk toward `league_mu / 2`, on the stated reasoning that half the league
+# mean IS the per-side mean. It is not: home teams average 1.502 goals and away
+# teams 1.154 across the twelve leagues checked, against a shared target of
+# 1.328. Every league showed the same +0.174 / -0.174 miss, so home rates were
+# dragged down and away rates pushed up, systematically and in the same
+# direction everywhere.
+#
+# Measured on 2,158 offered lanes, that is worth a SEVEN point split: home lanes
+# delivered 78.8% against 74.7% claimed (+4.1), away lanes 73.0% against 75.9%
+# (-2.9). It hid because the two halves cancel — pooled, the team lane reports a
+# gap of +0.3 and looks perfectly calibrated.
+DEFAULT_HOME_SHARE = 0.565
+_HOME_SHARE_CACHE: dict[tuple[Optional[str], Optional[int]], float] = {}
+
+
+def _home_share(df: pd.DataFrame, league_code: Optional[str],
+                cutoff: Optional[datetime]) -> float:
+    """Share of this league's goals scored at home, counted before `cutoff`.
+
+    Windowed and cached exactly like `_league_conversion`, and for the same
+    reason: `_compute_features` is handed the whole unfiltered league frame, so
+    an unguarded mean here would read seasons that had not happened yet.
+    """
+    year = cutoff.year if cutoff is not None else None
+    key = (league_code, year)
+    if league_code is not None and key in _HOME_SHARE_CACHE:
+        return _HOME_SHARE_CACHE[key]
+
+    rows = df
+    if cutoff is not None and len(rows):
+        rows = rows[rows["date"] < datetime(year, 1, 1)]
+    h = float(rows["hg"].fillna(0).sum()) if len(rows) else 0.0
+    a = float(rows["ag"].fillna(0).sum()) if len(rows) else 0.0
+    share = h / (h + a) if (h + a) > 200 else DEFAULT_HOME_SHARE
+    # Guard against a thin or freak window inverting the split.
+    share = min(0.65, max(0.50, share))
+
+    if league_code is not None:
+        _HOME_SHARE_CACHE[key] = share
+    return share
+
+
+def _shrink_side(gf: float, league_mu: Optional[float],
+                 share: float = 0.5) -> float:
+    """Shrink one side's scoring rate toward that SIDE's league mean.
+
+    `share` is the fraction of league goals this side scores — see
+    `_home_share`. Passing 0.5 reproduces the old behaviour of shrinking both
+    sides toward the same midpoint.
+    """
+    if not league_mu or league_mu <= 0:
+        return gf
+    target = league_mu * share
+    return max(0.05, target + TEAM_SHRINK * (gf - target))
+
+
+def _shrink_mu(mu: float, league_mu: Optional[float],
+               league_code: Optional[str] = None) -> float:
+    """Pull a fixture's goal expectation toward its league mean. See MU_SHRINK."""
+    if not league_mu or league_mu <= 0:
+        return mu
+    k = MU_SHRINK_BY_LEAGUE.get(league_code or "", MU_SHRINK)
+    return max(0.2, league_mu + k * (mu - league_mu))
+
 
 # ── Recency window for league-wide aggregates ─────────────────────────────────
 # League means and shot-conversion rates describe "what this league is like
@@ -142,9 +307,29 @@ def _domestic_fallback() -> List[str]:
 
 # ── Name normalisation ────────────────────────────────────────────────────────
 
+# Latin letters that are NOT an accented base plus a combining mark, so NFD
+# leaves them untouched and the Mn filter below never sees them. Without these
+# the accent-insensitive match silently fails on whole leagues: `Sønderjyske`
+# would not match `Sonderjyske`, `Widzew Łódź` not `Widzew Lodz`. The `å`, `é`,
+# `ş` family DO decompose and need no entry here.
+_UNDECOMPOSED = str.maketrans({
+    "ø": "o", "æ": "ae", "œ": "oe", "ł": "l", "đ": "d", "ð": "d",
+    "þ": "th", "ß": "ss", "ħ": "h", "ŧ": "t", "ı": "i", "ĸ": "k",
+})
+
+
 def _strip_accents(s: str) -> str:
+    """
+    Fold a name to plain ASCII letters for matching.
+
+    Two passes are needed. NFD splits an accented letter into base plus
+    combining mark and the mark is dropped; but a letter whose glyph carries the
+    modification INSIDE the codepoint — Scandinavian `ø`, Polish `ł`, Croatian
+    `đ` — has no decomposition at all and survives NFD unchanged. Those are
+    translated explicitly first.
+    """
     return "".join(
-        c for c in unicodedata.normalize("NFD", s)
+        c for c in unicodedata.normalize("NFD", s.translate(_UNDECOMPOSED))
         if unicodedata.category(c) != "Mn"
     )
 
@@ -186,8 +371,15 @@ def _match_team(target: str, candidates: List[str]) -> Optional[str]:
     """
     t_norm = _norm(target)
     t_accent = _norm_accent(target)
-    norm_map = {_norm(c): c for c in candidates}
-    accent_map = {_norm_accent(c): c for c in candidates}
+    # setdefault, not a dict comprehension: `candidates` arrives most-preferred
+    # first (see _team_names), and a comprehension would let the LAST colliding
+    # spelling win instead of the first. That is the difference between picking
+    # a club's current form and its abandoned historical variant.
+    norm_map: dict[str, str] = {}
+    accent_map: dict[str, str] = {}
+    for c in candidates:
+        norm_map.setdefault(_norm(c), c)
+        accent_map.setdefault(_norm_accent(c), c)
 
     if t_norm in norm_map:
         return norm_map[t_norm]
@@ -225,7 +417,37 @@ def _cutoff(match_date: date) -> datetime:
 
 
 def _team_names(df: pd.DataFrame) -> List[str]:
-    return list(set(df["home"].astype(str)) | set(df["away"].astype(str)))
+    """
+    Every club name in the frame, MOST PREFERRED FIRST.
+
+    This used to be `list(set(...))`, and that was a live defect rather than an
+    untidiness. Two spellings of one club — `CF Montreal` and `CF Montréal`,
+    `DC United` and `D.C. United` — collapse to the same key inside
+    `_match_team`, so exactly one of them wins the lookup. Set iteration order
+    depends on the per-process string hash seed, so WHICH one won changed from
+    run to run: the same fixture priced at mu 2.34 in one process and 1.62 in
+    the next, off 20 rows of current form or 149 rows stopping in May 2025.
+    Every downstream number inherited that coin flip.
+
+    Ordering is by most recent match first, then row count, then the name, so
+    the winner is both stable and the right half of a split club — this project
+    ranks the current and previous season above deep history. A thin-but-recent
+    variant that beats a fat-but-stale one on this ordering will usually fail
+    the history gate downstream and withhold the fixture, which is the safe
+    failure: no tip beats a tip built on year-old form.
+
+    The real repair for a split club is a merge in config/team_merges.json.
+    This only makes the unmerged case deterministic.
+    """
+    if df.empty:
+        return []
+    home = df[["home", "date"]].rename(columns={"home": "team"})
+    away = df[["away", "date"]].rename(columns={"away": "team"})
+    both = pd.concat([home, away])
+    both["team"] = both["team"].astype(str)
+    agg = both.groupby("team")["date"].agg(["max", "count"])
+    agg = agg.sort_values(["max", "count"], ascending=[False, False])
+    return list(agg.index)
 
 
 # ── Per-frame index cache ─────────────────────────────────────────────────────
@@ -334,6 +556,27 @@ def _resolve_in_frame(df: pd.DataFrame, team: str) -> Optional[str]:
     if team not in idx["resolved"]:
         idx["resolved"][team] = _match_team(team, idx["names"])
     return idx["resolved"][team]
+
+
+def _aliased(league_code: str, df: pd.DataFrame, team: str) -> str:
+    """
+    The name this league's store files `team` under.
+
+    Ordered so the alias table is a fallback and never an override: if the
+    resolver can already match the raw name, that match stands untouched. An
+    alias therefore only ever converts a fixture the engine WITHHELD into one it
+    can price, and can never change a tip it already issues — which is what
+    makes config/team_aliases.json safe to extend mid-season.
+
+    Guards against a stale entry too: an alias pointing at a name the store no
+    longer carries is ignored rather than trusted into an empty row set.
+    """
+    if _resolve_in_frame(df, team) is not None:
+        return team
+    mapped = aliases.get(league_code, team)
+    if mapped and _resolve_in_frame(df, mapped) is not None:
+        return mapped
+    return team
 
 
 def _find_team_rows(df: pd.DataFrame, team: str, cutoff: datetime) -> pd.DataFrame:
@@ -592,7 +835,12 @@ def _compute_features(
     A_away: Optional[pd.DataFrame] = None,
     cutoff: Optional[datetime] = None,
 ) -> Dict[str, float]:
-    names = list(set(_team_names(H)) | set(_team_names(A)))
+    # Concatenate rather than union two sets: `_team_names` returns a preference
+    # ORDER, and a set would discard it and reintroduce the hash-seed coin flip
+    # this function's callers were just fixed for.
+    seen: set[str] = set()
+    names = [n for n in (*_team_names(H), *_team_names(A))
+             if not (n in seen or seen.add(n))]
     h_norm = _norm(_match_team(hname, names) or hname)
     a_norm = _norm(_match_team(aname, names) or aname)
 
@@ -601,10 +849,13 @@ def _compute_features(
 
     # Venue blend: a home side's attack is better described by its home scoring
     # rate, an away side's by its away rate.
+    venue_h = venue_a = 0.0
     if H_home is not None and len(H_home) >= VENUE_MIN:
         gfh = gfh * (1 - VENUE_BLEND) + _goals_per_game(H_home, h_norm, "scored") * VENUE_BLEND
+        venue_h = VENUE_BLEND
     if A_away is not None and len(A_away) >= VENUE_MIN:
         gfa = gfa * (1 - VENUE_BLEND) + _goals_per_game(A_away, a_norm, "scored") * VENUE_BLEND
+        venue_a = VENUE_BLEND
 
     # Blend in what each side's shot volume implies it should be scoring.
     # Applied after the venue split so the two adjustments compose.
@@ -613,7 +864,24 @@ def _compute_features(
     gfa = _blended_scoring_rate(A, a_norm, gfa, conversion)
     shots_blended = conversion is not None
 
+    # Residual venue de-bias. Both scoring rates start from a team's form over
+    # its last ten matches HOME AND AWAY, and only VENUE_BLEND of that is
+    # replaced by venue-specific form. So `gfh` keeps leaning on a venue-neutral
+    # number and lands about 0.113 goals under the true home mean, with `gfa`
+    # the same amount over — measured across twelve leagues, and present before
+    # any shrinkage runs. Correcting the shrink TARGET could not reach it,
+    # because the bias is already in the input.
+    #
+    # Applied symmetrically so `mu_total = gfh + gfa` is exactly unchanged: the
+    # match lane is calibrated to a gap of ~0 and must not move to fix the team
+    # lane. Only the split between the two sides shifts.
+    if league_mu and league_mu > 0:
+        edge = league_mu * (_home_share(full_df, league_code, cutoff) - 0.5)
+        c = edge * (1 - (venue_h + venue_a) / 2)
+        gfh, gfa = max(0.05, gfh + c), max(0.05, gfa - c)
+
     mu_total = max(0.2, gfh + gfa)
+    mu_total = _shrink_mu(mu_total, league_mu, league_code)
     p0 = math.exp(-mu_total)
     p1 = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
@@ -628,10 +896,14 @@ def _compute_features(
             (full_df["hg"].fillna(0) + full_df["ag"].fillna(0)).mean() or 2.5
         )
 
+    _hshare = _home_share(full_df, league_code, cutoff)
+
     return {
         "p_two_plus":             round(float(p_two_plus), 3),
-        "p_home_tt05":            round(float(1.0 - _poisson_p0(gfh)), 3),
-        "p_away_tt05":            round(float(1.0 - _poisson_p0(gfa)), 3),
+        "p_home_tt05":            round(float(1.0 - _poisson_p0(
+            _shrink_side(gfh, league_mu, _hshare))), 3),
+        "p_away_tt05":            round(float(1.0 - _poisson_p0(
+            _shrink_side(gfa, league_mu, 1.0 - _hshare))), 3),
         # Tempo is normalised so a typical fixture lands near the middle of the
         # range. The previous mapping (mu/3.0 clipped at 0.9) saturated: league
         # means sit at 2.4-3.2 goals, so ~63% of matches pinned to the ceiling
@@ -685,7 +957,7 @@ def _asof_features_intl(
             df = store.load_results(code)
             if df.empty:
                 continue
-            rows = _find_team_rows(df, team, cutoff)
+            rows = _find_team_rows(df, _aliased(code, df, team), cutoff)
             if len(rows) > len(best_rows):
                 best_rows, best_full = rows, df
             # A full rolling window is the most that will ever be used, so once
@@ -733,6 +1005,11 @@ def asof_features(
     league_mu_asof, n_before = _league_mean_asof(df, cutoff)
     if n_before == 0:
         return {}
+
+    # Done once, before any lookup, so the rolling rows, the venue rows and the
+    # per-team nudges all key off the same name.
+    home_team = _aliased(league_code, df, home_team)
+    away_team = _aliased(league_code, df, away_team)
 
     H = _find_team_rows(df, home_team, cutoff)
     A = _find_team_rows(df, away_team, cutoff)

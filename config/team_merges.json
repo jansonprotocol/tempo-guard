@@ -1,0 +1,127 @@
+{
+  "_comment": [
+    "Clubs whose history is split across two spellings in the stored results,",
+    "with the variants that should be read as one team.",
+    "",
+    "Cause: the 2026 seasons arrive from a different provider than the",
+    "historical ones, under a different name convention — usually stripped",
+    "accents or a dropped legal prefix. The resolver picks ONE spelling, so a",
+    "club with 68 matches of history is served the 4 rows of the current",
+    "season and falls under the five-match gate. Two fixtures were withheld",
+    "for this on 22 Aug alone (Slask v Widzew, Zurich v Basel), plus Piast v",
+    "Legia and Luzern v Lausanne earlier the same day.",
+    "",
+    "Every entry below was read off the store's own name list and checked",
+    "pairwise. Deliberately NOT merged:",
+    "",
+    "  Stade Lausanne-Ouchy   a DIFFERENT club from FC Lausanne-Sport",
+    "  Wisla / Wisla Plock    two different clubs (Krakow and Plock), and",
+    "                         neither has a historical variant stored",
+    "  Wieczysta Krakow       newly promoted, no counterpart to merge with",
+    "  FC Thun, FC Vaduz      real counterparts, but their history stops in",
+    "                         2020 and 2021. Merging would produce a tip built",
+    "                         on six-year-old form, which is the recency defect",
+    "                         rather than the naming one. Left split until that",
+    "                         is fixed.",
+    "",
+    "A merge applies only where the served variant is BELOW the match gate, so",
+    "it can add a fixture the engine withheld and can never change one it",
+    "already prices. See store._apply_merges."
+  ],
+  "POL-EK": {
+    "Cracovia": [
+      "KS Cracovia"
+    ],
+    "Gornik Zabrze": [
+      "Górnik Zabrze"
+    ],
+    "Jagiellonia": [
+      "Jagiellonia Białystok"
+    ],
+    "Lech Poznan": [
+      "Lech Poznań"
+    ],
+    "Legia": [
+      "Legia Warszawa"
+    ],
+    "Pogon Szczecin": [
+      "Pogoń Szczecin"
+    ],
+    "Rakow": [
+      "Raków Częstochowa"
+    ],
+    "Slask Wroclaw": [
+      "Śląsk Wrocław"
+    ],
+    "Widzew Lodz": [
+      "Widzew Łódź"
+    ],
+    "Zaglebie": [
+      "Zagłębie Lubin"
+    ]
+  },
+  "SUI-SL": {
+    "Basel": [
+      "FC Basel 1893"
+    ],
+    "Grasshoppers": [
+      "Grasshopper Club Zürich"
+    ],
+    "Lausanne": [
+      "FC Lausanne-Sport"
+    ],
+    "Lugano": [
+      "FC Lugano"
+    ],
+    "Luzern": [
+      "FC Luzern"
+    ],
+    "Servette": [
+      "Servette FC"
+    ],
+    "Sion": [
+      "FC Sion"
+    ],
+    "St. Gallen": [
+      "FC St. Gallen"
+    ],
+    "Young Boys": [
+      "BSC Young Boys"
+    ],
+    "Zurich": [
+      "FC Zürich"
+    ]
+  },
+  "DEN-SL": {
+    "Aarhus": [
+      "Aarhus GF"
+    ],
+    "Brondby": [
+      "Brøndby IF"
+    ],
+    "FC Copenhagen": [
+      "FC København"
+    ],
+    "Lyngby": [
+      "Lyngby BK"
+    ],
+    "Midtjylland": [
+      "FC Midtjylland"
+    ],
+    "Nordsjaelland": [
+      "FC Nordsjælland"
+    ],
+    "Odense": [
+      "Odense BK"
+    ],
+    "Silkeborg": [
+      "Silkeborg IF"
+    ],
+    "Sonderjyske": [
+      "SønderjyskE"
+    ],
+    "Viborg": [
+      "Viborg FF"
+    ]
+  }
+}

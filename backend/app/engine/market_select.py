@@ -90,10 +90,31 @@ _MAX_TOTAL = 12
 # emitting U4.25 in two matches out of three, which scores well precisely
 # because it is close to a constant.
 #
-# 0.79 is the highest floor that clears 80% strike while keeping the most-picked
-# line under half of all calls. Above it the gain is concentration rather than
-# accuracy.
-MIN_WIN_PROB = 0.79
+# RE-TUNED alongside MU_SHRINK. 0.79 was the highest floor that cleared 80%
+# strike while keeping the most-picked line under half of all calls — measured
+# against an OVER-SPREAD mu. Shrinking mu toward the league mean moved every
+# fixture inward, so far fewer rungs clear an absolute 79% and the selector
+# falls through to the safest buyable one. The floor did not change; what it is
+# applied to did, and its own stated criterion broke: `U4.25` went to 88-95% of
+# tips in five leagues.
+#
+# Swept at MU_SHRINK = 0.60 over 1,487 replays (scripts/floor_after_shrink.py):
+#
+#   floor    hit     base    realised edge   top line   mix
+#   0.79    83.9%   82.4%       +1.50          54%      U4.25 54  O1.5 23  U3.0 16
+#   0.75    81.4%   79.5%       +1.99          34%      O1.5 34   U4.25 32  U3.0 27
+#   0.70    77.9%   75.9%       +2.08          45%      O1.5 45   U3.0 35   U4.25 11
+#   0.65    73.9%   71.4%       +2.54          47%      O1.5 46   U3.0 38   O2.25 7
+#   0.60    70.3%   67.0%       +3.24          39%      O1.5 38   U3.0 32   O2.25 16
+#
+# Lower floors keep buying edge, but with strike rate: 0.60 pays 13 points of
+# hit rate for 1.7 of edge, and this project is optimised for strike. 0.75 is
+# the only setting that improves edge (+1.50 -> +1.99) while keeping hit above
+# 80% AND restoring the original criterion — the top line falls from 54% to
+# **34%**, and the book becomes a genuine three-way spread rather than a U4.25
+# monoculture. At 0.70 concentration returns from the other side, with O1.5 at
+# 45%.
+MIN_WIN_PROB = 0.75
 
 # ── Playability: which rungs are worth offering in a given league ────────────
 # Two attempts to derive this failed, and both failures are instructive.

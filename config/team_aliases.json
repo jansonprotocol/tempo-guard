@@ -1,0 +1,115 @@
+{
+  "_comment": [
+    "Fixture-feed names that this repo's stored results file under a different",
+    "name, per league. Every target below was read off the store's own name",
+    "list, not guessed.",
+    "",
+    "These exist because the two sides of the pipeline come from different",
+    "providers. Results carry football-data.co.uk's short forms ('Man United',",
+    "'QPR', \"Nott'm Forest\"); fixtures carry full legal names ('Manchester",
+    "United FC', 'Queens Park Rangers FC'). Fuzzy matching cannot bridge them",
+    "because there is no shared text to score — 'qpr' and 'queens park rangers'",
+    "have nothing in common as strings.",
+    "",
+    "An alias is only consulted when the raw name resolves to NOTHING, so",
+    "adding one can never displace a match the resolver already makes. That is",
+    "enforced in features._aliased, not by convention.",
+    "",
+    "Deliberately NOT listed: 'Le Mans FC' (FRA-L1) and 'SV 07 Elversberg'",
+    "(GER-BL) have no rows in the store under any spelling — newly promoted,",
+    "so that is a data gap rather than a naming one. 'N.N.' (COPA-L) is the",
+    "feed's placeholder for an undecided team and must stay unresolved."
+  ],
+  "ENG-PL": {
+    "Manchester United FC": "Man United",
+    "Manchester City FC": "Man City",
+    "Nottingham Forest FC": "Nott'm Forest"
+  },
+  "ENG-CH": {
+    "Queens Park Rangers FC": "QPR",
+    "West Bromwich Albion FC": "West Brom",
+    "Wolverhampton Wanderers FC": "Wolves"
+  },
+  "ESP-LL": {
+    "Athletic Club": "Ath Bilbao",
+    "Club Atlético de Madrid": "Ath Madrid"
+  },
+  "FRA-L1": {
+    "Olympique Lyonnais": "Lyon",
+    "Stade Brestois 29": "Brest",
+    "Stade Rennais FC 1901": "Rennes",
+    "PSG": "Paris SG"
+  },
+  "GER-BL": {
+    "Borussia Mönchengladbach": "M'gladbach",
+    "Eintracht Frankfurt": "Ein Frankfurt",
+    "Hamburger SV": "Hamburg"
+  },
+  "ITA-SA": {
+    "FC Internazionale Milano": "Inter"
+  },
+  "NED-ED": {
+    "GA Eagles": "Go Ahead Eagles",
+    "ADO": "Den Haag",
+    "PSV": "PSV Eindhoven",
+    "NEC": "Nijmegen",
+    "NEC Nijmegen": "Nijmegen",
+    "Fortuna Sittard": "For Sittard"
+  },
+  "POR-PL": {
+    "Sporting Clube de Braga": "Sp Braga",
+    "Sporting Clube de Portugal": "Sp Lisbon",
+    "Sporting": "Sp Lisbon",
+    "Sporting CP": "Sp Lisbon",
+    "Vitória": "Guimaraes"
+  },
+  "FRA-L2": {
+    "Saint-Étienne": "St Etienne",
+    "Saint-Etienne": "St Etienne",
+    "AS Saint-Étienne": "St Etienne",
+    "AS Saint-Etienne": "St Etienne"
+  },
+  "COL-PA": {
+    "Ind. Medellín": "Independiente Medellín",
+    "Inter de Bogotá": "Internacional de Bogotá",
+    "Inter de Bogota": "Internacional de Bogotá"
+  },
+  "MLS": {
+    "LA Galaxy": "Los Angeles Galaxy",
+    "NY Red Bulls": "New York Red Bulls"
+  },
+  "JPN-J1": {
+    "Machida Z": "Machida Zelvia",
+    "Urawa Reds": "Urawa Red Diamonds"
+  },
+  "CHN-SL": {
+    "Tongliang Long": "Chongqing Tonglianglong"
+  },
+  "DEN-SL": {
+    "AGF": "Aarhus",
+    "OB": "Odense",
+    "København": "FC Copenhagen",
+    "Kobenhavn": "FC Copenhagen"
+  },
+  "SWE-AL": {
+    "VSK": "Vasteras SK",
+    "BP": "Brommapojkarna"
+  },
+  "TUR-SL": {
+    "Başakşehir": "Buyuksehyr",
+    "Basaksehir": "Buyuksehyr"
+  },
+  "ESP-L2": {
+    "Sporting": "Sp Gijon",
+    "Sporting Gijón": "Sp Gijon",
+    "Sporting Gijon": "Sp Gijon"
+  },
+  "PER-L1": {
+    "Cienciano": "Cienciano del Cusco"
+  },
+  "CHI-PD": {
+    "U. de Chile": "Universidad de Chile",
+    "U. De Chile": "Universidad de Chile",
+    "Colo-Colo": "Colo Colo"
+  }
+}
