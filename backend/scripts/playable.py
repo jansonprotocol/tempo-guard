@@ -58,6 +58,19 @@ LANE = re.compile(
 BUY = re.compile(r"buy≥([\d.]+)")
 
 
+def source(text: str) -> str:
+    """The region the two fixture tables live in: everything below the block.
+
+    The block renders the SAME six columns as the completed table, on purpose,
+    and it now sits above it. So an unscoped search for that header finds the
+    block's own header first and the block starts feeding on its own output —
+    self-reference that survives `--check`, because a block derived from itself
+    is trivially up to date. Everything derived here reads strictly below the
+    heading the block ends at.
+    """
+    return text[text.index(NEXT):] if NEXT in text else text
+
+
 def rows_of(text: str, header: str) -> list[list[str]]:
     """The rows of one table, stopping at the blank line that ends it.
 
@@ -67,6 +80,7 @@ def rows_of(text: str, header: str) -> list[list[str]]:
     there a second time. Both tables are empty on a fresh slate, which is
     exactly when the block is first built.
     """
+    text = source(text)
     if header not in text:
         return []
     out = []
@@ -114,6 +128,37 @@ def collect(text: str) -> list[tuple]:
     return sorted(out, key=lambda r: r[0])
 
 
+def fixtures(text: str) -> list[tuple]:
+    """One row per fixture, Tip 1 and Tip 2 side by side as the tables have it.
+
+    A fixture is listed when EITHER lane clears the threshold, and the other
+    cell then says why it is not in rather than being blanked. "Tip 2 only" is
+    a real fact about a fixture; an empty cell reads like missing data.
+    """
+    out = []
+    for header in (PENDING, COMPLETED):
+        for c in rows_of(text, header):
+            l1 = lane(c[4], c[1], 1)
+            l2 = lane(c[5], c[1], 2)
+            if l1 or l2:
+                out.append((c[6], c[2], c[3], c[1], c[4], c[5], l1, l2))
+    return sorted(out, key=lambda r: r[0])
+
+
+# "✅ HIT — 1-1 (decided, 20')" -> "1-1 (decided, 20')". Used when Tip 1 is
+# below the threshold: the fixture still belongs here on Tip 2, but Tip 1's
+# grading mark must not appear, or the row reads as a hit this block counted.
+GRADE = re.compile(r"^(?:✅|❌)\s*(?:HIT|MISS)?\s*—?\s*")
+
+
+def _cell(raw: str, keep: bool) -> str:
+    if keep:
+        return raw
+    # A cell that never held a tip already explains itself — "— none", "— no
+    # tip, Amedspor has 1 row". Only a real tip needs the threshold named.
+    return raw if raw.startswith("—") else f"— under +{MIN_EDGE:.0f}%"
+
+
 def counter_line(lanes: list[tuple]) -> str:
     def split(which: int | None) -> str:
         b = [r for r in lanes if which is None or r[3] == which]
@@ -137,8 +182,11 @@ def render(text: str) -> str:
         "it is correctly skipped, and it does not belong in a hit rate that "
         "claims to describe what can be played.", "",
         f"So: every lane from both tables carrying an edge above "
-        f"**+{MIN_EDGE:.0f}%**, Tip 1 and Tip 2 alike, which means one fixture "
-        f"can appear twice, once, or not at all. The threshold is not zero on "
+        f"**+{MIN_EDGE:.0f}%**, Tip 1 and Tip 2 alike, laid out exactly as the "
+        f"tables below are. A fixture is listed when either lane clears the "
+        f"threshold and the other cell says why it did not, so both lanes, one "
+        f"lane or neither can be in play on any given row — the counter above "
+        f"the table counts lanes, not rows. The threshold is not zero on "
         f"purpose — measured over 7,576 tips, lanes under +1% stated edge "
         f"returned **+0.3 points** of real edge over the base rate, against "
         f"+1.7 to +4.3 for everything above. Arithmetically positive, worth "
@@ -146,14 +194,13 @@ def render(text: str) -> str:
         f"and pinned by a test — nothing here is typed, so it cannot drift out "
         f"of step with the rows it counts.", "",
         counter_line(lanes), "",
-        "| Result | League | Fixture | Lane | Edge | buy≥ | Kickoff |",
-        "|---|---|---|---|---|---|---|",
+        "| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |",
+        "|---|---|---|---|---|---|",
     ]
-    for k, league, fixture, which, status, label, prob, edge, bf, res in lanes:
-        mark = res or ("**LIVE**" if "LIVE" in status else "— not started")
-        tag = "Tip 1" if which == 1 else "Tip 2"
-        head.append(f"| {mark} | {league} | {fixture} | {tag} · {label} "
-                    f"{prob}% | **+{edge:.1f}%** | {bf or '—'} | {k} |")
+    for k, league, teams, status, c1, c2, l1, l2 in fixtures(text):
+        head.append(f"| {status if l1 else GRADE.sub('', status)} | {league} | "
+                    f"{teams} | {_cell(c1, bool(l1))} | {_cell(c2, bool(l2))} "
+                    f"| {k} |")
     return "\n".join(head) + "\n"
 
 

@@ -35,7 +35,9 @@ COMPLETED = "| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |"
 
 def tally() -> tuple[int, int, int, int]:
     """(tip1 hits, tip1 settled, tip2 hits, tip2 settled) from the log."""
-    text = README.read_text()
+    # Scoped below the playable block, which renders the same header — see
+    # playable.source. Unscoped, this counts the block instead of the table.
+    text = playable.source(README.read_text())
     body = text.split(COMPLETED, 1)[1] if COMPLETED in text else ""
     h1 = n1 = h2 = n2 = 0
     for ln in body.splitlines():

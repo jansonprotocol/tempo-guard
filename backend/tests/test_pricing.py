@@ -185,6 +185,8 @@ def test_playable_parses_a_full_slate():
 
     lanes = playable.collect(log)
     assert len(lanes) == 86
+    # 86 lanes over 51 fixtures: most rows carry both, some only one.
+    assert len(playable.fixtures(log)) == 51
     assert sum(1 for r in lanes if r[9] == "✅") == 69
     assert all(r[7] > playable.MIN_EDGE for r in lanes)
     # Sorted by kickoff, like every other table in the log.
@@ -201,3 +203,27 @@ def test_playable_parses_a_full_slate():
                if playable.lane(cell, c[1], w) is None]
     assert len(dropped) == 54
     assert sum(1 for cell in dropped if playable.LANE.match(cell)) == 29
+
+
+def test_playable_block_does_not_feed_on_itself():
+    """The block renders the completed table's own header and sits ABOVE it.
+
+    Read without scoping, a search for that header finds the block's copy first
+    and the block is derived from its own previous output. That failure passes
+    `--check` — a block built from itself is trivially up to date — so nothing
+    but the counts would ever show it. Spliced in above the tables, the derived
+    lanes must be identical to the ones derived without it.
+    """
+    from scripts import playable
+
+    log = (playable.ROOT / "archive" / "2026-08-23-first-calibrated-slate"
+           / "log.md").read_text()
+    assert playable.NEXT in log
+
+    at = log.index(playable.NEXT)
+    spliced = log[:at] + playable.render(log) + "\n" + log[at:]
+    assert playable.collect(spliced) == playable.collect(log)
+    assert playable.fixtures(spliced) == playable.fixtures(log)
+    # And the header counts read the table below, not the block above it.
+    assert playable.rows_of(spliced, playable.COMPLETED) == \
+        playable.rows_of(log, playable.COMPLETED)

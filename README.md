@@ -54,33 +54,24 @@ you are buying.
 
 The two fixture tables below measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
 
-So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, which means one fixture can appear twice, once, or not at all. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
+So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, laid out exactly as the tables below are. A fixture is listed when either lane clears the threshold and the other cell says why it did not, so both lanes, one lane or neither can be in play on any given row — the counter above the table counts lanes, not rows. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
 
 **Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
 
-| Result | League | Fixture | Lane | Edge | buy≥ | Kickoff |
-|---|---|---|---|---|---|---|
-| — not started | Saudi Pro League | Neom v Al-Qadsiah | Tip 1 · O1.5 84.2% | **+4.4%** | 1.25 | 2026-08-24 18:40 |
-| — not started | Saudi Pro League | Neom v Al-Qadsiah | Tip 2 · Al-Qadsiah O1.5 56.5% | **+18.4%** | 1.86 | 2026-08-24 18:40 |
-| — not started | Danish Superliga | Brøndby v Silkeborg | Tip 1 · O1.5 80.8% | **+1.6%** | 1.30 | 2026-08-24 19:00 |
-| — not started | Danish Superliga | Brøndby v Silkeborg | Tip 2 · O2.25 58.8% | **+2.3%** | 1.59 | 2026-08-24 19:00 |
-| — not started | Allsvenskan | Malmö v Djurgården | Tip 1 · O1.5 84.8% | **+5.9%** | 1.24 | 2026-08-24 19:00 |
-| — not started | Allsvenskan | Malmö v Djurgården | Tip 2 · Malmö O1.5 60.1% | **+12.8%** | 1.75 | 2026-08-24 19:00 |
-| — not started | LaLiga | Osasuna v Levante | Tip 1 · O1.5 75.5% | **+1.1%** | 1.39 | 2026-08-24 19:30 |
-| — not started | Ligue 2 | Reims v Annecy | Tip 1 · O1.5 75.4% | **+3.5%** | 1.39 | 2026-08-24 20:45 |
-| — not started | Ligue 2 | Reims v Annecy | Tip 2 · Reims O0.5 80.3% | **+7.0%** | 1.31 | 2026-08-24 20:45 |
-| — not started | Serie A | Roma v Fiorentina | Tip 1 · O1.5 74.1% | **+2.2%** | 1.42 | 2026-08-24 20:45 |
-| — not started | Serie A | Roma v Fiorentina | Tip 2 · Roma O0.5 80.9% | **+7.5%** | 1.30 | 2026-08-24 20:45 |
-| — not started | Premier League | Fulham v Chelsea | Tip 1 · U4.25 86.1% | **+4.4%** | 1.24 | 2026-08-24 21:00 |
-| — not started | Premier League | Fulham v Chelsea | Tip 2 · U3.75 71.1% | **+6.2%** | 1.37 | 2026-08-24 21:00 |
-| — not started | Liga Portugal | Gil Vicente v Casa Pia | Tip 1 · U3.0 76.1% | **+4.6%** | 1.51 | 2026-08-24 21:15 |
-| — not started | Liga Portugal | Gil Vicente v Casa Pia | Tip 2 · Casa Pia U1.5 79.2% | **+13.9%** | 1.33 | 2026-08-24 21:15 |
-| — not started | LaLiga 2 | Málaga v Deportivo | Tip 1 · O1.5 76.9% | **+6.2%** | 1.37 | 2026-08-24 21:30 |
-| — not started | LaLiga 2 | Málaga v Deportivo | Tip 2 · Málaga O0.5 83.8% | **+7.4%** | 1.25 | 2026-08-24 21:30 |
-| — not started | LaLiga 2 | Granada v Mallorca | Tip 2 · U2.75 56.3% | **+1.1%** | 1.67 | 2026-08-24 21:30 |
-| — not started | Brasileirão Série B | Sport Recife v América-MG | Tip 1 · U3.0 83.1% | **+1.4%** | 1.33 | 2026-08-25 00:30 |
-| — not started | Brasileirão Série B | Sport Recife v América-MG | Tip 2 · América-MG U1.5 82.3% | **+4.7%** | 1.28 | 2026-08-25 00:30 |
-| — not started | Liga de Primera | Everton v U. de Concepción | Tip 2 · Everton O0.5 83.5% | **+5.5%** | 1.26 | 2026-08-25 01:30 |
+| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
+|---|---|---|---|---|---|
+| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.25 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.86 | 2026-08-24 18:40 |
+| — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
+| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.24 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.75 | 2026-08-24 19:00 |
+| — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
+| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.39 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.31 | 2026-08-24 20:45 |
+| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.30 | 2026-08-24 20:45 |
+| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.24 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.37 | 2026-08-24 21:00 |
+| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.51 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.33 | 2026-08-24 21:15 |
+| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.37 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.25 | 2026-08-24 21:30 |
+| — | LaLiga 2 | Granada v Mallorca | — under +1% | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
+| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.28 | 2026-08-25 00:30 |
+| — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.26 | 2026-08-25 01:30 |
 
 ## Pending FUTURE match bettips
 
