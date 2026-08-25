@@ -829,6 +829,18 @@ Coverage is the other limit: ~307 of ~1,100 Swiss-era fixtures clear the
 feature gates. Each finished European matchday thickens both windows;
 re-run `cup_composite.py` before the next verdict.
 
+**The pointed gate** (`cup_pointed.py`, 25 Aug) then asked whether the
+DNB-style read could validate cup lines: split the composite mu into side
+expectations via the strength gap (supremacy by construction, +0.40 cup
+home advantage) and gate tips on a side clearing a domestic strong-rung
+floor. The gate helps in BOTH directions — pointed beats unpointed
+(+0.7 vs −2.3 forward, −3.4 vs −4.6 reverse) — but the failing window
+stays failing: the 24-25 miss is a level error the selection cannot fix,
+so cups remain off. The side read itself, though, TRANSFERS: the pointed
+side avoids defeat 77.4% in cups (79.8% at home, break-even 1.32; 69.2%
+away, 1.57) — the domestic Rule 5 structure a few points weaker, priced
+accordingly.
+
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
 The team-lane defense blend invited the obvious sequel: `mu_total` is also
