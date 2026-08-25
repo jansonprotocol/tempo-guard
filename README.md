@@ -184,6 +184,8 @@ through the live tip code) kept the rule's core and sharpened every leg:
 | ✅ | Jong PSV v TOP Oss | U4.5 | 1.30 | 1.30x | clean buy, +7.1% at strike |
 | — open | Juventude v CRB | U3.5 | 1.20 | — | same tier as the flipped U3.0 tip, extra cushion; U3.0 unavailable |
 | ✅ | Athletic v Novorizontino | DNB (away) | 1.63 | 1.63x | experimental, derived from the Athletic U1.5 team lane |
+| — open | LASK v Celtic | U4.5 | 1.20 | — | first cup-lane bet, probationary; tip U4.25, book line U4.5 softer, +4.6% at strike |
+| — open | Bodø/Glimt v NEC | U4.5 | 1.42 | — | cup lane, probationary; +22.9% EV at strike, the board price of the slate |
 
 ## Engine state — 24 Aug 2026
 
