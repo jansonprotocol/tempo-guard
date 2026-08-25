@@ -438,6 +438,17 @@ INTL_GOAL_AVERAGES: Dict[str, float] = {
 # is not fixable with a constant, so cup fixtures abstain — the ROU-L1
 # treatment, applied to a whole family. The switch exists so the instrument
 # can still measure the disabled path.
+#
+# CONFIRMED TERMINAL by cup_calibrate.py (1,349 fixtures, 25 Aug): regressing
+# actual totals on the raw cup mu's deviation from baseline gives a slope of
+# 0.017 ± 0.021 — statistically ZERO against the domestic 0.42. The cup mu
+# contains no per-fixture information, so no CUP_MU_SHRINK exists: the sweep
+# runs from -8.4/-9.3 at k=0.35 to a best of -3.0/-1.9 at k=0.10, and even
+# k=0 — pure baseline tips — misses at -3.9/-2.9, because cup totals are
+# OVER-DISPERSED relative to Poisson (continental blowouts fatten the tails,
+# so even the base-rate rung over-promises). Reopening this board requires
+# BOTH a cross-league strength model and a cup dispersion correction, each
+# validated on the instrument that produced these numbers.
 CUP_TIPS_ENABLED = False
 
 def _domestic_fallback() -> List[str]:

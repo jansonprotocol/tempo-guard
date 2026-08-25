@@ -761,11 +761,17 @@ by-market cut names the disease — `U4.25`, the rung that leans on the base
 rate, is calibrated at −1.6, while every rung needing real per-fixture
 information is broken (`O2.25` −23.0, `U3.0` −17.1). **Domestic form does not
 transfer to European opposition**, and the engine cannot see relative
-strength across leagues. Not fixable with a constant, so `CUP_TIPS_ENABLED =
-False`: every UCL/UEL/UECL fixture abstains, pinned by a test, and
-`cup_replay.py` keeps measuring the disabled path so a future fix (a
-cross-league strength model — UEFA coefficients, or a shared-opponent
-bridge) has its instrument ready.
+strength across leagues. Not fixable with a constant — and now proven so.
+`cup_calibrate.py` (1,349 fixtures) regressed actual totals on the raw cup
+mu's deviation from its baseline: **slope 0.017 ± 0.021, statistically zero**
+against the domestic 0.42. The cup mu contains no per-fixture information.
+The shrink sweep confirms no rescue exists: best case −3.0/−1.9 at k = 0.10,
+and even k = 0 — informationless baseline tips — misses at −3.9/−2.9,
+because cup totals are **over-dispersed relative to Poisson**: continental
+blowouts fatten the tails, so even the base-rate rung over-promises. So
+`CUP_TIPS_ENABLED = False`, pinned by a test. Reopening requires BOTH a
+cross-league strength model AND a cup dispersion correction, and the
+instruments that produced these numbers are ready to judge them.
 
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
