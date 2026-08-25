@@ -411,11 +411,34 @@ MIN_LEAGUE_SAMPLE = 150
 
 INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
 
-# Historical goals/game baselines for competitions whose own history is too
-# short or too uneven to derive a stable league average from.
+# Goals/game baselines for competitions whose own history is too short or too
+# uneven to derive a stable average from. MEASURED from the stored files on
+# 25 Aug (the hardcoded originals ran 0.17-0.36 low), kept accurate even
+# though the cup path is disabled below — an instrument reads them.
 INTL_GOAL_AVERAGES: Dict[str, float] = {
-    "UCL": 2.70, "UEL": 2.50, "UECL": 2.40, "EC": 2.25, "WC": 2.30,
+    "UCL": 3.03, "UEL": 2.67, "UECL": 2.76, "EC": 2.25, "WC": 2.30,
+    "UCL-Q": 2.71, "UEL-Q": 2.54, "UECL-Q": 2.75,
 }
+
+# The cup path is OFF. Replayed on 2,109 recent main-phase tips and 178
+# qualifier tips (scripts/cup_replay.py, 25 Aug):
+#
+#     UCL     680 tips   gap  -8.3      UCL-Q     48   -21.3
+#     UEL    1210 tips   gap -13.4      UEL-Q     60   -16.1
+#     UECL    219 tips   gap -10.0      UECL-Q    70    -7.6
+#     ALL    2109 tips   gap -11.4 [69-73]
+#
+# Not the baselines: UEL's baseline error is half of UCL's and its gap is
+# BIGGER. The by-market cut names the disease — U4.25, the rung that leans on
+# the base rate, is calibrated at -1.6, while every rung that needs real
+# per-fixture information is catastrophic (O2.25 -23.0, U3.0 -17.1, U2.75
+# -25.4). Domestic form does not transfer to European opposition: a dominant
+# club in a weak league arrives with a scoring rate no European opponent will
+# concede, and the engine cannot see relative strength across leagues. That
+# is not fixable with a constant, so cup fixtures abstain — the ROU-L1
+# treatment, applied to a whole family. The switch exists so the instrument
+# can still measure the disabled path.
+CUP_TIPS_ENABLED = False
 
 def _domestic_fallback() -> List[str]:
     """
@@ -1115,6 +1138,9 @@ def _asof_features_intl(
     Cup fixtures: clubs' recent form comes from their domestic leagues, since a
     cup campaign alone is far too few matches to compute rolling form from.
     """
+    if not CUP_TIPS_ENABLED:
+        return {}
+
     cutoff = _cutoff(match_date)
 
     def best_frame(team: str) -> tuple[pd.DataFrame, Optional[pd.DataFrame]]:

@@ -930,3 +930,18 @@ def test_defense_blend_touches_team_lanes_only():
     for line in src.splitlines():
         if "mu_total" in line and "=" in line:
             assert "gfh_t" not in line and "gfa_t" not in line
+
+
+def test_cup_fixtures_abstain_while_the_path_is_off():
+    """Replayed on 2,109 recent cup tips: -11.4 points overconfident, with
+    the base-rate rung calibrated and every information-bearing rung broken —
+    domestic form does not transfer to European opposition. Off means off:
+    a cup fixture produces no features, hence no tip, until the path is
+    fixed and re-measured."""
+    from datetime import date
+
+    from app.data import features
+
+    assert features.CUP_TIPS_ENABLED is False
+    assert features.asof_features("UCL", "Real Madrid CF", "Bayern München",
+                                  date(2026, 9, 15)) == {}

@@ -96,6 +96,9 @@ def show(label: str, rows: list) -> None:
 
 
 def main() -> None:
+    # The live path is disabled; this instrument measures it anyway.
+    features.CUP_TIPS_ENABLED = True
+
     print("stored goals/game against the hardcoded baseline")
     for code in MAIN + QUAL:
         mu, n = baseline(code)

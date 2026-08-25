@@ -18,18 +18,18 @@
 2026-08-24 21:15	POR-PL	Liga Portugal	Gil Vicente v Casa Pia	U4.25 86.8% +0.5% · buy≥1.22	— none	✅ HIT — 2-0
 2026-08-24 21:30	ESP-L2	LaLiga 2	Granada v Mallorca	U3.0 78.1% +0.1% · buy≥1.45	— none	✅ HIT — 2-0
 2026-08-24 21:30	ESP-L2	LaLiga 2	Málaga v Deportivo	U3.0 79.1% +1.1% · buy≥1.42	✅ U2.75 58.5% +1.4% (floor −16.5) · buy≥1.61	✅ HIT — 1-1
-2026-08-25 00:30	BRA-SB	Brasileirão Série B	Athletic v Novorizontino	O1.0 89.2% +0.2% · buy≥1.22	**Athletic U1.5** 75.2% +13.1% (team) · buy≥1.44	
-2026-08-25 00:30	BRA-SB	Brasileirão Série B	Sport Recife v América-MG	U3.0 83.1% +1.4% · buy≥1.33	U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48	
-2026-08-25 01:00	BRA-SA	Brasileirão	Botafogo v Athletico	U4.25 88.5% **−0.4%** · buy≥1.20	— none	
-2026-08-25 01:30	CHI-PD	Liga de Primera	Everton v U. de Concepción	O1.5 76.5% +0.1% · buy≥1.37	**Everton O0.5** 83.7% +5.8% (team) · buy≥1.29	
+2026-08-25 00:30	BRA-SB	Brasileirão Série B	Athletic v Novorizontino	O1.0 89.2% +0.2% · buy≥1.22	✅ **Athletic U1.5** 75.2% +13.1% (team) · buy≥1.44	✅ HIT — 1-4
+2026-08-25 00:30	BRA-SB	Brasileirão Série B	Sport Recife v América-MG	U3.0 83.1% +1.4% · buy≥1.33	❌ U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48	✅ HIT — 3-0 (push at 3)
+2026-08-25 01:00	BRA-SA	Brasileirão	Botafogo v Athletico	U4.25 88.5% **−0.4%** · buy≥1.20	— none	LIVE 2-3 (90'+4)
+2026-08-25 01:30	CHI-PD	Liga de Primera	Everton v U. de Concepción	O1.5 76.5% +0.1% · buy≥1.37	**Everton O0.5** 83.7% +5.8% (team) · buy≥1.29	LIVE 3-1 (67')
 2026-08-25 18:05	SAU-PL	Saudi Pro League	Abha v Al-Khaleej	U4.25 85.8% +3.9% · buy≥1.28	U3.75 70.7% +5.5% (floor −4.3) · buy≥1.42	
 2026-08-25 18:10	SAU-PL	Saudi Pro League	Al-Taawoun v Al-Fayha	U4.25 85.4% +3.5% · buy≥1.25	U3.75 70.0% +4.8% (floor −5.0) · buy≥1.43	
-2026-08-25 18:45	UCL-Q	UCL Playoff	Sabah v H. Be'er Sheva	— no tip, qualifier history only	—	
+2026-08-25 18:45	UCL-Q	UCL Playoff	Sabah v H. Be'er Sheva	— no tip: cups off the board, path measured −11.4 overconfident	—	
 2026-08-25 20:00	SAU-PL	Saudi Pro League	Al-Ettifaq v Al-Nassr	O1.5 84.2% +4.5% · buy≥1.29	**Al-Nassr O1.5** 56.4% +18.2% (team) · buy≥1.92	
 2026-08-25 20:00	SAU-PL	Saudi Pro League	Al-Shabab v Al-Riyadh	O1.5 79.9% +0.2% · buy≥1.31	**Al-Shabab O0.5** 84.0% +5.9% (team) · buy≥1.29	
 2026-08-25 21:00	ESP-LL	LaLiga	Valencia v Real Betis	U4.25 88.0% +1.1% · buy≥1.21	U3.75 74.0% +1.7% (floor −1.0) · buy≥1.32	
-2026-08-25 21:00	UCL-Q	UCL Playoff	Bodø/Glimt v NEC	— no tip, qualifier history only	—	
-2026-08-25 21:00	UCL-Q	UCL Playoff	LASK v Celtic	— no tip, qualifier history only	—	
+2026-08-25 21:00	UCL-Q	UCL Playoff	Bodø/Glimt v NEC	— no tip: cups off the board, path measured −11.4 overconfident	—	
+2026-08-25 21:00	UCL-Q	UCL Playoff	LASK v Celtic	— no tip: cups off the board, path measured −11.4 overconfident	—	
 2026-08-26 00:30	BRA-SB	Brasileirão Série B	Atlético-GO v Botafogo-SP	U3.0 81.9% +0.1% · buy≥1.36	— none	
 2026-08-26 00:30	BRA-SB	Brasileirão Série B	Juventude v CRB	U3.0 83.3% +1.5% · buy≥1.32	U2.75 64.1% +2.0% (floor −10.9) · buy≥1.48	
 2026-08-26 03:00	COL-PA	Categoría Primera A	Cúcuta v Alianza Valledupar	U3.0 83.0% +3.3% · buy≥1.33	U4.25 93.3% +1.8% (lower edge) · buy≥1.13	
