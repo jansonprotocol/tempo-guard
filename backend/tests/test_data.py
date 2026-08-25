@@ -974,3 +974,17 @@ def test_cup_elo_staleness_guard_abstains():
     assert club_elo.elo_asof("Celtic", beyond) is None
     within = dates[-1] + pd.Timedelta(days=30)
     assert club_elo.elo_asof("Celtic", within) is not None
+
+
+def test_cup_over_debit_is_scoped_to_cup_overs():
+    """Cup over tips measured a flat -3.3/-3.7 across the two Swiss seasons
+    while the under rungs calibrated — the stated-probability debit must
+    touch exactly that family and nothing else."""
+    from app.data import club_elo
+
+    assert club_elo.stated_p("UCL", "O1.5", 0.80) == pytest.approx(
+        0.80 - club_elo.OVER_SAYS_DEBIT)
+    assert club_elo.stated_p("UECL-Q", "O2.25", 0.70) == pytest.approx(
+        0.70 - club_elo.OVER_SAYS_DEBIT)
+    assert club_elo.stated_p("UCL", "U4.25", 0.86) == 0.86      # cup under
+    assert club_elo.stated_p("ENG-PL", "O1.5", 0.80) == 0.80    # domestic

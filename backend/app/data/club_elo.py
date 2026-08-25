@@ -53,6 +53,27 @@ B1 = 0.154
 B2 = 0.015
 B0_FALLBACK = -0.661          # pooled intercept, used until 100 trailing rows
 
+# Cup OVER tips state ~3.5 points more than they deliver. Measured on the
+# wired live path over both Swiss seasons (1,878 tips, 26 Aug): O1.5 ran
+# -3.3 in 24-25 and -3.7 in 25-26, and the miss is FLAT across probability
+# bands (-2.9 / -3.9 / -3.8 low to high) — a level bias, not a tail or a
+# season. The under rungs are calibrated (U4.25 -0.6, U3.0 +2.2) and are
+# left untouched; a mu-level fix would trade their calibration away, which
+# is why this is a stated-probability debit on the over family only. A
+# GLOBAL says-debit was considered earlier and dropped — across the five
+# offline windows the overall gap wobbles +/-4 with no direction — but the
+# rung-level cut is uniform in both seasons, which is the two-window bar.
+OVER_SAYS_DEBIT = 0.035
+
+
+def stated_p(league_code: str, market: str, p: float) -> float:
+    """The probability to PUBLISH for a tip: cup over rungs read hot by a
+    measured, stable 3.5 points, so their stated number carries the debit.
+    Everything else — cup unders, every domestic market — passes through."""
+    if league_code in CUPS and market.split()[-1].startswith("O"):
+        return max(0.0, p - OVER_SAYS_DEBIT)
+    return p
+
 SCALE = 100.0
 MAX_STALE_DAYS = 400
 _TRAIL_DAYS = 180

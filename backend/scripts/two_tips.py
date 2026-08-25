@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.data import config
+from app.data import club_elo, config
 from app.engine import market_select, pricing, team_total
 from app.engine.types import ModuleFlags
 from app.predict import build_request, predict_fixture
@@ -50,6 +50,13 @@ def tips(lg: str, h: str, a: str, d: date):
     sc = [(m, e, p) for m, e, p, _q in
           market_select.score_markets(req.mu_total, req.league_mu)
           if market_select.playable(m, cfg.max_under_line, cfg.min_over_line)]
+    # Cup over rungs read a measured 3.5 points hot (see club_elo). The
+    # debit lands on stated probability AND edge — so a cup over must clear
+    # the playable bar on its honest number — while Tip 1's SELECTION stays
+    # with the engine, untouched as ever.
+    if lg in club_elo.CUPS:
+        sc = [(m, e - (club_elo.OVER_SAYS_DEBIT if m.startswith("O") else 0),
+               club_elo.stated_p(lg, m, p)) for m, e, p in sc]
     by = {m: (e, p) for m, e, p in sc}
     if t1 not in by:
         return None
@@ -80,10 +87,12 @@ def tips(lg: str, h: str, a: str, d: date):
         m3, p3, e3 = tt[0]
         if t2 is None or e3 > t2[2]:
             t2 = (m3, p3, e3, "team total")
-    return dict(mu=req.mu_total, lmu=req.league_mu, t1=(t1, p1, e1), t2=t2)
+    return dict(lg=lg, mu=req.mu_total, lmu=req.league_mu,
+                t1=(t1, p1, e1), t2=t2)
 
 
-def _buy(market: str, mu: float, p: float, edge: float | None = None) -> str:
+def _buy(market: str, mu: float, p: float, edge: float | None = None,
+         lg: str | None = None) -> str:
     """
     The price to check the book against: break-even, margin, curse haircut.
 
@@ -98,7 +107,16 @@ def _buy(market: str, mu: float, p: float, edge: float | None = None) -> str:
     bet; the printed number now already includes it.
     """
     try:
-        return (f"buy>={pricing.buy_from(market, mu, stated_edge=edge):.2f}")
+        be = pricing.buy_from(market, mu, stated_edge=edge)
+        # Cup overs are priced from a mu that reads 3.5 points hot, so the
+        # goal-distribution break-even inherits the optimism. `p` arrives
+        # already debited; scaling by (p + debit) / p converts the price to
+        # the honest probability — exact for .5 lines, a stated
+        # approximation for quarter-line pushes.
+        if (lg in club_elo.CUPS and market.split()[-1].startswith("O")
+                and p > 0):
+            be *= (p + club_elo.OVER_SAYS_DEBIT) / p
+        return f"buy>={be:.2f}"
     except (ValueError, IndexError):
         pass
     if p <= 0:
@@ -131,11 +149,11 @@ def main() -> None:
         m1, p1, e1 = r["t1"]
         line = (f"{lg:8s} {h[:22]:22.22s} v {a[:20]:20.20s} "
                 f"mu {r['mu']:4.2f}/{r['lmu']:4.2f}  "
-                f"TIP1 {m1:6s} {p1:5.1%} {e1:+6.2%} {_buy(m1, r['mu'], p1, e1)}")
+                f"TIP1 {m1:6s} {p1:5.1%} {e1:+6.2%} {_buy(m1, r['mu'], p1, e1, r.get('lg'))}")
         if r["t2"]:
             m2, p2, e2, why = r["t2"]
             line += (f"   TIP2 {m2:6s} {p2:5.1%} {e2:+6.2%} "
-                     f"{_buy(m2, r['mu'], p2, e2)} ({why})")
+                     f"{_buy(m2, r['mu'], p2, e2, r.get('lg'))} ({why})")
         else:
             line += "   TIP2 — none"
         print(line)

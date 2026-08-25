@@ -881,6 +881,19 @@ path — the −5.0). `CUP_TIPS_ENABLED` goes back to `False` if the live
 gap breaks the measured band; cup tips are marked **probationary** on
 the board until a real graded sample accumulates.
 
+**The wired path replayed, and the over debit (26 Aug).** The live code
+itself — `build_request` through `predict_fixture`, the path that fills
+the board — replayed over the two Swiss seasons at 1,878 tips: 24-25 gap
+−2.3, 25-26 gap −2.1, no flip. The by-rung cut isolated the whole miss:
+U4.25 −0.6 and U3.0 +2.2 are calibrated, while **O1.5 runs −3.3 / −3.7
+across the seasons and flat across every probability band** — a level
+bias on the over family alone. So `club_elo.OVER_SAYS_DEBIT = 0.035`:
+cup over tips now publish their probability, edge, and buy-price 3.5
+points colder (selection untouched — the debit makes the numbers honest
+and forces a cup over to clear the playable bar on its honest edge).
+With the debit both windows close to **+0.0 / −0.1**. Cup unders and
+every domestic market pass through unchanged, pinned by a test.
+
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
 The team-lane defense blend invited the obvious sequel: `mu_total` is also
