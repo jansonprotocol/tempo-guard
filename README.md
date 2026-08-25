@@ -280,11 +280,15 @@ that premium the book is keeping the insurance money.
 | — open | LASK v Celtic | U4.5 | 1.20 | — | first cup-lane bet, probationary; tip U4.25, book line U4.5 softer, +4.6% at strike |
 | — open | Bodø/Glimt v NEC | U4.5 | 1.42 | — | cup lane, probationary; +22.9% EV at strike, the board price of the slate |
 | — open | Rapid Vienna v Hearts | U4.5 | 1.18 | — | cup lane, softer line above U4.25 tip, +3.1% at strike |
-| — open | Plzeň v Crvena zvezda | U4.5 | 1.14 | — | cup lane, +4.4% at strike |
+| — open | Plzeň v Crvena zvezda | U4.5 | 1.14 | — | cashed out at stake, replaced with the U3.5 below |
 | — open | Thun v Lech | U4.5 | 1.19 | — | cup lane, +7.0% at strike, best EV of the five |
 | — open | St. Gallen v Nordsjælland | U4.5 | 1.20 | — | cup lane, +6.1% at strike |
 | — open | Celta v Osasuna | DNB (home) | 1.38 | — | experimental; O0.5-pointed read, the rung the backtest flagged |
 | — open | Borac v Víkingur | U4.5 | 1.17 | — | cup lane, +3.9% at strike |
+| — open | Viking v Dinamo Zagreb | U3.5 | 1.45 | — | rule-6 harder line, needed ~1.41, +8.1% at strike |
+| — open | Plzeň v Crvena zvezda | U3.5 | 1.43 | — | rule-6 harder line, needed ~1.32, +14.2% at strike |
+| — open | Riga v Klaksvík | U3.5 | 1.47 | — | rule-6 harder line, needed ~1.41, +9.7% at strike |
+| — open | CSKA Sofia v OFI | U3.5 | 1.36 | — | rule-6 harder line, needed ~1.32, +8.4% at strike |
 
 ## Engine state — 24 Aug 2026
 
