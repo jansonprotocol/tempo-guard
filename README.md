@@ -269,6 +269,12 @@ through the live tip code) kept the rule's core and sharpened every leg:
 | ✅ | Athletic v Novorizontino | DNB (away) | 1.63 | 1.63x | experimental, derived from the Athletic U1.5 team lane |
 | — open | LASK v Celtic | U4.5 | 1.20 | — | first cup-lane bet, probationary; tip U4.25, book line U4.5 softer, +4.6% at strike |
 | — open | Bodø/Glimt v NEC | U4.5 | 1.42 | — | cup lane, probationary; +22.9% EV at strike, the board price of the slate |
+| — open | Rapid Vienna v Hearts | U4.5 | 1.18 | — | cup lane, softer line above U4.25 tip, +3.1% at strike |
+| — open | Plzeň v Crvena zvezda | U4.5 | 1.14 | — | cup lane, +4.4% at strike |
+| — open | Thun v Lech | U4.5 | 1.19 | — | cup lane, +7.0% at strike, best EV of the five |
+| — open | St. Gallen v Nordsjælland | U4.5 | 1.20 | — | cup lane, +6.1% at strike |
+| — open | Celta v Osasuna | DNB (home) | 1.38 | — | experimental; O0.5-pointed read, the rung the backtest flagged |
+| — open | Borac v Víkingur | U4.5 | 1.17 | — | cup lane, +3.9% at strike |
 
 ## Engine state — 24 Aug 2026
 
