@@ -795,6 +795,28 @@ needs data the store does not yet hold. Qualifiers fail outright (−5.0). 271 c
 European history the old path never read — the unmined strand. The club→
 league map is cached in `config/club_leagues.json`.
 
+**The final round trained entirely inside the Swiss era**
+(`cup_composite.py`, 25 Aug) — the closest any cup model has come, and still
+short. Two complete Swiss-format seasons exist, so nothing crosses the
+break, and the strength number moved from league to CLUB (the BIG_MATCH
+as-of-form machinery applied continentally, plus the previously unmined
+own-European-record strand): `club_str = league_rating + 0.8·(as-of domestic
+PPG − 1.45) + 0.3·own_cup_form`. Trained on one season, validated on the
+other, then the roles swapped — a model that only works one way learned a
+season, not a structure:
+
+    fit 24-25 → validate 25-26   182 tips   says 85.8   hit 85.2   gap −0.6
+    fit 25-26 → validate 24-25   125 tips   says 84.8   hit 80.8   gap −4.0
+
+Forward calibrates almost perfectly; the reverse fails; pooled ≈ −2 on 307
+tips, with confidence intervals ±5-6 per window at this n. The two-window
+bar is both directions or nothing, so **cups stay off** — but the family's
+trajectory is −11.4 → −2, the club composite beat league-only ratings in
+every cut, and 2024-25 looks like the harder season in every instrument.
+Coverage is the other limit: ~307 of ~1,100 Swiss-era fixtures clear the
+feature gates. Each finished European matchday thickens both windows;
+re-run `cup_composite.py` before the next verdict.
+
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
 The team-lane defense blend invited the obvious sequel: `mu_total` is also
