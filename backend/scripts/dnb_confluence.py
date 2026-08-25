@@ -112,8 +112,17 @@ def show(label: str, rs: list[dict]) -> None:
 def main() -> None:
     args = sys.argv[1:]
     n = int(args[args.index("--n") + 1]) if "--n" in args else 300
+    dump = args[args.index("--dump") + 1] if "--dump" in args else None
+    load = args[args.index("--load") + 1] if "--load" in args else None
 
-    rows = collect(n)
+    if load:
+        import pickle
+        rows = pickle.loads(Path(load).read_bytes())
+    else:
+        rows = collect(n)
+    if dump:
+        import pickle
+        Path(dump).write_bytes(pickle.dumps(rows))
     conf = [r for r in rows if r["over1"]]
     ctrl = [r for r in rows if not r["over1"]]
     print(f"{len(rows)} pointed pairs replayed "
@@ -147,6 +156,22 @@ def main() -> None:
     print("\nHOME/AWAY SPLIT OF X (confluence)")
     show("X is home", [r for r in conf if r["x"] == "H"])
     show("X is away", [r for r in conf if r["x"] == "A"])
+
+    # The cross-cut the flat tables hint at: the strong-claim rungs (O1.5
+    # direct, U1.5 elimination — NOT the safe O0.5 tag) on the home side.
+    # This is the shape of every DNB actually taken under the rule, so it
+    # gets the full two-window treatment.
+    strong = [r for r in conf if r["m2"].split()[1] in ("O1.5", "U1.5")]
+    print("\nTHE BETTABLE CANDIDATE (strong rung only: O1.5 direct or "
+          "U1.5 elimination)")
+    show("strong rung, any venue", strong)
+    sh = [r for r in strong if r["x"] == "H"]
+    show("strong rung, X home", sh)
+    if len(sh) >= 40:
+        m = sorted(r["date"] for r in sh)[len(sh) // 2]
+        show("  older half", [r for r in sh if r["date"] < m])
+        show("  newer half", [r for r in sh if r["date"] >= m])
+    show("strong rung, X away", [r for r in strong if r["x"] == "A"])
 
 
 if __name__ == "__main__":
