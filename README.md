@@ -76,6 +76,16 @@ through the live tip code) kept the rule's core and sharpened every leg:
   group is roughly fair, not an edge; the 6-0 live run sits inside that
   variance. The rule finds survivors; the price decides the bet.
 
+**6. The line-translation ladder.** When the book does not offer the tipped
+line, translate DOWN in safety, never down in price. Best to worst: the
+SOFTER line one notch above the tip (U4.5 over a U4.25/U3.75 tip — converts
+the half-loss outcome into a full win, usually for a couple of cents); the
+tip as printed at its buy≥; the HARDER half-line (U3.5 for U3.75) **only at
+buy≥ + 0.07–0.10** — its win probability is identical (both win at ≤3), but
+at exactly 4 goals it loses the full stake where the quarter line loses
+half, and exactly-4 lands 12–14% of the time at these expectations. Below
+that premium the book is keeping the insurance money.
+
 **Minimum average odds, from settlement rather than `1 / hit-rate`:**
 
     Tip 1    break-even 1.211    at +5% margin  1.27
