@@ -25,7 +25,25 @@ or loss. The numbers that matter:
 Two-window split (older/newer half by date) applies as everywhere: a rule
 that only works in one half is a story, not a rule.
 
+VERDICT (25 Aug 2026, 6,354 pointed pairs, 300 most recent per league):
+
+    all confluence        3131   avoid-defeat 78.1   break-even 1.40
+    control (no over T1)  3223   avoid-defeat 77.8   break-even 1.43
+    O0.5-pointed          1258   avoid-defeat 73.4   break-even 1.55
+    strong rung, X home   1231   avoid-defeat 83.9   break-even 1.26
+      older / newer half         86.5 / 81.3         1.21 / 1.31
+
+The archive's 78.6% replicated at scale, so the core observation is real —
+but the over Tip 1 adds nothing (control matches), the safe O0.5 tag is
+the trap, and the bettable shape is the strong rung (O1.5 direct or U1.5
+elimination) on the HOME side, which holds direction in both windows.
+Leg 4 becomes a number: the offered DNB price must clear the group's
+break-even (~1.30 strong-home, ~1.50 away) — at the 1.22-1.27 the book
+typically posts, the group is fair value, not an edge. README Rule 5
+carries the refined rule.
+
 Usage:  python scripts/dnb_confluence.py [--n 300]
+                                         [--dump rows.pkl | --load rows.pkl]
 """
 from __future__ import annotations
 

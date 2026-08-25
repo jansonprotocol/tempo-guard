@@ -52,17 +52,29 @@ league gives `O0.5` 75.4% (needs 1.39) and `O1.5` 41.5% (needs 2.53). The
 pre-match probability priced 90 minutes and says nothing about which of those
 you are buying.
 
-**5. The DNB confluence rule (probationary — 6/6 live, backtest pending).**
-Draw No Bet on side X only when every strand points the same way: Tip 1 is an
-Over corridor, Tip 2 names X's attack (`X O0.5/O1.5`) or the opponent's
-silence (`Y U1.5` — the promised goals must be X's), the team-lane probability
-is strong, **and the bookmaker's DNB price is short** — the market has also
-taken side X. Any strand missing, no bet: Malmö failed on probability (60.1%)
-and on price (no short side offered), and lost. Everton, Reims, Heracles and
-Novorizontino passed all four and won. The engine's naive 1X2 arithmetic went
-0-for-6 against this rule — the lanes carry the information; the independent-
-Poisson conversion does not. Legs 1–3 are backtestable and queued; leg 4 is
-live judgement by design, since this repo stores no odds.
+**5. The DNB confluence rule (backtested 25 Aug — refined, still
+probationary).** Draw No Bet on side X only when the strands point the same
+way. The 6,354-fixture replay (`dnb_confluence.py`, every pair regenerated
+through the live tip code) kept the rule's core and sharpened every leg:
+
+- **The pointed team lane is real** — the archive's 78.6% avoid-defeat
+  replicated at scale: 78.1% on 3,131 confluence fixtures.
+- **Leg 1 (the Over Tip 1) carries no weight of its own**: the control
+  group — pointed team lane WITHOUT an over corridor — avoids defeat at
+  the same 77.8%. Keep it as context, not as a strand.
+- **The strand that matters is WHICH rung points.** `O1.5` direct (81.1%,
+  break-even 1.32) and `U1.5` elimination (82.7%, break-even 1.27 — the
+  Novorizontino shape) are the real reads. The safe-looking `O0.5` tag is
+  the trap: 73.4%, needs 1.55, which no book offers for these sides.
+- **Venue is a full leg.** Strong rung + X at home: 83.9% avoid defeat on
+  1,231 fixtures, break-even 1.26, and it holds both windows (older 1.21,
+  newer 1.31 — same direction, no flip). X away needs 1.45+ even on the
+  strong rungs. Reims, Everton, Al-Shabab were all home sides.
+- **Leg 4 gets a number.** "Short price confirms" is now: the offered DNB
+  price must CLEAR the group's break-even — **≥1.30 for strong-rung home,
+  ≥1.50 away, never on an `O0.5`-only read**. At 1.22–1.27 the strong-home
+  group is roughly fair, not an edge; the 6-0 live run sits inside that
+  variance. The rule finds survivors; the price decides the bet.
 
 **Minimum average odds, from settlement rather than `1 / hit-rate`:**
 
