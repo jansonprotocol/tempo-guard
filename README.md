@@ -783,9 +783,15 @@ the real baseline sin was staleness — modern UCL runs 3.34 goals against the
 2.70 the engine used. A strength-based mu (rolling 3-year baseline +
 0.27·|gap| + 0.04·sum, trained pre-2022) validates at **+1.1 on the most
 recent held-out window** with a live market mix — but sits at **−3.7 on
-2022-24**, and the two-window bar is the bar: not shipped. The open question
-is whether frozen ratings drift (they are fitted pre-2022; re-fitting
-as-of is the next experiment). 271 clubs also carry 20+ matches of their own
+2022-24**, and the two-window bar is the bar: not shipped. The as-of refit was
+then run (`cup_asof.py`, ratings refitted monthly on trailing bridges): the
+per-competition gaps LOOKED calibrated (UCL −0.7, UEL +0.8, UECL −0.9) — and
+the main-phase two-window cut exposed that as pooled cancellation, the
+project's signature failure caught a fourth time: early −3.7, late +3.3,
+opposite signs averaging to zero. The windows disagreeing in SIGN points at
+the 2024-25 format change as a structural break; the Swiss-model era runs
+hotter than everything the model was fitted on, and validating a break model
+needs data the store does not yet hold. Qualifiers fail outright (−5.0). 271 clubs also carry 20+ matches of their own
 European history the old path never read — the unmined strand. The club→
 league map is cached in `config/club_leagues.json`.
 
