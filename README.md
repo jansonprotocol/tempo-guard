@@ -52,6 +52,18 @@ league gives `O0.5` 75.4% (needs 1.39) and `O1.5` 41.5% (needs 2.53). The
 pre-match probability priced 90 minutes and says nothing about which of those
 you are buying.
 
+**5. The DNB confluence rule (probationary — 6/6 live, backtest pending).**
+Draw No Bet on side X only when every strand points the same way: Tip 1 is an
+Over corridor, Tip 2 names X's attack (`X O0.5/O1.5`) or the opponent's
+silence (`Y U1.5` — the promised goals must be X's), the team-lane probability
+is strong, **and the bookmaker's DNB price is short** — the market has also
+taken side X. Any strand missing, no bet: Malmö failed on probability (60.1%)
+and on price (no short side offered), and lost. Everton, Reims, Heracles and
+Novorizontino passed all four and won. The engine's naive 1X2 arithmetic went
+0-for-6 against this rule — the lanes carry the information; the independent-
+Poisson conversion does not. Legs 1–3 are backtestable and queued; leg 4 is
+live judgement by design, since this repo stores no odds.
+
 **Minimum average odds, from settlement rather than `1 / hit-rate`:**
 
     Tip 1    break-even 1.211    at +5% margin  1.27
