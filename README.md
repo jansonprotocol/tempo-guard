@@ -106,7 +106,7 @@ through the live tip code) kept the rule's core and sharpened every leg:
 <table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td><b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— under +1%</td><td><b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
-<table align="left"><tr><th align="left">🟢 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>U3.75 72.7% +1.6%<br>buy≥1.34 · floor −2.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>U3.75 72.7% +1.6%<br>buy≥1.34 · floor −9.3</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.3% +1.5%<br>buy≥1.32</td><td>U2.75 64.1% +2.0%<br>buy≥1.48 · floor −10.9</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 03:00 <b>Cúcuta v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 83.0% +3.3%<br>buy≥1.33</td><td>U4.25 93.3% +1.8%<br>buy≥1.13 · lower edge</td></tr></table>
 
@@ -124,7 +124,7 @@ through the live tip code) kept the rule's core and sharpened every leg:
 <table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 79.9% +0.2%<br>buy≥1.31</td><td><b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Bodø/Glimt v NEC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 86.6% +0.5%<br>buy≥1.23</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔵 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>U3.75 72.7% +1.6%<br>buy≥1.34 · floor −2.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>U3.75 72.7% +1.6%<br>buy≥1.34 · floor −9.3</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 00:30 <b>Atlético-GO v Botafogo-SP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 81.9% +0.1%<br>buy≥1.36</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.3% +1.5%<br>buy≥1.32</td><td>U2.75 64.1% +2.0%<br>buy≥1.48 · floor −10.9</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 03:00 <b>Cúcuta v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 83.0% +3.3%<br>buy≥1.33</td><td>U4.25 93.3% +1.8%<br>buy≥1.13 · lower edge</td></tr></table>
@@ -893,6 +893,18 @@ points colder (selection untouched — the debit makes the numbers honest
 and forces a cup over to clear the playable bar on its honest edge).
 With the debit both windows close to **+0.0 / −0.1**. Cup unders and
 every domestic market pass through unchanged, pinned by a test.
+
+**Hitrate-first selection (26 Aug).** The calibrated lane still hit ~80%
+against the domestic board's ~85, because edge-ranked selection favours
+O1.5. Sweeping the cup probability floor on the wired path found the
+whole dial at one setting: `min_win_prob 0.82` on all six cup codes
+flips the mix to the calibrated base rungs at **zero volume cost**
+(`choose()` falls back to the safest buyable rung, so no fixture loses
+its tip) — hit rises to **81.9 / 84.7** across the seasons (≈83.3
+pooled) with both windows still calibrated (−1.5 / +0.9, debited says).
+Beyond 0.82 the dial saturates; ~83 is this lane's honest ceiling, a
+shade under domestic, paid for in shorter under prices. Domestic floors
+untouched, pinned by a test.
 
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 

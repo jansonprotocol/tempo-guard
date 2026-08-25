@@ -988,3 +988,15 @@ def test_cup_over_debit_is_scoped_to_cup_overs():
         0.70 - club_elo.OVER_SAYS_DEBIT)
     assert club_elo.stated_p("UCL", "U4.25", 0.86) == 0.86      # cup under
     assert club_elo.stated_p("ENG-PL", "O1.5", 0.80) == 0.80    # domestic
+
+
+def test_cup_probability_floor_is_raised():
+    """The cup lane selects hitrate-first: min_win_prob 0.82 on all six cup
+    codes flips the mix to the calibrated base rungs (hit ~80 -> ~83 across
+    both Swiss seasons, zero volume lost — choose() falls back to the
+    safest buyable rung). Domestic floors are untouched."""
+    from app.data import config
+
+    for code in ("UCL", "UEL", "UECL", "UCL-Q", "UEL-Q", "UECL-Q"):
+        assert config.get(code).min_win_prob == 0.82
+    assert config.get("ENG-PL").min_win_prob is None
