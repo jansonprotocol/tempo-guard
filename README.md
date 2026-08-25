@@ -841,6 +841,33 @@ side avoids defeat 77.4% in cups (79.8% at home, break-even 1.32; 69.2%
 away, 1.57) — the domestic Rule 5 structure a few points weaker, priced
 accordingly.
 
+**Club Elo broke the deadlock** (`cup_elo.py`, 25 Aug — user's suggestion).
+clubelo.com maintains exactly what the composite approximated: club-level
+strength from every match in every competition, as-of daily. Snapshots
+(mirrored via github.com/tonyelhabr/club-rankings, trimmed into
+`config/club_elo.parquet`, names mapped in `config/club_elo_names.json`)
+cover the whole Swiss era through the 25-26 league phase. Coverage jumps
+from ~28% to **92%** (1,563 of 1,701 fixtures), and for the first time
+EVERY window agrees:
+
+    frozen   24-25 → 25-26  745 tips  gap −2.5     reverse  818  −1.7
+    walked   (live shape: slopes frozen, intercept tracked monthly)
+             25-26  −1.8  (halves −3.6 / −0.3)
+             24-25  −2.4  (halves −3.4 / −1.5)
+
+Real market mix (~25% O1.5 vs the U4.25 base rung), no sign flips, no
+pooled cancellation — a stable ~−2 overstatement, the correctable kind:
+a −2 says-debit measured on one season and confirmed on the other passes
+the same bar every shipped constant passed. Staleness is a non-issue
+(Elo lagged 60 days grades identically), so the committed snapshot
+refreshed every few weeks is operationally enough. Per-competition
+intercepts were tried and rejected (they absorb season noise and whipsaw
+between directions). The UEFA country coefficient was considered and set
+aside: our bridge ratings already measure it, club-level and in goals.
+**Cups stay off pending one deliberate decision**: wiring the Elo lane
+into the live path (external results-derived data — never odds — as a
+cup-only strength source, with the −2 debit and a snapshot-age guard).
+
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
 The team-lane defense blend invited the obvious sequel: `mu_total` is also
