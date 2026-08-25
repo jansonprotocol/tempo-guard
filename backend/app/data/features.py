@@ -409,7 +409,8 @@ RECENT_WINDOW_DAYS = 365 * 3
 # precise-but-empty, and the fallback is still strictly as-of.
 MIN_LEAGUE_SAMPLE = 150
 
-INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
+INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC",
+                     "UCL-Q", "UEL-Q", "UECL-Q"}
 
 # Goals/game baselines for competitions whose own history is too short or too
 # uneven to derive a stable average from. MEASURED from the stored files on
@@ -449,7 +450,22 @@ INTL_GOAL_AVERAGES: Dict[str, float] = {
 # so even the base-rate rung over-promises). Reopening this board requires
 # BOTH a cross-league strength model and a cup dispersion correction, each
 # validated on the instrument that produced these numbers.
-CUP_TIPS_ENABLED = False
+#
+# REOPENED PROBATIONARY 25 Aug 2026 — the cross-league strength model that
+# verdict demanded exists: Club Elo (app/data/club_elo.py), the one variant
+# that passed every window. Frozen-slope symmetry −2.5 / −1.7; walked
+# intercept −1.8 / −2.4 with all four half-windows same-signed; and a true
+# out-of-sample dress rehearsal — 202 knockout fixtures Jan–May 2026 priced
+# on Elo frozen at Jan 14 — hit 89.1% against a stated 84.9 (+4.2). The
+# family that replayed at −11.4 measures ±4 around zero at ~800 tips per
+# window, the same wobble domestic leagues show. 92% club coverage; the
+# dispersion half of the old verdict dissolved earlier (var/mean 1.00-1.04
+# once the stale baselines were fixed). Probationary: cup tips are labeled
+# on the board, and the switch goes back to False if the live gap breaks
+# the band the instruments measured. The old domestic-form path this switch
+# used to guard is gone — scripts/cup_replay.py and the other instruments
+# now exercise the Elo lane.
+CUP_TIPS_ENABLED = True
 
 def _domestic_fallback() -> List[str]:
     """
@@ -1146,39 +1162,37 @@ def _asof_features_intl(
     league_code: str, min_matches: int,
 ) -> Dict[str, float]:
     """
-    Cup fixtures: clubs' recent form comes from their domestic leagues, since a
-    cup campaign alone is far too few matches to compute rolling form from.
+    Cup fixtures: mu from Club Elo strength, not domestic form.
+
+    The original path read each club's domestic league form — measured
+    slope 0.017 ± 0.021 against actual cup totals, statistically zero
+    (scripts/cup_calibrate.py): domestic dominance does not transfer to
+    European opposition. What does transfer is cross-club strength, and
+    app.data.club_elo carries the validated model — committed as-of Elo
+    snapshots, frozen slopes, a monthly-tracked intercept. See that
+    module and scripts/cup_elo.py for the full evidence chain.
+
+    Abstention is still a first-class answer: national-team competitions
+    (EC, WC) have no club Elo, unmapped clubs return None, and stale
+    ratings fail the freshness guard — all of those return {} and the
+    fixture stays untipped.
     """
     if not CUP_TIPS_ENABLED:
         return {}
 
-    cutoff = _cutoff(match_date)
+    from app.data import club_elo
 
-    def best_frame(team: str) -> tuple[pd.DataFrame, Optional[pd.DataFrame]]:
-        best_rows, best_full = pd.DataFrame(), None
-        for code in _domestic_fallback():
-            df = store.load_results(code)
-            if df.empty:
-                continue
-            rows = _find_team_rows(df, _aliased(code, df, team), cutoff)
-            if len(rows) > len(best_rows):
-                best_rows, best_full = rows, df
-            # A full rolling window is the most that will ever be used, so once
-            # one league supplies it there is nothing better to find. Without
-            # this the search scans all ~50 leagues for every cup team.
-            if len(best_rows) >= ROLLING_MATCHES:
-                break
-        return best_rows, best_full
-
-    H, full_H = best_frame(home_team)
-    A, _ = best_frame(away_team)
-
-    if len(H) < min_matches or len(A) < min_matches:
+    got = club_elo.cup_mu(league_code, home_team, away_team, match_date,
+                          INTL_GOAL_AVERAGES.get(league_code))
+    if got is None:
         return {}
+    mu, base = got
 
-    return _compute_features(H, A, home_team, away_team,
-                             full_H if full_H is not None else H,
-                             league_code=league_code)
+    # The one derived module input: the model's own P(2+ goals), so the
+    # under-guard reads this fixture rather than a neutral default.
+    p_two_plus = 1.0 - math.exp(-mu) * (1.0 + mu)
+
+    return {"mu_total": mu, "league_mu": base, "p_two_plus": p_two_plus}
 
 
 # ── Main entry point ──────────────────────────────────────────────────────────

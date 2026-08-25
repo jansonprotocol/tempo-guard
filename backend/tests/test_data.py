@@ -932,16 +932,45 @@ def test_defense_blend_touches_team_lanes_only():
             assert "gfh_t" not in line and "gfa_t" not in line
 
 
-def test_cup_fixtures_abstain_while_the_path_is_off():
-    """Replayed on 2,109 recent cup tips: -11.4 points overconfident, with
-    the base-rate rung calibrated and every information-bearing rung broken —
-    domestic form does not transfer to European opposition. Off means off:
-    a cup fixture produces no features, hence no tip, until the path is
-    fixed and re-measured."""
+def test_cup_fixtures_price_from_club_elo():
+    """The reopened cup lane: mu comes from committed as-of Club Elo, never
+    from domestic form (measured slope 0.017 — zero — against cup totals).
+    The pinned behaviours are the boundaries: mapped clubs price, national
+    teams and unmapped clubs abstain, and the mu lands inside the plausible
+    band the instruments graded."""
     from datetime import date
 
     from app.data import features
 
-    assert features.CUP_TIPS_ENABLED is False
-    assert features.asof_features("UCL", "Real Madrid CF", "Bayern München",
+    assert features.CUP_TIPS_ENABLED is True
+    got = features.asof_features("UCL", "Real Madrid CF", "Bayern München",
+                                 date(2025, 10, 15))
+    assert got, "two mapped giants must price"
+    assert 0.5 < got["mu_total"] < 6.0
+    assert got["league_mu"] > 2.0          # UCL base is a high-scoring one
+    assert 0.0 < got["p_two_plus"] < 1.0
+
+    # National-team competitions carry no club Elo: abstain, don't guess.
+    assert features.asof_features("EC", "France", "Germany",
                                   date(2026, 9, 15)) == {}
+
+    # A club outside the mapping abstains rather than pricing on nothing.
+    assert features.asof_features("UCL", "Real Madrid CF", "No Such Club FC",
+                                  date(2025, 10, 15)) == {}
+
+
+def test_cup_elo_staleness_guard_abstains():
+    """Elo lagged 60 days measured harmless; a rating more than a season
+    old describes a different squad. Past MAX_STALE_DAYS the lane must
+    return None rather than a number."""
+    from datetime import date, timedelta
+
+    import pandas as pd
+
+    from app.data import club_elo
+
+    dates, elos = club_elo._series()[club_elo._names()["Celtic"]]
+    beyond = dates[-1] + pd.Timedelta(days=club_elo.MAX_STALE_DAYS + 30)
+    assert club_elo.elo_asof("Celtic", beyond) is None
+    within = dates[-1] + pd.Timedelta(days=30)
+    assert club_elo.elo_asof("Celtic", within) is not None

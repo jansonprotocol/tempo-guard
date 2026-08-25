@@ -106,6 +106,7 @@ through the live tip code) kept the rule's core and sharpened every leg:
 <table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td><b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— under +1%</td><td><b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
+<table align="left"><tr><th align="left">🟢 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>U3.75 72.7% +1.6%<br>buy≥1.34 · floor −2.3</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.3% +1.5%<br>buy≥1.32</td><td>U2.75 64.1% +2.0%<br>buy≥1.48 · floor −10.9</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 03:00 <b>Cúcuta v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 83.0% +3.3%<br>buy≥1.33</td><td>U4.25 93.3% +1.8%<br>buy≥1.13 · lower edge</td></tr></table>
 
@@ -118,12 +119,12 @@ through the live tip code) kept the rule's core and sharpened every leg:
 
 <table align="left"><tr><th align="left">🔵 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
-<table align="left"><tr><th align="left">🔵 25-08 18:45 <b>Sabah v H. Be'er Sheva</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff</td><td>— no tip: cups off the board, path measured −11.4 overconfident</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 25-08 18:45 <b>Sabah v H. Be'er Sheva</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 86.5% +0.4%<br>buy≥1.23</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td><b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 79.9% +0.2%<br>buy≥1.31</td><td><b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
-<table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Bodø/Glimt v NEC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff</td><td>— no tip: cups off the board, path measured −11.4 overconfident</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔵 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff</td><td>— no tip: cups off the board, path measured −11.4 overconfident</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Bodø/Glimt v NEC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 86.6% +0.5%<br>buy≥1.23</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>U3.75 72.7% +1.6%<br>buy≥1.34 · floor −2.3</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 00:30 <b>Atlético-GO v Botafogo-SP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 81.9% +0.1%<br>buy≥1.36</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.3% +1.5%<br>buy≥1.32</td><td>U2.75 64.1% +2.0%<br>buy≥1.48 · floor −10.9</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 03:00 <b>Cúcuta v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 83.0% +3.3%<br>buy≥1.33</td><td>U4.25 93.3% +1.8%<br>buy≥1.13 · lower edge</td></tr></table>
@@ -856,17 +857,29 @@ EVERY window agrees:
              24-25  −2.4  (halves −3.4 / −1.5)
 
 Real market mix (~25% O1.5 vs the U4.25 base rung), no sign flips, no
-pooled cancellation — a stable ~−2 overstatement, the correctable kind:
-a −2 says-debit measured on one season and confirmed on the other passes
-the same bar every shipped constant passed. Staleness is a non-issue
-(Elo lagged 60 days grades identically), so the committed snapshot
-refreshed every few weeks is operationally enough. Per-competition
-intercepts were tried and rejected (they absorb season noise and whipsaw
-between directions). The UEFA country coefficient was considered and set
-aside: our bridge ratings already measure it, club-level and in goals.
-**Cups stay off pending one deliberate decision**: wiring the Elo lane
-into the live path (external results-derived data — never odds — as a
-cup-only strength source, with the −2 debit and a snapshot-age guard).
+pooled cancellation. Staleness is a non-issue (Elo lagged 60 days grades
+identically), so the committed snapshot refreshed every few weeks is
+operationally enough. Per-competition intercepts were tried and rejected
+(they absorb season noise and whipsaw between directions). The UEFA
+country coefficient was considered and set aside: our bridge ratings
+already measure it, club-level and in goals.
+
+**WIRED IN, PROBATIONARY — 25 Aug.** The deciding test was a true dress
+rehearsal: the 202 knockout fixtures played after the snapshot's last day
+(Jan–May 2026), priced exactly as the live lane would — frozen Elo,
+walked intercept — hit **89.1% against a stated 84.9** (+4.2). That +4.2
+also killed the planned −2 debit: across five windows the gap wobbles ±4
+around zero with no direction, the same wobble domestic leagues show at
+these sample sizes, so the lane ships at honest probabilities.
+`app/data/club_elo.py` is the boundary: results-derived only (never
+odds), cups only (domestic leagues never touch it), committed snapshots
+only (a refresh is a reviewed commit, never a predict-time network
+call), and abstention stays first-class — national teams, unmapped
+clubs, and ratings staler than 400 days produce no tip. Qualifier codes
+now route through the same lane (they previously fell to the domestic
+path — the −5.0). `CUP_TIPS_ENABLED` goes back to `False` if the live
+gap breaks the measured band; cup tips are marked **probationary** on
+the board until a real graded sample accumulates.
 
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
