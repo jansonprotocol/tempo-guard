@@ -769,9 +769,25 @@ The shrink sweep confirms no rescue exists: best case −3.0/−1.9 at k = 0.10,
 and even k = 0 — informationless baseline tips — misses at −3.9/−2.9,
 because cup totals are **over-dispersed relative to Poisson**: continental
 blowouts fatten the tails, so even the base-rate rung over-promises. So
-`CUP_TIPS_ENABLED = False`, pinned by a test. Reopening requires BOTH a
-cross-league strength model AND a cup dispersion correction, and the
-instruments that produced these numbers are ready to judge them.
+`CUP_TIPS_ENABLED = False`, pinned by a test.
+
+**The road back is measured and half-built** (`cup_strength.py`, 25 Aug).
+Every stored cup match bridges two leagues, and least squares over 4,825
+clean bridges rates the leagues from goals alone — the big five emerge in
+order (ENG +1.04, ESP +0.92, GER +0.84, ITA +0.68, FRA +0.50, down to IRL
+−1.31) with a cup home advantage of +0.40. Where domestic form measured a
+slope of 0.017, the ratings PREDICT cup totals: |gap| +0.270 ± 0.063 and sum
++0.121 ± 0.032 — mismatches mean goals, and giants attack rather than hide.
+Two myths also fell: cups are NOT over-dispersed (var/mean 1.00-1.04), and
+the real baseline sin was staleness — modern UCL runs 3.34 goals against the
+2.70 the engine used. A strength-based mu (rolling 3-year baseline +
+0.27·|gap| + 0.04·sum, trained pre-2022) validates at **+1.1 on the most
+recent held-out window** with a live market mix — but sits at **−3.7 on
+2022-24**, and the two-window bar is the bar: not shipped. The open question
+is whether frozen ratings drift (they are fitted pre-2022; re-fitting
+as-of is the next experiment). 271 clubs also carry 20+ matches of their own
+European history the old path never read — the unmined strand. The club→
+league map is cached in `config/club_leagues.json`.
 
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
