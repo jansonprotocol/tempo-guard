@@ -5,11 +5,11 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 2
 
 
-## CURRENT CONFIRMED HITRATE: 83.3%
+## CURRENT CONFIRMED HITRATE: 81.0%
 
     lane                        Tip 1              Tip 2
-    all matches             15 / 18   83.3%      9 / 12   75.0%
-    played lanes  >+1%      10 / 11   90.9%      9 / 12   75.0%
+    all matches             17 / 21   81.0%     11 / 14   78.6%
+    played lanes  >+1%      12 / 13   92.3%     11 / 14   78.6%
     placed bets             12 / 17   70.6%    ROI -4.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -96,7 +96,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 19 / 23   ·   82.6%**   ·   **Tip 1 — 10 / 11   ·   90.9%**   ·   **Tip 2 — 9 / 12   ·   75.0%**
+**Playable — 23 / 27   ·   85.2%**   ·   **Tip 1 — 12 / 13   ·   92.3%**   ·   **Tip 2 — 11 / 14   ·   78.6%**
 
 <table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (80.5 +0.0)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
@@ -111,8 +111,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-4 · 25-08 00:30 <b>Athletic v Novorizontino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>— under +1%</td><td>✅ <b>Athletic U1.5</b> 75.2% +13.1%<br>buy≥1.44 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 (push at 3) · 25-08 00:30 <b>Sport Recife v América-MG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.1% +1.4%<br>buy≥1.33</td><td>❌ U2.75 63.9% +1.9%<br>buy≥1.48 · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>— under +1%</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
-<table align="left"><tr><th align="left">🟢 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
-<table align="left"><tr><th align="left">🟢 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>✅ U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-0 · 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>✅ U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td><b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— under +1%</td><td><b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
@@ -159,9 +159,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
-<table align="left"><tr><th align="left">🔵 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
-<table align="left"><tr><th align="left">🔵 25-08 18:45 <b>Sabah v H. Be'er Sheva</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 86.5% +0.4%<br>buy≥1.23</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td><b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 79.9% +0.2%<br>buy≥1.31</td><td><b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
@@ -226,7 +223,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 15 / 18   ·   83.3%**   ·   **Tip 2 — 9 / 12   ·   75.0%**
+**Tip 1 — 17 / 21   ·   81.0%**   ·   **Tip 2 — 11 / 14   ·   78.6%**
 
 <table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (80.5 +0.0)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
@@ -248,6 +245,9 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 3-0 (push at 3) · 25-08 00:30 <b>Sport Recife v América-MG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.1% +1.4%<br>buy≥1.33</td><td>❌ U2.75 63.9% +1.9%<br>buy≥1.48 · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">❌ 2-3 · 25-08 01:00 <b>Botafogo v Athletico</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (82.7 +0.9)</td><td>U4.25 88.5% <b>−0.4%</b><br>buy≥1.20</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>O1.5 76.5% +0.1%<br>buy≥1.37</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>✅ U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-0 · 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>✅ U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-2 (90'+4; 5-2 aet) · 25-08 18:45 <b>Sabah v H. Be'er Sheva</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 86.5% +0.4%<br>buy≥1.23</td><td>— none</td></tr></table>
 
 <br clear="all">
 
