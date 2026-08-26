@@ -467,8 +467,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div class="askrow">
    <input type="date" id="ask-d">
    <select id="ask-lg"><option value="">League…</option></select>
-   <input id="ask-a" list="dl-a" placeholder="Team A (home)" disabled>
-   <input id="ask-b" list="dl-b" placeholder="Team B (away)" disabled>
+   <input id="ask-a" list="dl-a" placeholder="Team A"
+    onfocus="ensureBank()">
+   <input id="ask-b" list="dl-b" placeholder="Team B"
+    onfocus="ensureBank()">
    <button class="btn askbtn" onclick="askAthena()">Enter</button>
   </div>
   <datalist id="dl-a"></datalist><datalist id="dl-b"></datalist>
@@ -609,24 +611,25 @@ async function ensureBank() {{
     }}
   }}
   refreshLeagues();
+  fillTeamLists();
 }}
 document.getElementById("ask-d").addEventListener("change",
   async () => {{ await ensureBank(); refreshLeagues(); }});
 document.getElementById("ask-lg").addEventListener("focus", ensureBank);
-document.getElementById("ask-lg").addEventListener("change", e => {{
-  const comp = BANK && BANK[e.target.value];
+function fillTeamLists() {{
+  if (!BANK) return;
+  const comp = BANK[document.getElementById("ask-lg").value];
+  const teams = comp ? comp.teams
+    : [...new Set(Object.values(BANK).flatMap(c => c.teams))].sort();
   for (const id of ["dl-a", "dl-b"]) {{
     const dl = document.getElementById(id); dl.innerHTML = "";
-    if (comp) for (const tm of comp.teams) {{
+    for (const tm of teams) {{
       const o = document.createElement("option");
       o.value = tm; dl.appendChild(o);
     }}
   }}
-  for (const id of ["ask-a", "ask-b"]) {{
-    const inp = document.getElementById(id);
-    inp.disabled = !comp; inp.value = "";
-  }}
-}});
+}}
+document.getElementById("ask-lg").addEventListener("change", fillTeamLists);
 function askCard(m, comp, note) {{
   const mark = m.mark ? m.mark + " " + (m.score || "") :
     (m.src === "board" ? "🕑 on the board" : "");
@@ -647,15 +650,20 @@ async function askAthena() {{
   const A = document.getElementById("ask-a").value.trim();
   const B = document.getElementById("ask-b").value.trim();
   const D = document.getElementById("ask-d").value;
-  if (!code || !A || !B) {{
-    out.innerHTML = '<div class="askerr">Pick a league and both teams '
-      + "first.</div>"; return;
+  if (!A || !B) {{
+    out.innerHTML = '<div class="askerr">Fill in both teams first — '
+      + "league and date narrow the search but are optional.</div>";
+    return;
   }}
-  const comp = BANK[code];
-  // Both venue orders, every meeting Athena has run, oldest to newest.
-  const all = [...(LOOKUP[code + "|" + norm(A) + "|" + norm(B)] || []),
-               ...(LOOKUP[code + "|" + norm(B) + "|" + norm(A)] || [])]
-    .sort((x, y) => x.d.localeCompare(y.d));
+  // Both venue orders, every meeting Athena has run; without a league,
+  // every competition is searched.
+  const codes = code ? [code] : Object.keys(BANK);
+  const all = [];
+  for (const c of codes)
+    for (const k of [c + "|" + norm(A) + "|" + norm(B),
+                     c + "|" + norm(B) + "|" + norm(A)])
+      for (const m of LOOKUP[k] || []) all.push([m, BANK[c]]);
+  all.sort((x, y) => x[0].d.localeCompare(y[0].d));
   if (!all.length) {{
     out.innerHTML = '<div class="askerr">Athena has not run this matchup. '
       + "The board carries what the operator feeds in, and past matches "
@@ -665,7 +673,7 @@ async function askAthena() {{
   }}
   let show = all, head = "";
   if (D) {{
-    const exact = all.filter(m => m.d === D);
+    const exact = all.filter(x => x[0].d === D);
     if (exact.length) show = exact;
     else head = '<div class="dim" style="margin-bottom:6px">Not on ' + D
       + " — showing every meeting Athena has run:</div>";
@@ -675,7 +683,7 @@ async function askAthena() {{
       + "last:</div>";
   }}
   out.innerHTML = head
-    + show.map(m => askCard(m, comp, "")).join("");
+    + show.map(x => askCard(x[0], x[1], "")).join("");
 }}
 </script>
 </body></html>"""
