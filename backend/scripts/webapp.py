@@ -163,16 +163,31 @@ def _card(f, kind: str, reads: dict) -> str:
         if cell.strip() in ("", "—", "— none"):
             return ""
         pl = " pl" if (not f.settled and f.lane(which)) else ""
+        # While the match runs, say what the score has done to this lane.
+        live = ""
+        if not f.settled and f.status:
+            from scripts import liveline
+            s = liveline.progress(cell, f.teams, f.status)
+            if s:
+                cls = ("gone" if s.startswith("✗") or "gone" in s
+                       else "won" if s.startswith("✓") else "")
+                live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell)}</div>")
+                f"</span> {_fmt(cell)}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
+    from scripts import liveline
+    tie = liveline.tie_note(f.teams, f.status)
+    tie_html = (f'<div class="tie">🏆 {html.escape(tie)} '
+                f'<span class="dim">Context only — Athena prices the '
+                f'match total and does not see the tie.</span></div>'
+                if tie else "")
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
            f"{lane(1, f.tip1)}")
-    body = lane(2, f.tip2)
+    body = lane(2, f.tip2) + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
     if not body:
@@ -537,6 +552,12 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .lane.pl {{ outline:1px solid #234d33; }}
 .lane .which {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-right:6px; }}
+.prog {{ margin-top:5px; font-size:11px; letter-spacing:.04em;
+  color:var(--gold); }}
+.prog.won {{ color:var(--green); }}
+.prog.gone {{ color:#e07a6a; }}
+.tie {{ margin-top:8px; font-size:12px; color:var(--tx);
+  background:#111622; border-radius:7px; padding:8px 10px; }}
 summary {{ cursor:pointer; list-style:none; }}
 summary::-webkit-details-marker {{ display:none; }}
 .more {{ float:right; color:var(--dim); font-size:11px; font-weight:400; }}
@@ -665,6 +686,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  real prices. Everything on every page is computed from three small data
  files; no number is ever typed by hand, so nothing can quietly go
  stale.</p>
+ <p><b>What it does not see:</b> Athena prices one match's goal total.
+ It has no concept of a two-legged tie, an aggregate score, or what a
+ side needs on the night — and that matters, because a team chasing a
+ deficit plays differently from one protecting a lead. Rather than
+ pretend otherwise, cup cards print the aggregate picture beside the tip
+ and label it context. It also cannot see team news, red cards before
+ they happen, or the weather.</p>
  <p><b>How it stays honest:</b> every constant in the engine must prove
  itself on two separate time windows before it ships; every era is
  archived untouched, including the ones that lost money; new lanes (like

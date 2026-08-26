@@ -123,15 +123,21 @@ def _cards(entries: list[tuple[Fixture, str, str, str]]) -> list[str]:
     anywhere. `<br clear="all">` ends the float so the next section's text
     cannot ride up alongside the last card.
     """
+    from scripts import liveline
     out = []
     for f, glyph, t1, t2 in entries:
+        tie = liveline.tie_note(f.teams, f.status)
+        # The tie is context, never an input: Athena prices one match's
+        # goals and has no concept of an aggregate.
+        row = (f'<tr><td colspan="3"><sub>🏆 {_html(tie)}</sub></td></tr>'
+               if tie else "")
         out.append(
             '<table align="left">'
             f'<tr><th align="left">{_html(_head(f, glyph))}</th>'
             '<th align="left">Tip 1</th><th align="left">Tip 2</th></tr>'
             f'<tr><td>{_html(_badge(f))}</td>'
             f'<td>{_html(t1)}</td><td>{_html(t2)}</td></tr>'
-            '</table>')
+            f'{row}</table>')
     if out:
         out += ['', '<br clear="all">', '']
     return out
@@ -143,6 +149,15 @@ def _html(s: str) -> str:
     for i in range(1, len(parts), 2):
         parts[i] = f"<b>{parts[i]}</b>"
     return "".join(parts)
+
+
+def _live(f, cell: str) -> str:
+    """The lane's state at the current score — empty unless in play."""
+    from scripts import liveline
+    if f.settled or not f.status:
+        return ""
+    s = liveline.progress(cell, f.teams, f.status)
+    return f" · <i>{s}</i>" if s else ""
 
 
 def _cell(raw: str) -> str:
@@ -237,9 +252,11 @@ def render_board(fixtures: list[Fixture]) -> str:
         l1, l2 = f.lane(1), f.lane(2)
         if not l1 and not l2:
             continue
-        c1 = _cell(f.tip1) if l1 else (f.tip1 if f.tip1.startswith("—")
-                                       else f"— under +{MIN_EDGE:.0f}%")
-        c2 = _cell(f.tip2) if l2 else (f.tip2 if f.tip2.startswith("—")
+        c1 = _cell(f.tip1) + _live(f, f.tip1) if l1 else (
+            f.tip1 if f.tip1.startswith("—")
+            else f"— under +{MIN_EDGE:.0f}%")
+        c2 = _cell(f.tip2) + _live(f, f.tip2) if l2 else (
+            f.tip2 if f.tip2.startswith("—")
                                        else f"— under +{MIN_EDGE:.0f}%")
         entries.append((f, "🟢", c1, c2))
     out += _cards(entries)
@@ -255,7 +272,8 @@ def render_board(fixtures: list[Fixture]) -> str:
         "league are its **(hit gap)** over its last 200 replayed matches — "
         "read the gap before trusting a row.", "",
     ]
-    out += _cards([(f, "🔵", _cell(f.tip1), _cell(f.tip2)) for f in pending])
+    out += _cards([(f, "🔵", _cell(f.tip1) + _live(f, f.tip1),
+                _cell(f.tip2) + _live(f, f.tip2)) for f in pending])
     if not pending:
         out += ["*(no open fixtures)*", ""]
 
