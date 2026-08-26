@@ -361,6 +361,11 @@ def rewrite(text: str) -> str:
             + "\n".join(render_bets()) + "\n" + text[e2:])
 
 
+def liveline_score(status: str):
+    from scripts import liveline
+    return liveline.score_of(status)
+
+
 def verify(quiet: bool = False) -> None:
     """Every fixture, on every surface, every time.
 
@@ -495,6 +500,27 @@ def verify(quiet: bool = False) -> None:
             except Exception as exc:
                 bad.append(f"matchbank.json is unreadable: {exc}")
 
+    # 10. No fixture quietly rots. A match that kicked off hours ago and
+    #     still shows nothing means the last update touched one row and
+    #     left its neighbours behind — the exact failure sweep.py exists
+    #     to prevent, so the board refuses to render until it is swept.
+    from datetime import datetime, timedelta
+    stale_cutoff = datetime.now() - timedelta(hours=4)
+    rotting = []
+    for f in fixtures:
+        if f.settled:
+            continue
+        try:
+            ko = datetime.strptime(f.kickoff, "%Y-%m-%d %H:%M")
+        except ValueError:
+            continue
+        if ko < stale_cutoff and not liveline_score(f.status):
+            rotting.append(f"{f.teams} (kicked off {f.kickoff})")
+    if rotting:
+        bad.append("these kicked off over four hours ago and carry no "
+                   "result — run scripts/sweep.py:\n    "
+                   + "\n    ".join(rotting))
+
     if bad:
         raise SystemExit("BOARD VERIFY FAILED\n  " + "\n  ".join(bad))
     if not quiet:
@@ -515,7 +541,12 @@ def main() -> None:
         verify()
         return
     if new == text:
+        # The README can be current while the app is not — they are
+        # written by different code from the same sources, and only one
+        # of them is compared above. So the app is always re-rendered.
         print("board already current")
+        from scripts import webapp
+        webapp.main()
         verify()
         return
     README.write_text(new)
