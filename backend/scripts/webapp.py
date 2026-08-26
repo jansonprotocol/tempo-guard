@@ -322,8 +322,24 @@ def main() -> None:
         if rd:
             entry["kw"] = rd[0]
         comp["matches"].append(entry)
+    # Visitors think of a UCL qualifier as a UCL game, so the form does
+    # too: the -Q competitions fold into their parents for lookup. The
+    # board itself keeps the distinction (different baselines, different
+    # badges) — this merge is presentation only.
+    for q, parent in (("UCL-Q", "UCL"), ("UEL-Q", "UEL"),
+                      ("UECL-Q", "UECL")):
+        if q in bank:
+            names = {"UCL": "UEFA Champions League",
+                     "UEL": "UEFA Europa League",
+                     "UECL": "UEFA Conference League"}
+            dst = bank.setdefault(parent, dict(
+                name=names[parent], teams=[], matches=[]))
+            dst["teams"] += bank[q]["teams"]
+            dst["matches"] += bank[q]["matches"]
+            del bank[q]
     for comp in bank.values():
         comp["teams"] = sorted(set(comp["teams"]))
+        comp["matches"].sort(key=lambda m: m["d"])
     (OUT.parent / "matchbank.json").write_text(
         _json.dumps(bank, ensure_ascii=False))
 
@@ -564,22 +580,38 @@ const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .toLowerCase().replace(/[.\-'()\/]/g, " ").split(/\s+/)
   .filter(w => w && !["fc","fk","cf","sc","ac","afc","bk","if","sk",
                       "club","cp"].includes(w)).join(" ");
-async function ensureBank() {{
-  if (BANK) return;
-  BANK = await (await fetch("matchbank.json")).json();
-  LOOKUP = {{}};
-  for (const [code, comp] of Object.entries(BANK))
-    for (const m of comp.matches) {{
-      const k = code + "|" + norm(m.h) + "|" + norm(m.a);
-      (LOOKUP[k] = LOOKUP[k] || []).push(m);
-    }}
+let DATES = null;
+function refreshLeagues() {{
+  if (!BANK) return;
   const sel = document.getElementById("ask-lg");
+  const keep = sel.value;
+  const D = document.getElementById("ask-d").value;
+  sel.innerHTML = '<option value="">League…</option>';
   for (const [code, comp] of Object.entries(BANK).sort(
       (x, y) => x[1].name.localeCompare(y[1].name))) {{
+    if (D && !DATES[code].has(D)) continue;
     const o = document.createElement("option");
     o.value = code; o.textContent = comp.name; sel.appendChild(o);
   }}
+  sel.value = keep;
+  if (sel.value !== keep) sel.dispatchEvent(new Event("change"));
 }}
+async function ensureBank() {{
+  if (BANK) return;
+  BANK = await (await fetch("matchbank.json")).json();
+  LOOKUP = {{}}; DATES = {{}};
+  for (const [code, comp] of Object.entries(BANK)) {{
+    DATES[code] = new Set();
+    for (const m of comp.matches) {{
+      const k = code + "|" + norm(m.h) + "|" + norm(m.a);
+      (LOOKUP[k] = LOOKUP[k] || []).push(m);
+      DATES[code].add(m.d);
+    }}
+  }}
+  refreshLeagues();
+}}
+document.getElementById("ask-d").addEventListener("change",
+  async () => {{ await ensureBank(); refreshLeagues(); }});
 document.getElementById("ask-lg").addEventListener("focus", ensureBank);
 document.getElementById("ask-lg").addEventListener("change", e => {{
   const comp = BANK && BANK[e.target.value];
