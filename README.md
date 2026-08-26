@@ -7,12 +7,12 @@
 **📱 Live board: [tempo-guard.vercel.app](https://tempo-guard.vercel.app)** — the same derived data as this page, rendered as an app; redeployed from `web/` on every merge.
 
 
-## CURRENT CONFIRMED HITRATE: 83.3%
+## CURRENT CONFIRMED HITRATE: 84.8%
 
     lane                        Tip 1              Tip 2
-    all matches             25 / 30   83.3%     16 / 21   76.2%
-    played lanes  >+1%      17 / 19   89.5%     16 / 21   76.2%
-    placed bets             18 / 24   75.0%    ROI -2.9%
+    all matches             28 / 33   84.8%     17 / 23   73.9%
+    played lanes  >+1%      18 / 20   90.0%     17 / 23   73.9%
+    placed bets             18 / 25   72.0%    ROI -6.8%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -98,7 +98,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 33 / 40   ·   82.5%**   ·   **Tip 1 — 17 / 19   ·   89.5%**   ·   **Tip 2 — 16 / 21   ·   76.2%**
+**Playable — 35 / 43   ·   81.4%**   ·   **Tip 1 — 18 / 20   ·   90.0%**   ·   **Tip 2 — 17 / 23   ·   73.9%**
 
 <table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (80.5 +0.0)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
@@ -122,10 +122,10 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 (push at 3) · 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.3% +1.5%<br>buy≥1.32</td><td>❌ U2.75 64.1% +2.0%<br>buy≥1.48 · floor −10.9</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 26-08 03:00 <b>Cúcuta v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 83.0% +3.3%<br>buy≥1.33</td><td>✅ U4.25 93.3% +1.8%<br>buy≥1.13 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 (90'; level 3-3, to extra time) · 26-08 18:45 <b>Rapid Vienna v Hearts</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 87.4% +1.8%<br>buy≥1.22</td><td>✅ U3.75 73.0% +2.7%<br>buy≥1.33 · floor −9.0</td></tr><tr><td colspan="3"><sub>🏆 1st leg Heart of Midlothian 2-2 Rapid Vienna · level 3-3 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 59' 1-1 <b>Real Madrid v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 81.2% +6.8%<br>buy≥1.33 · <i>✓ landed</i></td><td><b>Real Madrid O1.5</b> 67.0% +24.7%<br>buy≥1.62 · team · <i>needs 1 more</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 65' 1-1 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.6% +1.5%<br>buy≥1.21 · <i>room for 2 · half from the 2nd</i></td><td>U3.75 73.3% +2.2%<br>buy≥1.33 · floor −8.7 · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Slovan Bratislava 1-1 NK Celje · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 65' 1-2 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>— under +1%</td><td>U3.75 72.2% +1.1%<br>buy≥1.35 · floor −9.8 · <i>next goal hurts</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Fenerbahce 1-1 Lyon · Fenerbahçe lead 3-2 on aggregate — Lyon need 1 to level it.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 63' 3-1 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21 · <i>half safe</i></td><td>U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9 · <i>half gone</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · Viking lead 5-3 on aggregate — Dinamo Zagreb need 2 to level.</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 4-1 <b>Real Madrid v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 81.2% +6.8%<br>buy≥1.33 · <i>✓ landed</i></td><td><b>Real Madrid O1.5</b> 67.0% +24.7%<br>buy≥1.62 · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 93' 1-1 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.6% +1.5%<br>buy≥1.21 · <i>room for 2 · half from the 2nd</i></td><td>U3.75 73.3% +2.2%<br>buy≥1.33 · floor −8.7 · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Slovan Bratislava 1-1 NK Celje · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 26-08 21:00 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>— under +1%</td><td>✅ U3.75 72.2% +1.1%<br>buy≥1.35 · floor −9.8</td></tr><tr><td colspan="3"><sub>🏆 1st leg Fenerbahce 1-1 Lyon · Fenerbahçe lead 3-2 on aggregate — Lyon need 1 to level it.</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 26-08 21:00 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21</td><td>❌ U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9</td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · Viking lead 5-3 on aggregate — Dinamo Zagreb need 2 to level.</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 23:00 <b>Boyacá Chicó v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 81.9% +2.2%<br>buy≥1.35</td><td>U4.25 92.8% +1.2%<br>buy≥1.14 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-08 03:30 <b>Atl. Nacional v Dep. Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>— under +1%</td><td>O1.75 72.8% +5.6%<br>buy≥1.57 · floor −2.2</td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-08 17:00 <b>KuPS v Shamrock Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 90.0% +4.5%<br>buy≥1.21</td><td>U3.75 77.3% +6.9%<br>buy≥1.31 · floor −4.7</td></tr><tr><td colspan="3"><sub>🏆 1st leg Shamrock Rovers 1-1 KuPS Kuopio · level 1-1 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
@@ -169,11 +169,8 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 59' 1-1 <b>Real Madrid v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 81.2% +6.8%<br>buy≥1.33 · <i>✓ landed</i></td><td><b>Real Madrid O1.5</b> 67.0% +24.7%<br>buy≥1.62 · team · <i>needs 1 more</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 63' 4-0 <b>AEK Athens v Levski Sofia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 82.5% <b>-3.6%</b><br>buy≥1.30 · <i>half safe</i></td><td>— none</td></tr><tr><td colspan="3"><sub>🏆 1st leg Levski Sofia 0-0 AEK Athens · AEK Athens lead 4-0 on aggregate — Levski Sofia need 4 to level.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 65' 1-1 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.6% +1.5%<br>buy≥1.21 · <i>room for 2 · half from the 2nd</i></td><td>U3.75 73.3% +2.2%<br>buy≥1.33 · floor −8.7 · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Slovan Bratislava 1-1 NK Celje · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 65' 1-2 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 86.8% <b>+0.8%</b><br>buy≥1.22 · <i>room for 1 · half from the 1st</i></td><td>U3.75 72.2% +1.1%<br>buy≥1.35 · floor −9.8 · <i>next goal hurts</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Fenerbahce 1-1 Lyon · Fenerbahçe lead 3-2 on aggregate — Lyon need 1 to level it.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 63' 3-1 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21 · <i>half safe</i></td><td>U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9 · <i>half gone</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · Viking lead 5-3 on aggregate — Dinamo Zagreb need 2 to level.</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 4-1 <b>Real Madrid v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 81.2% +6.8%<br>buy≥1.33 · <i>✓ landed</i></td><td><b>Real Madrid O1.5</b> 67.0% +24.7%<br>buy≥1.62 · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 93' 1-1 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.6% +1.5%<br>buy≥1.21 · <i>room for 2 · half from the 2nd</i></td><td>U3.75 73.3% +2.2%<br>buy≥1.33 · floor −8.7 · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Slovan Bratislava 1-1 NK Celje · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 23:00 <b>Boyacá Chicó v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 81.9% +2.2%<br>buy≥1.35</td><td>U4.25 92.8% +1.2%<br>buy≥1.14 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-08 00:00 <b>Coquimbo v U. Católica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>O1.5 76.8% +0.5%<br>buy≥1.37</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-08 01:20 <b>América de Cali v Junior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 80.5% +0.8%<br>buy≥1.39</td><td>U2.75 60.3% +1.0%<br>buy≥1.57 · floor −14.7</td></tr></table>
@@ -222,7 +219,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 25 / 30   ·   83.3%**   ·   **Tip 2 — 16 / 21   ·   76.2%**
+**Tip 1 — 28 / 33   ·   84.8%**   ·   **Tip 2 — 17 / 23   ·   73.9%**
 
 <table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (80.5 +0.0)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
@@ -258,12 +255,15 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">⚪ 1-1 (no tip) · 26-08 18:00 <b>Al-Faisaly v Al-Fateh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— no tip, Al-Faisaly too little top-flight history (promoted)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 (90'; level 3-3, to extra time) · 26-08 18:45 <b>Rapid Vienna v Hearts</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 87.4% +1.8%<br>buy≥1.22</td><td>✅ U3.75 73.0% +2.7%<br>buy≥1.33 · floor −9.0</td></tr><tr><td colspan="3"><sub>🏆 1st leg Heart of Midlothian 2-2 Rapid Vienna · level 3-3 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
 <table align="left"><tr><th align="left">⚪ 1-1 (no tip) · 26-08 20:00 <b>Al Diriyah v Al-Kholood</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— no tip, both promoted, too little top-flight history</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">✅ 4-0 · 26-08 21:00 <b>AEK Athens v Levski Sofia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 82.5% <b>-3.6%</b><br>buy≥1.30</td><td>— none</td></tr><tr><td colspan="3"><sub>🏆 1st leg Levski Sofia 0-0 AEK Athens · AEK Athens lead 4-0 on aggregate — Levski Sofia need 4 to level.</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 26-08 21:00 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 86.8% <b>+0.8%</b><br>buy≥1.22</td><td>✅ U3.75 72.2% +1.1%<br>buy≥1.35 · floor −9.8</td></tr><tr><td colspan="3"><sub>🏆 1st leg Fenerbahce 1-1 Lyon · Fenerbahçe lead 3-2 on aggregate — Lyon need 1 to level it.</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 26-08 21:00 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21</td><td>❌ U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9</td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · Viking lead 5-3 on aggregate — Dinamo Zagreb need 2 to level.</sub></td></tr></table>
 
 <br clear="all">
 
 ### 🟡 Actual placed bets
 
-**Settled: 18 / 24  ·  ROI -2.9%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 18 / 25  ·  ROI -6.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -295,7 +295,7 @@ that premium the book is keeping the insurance money.
 | — open | St. Gallen v Nordsjælland | U4.5 | 1.20 | — | cup lane, +6.1% at strike |
 | — open | Celta v Osasuna | DNB (home) | 1.38 | — | experimental; O0.5-pointed read, the rung the backtest flagged |
 | — open | Borac v Víkingur | U4.5 | 1.17 | — | cup lane, +3.9% at strike |
-| — open | Viking v Dinamo Zagreb | U3.5 | 1.45 | — | rule-6 harder line, needed ~1.41, +8.1% at strike |
+| ❌ | Viking v Dinamo Zagreb | U3.5 | 1.45 | 0.00x | rule-6 harder line, needed ~1.41, +8.1% at strike |
 | — open | Plzeň v Crvena zvezda | U3.5 | 1.43 | — | rule-6 harder line, needed ~1.32, +14.2% at strike |
 | — open | Riga v Klaksvík | U3.5 | 1.47 | — | rule-6 harder line, needed ~1.41, +9.7% at strike |
 | — open | CSKA Sofia v OFI | U3.5 | 1.36 | — | rule-6 harder line, needed ~1.32, +8.4% at strike |
