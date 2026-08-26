@@ -93,6 +93,35 @@ def _bets_rows() -> list[dict]:
     return out
 
 
+# The store carries era-split club names — "Real Madrid", "Real Madrid CF"
+# and "Real Madrid C.F." are three rows of the same club, because different
+# source files spell it differently. The board never cared (each fixture
+# resolves its own frame), but a lookup form must, or El Clásico hides under
+# a spelling the visitor did not type. So the bank is keyed on the engine's
+# own canonical form, with every spelling aliased to it.
+_JS_STOP = {"fc", "fk", "cf", "sc", "ac", "afc", "bk", "if", "sk",
+            "club", "cp"}
+
+
+def _jsnorm(s: str) -> str:
+    """Mirror of the page's norm() — the alias map is keyed by it."""
+    import unicodedata
+    s = unicodedata.normalize("NFD", s)
+    s = "".join(c for c in s if not unicodedata.combining(c)).lower()
+    s = re.sub(r"[.\-'()/]", " ", s)
+    return " ".join(w for w in s.split() if w not in _JS_STOP)
+
+
+def _key(name: str) -> str:
+    """One club, one key. The engine's canonical form, minus the stray
+    single letters that punctuation leaves behind ("real madrid c f")."""
+    from app.data.features import _canonical
+    k = _canonical(name)
+    trimmed = " ".join(t for t in k.split()
+                       if not (len(t) == 1 and t.isalpha()))
+    return trimmed or k
+
+
 _READS_CACHE = ROOT / "config" / "reads_cache.json"
 
 
@@ -337,11 +366,60 @@ def main() -> None:
             dst["teams"] += bank[q]["teams"]
             dst["matches"] += bank[q]["matches"]
             del bank[q]
+    # Canonical keys: one club, one identity, every spelling aliased to
+    # it. Three signals decide which spellings are the same club: the
+    # engine's canonical form, the Club Elo identity (one external name
+    # per club), and config/club_nicknames.tsv for what people actually
+    # type. The display name is the shortest spelling in the group —
+    # "Lyon" over "Olympique Lyonnais" — unless the nickname file names
+    # one explicitly.
+    from app.data import club_elo as _ce
+    nick, prefer = {}, {}
+    nick_path = ROOT / "config" / "club_nicknames.tsv"
+    if nick_path.exists():
+        for ln in nick_path.read_text().splitlines():
+            if ln.strip() and not ln.startswith("#") and "\t" in ln:
+                a, shown = (x.strip() for x in ln.split("\t", 1))
+                nick[_jsnorm(a)] = shown
+
+    def base_key(name):
+        # One club, one key: the Club Elo identity when it knows the club,
+        # the engine's canonical form otherwise.
+        ext = (_ce._names().get(name)
+               or _ce._norm_index().get(_ce._norm(name)))
+        return _key(ext) if ext else _key(name)
+
+    def group(name):
+        # A nickname resolves to its display name, and that display name
+        # goes through the SAME base_key — otherwise "PSG" keys as
+        # "paris saint germain" while the fixtures key as "paris sg".
+        shown = nick.get(_jsnorm(name))
+        return base_key(shown if shown else name)
+
+    alias, spellings = {}, {}
     for comp in bank.values():
-        comp["teams"] = sorted(set(comp["teams"]))
+        for m in comp["matches"]:
+            for fld, side in (("h", "kh"), ("a", "ka")):
+                g = group(m[fld])
+                m[side] = g
+                alias[_jsnorm(m[fld])] = g
+                spellings.setdefault(g, set()).add(m[fld])
+    for shown in set(nick.values()):
+        prefer[base_key(shown)] = shown
+    for a, shown in nick.items():
+        alias[a] = base_key(shown)
+    for g, names in spellings.items():
+        alias.setdefault(_jsnorm(g), g)
+        if g not in prefer:
+            prefer[g] = min(names, key=lambda n: (len(n), n))
+    for comp in bank.values():
+        shown = {group(nm) for nm in comp["teams"]}
+        shown |= {m["kh"] for m in comp["matches"]}
+        shown |= {m["ka"] for m in comp["matches"]}
+        comp["teams"] = sorted({prefer.get(g, g) for g in shown})
         comp["matches"].sort(key=lambda m: m["d"])
     (OUT.parent / "matchbank.json").write_text(
-        _json.dumps(bank, ensure_ascii=False))
+        _json.dumps(dict(comps=bank, alias=alias), ensure_ascii=False))
 
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -577,7 +655,7 @@ function route() {{
 }}
 addEventListener("hashchange", route); route();
 
-let BANK = null, LOOKUP = null;
+let BANK = null, LOOKUP = null, ALIAS = null;
 const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .toLowerCase().replace(/[.\-'()\/]/g, " ").split(/\s+/)
   .filter(w => w && !["fc","fk","cf","sc","ac","afc","bk","if","sk",
@@ -600,12 +678,13 @@ function refreshLeagues() {{
 }}
 async function ensureBank() {{
   if (BANK) return;
-  BANK = await (await fetch("matchbank.json")).json();
+  const raw = await (await fetch("matchbank.json")).json();
+  BANK = raw.comps; ALIAS = raw.alias;
   LOOKUP = {{}}; DATES = {{}};
   for (const [code, comp] of Object.entries(BANK)) {{
     DATES[code] = new Set();
     for (const m of comp.matches) {{
-      const k = code + "|" + norm(m.h) + "|" + norm(m.a);
+      const k = code + "|" + m.kh + "|" + m.ka;
       (LOOKUP[k] = LOOKUP[k] || []).push(m);
       DATES[code].add(m.d);
     }}
@@ -657,11 +736,11 @@ async function askAthena() {{
   }}
   // Both venue orders, every meeting Athena has run; without a league,
   // every competition is searched.
+  const kA = ALIAS[norm(A)] || norm(A), kB = ALIAS[norm(B)] || norm(B);
   const codes = code ? [code] : Object.keys(BANK);
   const all = [];
   for (const c of codes)
-    for (const k of [c + "|" + norm(A) + "|" + norm(B),
-                     c + "|" + norm(B) + "|" + norm(A)])
+    for (const k of [c + "|" + kA + "|" + kB, c + "|" + kB + "|" + kA])
       for (const m of LOOKUP[k] || []) all.push([m, BANK[c]]);
   all.sort((x, y) => x[0].d.localeCompare(y[0].d));
   if (!all.length) {{
