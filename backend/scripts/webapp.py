@@ -367,25 +367,56 @@ def main() -> None:
             dst["matches"] += bank[q]["matches"]
             del bank[q]
     # Canonical keys: one club, one identity, every spelling aliased to
-    # it. Display names follow the club's most recent spelling, so the
-    # autofill offers today's name rather than an archived one.
-    alias, newest = {}, {}
+    # it. Three signals decide which spellings are the same club: the
+    # engine's canonical form, the Club Elo identity (one external name
+    # per club), and config/club_nicknames.tsv for what people actually
+    # type. The display name is the shortest spelling in the group —
+    # "Lyon" over "Olympique Lyonnais" — unless the nickname file names
+    # one explicitly.
+    from app.data import club_elo as _ce
+    nick, prefer = {}, {}
+    nick_path = ROOT / "config" / "club_nicknames.tsv"
+    if nick_path.exists():
+        for ln in nick_path.read_text().splitlines():
+            if ln.strip() and not ln.startswith("#") and "\t" in ln:
+                a, shown = (x.strip() for x in ln.split("\t", 1))
+                nick[_jsnorm(a)] = shown
+
+    def base_key(name):
+        # One club, one key: the Club Elo identity when it knows the club,
+        # the engine's canonical form otherwise.
+        ext = (_ce._names().get(name)
+               or _ce._norm_index().get(_ce._norm(name)))
+        return _key(ext) if ext else _key(name)
+
+    def group(name):
+        # A nickname resolves to its display name, and that display name
+        # goes through the SAME base_key — otherwise "PSG" keys as
+        # "paris saint germain" while the fixtures key as "paris sg".
+        shown = nick.get(_jsnorm(name))
+        return base_key(shown if shown else name)
+
+    alias, spellings = {}, {}
     for comp in bank.values():
         for m in comp["matches"]:
             for fld, side in (("h", "kh"), ("a", "ka")):
-                k = _key(m[fld])
-                m[side] = k
-                alias[_jsnorm(m[fld])] = k
-                alias.setdefault(_jsnorm(k), k)
-                if m["d"] >= newest.get(k, ("", ""))[0]:
-                    newest[k] = (m["d"], m[fld])
+                g = group(m[fld])
+                m[side] = g
+                alias[_jsnorm(m[fld])] = g
+                spellings.setdefault(g, set()).add(m[fld])
+    for shown in set(nick.values()):
+        prefer[base_key(shown)] = shown
+    for a, shown in nick.items():
+        alias[a] = base_key(shown)
+    for g, names in spellings.items():
+        alias.setdefault(_jsnorm(g), g)
+        if g not in prefer:
+            prefer[g] = min(names, key=lambda n: (len(n), n))
     for comp in bank.values():
-        shown = {}
-        for nm in comp["teams"]:
-            k = _key(nm)
-            alias[_jsnorm(nm)] = k
-            shown[k] = newest.get(k, ("", nm))[1]
-        comp["teams"] = sorted(set(shown.values()))
+        shown = {group(nm) for nm in comp["teams"]}
+        shown |= {m["kh"] for m in comp["matches"]}
+        shown |= {m["ka"] for m in comp["matches"]}
+        comp["teams"] = sorted({prefer.get(g, g) for g in shown})
         comp["matches"].sort(key=lambda m: m["d"])
     (OUT.parent / "matchbank.json").write_text(
         _json.dumps(dict(comps=bank, alias=alias), ensure_ascii=False))

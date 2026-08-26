@@ -1,0 +1,51 @@
+# What people call clubs, and the one name the app shows for each.
+# alias	display name
+# Typed by hand (a nickname is culture, not data); read by scripts/webapp.py
+# for the Ask Athena form only — the engine never uses this file.
+PSG	Paris Saint-Germain
+Paris SG	Paris Saint-Germain
+Barca	Barcelona
+Barça	Barcelona
+Real	Real Madrid
+Atleti	Atlético Madrid
+Atletico	Atlético Madrid
+Atlético de Madrid	Atlético Madrid
+Club Atlético de Madrid	Atlético Madrid
+Man Utd	Manchester United
+Man United	Manchester United
+Man City	Manchester City
+Spurs	Tottenham Hotspur
+Wolves	Wolverhampton Wanderers
+Forest	Nottingham Forest
+Bayern Munich	Bayern München
+Bayern	Bayern München
+Dortmund	Borussia Dortmund
+BVB	Borussia Dortmund
+Gladbach	Borussia Mönchengladbach
+Juve	Juventus
+Inter Milan	Inter
+Nerazzurri	Inter
+Milan	AC Milan
+Napoli	SSC Napoli
+Roma	AS Roma
+OL	Lyon
+Olympique Lyonnais	Lyon
+OM	Marseille
+Olympique de Marseille	Marseille
+Sporting CP	Sporting
+Sporting Lisbon	Sporting
+Porto	FC Porto
+Ajax Amsterdam	Ajax
+PSV Eindhoven	PSV
+Feyenoord Rotterdam	Feyenoord
+Celtic FC	Celtic
+Rangers FC	Rangers
+Red Star	Crvena zvezda
+Crvena Zvezda	Crvena zvezda
+Shakhtar	Shakhtar Donetsk
+Zenit	Zenit St Petersburg
+Galatasaray SK	Galatasaray
+Fener	Fenerbahçe
+Besiktas	Beşiktaş
+Olympiacos	Olympiakos
+Panathinaikos FC	Panathinaikos

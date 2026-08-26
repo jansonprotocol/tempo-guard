@@ -223,7 +223,7 @@
  "Paksi SE": "Paksi",
  "Panathinaikos": "Panathinaikos",
  "Paphos FC": "Paphos",
- "Paris Saint-Germain FC": "Paris FC",
+ "Paris Saint-Germain FC": "Paris SG",
  "Partizan": "Partizan",
  "Penybont FC": "Penybont",
  "Petrocub": "Petrocub",
@@ -415,5 +415,7 @@
  "U. Craiova": "Craiova",
  "Plzeň": "Viktoria Plzen",
  "H. Be'er Sheva": "Beer-Sheva",
- "Borac": "Borac Banja Luka"
+ "Borac": "Borac Banja Luka",
+ "Paris Saint-Germain": "Paris SG",
+ "Olympique Lyonnais": "Lyon"
 }
