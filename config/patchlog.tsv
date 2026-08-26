@@ -2,6 +2,10 @@
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
 2026-08-26	interface	Live lanes state what the score has done to them — landed, needs N more, room for N, half gone — read from the ledger's own settlement, on every tab and in the README
+2026-08-26	engine	Domestic context measured and declined: the mismatch term passes on residuals (t 3.81, both windows) but loses hitrate as tips (86.4 → 85.9 / 85.7); table position, three-season stature and the reverse fixture all fall short
+2026-08-26	cups	SIGNED Elo gap shipped: the mu used |gap| only, pricing a strong home side exactly like a strong away side. Strongest term yet (t 4.95), improves both windows live — cup hitrate 83.3 → 84.3, pooled gap +0.1
+2026-08-26	cups	Level-aggregate second legs profiled (n 645): goals ordinary (2.74 v 2.67 usual), but home wins 49.1% and 21.7% go to extra time — decided at home, not through more goals
+2026-08-26	cups	Two-legged ties measured: the aggregate adds nothing the engine's own mu has not already priced (t ≈ 1) — the apparent lead effect was the strength gap that created the lead
 2026-08-26	interface	Two-legged ties get their aggregate printed beside the tip — first legs pulled from ESPN into config/first_legs.tsv, labelled context because the engine prices one match and cannot see the tie
 2026-08-26	interface	Live headroom corrected: a quarter line's half-win band counts as room (U4.25 at 1-0 is room for 3, half from the 3rd), not a loss
 2026-08-26	cups	Elo+form tested and declined: goal-tempo terms carry real signal (t 2.6, 2.1) but no window improves when graded — results-based form and Elo momentum are flat outright
