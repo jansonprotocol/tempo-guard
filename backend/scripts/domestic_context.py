@@ -110,7 +110,10 @@ def league_rows(code: str, n: int) -> list[dict]:
                             sh, sa = num_h / den_h, num_a / den_a
                     rev = met.get((season, frozenset((h, a))))
                     out.append(dict(
-                        d=r.date, dev=int(r.hg) + int(r.ag) - req.mu_total,
+                        d=r.date, code=code, hg=int(r.hg), ag=int(r.ag),
+                        mu=float(req.mu_total),
+                        lmu=float(req.league_mu or 0) or None,
+                        dev=int(r.hg) + int(r.ag) - req.mu_total,
                         ppg_signed=ppg_h - ppg_a,
                         ppg_gap=abs(ppg_h - ppg_a),
                         pos_signed=((pa - ph) / 10.0
@@ -153,18 +156,65 @@ def show(label, rows, term):
     print(f"  {label:22} n {n:5}  {b:+.4f} ± {se:.4f}   t {t:+5.2f}{flag}")
 
 
+def graded(rows, b, term="ppg_gap"):
+    """Re-select each tip offline with mu shifted by b * term, exactly as
+    market_select would, and grade it."""
+    from app.engine import market_select
+    from app.util.asian_lines import evaluate_market, hit_weight
+    out = []
+    for r in rows:
+        if r.get(term) is None or not r.get("lmu"):
+            continue
+        cfg = config.get(r["code"])
+        mu = r["mu"] + b * r[term]
+        best = None
+        for m, _e, p, _q in market_select.score_markets(mu, r["lmu"]):
+            if not market_select.playable(m, cfg.max_under_line,
+                                          cfg.min_over_line):
+                continue
+            if p < (cfg.min_win_prob or market_select.MIN_WIN_PROB):
+                continue
+            if best is None or p > best[1]:
+                best = (m, p)
+        if best is None:
+            continue
+        res = evaluate_market(best[0], r["hg"], r["ag"])
+        if res is None:
+            continue
+        out.append((best[1], hit_weight(res) >= 1.0))
+    return out
+
+
+def grade_show(label, g):
+    if len(g) < 100:
+        print(f"  {label:26} too few: {len(g)}")
+        return
+    k = sum(1 for x in g if x[1])
+    says = sum(x[0] for x in g) / len(g)
+    print(f"  {label:26} {len(g):5} tips  says {says*100:5.1f}  "
+          f"hit {k/len(g)*100:5.1f}  gap {(k/len(g)-says)*100:+5.1f}")
+
+
 def main() -> None:
+    import pickle
     args = sys.argv[1:]
     n = int(args[args.index("--n") + 1]) if "--n" in args else 300
-    rows = []
-    for code in LEAGUES:
-        try:
-            got = league_rows(code, n)
-        except Exception as exc:
-            print(f"{code}: FAILED {exc}", file=sys.stderr)
-            continue
-        print(f"{code}: {len(got)}", file=sys.stderr)
-        rows += got
+    cache = Path(args[args.index("--cache") + 1]) if "--cache" in args \
+        else None
+    if cache and cache.exists():
+        rows = pickle.loads(cache.read_bytes())
+    else:
+        rows = []
+        for code in LEAGUES:
+            try:
+                got = league_rows(code, n)
+            except Exception as exc:
+                print(f"{code}: FAILED {exc}", file=sys.stderr)
+                continue
+            print(f"{code}: {len(got)}", file=sys.stderr)
+            rows += got
+        if cache:
+            cache.write_bytes(pickle.dumps(rows))
     rows.sort(key=lambda r: r["d"])
     print(f"\n{len(rows)} domestic fixtures, residual against the engine's "
           f"own mu\n")
@@ -174,6 +224,34 @@ def main() -> None:
         show("all", rows, term)
         show("older half", [r for r in rows if r["d"] < mid], term)
         show("newer half", [r for r in rows if r["d"] >= mid], term)
+
+    if "--grade" not in sys.argv:
+        return
+
+    # WHY would a mismatch add goals the rates missed? The suspect is
+    # shrinkage: MU_SHRINK pulls every fixture toward the league mean, and
+    # a lopsided fixture is exactly the one that sits far from it. If the
+    # residual is concentrated where mu already departs from the mean,
+    # the gap term is really a shrinkage correction.
+    print("\nMECHANISM — residual by how far mu sits from the league mean")
+    have = [r for r in rows if r.get("lmu")]
+    have.sort(key=lambda r: abs(r["mu"] - r["lmu"]))
+    third = len(have) // 3
+    for lab, part in (("mu near the mean", have[:third]),
+                      ("middling", have[third:2 * third]),
+                      ("mu far from the mean", have[2 * third:])):
+        show(lab, part, "ppg_gap")
+
+    # The bar: does it survive as TIPS, in both windows?
+    print("\nGRADED — the live shape, betas frozen from the other window")
+    old_h = [r for r in rows if r["d"] < mid]
+    new_h = [r for r in rows if r["d"] >= mid]
+    for lab, train, test in (("older -> newer", old_h, new_h),
+                             ("newer -> older", new_h, old_h)):
+        got = stats(train, "ppg_gap")
+        b = got[1] if got else 0.0
+        grade_show(f"{lab}  as-is", graded(test, 0.0))
+        grade_show(f"{lab}  + gap {b:+.3f}", graded(test, b))
 
 
 if __name__ == "__main__":
