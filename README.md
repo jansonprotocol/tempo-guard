@@ -994,6 +994,21 @@ live shape it improves both: hit **81.8 → 82.5** and **83.9 → 85.2**.
 Shipped as `B3`; the wired path now grades **84.3% pooled with a +0.1
 gap** (24-25 −1.2, 25-26 +1.4).
 
+**What a level tie actually looks like** (645 second legs at x-x, 24% of
+all second legs). The goals are ordinary — **2.74 against the usual
+2.67**, +0.07 and statistically nothing; the most common scoreline
+bucket is three goals (24.7%), a blank is rare (8.1%). What is NOT
+ordinary is the result: the home side wins **49.1%** against the usual
+~45%, the away side 29.1%, and **21.7% are still level after 90 minutes
+and go to extra time**. Level ties are decided at home more often than
+normal, but through 1-0s and 2-1s rather than through more goals — which
+is why the totals lane sees nothing. Practical corollary: in a fifth of
+these the memorable goals arrive in extra time, after every over/under
+has already settled on the 90 (Sabah 5-2 on 25 Aug was 3-2 at the
+whistle). The one cell matching the low-block intuition — level tie with
+the stronger club hosting — runs 2.37 goals, −0.34 below usual, but on
+n=38 at ±0.25 that is suggestive, not established.
+
 **The tie itself adds nothing.** Second legs were also cut by aggregate
 state against the engine's own mu: home 2+ ahead +0.25 (t 1.08), 2+
 behind −0.14 (t −1.01), either side 2+ ahead −0.09 / +0.12 across
