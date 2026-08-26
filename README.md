@@ -4,6 +4,8 @@
 
 # ATHENA — TEMPO GUARD · BETA STAGE 2
 
+**📱 Live board: [tempo-guard.vercel.app](https://tempo-guard.vercel.app)** — the same derived data as this page, rendered as an app; redeployed from `web/` on every merge.
+
 
 ## CURRENT CONFIRMED HITRATE: 82.8%
 
