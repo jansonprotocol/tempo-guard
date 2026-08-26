@@ -971,6 +971,19 @@ operationally enough. Per-competition intercepts were tried and rejected
 country coefficient was considered and set aside: our bridge ratings
 already measure it, club-level and in goals.
 
+**Elo + form: tested and declined** (`cup_elo_form.py`, 26 Aug). Since
+Elo rates clubs by results, it cannot tell a 1-0 pair from a 3-2 pair —
+so goal TEMPO should be orthogonal to it. It is: domestic goals-per-game
+(+0.429 ± 0.165, t 2.60) and own-cup goal totals (+0.112 ± 0.053, t 2.13)
+both carry signal, while every results-based term is flat (domestic PPG
+t 1.15, PPG mismatch t 0.38, 90-day Elo momentum t −0.11 — Elo levels
+already price momentum). But signal is not edge: graded as tips, the
+terms improve NO window (−0.6→−0.8 and −6.8→−7.0; −1.2→−2.9 and
+−1.4→−1.2). A term worth 0.4–2.7% of residual variance moves mu by
+hundredths of a goal, less than the distance between rungs, so it
+reshuffles selection at the margin and mostly picks worse. The cup lane
+stays strength-only.
+
 **WIRED IN, PROBATIONARY — 25 Aug.** The deciding test was a true dress
 rehearsal: the 202 knockout fixtures played after the snapshot's last day
 (Jan–May 2026), priced exactly as the live lane would — frozen Elo,
