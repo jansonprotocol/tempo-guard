@@ -359,6 +359,10 @@ def main() -> None:
     f = load()
     print(f"board rendered: {len(f)} fixtures, "
           f"{sum(1 for x in f if not x.settled)} pending")
+    # The web app derives from the same sources; rendering them together is
+    # what keeps the page and the README incapable of disagreeing.
+    from scripts import webapp
+    webapp.main()
 
 
 if __name__ == "__main__":
