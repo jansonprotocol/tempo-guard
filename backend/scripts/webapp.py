@@ -93,6 +93,35 @@ def _bets_rows() -> list[dict]:
     return out
 
 
+# The store carries era-split club names — "Real Madrid", "Real Madrid CF"
+# and "Real Madrid C.F." are three rows of the same club, because different
+# source files spell it differently. The board never cared (each fixture
+# resolves its own frame), but a lookup form must, or El Clásico hides under
+# a spelling the visitor did not type. So the bank is keyed on the engine's
+# own canonical form, with every spelling aliased to it.
+_JS_STOP = {"fc", "fk", "cf", "sc", "ac", "afc", "bk", "if", "sk",
+            "club", "cp"}
+
+
+def _jsnorm(s: str) -> str:
+    """Mirror of the page's norm() — the alias map is keyed by it."""
+    import unicodedata
+    s = unicodedata.normalize("NFD", s)
+    s = "".join(c for c in s if not unicodedata.combining(c)).lower()
+    s = re.sub(r"[.\-'()/]", " ", s)
+    return " ".join(w for w in s.split() if w not in _JS_STOP)
+
+
+def _key(name: str) -> str:
+    """One club, one key. The engine's canonical form, minus the stray
+    single letters that punctuation leaves behind ("real madrid c f")."""
+    from app.data.features import _canonical
+    k = _canonical(name)
+    trimmed = " ".join(t for t in k.split()
+                       if not (len(t) == 1 and t.isalpha()))
+    return trimmed or k
+
+
 _READS_CACHE = ROOT / "config" / "reads_cache.json"
 
 
@@ -337,11 +366,29 @@ def main() -> None:
             dst["teams"] += bank[q]["teams"]
             dst["matches"] += bank[q]["matches"]
             del bank[q]
+    # Canonical keys: one club, one identity, every spelling aliased to
+    # it. Display names follow the club's most recent spelling, so the
+    # autofill offers today's name rather than an archived one.
+    alias, newest = {}, {}
     for comp in bank.values():
-        comp["teams"] = sorted(set(comp["teams"]))
+        for m in comp["matches"]:
+            for fld, side in (("h", "kh"), ("a", "ka")):
+                k = _key(m[fld])
+                m[side] = k
+                alias[_jsnorm(m[fld])] = k
+                alias.setdefault(_jsnorm(k), k)
+                if m["d"] >= newest.get(k, ("", ""))[0]:
+                    newest[k] = (m["d"], m[fld])
+    for comp in bank.values():
+        shown = {}
+        for nm in comp["teams"]:
+            k = _key(nm)
+            alias[_jsnorm(nm)] = k
+            shown[k] = newest.get(k, ("", nm))[1]
+        comp["teams"] = sorted(set(shown.values()))
         comp["matches"].sort(key=lambda m: m["d"])
     (OUT.parent / "matchbank.json").write_text(
-        _json.dumps(bank, ensure_ascii=False))
+        _json.dumps(dict(comps=bank, alias=alias), ensure_ascii=False))
 
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -577,7 +624,7 @@ function route() {{
 }}
 addEventListener("hashchange", route); route();
 
-let BANK = null, LOOKUP = null;
+let BANK = null, LOOKUP = null, ALIAS = null;
 const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .toLowerCase().replace(/[.\-'()\/]/g, " ").split(/\s+/)
   .filter(w => w && !["fc","fk","cf","sc","ac","afc","bk","if","sk",
@@ -600,12 +647,13 @@ function refreshLeagues() {{
 }}
 async function ensureBank() {{
   if (BANK) return;
-  BANK = await (await fetch("matchbank.json")).json();
+  const raw = await (await fetch("matchbank.json")).json();
+  BANK = raw.comps; ALIAS = raw.alias;
   LOOKUP = {{}}; DATES = {{}};
   for (const [code, comp] of Object.entries(BANK)) {{
     DATES[code] = new Set();
     for (const m of comp.matches) {{
-      const k = code + "|" + norm(m.h) + "|" + norm(m.a);
+      const k = code + "|" + m.kh + "|" + m.ka;
       (LOOKUP[k] = LOOKUP[k] || []).push(m);
       DATES[code].add(m.d);
     }}
@@ -657,11 +705,11 @@ async function askAthena() {{
   }}
   // Both venue orders, every meeting Athena has run; without a league,
   // every competition is searched.
+  const kA = ALIAS[norm(A)] || norm(A), kB = ALIAS[norm(B)] || norm(B);
   const codes = code ? [code] : Object.keys(BANK);
   const all = [];
   for (const c of codes)
-    for (const k of [c + "|" + norm(A) + "|" + norm(B),
-                     c + "|" + norm(B) + "|" + norm(A)])
+    for (const k of [c + "|" + kA + "|" + kB, c + "|" + kB + "|" + kA])
       for (const m of LOOKUP[k] || []) all.push([m, BANK[c]]);
   all.sort((x, y) => x[0].d.localeCompare(y[0].d));
   if (!all.length) {{
