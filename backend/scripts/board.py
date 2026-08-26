@@ -361,6 +361,149 @@ def rewrite(text: str) -> str:
             + "\n".join(render_bets()) + "\n" + text[e2:])
 
 
+def verify(quiet: bool = False) -> None:
+    """Every fixture, on every surface, every time.
+
+    The board has gone wrong twice in ways a human eye missed: a derived
+    block silently kept a stale copy of the data, and a generated script
+    failed to parse so the app rendered blank while the file still looked
+    fine. Both would have been caught by counting. So the renderer counts:
+    each fixture must appear in the README and in the app tab its state
+    puts it in, the tallies must match the fixtures they claim to
+    summarise, the ledger must carry every bet, and the app's script must
+    parse. A mismatch raises — a wrong board is worse than no board.
+    """
+    import json
+    import shutil
+    import subprocess
+    import tempfile
+
+    fixtures = load()
+    readme = README.read_text()
+    app_path = ROOT / "web" / "index.html"
+    app = app_path.read_text() if app_path.exists() else ""
+    bad: list[str] = []
+
+    # Each surface escapes its own way — the README keeps apostrophes,
+    # the app writes them as &#x27; — so a name is looked for in the form
+    # that surface would have written it, not in one canonical spelling.
+    import html as _h
+
+    def in_readme(name: str) -> bool:
+        return _html(name) in readme
+
+    def in_app(name: str, where: str) -> bool:
+        return _h.escape(name) in where or _html(name) in where
+
+    playable = [f for f in fixtures if not f.settled
+                and (f.lane(1) or f.lane(2))]
+    pending = [f for f in fixtures if not f.settled]
+    done = [f for f in fixtures if f.settled]
+
+    # 1. The README carries every fixture, whatever its state.
+    for f in fixtures:
+        if not in_readme(f.teams):
+            bad.append(f"README is missing {f.teams!r}")
+
+    # 2. The header tallies describe the fixtures they sit above.
+    t_lane, p_lane = _tallies(fixtures)
+    for which, (hits, n) in t_lane.items():
+        if n and f"{hits:3} / {n:<3}" not in readme:
+            bad.append(f"README header lost the Tip {which} tally "
+                       f"({hits}/{n})")
+
+    # 3. Every bet in the ledger reaches the placed-bets block.
+    from scripts import ledger
+    bets = [ln.split("\t")[0] for ln in ledger.BETS.read_text().splitlines()
+            if ln.strip() and not ln.startswith("#")]
+    for name in set(bets):
+        if not in_readme(name):
+            bad.append(f"placed-bets block is missing {name!r}")
+
+    if app:
+        # 4. The app's five pages and four tabs still exist.
+        for pid in ("p-home", "p-sessions", "p-retrosim", "p-patches",
+                    "p-about"):
+            if f'id="{pid}"' not in app:
+                bad.append(f"app page {pid} vanished")
+        panes = {}
+        for pid in ("t-playable", "t-bets", "t-lanes", "t-done"):
+            if f'id="{pid}"' not in app:
+                bad.append(f"app tab {pid} vanished")
+                continue
+            i = app.index(f'id="{pid}"')
+            ends = [x for x in (app.find('class="tabpane"', i + 1),
+                                app.find('<div id="learn"', i + 1),
+                                app.find("</section>", i + 1)) if x > 0]
+            panes[pid] = app[i:min(ends)] if ends else app[i:]
+
+        # 5. Each fixture appears in the tab its state puts it in — and a
+        #    playable one appears in BOTH, since Playable filters the
+        #    Athena lanes rather than removing from them.
+        for pid, want in (("t-playable", playable), ("t-lanes", pending),
+                          ("t-done", done)):
+            body = panes.get(pid, "")
+            for f in want:
+                if not in_app(f.teams, body):
+                    bad.append(f"app tab {pid} is missing {f.teams!r}")
+            got = body.count('<details class="card')
+            if got != len(want):
+                bad.append(f"app tab {pid} shows {got} cards, "
+                           f"expected {len(want)}")
+
+        # 6. The ledger reaches the app too.
+        for name in set(bets):
+            if not in_app(name, panes.get("t-bets", "")):
+                bad.append(f"app Found bets is missing {name!r}")
+
+        # 7. A live fixture must say what the score did to its lanes.
+        from scripts import liveline
+        for f in fixtures:
+            if f.settled or not f.status or not liveline.score_of(f.status):
+                continue
+            for which in (1, 2):
+                cell = f.tip1 if which == 1 else f.tip2
+                if cell.strip() in ("", "—", "— none"):
+                    continue
+                state = liveline.progress(cell, f.teams, f.status)
+                if state and state not in app:
+                    bad.append(f"app lost the live state {state!r} for "
+                               f"{f.teams!r}")
+
+        # 8. The generated script parses. A syntax error hides every page.
+        node = shutil.which("node")
+        if node and "<script>" in app:
+            js = app[app.index("<script>") + 8:app.rindex("</script>")]
+            with tempfile.NamedTemporaryFile("w", suffix=".js",
+                                             delete=False) as fh:
+                fh.write(js)
+                path = fh.name
+            r = subprocess.run([node, "--check", path],
+                               capture_output=True, text=True)
+            if r.returncode != 0:
+                bad.append(f"app script does not parse: "
+                           f"{r.stderr.strip().splitlines()[-1]}")
+
+        # 9. The lookup bank is intact and shaped as the page expects.
+        bank_path = ROOT / "web" / "matchbank.json"
+        if bank_path.exists():
+            try:
+                bank = json.loads(bank_path.read_text())
+                for key in ("comps", "alias", "names"):
+                    if key not in bank:
+                        bad.append(f"matchbank.json lost {key!r}")
+            except Exception as exc:
+                bad.append(f"matchbank.json is unreadable: {exc}")
+
+    if bad:
+        raise SystemExit("BOARD VERIFY FAILED\n  " + "\n  ".join(bad))
+    if not quiet:
+        print(f"verified: {len(fixtures)} fixtures across README and "
+              f"{'app' if app else 'README only'} "
+              f"({len(playable)} playable, {len(pending)} pending, "
+              f"{len(done)} completed, {len(set(bets))} bets)")
+
+
 def main() -> None:
     text = README.read_text()
     new = rewrite(text)
@@ -369,9 +512,11 @@ def main() -> None:
             print("Board is STALE. Run: python scripts/board.py")
             sys.exit(1)
         print("board matches fixtures.tsv")
+        verify()
         return
     if new == text:
         print("board already current")
+        verify()
         return
     README.write_text(new)
     f = load()
@@ -381,6 +526,7 @@ def main() -> None:
     # what keeps the page and the README incapable of disagreeing.
     from scripts import webapp
     webapp.main()
+    verify()
 
 
 if __name__ == "__main__":

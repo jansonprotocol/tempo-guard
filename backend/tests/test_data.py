@@ -990,6 +990,16 @@ def test_cup_over_debit_is_scoped_to_cup_overs():
     assert club_elo.stated_p("ENG-PL", "O1.5", 0.80) == 0.80    # domestic
 
 
+def test_board_verify_passes_on_the_committed_board():
+    """The renderer's own hard lock: every fixture present on every
+    surface, tallies matching, ledger complete, app script parsing. It
+    runs inside board.py on every path; this pins that the committed
+    board satisfies it, so a broken render cannot be committed green."""
+    from scripts import board
+
+    board.verify(quiet=True)
+
+
 def test_cup_probability_floor_is_raised():
     """The cup lane selects hitrate-first: min_win_prob 0.82 on all six cup
     codes flips the mix to the calibrated base rungs (hit ~80 -> ~83 across
