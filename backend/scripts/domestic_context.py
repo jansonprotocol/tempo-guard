@@ -28,7 +28,31 @@ Reported as coefficient ± standard error against the mu residual, then
 split into an older and a newer half. The bar is the project's usual:
 significant, stable, and present in both windows, or it does not ship.
 
-Usage:  python scripts/domestic_context.py [--n 300]
+VERDICT (26 Aug 2026): one term clears the residual bar and still does
+not ship — the fourth "signal without edge" of the day.
+
+    ppg_gap      +0.241 ± 0.063  t 3.81   windows t 3.17 / 2.23  <-- passes
+    pos_signed   +0.103 ± 0.035  t 2.94   windows t 2.42 / 1.75
+    stature      +0.118 ± 0.057  t 2.06   windows t 1.17 / 1.79
+    ppg_signed   +0.094 ± 0.039  t 2.40   windows t 1.92 / 1.46
+    reverse      +0.025 ± 0.019  t 1.32   nothing
+
+Graded as tips in the live shape, the mismatch term LOSES hitrate in
+both directions — 86.4 -> 85.9 and 86.4 -> 85.7 — while moving the gap
+by a tenth either way. The residual is real; the tips are not better for
+it. The reason is visible in the same table: the domestic board already
+grades 86.4% against a stated 85.2-85.6, so it is mildly UNDER-confident
+already. Pushing mu up on mismatched fixtures shifts selection toward
+looser rungs, and those pick worse than the correction gains.
+
+The shrinkage hypothesis is also refuted. If MU_SHRINK were
+over-correcting the extremes, the residual would concentrate where mu
+sits far from the league mean. It does not: near the mean +0.116
+(t 1.06), middling +0.358 (t 3.08), far +0.251 (t 2.40) — strongest in
+the MIDDLE. Whatever the mismatch term knows, it is not a shrink error.
+
+Usage:  python scripts/domestic_context.py [--n 300] [--grade]
+                                           [--cache rows.pkl]
 """
 from __future__ import annotations
 

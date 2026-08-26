@@ -1071,6 +1071,39 @@ Beyond 0.82 the dial saturates; ~83 is this lane's honest ceiling, a
 shade under domestic, paid for in shorter under prices. Domestic floors
 untouched, pinned by a test.
 
+#### MEASURED AND DECLINED — the domestic context terms
+
+B3's success in cups raised the obvious question: does the LEAGUE mu miss
+the same kind of thing? (`domestic_context.py`, 4,189 fixtures across 16
+leagues, residuals against the engine's own mu.) One term clears the
+two-window bar — **ppg_gap**, how lopsided the matchup is in recent form,
++0.241 ± 0.063 (t 3.81), holding at t 3.17 and 2.23 in the two halves.
+The engine under-predicts goals when a strong side meets a weak one, by
+roughly +0.36 on a typical mismatch.
+
+It still does not ship, because graded as tips it LOSES hitrate in both
+directions: **86.4 → 85.9** and **86.4 → 85.7**. The same table shows
+why — the domestic board already grades 86.4% against a stated 85.2-85.6,
+so it is mildly under-confident already; pushing mu up on mismatched
+fixtures shifts selection toward looser rungs that pick worse than the
+correction gains. Signal without edge, the same verdict the cup tempo
+terms got.
+
+The shrinkage hypothesis was also refuted: if `MU_SHRINK` were
+over-correcting extremes, the residual would sit where mu is far from
+the league mean. It does not — near the mean +0.116 (t 1.06), middling
++0.358 (t 3.08), far +0.251 (t 2.40), strongest in the MIDDLE.
+
+The other candidates fall short outright: table position is one window
+shy (t 2.42 / 1.75), three-season **stature** — "Barcelona is always top
+three", which a rolling window forgets after a bad month — is suggestive
+but neither window alone (1.17 / 1.79, and it needs three prior seasons
+so coverage is thin at 2,553), the signed gap is weak exactly as
+predicted (domestic rates are already venue-split, so they know which
+side is better), and this season's earlier meeting between the same
+clubs is nothing at all (t 1.32) — the same answer the two-legged tie
+question got from an entirely separate sample.
+
 #### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
 
 The team-lane defense blend invited the obvious sequel: `mu_total` is also
