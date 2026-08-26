@@ -272,6 +272,27 @@ def _learn() -> str:
             f'behavior:\'smooth\'}})">\u2191 Back to top</button></div>')
 
 
+def _check_js(page: str) -> None:
+    """A syntax error in the generated script blanks the whole app — the
+    router never runs, so every page stays hidden. This page is written by
+    Python f-strings, where one collapsed backslash does exactly that, so
+    the JS is parsed before it can ship."""
+    import shutil
+    import subprocess
+    import tempfile
+    node = shutil.which("node")
+    if not node:
+        return
+    js = page[page.index("<script>") + 8:page.rindex("</script>")]
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as fh:
+        fh.write(js)
+        path = fh.name
+    r = subprocess.run([node, "--check", path], capture_output=True,
+                       text=True)
+    if r.returncode != 0:
+        raise SystemExit(f"generated JS is broken:\n{r.stderr}")
+
+
 def main() -> None:
     fixtures = board.load()
     t, p = board._tallies(fixtures)
@@ -282,7 +303,10 @@ def main() -> None:
     reads = _reads(fixtures)
     pending = [f for f in fixtures if not f.settled]
     playable = [f for f in pending if f.lane(1) or f.lane(2)]
-    waiting = [f for f in pending if f not in playable]
+    # "Athena lanes" is everything the engine published for this run, the
+    # playable ones included — the playable tab is a filter on top of it,
+    # not a slice taken out of it.
+    waiting = pending
     done = [f for f in fixtures if f.settled][::-1]
 
     def tile(label, value, sub):
@@ -418,8 +442,12 @@ def main() -> None:
         shown |= {m["ka"] for m in comp["matches"]}
         comp["teams"] = sorted({prefer.get(g, g) for g in shown})
         comp["matches"].sort(key=lambda m: m["d"])
+    live = {g for comp in bank.values() for m in comp["matches"]
+            for g in (m["kh"], m["ka"])}
+    names = {g: prefer.get(g, g) for g in live}
     (OUT.parent / "matchbank.json").write_text(
-        _json.dumps(dict(comps=bank, alias=alias), ensure_ascii=False))
+        _json.dumps(dict(comps=bank, alias=alias, names=names),
+                    ensure_ascii=False))
 
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -469,6 +497,17 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   var(--edge); border-radius:8px; color:var(--tx); padding:8px 10px;
   font:inherit; font-size:13px; }}
 .askbtn {{ margin:0; }}
+.combo {{ position:relative; }}
+.combo input {{ width:100%; }}
+.sug {{ display:none; position:absolute; z-index:20; left:0; right:0;
+  top:calc(100% + 3px); background:#111622; border:1px solid var(--edge);
+  border-radius:8px; max-height:230px; overflow-y:auto; }}
+.sug.on {{ display:block; }}
+.sug div {{ padding:9px 11px; cursor:pointer; font-size:13px;
+  border-bottom:1px solid var(--edge); }}
+.sug div:last-child {{ border-bottom:0; }}
+.sug div:hover, .sug div.pick {{ background:var(--card); }}
+.sug .why {{ color:var(--dim); font-size:11px; }}
 #ask-out {{ margin-top:10px; }}
 #ask-out .grid {{ max-width:460px; }}
 .askerr {{ color:#e07a6a; font-size:13px; padding:8px 2px; }}
@@ -545,13 +584,14 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div class="askrow">
    <input type="date" id="ask-d">
    <select id="ask-lg"><option value="">League…</option></select>
-   <input id="ask-a" list="dl-a" placeholder="Team A"
-    onfocus="ensureBank()">
-   <input id="ask-b" list="dl-b" placeholder="Team B"
-    onfocus="ensureBank()">
+   <div class="combo"><input id="ask-a" placeholder="Team A"
+    autocomplete="off" onfocus="ensureBank()"><div class="sug"
+    id="sug-a"></div></div>
+   <div class="combo"><input id="ask-b" placeholder="Team B"
+    autocomplete="off" onfocus="ensureBank()"><div class="sug"
+    id="sug-b"></div></div>
    <button class="btn askbtn" onclick="askAthena()">Enter</button>
   </div>
-  <datalist id="dl-a"></datalist><datalist id="dl-b"></datalist>
   <div id="ask-out"></div>
  </div>
  <div class="tabs">
@@ -654,13 +694,18 @@ function route() {{
     a.classList.toggle("on", a.dataset.t === tab);
 }}
 addEventListener("hashchange", route); route();
+window.addEventListener("error", () => {{
+  // A broken form must never hide the board: re-run the router and let
+  // the failure stay local to Ask Athena.
+  try {{ route(); }} catch (e) {{}}
+}});
 
-let BANK = null, LOOKUP = null, ALIAS = null;
+let BANK = null, LOOKUP = null, ALIAS = null, NAMES = null, DATES = null;
 const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .toLowerCase().replace(/[.\-'()\/]/g, " ").split(/\s+/)
   .filter(w => w && !["fc","fk","cf","sc","ac","afc","bk","if","sk",
                       "club","cp"].includes(w)).join(" ");
-let DATES = null;
+
 function refreshLeagues() {{
   if (!BANK) return;
   const sel = document.getElementById("ask-lg");
@@ -674,12 +719,11 @@ function refreshLeagues() {{
     o.value = code; o.textContent = comp.name; sel.appendChild(o);
   }}
   sel.value = keep;
-  if (sel.value !== keep) sel.dispatchEvent(new Event("change"));
 }}
 async function ensureBank() {{
   if (BANK) return;
   const raw = await (await fetch("matchbank.json")).json();
-  BANK = raw.comps; ALIAS = raw.alias;
+  BANK = raw.comps; ALIAS = raw.alias; NAMES = raw.names;
   LOOKUP = {{}}; DATES = {{}};
   for (const [code, comp] of Object.entries(BANK)) {{
     DATES[code] = new Set();
@@ -689,38 +733,105 @@ async function ensureBank() {{
       DATES[code].add(m.d);
     }}
   }}
-  refreshLeagues();
-  fillTeamLists();
-}}
-document.getElementById("ask-d").addEventListener("change",
-  async () => {{ await ensureBank(); refreshLeagues(); }});
-document.getElementById("ask-lg").addEventListener("focus", ensureBank);
-function fillTeamLists() {{
-  if (!BANK) return;
-  const comp = BANK[document.getElementById("ask-lg").value];
-  const teams = comp ? comp.teams
-    : [...new Set(Object.values(BANK).flatMap(c => c.teams))].sort();
-  for (const id of ["dl-a", "dl-b"]) {{
-    const dl = document.getElementById(id); dl.innerHTML = "";
-    for (const tm of teams) {{
-      const o = document.createElement("option");
-      o.value = tm; dl.appendChild(o);
-    }}
+  // Every spelling and nickname a club answers to, for the suggestions.
+  SEARCH = {{}};
+  for (const [txt, key] of Object.entries(ALIAS)) {{
+    if (!NAMES[key]) continue;
+    (SEARCH[key] = SEARCH[key] || {{name: NAMES[key], txt: []}}).txt.push(txt);
   }}
+  refreshLeagues();
 }}
-document.getElementById("ask-lg").addEventListener("change", fillTeamLists);
+let SEARCH = {{}};
+
+function keysInScope() {{
+  const code = document.getElementById("ask-lg").value;
+  if (!code || !BANK[code]) return null;
+  const s = new Set();
+  for (const m of BANK[code].matches) {{ s.add(m.kh); s.add(m.ka); }}
+  return s;
+}}
+function suggest(which) {{
+  const inp = document.getElementById("ask-" + which);
+  const box = document.getElementById("sug-" + which);
+  const q = norm(inp.value);
+  if (!BANK || !q) {{ box.classList.remove("on"); return; }}
+  const scope = keysInScope();
+  const hits = [];
+  for (const [key, e] of Object.entries(SEARCH)) {{
+    if (scope && !scope.has(key)) continue;
+    const exact = e.txt.some(x => x.startsWith(q));
+    const loose = exact || e.txt.some(x => x.includes(q));
+    if (loose) hits.push([exact ? 0 : 1, e.name.length, e.name, key]);
+  }}
+  hits.sort();
+  box.textContent = "";
+  for (const h of hits.slice(0, 8)) {{
+    const row = document.createElement("div");
+    row.textContent = h[2];
+    // mousedown, not click: blur would close the list first on desktop.
+    row.addEventListener("mousedown", ev => {{
+      ev.preventDefault(); pick(which, h[2]);
+    }});
+    box.appendChild(row);
+  }}
+  box.classList.toggle("on", hits.length > 0);
+}}
+function pick(which, name) {{
+  const inp = document.getElementById("ask-" + which);
+  inp.value = name;
+  document.getElementById("sug-" + which).classList.remove("on");
+  maybeAuto();
+}}
+let TYPING = null;
+// Typed names fire only once both actually resolve to a club Athena
+// knows, and only after typing stops — no lookups mid-word.
+function autoIfResolved() {{
+  const A = document.getElementById("ask-a").value.trim();
+  const B = document.getElementById("ask-b").value.trim();
+  if (A && B && ALIAS[norm(A)] && ALIAS[norm(B)]) askAthena();
+}}
+for (const w of ["a", "b"]) {{
+  const inp = document.getElementById("ask-" + w);
+  inp.addEventListener("input", () => {{
+    suggest(w);
+    clearTimeout(TYPING);
+    TYPING = setTimeout(autoIfResolved, 450);
+  }});
+  inp.addEventListener("blur", () => setTimeout(
+    () => document.getElementById("sug-" + w).classList.remove("on"), 150));
+  inp.addEventListener("keydown", e => {{
+    if (e.key === "Enter") {{
+      document.getElementById("sug-" + w).classList.remove("on");
+      askAthena();
+    }}
+  }});
+}}
+// Typing rarely ends with a button press on a phone, so the form answers
+// as soon as it has enough: both teams, or a league and a date.
+function maybeAuto() {{
+  const A = document.getElementById("ask-a").value.trim();
+  const B = document.getElementById("ask-b").value.trim();
+  const code = document.getElementById("ask-lg").value;
+  const D = document.getElementById("ask-d").value;
+  if ((A && B) || (code && D)) askAthena();
+}}
+document.getElementById("ask-d").addEventListener("change", async () => {{
+  await ensureBank(); refreshLeagues(); maybeAuto();
+}});
+document.getElementById("ask-lg").addEventListener("change", maybeAuto);
+
 function askCard(m, comp, note) {{
   const mark = m.mark ? m.mark + " " + (m.score || "") :
     (m.src === "board" ? "🕑 on the board" : "");
   let body = "";
   if (m.t2) body += '<div class="lane"><span class="which">Tip 2</span> '
     + m.t2.replaceAll(" · ", "<br>") + "</div>";
-  return '<div class="grid"><div class="card play"><div class="teams">'
+  return '<div class="card play"><div class="teams">'
     + m.h + " v " + m.a + '</div><div class="meta">' + mark + " · "
     + m.d + " · " + comp.name + (note ? " · " + note : "") + "</div>"
     + (m.kw ? '<div class="kw">🧠 ' + m.kw + "</div>" : "")
     + '<div class="lane pl"><span class="which">Tip 1</span> '
-    + m.tip.replaceAll(" · ", "<br>") + "</div>" + body + "</div></div>";
+    + m.tip.replaceAll(" · ", "<br>") + "</div>" + body + "</div>";
 }}
 async function askAthena() {{
   await ensureBank();
@@ -729,13 +840,30 @@ async function askAthena() {{
   const A = document.getElementById("ask-a").value.trim();
   const B = document.getElementById("ask-b").value.trim();
   const D = document.getElementById("ask-d").value;
-  if (!A || !B) {{
-    out.innerHTML = '<div class="askerr">Fill in both teams first — '
-      + "league and date narrow the search but are optional.</div>";
+  const wrap = h => '<div class="grid">' + h + "</div>";
+
+  // League + date, no teams: that day's card set for the competition.
+  if (!A && !B) {{
+    if (!code || !D) {{
+      out.innerHTML = '<div class="askerr">Fill in both teams, or pick a '
+        + "league and a date to see that day's matches.</div>";
+      return;
+    }}
+    const day = BANK[code].matches.filter(m => m.d === D);
+    out.innerHTML = day.length
+      ? '<div class="dim" style="margin-bottom:6px">' + day.length
+        + " match" + (day.length > 1 ? "es" : "") + " — " + BANK[code].name
+        + " on " + D + ":</div>"
+        + wrap(day.map(m => askCard(m, BANK[code], "")).join(""))
+      : '<div class="askerr">Athena has nothing for ' + BANK[code].name
+        + " on " + D + ".</div>";
     return;
   }}
-  // Both venue orders, every meeting Athena has run; without a league,
-  // every competition is searched.
+  if (!A || !B) {{
+    out.innerHTML = '<div class="askerr">One team to go — fill both, or '
+      + "clear them and pick a league and date instead.</div>";
+    return;
+  }}
   const kA = ALIAS[norm(A)] || norm(A), kB = ALIAS[norm(B)] || norm(B);
   const codes = code ? [code] : Object.keys(BANK);
   const all = [];
@@ -746,28 +874,32 @@ async function askAthena() {{
   if (!all.length) {{
     out.innerHTML = '<div class="askerr">Athena has not run this matchup. '
       + "The board carries what the operator feeds in, and past matches "
-      + "cover roughly each competition's last 200 games — try the "
-      + "suggestions while typing.</div>";
+      + "cover roughly each competition's last 200 games.</div>";
     return;
   }}
-  let show = all, head = "";
+  // A date is a filter, not a hint: it narrows strictly, and when nothing
+  // lands on it the answer says so and offers the dates that exist.
   if (D) {{
     const exact = all.filter(x => x[0].d === D);
-    if (exact.length) show = exact;
-    else head = '<div class="dim" style="margin-bottom:6px">Not on ' + D
-      + " — showing every meeting Athena has run:</div>";
-  }} else {{
-    head = '<div class="dim" style="margin-bottom:6px">' + all.length
-      + " meeting" + (all.length > 1 ? "s" : "") + " on record — newest "
-      + "last:</div>";
+    if (exact.length) {{
+      out.innerHTML = wrap(exact.map(x => askCard(x[0], x[1], "")).join(""));
+    }} else {{
+      out.innerHTML = '<div class="askerr">No ' + A + " v " + B + " on "
+        + D + ". Athena has run it on: "
+        + all.map(x => x[0].d).join(", ") + ".</div>";
+    }}
+    return;
   }}
-  out.innerHTML = head
-    + show.map(x => askCard(x[0], x[1], "")).join("");
+  out.innerHTML = '<div class="dim" style="margin-bottom:6px">' + all.length
+    + " meeting" + (all.length > 1 ? "s" : "") + " on record — newest "
+    + "last:</div>"
+    + wrap(all.map(x => askCard(x[0], x[1], "")).join(""));
 }}
 </script>
 </body></html>"""
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(page)
+    _check_js(page)
     print(f"web app rendered: {OUT.relative_to(OUT.parents[2])} "
           f"({len(page) // 1024}KB)")
 
