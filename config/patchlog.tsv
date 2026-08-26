@@ -1,0 +1,20 @@
+# The patch log: what changed in the engine and when, one line each.
+# Typed by hand like a changelog is; read by scripts/webapp.py for the
+# Patches page. Newest first. Columns: date, area, note.
+2026-08-26	interface	Board shipped as a web app (Vercel); README and app render from the same sources in one command
+2026-08-26	ledger	Cashout column finally read: a position cashed at stake settles at 1.00x immediately, never on the later result
+2026-08-26	cups	Playable check: tightening cup EDGE hurts (winner's curse); tightening PROBABILITY helps — p≥87% lifts cup playable lanes to ~91-92% both seasons
+2026-08-26	rules	Rule 6, the line-translation ladder: softer line first, printed line second, harder half-line only at buy≥ +0.07-0.10
+2026-08-26	cups	Probability floor 0.82 on all six cup codes: hitrate-first selection, ~80→~83 at zero volume cost
+2026-08-26	cups	Cup over-tips measured 3.5 points hot in both seasons, flat across bands — OVER_SAYS_DEBIT ships, windows close at +0.0/−0.1
+2026-08-25	cups	CUPS REOPENED (probationary): Club Elo strength lane — 92% coverage, all windows same-signed, 202-fixture dress rehearsal hit 89.1%
+2026-08-25	cups	Cup verdict chain: domestic form carries zero cup signal (slope 0.017); league bridge ratings real but one window short; Swiss-era club composite −0.6/−4.0
+2026-08-25	rules	Rule 5 backtested on 6,354 pairs: pointed team lane real (78%), O0.5 tag is the trap, home+strong rung avoids defeat 83.9% — leg 4 becomes a number
+2026-08-25	engine	DEFENSE_BLEND 0.5: team lanes finally see the opponent's defense (+7-11 pts); match mu measured and declined (~+1 pt, double-counts)
+2026-08-25	engine	BIG_MATCH_DEBIT 0.15: top-6 clashes priced 0.15 goals lower; season-phase structure measured, relegation variant declined
+2026-08-25	data	NED-D2 launched same-day (check data → calibrate → futurematch); went 4-for-4 on its first slate
+2026-08-25	interface	Card-layout board: every block derived from fixtures.tsv by board.py; the placed-bets block can no longer go stale
+2026-08-24	engine	Cross-division fallback: promoted clubs priced from lower-division history at measured exchange rates (×0.754 scored, ×1.516 conceded)
+2026-08-24	engine	TEAM_RATE_FLOOR 0.95 and the winner's-curse haircut moved into buy_from — hand rules become code
+2026-08-24	engine	VENUE_BLEND swept and closed: a validated dead knob at 0.35
+2026-08-24	board	Playable bar raised to +1% edge; playable block moved above pending; three-lane header tracker
