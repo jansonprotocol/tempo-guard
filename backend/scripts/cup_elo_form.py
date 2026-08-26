@@ -73,7 +73,8 @@ from scripts.cup_composite import SPLIT, grade, show
 from scripts.cup_elo import BREAK, ELO_END, SCALE, asof, elo_series
 
 ROOT = Path(__file__).resolve().parents[2]
-TERMS = ("dom_tempo", "cup_tempo", "ppg_sum", "ppg_gap", "elo_mom")
+TERMS = ("elo_signed", "dom_tempo", "cup_tempo", "ppg_sum", "ppg_gap",
+         "elo_mom")
 
 
 def build():
@@ -154,6 +155,10 @@ def build():
                 rows.append(dict(
                     d=r.date, code=code, hg=int(r.hg), ag=int(r.ag),
                     base=base, eh=eh / SCALE, ea=ea / SCALE,
+                    # The mu uses |gap| only, so it cannot tell a strong
+                    # home side from a strong away side. The SIGNED gap
+                    # is the term that would let it.
+                    elo_signed=(eh - ea) / SCALE,
                     dom_tempo=((gh + ga_) - 5.4) if (gh and ga_) else None,
                     cup_tempo=((float(np.mean(ch[-8:]))
                                 + float(np.mean(ca[-8:]))) - 5.4)

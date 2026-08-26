@@ -19,8 +19,9 @@ The model is the one that passed every window cup_elo.py measured:
 
     mu = rolling_3y_competition_base
        + intercept                     tracked on the trailing 180 days
-       + B1 * |elo_home − elo_away|    per 100 Elo
-       + B2 * (elo_home + elo_away)
+       + B1 * |elo_home − elo_away|    per 100 Elo — how lopsided
+       + B2 * (elo_home + elo_away)                 how good they are
+       + B3 * (elo_home − elo_away)                 WHICH side is stronger
 
 Slopes are FROZEN from the pooled Swiss-era fit (2024-07 → 2026-01,
 1,563 fixtures). The intercept is the part that drifts between seasons
@@ -48,10 +49,25 @@ from app.data import store
 
 CUPS = ("UCL", "UEL", "UECL", "UCL-Q", "UEL-Q", "UECL-Q")
 
-# Pooled Swiss-era fit, scripts/cup_elo.py, 25 Aug 2026. Per 100 Elo.
-B1 = 0.154
-B2 = 0.015
-B0_FALLBACK = -0.661          # pooled intercept, used until 100 trailing rows
+# Pooled Swiss-era fit, scripts/cup_elo.py, refitted 26 Aug 2026 with the
+# signed term below. Per 100 Elo.
+B1 = 0.161                    # |elo gap| — how lopsided the tie is
+B2 = 0.017                    # elo sum   — how good both clubs are
+B0_FALLBACK = -0.747          # pooled intercept, used until 100 trailing rows
+
+# The SIGNED gap: which side is the stronger one. Until 26 Aug the mu used
+# |gap| alone, so it priced a 1900 home side against a 1600 away side
+# exactly like the reverse — venue-blind on strength, in a sport where the
+# home side attacks. Found by chasing a two-legged-tie question: second
+# legs ran +0.33 goals over the mu when the stronger club hosted and −0.26
+# when it had hosted the first leg, a 0.59-goal spread the model could not
+# express. Measured directly it is the strongest term the project has
+# found (+0.1015 ± 0.0205, t 4.95 on 1,563 Swiss-era fixtures), the
+# coefficient barely moves between seasons (+0.097 / +0.106), and the
+# by-tercile pattern is monotone in BOTH windows. In the live shape
+# (frozen betas, walked intercept) it improves both: 81.8 → 82.5 and
+# 83.9 → 85.2 hit, gaps −3.0 → −2.9 and −1.2 → −0.6.
+B3 = 0.101
 
 # Cup OVER tips state ~3.5 points more than they deliver. Measured on the
 # wired live path over both Swiss seasons (1,878 tips, 26 Aug): O1.5 ran
@@ -186,7 +202,8 @@ def _intercept(year: int, month: int) -> float:
                 continue
             eh, ea = eh / SCALE, ea / SCALE
             resid.append(int(r.hg) + int(r.ag) - b
-                         - (B1 * abs(eh - ea) + B2 * (eh + ea)))
+                         - (B1 * abs(eh - ea) + B2 * (eh + ea)
+                            + B3 * (eh - ea)))
     if len(resid) < _MIN_TRAIL_ROWS:
         return B0_FALLBACK
     return float(sum(resid) / len(resid))
@@ -211,5 +228,5 @@ def cup_mu(league_code: str, home: str, away: str, match_date: date,
         return None
     b0 = _intercept(when.year, when.month)
     eh, ea = eh / SCALE, ea / SCALE
-    mu = base + b0 + B1 * abs(eh - ea) + B2 * (eh + ea)
+    mu = base + b0 + B1 * abs(eh - ea) + B2 * (eh + ea) + B3 * (eh - ea)
     return max(0.5, min(6.0, mu)), base
