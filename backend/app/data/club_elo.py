@@ -105,9 +105,13 @@ def _norm(s: str) -> str:
 
 @lru_cache(maxsize=1)
 def _norm_index() -> dict:
-    """Normalized store-name -> clubelo name, so a fixture typed as
-    "Bayern München" still finds the mapping keyed "FC Bayern München"."""
-    return {_norm(k): v for k, v in _names().items()}
+    """Normalized name -> clubelo name. Two layers: clubelo's own club
+    names map to themselves (so a board short form like "Górnik" or
+    "St. Truiden" resolves without an explicit entry), and the curated
+    store-name mapping layers on top and wins on any collision."""
+    idx = {_norm(v): v for v in set(_names().values())}
+    idx.update({_norm(k): v for k, v in _names().items()})
+    return idx
 
 
 @lru_cache(maxsize=1)
