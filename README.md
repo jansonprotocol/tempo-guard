@@ -10,7 +10,7 @@
     lane                        Tip 1              Tip 2
     all matches             24 / 29   82.8%     15 / 20   75.0%
     played lanes  >+1%      16 / 18   88.9%     15 / 20   75.0%
-    placed bets             16 / 22   72.7%    ROI -4.0%
+    placed bets             17 / 23   73.9%    ROI -3.8%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -253,7 +253,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 16 / 22  ·  ROI -4.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 17 / 23  ·  ROI -3.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -280,7 +280,7 @@ that premium the book is keeping the insurance money.
 | ❌ | LASK v Celtic | U4.5 | 1.20 | 0.00x | first cup-lane bet, probationary; tip U4.25, book line U4.5 softer, +4.6% at strike |
 | ✅ | Bodø/Glimt v NEC | U4.5 | 1.42 | 1.42x | cup lane, probationary; +22.9% EV at strike, the board price of the slate |
 | — open | Rapid Vienna v Hearts | U4.5 | 1.18 | — | cup lane, softer line above U4.25 tip, +3.1% at strike |
-| — open | Plzeň v Crvena zvezda | U4.5 | 1.14 | — | cashed out at stake, replaced with the U3.5 below |
+| ◦ | Plzeň v Crvena zvezda | U4.5 | 1.14 | 1.00x | cashed out at stake, replaced with the U3.5 below |
 | — open | Thun v Lech | U4.5 | 1.19 | — | cup lane, +7.0% at strike, best EV of the five |
 | — open | St. Gallen v Nordsjælland | U4.5 | 1.20 | — | cup lane, +6.1% at strike |
 | — open | Celta v Osasuna | DNB (home) | 1.38 | — | experimental; O0.5-pointed read, the rung the backtest flagged |

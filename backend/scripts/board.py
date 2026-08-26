@@ -303,6 +303,11 @@ def render_bets() -> list[str]:
         name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
         note = parts[6] if len(parts) > 6 else ""
         lane = rung if side == "-" else f"{rung} ({'home' if side == 'H' else 'away'})"
+        # Cashed out at stake: realised at 1.00x now, whatever the fixture
+        # does later — same convention as headline.bets().
+        if len(parts) > 4 and parts[4] == "1":
+            out.append(f"| ◦ | {name} | {lane} | {odds:.2f} | 1.00x | {note} |")
+            continue
         fx = fixtures.get(name)
         if fx is None or fx["hg"] is None:
             out.append(f"| — open | {name} | {lane} | {odds:.2f} | — | {note} |")

@@ -69,6 +69,16 @@ def bets() -> tuple[int, int, float]:
             continue
         parts = ln.split("\t")
         name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
+        # A position cashed out at stake (cashout flag, column 5) is realised
+        # money: it settles the moment it is flagged, at exactly 1.00x, no
+        # matter what the fixture later does — the fixture's result belongs
+        # to whatever bet replaced it, never to this one twice.
+        if len(parts) > 4 and parts[4] == "1":
+            staked += 1
+            returned += 1.0
+            n += 1
+            hits += 1
+            continue
         fx = fixtures.get(name)
         if fx is None or fx["hg"] is None:
             continue
