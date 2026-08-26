@@ -91,7 +91,31 @@ def _bets_rows() -> list[dict]:
     return out
 
 
-def _card(f, kind: str) -> str:
+_READS_CACHE = ROOT / "config" / "reads_cache.json"
+
+
+def _reads(fixtures) -> dict:
+    """(code|teams|date) -> [keywords, sentence]. Computed once per fixture
+    — the read is as-of the match date, so it never changes — and cached so
+    board renders stay fast."""
+    import json as _json
+
+    from scripts.reads import fixture_read
+    cache = (_json.loads(_READS_CACHE.read_text())
+             if _READS_CACHE.exists() else {})
+    dirty = False
+    for f in fixtures:
+        key = f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}"
+        if key not in cache:
+            cache[key] = fixture_read(f.code, f.teams, f.kickoff)
+            dirty = True
+    if dirty:
+        _READS_CACHE.write_text(
+            _json.dumps(cache, ensure_ascii=False, indent=0))
+    return cache
+
+
+def _card(f, kind: str, reads: dict) -> str:
     badge = rates().get(f.code)
     league = html.escape(f.league) + (
         f' <span class="badge">{html.escape(badge)}</span>' if badge else "")
@@ -103,22 +127,35 @@ def _card(f, kind: str) -> str:
         head = f'<span class="live">🔴 {html.escape(f.status)}</span>'
     else:
         head = f"🕑 {board._stamp(f)}"
-    lanes = ""
-    for which, cell in ((1, f.tip1), (2, f.tip2)):
+
+    def lane(which, cell):
         if cell.strip() in ("", "—", "— none"):
-            continue
-        pl = ' class="pl"' if (not f.settled and f.lane(which)) else ""
-        lanes += (f'<div class="lane"{pl}><span class="which">Tip {which}'
-                  f"</span> {_fmt(cell)}</div>")
-    return (f'<div class="card {kind}" data-t="{html.escape(f.teams.lower())} '
+            return ""
+        pl = " pl" if (not f.settled and f.lane(which)) else ""
+        return (f'<div class="lane{pl}"><span class="which">Tip {which}'
+                f"</span> {_fmt(cell)}</div>")
+
+    read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
+    kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
+    top = (f'<div class="teams">{html.escape(f.teams)}'
+           f'<span class="more">more ▾</span></div>'
+           f'<div class="meta">{head} · {league}</div>{kw}'
+           f"{lane(1, f.tip1)}")
+    body = lane(2, f.tip2)
+    if read:
+        body += f'<div class="read">{read[1]}</div>'
+    if not body:
+        body = '<div class="read dim">nothing more on this one</div>'
+    return (f'<details class="card {kind}" '
+            f'data-t="{html.escape(f.teams.lower())} '
             f'{html.escape(f.league.lower())} {f.code.lower()}">'
-            f'<div class="teams">{html.escape(f.teams)}</div>'
-            f'<div class="meta">{head} · {league}</div>{lanes}</div>')
+            f"<summary>{top}</summary>{body}</details>")
 
 
-def _grid(cards, kind):
+def _grid(cards, kind, reads):
     return ('<div class="grid">'
-            + "".join(_card(f, kind) for f in cards) + "</div>") if cards \
+            + "".join(_card(f, kind, reads) for f in cards)
+            + "</div>") if cards \
         else '<p class="dim">nothing here right now</p>'
 
 
@@ -157,6 +194,7 @@ def main() -> None:
     (p1, q1), _ = p[1], p[2]
     bh, bn, roi = headline.bets()
 
+    reads = _reads(fixtures)
     pending = [f for f in fixtures if not f.settled]
     playable = [f for f in pending if f.lane(1) or f.lane(2)]
     waiting = [f for f in pending if f not in playable]
@@ -253,6 +291,14 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .lane.pl {{ outline:1px solid #234d33; }}
 .lane .which {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-right:6px; }}
+summary {{ cursor:pointer; list-style:none; }}
+summary::-webkit-details-marker {{ display:none; }}
+.more {{ float:right; color:var(--dim); font-size:11px; font-weight:400; }}
+details[open] .more {{ visibility:hidden; }}
+.kw {{ color:var(--gold); font-size:12px; margin:2px 0 6px; }}
+.read {{ color:var(--dim); font-size:13px; margin-top:8px; line-height:1.5;
+  border-top:1px solid var(--edge); padding-top:8px; }}
+.read b {{ color:var(--tx); }}
 table {{ width:100%; border-collapse:collapse; font-size:13px;
   background:var(--card); border-radius:10px; overflow:hidden; }}
 td, th {{ padding:7px 9px; border-top:1px solid var(--edge);
@@ -298,12 +344,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <input id="q" placeholder="filter — team, league, code…"
   oninput="for(const c of document.querySelectorAll('.card'))
   c.style.display=c.dataset.t.includes(this.value.toLowerCase())?'':'none'">
- <div class="tabpane" id="t-playable">{_grid(playable, "play")}</div>
+ <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets"><div class="wrap"><table>
   <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Odds</th><th>Return</th>
   <th>Note</th></tr>{bets_html}</table></div></div>
- <div class="tabpane" id="t-lanes">{_grid(waiting, "pend")}</div>
- <div class="tabpane" id="t-done">{_grid(done, "done")}</div>
+ <div class="tabpane" id="t-lanes">{_grid(waiting, "pend", reads)}</div>
+ <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
 </section>
 
 <section class="page" id="p-sessions">
