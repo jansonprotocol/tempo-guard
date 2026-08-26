@@ -187,6 +187,52 @@ def _patch_rows() -> str:
     return "".join(out)
 
 
+def _learn() -> str:
+    """The teaching block: one example card, each part explained in a line."""
+    card = """<details class="card play" open>
+<summary><div class="teams">Plze\u0148 v Crvena zvezda<span class="more">more \u25be</span></div>
+<div class="meta">\U0001f551 27-08 19:00 \u00b7 UEL Playoff \u00b7 probationary <span class="badge">(86.4 \u22120.2)</span></div>
+<div class="kw">\U0001f9e0 Elo 1566 v 1564 \u00b7 even tie on Elo</div>
+<div class="lane pl"><span class="which">Tip 1</span> U4.25 91.6% +3.0%<br>buy\u22651.15</div></summary>
+<div class="lane"><span class="which">Tip 2</span> U3.75 79.8% +5.0% (floor \u22122.2)<br>buy\u22651.28</div>
+<div class="read">Athena prices cups from Club Elo \u2014 strength measured across every competition. It reads <b>Plze\u0148</b> at 1566 against <b>Crvena zvezda</b> at 1564: an even tie on club strength.</div>
+</details>"""
+    rows = [
+        ("The matchup", "home team first, away team second \u2014 venue "
+         "matters and is already in the numbers."),
+        ("\U0001f551 / \U0001f534 / \u2705\u274c", "the clock before "
+         "kickoff, red while live, then the verdict with the final score "
+         "once graded."),
+        ("The league line", "the competition \u2014 \u00b7 probationary "
+         "marks a lane still earning trust with live results."),
+        ("(86.4 \u22120.2)", "the league's proven record: hitrate over its "
+         "last 200 matches, replayed as-of, and the gap between what Athena "
+         "claimed and what actually landed. Near zero = the engine tells "
+         "the truth here."),
+        ("\U0001f9e0 the read", "what Athena measured in this matchup, in "
+         "keywords \u2014 tap the card for the full story in sentences."),
+        ("Tip 1", "the engine's best market. U4.25 = under 4.25 goals; "
+         "91.6% = claimed probability; +3.0% = edge over a typical match."),
+        ("buy\u22651.15", "the minimum odds that make this tip worth "
+         "money \u2014 margin included. Never buy below it; the margin IS "
+         "the edge."),
+        ("Green border / lane", "a playable lane: edge above +1%. These "
+         "are the tips with real value \u2014 the rest are shown for "
+         "honesty, not for money."),
+        ("Tip 2 \u00b7 more \u25be", "the runner-up lane \u2014 another "
+         "rung or a team total. (floor \u22122.2) says how far it sits "
+         "below the confidence bar."),
+    ]
+    items = "".join(f'<tr><td class="mk"><b>{k}</b></td><td>{v}</td></tr>'
+                    for k, v in rows)
+    return (f'<div id="learn"><h2>\U0001f393 Learn Athena \u2014 how to '
+            f'read a block</h2><div class="grid" style="max-width:420px">'
+            f"{card}</div><div class=\"wrap\" style=\"margin-top:10px\">"
+            f"<table>{items}</table></div>"
+            f'<button class="btn" onclick="scrollTo({{top:0,'
+            f'behavior:\'smooth\'}})">\u2191 Back to top</button></div>')
+
+
 def main() -> None:
     fixtures = board.load()
     t, p = board._tallies(fixtures)
@@ -271,6 +317,12 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .tile .l {{ color:var(--dim); font-size:11px; text-transform:uppercase;
   letter-spacing:.08em; margin-top:2px; }}
 .tile .s {{ color:var(--dim); font-size:12px; }}
+.btn {{ display:block; width:100%; background:var(--card);
+  border:1px solid var(--edge); border-radius:8px; color:var(--gold);
+  padding:9px 12px; margin:2px 0 8px; font:inherit; font-size:13px;
+  cursor:pointer; text-align:center; }}
+#learn {{ margin-top:26px; border-top:1px solid var(--edge);
+  padding-top:6px; }}
 input#q {{ width:100%; background:var(--card); border:1px solid var(--edge);
   border-radius:8px; color:var(--tx); padding:9px 12px; margin:2px 0 10px; }}
 h2 {{ font-size:16px; margin:16px 0 10px; }}
@@ -341,6 +393,9 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <a href="#home/done" data-t="done" class="grey">⚪ Completed
    <span class="dim">{len(done)}</span></a>
  </div>
+ <button class="btn" onclick="document.getElementById('learn')
+  .scrollIntoView({{behavior:'smooth'}})">🎓 Learn Athena — how to read
+  these blocks</button>
  <input id="q" placeholder="filter — team, league, code…"
   oninput="for(const c of document.querySelectorAll('.card'))
   c.style.display=c.dataset.t.includes(this.value.toLowerCase())?'':'none'">
@@ -350,6 +405,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <th>Note</th></tr>{bets_html}</table></div></div>
  <div class="tabpane" id="t-lanes">{_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
+ {_learn()}
 </section>
 
 <section class="page" id="p-sessions">
