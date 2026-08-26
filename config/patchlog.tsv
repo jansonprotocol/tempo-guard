@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-08-26	interface	Live lanes state what the score has done to them — landed, needs N more, room for N, half gone — read from the ledger's own settlement, on every tab and in the README
 2026-08-26	cups	Elo+form tested and declined: goal-tempo terms carry real signal (t 2.6, 2.1) but no window improves when graded — results-based form and Elo momentum are flat outright
 2026-08-26	cups	PSG was mapped to Paris FC in the Club Elo table — 1969 vs 1538, a 430-point mispricing on every PSG cup fixture; found by auditing all 140 subset matches, one defect among them
 2026-08-26	interface	Ask Athena: one club one identity — era-split spellings, Club Elo names and a nickname file (PSG, Barça, Spurs) all resolve to the same club

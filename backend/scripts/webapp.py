@@ -163,8 +163,17 @@ def _card(f, kind: str, reads: dict) -> str:
         if cell.strip() in ("", "—", "— none"):
             return ""
         pl = " pl" if (not f.settled and f.lane(which)) else ""
+        # While the match runs, say what the score has done to this lane.
+        live = ""
+        if not f.settled and f.status:
+            from scripts import liveline
+            s = liveline.progress(cell, f.teams, f.status)
+            if s:
+                cls = ("gone" if s.startswith("✗") or "gone" in s
+                       else "won" if s.startswith("✓") else "")
+                live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell)}</div>")
+                f"</span> {_fmt(cell)}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -537,6 +546,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .lane.pl {{ outline:1px solid #234d33; }}
 .lane .which {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-right:6px; }}
+.prog {{ margin-top:5px; font-size:11px; letter-spacing:.04em;
+  color:var(--gold); }}
+.prog.won {{ color:var(--green); }}
+.prog.gone {{ color:#e07a6a; }}
 summary {{ cursor:pointer; list-style:none; }}
 summary::-webkit-details-marker {{ display:none; }}
 .more {{ float:right; color:var(--dim); font-size:11px; font-weight:400; }}

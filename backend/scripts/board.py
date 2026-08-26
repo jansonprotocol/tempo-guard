@@ -145,6 +145,15 @@ def _html(s: str) -> str:
     return "".join(parts)
 
 
+def _live(f, cell: str) -> str:
+    """The lane's state at the current score — empty unless in play."""
+    from scripts import liveline
+    if f.settled or not f.status:
+        return ""
+    s = liveline.progress(cell, f.teams, f.status)
+    return f" · <i>{s}</i>" if s else ""
+
+
 def _cell(raw: str) -> str:
     """One tip cell: probability line on top, buy-from below, annotation last.
 
@@ -237,9 +246,11 @@ def render_board(fixtures: list[Fixture]) -> str:
         l1, l2 = f.lane(1), f.lane(2)
         if not l1 and not l2:
             continue
-        c1 = _cell(f.tip1) if l1 else (f.tip1 if f.tip1.startswith("—")
-                                       else f"— under +{MIN_EDGE:.0f}%")
-        c2 = _cell(f.tip2) if l2 else (f.tip2 if f.tip2.startswith("—")
+        c1 = _cell(f.tip1) + _live(f, f.tip1) if l1 else (
+            f.tip1 if f.tip1.startswith("—")
+            else f"— under +{MIN_EDGE:.0f}%")
+        c2 = _cell(f.tip2) + _live(f, f.tip2) if l2 else (
+            f.tip2 if f.tip2.startswith("—")
                                        else f"— under +{MIN_EDGE:.0f}%")
         entries.append((f, "🟢", c1, c2))
     out += _cards(entries)
@@ -255,7 +266,8 @@ def render_board(fixtures: list[Fixture]) -> str:
         "league are its **(hit gap)** over its last 200 replayed matches — "
         "read the gap before trusting a row.", "",
     ]
-    out += _cards([(f, "🔵", _cell(f.tip1), _cell(f.tip2)) for f in pending])
+    out += _cards([(f, "🔵", _cell(f.tip1) + _live(f, f.tip1),
+                _cell(f.tip2) + _live(f, f.tip2)) for f in pending])
     if not pending:
         out += ["*(no open fixtures)*", ""]
 
