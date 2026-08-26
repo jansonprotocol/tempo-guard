@@ -272,6 +272,27 @@ def _learn() -> str:
             f'behavior:\'smooth\'}})">\u2191 Back to top</button></div>')
 
 
+def _check_js(page: str) -> None:
+    """A syntax error in the generated script blanks the whole app — the
+    router never runs, so every page stays hidden. This page is written by
+    Python f-strings, where one collapsed backslash does exactly that, so
+    the JS is parsed before it can ship."""
+    import shutil
+    import subprocess
+    import tempfile
+    node = shutil.which("node")
+    if not node:
+        return
+    js = page[page.index("<script>") + 8:page.rindex("</script>")]
+    with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as fh:
+        fh.write(js)
+        path = fh.name
+    r = subprocess.run([node, "--check", path], capture_output=True,
+                       text=True)
+    if r.returncode != 0:
+        raise SystemExit(f"generated JS is broken:\n{r.stderr}")
+
+
 def main() -> None:
     fixtures = board.load()
     t, p = board._tallies(fixtures)
@@ -673,6 +694,11 @@ function route() {{
     a.classList.toggle("on", a.dataset.t === tab);
 }}
 addEventListener("hashchange", route); route();
+window.addEventListener("error", () => {{
+  // A broken form must never hide the board: re-run the router and let
+  // the failure stay local to Ask Athena.
+  try {{ route(); }} catch (e) {{}}
+}});
 
 let BANK = null, LOOKUP = null, ALIAS = null, NAMES = null, DATES = null;
 const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -738,9 +764,16 @@ function suggest(which) {{
     if (loose) hits.push([exact ? 0 : 1, e.name.length, e.name, key]);
   }}
   hits.sort();
-  box.innerHTML = hits.slice(0, 8).map(h =>
-    '<div onmousedown="pick(\'' + which + "','" +
-    h[2].replace(/'/g, "\\'") + '\')">' + h[2] + "</div>").join("");
+  box.textContent = "";
+  for (const h of hits.slice(0, 8)) {{
+    const row = document.createElement("div");
+    row.textContent = h[2];
+    // mousedown, not click: blur would close the list first on desktop.
+    row.addEventListener("mousedown", ev => {{
+      ev.preventDefault(); pick(which, h[2]);
+    }});
+    box.appendChild(row);
+  }}
   box.classList.toggle("on", hits.length > 0);
 }}
 function pick(which, name) {{
@@ -866,6 +899,7 @@ async function askAthena() {{
 </body></html>"""
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(page)
+    _check_js(page)
     print(f"web app rendered: {OUT.relative_to(OUT.parents[2])} "
           f"({len(page) // 1024}KB)")
 

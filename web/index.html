@@ -250,6 +250,11 @@ function route() {
     a.classList.toggle("on", a.dataset.t === tab);
 }
 addEventListener("hashchange", route); route();
+window.addEventListener("error", () => {
+  // A broken form must never hide the board: re-run the router and let
+  // the failure stay local to Ask Athena.
+  try { route(); } catch (e) {}
+});
 
 let BANK = null, LOOKUP = null, ALIAS = null, NAMES = null, DATES = null;
 const norm = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "")
@@ -315,9 +320,16 @@ function suggest(which) {
     if (loose) hits.push([exact ? 0 : 1, e.name.length, e.name, key]);
   }
   hits.sort();
-  box.innerHTML = hits.slice(0, 8).map(h =>
-    '<div onmousedown="pick('' + which + "','" +
-    h[2].replace(/'/g, "\'") + '')">' + h[2] + "</div>").join("");
+  box.textContent = "";
+  for (const h of hits.slice(0, 8)) {
+    const row = document.createElement("div");
+    row.textContent = h[2];
+    // mousedown, not click: blur would close the list first on desktop.
+    row.addEventListener("mousedown", ev => {
+      ev.preventDefault(); pick(which, h[2]);
+    });
+    box.appendChild(row);
+  }
   box.classList.toggle("on", hits.length > 0);
 }
 function pick(which, name) {
