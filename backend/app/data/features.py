@@ -184,6 +184,65 @@ MU_SHRINK_BY_LEAGUE: Dict[str, float] = {
 # where the team probabilities are derived, so mu_total is not shrunk twice.
 TEAM_SHRINK = 0.62
 
+# A FLOOR on the shrunk per-side rate, and it is not a second shrink — the two
+# ends of the range need opposite corrections and one scalar cannot give them.
+# Swept on 13,872 selection-free side-observations, membership frozen:
+#
+#     TEAM_SHRINK      0.62    0.70    0.78    0.86
+#     gf 0.0-0.9      +6.7    +7.9    +9.2   +10.4     P(>=2), worse
+#     gf 1.9-9.9      +3.5    +2.0    +0.5    -0.9     P(>=2), better
+#
+# Less shrink fixes the top and wrecks the bottom, so 0.62 stays. The bottom is
+# not a spread problem at all: the weakest sides are simply rated too low, which
+# the regression that SET the shrink already showed and nobody read as a
+# separate fault — "lowest gf fifth says 0.90 goals, actually 1.14". A slope
+# fitted with an intercept of 0.572 cannot be applied as a slope alone without
+# leaving exactly this residual at the low end.
+#
+# What the floor is worth, held-back window scored with the value picked on the
+# recent one, and both rungs it could touch measured alongside:
+#
+#     P(side scores >= 2), gf < 0.9      recent   held-back
+#       no floor                          +6.8       +6.5
+#       floor 0.95                        +1.5       +1.4
+#
+#     lane        no floor              floor 0.95
+#     U1.5     -6.7 / -4.0            -4.3 / -0.1     n 421->381, 453->413
+#     O1.5     +8.6 / +2.7            +8.5 / +2.9     untouched
+#     O0.5     +2.5 / -0.9            +2.4 / -0.7     untouched
+#
+# It replicates in both windows, costs about 9% of `U1.5` lanes, and leaves the
+# other two rungs alone — `U1.5` needs p >= 0.75, so P(>=2) <= 0.25, so gf <=
+# 0.96, which is why that lane and only that lane sits inside the floored band.
+#
+# 1.00 scores marginally better on the shape metric (-0.4 / -0.5) but was never
+# measured at lane level, and 0.95 moves half as many observations for a gain
+# already validated. The conservative one ships.
+TEAM_RATE_FLOOR = 0.95
+
+# Weight of opponent defense in the team-lane side rate. 0.0 was attack-only,
+# the engine as it stood until 24 Aug — a side facing the league's best
+# defense and its worst got the same number. Stage 1 (206,676 selection-free
+# fixture-sides) showed the opponent's conceded rate separates P(side scores)
+# by 7-11 points WITHIN an attack bucket; the sweep through the engine's own
+# path, 11,903 fixtures per weight, two windows, lane gaps says-vs-hit:
+#
+#     w        O0.5           O1.5           U1.5          sum|gap|
+#     0.0    +0.0 / -2.0    +2.5 / +3.1    -2.4 / -2.6      12.6
+#     0.3    +0.7 / -0.4    +2.1 / +2.3    -1.9 / -1.6       9.0
+#     0.5    -0.5 / -1.0    +0.3 / +1.3    -1.6 / -1.3       6.0   <- ships
+#     0.7    -1.8 / -1.6    -1.7 / -2.4    -0.8 / -1.7      10.0
+#     1.0    -3.3 / -2.6    -5.9 / -7.8    -2.7 / -2.9      25.2
+#
+# A clean U-shape with its floor at half-weight: every rung improves or holds
+# in BOTH windows at 0.5, and full weight overshoots into the opposite error —
+# the same lesson as every blend in this file (SHOT_BLEND 0.60, VENUE_BLEND
+# 0.35): the signal is real and taking all of it is wrong. O1.5, the rung the
+# stage-1 spread said had the most to gain, goes from +2.5/+3.1 to +0.3/+1.3.
+# Team lanes only; mu_total is computed from the unadjusted rates above and a
+# test pins that.
+DEFENSE_BLEND = 0.5
+
 
 # Fraction of a league's goals scored by the home side. Both sides used to be
 # shrunk toward `league_mu / 2`, on the stated reasoning that half the league
@@ -228,6 +287,75 @@ def _home_share(df: pd.DataFrame, league_code: Optional[str],
     return share
 
 
+# ── The top-clash debit ───────────────────────────────────────────────────────
+#
+# Born from the 0-0 Manchester derby retrosim and measured before being
+# believed. Stage 1, selection-free over 268,912 stored fixtures with league
+# tables computed strictly as-of: big matches run under their own league's
+# mean, monotone in stakes (top6 −0.02, top4 −0.05, 1v2 −0.11). Stage 2, the
+# ENGINE-relative residual on 24 leagues and two separate windows:
+#
+#     actual − mu        recent           held-back
+#     control            +0.027           +0.025
+#     both top-6         −0.131 ±0.085    −0.155 ±0.091    replicates
+#     both top-4         −0.217 ±0.129    −0.363 ±0.141    replicates
+#     both bottom-4      −0.180           +0.237           SIGN FLIP — dead
+#
+# The engine reads two fat attacking rates and prices a top clash UP exactly
+# when the occasion pushes it down — form cannot see stakes. The relegation
+# mirror case died the two-window death: bad teams already arrive with thin
+# rates, so the engine absorbs that one on its own.
+#
+# 0.15 is the pooled top-6 effect shaded conservative (−0.15 to −0.17 across
+# both windows, z ≈ 2.5 against control). One tier, not two: top-4 measures
+# stronger but noisier, and a second constant can earn its place with more
+# data. Applied to the MATCH mu only — the team lanes were not measured.
+#
+# The flag replicates the measurement exactly, quirk included: points within
+# the CALENDAR year to date, both sides with six-plus rounds played, both in
+# the top six. For autumn rounds of a European season that is the season table;
+# for spring rounds it is a half-season form table. That is what validated on
+# both windows, so that is what ships — refining the boundary is a new
+# measurement, not a free edit.
+BIG_MATCH_DEBIT = 0.15
+_TOP_CLASH_MIN_ROUNDS = 6
+_TOP_CLASH_TOP_N = 6
+_TOP_CLASH_CACHE: dict[tuple, frozenset] = {}
+
+
+def _is_top_clash(df: pd.DataFrame, h_norm: str, a_norm: str,
+                  cutoff: datetime, league_code: str) -> bool:
+    key = (league_code, cutoff.date() if hasattr(cutoff, "date") else cutoff)
+    top = _TOP_CLASH_CACHE.get(key)
+    if top is None:
+        year_start = datetime(cutoff.year, 1, 1)
+        block = df[(df["date"] >= year_start) & (df["date"] < cutoff)]
+        pts: dict[str, int] = {}
+        played: dict[str, int] = {}
+        for r in block.itertuples():
+            if pd.isna(r.hg) or pd.isna(r.ag):
+                continue
+            h, a = _norm(str(r.home)), _norm(str(r.away))
+            hw = 3 if r.hg > r.ag else 1 if r.hg == r.ag else 0
+            pts[h] = pts.get(h, 0) + hw
+            pts[a] = pts.get(a, 0) + (3 if hw == 0 else 1 if hw == 1 else 0)
+            played[h] = played.get(h, 0) + 1
+            played[a] = played.get(a, 0) + 1
+        # Measured on full-size leagues. In a frame with few clubs — a cup
+        # fallback, a tiny sample — "top six" is everybody and means nothing,
+        # so the flag stands down rather than firing on all of them.
+        if len(pts) < 2 * _TOP_CLASH_TOP_N:
+            top = frozenset()
+        else:
+            table = sorted(pts, key=lambda t: -pts[t])[:_TOP_CLASH_TOP_N]
+            top = frozenset(t for t in table
+                            if played.get(t, 0) >= _TOP_CLASH_MIN_ROUNDS)
+        if len(_TOP_CLASH_CACHE) > 4096:
+            _TOP_CLASH_CACHE.clear()
+        _TOP_CLASH_CACHE[key] = top
+    return h_norm in top and a_norm in top
+
+
 def _shrink_side(gf: float, league_mu: Optional[float],
                  share: float = 0.5) -> float:
     """Shrink one side's scoring rate toward that SIDE's league mean.
@@ -239,7 +367,10 @@ def _shrink_side(gf: float, league_mu: Optional[float],
     if not league_mu or league_mu <= 0:
         return gf
     target = league_mu * share
-    return max(0.05, target + TEAM_SHRINK * (gf - target))
+    # The floor is applied last, so it binds on the SHRUNK rate rather than the
+    # raw one — it is a statement about what the engine ends up believing, not
+    # about what the form data said before shrinkage.
+    return max(TEAM_RATE_FLOOR, target + TEAM_SHRINK * (gf - target))
 
 
 def _shrink_mu(mu: float, league_mu: Optional[float],
@@ -278,13 +409,63 @@ RECENT_WINDOW_DAYS = 365 * 3
 # precise-but-empty, and the fallback is still strictly as-of.
 MIN_LEAGUE_SAMPLE = 150
 
-INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC"}
+INTL_LEAGUE_CODES = {"UCL", "UEL", "UECL", "EC", "WC",
+                     "UCL-Q", "UEL-Q", "UECL-Q"}
 
-# Historical goals/game baselines for competitions whose own history is too
-# short or too uneven to derive a stable league average from.
+# Goals/game baselines for competitions whose own history is too short or too
+# uneven to derive a stable average from. MEASURED from the stored files on
+# 25 Aug (the hardcoded originals ran 0.17-0.36 low), kept accurate even
+# though the cup path is disabled below — an instrument reads them.
 INTL_GOAL_AVERAGES: Dict[str, float] = {
-    "UCL": 2.70, "UEL": 2.50, "UECL": 2.40, "EC": 2.25, "WC": 2.30,
+    "UCL": 3.03, "UEL": 2.67, "UECL": 2.76, "EC": 2.25, "WC": 2.30,
+    "UCL-Q": 2.71, "UEL-Q": 2.54, "UECL-Q": 2.75,
 }
+
+# The cup path is OFF. Replayed on 2,109 recent main-phase tips and 178
+# qualifier tips (scripts/cup_replay.py, 25 Aug):
+#
+#     UCL     680 tips   gap  -8.3      UCL-Q     48   -21.3
+#     UEL    1210 tips   gap -13.4      UEL-Q     60   -16.1
+#     UECL    219 tips   gap -10.0      UECL-Q    70    -7.6
+#     ALL    2109 tips   gap -11.4 [69-73]
+#
+# Not the baselines: UEL's baseline error is half of UCL's and its gap is
+# BIGGER. The by-market cut names the disease — U4.25, the rung that leans on
+# the base rate, is calibrated at -1.6, while every rung that needs real
+# per-fixture information is catastrophic (O2.25 -23.0, U3.0 -17.1, U2.75
+# -25.4). Domestic form does not transfer to European opposition: a dominant
+# club in a weak league arrives with a scoring rate no European opponent will
+# concede, and the engine cannot see relative strength across leagues. That
+# is not fixable with a constant, so cup fixtures abstain — the ROU-L1
+# treatment, applied to a whole family. The switch exists so the instrument
+# can still measure the disabled path.
+#
+# CONFIRMED TERMINAL by cup_calibrate.py (1,349 fixtures, 25 Aug): regressing
+# actual totals on the raw cup mu's deviation from baseline gives a slope of
+# 0.017 ± 0.021 — statistically ZERO against the domestic 0.42. The cup mu
+# contains no per-fixture information, so no CUP_MU_SHRINK exists: the sweep
+# runs from -8.4/-9.3 at k=0.35 to a best of -3.0/-1.9 at k=0.10, and even
+# k=0 — pure baseline tips — misses at -3.9/-2.9, because cup totals are
+# OVER-DISPERSED relative to Poisson (continental blowouts fatten the tails,
+# so even the base-rate rung over-promises). Reopening this board requires
+# BOTH a cross-league strength model and a cup dispersion correction, each
+# validated on the instrument that produced these numbers.
+#
+# REOPENED PROBATIONARY 25 Aug 2026 — the cross-league strength model that
+# verdict demanded exists: Club Elo (app/data/club_elo.py), the one variant
+# that passed every window. Frozen-slope symmetry −2.5 / −1.7; walked
+# intercept −1.8 / −2.4 with all four half-windows same-signed; and a true
+# out-of-sample dress rehearsal — 202 knockout fixtures Jan–May 2026 priced
+# on Elo frozen at Jan 14 — hit 89.1% against a stated 84.9 (+4.2). The
+# family that replayed at −11.4 measures ±4 around zero at ~800 tips per
+# window, the same wobble domestic leagues show. 92% club coverage; the
+# dispersion half of the old verdict dissolved earlier (var/mean 1.00-1.04
+# once the stale baselines were fixed). Probationary: cup tips are labeled
+# on the board, and the switch goes back to False if the live gap breaks
+# the band the instruments measured. The old domestic-form path this switch
+# used to guard is gone — scripts/cup_replay.py and the other instruments
+# now exercise the Elo lane.
+CUP_TIPS_ENABLED = True
 
 def _domestic_fallback() -> List[str]:
     """
@@ -894,6 +1075,14 @@ def _compute_features(
 
     mu_total = max(0.2, gfh + gfa)
     mu_total = _shrink_mu(mu_total, league_mu, league_code)
+    # Two top sides suppress each other in a way form cannot see — the engine
+    # reads two fat attacking rates and prices the fixture UP when the occasion
+    # pushes it down. See _is_top_clash for the measurement; applied after the
+    # shrink because it is an occasion effect, not a spread error, and to
+    # mu_total only because only the match residual was measured.
+    if (league_code and cutoff is not None
+            and _is_top_clash(full_df, h_norm, a_norm, cutoff, league_code)):
+        mu_total = max(0.2, mu_total - BIG_MATCH_DEBIT)
     p0 = math.exp(-mu_total)
     p1 = mu_total * p0
     p_two_plus = 1.0 - (p0 + p1)
@@ -910,12 +1099,27 @@ def _compute_features(
 
     _hshare = _home_share(full_df, league_code, cutoff)
 
+    # Opponent defense, for the TEAM lanes only. The side rate is attack-only
+    # today, and stage-1 measurement over 206,676 fixture-sides says that is
+    # the largest untapped signal in the store: holding own attack fixed, the
+    # opponent's conceded rate still moves P(side scores) by 7-11 points. The
+    # factor is each side's rate scaled by how leaky its opponent is relative
+    # to a typical opponent on that side of the venue split, raised to
+    # DEFENSE_BLEND — at 0.0 (the shipped value until the two-window sweep
+    # says otherwise) everything below is exactly the attack-only engine.
+    gfh_t, gfa_t = gfh, gfa
+    if DEFENSE_BLEND > 0 and league_mu and league_mu > 0:
+        d_h = _goals_per_game(A, a_norm, "conceded") / (league_mu * _hshare)
+        d_a = _goals_per_game(H, h_norm, "conceded") / (league_mu * (1 - _hshare))
+        gfh_t = gfh * (max(0.2, min(3.0, d_h)) ** DEFENSE_BLEND)
+        gfa_t = gfa * (max(0.2, min(3.0, d_a)) ** DEFENSE_BLEND)
+
     return {
         "p_two_plus":             round(float(p_two_plus), 3),
         "p_home_tt05":            round(float(1.0 - _poisson_p0(
-            _shrink_side(gfh, league_mu, _hshare))), 3),
+            _shrink_side(gfh_t, league_mu, _hshare))), 3),
         "p_away_tt05":            round(float(1.0 - _poisson_p0(
-            _shrink_side(gfa, league_mu, 1.0 - _hshare))), 3),
+            _shrink_side(gfa_t, league_mu, 1.0 - _hshare))), 3),
         # Tempo is normalised so a typical fixture lands near the middle of the
         # range. The previous mapping (mu/3.0 clipped at 0.9) saturated: league
         # means sit at 2.4-3.2 goals, so ~63% of matches pinned to the ceiling
@@ -958,36 +1162,37 @@ def _asof_features_intl(
     league_code: str, min_matches: int,
 ) -> Dict[str, float]:
     """
-    Cup fixtures: clubs' recent form comes from their domestic leagues, since a
-    cup campaign alone is far too few matches to compute rolling form from.
+    Cup fixtures: mu from Club Elo strength, not domestic form.
+
+    The original path read each club's domestic league form — measured
+    slope 0.017 ± 0.021 against actual cup totals, statistically zero
+    (scripts/cup_calibrate.py): domestic dominance does not transfer to
+    European opposition. What does transfer is cross-club strength, and
+    app.data.club_elo carries the validated model — committed as-of Elo
+    snapshots, frozen slopes, a monthly-tracked intercept. See that
+    module and scripts/cup_elo.py for the full evidence chain.
+
+    Abstention is still a first-class answer: national-team competitions
+    (EC, WC) have no club Elo, unmapped clubs return None, and stale
+    ratings fail the freshness guard — all of those return {} and the
+    fixture stays untipped.
     """
-    cutoff = _cutoff(match_date)
-
-    def best_frame(team: str) -> tuple[pd.DataFrame, Optional[pd.DataFrame]]:
-        best_rows, best_full = pd.DataFrame(), None
-        for code in _domestic_fallback():
-            df = store.load_results(code)
-            if df.empty:
-                continue
-            rows = _find_team_rows(df, _aliased(code, df, team), cutoff)
-            if len(rows) > len(best_rows):
-                best_rows, best_full = rows, df
-            # A full rolling window is the most that will ever be used, so once
-            # one league supplies it there is nothing better to find. Without
-            # this the search scans all ~50 leagues for every cup team.
-            if len(best_rows) >= ROLLING_MATCHES:
-                break
-        return best_rows, best_full
-
-    H, full_H = best_frame(home_team)
-    A, _ = best_frame(away_team)
-
-    if len(H) < min_matches or len(A) < min_matches:
+    if not CUP_TIPS_ENABLED:
         return {}
 
-    return _compute_features(H, A, home_team, away_team,
-                             full_H if full_H is not None else H,
-                             league_code=league_code)
+    from app.data import club_elo
+
+    got = club_elo.cup_mu(league_code, home_team, away_team, match_date,
+                          INTL_GOAL_AVERAGES.get(league_code))
+    if got is None:
+        return {}
+    mu, base = got
+
+    # The one derived module input: the model's own P(2+ goals), so the
+    # under-guard reads this fixture rather than a neutral default.
+    p_two_plus = 1.0 - math.exp(-mu) * (1.0 + mu)
+
+    return {"mu_total": mu, "league_mu": base, "p_two_plus": p_two_plus}
 
 
 # ── Main entry point ──────────────────────────────────────────────────────────
@@ -1025,6 +1230,24 @@ def asof_features(
 
     H = _find_team_rows(df, home_team, cutoff)
     A = _find_team_rows(df, away_team, cutoff)
+    H_home = _find_venue_rows(df, home_team, cutoff, "home")
+    A_away = _find_venue_rows(df, away_team, cutoff, "away")
+
+    # A club its own league cannot describe may have just arrived from the
+    # division above or below — see the fallback's header for the measured
+    # exchange rate. Rescue-only: this branch is unreachable for any club the
+    # league already has `min_matches` rows for.
+    if len(H) < min_matches:
+        got = _cross_division_rows(league_code, home_team, cutoff,
+                                   min_matches, "home")
+        if got is not None:
+            home_team, H, H_home = got
+    if len(A) < min_matches:
+        got = _cross_division_rows(league_code, away_team, cutoff,
+                                   min_matches, "away")
+        if got is not None:
+            away_team, A, A_away = got
+
     if len(H) < min_matches or len(A) < min_matches:
         return {}
 
@@ -1032,10 +1255,101 @@ def asof_features(
         H, A, home_team, away_team, df,
         league_code=league_code,
         league_mu=league_mu_asof,
-        H_home=_find_venue_rows(df, home_team, cutoff, "home"),
-        A_away=_find_venue_rows(df, away_team, cutoff, "away"),
+        H_home=H_home,
+        A_away=A_away,
         cutoff=cutoff,
     )
+
+
+# ── Cross-division fallback ───────────────────────────────────────────────────
+#
+# A promoted club abstains with a full season of history one division down —
+# Le Mans with 328 rows in FRA-L2, Racing Santander with 336 in ESP-L2 — and
+# recurs for ~3 clubs per league every August. No alias or merge can reach it,
+# because the rows genuinely live in another competition's file.
+#
+# The reason it was never simply "look one division down" is that the form does
+# not transfer raw. Measured over 789 club-seasons that crossed a stored
+# boundary (15+ matches before, 10+ after):
+#
+#     PROMOTED  (415)   goals for  x0.754    against x1.516    total x1.025
+#     RELEGATED (374)   goals for  x1.345    against x0.727    total x0.948
+#
+# A promoted side scores a quarter less and concedes half again more, so its
+# raw lower-division rates would overstate the team lane badly. But the two
+# directions are near-reciprocal (0.754 up against 1/1.345 = 0.743 down), which
+# is what one stable exchange rate between adjacent divisions looks like — so
+# the correction is those constants applied to the rows, and the fixture's own
+# league then supplies every baseline (league_mu, base rates, shrink targets)
+# exactly as it would for any other club. The match TOTAL transfers almost
+# clean (x1.025), which is why the scaled read is usable at all: this engine
+# prices totals.
+#
+# GUARDED like the merge table: the fallback fires only when the club's own
+# league yields fewer than `min_matches` rows, so it can convert an abstention
+# into a tip and can never move a tip the engine already issues.
+DIVISION_LADDERS = [
+    ["ENG-PL", "ENG-CH", "ENG-L1", "ENG-L2", "ENG-NL"],
+    ["ESP-LL", "ESP-L2"],
+    ["NED-ED", "NED-D2"],
+    ["GER-BL", "GER-B2"],
+    ["ITA-SA", "ITA-SB"],
+    ["FRA-L1", "FRA-L2"],
+    ["SCO-PL", "SCO-CH", "SCO-L1", "SCO-L2"],
+    ["BRA-SA", "BRA-SB"],
+    ["SUI-SL", "SUI-CL"],
+]
+PROMOTED_SCORED = 0.754
+PROMOTED_CONCEDED = 1.516
+
+
+def _adjacent_divisions(league_code: str) -> List[Tuple[str, bool]]:
+    """(sibling code, promoted) — promoted=True when the sibling sits BELOW
+    the fixture's league, so a club found there is moving up into it."""
+    for ladder in DIVISION_LADDERS:
+        if league_code in ladder:
+            i = ladder.index(league_code)
+            out = []
+            if i + 1 < len(ladder):
+                out.append((ladder[i + 1], True))
+            if i > 0:
+                out.append((ladder[i - 1], False))
+            return out
+    return []
+
+
+def _cross_division_rows(
+    league_code: str, team: str, cutoff: datetime, min_matches: int,
+    venue: str,
+) -> Optional[Tuple[str, pd.DataFrame, pd.DataFrame]]:
+    """(matched name, rows, venue rows) from an adjacent division, with every
+    goal rescaled to the fixture league's level. None when the club is not
+    there either — the abstention then stands, which is the honest end."""
+    for code, promoted in _adjacent_divisions(league_code):
+        df = store.load_results(code)
+        if df.empty:
+            continue
+        matched = _resolve_in_frame(df, _aliased(code, df, team))
+        if matched is None:
+            continue
+        rows = _find_team_rows(df, matched, cutoff)
+        if len(rows) < min_matches:
+            continue
+        sf = PROMOTED_SCORED if promoted else 1.0 / PROMOTED_SCORED
+        cf = PROMOTED_CONCEDED if promoted else 1.0 / PROMOTED_CONCEDED
+
+        def scale(frame: pd.DataFrame) -> pd.DataFrame:
+            out = frame.copy()
+            is_home = out["home"].astype(str) == matched
+            out.loc[is_home, "hg"] = out.loc[is_home, "hg"] * sf
+            out.loc[is_home, "ag"] = out.loc[is_home, "ag"] * cf
+            out.loc[~is_home, "ag"] = out.loc[~is_home, "ag"] * sf
+            out.loc[~is_home, "hg"] = out.loc[~is_home, "hg"] * cf
+            return out
+
+        return (matched, scale(rows),
+                scale(_find_venue_rows(df, matched, cutoff, venue)))
+    return None
 
 
 def validate_match_existed(

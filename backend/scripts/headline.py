@@ -69,12 +69,30 @@ def bets() -> tuple[int, int, float]:
             continue
         parts = ln.split("\t")
         name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
+        # A position cashed out at stake (cashout flag, column 5) is realised
+        # money: it settles the moment it is flagged, at exactly 1.00x, no
+        # matter what the fixture later does — the fixture's result belongs
+        # to whatever bet replaced it, never to this one twice.
+        if len(parts) > 4 and parts[4] == "1":
+            staked += 1
+            returned += 1.0
+            n += 1
+            hits += 1
+            continue
         fx = fixtures.get(name)
         if fx is None or fx["hg"] is None:
             continue
-        goals = (fx["hg"] + fx["ag"]) if side == "-" else (
-            fx["hg"] if side == "H" else fx["ag"])
-        s = ledger.pricing.settle_fraction(rung, goals)
+        if rung == "DNB":
+            # Draw No Bet settles on the match RESULT, which no total carries:
+            # full win, push on a draw, full loss. Tracked because bets exist
+            # against it; the engine still neither tips nor prices 1X2.
+            gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
+                      else (fx["ag"], fx["hg"]))
+            s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        else:
+            goals = (fx["hg"] + fx["ag"]) if side == "-" else (
+                fx["hg"] if side == "H" else fx["ag"])
+            s = ledger.pricing.settle_fraction(rung, goals)
         returned += max(s, 0.0) * odds + (1 - abs(s))
         staked += 1
         n += 1
@@ -141,27 +159,15 @@ def render() -> str:
 
 
 def main() -> None:
-    text = README.read_text()
-    start = text.index("## CURRENT CONFIRMED HITRATE")
-    end = text.index("live tips, not backtests") + len("live tips, not backtests")
-    new = text[:start] + render() + text[end:]
+    """Retired from README duty — the board renders the header now.
 
-    # And the tally above the completed table, from the same count.
-    cs = new.index(COUNTER)
-    ce = new.index("\n", cs)
-    new = new[:cs] + counter_line() + new[ce:]
-    if "--check" in sys.argv:
-        if new != text:
-            print("README headline is STALE. Run: python scripts/headline.py")
-            print("  want:", render().replace("\n", " | "))
-            sys.exit(1)
-        print("headline matches the log")
-        return
-    if new == text:
-        print("headline already current")
-        return
-    README.write_text(new)
-    print(render())
+    The spans this script owned still exist, but the completed table it
+    tallied from does not, so running the old rewrite would zero the header.
+    Deferring keeps old habits and old hooks harmless.
+    """
+    from scripts import board
+
+    board.main()
 
 
 if __name__ == "__main__":

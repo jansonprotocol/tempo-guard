@@ -44,22 +44,26 @@ SCORE = re.compile(r"(\d+)\s*-\s*(\d+)")
 
 
 def read_fixtures() -> dict[str, dict]:
-    """fixture name -> {tip rung, tip probability, home goals, away goals}."""
+    """fixture name -> {tip rung, tip probability, home goals, away goals}.
+
+    Reads config/fixtures.tsv, the typed source the whole board renders from.
+    This used to parse the README's pipe tables, which made the ledger break
+    every time the page's layout moved — the data now never moves.
+    """
     out = {}
-    for ln in README.read_text().splitlines():
-        if not ln.startswith("|") or ln.count("|") != 7 or "---" in ln:
+    for ln in (ROOT / "config" / "fixtures.tsv").read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
             continue
-        c = [x.strip() for x in ln.split("|")]
-        name, status, tip = c[3], c[1], c[4]
-        m = TIP.search(tip)
+        _ko, _code, _league, name, tip1, tip2, status = ln.split("\t")
+        m = TIP.search(tip1)
         if not m:
             continue
-        # Only a SETTLED row carries a result. The pending table shows live
+        # Only a SETTLED row carries a result. The status column shows live
         # scores too ("LIVE: 2-1 (90')"), and an earlier version matched those
         # as final — settling bets off matches still being played, which is the
         # same mistake that mis-graded Antwerp off an in-play 1-1.
         s = SCORE.search(status) if status[:1] in ("✅", "❌") else None
-        m2 = TIP.search(c[5])
+        m2 = TIP.search(tip2)
         out[name] = {
             "rung": m.group(1),
             "p": float(m.group(2)) / 100,
@@ -107,6 +111,23 @@ def main() -> None:
             continue
 
         label = rung if side == "-" else f"{rung}({side})"
+        if rung == "DNB":
+            # Draw No Bet: settles on the match result — win, push on a draw,
+            # loss. The engine neither tips nor prices 1X2, so break-even here
+            # is only the bettor's own record; no buy-from judgement applies.
+            gf = None if fx["hg"] is None else (
+                fx["hg"] if side == "H" else fx["ag"])
+            ga = None if fx["hg"] is None else (
+                fx["ag"] if side == "H" else fx["hg"])
+            out.append((name, rung, odds, None, None, gf, cash, label))
+            if gf is not None:
+                s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+                staked += 1
+                returned += max(s, 0.0) * odds + (1 - abs(s))
+                n_settled += 1
+                n_hit += s >= 0
+            continue
+
         if side == "-":
             # An IN-PLAY bet must be priced against the probability that was
             # true when it was struck, not the pre-match one. Backing `O0.5` at

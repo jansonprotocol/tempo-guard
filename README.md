@@ -5,14 +5,14 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 2
 
 
-## CURRENT CONFIRMED HITRATE: 0.0%
+## CURRENT CONFIRMED HITRATE: 82.8%
 
     lane                        Tip 1              Tip 2
-    all matches              0 / 0               0 / 0
-    played lanes  >+1%       0 / 0               0 / 0
-    placed bets              0 / 0             ROI +0.0%
+    all matches             24 / 29   82.8%     15 / 20   75.0%
+    played lanes  >+1%      16 / 18   88.9%     15 / 20   75.0%
+    placed bets             17 / 23   73.9%    ROI -3.8%
 
-**All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Derived by `python scripts/headline.py`, never typed · over/under markets only · live tips, not backtests
+**All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
 Reset on **24 Aug 2026**, after the first full slate on the calibrated engine.
 That day is archived at
@@ -40,88 +40,255 @@ under 0.87x. The margin is the entire edge.
 drawdown, and never halved the bankroll in 4,000 runs. Bigger stakes on a bad
 price accelerate the loss rather than rescue it.
 
-**3. High-edge tips need about 3% more price than published.** Tips over +3.5%
-stated edge come in 2.5 points overconfident — the winner's curse of ranking by
-an estimate, not a defect that can be fixed. `buy≥1.30` on such a tip means 1.34.
+**3. ~~High-edge tips need about 3% more price than published.~~ Now applied
+automatically — `buy≥` already carries it.** Tips over +3.5% stated edge come in
+2.5 points overconfident — the winner's curse of ranking by an estimate, not a
+defect that can be fixed. Measured twice on separate populations at −2.5 and
+−2.9, against roughly zero in every band below, so `pricing.buy_from` adds 3.2%
+to those tips and nothing to the rest. **Do not add it again by hand.**
 
 **4. In play, price the rung and not the tip.** At 0-0 half time a 2.7-goal
 league gives `O0.5` 75.4% (needs 1.39) and `O1.5` 41.5% (needs 2.53). The
 pre-match probability priced 90 minutes and says nothing about which of those
 you are buying.
 
+**5. The DNB confluence rule (backtested 25 Aug — refined, still
+probationary).** Draw No Bet on side X only when the strands point the same
+way. The 6,354-fixture replay (`dnb_confluence.py`, every pair regenerated
+through the live tip code) kept the rule's core and sharpened every leg:
+
+- **The pointed team lane is real** — the archive's 78.6% avoid-defeat
+  replicated at scale: 78.1% on 3,131 confluence fixtures.
+- **Leg 1 (the Over Tip 1) carries no weight of its own**: the control
+  group — pointed team lane WITHOUT an over corridor — avoids defeat at
+  the same 77.8%. Keep it as context, not as a strand.
+- **The strand that matters is WHICH rung points.** `O1.5` direct (81.1%,
+  break-even 1.32) and `U1.5` elimination (82.7%, break-even 1.27 — the
+  Novorizontino shape) are the real reads. The safe-looking `O0.5` tag is
+  the trap: 73.4%, needs 1.55, which no book offers for these sides.
+- **Venue is a full leg.** Strong rung + X at home: 83.9% avoid defeat on
+  1,231 fixtures, break-even 1.26, and it holds both windows (older 1.21,
+  newer 1.31 — same direction, no flip). X away needs 1.45+ even on the
+  strong rungs. Reims, Everton, Al-Shabab were all home sides.
+- **Leg 4 gets a number.** "Short price confirms" is now: the offered DNB
+  price must CLEAR the group's break-even — **≥1.30 for strong-rung home,
+  ≥1.50 away, never on an `O0.5`-only read**. At 1.22–1.27 the strong-home
+  group is roughly fair, not an edge; the 6-0 live run sits inside that
+  variance. The rule finds survivors; the price decides the bet.
+
+**6. The line-translation ladder.** When the book does not offer the tipped
+line, translate DOWN in safety, never down in price. Best to worst: the
+SOFTER line one notch above the tip (U4.5 over a U4.25/U3.75 tip — converts
+the half-loss outcome into a full win, usually for a couple of cents); the
+tip as printed at its buy≥; the HARDER half-line (U3.5 for U3.75) **only at
+buy≥ + 0.07–0.10** — its win probability is identical (both win at ≤3), but
+at exactly 4 goals it loses the full stake where the quarter line loses
+half, and exactly-4 lands 12–14% of the time at these expectations. Below
+that premium the book is keeping the insurance money.
+
 **Minimum average odds, from settlement rather than `1 / hit-rate`:**
 
     Tip 1    break-even 1.211    at +5% margin  1.27
     Tip 2    break-even 1.393    at +5% margin  1.46
 
-## Playable lanes — edge above +1%
+## 🟢 Playable lanes — edge above +1%
 
-The two fixture tables below measure the ENGINE: every fixture Athena priced, bet or no bet. That number answers *is the model right*, and it stays as it is. This block answers the different question the bankroll asks — **of the lanes that were actually buyable, how many landed?** A tip at zero edge is the base rate wearing a probability; it is correctly skipped, and it does not belong in a hit rate that claims to describe what can be played.
+> [!TIP]
+> The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-So: every lane from both tables carrying an edge above **+1%**, Tip 1 and Tip 2 alike, laid out exactly as the tables below are. A fixture is listed when either lane clears the threshold and the other cell says why it did not, so both lanes, one lane or neither can be in play on any given row — the counter above the table counts lanes, not rows. The threshold is not zero on purpose — measured over 7,576 tips, lanes under +1% stated edge returned **+0.3 points** of real edge over the base rate, against +1.7 to +4.3 for everything above. Arithmetically positive, worth nothing. Derived from those tables by `python scripts/playable.py` and pinned by a test — nothing here is typed, so it cannot drift out of step with the rows it counts.
+**Playable — 31 / 38   ·   81.6%**   ·   **Tip 1 — 16 / 18   ·   88.9%**   ·   **Tip 2 — 15 / 20   ·   75.0%**
 
-**Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+<table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (80.5 +0.0)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 (half win at 4) · 24-08 19:00 <b>Brøndby v Silkeborg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (84.7 +0.8)</td><td>U4.25 82.2% +1.1%<br>buy≥1.30</td><td>❌ U3.75 65.6% +1.4%<br>buy≥1.47 · floor −9.4</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-3 · 24-08 19:00 <b>Malmö v Djurgården</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (78.7 −4.6)</td><td>O1.5 84.8% +5.9%<br>buy≥1.28</td><td>❌ <b>Malmö O1.5</b> 60.1% +12.8%<br>buy≥1.80 · team</td></tr></table>
+<table align="left"><tr><th align="left">❌ 0-0 · 24-08 19:30 <b>Osasuna v Levante</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 75.7% +1.4%<br>buy≥1.39</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-6 · 24-08 20:00 <b>Jong FC Utrecht v Heracles</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (81.5 −1.3)</td><td>O1.5 83.9% +2.3%<br>buy≥1.25</td><td>✅ <b>Heracles O0.5</b> 83.8% +11.1%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 24-08 20:00 <b>Jong PSV v TOP Oss</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (81.5 −1.3)</td><td>U4.25 82.4% +2.6%<br>buy≥1.30</td><td>✅ U3.75 65.9% +3.5%<br>buy≥1.46 · floor −9.1</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 24-08 20:45 <b>Reims v Annecy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (79.5 −3.0)</td><td>O1.5 77.4% +5.5%<br>buy≥1.40</td><td>✅ <b>Reims O0.5</b> 81.4% +7.6%<br>buy≥1.33 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-3 · 24-08 21:00 <b>Fulham v Chelsea</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (83.5 +0.1)</td><td>O1.5 81.3% +1.4%<br>buy≥1.29</td><td>✅ <b>Chelsea O0.5</b> 84.0% +9.2%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 24-08 21:30 <b>Málaga v Deportivo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (81.6 −5.5)</td><td>U3.0 79.1% +1.1%<br>buy≥1.42</td><td>✅ U2.75 58.5% +1.4%<br>buy≥1.61 · floor −16.5</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-4 · 25-08 00:30 <b>Athletic v Novorizontino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>— under +1%</td><td>✅ <b>Athletic U1.5</b> 75.2% +13.1%<br>buy≥1.44 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 (push at 3) · 25-08 00:30 <b>Sport Recife v América-MG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.1% +1.4%<br>buy≥1.33</td><td>❌ U2.75 63.9% +1.9%<br>buy≥1.48 · floor −11.1</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>— under +1%</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>✅ U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-0 · 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>✅ U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-3 · 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td>✅ <b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-3 · 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— under +1%</td><td>✅ <b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>✅ U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
+<table align="left"><tr><th align="left">❌ 4-1 (90'; goal at 90', tie to ET) · 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>❌ U3.75 72.7% +1.6%<br>buy≥1.34 · floor −9.3</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 (push at 3) · 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.3% +1.5%<br>buy≥1.32</td><td>❌ U2.75 64.1% +2.0%<br>buy≥1.48 · floor −10.9</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 26-08 03:00 <b>Cúcuta v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 83.0% +3.3%<br>buy≥1.33</td><td>✅ U4.25 93.3% +1.8%<br>buy≥1.13 · lower edge</td></tr></table>
+<table align="left"><tr><th align="left">🟢 26-08 18:45 <b>Rapid Vienna v Hearts</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 87.4% +1.8%<br>buy≥1.22</td><td>U3.75 73.0% +2.7%<br>buy≥1.33 · floor −9.0</td></tr></table>
+<table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Real Madrid v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 81.2% +6.8%<br>buy≥1.33</td><td><b>Real Madrid O1.5</b> 67.0% +24.7%<br>buy≥1.62 · team</td></tr></table>
+<table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 88.6% +2.6%<br>buy≥1.20</td><td>U3.75 75.0% +3.9%<br>buy≥1.35 · floor −7.0</td></tr></table>
+<table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.8% +1.7%<br>buy≥1.21</td><td>U3.75 73.7% +2.6%<br>buy≥1.32 · floor −8.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 88.4% +2.3%<br>buy≥1.20</td><td>U3.75 74.6% +3.5%<br>buy≥1.31 · floor −7.4</td></tr></table>
+<table align="left"><tr><th align="left">🟢 26-08 23:00 <b>Boyacá Chicó v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 81.9% +2.2%<br>buy≥1.35</td><td>U4.25 92.8% +1.2%<br>buy≥1.14 · lower edge</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 03:30 <b>Atl. Nacional v Dep. Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>— under +1%</td><td>O1.75 72.8% +5.6%<br>buy≥1.57 · floor −2.2</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 17:00 <b>KuPS v Shamrock Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 89.9% +4.3%<br>buy≥1.21</td><td>U3.75 77.0% +6.7%<br>buy≥1.32 · floor −5.0</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 18:00 <b>Jablonec v Rangers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.4% +2.8%<br>buy≥1.20</td><td>U3.75 74.7% +4.3%<br>buy≥1.35 · floor −7.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 18:00 <b>M. Tel-Aviv v Lugano</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 89.4% +3.8%<br>buy≥1.22</td><td>U3.75 76.2% +5.8%<br>buy≥1.33 · floor −5.8</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 18:00 <b>Qarabağ v Twente</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 89.0% +3.4%<br>buy≥1.19</td><td>U3.75 75.5% +5.2%<br>buy≥1.34 · floor −6.5</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 18:45 <b>Freiburg v Motherwell</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>O1.5 77.3% +1.3%<br>buy≥1.36</td><td>O2.25 55.3% +3.5%<br>buy≥1.74 · floor −26.7</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 19:00 <b>Plzeň v Crvena zvezda</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.6% +3.0%<br>buy≥1.15</td><td>U3.75 79.8% +5.0%<br>buy≥1.28 · floor −2.2</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 19:00 <b>Kauno Žalgiris v Beşiktaş</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>— under +1%</td><td>O1.75 73.4% +1.3%<br>buy≥1.49 · floor −8.6</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 19:00 <b>Omonia v St. Truiden</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.2% +2.7%<br>buy≥1.16</td><td>U3.75 79.3% +4.4%<br>buy≥1.28 · floor −2.7</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 19:00 <b>Hradec Králové v Panathinaikos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 86.9% +1.3%<br>buy≥1.22</td><td>U3.75 72.3% +1.9%<br>buy≥1.35 · floor −9.7</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 19:00 <b>Raków v Hajduk</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>— under +1%</td><td>U3.75 71.7% +1.3%<br>buy≥1.36 · floor −10.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 19:00 <b>Riga v Klaksvík</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.4% +2.8%<br>buy≥1.20</td><td>U3.75 74.7% +4.3%<br>buy≥1.35 · floor −7.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 19:00 <b>Brann v PAOK</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 87.2% +1.6%<br>buy≥1.22</td><td>U3.75 72.7% +2.4%<br>buy≥1.34 · floor −9.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:00 <b>Sétif v Ben Aknoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (90.5 +2.9)</td><td>U3.0 84.9% +1.8%<br>buy≥1.29</td><td>U2.75 66.5% +2.6%<br>buy≥1.43 · floor −8.5</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:00 <b>CSKA Sofia v OFI</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.5% +2.9%<br>buy≥1.15</td><td>U3.75 79.7% +4.9%<br>buy≥1.28 · floor −2.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:00 <b>Thun v Lech</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 89.9% +1.4%<br>buy≥1.18</td><td>U3.75 77.1% +2.2%<br>buy≥1.27 · floor −4.9</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:00 <b>St. Gallen v Nordsjælland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.4% +2.9%<br>buy≥1.20</td><td>U3.75 74.7% +4.3%<br>buy≥1.35 · floor −7.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:00 <b>H. Tel Aviv v Atalanta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>O1.5 81.5% +5.5%<br>buy≥1.33</td><td>O2.25 61.9% +10.1%<br>buy≥1.58 · floor −20.1</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:30 <b>Celta v Osasuna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 75.7% +1.5%<br>buy≥1.39</td><td><b>Celta O0.5</b> 83.0% +3.7%<br>buy≥1.31 · team</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:30 <b>Ferencváros v Trabzonspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.4% +2.9%<br>buy≥1.16</td><td>U3.75 79.6% +4.8%<br>buy≥1.28 · floor −2.4</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:30 <b>Brighton v Tromsø</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>O1.5 78.2% +2.3%<br>buy≥1.34</td><td>O2.25 56.7% +4.9%<br>buy≥1.71 · floor −25.3</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 20:30 <b>Borac v Víkingur</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.8% +3.2%<br>buy≥1.19</td><td>U3.75 75.2% +4.9%<br>buy≥1.34 · floor −6.8</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 21:00 <b>Barcelona v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 78.3% +4.0%<br>buy≥1.38</td><td><b>Athletic U1.5</b> 75.3% +7.1%<br>buy≥1.44 · team</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 21:00 <b>Hibernian v Gent</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.2% +2.6%<br>buy≥1.20</td><td>U3.75 74.3% +3.9%<br>buy≥1.36 · floor −7.7</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 21:00 <b>Larne v Lincoln RI</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 90.9% +5.3%<br>buy≥1.20</td><td>U3.75 78.6% +8.3%<br>buy≥1.29 · floor −3.4</td></tr></table>
+<table align="left"><tr><th align="left">🟢 27-08 22:00 <b>MC Alger v Oran</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (90.5 +2.9)</td><td>— under +1%</td><td><b>MC Alger O0.5</b> 81.2% +7.2%<br>buy≥1.33 · team</td></tr></table>
 
-| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
+<br clear="all">
+
+## 🔵 Pending FUTURE match bettips
+
+> [!NOTE]
+> Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
+
+<table align="left"><tr><th align="left">🔵 26-08 18:00 <b>Al-Faisaly v Al-Fateh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— no tip, Al-Faisaly too little top-flight history (promoted)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 18:45 <b>Rapid Vienna v Hearts</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 87.4% +1.8%<br>buy≥1.22</td><td>U3.75 73.0% +2.7%<br>buy≥1.33 · floor −9.0</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 20:00 <b>Al Diriyah v Al-Kholood</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>— no tip, both promoted, too little top-flight history</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 21:00 <b>Real Madrid v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 81.2% +6.8%<br>buy≥1.33</td><td><b>Real Madrid O1.5</b> 67.0% +24.7%<br>buy≥1.62 · team</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 21:00 <b>AEK Athens v Levski Sofia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 85.7% <b>−0.4%</b><br>buy≥1.24</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 21:00 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 88.6% +2.6%<br>buy≥1.20</td><td>U3.75 75.0% +3.9%<br>buy≥1.35 · floor −7.0</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 21:00 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.8% +1.7%<br>buy≥1.21</td><td>U3.75 73.7% +2.6%<br>buy≥1.32 · floor −8.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 21:00 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 88.4% +2.3%<br>buy≥1.20</td><td>U3.75 74.6% +3.5%<br>buy≥1.31 · floor −7.4</td></tr></table>
+<table align="left"><tr><th align="left">🔵 26-08 23:00 <b>Boyacá Chicó v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 81.9% +2.2%<br>buy≥1.35</td><td>U4.25 92.8% +1.2%<br>buy≥1.14 · lower edge</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 00:00 <b>Coquimbo v U. Católica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>O1.5 76.8% +0.5%<br>buy≥1.37</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 01:20 <b>América de Cali v Junior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 80.5% +0.8%<br>buy≥1.39</td><td>U2.75 60.3% +1.0%<br>buy≥1.57 · floor −14.7</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 03:30 <b>Atl. Nacional v Dep. Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U4.25 88.1% <b>−3.4%</b><br>buy≥1.20</td><td>O1.75 72.8% +5.6%<br>buy≥1.57 · floor −2.2</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 17:00 <b>KuPS v Shamrock Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 89.9% +4.3%<br>buy≥1.21</td><td>U3.75 77.0% +6.7%<br>buy≥1.32 · floor −5.0</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 18:00 <b>Ararat-Armenia v U. Craiova</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 88.4% <b>−0.2%</b><br>buy≥1.20</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 18:00 <b>Iberia v Jagiellonia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>— no tip: Iberia has no Club Elo rating</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 18:00 <b>Jablonec v Rangers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.4% +2.8%<br>buy≥1.20</td><td>U3.75 74.7% +4.3%<br>buy≥1.35 · floor −7.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 18:00 <b>M. Tel-Aviv v Lugano</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 89.4% +3.8%<br>buy≥1.22</td><td>U3.75 76.2% +5.8%<br>buy≥1.33 · floor −5.8</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 18:00 <b>Qarabağ v Twente</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 89.0% +3.4%<br>buy≥1.19</td><td>U3.75 75.5% +5.2%<br>buy≥1.34 · floor −6.5</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 18:45 <b>Monaco v Górnik</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 83.0% <b>−2.6%</b><br>buy≥1.29</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 18:45 <b>Freiburg v Motherwell</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>O1.5 77.3% +1.3%<br>buy≥1.36</td><td>O2.25 55.3% +3.5%<br>buy≥1.74 · floor −26.7</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Plzeň v Crvena zvezda</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.6% +3.0%<br>buy≥1.15</td><td>U3.75 79.8% +5.0%<br>buy≥1.28 · floor −2.2</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Kauno Žalgiris v Beşiktaş</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 84.8% <b>−3.8%</b><br>buy≥1.26</td><td>O1.75 73.4% +1.3%<br>buy≥1.49 · floor −8.6</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Lillestrøm v Egnatia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>— no tip: Lillestrøm's Elo is 17 months stale (freshness guard)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Omonia v St. Truiden</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.2% +2.7%<br>buy≥1.16</td><td>U3.75 79.3% +4.4%<br>buy≥1.28 · floor −2.7</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Salzburg v Mjällby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>— no tip: Mjällby has no Club Elo rating</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Hradec Králové v Panathinaikos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 86.9% +1.3%<br>buy≥1.22</td><td>U3.75 72.3% +1.9%<br>buy≥1.35 · floor −9.7</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>København v Inter Turku</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>— no tip: Inter Turku's Elo is 3 years stale (freshness guard)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Inter Escaldes v Drita</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 85.4% <b>−0.2%</b><br>buy≥1.25</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Pafos v Dinamo City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 81.3% <b>−4.3%</b><br>buy≥1.32</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Raków v Hajduk</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 86.5% +0.9%<br>buy≥1.23</td><td>U3.75 71.7% +1.3%<br>buy≥1.36 · floor −10.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Riga v Klaksvík</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.4% +2.8%<br>buy≥1.20</td><td>U3.75 74.7% +4.3%<br>buy≥1.35 · floor −7.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 19:00 <b>Brann v PAOK</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 87.2% +1.6%<br>buy≥1.22</td><td>U3.75 72.7% +2.4%<br>buy≥1.34 · floor −9.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>Sétif v Ben Aknoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (90.5 +2.9)</td><td>U3.0 84.9% +1.8%<br>buy≥1.29</td><td>U2.75 66.5% +2.6%<br>buy≥1.43 · floor −8.5</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>AGF v Benfica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 86.2% <b>−2.3%</b><br>buy≥1.23</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>CSKA Sofia v OFI</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.5% +2.9%<br>buy≥1.15</td><td>U3.75 79.7% +4.9%<br>buy≥1.28 · floor −2.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>Thun v Lech</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 89.9% +1.4%<br>buy≥1.18</td><td>U3.75 77.1% +2.2%<br>buy≥1.27 · floor −4.9</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>Ajax v Sion</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 84.4% <b>−1.2%</b><br>buy≥1.26</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>St. Gallen v Nordsjælland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.4% +2.9%<br>buy≥1.20</td><td>U3.75 74.7% +4.3%<br>buy≥1.35 · floor −7.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>H. Tel Aviv v Atalanta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>O1.5 81.5% +5.5%<br>buy≥1.33</td><td>O2.25 61.9% +10.1%<br>buy≥1.58 · floor −20.1</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:30 <b>Celta v Osasuna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 75.7% +1.5%<br>buy≥1.39</td><td><b>Celta O0.5</b> 83.0% +3.7%<br>buy≥1.31 · team</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:30 <b>Ferencváros v Trabzonspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 91.4% +2.9%<br>buy≥1.16</td><td>U3.75 79.6% +4.8%<br>buy≥1.28 · floor −2.4</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:30 <b>Anderlecht v Kairat</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEL Playoff · probationary (86.4 −0.2)</td><td>U4.25 86.8% <b>−1.8%</b><br>buy≥1.22</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:30 <b>Brighton v Tromsø</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>O1.5 78.2% +2.3%<br>buy≥1.34</td><td>O2.25 56.7% +4.9%<br>buy≥1.71 · floor −25.3</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:30 <b>Austria Wien v Braga</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 83.1% <b>−2.4%</b><br>buy≥1.29</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:30 <b>Borac v Víkingur</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.8% +3.2%<br>buy≥1.19</td><td>U3.75 75.2% +4.9%<br>buy≥1.34 · floor −6.8</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 20:45 <b>Rijeka v Midtjylland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 82.8% <b>−2.8%</b><br>buy≥1.29</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 21:00 <b>Barcelona v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 78.3% +4.0%<br>buy≥1.38</td><td><b>Athletic U1.5</b> 75.3% +7.1%<br>buy≥1.44 · team</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 21:00 <b>Partizan v Getafe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 84.2% <b>−1.4%</b><br>buy≥1.27</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 21:00 <b>Hibernian v Gent</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 88.2% +2.6%<br>buy≥1.20</td><td>U3.75 74.3% +3.9%<br>buy≥1.36 · floor −7.7</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 21:00 <b>Larne v Lincoln RI</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 90.9% +5.3%<br>buy≥1.20</td><td>U3.75 78.6% +8.3%<br>buy≥1.29 · floor −3.4</td></tr></table>
+<table align="left"><tr><th align="left">🔵 27-08 22:00 <b>MC Alger v Oran</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (90.5 +2.9)</td><td>U4.25 93.3% <b>−0.1%</b><br>buy≥1.13</td><td><b>MC Alger O0.5</b> 81.2% +7.2%<br>buy≥1.33 · team</td></tr></table>
+
+<br clear="all">
+
+## ⚪ Completed FUTURE match bettips
+
+**Tip 1 — 24 / 29   ·   82.8%**   ·   **Tip 2 — 15 / 20   ·   75.0%**
+
+<table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (80.5 +0.0)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 (half win at 4) · 24-08 19:00 <b>Brøndby v Silkeborg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (84.7 +0.8)</td><td>U4.25 82.2% +1.1%<br>buy≥1.30</td><td>❌ U3.75 65.6% +1.4%<br>buy≥1.47 · floor −9.4</td></tr></table>
+<table align="left"><tr><th align="left">⚪ 3-2 (no tip) · 24-08 19:00 <b>Celta Fortuna v FC Andorra</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (81.6 −5.5)</td><td>— no tip, Celta B has 1 row (reserve side, promoted)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-3 · 24-08 19:00 <b>Malmö v Djurgården</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (78.7 −4.6)</td><td>O1.5 84.8% +5.9%<br>buy≥1.28</td><td>❌ <b>Malmö O1.5</b> 60.1% +12.8%<br>buy≥1.80 · team</td></tr></table>
+<table align="left"><tr><th align="left">❌ 0-0 · 24-08 19:30 <b>Osasuna v Levante</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 75.7% +1.4%<br>buy≥1.39</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-6 · 24-08 20:00 <b>Jong FC Utrecht v Heracles</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (81.5 −1.3)</td><td>O1.5 83.9% +2.3%<br>buy≥1.25</td><td>✅ <b>Heracles O0.5</b> 83.8% +11.1%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 24-08 20:00 <b>Jong PSV v TOP Oss</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (81.5 −1.3)</td><td>U4.25 82.4% +2.6%<br>buy≥1.30</td><td>✅ U3.75 65.9% +3.5%<br>buy≥1.46 · floor −9.1</td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-2 (two penalties) · 24-08 20:00 <b>Al-Ittihad v Al-Hazem</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 82.5% +0.5%<br>buy≥1.30</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">⚪ 2-0 (no tip) · 24-08 20:30 <b>Kocaelispor v Amed</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.2 −2.9)</td><td>— no tip, Amedspor has 1 row (promoted)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 24-08 20:45 <b>Reims v Annecy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (79.5 −3.0)</td><td>O1.5 77.4% +5.5%<br>buy≥1.40</td><td>✅ <b>Reims O0.5</b> 81.4% +7.6%<br>buy≥1.33 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 4-0 (half win at 4) · 24-08 20:45 <b>Roma v Fiorentina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (80.5 +0.0)</td><td>U4.25 88.4% <b>−0.3%</b><br>buy≥1.20</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-3 · 24-08 21:00 <b>Fulham v Chelsea</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (83.5 +0.1)</td><td>O1.5 81.3% +1.4%<br>buy≥1.29</td><td>✅ <b>Chelsea O0.5</b> 84.0% +9.2%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 24-08 21:15 <b>Gil Vicente v Casa Pia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (79.5 −0.9)</td><td>U4.25 86.8% +0.5%<br>buy≥1.22</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 24-08 21:30 <b>Granada v Mallorca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (81.6 −5.5)</td><td>U3.0 78.1% +0.1%<br>buy≥1.45</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 24-08 21:30 <b>Málaga v Deportivo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (81.6 −5.5)</td><td>U3.0 79.1% +1.1%<br>buy≥1.42</td><td>✅ U2.75 58.5% +1.4%<br>buy≥1.61 · floor −16.5</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-4 · 25-08 00:30 <b>Athletic v Novorizontino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>O1.0 89.2% +0.2%<br>buy≥1.22</td><td>✅ <b>Athletic U1.5</b> 75.2% +13.1%<br>buy≥1.44 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 (push at 3) · 25-08 00:30 <b>Sport Recife v América-MG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.1% +1.4%<br>buy≥1.33</td><td>❌ U2.75 63.9% +1.9%<br>buy≥1.48 · floor −11.1</td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 25-08 01:00 <b>Botafogo v Athletico</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (82.7 +0.9)</td><td>U4.25 88.5% <b>−0.4%</b><br>buy≥1.20</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>O1.5 76.5% +0.1%<br>buy≥1.37</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>✅ U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-0 · 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>✅ U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-2 (90'+4; 5-2 aet) · 25-08 18:45 <b>Sabah v H. Be'er Sheva</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 86.5% +0.4%<br>buy≥1.23</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-3 · 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td>✅ <b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-3 · 25-08 20:00 <b>Al-Shabab v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (82.7 −0.8)</td><td>O1.5 79.9% +0.2%<br>buy≥1.31</td><td>✅ <b>Al-Shabab O0.5</b> 84.0% +5.9%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 25-08 21:00 <b>Valencia v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>U4.25 88.0% +1.1%<br>buy≥1.21</td><td>✅ U3.75 74.0% +1.7%<br>buy≥1.32 · floor −1.0</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 · 25-08 21:00 <b>Bodø/Glimt v NEC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 86.6% +0.5%<br>buy≥1.23</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">❌ 4-1 (90'; goal at 90', tie to ET) · 25-08 21:00 <b>LASK v Celtic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.2% +1.1%<br>buy≥1.22</td><td>❌ U3.75 72.7% +1.6%<br>buy≥1.34 · floor −9.3</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 (push at 3) · 26-08 00:30 <b>Atlético-GO v Botafogo-SP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 81.9% +0.1%<br>buy≥1.36</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 (push at 3) · 26-08 00:30 <b>Juventude v CRB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.8 −1.0)</td><td>U3.0 83.3% +1.5%<br>buy≥1.32</td><td>❌ U2.75 64.1% +2.0%<br>buy≥1.48 · floor −10.9</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 26-08 03:00 <b>Cúcuta v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 83.0% +3.3%<br>buy≥1.33</td><td>✅ U4.25 93.3% +1.8%<br>buy≥1.13 · lower edge</td></tr></table>
+
+<br clear="all">
+
+### 🟡 Actual placed bets
+
+**Settled: 17 / 23  ·  ROI -3.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+
+| Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
-| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.25 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.86 | 2026-08-24 18:40 |
-| — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
-| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.24 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.75 | 2026-08-24 19:00 |
-| — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
-| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.39 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.31 | 2026-08-24 20:45 |
-| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.30 | 2026-08-24 20:45 |
-| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.24 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.37 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.51 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.33 | 2026-08-24 21:15 |
-| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.37 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.25 | 2026-08-24 21:30 |
-| — | LaLiga 2 | Granada v Mallorca | — under +1% | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.28 | 2026-08-25 00:30 |
-| — | Liga de Primera | Everton v U. de Concepción | — under +1% | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.26 | 2026-08-25 01:30 |
-
-## Pending FUTURE match bettips
-
-**Every fixture table below is sorted by kickoff, earliest first** — pending,
-completed and placed bets alike. New rows arrive in the order fixtures are
-priced, which is not that order, so run `python scripts/sort_tables.py` after
-adding any; a test fails if a table drifts out of order. **These two tables are
-the only thing on this page that is typed.** Everything above them reads from
-them: the header counts by `python scripts/headline.py`, the playable-lanes
-block by `python scripts/playable.py`. After editing a table run all three
-scripts; each has a `--check` mode and each is pinned by a test.
-
-| Live | League | Teams | Tip 1 | Tip 2 | Kickoff |
-|---|---|---|---|---|---|
-| — | Serie A | Bologna v Lazio | U4.25 89.1% +0.5% · buy≥1.19 | — none | 2026-08-24 18:30 |
-| — | Saudi Pro League | Neom v Al-Qadsiah | O1.5 84.2% +4.4% · buy≥1.25 | **Al-Qadsiah O1.5** 56.5% +18.4% (team) · buy≥1.86 | 2026-08-24 18:40 |
-| — | Danish Superliga | Brøndby v Silkeborg | O1.5 80.8% +1.6% · buy≥1.30 | O2.25 58.8% +2.3% (floor −16.2) · buy≥1.59 | 2026-08-24 19:00 |
-| — | Allsvenskan | Malmö v Djurgården | O1.5 84.8% +5.9% · buy≥1.24 | **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.75 | 2026-08-24 19:00 |
-| — | LaLiga 2 | Celta Fortuna v FC Andorra | — no tip, Celta B has 1 row (reserve side, promoted) | — | 2026-08-24 19:00 |
-| — | LaLiga | Osasuna v Levante | O1.5 75.5% +1.1% · buy≥1.39 | — none | 2026-08-24 19:30 |
-| — | Saudi Pro League | Al-Ittihad v Al-Hazem | U4.25 81.9% **+0.0%** · buy≥1.31 | — none | 2026-08-24 20:00 |
-| — | Trendyol Süper Lig | Kocaelispor v Amed | — no tip, Amedspor has 1 row (promoted) | — | 2026-08-24 20:30 |
-| — | Ligue 2 | Reims v Annecy | O1.5 75.4% +3.5% · buy≥1.39 | **Reims O0.5** 80.3% +7.0% (team) · buy≥1.31 | 2026-08-24 20:45 |
-| — | Serie A | Roma v Fiorentina | O1.5 74.1% +2.2% · buy≥1.42 | **Roma O0.5** 80.9% +7.5% (team) · buy≥1.30 | 2026-08-24 20:45 |
-| — | Premier League | Fulham v Chelsea | U4.25 86.1% +4.4% · buy≥1.24 | U3.75 71.1% +6.2% (floor −3.9) · buy≥1.37 | 2026-08-24 21:00 |
-| — | Liga Portugal | Gil Vicente v Casa Pia | U3.0 76.1% +4.6% · buy≥1.51 | **Casa Pia U1.5** 79.2% +13.9% (team) · buy≥1.33 | 2026-08-24 21:15 |
-| — | LaLiga 2 | Málaga v Deportivo | O1.5 76.9% +6.2% · buy≥1.37 | **Málaga O0.5** 83.8% +7.4% (team) · buy≥1.25 | 2026-08-24 21:30 |
-| — | LaLiga 2 | Granada v Mallorca | U3.0 77.3% +0.9% · buy≥1.47 | U2.75 56.3% +1.1% (floor −18.7) · buy≥1.67 | 2026-08-24 21:30 |
-| — | Brasileirão Série B | Athletic v Novorizontino | O1.0 89.2% +0.2% · buy≥1.22 | — none | 2026-08-25 00:30 |
-| — | Brasileirão Série B | Sport Recife v América-MG | U3.0 83.1% +1.4% · buy≥1.33 | **América-MG U1.5** 82.3% +4.7% (team) · buy≥1.28 | 2026-08-25 00:30 |
-| — | Brasileirão | Botafogo v Athletico | U3.0 76.2% +0.8% · buy≥1.51 | — none | 2026-08-25 01:00 |
-| — | Liga de Primera | Everton v U. de Concepción | O1.5 76.5% +0.1% · buy≥1.37 | **Everton O0.5** 83.5% +5.5% (team) · buy≥1.26 | 2026-08-25 01:30 |
-
-## Completed FUTURE match bettips
-
-**Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
-
-| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |
-|---|---|---|---|---|---|
-
-### Actual placed bets
-
-**Settled: 0 / 0  ·  Pending: 0**
-
-| Kickoff | Fixture | Athena Tip 1 | Lane taken | Odds | Buy from | EV |
-|---|---|---|---|---|---|---|
+| ❌ | Fulham v Chelsea | U3.75 | 1.36 | 0.00x | pre-refresh Tip 2; the refresh flipped the fixture |
+| ✅ | Málaga v Deportivo | O0.5 (home) | 1.35 | 1.35x | pre-refresh team lane; later dropped off the fixture |
+| ✅ | Málaga v Deportivo | O1.5 | 1.48 | 1.48x | pre-refresh Tip 1 |
+| ✅ | Sport Recife v América-MG | U3.5 | 1.28 | 1.28x | same tier as the U3.0 tip |
+| ❌½ | Brøndby v Silkeborg | U3.75 | 1.50 | 0.50x | Tip 2 |
+| ✅ | Brøndby v Silkeborg | U4.5 | 1.26 | 1.26x | same tier, softer settlement |
+| ❌ | Malmö v Djurgården | O1.5 (home) | 1.93 | 0.00x | the star lane, bought at 1.93 vs buy≥1.80 |
+| ❌ | Osasuna v Levante | O1.5 | 1.30 | 0.00x | filler, under buy-from |
+| ❌ | Al-Ittihad v Al-Hazem | U4.5 | 1.22 | 0.00x | filler |
+| ✅ | Fulham v Chelsea | O1.5 | 1.23 | 1.23x | the tip, at break-even |
+| ✅ | Bologna v Lazio | U3.5 | 1.22 | 1.22x | filler, under buy-from |
+| ✅ | Cúcuta v Alianza Valledupar | U3.0 | 1.24 | 1.24x | the tip, 9 cents under buy-from |
+| ✅ | Reims v Annecy | DNB (home) | 1.35 | 1.35x | experimental |
+| ◦ | Al-Shabab v Al-Riyadh | DNB (home) | 1.27 | 1.00x | experimental |
+| ✅ | Neom v Al-Qadsiah | DNB (away) | 1.22 | 1.22x | experimental |
+| ✅ | Everton v U. de Concepción | DNB (home) | 1.22 | 1.22x | experimental |
+| ✅ | Jong FC Utrecht v Heracles | DNB (away) | 1.23 | 1.23x | experimental, engine's steepest DNB verdict |
+| ✅ | Jong PSV v TOP Oss | U4.5 | 1.30 | 1.30x | clean buy, +7.1% at strike |
+| ✅ | Juventude v CRB | U3.5 | 1.20 | 1.20x | same tier as the flipped U3.0 tip, extra cushion; U3.0 unavailable |
+| ✅ | Athletic v Novorizontino | DNB (away) | 1.63 | 1.63x | experimental, derived from the Athletic U1.5 team lane |
+| ❌ | LASK v Celtic | U4.5 | 1.20 | 0.00x | first cup-lane bet, probationary; tip U4.25, book line U4.5 softer, +4.6% at strike |
+| ✅ | Bodø/Glimt v NEC | U4.5 | 1.42 | 1.42x | cup lane, probationary; +22.9% EV at strike, the board price of the slate |
+| — open | Rapid Vienna v Hearts | U4.5 | 1.18 | — | cup lane, softer line above U4.25 tip, +3.1% at strike |
+| ◦ | Plzeň v Crvena zvezda | U4.5 | 1.14 | 1.00x | cashed out at stake, replaced with the U3.5 below |
+| — open | Thun v Lech | U4.5 | 1.19 | — | cup lane, +7.0% at strike, best EV of the five |
+| — open | St. Gallen v Nordsjælland | U4.5 | 1.20 | — | cup lane, +6.1% at strike |
+| — open | Celta v Osasuna | DNB (home) | 1.38 | — | experimental; O0.5-pointed read, the rung the backtest flagged |
+| — open | Borac v Víkingur | U4.5 | 1.17 | — | cup lane, +3.9% at strike |
+| — open | Viking v Dinamo Zagreb | U3.5 | 1.45 | — | rule-6 harder line, needed ~1.41, +8.1% at strike |
+| — open | Plzeň v Crvena zvezda | U3.5 | 1.43 | — | rule-6 harder line, needed ~1.32, +14.2% at strike |
+| — open | Riga v Klaksvík | U3.5 | 1.47 | — | rule-6 harder line, needed ~1.41, +9.7% at strike |
+| — open | CSKA Sofia v OFI | U3.5 | 1.36 | — | rule-6 harder line, needed ~1.32, +8.4% at strike |
 
 ## Engine state — 24 Aug 2026
 
@@ -129,6 +296,14 @@ scripts; each has a `--check` mode and each is pinned by a test.
                                        toward the league mean
     MU_SHRINK_BY_LEAGUE    MLS 0.15, IRL-PD 0.10
     TEAM_SHRINK            0.62        the team-total lane, shrunk separately
+    BIG_MATCH_DEBIT        0.15        both sides top-6 as-of: two fat form
+                                       rates price a top clash UP exactly when
+                                       the occasion pushes it down; validated
+                                       on two windows (−0.13 / −0.16), and the
+                                       relegation mirror case died a sign-flip
+    TEAM_RATE_FLOOR        0.95        floor on the shrunk per-side rate; the
+                                       low end needed a level fix, not a spread
+                                       one, and the two ends pull opposite ways
     MIN_WIN_PROB           0.75        probability floor, re-tuned with the shrink
 
     weighted calibration gap    -0.6 in-sample, -1.5 out-of-sample  (was -4.4)
@@ -595,6 +770,377 @@ change that improved hit rate while concentrating the book would have been the
 certainty trap again. Three constants (`MU_SHRINK`, `TEAM_SHRINK`,
 `MIN_WIN_PROB`), two per-league overrides, and the coupling between the first
 and last pinned in a test so neither can move alone.
+
+### Diagnostics — 24 Aug, full re-run
+
+Every instrument re-run on the current engine. Two things worth saying before
+the numbers: **the engine reproduced its 23 Aug figures to a tenth of a point**,
+which is the first time a rebuild here has been boringly stable, and **the one
+open defect that looked like two defects turned out to be one, in the place
+nobody was looking.**
+
+#### The venue fix holds, and the "side split" it left behind is not real
+
+`tt05_calibration`, 13,872 side-observations, no lane selection:
+
+    HOME    +0.8      (was +4.1 before the fix)
+    AWAY    +0.3      (was -3.6)
+    BOTH    +0.5      split 0.5, from 7.7
+
+But `team_calibration` still reported the lane-level sides split — TA +2.9,
+TB −3.0 — which read as the fix not having taken. It has. `team_rung_side.py`
+cross-tabulates rung against side and the margin dissolves:
+
+    rung          HOME (TA)              AWAY (TB)
+                n    says   hit  gap    n    says   hit  gap
+    O0.5      884   82.1%  82.8% +0.8  350   81.7%  82.3% +0.5
+    O1.5      721   60.3%  66.2% +5.9  113   59.6%  64.6% +5.0
+    U1.5       61   79.9%  78.7% -1.2  813   78.6%  73.1% -5.6
+
+**`O1.5` runs +5.9 at home and +5.0 away — the same on both sides**, so it is
+not venue. The side margin was pure composition: `O1.5` is 86.5% home lanes and
+`U1.5` is 93.0% away lanes, because home teams score more. Two apparent defects,
+one real one, and it lives in the rung.
+
+#### The rung defect is NOT a Poisson shape error — sixth hypothesis dead
+
+The obvious mechanism was over-dispersion. `team_total` recovers
+`gf = -ln(1 - p_tt05)` and prices every rung as Poisson(`gf`), which pins
+`P(≥1)` by construction — so `O0.5` cannot be wrong however wrong the shape is,
+and every shape error is pushed onto the `≥2` boundary. That predicts exactly
+what was seen, including why `O0.5` is clean.
+
+`side_shape.py` tested it selection-free on 13,872 observations. It is wrong:
+
+    P(side scores >= 2)      poisson   actual    gap
+      fitted gf 0.0-0.9       19.3%    26.0%    +6.7
+      fitted gf 0.9-1.2       29.1%    30.7%    +1.6
+      fitted gf 1.2-1.5       38.9%    38.5%    -0.4
+      fitted gf 1.5-1.9       49.1%    49.5%    +0.4
+      fitted gf 1.9-9.9       61.3%    64.9%    +3.5
+      ALL                     39.1%    39.9%    +0.8
+
+    one side's goals: mean 1.376  var 1.441  var/mean 1.047  (Poisson = 1.000)
+
+**Pooled +0.8 and the middle bands flat.** The Poisson ladder is sound and the
+dispersion is 1.047, near enough to 1.000 to price with. What the table does
+show is a different thing: **both extreme bands run high**, and the two ends
+turn out to need OPPOSITE corrections.
+
+#### FIXED — the weakest sides were rated too low. `TEAM_RATE_FLOOR = 0.95`
+
+Sweeping `TEAM_SHRINK` with band membership frozen settles which end is which:
+
+    TEAM_SHRINK      0.62    0.70    0.78    0.86     P(>=2) gap
+    gf 0.0-0.9      +6.7    +7.9    +9.2   +10.4     gets WORSE
+    gf 1.9-9.9      +3.5    +2.0    +0.5    -0.9     gets better
+    ALL             +0.8    +0.9    +1.0    +1.1     sd(gf) 0.304 -> 0.375
+
+Less shrink fixes the top and wrecks the bottom, and pooled degrades all the
+way, so **0.62 stays** — which independently re-confirms the sweep that set it.
+The bottom band is not a spread problem at all. It is a level error, and the
+regression that SET the shrink had already printed it without anyone reading it
+as a separate fault: *"lowest gf fifth says 0.90 goals, actually 1.14"*. A slope
+fitted with an intercept of 0.572 cannot be applied as a slope alone.
+
+So the correction is a floor, not a scalar. Picked on the recent window and
+scored on the held-back one:
+
+    P(side scores >= 2), gf < 0.9      recent   held-back
+      no floor                          +6.8       +6.5
+      floor 0.95                        +1.5       +1.4
+
+    lane        no floor           floor 0.95        volume
+    U1.5     -6.7 / -4.0        -4.3 / -0.1      421->381, 453->413
+    O1.5     +8.6 / +2.7        +8.5 / +2.9      untouched
+    O0.5     +2.5 / -0.9        +2.4 / -0.7      untouched
+
+**`U1.5` improves in both windows for about 9% of its lanes**, and nothing else
+moves — `U1.5` needs `p ≥ 0.75`, so `P(≥2) ≤ 0.25`, so `gf ≤ 0.96`, which is
+why that lane and only that lane sits inside the floored band. `p_*_tt05` is
+built from `_shrink_side` and `mu_total` is not, so the match ladder cannot be
+touched; a test pins that. On the live slate every `mu` is unchanged, `Casa Pia
+U1.5` moved 79.2% → 75.4% and one `U1.5` dropped under its offer floor.
+
+#### OFF THE BOARD — the whole cup family, measured at −11.4
+
+The question "can the qualifiers be priced instead of declined?" got its
+answer backwards: the qualifiers were never the risk — the main phase was.
+Replayed on the 1,200 most recent stored matches per competition:
+
+    UCL     680 tips   gap  −8.3        UCL-Q    48   −21.3
+    UEL    1210 tips   gap −13.4        UEL-Q    60   −16.1
+    UECL    219 tips   gap −10.0        UECL-Q   70    −7.6
+    ALL    2109 tips   gap −11.4 [69−73]
+
+Not the baselines (they were 0.17−0.36 low and are now corrected to measured
+values): UEL carries half of UCL's baseline error and a BIGGER gap. The
+by-market cut names the disease — `U4.25`, the rung that leans on the base
+rate, is calibrated at −1.6, while every rung needing real per-fixture
+information is broken (`O2.25` −23.0, `U3.0` −17.1). **Domestic form does not
+transfer to European opposition**, and the engine cannot see relative
+strength across leagues. Not fixable with a constant — and now proven so.
+`cup_calibrate.py` (1,349 fixtures) regressed actual totals on the raw cup
+mu's deviation from its baseline: **slope 0.017 ± 0.021, statistically zero**
+against the domestic 0.42. The cup mu contains no per-fixture information.
+The shrink sweep confirms no rescue exists: best case −3.0/−1.9 at k = 0.10,
+and even k = 0 — informationless baseline tips — misses at −3.9/−2.9,
+because cup totals are **over-dispersed relative to Poisson**: continental
+blowouts fatten the tails, so even the base-rate rung over-promises. So
+`CUP_TIPS_ENABLED = False`, pinned by a test.
+
+**The road back is measured and half-built** (`cup_strength.py`, 25 Aug).
+Every stored cup match bridges two leagues, and least squares over 4,825
+clean bridges rates the leagues from goals alone — the big five emerge in
+order (ENG +1.04, ESP +0.92, GER +0.84, ITA +0.68, FRA +0.50, down to IRL
+−1.31) with a cup home advantage of +0.40. Where domestic form measured a
+slope of 0.017, the ratings PREDICT cup totals: |gap| +0.270 ± 0.063 and sum
++0.121 ± 0.032 — mismatches mean goals, and giants attack rather than hide.
+Two myths also fell: cups are NOT over-dispersed (var/mean 1.00-1.04), and
+the real baseline sin was staleness — modern UCL runs 3.34 goals against the
+2.70 the engine used. A strength-based mu (rolling 3-year baseline +
+0.27·|gap| + 0.04·sum, trained pre-2022) validates at **+1.1 on the most
+recent held-out window** with a live market mix — but sits at **−3.7 on
+2022-24**, and the two-window bar is the bar: not shipped. The as-of refit was
+then run (`cup_asof.py`, ratings refitted monthly on trailing bridges): the
+per-competition gaps LOOKED calibrated (UCL −0.7, UEL +0.8, UECL −0.9) — and
+the main-phase two-window cut exposed that as pooled cancellation, the
+project's signature failure caught a fourth time: early −3.7, late +3.3,
+opposite signs averaging to zero. The windows disagreeing in SIGN points at
+the 2024-25 format change as a structural break; the Swiss-model era runs
+hotter than everything the model was fitted on, and validating a break model
+needs data the store does not yet hold. Qualifiers fail outright (−5.0). 271 clubs also carry 20+ matches of their own
+European history the old path never read — the unmined strand. The club→
+league map is cached in `config/club_leagues.json`.
+
+**The final round trained entirely inside the Swiss era**
+(`cup_composite.py`, 25 Aug) — the closest any cup model has come, and still
+short. Two complete Swiss-format seasons exist, so nothing crosses the
+break, and the strength number moved from league to CLUB (the BIG_MATCH
+as-of-form machinery applied continentally, plus the previously unmined
+own-European-record strand): `club_str = league_rating + 0.8·(as-of domestic
+PPG − 1.45) + 0.3·own_cup_form`. Trained on one season, validated on the
+other, then the roles swapped — a model that only works one way learned a
+season, not a structure:
+
+    fit 24-25 → validate 25-26   182 tips   says 85.8   hit 85.2   gap −0.6
+    fit 25-26 → validate 24-25   125 tips   says 84.8   hit 80.8   gap −4.0
+
+Forward calibrates almost perfectly; the reverse fails; pooled ≈ −2 on 307
+tips, with confidence intervals ±5-6 per window at this n. The two-window
+bar is both directions or nothing, so **cups stay off** — but the family's
+trajectory is −11.4 → −2, the club composite beat league-only ratings in
+every cut, and 2024-25 looks like the harder season in every instrument.
+Coverage is the other limit: ~307 of ~1,100 Swiss-era fixtures clear the
+feature gates. Each finished European matchday thickens both windows;
+re-run `cup_composite.py` before the next verdict.
+
+**The pointed gate** (`cup_pointed.py`, 25 Aug) then asked whether the
+DNB-style read could validate cup lines: split the composite mu into side
+expectations via the strength gap (supremacy by construction, +0.40 cup
+home advantage) and gate tips on a side clearing a domestic strong-rung
+floor. The gate helps in BOTH directions — pointed beats unpointed
+(+0.7 vs −2.3 forward, −3.4 vs −4.6 reverse) — but the failing window
+stays failing: the 24-25 miss is a level error the selection cannot fix,
+so cups remain off. The side read itself, though, TRANSFERS: the pointed
+side avoids defeat 77.4% in cups (79.8% at home, break-even 1.32; 69.2%
+away, 1.57) — the domestic Rule 5 structure a few points weaker, priced
+accordingly.
+
+**Club Elo broke the deadlock** (`cup_elo.py`, 25 Aug — user's suggestion).
+clubelo.com maintains exactly what the composite approximated: club-level
+strength from every match in every competition, as-of daily. Snapshots
+(mirrored via github.com/tonyelhabr/club-rankings, trimmed into
+`config/club_elo.parquet`, names mapped in `config/club_elo_names.json`)
+cover the whole Swiss era through the 25-26 league phase. Coverage jumps
+from ~28% to **92%** (1,563 of 1,701 fixtures), and for the first time
+EVERY window agrees:
+
+    frozen   24-25 → 25-26  745 tips  gap −2.5     reverse  818  −1.7
+    walked   (live shape: slopes frozen, intercept tracked monthly)
+             25-26  −1.8  (halves −3.6 / −0.3)
+             24-25  −2.4  (halves −3.4 / −1.5)
+
+Real market mix (~25% O1.5 vs the U4.25 base rung), no sign flips, no
+pooled cancellation. Staleness is a non-issue (Elo lagged 60 days grades
+identically), so the committed snapshot refreshed every few weeks is
+operationally enough. Per-competition intercepts were tried and rejected
+(they absorb season noise and whipsaw between directions). The UEFA
+country coefficient was considered and set aside: our bridge ratings
+already measure it, club-level and in goals.
+
+**WIRED IN, PROBATIONARY — 25 Aug.** The deciding test was a true dress
+rehearsal: the 202 knockout fixtures played after the snapshot's last day
+(Jan–May 2026), priced exactly as the live lane would — frozen Elo,
+walked intercept — hit **89.1% against a stated 84.9** (+4.2). That +4.2
+also killed the planned −2 debit: across five windows the gap wobbles ±4
+around zero with no direction, the same wobble domestic leagues show at
+these sample sizes, so the lane ships at honest probabilities.
+`app/data/club_elo.py` is the boundary: results-derived only (never
+odds), cups only (domestic leagues never touch it), committed snapshots
+only (a refresh is a reviewed commit, never a predict-time network
+call), and abstention stays first-class — national teams, unmapped
+clubs, and ratings staler than 400 days produce no tip. Qualifier codes
+now route through the same lane (they previously fell to the domestic
+path — the −5.0). `CUP_TIPS_ENABLED` goes back to `False` if the live
+gap breaks the measured band; cup tips are marked **probationary** on
+the board until a real graded sample accumulates.
+
+**The wired path replayed, and the over debit (26 Aug).** The live code
+itself — `build_request` through `predict_fixture`, the path that fills
+the board — replayed over the two Swiss seasons at 1,878 tips: 24-25 gap
+−2.3, 25-26 gap −2.1, no flip. The by-rung cut isolated the whole miss:
+U4.25 −0.6 and U3.0 +2.2 are calibrated, while **O1.5 runs −3.3 / −3.7
+across the seasons and flat across every probability band** — a level
+bias on the over family alone. So `club_elo.OVER_SAYS_DEBIT = 0.035`:
+cup over tips now publish their probability, edge, and buy-price 3.5
+points colder (selection untouched — the debit makes the numbers honest
+and forces a cup over to clear the playable bar on its honest edge).
+With the debit both windows close to **+0.0 / −0.1**. Cup unders and
+every domestic market pass through unchanged, pinned by a test.
+
+**Hitrate-first selection (26 Aug).** The calibrated lane still hit ~80%
+against the domestic board's ~85, because edge-ranked selection favours
+O1.5. Sweeping the cup probability floor on the wired path found the
+whole dial at one setting: `min_win_prob 0.82` on all six cup codes
+flips the mix to the calibrated base rungs at **zero volume cost**
+(`choose()` falls back to the safest buyable rung, so no fixture loses
+its tip) — hit rises to **81.9 / 84.7** across the seasons (≈83.3
+pooled) with both windows still calibrated (−1.5 / +0.9, debited says).
+Beyond 0.82 the dial saturates; ~83 is this lane's honest ceiling, a
+shade under domestic, paid for in shorter under prices. Domestic floors
+untouched, pinned by a test.
+
+#### MEASURED AND DECLINED — defense adds almost nothing to the MATCH mu
+
+The team-lane defense blend invited the obvious sequel: `mu_total` is also
+attack-only. Measured the same way over 103,338 fixtures — combined leakiness
+within a combined-attack bucket — the strand is dead: ~+1 point of O2.5 and
+under a tenth of a goal at the extremes, against the team lanes' 7-11 points.
+The reason is structural: at match level defense nearly double-counts, because
+a team's conceded rate largely IS its opponents' scoring. A side's rate needs
+its specific opponent; a match total mostly does not — which is why the match
+ladder always calibrated clean while the team lanes hid the hole, and why the
+residual-mu-spread hypothesis died. No knob; the Over-side edge lives in the
+team lanes and long rungs, where DEFENSE_BLEND now sharpens it honestly.
+
+#### MEASURED — the big-match effect has a season-phase structure
+
+Cutting the 268,912-fixture measurement by season third:
+
+    vs phase control       early      mid       late
+    top-4 clash            +0.02     −0.07     −0.075
+    bottom-4 clash         −0.044    −0.067    −0.104
+
+The top-clash compression is ABSENT in the first third of a season and
+switches on from mid-season — stakes must be concrete before two top sides
+suppress each other. The shipped `BIG_MATCH_DEBIT` flag validated pooled and
+stays as-is; phase-gating it to mid-season onward is a logged refinement
+candidate that needs its own engine-relative cut (the flagged population is
+too thin to split three ways today). Bottom clashes run tight at EVERY phase
+with a late-season fear premium on top — a February six-pointer is the
+tightest fixture type in football — but no knob ships for it: engine-relative
+the effect sign-flips across windows, because form already sees bad teams'
+thin rates. The engine absorbs relegation culture for free; it was only blind
+to the top-clash kind.
+
+#### SHIPPED — cross-division fallback, validated on 608 historical tips
+
+The archive's "largest single volume fix still outstanding": a promoted club
+abstains with a full season of history one division down. Form does not
+transfer raw — measured over 789 club-seasons crossing a stored boundary, a
+promoted side scores **×0.754** and concedes **×1.516** of its lower-division
+rates, near-reciprocal with relegation (×1.345 / ×0.727), while the match
+TOTAL transfers almost clean (×1.025). So the fallback pulls the club's rows
+from the adjacent division with every goal rescaled by those constants, and
+the fixture's own league supplies every baseline. Rescue-only, like the merge
+gate: it fires only under `MIN_MATCHES` and can never move an existing tip.
+
+Replayed on every fixture since 2015 where the live guard would fire:
+
+    FALLBACK fixtures        608 tips   says 82.4%   hit 83.1%   gap +0.7
+    control (same leagues) 18,229 tips  says 82.2%   hit 81.7%   gap -0.4
+
+Indistinguishable from ordinary tips, which is the pass mark. Le Mans, Racing
+Santander, Elversberg and Dep. A Coruña all price immediately; Celta B and
+Amedspor stay abstained because their lower divisions are not stored, which is
+the honest boundary of the method.
+
+#### CLOSED — `VENUE_BLEND` swept for the first time: it is a dead knob
+
+The last constant in the engine that had never been validated. Swept 0.0 to
+0.8 on 6,891 fixtures, both windows, both lanes scored — the per-side split it
+exists to fix, and the match total it is allowed to touch:
+
+    blend        |split| recent   |split| held-back   match gap
+    0.00              0.2              1.2              1.50 / 0.32
+    0.20              0.1              1.3              1.50 / 0.32
+    0.35  (live)      0.1              1.4              1.49 / 0.33
+    0.50              0.2              1.6              1.49 / 0.33
+    0.80              0.6              1.9              1.50 / 0.34
+
+Nothing moves outside noise (each side's gap carries ~0.9 points of standard
+error at this n). The reason is structural: the residual de-bias is written as
+`edge * (1 - blend)`, so the two mechanisms are redundant — turn the blend off
+and the de-bias runs at full strength and closes the split by itself; turn it
+up and the de-bias hands the job to the venue-specific rates, which do it
+slightly worse on held-back data. The de-bias is doing the work. The blend is
+along for the ride, and no value in the range beats 0.35 by anything a bet
+would notice. **0.35 stays, and the constant is no longer unvalidated.**
+
+#### Two things the window split made WEAKER, not stronger
+
+Pooling hid this, and both correct claims made earlier in this section:
+
+- **The `≥1` under-statement does not replicate.** Recent +11.4, held-back +2.8
+  on n≈300 a side. Only the `≥2` signal survives the split (+6.8 / +6.5), which
+  is the one the rungs are cut on — but "both thresholds are under-stated" was
+  a pooled-data artefact and is withdrawn.
+- **`O1.5` at +5.8 is softer than it looks.** Recent +8.6, held-back +2.7. That
+  is about 1.8 standard errors apart on n≈420 each, so the rung's over-delivery
+  is partly window noise. `U1.5` by contrast holds (−6.7 / −4.0, under 1 SE),
+  which is why the floor was validated on `U1.5` and not on the pair.
+
+#### The match lane reproduced exactly
+
+`edge_bands`, 7,576 tips across 62 leagues:
+
+    stated edge        n    says    hit    gap    base   REAL    23 Aug
+    under +1%       2704   83.3%  84.7%   +1.4   84.4%  +0.3      +1.4
+    +1 to +2%        807   82.9%  83.1%   +0.2   81.4%  +1.7      +0.2
+    +2 to +3.5%     1193   82.0%  81.9%   -0.1   79.2%  +2.7      -0.1
+    over +3.5%      2872   81.6%  79.1%   -2.5   74.8%  +4.3      -2.5
+
+Identical to the archived run. Every market still calibrated (`O1.5` +0.2,
+`U3.0` −0.5, `U4.25` −0.5). Realised edge over base **+2.4**.
+
+**This is now priced rather than noted** — see rule 3. `mu_mismatch` re-measured
+at 0.2 points (tail −2.9 → −2.7), confirming it is real, tiny, and not the tail.
+
+#### Team histories: four clubs served less than a rolling window
+
+Scanning every club active in the last 120 days against `ROLLING_MATCHES = 10`:
+
+    1081 clubs   full window
+     129 clubs   5-9 rows — priced on a PARTIAL window
+     192 clubs   under 5 — withheld outright
+
+Most of the thin ones are cup competitions (`UCL-Q`, `UEL-Q`, `UECL-Q`), where
+a club genuinely plays 2–8 matches and there is nothing to fix. The domestic
+cases are real:
+
+- **`ROU-L1` — eleven clubs sit at exactly 5 rows.** They price, on half a
+  rolling window. Three of them (`Dinamo Bucuresti`, `FC Botosani`,
+  `Farul Constanta`) have 78–79 further rows under an accented spelling that
+  the merge table cannot reach, because `_MERGE_GATE = 5` and `5 < 5` is false.
+  The gate is one off from rescuing them.
+- **`MEX-LMX` is effectively dark** — fourteen clubs at 4 rows, withheld. Only
+  one has a twin spelling, so this is missing data rather than naming.
+
+An accent-variant scan across all 61 leagues found 18 split clubs, 14 of which
+serve the THINNER half. Most are harmless (`Malmö FF` serves 17 rows against a
+twin that stops in April 2025 — the rolling window never reaches back that far).
+The four that matter are listed above.
 
 ### Diagnostics — 23 Aug, full sweep
 

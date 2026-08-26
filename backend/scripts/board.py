@@ -1,0 +1,369 @@
+"""
+The fixture board: every block in README.md rendered from one typed file.
+
+`config/fixtures.tsv` is the source of truth — one row per fixture, graded by
+filling its `status` column. This renders all of it: the headline counts, the
+playable block, the pending and completed cards. The pipe tables the page used
+to carry were both the display AND the data, which meant five scripts parsed
+the README and every layout change broke all of them; now layout is this
+file's private business and the data never moves.
+
+Each fixture is a CARD, two rows — the example the layout follows:
+
+    | 🔵 25-08 21:00 — Valencia v Real Betis | Tip 1        | Tip 2        |
+    | LaLiga (80.5 −0.1)                     | U4.25 88.0%… | U3.75 74.0%… |
+
+GitHub strips CSS from READMEs, so there is no real color control and no
+forced dark mode — the page renders in the viewer's own theme. Block identity
+comes from the glyphs instead: 🟢 playable, 🔵 pending, ✅/❌ completed, and a
+colored GitHub callout opening each section.
+
+    python scripts/board.py            render README from fixtures.tsv
+    python scripts/board.py --check    exit 1 if stale, change nothing
+
+Badges per league come from config/league_hitrates.tsv, the playable filter
+and lane parsing from scripts/playable.py (which remains the reader for the
+ARCHIVED pipe-table logs), and the bet line from the ledger.
+"""
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts import playable
+from scripts.league_badges import rates
+
+ROOT = Path(__file__).resolve().parents[2]
+README = ROOT / "README.md"
+FIXTURES = ROOT / "config" / "fixtures.tsv"
+
+MIN_EDGE = playable.MIN_EDGE
+
+# The rendered region: from the playable heading to the placed-bets heading.
+# The placed-bets table keeps its own shape (different data), and the header
+# span at the top of the page is rendered separately by render_header. Two
+# START spellings, because the first render REPLACES the heading it anchored
+# on — the same trap the playable block hit when its threshold renamed it.
+STARTS = ("## 🟢 Playable lanes", "## Playable lanes")
+ENDS = ("### 🟡 Actual placed bets", "### Actual placed bets")
+TAIL = "## Engine state"
+HEAD_START = "## CURRENT CONFIRMED HITRATE"
+HEAD_END = "live tips, not backtests"
+
+
+class Fixture:
+    __slots__ = ("kickoff", "code", "league", "teams", "tip1", "tip2", "status")
+
+    def __init__(self, kickoff, code, league, teams, tip1, tip2, status):
+        self.kickoff, self.code, self.league = kickoff, code, league
+        self.teams, self.tip1, self.tip2 = teams, tip1, tip2
+        self.status = status
+
+    @property
+    def settled(self) -> bool:
+        # "FT ..." is finished with nothing to grade — an abstained fixture
+        # that played out. It moves to the completed block but feeds no tally.
+        return self.status[:1] in ("✅", "❌") or self.status.startswith("FT")
+
+    def lane(self, which: int):
+        cell = self.tip1 if which == 1 else self.tip2
+        return playable.lane(cell, self.status or "—", which)
+
+
+def load() -> list[Fixture]:
+    out = []
+    for ln in FIXTURES.read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        parts = ln.split("\t")
+        if len(parts) != 7:
+            raise ValueError(f"fixtures.tsv row needs 7 columns: {ln!r}")
+        out.append(Fixture(*parts))
+    return sorted(out, key=lambda f: f.kickoff)
+
+
+def _badge(f: Fixture) -> str:
+    b = rates().get(f.code)
+    return f"{f.league} {b}" if b else f.league
+
+
+def _stamp(f: Fixture) -> str:
+    """`25-08 21:00` — compact, the year belongs to the file not the card."""
+    d, t = f.kickoff.split(" ")
+    _y, m, day = d.split("-")
+    return f"{day}-{m} {t}"
+
+
+def _mark(f: Fixture) -> str:
+    if f.settled:
+        return f.status.split("—")[-1].strip() if "—" in f.status else f.status
+    return f.status or ""
+
+
+def _head(f: Fixture, glyph: str) -> str:
+    if f.status.startswith("FT"):
+        return f"⚪ {f.status[3:] or f.status} · {_stamp(f)} **{f.teams}**"
+    if f.settled:
+        return f"{f.status[:1]} {_mark(f)} · {_stamp(f)} **{f.teams}**"
+    if f.status:                        # LIVE
+        return f"🔴 {f.status} **{f.teams}**"
+    return f"{glyph} {_stamp(f)} **{f.teams}**"
+
+
+def _cards(entries: list[tuple[Fixture, str, str, str]]) -> list[str]:
+    """Every match its own card, floated so they flow two abreast.
+
+    Markdown tables are block elements — two of them can only stack — so each
+    card is a small HTML table carrying `align="left"`, the one layout
+    attribute GitHub's sanitizer allows through. Floated cards sit side by
+    side where the viewport is wide and wrap underneath each other where it
+    is narrow, which is exactly the mobile behaviour asked for, with no CSS
+    anywhere. `<br clear="all">` ends the float so the next section's text
+    cannot ride up alongside the last card.
+    """
+    out = []
+    for f, glyph, t1, t2 in entries:
+        out.append(
+            '<table align="left">'
+            f'<tr><th align="left">{_html(_head(f, glyph))}</th>'
+            '<th align="left">Tip 1</th><th align="left">Tip 2</th></tr>'
+            f'<tr><td>{_html(_badge(f))}</td>'
+            f'<td>{_html(t1)}</td><td>{_html(t2)}</td></tr>'
+            '</table>')
+    if out:
+        out += ['', '<br clear="all">', '']
+    return out
+
+
+def _html(s: str) -> str:
+    """Markdown bold does not render inside an HTML table, so ** becomes <b>."""
+    parts = s.split("**")
+    for i in range(1, len(parts), 2):
+        parts[i] = f"<b>{parts[i]}</b>"
+    return "".join(parts)
+
+
+def _cell(raw: str) -> str:
+    """One tip cell: probability line on top, buy-from below, annotation last.
+
+    `(team)`, `(floor −9.1)`, `(lower edge)` widen the top line unevenly, so
+    they ride the second line instead — the top line stays `RUNG P% +E%`
+    across every card, which is what keeps a six-column row readable.
+    """
+    if raw.startswith("—") or not raw:
+        return raw or "—"
+    import re
+    m = re.match(r"^(.*?)\s*(\([^)]*\))?\s*· (buy≥\S+)\s*$", raw)
+    if not m:
+        return raw.replace(" · buy≥", "<br>buy≥")
+    top, note, buy = m.groups()
+    return f"{top}<br>{buy}" + (f" · {note[1:-1]}" if note else "")
+
+
+def _tallies(fixtures: list[Fixture]):
+    t = {1: [0, 0], 2: [0, 0]}          # published lanes: hits, settled
+    p = {1: [0, 0], 2: [0, 0]}          # playable lanes
+    for f in fixtures:
+        if not f.settled:
+            continue
+        for which in (1, 2):
+            cell = f.tip1 if which == 1 else f.tip2
+            m = playable.LANE.match(cell)
+            if m and not m.group(1).strip(" *·").startswith("—"):
+                mark = f.status[:1] if which == 1 else cell[:1]
+                if mark in ("✅", "❌"):
+                    t[which][1] += 1
+                    t[which][0] += mark == "✅"
+            got = f.lane(which)
+            if got and got[4] in ("✅", "❌"):
+                p[which][1] += 1
+                p[which][0] += got[4] == "✅"
+    return t, p
+
+
+def render_header(fixtures: list[Fixture]) -> str:
+    from scripts.headline import bets
+
+    t, p = _tallies(fixtures)
+    (h1, n1), (h2, n2) = t[1], t[2]
+    (p1, q1), (p2, q2) = p[1], p[2]
+    bh, bn, roi = bets()
+    pct = h1 / n1 * 100 if n1 else 0.0
+
+    def cell(h, n):
+        return f"{h:3} / {n:<3}" + (f"{h / n * 100:6.1f}%" if n else "       ")
+
+    return "\n".join(ln.rstrip() for ln in [
+        f"## CURRENT CONFIRMED HITRATE: {pct:.1f}%",
+        "",
+        f"    lane                        Tip 1              Tip 2",
+        f"    all matches            {cell(h1, n1)}    {cell(h2, n2)}",
+        f"    played lanes  >+1%     {cell(p1, q1)}    {cell(p2, q2)}",
+        f"    placed bets            {cell(bh, bn)}    ROI {roi:+.1f}%",
+        "",
+        "**All matches** is the engine: every fixture priced, bet or not. "
+        "**Played lanes** is the same count over the lanes with real edge — "
+        "what was buyable, tracked in its own block below. **Placed bets** is "
+        "the book. Rendered by `python scripts/board.py` from "
+        "`config/fixtures.tsv`, never typed · over/under markets only · "
+        "live tips, not backtests",
+    ])
+
+
+def render_board(fixtures: list[Fixture]) -> str:
+    _t, p = _tallies(fixtures)
+    (p1, q1), (p2, q2) = p[1], p[2]
+    ph, pn = p1 + p2, q1 + q2
+
+    def counter(label, h, n):
+        return f"**{label} — {h} / {n}" + (f"   ·   {h/n*100:.1f}%**" if n else "**")
+
+    out = [
+        "## 🟢 Playable lanes — edge above +1%", "",
+        "> [!TIP]",
+        "> The block the bankroll follows: every lane carrying an edge above "
+        "**+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate "
+        "wearing a probability — measured over 7,576 tips, lanes under +1% "
+        "stated edge returned +0.3 points of real edge against +1.7 to +4.3 "
+        "for everything above. A cell below the threshold says so instead of "
+        "hiding; the counter counts lanes, not cards.", "",
+        counter("Playable", ph, pn) + "   ·   " + counter("Tip 1", p1, q1)
+        + "   ·   " + counter("Tip 2", p2, q2), "",
+    ]
+    entries = []
+    for f in fixtures:
+        l1, l2 = f.lane(1), f.lane(2)
+        if not l1 and not l2:
+            continue
+        c1 = _cell(f.tip1) if l1 else (f.tip1 if f.tip1.startswith("—")
+                                       else f"— under +{MIN_EDGE:.0f}%")
+        c2 = _cell(f.tip2) if l2 else (f.tip2 if f.tip2.startswith("—")
+                                       else f"— under +{MIN_EDGE:.0f}%")
+        entries.append((f, "🟢", c1, c2))
+    out += _cards(entries)
+
+    pending = [f for f in fixtures if not f.settled]
+    out += [
+        "## 🔵 Pending FUTURE match bettips", "",
+        "> [!NOTE]",
+        "> Every fixture Athena has priced that has not finished, playable or "
+        "not — this and the completed block are the ENGINE's record. The "
+        "typed source is `config/fixtures.tsv`; grade a fixture there and "
+        "re-render with `python scripts/board.py`. The numbers after each "
+        "league are its **(hit gap)** over its last 200 replayed matches — "
+        "read the gap before trusting a row.", "",
+    ]
+    out += _cards([(f, "🔵", _cell(f.tip1), _cell(f.tip2)) for f in pending])
+    if not pending:
+        out += ["*(no open fixtures)*", ""]
+
+    done = [f for f in fixtures if f.settled]
+    t, _p = _tallies(fixtures)
+    out += [
+        "## ⚪ Completed FUTURE match bettips", "",
+        counter("Tip 1", *t[1]) + "   ·   " + counter("Tip 2", *t[2]), "",
+    ]
+    out += _cards([(f, "⚪", _cell(f.tip1), _cell(f.tip2)) for f in done])
+    if not done:
+        out += ["*(nothing settled yet on this slate)*", ""]
+
+    return "\n".join(out)
+
+
+def render_bets() -> list[str]:
+    """The placed-bets block, settled by the ledger's own rules.
+
+    This was the last hand-typed block on the page and it went stale the
+    same way every hand-typed number here has: the counter read 0 / 0 while
+    eleven bets sat settled. Now bets.tsv carries the bet and its note, the
+    fixture result comes from fixtures.tsv, and the settlement marks are
+    computed — full/half win, push, half/full loss, DNB included.
+    """
+    from scripts import headline, ledger
+
+    fixtures = ledger.read_fixtures()
+    bh, bn, roi = headline.bets()
+    out = [
+        "### 🟡 Actual placed bets", "",
+        f"**Settled: {bh} / {bn}  ·  ROI {roi:+.1f}%  ·  flat stakes** — "
+        "settled through real settlement fractions by the ledger; a push or "
+        "half-win counts as a hit, a half-loss does not. Notes travel with "
+        "the bet in `config/bets.tsv`.", "",
+        "| Result | Fixture | Lane | Odds | Return | Note |",
+        "|---|---|---|---|---|---|",
+    ]
+    MARK = {1.0: ("✅", "won"), 0.5: ("✅½", "half won"), 0.0: ("◦", "push"),
+            -0.5: ("❌½", "half lost"), -1.0: ("❌", "lost")}
+    for ln in ledger.BETS.read_text().splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        parts = ln.split("\t")
+        name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
+        note = parts[6] if len(parts) > 6 else ""
+        lane = rung if side == "-" else f"{rung} ({'home' if side == 'H' else 'away'})"
+        # Cashed out at stake: realised at 1.00x now, whatever the fixture
+        # does later — same convention as headline.bets().
+        if len(parts) > 4 and parts[4] == "1":
+            out.append(f"| ◦ | {name} | {lane} | {odds:.2f} | 1.00x | {note} |")
+            continue
+        fx = fixtures.get(name)
+        if fx is None or fx["hg"] is None:
+            out.append(f"| — open | {name} | {lane} | {odds:.2f} | — | {note} |")
+            continue
+        if rung == "DNB":
+            gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
+                      else (fx["ag"], fx["hg"]))
+            s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        else:
+            goals = (fx["hg"] + fx["ag"]) if side == "-" else (
+                fx["hg"] if side == "H" else fx["ag"])
+            s = ledger.pricing.settle_fraction(rung, goals)
+        ret = max(s, 0.0) * odds + (1 - abs(s))
+        mark, _w = MARK[s]
+        out.append(f"| {mark} | {name} | {lane} | {odds:.2f} "
+                   f"| {ret:.2f}x | {note} |")
+    out.append("")
+    return out
+
+
+def rewrite(text: str) -> str:
+    hs = text.index(HEAD_START)
+    he = text.index(HEAD_END, hs) + len(HEAD_END)
+    fixtures = load()
+    text = text[:hs] + render_header(fixtures) + text[he:]
+
+    s = min((text.index(m) for m in STARTS if m in text), default=None)
+    if s is None:
+        raise ValueError("board region not found in README")
+    e = min(text.index(m, s) for m in ENDS if m in text)
+    e2 = text.index(TAIL, e)
+    return (text[:s] + render_board(fixtures) + "\n"
+            + "\n".join(render_bets()) + "\n" + text[e2:])
+
+
+def main() -> None:
+    text = README.read_text()
+    new = rewrite(text)
+    if "--check" in sys.argv:
+        if new != text:
+            print("Board is STALE. Run: python scripts/board.py")
+            sys.exit(1)
+        print("board matches fixtures.tsv")
+        return
+    if new == text:
+        print("board already current")
+        return
+    README.write_text(new)
+    f = load()
+    print(f"board rendered: {len(f)} fixtures, "
+          f"{sum(1 for x in f if not x.settled)} pending")
+    # The web app derives from the same sources; rendering them together is
+    # what keeps the page and the README incapable of disagreeing.
+    from scripts import webapp
+    webapp.main()
+
+
+if __name__ == "__main__":
+    main()

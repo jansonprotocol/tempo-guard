@@ -1197,7 +1197,8 @@
     "module_overrides": {},
     "last_calibrated": null,
     "last_hit_rate": null,
-    "last_sample": null
+    "last_sample": null,
+    "min_win_prob": 0.82
   },
   "UECL": {
     "league_code": "UECL",
@@ -1222,7 +1223,8 @@
     "module_overrides": {},
     "last_calibrated": null,
     "last_hit_rate": null,
-    "last_sample": null
+    "last_sample": null,
+    "min_win_prob": 0.82
   },
   "UECL-Q": {
     "league_code": "UECL-Q",
@@ -1247,7 +1249,8 @@
     "module_overrides": {},
     "last_calibrated": null,
     "last_hit_rate": null,
-    "last_sample": null
+    "last_sample": null,
+    "min_win_prob": 0.82
   },
   "UEL": {
     "league_code": "UEL",
@@ -1272,7 +1275,8 @@
     "module_overrides": {},
     "last_calibrated": null,
     "last_hit_rate": null,
-    "last_sample": null
+    "last_sample": null,
+    "min_win_prob": 0.82
   },
   "UKR-PL": {
     "league_code": "UKR-PL",
@@ -1298,5 +1302,15 @@
     "last_calibrated": null,
     "last_hit_rate": null,
     "last_sample": null
+  },
+  "UCL-Q": {
+    "min_win_prob": 0.82,
+    "league_code": "UCL-Q",
+    "name": "UEFA Champions League qualifying"
+  },
+  "UEL-Q": {
+    "min_win_prob": 0.82,
+    "league_code": "UEL-Q",
+    "name": "UEFA Europa League qualifying"
   }
 }

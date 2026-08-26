@@ -95,74 +95,6 @@ def test_rejects_non_total_markets():
         pricing.settle_fraction("BTTS", 2)
 
 
-def test_readme_fixture_tables_are_in_kickoff_order():
-    """The log is read top-down to decide what to look at next, so both fixture
-    tables and the bet table must run earliest kickoff first. Rows get appended
-    in the order fixtures are PRICED, which is not that order, so this pins it —
-    `python scripts/sort_tables.py` fixes any drift."""
-    from scripts import sort_tables
-
-    text = sort_tables.README.read_text()
-    assert sort_tables.sort_tables(text) == text, (
-        "README fixture tables are out of kickoff order; "
-        "run python scripts/sort_tables.py")
-
-
-def test_readme_headline_matches_the_log():
-    """The header carried `1 / 1 settled · 100%` while eleven fixtures sat
-    graded in the table below it. It is derived now, and pinned here so it
-    cannot drift again — `python scripts/headline.py` regenerates it."""
-    from scripts import headline
-
-    text = headline.README.read_text()
-    start = text.index("## CURRENT CONFIRMED HITRATE")
-    end = text.index("live tips, not backtests") + len("live tips, not backtests")
-    assert text[start:end] == headline.render(), (
-        "README headline is stale; run python scripts/headline.py")
-
-    # The tally above the completed table is the same count, and went stale the
-    # same way: it read 2/2 with eleven fixtures graded below it.
-    cs = text.index(headline.COUNTER)
-    assert text[cs:text.index("\n", cs)] == headline.counter_line(), (
-        "README completed-table counter is stale; "
-        "run python scripts/headline.py")
-
-
-def test_header_played_row_agrees_with_the_playable_block():
-    """The header now carries three lines, and the middle one restates what the
-    playable block counts. Two renderers reading the same tables is exactly how
-    the old hand-typed counters drifted, so they are pinned to each other: both
-    must apply the same MIN_EDGE to the same lanes."""
-    from scripts import headline, playable
-
-    lanes = playable.collect(playable.README.read_text())
-    p1, q1, p2, q2 = headline.played()
-    for which, (h, n) in ((1, (p1, q1)), (2, (p2, q2))):
-        b = [r for r in lanes if r[3] == which]
-        assert h == sum(1 for r in b if r[9] == "✅")
-        assert n == sum(1 for r in b if r[9] in ("✅", "❌"))
-
-
-def test_readme_playable_lanes_match_the_tables():
-    """The playable-lanes block is a filtered view of the two fixture tables,
-    so it can only be right while it is regenerated — `python
-    scripts/playable.py`. Same reason the headline is pinned above."""
-    from scripts import playable
-
-    text = playable.README.read_text()
-    assert playable.rewrite(text) == text, (
-        "README playable-lanes block is stale; run python scripts/playable.py")
-    assert text.count("\n" + playable.ANCHOR) == 1
-
-    # Raising MIN_EDGE changes the heading, and the rewrite has to still find
-    # the block it wrote under the old one. It did not the first time: it
-    # matched on the full heading, missed, and appended a second block below
-    # the first. Renaming the heading must replace, not duplicate.
-    renamed = text.replace(playable.HEADING, playable.ANCHOR + " — edge above +9%")
-    assert renamed != text
-    assert playable.rewrite(renamed).count("\n" + playable.ANCHOR) == 1
-
-
 def test_playable_parses_a_full_slate():
     """The live tables are usually short or empty, so the parser is pinned
     against the archived 23 Aug log instead: 70 graded fixtures carrying every
@@ -227,3 +159,57 @@ def test_playable_block_does_not_feed_on_itself():
     # And the header counts read the table below, not the block above it.
     assert playable.rows_of(spliced, playable.COMPLETED) == \
         playable.rows_of(log, playable.COMPLETED)
+
+
+def test_curse_haircut_only_touches_the_top_edge_band():
+    """Ranking by an estimate selects the fixtures whose estimate came in high,
+    so the top band is overconfident by construction. Measured at -2.5 on
+    7,576 tips and -2.9 on a second population, against ~0 in every band below
+    it, so the correction is a step at CURSE_EDGE and not a curve."""
+    mu = 2.60
+    plain = pricing.buy_from("O1.5", mu)
+
+    # No edge given: the caller never claimed one, so nothing is applied.
+    assert pricing.buy_from("O1.5", mu, stated_edge=None) == plain
+    # Below the threshold, unchanged — those bands measured within noise of 0.
+    assert pricing.buy_from("O1.5", mu, stated_edge=0.02) == plain
+    assert pricing.buy_from("O1.5", mu, stated_edge=pricing.CURSE_EDGE) == plain
+    # Above it, dearer by exactly the measured haircut.
+    dear = pricing.buy_from("O1.5", mu, stated_edge=0.05)
+    assert dear == pytest.approx(plain * (1 + pricing.CURSE_HAIRCUT))
+    # It only ever raises the bar. A haircut that could lower a price would be
+    # manufacturing value out of a known overconfidence.
+    assert dear > plain
+
+
+def test_curse_haircut_reprices_toward_the_measured_hit_rate():
+    """The size is not a guess: the top band said 81.6% and returned 79.1%, so
+    the honest probability is 0.969 of stated and the price it needs is 1/0.969
+    of the quoted one. The constant must stay within a rounding of that."""
+    assert pricing.CURSE_HAIRCUT == pytest.approx(1 / (79.1 / 81.6) - 1, abs=0.004)
+
+
+def test_board_matches_fixtures_tsv():
+    """Every block on the page renders from config/fixtures.tsv — header
+    counts, playable cards, pending and completed cards, league badges. One
+    pin replaces the five that guarded the old pipe tables: if any rendered
+    number drifts from the data, this fails and `python scripts/board.py`
+    fixes it."""
+    from scripts import board
+
+    text = board.README.read_text()
+    assert board.rewrite(text) == text, (
+        "README board is stale; run python scripts/board.py")
+
+
+def test_fixtures_tsv_is_well_formed():
+    """The typed source: seven tab-separated columns per row, kickoff parseable,
+    status either empty, LIVE, or a graded mark. A malformed row here is the
+    new version of a broken pipe table, so it fails loudly."""
+    from scripts import board
+
+    for f in board.load():
+        assert len(f.kickoff) == 16 and f.kickoff[4] == "-", f.kickoff
+        assert " v " in f.teams, f.teams
+        assert (f.status == "" or f.status.startswith(("✅", "❌", "LIVE"))
+                or f.status.startswith(("🔴", "FT"))), f.status

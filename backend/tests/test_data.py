@@ -716,3 +716,287 @@ def test_alias_pointing_at_a_missing_name_is_ignored():
 
     # `Celta B` is not in this frame, so the alias must not be applied.
     assert features._aliased("ESP-L2", df, "Celta Fortuna") == "Celta Fortuna"
+
+
+def test_weak_sides_are_floored_and_ordinary_ones_are_not():
+    """The floor is a patch on the low end, not a second shrink.
+
+    The shrink's own fitting regression already showed it — "lowest gf fifth
+    says 0.90 goals, actually 1.14" — but a slope fitted with an intercept of
+    0.572 cannot be applied as a slope alone without leaving that residual.
+    Sweeping TEAM_SHRINK makes the low band worse in every direction that
+    helps the high band, so the two ends get different corrections.
+    """
+    from app.data import features
+
+    mu, share = 2.66, 0.565
+    # A side with almost no attack lands ON the floor rather than below it.
+    assert features._shrink_side(0.10, mu, 1 - share) == features.TEAM_RATE_FLOOR
+    # An ordinary side is untouched by it.
+    assert features._shrink_side(2.20, mu, share) > features.TEAM_RATE_FLOOR
+    # And the floor never LOWERS a rate — it can only make a weak side look
+    # stronger, which is the direction the measurement asked for.
+    for gf in (0.05, 0.5, 1.0, 1.5, 2.5):
+        for s in (share, 1 - share):
+            assert features._shrink_side(gf, mu, s) >= features.TEAM_RATE_FLOOR
+
+
+def test_the_floor_cannot_reach_the_match_lane():
+    """`p_*_tt05` are built from `_shrink_side`; `mu_total` is not. The team
+    lane has its own shrink precisely so the match lane is not shrunk twice,
+    and the floor inherits that isolation — the match ladder is calibrated to
+    a gap of ~0 and a team-lane patch does not get to disturb it."""
+    import inspect
+
+    from app.data import features
+
+    src = inspect.getsource(features._compute_features)
+    for line in src.splitlines():
+        if "mu_total" in line and "=" in line:
+            assert "_shrink_side" not in line
+
+
+def _division_frame(rows):
+    import pandas as pd
+
+    return pd.DataFrame({
+        "date": pd.to_datetime([r[0] for r in rows]),
+        "home": [r[1] for r in rows], "away": [r[2] for r in rows],
+        "hg": [float(r[3]) for r in rows], "ag": [float(r[4]) for r in rows]})
+
+
+def test_cross_division_rows_apply_the_measured_exchange_rate(monkeypatch):
+    """A promoted club's goals are rescaled to the upper division's level —
+    scored x0.754, conceded x1.516, measured on 789 crossing club-seasons —
+    and the away-venue perspective scales the same numbers from the other
+    column."""
+    from datetime import datetime
+
+    from app.data import features, store
+
+    lower = _division_frame([
+        ("2026-03-01", "Promoted FC", "Rival", 2, 1),   # scored 2 at home
+        ("2026-03-08", "Rival", "Promoted FC", 0, 3),   # scored 3 away
+        ("2026-03-15", "Promoted FC", "Other", 1, 0),
+        ("2026-03-22", "Other", "Promoted FC", 2, 2),
+        ("2026-03-29", "Promoted FC", "Rival", 0, 0),
+    ])
+    monkeypatch.setattr(store, "load_results",
+                        lambda code, season=None: lower if code == "ESP-L2"
+                        else _division_frame([]))
+
+    got = features._cross_division_rows(
+        "ESP-LL", "Promoted FC", datetime(2026, 8, 25), 5, "home")
+    assert got is not None
+    name, rows, _venue = got
+    assert name == "Promoted FC"
+    # Home rows: own goals scaled down, opponent goals scaled up.
+    first = rows[rows["date"] == "2026-03-01"].iloc[0]
+    assert first["hg"] == pytest.approx(2 * features.PROMOTED_SCORED)
+    assert first["ag"] == pytest.approx(1 * features.PROMOTED_CONCEDED)
+    # Away rows: same factors from the other column.
+    away = rows[rows["date"] == "2026-03-08"].iloc[0]
+    assert away["ag"] == pytest.approx(3 * features.PROMOTED_SCORED)
+    assert away["hg"] == pytest.approx(0.0)
+
+
+def test_cross_division_directions_are_reciprocal(monkeypatch):
+    """A club found in the division ABOVE the fixture's league is relegated
+    into it, and the same exchange rate applies crossed the other way."""
+    from datetime import datetime
+
+    from app.data import features, store
+
+    upper = _division_frame([
+        ("2026-03-01", "Dropped FC", "Rival", 1, 2),
+        ("2026-03-08", "Rival", "Dropped FC", 1, 1),
+        ("2026-03-15", "Dropped FC", "Other", 0, 1),
+        ("2026-03-22", "Other", "Dropped FC", 3, 0),
+        ("2026-03-29", "Dropped FC", "Rival", 2, 2),
+    ])
+    monkeypatch.setattr(store, "load_results",
+                        lambda code, season=None: upper if code == "ESP-LL"
+                        else _division_frame([]))
+
+    got = features._cross_division_rows(
+        "ESP-L2", "Dropped FC", datetime(2026, 8, 25), 5, "home")
+    assert got is not None
+    _name, rows, _venue = got
+    first = rows[rows["date"] == "2026-03-01"].iloc[0]
+    assert first["hg"] == pytest.approx(1 / features.PROMOTED_SCORED)
+    assert first["ag"] == pytest.approx(2 / features.PROMOTED_CONCEDED)
+
+
+def test_fallback_is_rescue_only():
+    """The guard mirrors the merge gate: a club its own league can already
+    describe never goes cross-division, so no existing tip can move. Pinned
+    at the call site — the fallback runs only inside `len(H) < min_matches`."""
+    import inspect
+
+    from app.data import features
+
+    src = inspect.getsource(features.asof_features)
+    h = src.index("_cross_division_rows(league_code, home_team")
+    assert "if len(H) < min_matches:" in src[:h]
+    a = src.index("_cross_division_rows(league_code, away_team")
+    assert "if len(A) < min_matches:" in src[:a]
+
+
+def test_no_ladder_means_no_fallback():
+    """A league outside every ladder (its neighbours are not stored) returns
+    no siblings, so the fallback cannot invent one."""
+    from app.data import features
+
+    assert features._adjacent_divisions("TUR-SL") == []
+    assert features._adjacent_divisions("ESP-LL") == [("ESP-L2", True)]
+    assert features._adjacent_divisions("ENG-CH") == [
+        ("ENG-L1", True), ("ENG-PL", False)]
+
+
+def _clash_frame():
+    import pandas as pd
+
+    rows = []
+    # A 12-club league: four strong sides beating eight fillers for 7 rounds.
+    # Size matters — the flag stands down in frames under twice its top-N,
+    # because "top six" of six clubs is everybody.
+    strong = ["Alpha", "Beta", "Gamma", "Delta"]
+    weak = [f"Filler{i}" for i in range(1, 9)]
+    d = pd.Timestamp("2026-02-01")
+    for rnd in range(7):
+        for i, s in enumerate(strong):
+            rows.append((d, s, weak[(rnd + i) % 8], 2, 0))
+        # Draws only among fillers 3-8, so Filler1 and Filler2 finish on
+        # zero points — genuinely OUTSIDE the top six, which a 12-team league
+        # needs constructing deliberately: 5th place is top-6 by definition.
+        rows.append((d, weak[2 + (rnd % 3) * 2], weak[3 + (rnd % 3) * 2], 0, 0))
+        d += pd.Timedelta(days=7)
+    return pd.DataFrame(rows, columns=["date", "home", "away", "hg", "ag"])
+
+
+def test_top_clash_flag_matches_the_measurement():
+    """Both sides top-6 by calendar-year points with 6+ rounds each — the flag
+    the two-window validation was run on, quirk included."""
+    from datetime import datetime
+
+    from app.data import features
+
+    df = _clash_frame()
+    cutoff = datetime(2026, 8, 1)
+    features._TOP_CLASH_CACHE.clear()
+    top = [t for t in ("alpha", "beta", "gamma", "delta")
+           if features._is_top_clash(df, t, t, cutoff, "TEST-LG")]
+    assert top, "strong clubs should reach the top table"
+    # A clash needs BOTH sides up there.
+    assert features._is_top_clash(df, top[0], top[-1], cutoff, "TEST-LG") \
+        == (len(top) >= 2)
+    assert not features._is_top_clash(df, top[0], "filler1", cutoff, "TEST-LG")
+    # Before six rounds exist, nobody is flagged — a table that early is noise.
+    features._TOP_CLASH_CACHE.clear()
+    early = datetime(2026, 2, 20)
+    assert not features._is_top_clash(df, top[0], top[-1], early, "TEST-LG")
+
+
+def test_big_match_debit_only_lowers_and_only_matches():
+    """The debit is a subtraction on the MATCH mu, sized from the pooled
+    top-6 effect (−0.15 to −0.17 in both windows). It must never raise a mu,
+    and the team lanes — which were never measured — must not carry it."""
+    import inspect
+
+    from app.data import features
+
+    assert 0 < features.BIG_MATCH_DEBIT <= 0.2
+    src = inspect.getsource(features._compute_features)
+    at = src.index("BIG_MATCH_DEBIT")
+    # Applied to mu_total after the shrink, before anything else reads it...
+    assert "mu_total = max(0.2, mu_total - BIG_MATCH_DEBIT)" in src
+    # ...and never to the per-side rates that feed p_*_tt05.
+    assert "gfh - BIG_MATCH_DEBIT" not in src
+    assert "gfa - BIG_MATCH_DEBIT" not in src
+
+
+def test_defense_blend_touches_team_lanes_only():
+    """The defense adjustment feeds `p_*_tt05` and nothing else: `mu_total`
+    is assembled from the unadjusted attack rates, so the match ladder —
+    calibrated to ~0 — cannot move. Pinned the same way as the floor."""
+    import inspect
+
+    from app.data import features
+
+    assert 0.0 <= features.DEFENSE_BLEND <= 0.7
+    src = inspect.getsource(features._compute_features)
+    # The adjusted rates exist and are consumed by the tt05 lines only.
+    assert "gfh_t" in src and "gfa_t" in src
+    for line in src.splitlines():
+        if "mu_total" in line and "=" in line:
+            assert "gfh_t" not in line and "gfa_t" not in line
+
+
+def test_cup_fixtures_price_from_club_elo():
+    """The reopened cup lane: mu comes from committed as-of Club Elo, never
+    from domestic form (measured slope 0.017 — zero — against cup totals).
+    The pinned behaviours are the boundaries: mapped clubs price, national
+    teams and unmapped clubs abstain, and the mu lands inside the plausible
+    band the instruments graded."""
+    from datetime import date
+
+    from app.data import features
+
+    assert features.CUP_TIPS_ENABLED is True
+    got = features.asof_features("UCL", "Real Madrid CF", "Bayern München",
+                                 date(2025, 10, 15))
+    assert got, "two mapped giants must price"
+    assert 0.5 < got["mu_total"] < 6.0
+    assert got["league_mu"] > 2.0          # UCL base is a high-scoring one
+    assert 0.0 < got["p_two_plus"] < 1.0
+
+    # National-team competitions carry no club Elo: abstain, don't guess.
+    assert features.asof_features("EC", "France", "Germany",
+                                  date(2026, 9, 15)) == {}
+
+    # A club outside the mapping abstains rather than pricing on nothing.
+    assert features.asof_features("UCL", "Real Madrid CF", "No Such Club FC",
+                                  date(2025, 10, 15)) == {}
+
+
+def test_cup_elo_staleness_guard_abstains():
+    """Elo lagged 60 days measured harmless; a rating more than a season
+    old describes a different squad. Past MAX_STALE_DAYS the lane must
+    return None rather than a number."""
+    from datetime import date, timedelta
+
+    import pandas as pd
+
+    from app.data import club_elo
+
+    dates, elos = club_elo._series()[club_elo._names()["Celtic"]]
+    beyond = dates[-1] + pd.Timedelta(days=club_elo.MAX_STALE_DAYS + 30)
+    assert club_elo.elo_asof("Celtic", beyond) is None
+    within = dates[-1] + pd.Timedelta(days=30)
+    assert club_elo.elo_asof("Celtic", within) is not None
+
+
+def test_cup_over_debit_is_scoped_to_cup_overs():
+    """Cup over tips measured a flat -3.3/-3.7 across the two Swiss seasons
+    while the under rungs calibrated — the stated-probability debit must
+    touch exactly that family and nothing else."""
+    from app.data import club_elo
+
+    assert club_elo.stated_p("UCL", "O1.5", 0.80) == pytest.approx(
+        0.80 - club_elo.OVER_SAYS_DEBIT)
+    assert club_elo.stated_p("UECL-Q", "O2.25", 0.70) == pytest.approx(
+        0.70 - club_elo.OVER_SAYS_DEBIT)
+    assert club_elo.stated_p("UCL", "U4.25", 0.86) == 0.86      # cup under
+    assert club_elo.stated_p("ENG-PL", "O1.5", 0.80) == 0.80    # domestic
+
+
+def test_cup_probability_floor_is_raised():
+    """The cup lane selects hitrate-first: min_win_prob 0.82 on all six cup
+    codes flips the mix to the calibrated base rungs (hit ~80 -> ~83 across
+    both Swiss seasons, zero volume lost — choose() falls back to the
+    safest buyable rung). Domestic floors are untouched."""
+    from app.data import config
+
+    for code in ("UCL", "UEL", "UECL", "UCL-Q", "UEL-Q", "UECL-Q"):
+        assert config.get(code).min_win_prob == 0.82
+    assert config.get("ENG-PL").min_win_prob is None
