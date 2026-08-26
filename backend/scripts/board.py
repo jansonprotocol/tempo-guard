@@ -123,15 +123,21 @@ def _cards(entries: list[tuple[Fixture, str, str, str]]) -> list[str]:
     anywhere. `<br clear="all">` ends the float so the next section's text
     cannot ride up alongside the last card.
     """
+    from scripts import liveline
     out = []
     for f, glyph, t1, t2 in entries:
+        tie = liveline.tie_note(f.teams, f.status)
+        # The tie is context, never an input: Athena prices one match's
+        # goals and has no concept of an aggregate.
+        row = (f'<tr><td colspan="3"><sub>🏆 {_html(tie)}</sub></td></tr>'
+               if tie else "")
         out.append(
             '<table align="left">'
             f'<tr><th align="left">{_html(_head(f, glyph))}</th>'
             '<th align="left">Tip 1</th><th align="left">Tip 2</th></tr>'
             f'<tr><td>{_html(_badge(f))}</td>'
             f'<td>{_html(t1)}</td><td>{_html(t2)}</td></tr>'
-            '</table>')
+            f'{row}</table>')
     if out:
         out += ['', '<br clear="all">', '']
     return out

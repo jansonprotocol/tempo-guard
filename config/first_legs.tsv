@@ -1,0 +1,44 @@
+# The first leg of each two-legged tie on the board, from ESPN.
+# Athena does not read this — it prices one match's goals and has no
+# concept of a tie. The board shows it as context beside the tip.
+# Written by scripts/first_legs.py. fixture	first leg
+AEK Athens v Levski Sofia	Levski Sofia 0-0 AEK Athens
+AGF v Benfica	Benfica 3-1 AGF
+Ajax v Sion	FC Sion 2-4 Ajax Amsterdam
+Anderlecht v Kairat	Kairat Almaty 0-3 Anderlecht
+Ararat-Armenia v U. Craiova	CSU Craiova 1-1 Ararat-Armenia
+Austria Wien v Braga	Braga 2-0 Austria Vienna
+Bodø/Glimt v NEC	NEC Nijmegen 1-3 Bodo/Glimt
+Borac v Víkingur	Vikingur Reykjavik 1-3 Borac Banja Luka
+Brann v PAOK	PAOK 1-1 SK Brann
+CSKA Sofia v OFI	OFI Crete 3-0 CSKA Sofia
+Celje v Slovan Bratislava	Slovan Bratislava 1-1 NK Celje
+Ferencváros v Trabzonspor	Trabzonspor 0-1 Ferencvaros
+Freiburg v Motherwell	Motherwell 1-3 SC Freiburg
+H. Tel Aviv v Atalanta	Atalanta 0-0 Hapoel Tel Aviv
+Hibernian v Gent	KAA Gent 0-0 Hibernian
+Hradec Králové v Panathinaikos	Panathinaikos 2-2 FC Hradec Králové
+Iberia v Jagiellonia	Jagiellonia Bialystok 4-0 Iberia 1999
+Inter Escaldes v Drita	Drita Gjilan 2-2 Inter D'Escaldes
+Jablonec v Rangers	Rangers 1-0 Jablonec
+Kauno Žalgiris v Beşiktaş	Besiktas 3-0 Kauno Zalgiris
+KuPS v Shamrock Rovers	Shamrock Rovers 1-1 KuPS Kuopio
+København v Inter Turku	FC Inter Turku 0-0 F.C. København
+LASK v Celtic	Celtic 3-0 LASK Linz
+Larne v Lincoln RI	Lincoln Red Imps 0-2 Larne
+Lyon v Fenerbahçe	Fenerbahce 1-1 Lyon
+M. Tel-Aviv v Lugano	FC Lugano 2-1 Maccabi Tel-Aviv
+Monaco v Górnik	Gornik Zabrze 2-3 AS Monaco
+Omonia v St. Truiden	Sint-Truidense 1-0 Omonia Nicosia
+Pafos v Dinamo City	Dinamo City 1-1 Pafos
+Partizan v Getafe	Getafe 3-1 Partizan Belgrade
+Qarabağ v Twente	FC Twente 0-1 FK Qarabag
+Raków v Hajduk	Hajduk Split 2-2 Raków Czestochowa
+Rapid Vienna v Hearts	Heart of Midlothian 2-2 Rapid Vienna
+Riga v Klaksvík	KI Klaksvik 0-0 Riga FC
+Rijeka v Midtjylland	FC Midtjylland 2-0 Rijeka
+Sabah v H. Be'er Sheva	Hapoel Be'er 2-1 Sabah FK
+Salzburg v Mjällby	Mjällby AIF 0-1 RB Salzburg
+St. Gallen v Nordsjælland	FC Nordsjælland 1-0 St. Gallen
+Thun v Lech	Lech Poznan 7-0 FC Thun
+Viking v Dinamo Zagreb	Dinamo Zagreb 2-2 Viking FK

@@ -88,7 +88,114 @@ def progress(cell: str, teams: str, status: str) -> str:
         return "push as it stands"
     if now < 1.0:
         return "half safe"
-    for k in range(1, 8):
-        if pricing.settle_fraction(market, goals + k) < 1.0:
-            return "next goal hurts" if k == 1 else f"room for {k - 1}"
-    return "room to spare"
+    # Two thresholds, because a quarter line has a middle band: `full` is
+    # how many more goals leave the lane untouched, `safe` how many leave
+    # it still winning something. U4.25 at one goal is full through three
+    # and half-wins at four — "room for 2" undersold it.
+    full = safe = None
+    for k in range(1, 9):
+        s = pricing.settle_fraction(market, goals + k)
+        if full is None and s < 1.0:
+            full = k - 1
+        if safe is None and s <= 0.0:
+            safe = k - 1
+            break
+    if full is None:
+        return "room to spare"
+    if safe is None or safe == full:
+        return "next goal hurts" if full == 0 else f"room for {full}"
+    return (f"room for {safe} · half from the {full + 1}"
+            + ("st" if full + 1 == 1 else "nd" if full + 1 == 2
+               else "rd" if full + 1 == 3 else "th"))
+
+
+_LEGS = Path(__file__).resolve().parents[2] / "config" / "first_legs.tsv"
+_LEG_LINE = re.compile(r"^(?P<h>.+?)\s+(?P<hg>\d+)-(?P<ag>\d+)\s+(?P<a>.+)$")
+
+
+def _legs() -> dict:
+    if not _LEGS.exists():
+        return {}
+    out = {}
+    for ln in _LEGS.read_text().splitlines():
+        if ln.strip() and not ln.startswith("#") and "\t" in ln:
+            fixture, leg = (x.strip() for x in ln.split("\t", 1))
+            out[fixture] = leg
+    return out
+
+
+_DROP = {"fc", "fk", "cf", "sc", "ac", "afc", "bk", "if", "sk", "club",
+         "cp", "of", "the", "ri"}
+
+
+def _words(s: str) -> set:
+    import unicodedata
+    s = unicodedata.normalize("NFD", s)
+    s = "".join(c for c in s if not unicodedata.combining(c)).lower()
+    for ch in ".-'()/":
+        s = s.replace(ch, " ")
+    return {w for w in s.split() if w not in _DROP}
+
+
+def same_club(a: str, b: str) -> bool:
+    """Loose club identity across sources: accents stripped, club words
+    dropped, and one token allowed to be a prefix of another so "Hearts"
+    finds "Heart of Midlothian"."""
+    x, y = _words(a), _words(b)
+    if not x or not y:
+        return False
+    for p in x:
+        for q in y:
+            if len(p) >= 4 and len(q) >= 4 and (p.startswith(q)
+                                                or q.startswith(p)):
+                return True
+    return bool(x & y)
+
+
+def _side_goals(leg: str, home: str, away: str):
+    """(this fixture's home goals, away goals) in the first leg."""
+    m = _LEG_LINE.match(leg)
+    if not m:
+        return None
+    lh, la = m.group("h").lower(), m.group("a").lower()
+    hg1, ag1 = int(m.group("hg")), int(m.group("ag"))
+
+    # The first leg was the reverse fixture, so today's home side was away.
+    if same_club(home, la) and same_club(away, lh):
+        return ag1, hg1
+    if same_club(home, lh) and same_club(away, la):
+        return hg1, ag1
+    return None
+
+
+def tie_note(teams: str, status: str) -> str:
+    """The aggregate picture in one sentence, or "" when this is not a
+    known two-legged tie. Context only — Athena prices the match total
+    and cannot see the tie."""
+    if " v " not in teams:
+        return ""
+    leg = _legs().get(teams)
+    if not leg:
+        return ""
+    home, away = (x.strip() for x in teams.split(" v ", 1))
+    got = _side_goals(leg, home, away)
+    if got is None:
+        return ""
+    h1, a1 = got
+    hg, ag = score_of(status) or (0, 0)
+    ah, aa = h1 + hg, a1 + ag
+    started = bool(score_of(status))
+    lead = "lead" if started else "carry"
+    if ah > aa:
+        need = ah - aa
+        tail = (f"{away} need {need} to level"
+                + (" it" if need == 1 else ""))
+        core = f"{home} {lead} {ah}-{aa} on aggregate"
+    elif aa > ah:
+        need = aa - ah
+        tail = f"{home} need {need} to level" + (" it" if need == 1 else "")
+        core = f"{away} {lead} {aa}-{ah} on aggregate"
+    else:
+        core = f"level {ah}-{aa} on aggregate"
+        tail = "as it stands this goes to extra time"
+    return f"1st leg {leg} · {core} — {tail}."
