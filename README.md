@@ -301,6 +301,7 @@ that premium the book is keeping the insurance money.
 | — open | CSKA Sofia v OFI | U3.5 | 1.36 | — | rule-6 harder line, needed ~1.32, +8.4% at strike |
 | — open | AGF v Benfica | U4.5 | 1.22 | — | cup lane, softer line above the U4.25 tip, +8.8% at strike |
 | — open | Kauno Žalgiris v Beşiktaş | U3.5 | 1.35 | — | rule-6 harder line, needed ~1.37 — two cents short, +3.8% at strike |
+| — open | Larne v Lincoln RI | U3.5 | 1.30 | — | rule-6 harder line off the U3.75 lane (79.0%); needed ~1.33, three cents short, +2.7% at strike |
 
 ## Engine state — 24 Aug 2026
 
