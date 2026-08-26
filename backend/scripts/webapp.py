@@ -29,6 +29,8 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "web" / "index.html"
 TITLE = "ATHENA — TEMPO GUARD"
 STAGE = "BETA STAGE 2"        # bumped at each stage transition, deliberately
+SESSION_NO = 3                # bumped when a run closes and a new one opens
+SESSION_START = "24 Aug"      # the reset date of the current run
 
 # The archived eras: frozen history, recorded once (the numbers live in
 # archive/*/log.md and the README's archive section; they never change).
@@ -287,6 +289,44 @@ def main() -> None:
             f"<p><b>Patches &amp; calibrations of this era</b></p>"
             f"<ul>{patches}</ul></div>")
 
+    # Session banner dates: start is the run's reset; end follows the
+    # latest fixture on the board, so it never goes stale by hand.
+    MONTHS = ("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec").split()
+    last = max(f.kickoff for f in fixtures).split(" ")[0]
+    _y, _m, _d = last.split("-")
+    session_end = f"{int(_d)} {MONTHS[int(_m) - 1]} {_y}"
+
+    # The match bank the visitor form answers from: the retrosim bank
+    # (matchbank.py) plus everything on the current board.
+    import json as _json
+    retro_path = ROOT / "config" / "matchbank_retro.json"
+    bank = _json.loads(retro_path.read_text()) if retro_path.exists() else {}
+    for f in fixtures:
+        comp = bank.setdefault(f.code, dict(name=f.league, teams=[],
+                                            matches=[]))
+        if " v " not in f.teams:
+            continue
+        hh, aa = (x.strip() for x in f.teams.split(" v ", 1))
+        for nm in (hh, aa):
+            if nm not in comp["teams"]:
+                comp["teams"].append(nm)
+        entry = dict(d=f.kickoff.split(" ")[0], h=hh, a=aa,
+                     tip=re.sub(r"\*\*(.+?)\*\*", r"\1", f.tip1),
+                     score="", mark="", src="board")
+        if f.settled and "—" in f.status:
+            entry["score"] = f.status.split("—")[-1].strip()
+            entry["mark"] = f.status[:1]
+        if f.tip2.strip() not in ("", "—", "— none"):
+            entry["t2"] = re.sub(r"\*\*(.+?)\*\*", r"\1", f.tip2)
+        rd = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
+        if rd:
+            entry["kw"] = rd[0]
+        comp["matches"].append(entry)
+    for comp in bank.values():
+        comp["teams"] = sorted(set(comp["teams"]))
+    (OUT.parent / "matchbank.json").write_text(
+        _json.dumps(bank, ensure_ascii=False))
+
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -325,6 +365,19 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .tile .l {{ color:var(--dim); font-size:11px; text-transform:uppercase;
   letter-spacing:.08em; margin-top:2px; }}
 .tile .s {{ color:var(--dim); font-size:12px; }}
+.session {{ color:var(--gold); font-size:12px; letter-spacing:.18em;
+  text-transform:uppercase; margin:2px 0 8px; }}
+.ask {{ background:var(--card); border:1px solid var(--edge);
+  border-radius:10px; padding:12px 14px; margin:0 0 12px; font-size:13px; }}
+.askrow {{ display:grid; gap:8px; margin-top:10px;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); }}
+.askrow input, .askrow select {{ background:#111622; border:1px solid
+  var(--edge); border-radius:8px; color:var(--tx); padding:8px 10px;
+  font:inherit; font-size:13px; }}
+.askbtn {{ margin:0; }}
+#ask-out {{ margin-top:10px; }}
+#ask-out .grid {{ max-width:460px; }}
+.askerr {{ color:#e07a6a; font-size:13px; padding:8px 2px; }}
 .btn {{ display:block; width:100%; background:var(--card);
   border:1px solid var(--edge); border-radius:8px; color:var(--gold);
   padding:9px 12px; margin:2px 0 8px; font:inherit; font-size:13px;
@@ -390,7 +443,21 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 </nav>
 
 <section class="page" id="p-home">
+ <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}</div>
  <div class="tiles">{tiles}</div>
+ <div class="ask">
+  <b>🔎 Ask Athena</b> <span class="dim">— look up any matchup it has run;
+  past matches are a retrosim (each competition's last ~200 games).</span>
+  <div class="askrow">
+   <input type="date" id="ask-d">
+   <select id="ask-lg"><option value="">League…</option></select>
+   <input id="ask-a" list="dl-a" placeholder="Team A (home)" disabled>
+   <input id="ask-b" list="dl-b" placeholder="Team B (away)" disabled>
+   <button class="btn askbtn" onclick="askAthena()">Enter</button>
+  </div>
+  <datalist id="dl-a"></datalist><datalist id="dl-b"></datalist>
+  <div id="ask-out"></div>
+ </div>
  <div class="tabs">
   <a href="#home/playable" data-t="playable">🟢 Playable lanes
    <span class="dim">{len(playable)}</span></a>
@@ -491,6 +558,89 @@ function route() {{
     a.classList.toggle("on", a.dataset.t === tab);
 }}
 addEventListener("hashchange", route); route();
+
+let BANK = null, LOOKUP = null;
+const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase().replace(/[.\-'()\/]/g, " ").split(/\s+/)
+  .filter(w => w && !["fc","fk","cf","sc","ac","afc","bk","if","sk",
+                      "club","cp"].includes(w)).join(" ");
+async function ensureBank() {{
+  if (BANK) return;
+  BANK = await (await fetch("matchbank.json")).json();
+  LOOKUP = {{}};
+  for (const [code, comp] of Object.entries(BANK))
+    for (const m of comp.matches) {{
+      const k = code + "|" + norm(m.h) + "|" + norm(m.a);
+      (LOOKUP[k] = LOOKUP[k] || []).push(m);
+    }}
+  const sel = document.getElementById("ask-lg");
+  for (const [code, comp] of Object.entries(BANK).sort(
+      (x, y) => x[1].name.localeCompare(y[1].name))) {{
+    const o = document.createElement("option");
+    o.value = code; o.textContent = comp.name; sel.appendChild(o);
+  }}
+}}
+document.getElementById("ask-lg").addEventListener("focus", ensureBank);
+document.getElementById("ask-lg").addEventListener("change", e => {{
+  const comp = BANK && BANK[e.target.value];
+  for (const id of ["dl-a", "dl-b"]) {{
+    const dl = document.getElementById(id); dl.innerHTML = "";
+    if (comp) for (const tm of comp.teams) {{
+      const o = document.createElement("option");
+      o.value = tm; dl.appendChild(o);
+    }}
+  }}
+  for (const id of ["ask-a", "ask-b"]) {{
+    const inp = document.getElementById(id);
+    inp.disabled = !comp; inp.value = "";
+  }}
+}});
+function askCard(m, comp, note) {{
+  const mark = m.mark ? m.mark + " " + (m.score || "") :
+    (m.src === "board" ? "🕑 on the board" : "");
+  let body = "";
+  if (m.t2) body += '<div class="lane"><span class="which">Tip 2</span> '
+    + m.t2.replaceAll(" · ", "<br>") + "</div>";
+  return '<div class="grid"><div class="card play"><div class="teams">'
+    + m.h + " v " + m.a + '</div><div class="meta">' + mark + " · "
+    + m.d + " · " + comp.name + (note ? " · " + note : "") + "</div>"
+    + (m.kw ? '<div class="kw">🧠 ' + m.kw + "</div>" : "")
+    + '<div class="lane pl"><span class="which">Tip 1</span> '
+    + m.tip.replaceAll(" · ", "<br>") + "</div>" + body + "</div></div>";
+}}
+async function askAthena() {{
+  await ensureBank();
+  const out = document.getElementById("ask-out");
+  const code = document.getElementById("ask-lg").value;
+  const A = document.getElementById("ask-a").value.trim();
+  const B = document.getElementById("ask-b").value.trim();
+  const D = document.getElementById("ask-d").value;
+  if (!code || !A || !B) {{
+    out.innerHTML = '<div class="askerr">Pick a league and both teams '
+      + "first.</div>"; return;
+  }}
+  const comp = BANK[code];
+  let hits = LOOKUP[code + "|" + norm(A) + "|" + norm(B)] || [];
+  let note = "";
+  if (!hits.length) {{
+    hits = LOOKUP[code + "|" + norm(B) + "|" + norm(A)] || [];
+    if (hits.length) note = "shown home-first, as it was played";
+  }}
+  if (!hits.length) {{
+    out.innerHTML = '<div class="askerr">Athena has not run this matchup. '
+      + "The board carries what the operator feeds in, and past matches "
+      + "cover roughly each competition's last 200 games — try the "
+      + "suggestions while typing, or the reverse fixture.</div>";
+    return;
+  }}
+  let show = hits;
+  if (D) {{
+    const exact = hits.filter(m => m.d === D);
+    if (exact.length) show = exact;
+    else note = "not on " + D + " — showing the date(s) Athena ran it";
+  }}
+  out.innerHTML = show.slice(-3).map(m => askCard(m, comp, note)).join("");
+}}
 </script>
 </body></html>"""
     OUT.parent.mkdir(exist_ok=True)
