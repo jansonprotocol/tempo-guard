@@ -190,12 +190,12 @@ def _patch_rows() -> str:
 def _learn() -> str:
     """The teaching block: one example card, each part explained in a line."""
     card = """<details class="card play" open>
-<summary><div class="teams">Plze\u0148 v Crvena zvezda<span class="more">more \u25be</span></div>
-<div class="meta">\U0001f551 27-08 19:00 \u00b7 UEL Playoff \u00b7 probationary <span class="badge">(86.4 \u22120.2)</span></div>
-<div class="kw">\U0001f9e0 Elo 1566 v 1564 \u00b7 even tie on Elo</div>
-<div class="lane pl"><span class="which">Tip 1</span> U4.25 91.6% +3.0%<br>buy\u22651.15</div></summary>
-<div class="lane"><span class="which">Tip 2</span> U3.75 79.8% +5.0% (floor \u22122.2)<br>buy\u22651.28</div>
-<div class="read">Athena prices cups from Club Elo \u2014 strength measured across every competition. It reads <b>Plze\u0148</b> at 1566 against <b>Crvena zvezda</b> at 1564: an even tie on club strength.</div>
+<summary><div class="teams">Real Madrid v Real Sociedad<span class="more">more \u25be</span></div>
+<div class="meta">\U0001f551 26-08 21:00 \u00b7 LaLiga <span class="badge">(80.5 \u22120.1)</span></div>
+<div class="kw">\U0001f9e0 elite attack vs leaky defence</div>
+<div class="lane pl"><span class="which">Tip 1</span> O1.5 81.2% +6.8%<br>buy\u22651.33</div></summary>
+<div class="lane pl"><span class="which">Tip 2</span> <b>Real Madrid O1.5</b> 67.0% +24.7% (team)<br>buy\u22651.62</div>
+<div class="read"><b>Real Madrid</b>: elite attack, elite defence, in form \u2014 against <b>Real Sociedad</b>: leaky defence, struggling. That pairing \u2014 firepower against a defence that leaks \u2014 is where the goals in this tip come from.</div>
 </details>"""
     rows = [
         ("The matchup", "home team first, away team second \u2014 venue "
@@ -203,25 +203,33 @@ def _learn() -> str:
         ("\U0001f551 / \U0001f534 / \u2705\u274c", "the clock before "
          "kickoff, red while live, then the verdict with the final score "
          "once graded."),
-        ("The league line", "the competition \u2014 \u00b7 probationary "
-         "marks a lane still earning trust with live results."),
-        ("(86.4 \u22120.2)", "the league's proven record: hitrate over its "
+        ("The league line", "the competition. On cup cards, \u00b7 "
+         "probationary marks a lane still earning trust with live "
+         "results."),
+        ("(80.5 \u22120.1)", "the league's proven record: hitrate over its "
          "last 200 matches, replayed as-of, and the gap between what Athena "
          "claimed and what actually landed. Near zero = the engine tells "
          "the truth here."),
         ("\U0001f9e0 the read", "what Athena measured in this matchup, in "
          "keywords \u2014 tap the card for the full story in sentences."),
-        ("Tip 1", "the engine's best market. U4.25 = under 4.25 goals; "
-         "91.6% = claimed probability; +3.0% = edge over a typical match."),
-        ("buy\u22651.15", "the minimum odds that make this tip worth "
+        ("Tip 1", "the engine's best market. O1.5 = over 1.5 goals in the "
+         "match; 81.2% = claimed probability; +6.8% = edge over a typical "
+         "match."),
+        ("buy\u22651.33", "the minimum odds that make this tip worth "
          "money \u2014 margin included. Never buy below it; the margin IS "
          "the edge."),
         ("Green border / lane", "a playable lane: edge above +1%. These "
          "are the tips with real value \u2014 the rest are shown for "
          "honesty, not for money."),
-        ("Tip 2 \u00b7 more \u25be", "the runner-up lane \u2014 another "
-         "rung or a team total. (floor \u22122.2) says how far it sits "
-         "below the confidence bar."),
+        ("Tip 2 \u00b7 more \u25be", "the second lane. (team) means a "
+         "TEAM total \u2014 here Real Madrid alone to score 2+ \u2014 a "
+         "different market from the match total, offered when its edge "
+         "beats the ladder's runner-up. On other cards (floor \u2212x) "
+         "says how far Tip 2 sits below the confidence bar."),
+        ("\U0001f9e0 the story", "tap any card open: the read in full "
+         "sentences \u2014 every phrase maps to something measured (attack "
+         "and defence bands, form, table stakes, cup Elo), never "
+         "invented."),
     ]
     items = "".join(f'<tr><td class="mk"><b>{k}</b></td><td>{v}</td></tr>'
                     for k, v in rows)
