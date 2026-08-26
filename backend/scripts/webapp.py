@@ -349,7 +349,7 @@ def main() -> None:
 <title>{TITLE}</title>
 <link rel="icon" href="athena-logo.png">
 <style>
-:root {{ --bg:#0e1116; --card:#161b24; --edge:#232a36; --tx:#dbe2ee;
+:root {{ color-scheme:dark; --bg:#0e1116; --card:#161b24; --edge:#232a36; --tx:#dbe2ee;
   --dim:#8b95a7; --green:#37c26b; --blue:#4f8ef7; --gold:#e8b93c; }}
 * {{ box-sizing:border-box; margin:0; }}
 body {{ background:var(--bg); color:var(--tx); font:15px/1.45 system-ui,
