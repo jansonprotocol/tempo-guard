@@ -125,7 +125,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Real Madrid v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (80.5 −0.1)</td><td>O1.5 81.2% +6.8%<br>buy≥1.33</td><td><b>Real Madrid O1.5</b> 67.0% +24.7%<br>buy≥1.62 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.6% +1.5%<br>buy≥1.21</td><td>U3.75 73.3% +2.2%<br>buy≥1.33 · floor −8.7</td></tr><tr><td colspan="3"><sub>🏆 1st leg Slovan Bratislava 1-1 NK Celje · level 1-1 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>— under +1%</td><td>U3.75 72.2% +1.1%<br>buy≥1.35 · floor −9.8</td></tr><tr><td colspan="3"><sub>🏆 1st leg Fenerbahce 1-1 Lyon · level 1-1 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🟢 26-08 21:00 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21</td><td>U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9</td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 7' 0-0 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21 · <i>room for 4 · half from the 4th</i></td><td>U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9 · <i>room for 3</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-08 23:00 <b>Boyacá Chicó v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 81.9% +2.2%<br>buy≥1.35</td><td>U4.25 92.8% +1.2%<br>buy≥1.14 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-08 03:30 <b>Atl. Nacional v Dep. Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>— under +1%</td><td>O1.75 72.8% +5.6%<br>buy≥1.57 · floor −2.2</td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-08 17:00 <b>KuPS v Shamrock Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (82.2 −2.3)</td><td>U4.25 90.0% +4.5%<br>buy≥1.21</td><td>U3.75 77.3% +6.9%<br>buy≥1.31 · floor −4.7</td></tr><tr><td colspan="3"><sub>🏆 1st leg Shamrock Rovers 1-1 KuPS Kuopio · level 1-1 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
@@ -175,7 +175,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 26-08 21:00 <b>AEK Athens v Levski Sofia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 82.5% <b>-3.6%</b><br>buy≥1.30</td><td>— none</td></tr><tr><td colspan="3"><sub>🏆 1st leg Levski Sofia 0-0 AEK Athens · level 0-0 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 21:00 <b>Celje v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.6% +1.5%<br>buy≥1.21</td><td>U3.75 73.3% +2.2%<br>buy≥1.33 · floor −8.7</td></tr><tr><td colspan="3"><sub>🏆 1st leg Slovan Bratislava 1-1 NK Celje · level 1-1 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 21:00 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 86.8% <b>+0.8%</b><br>buy≥1.22</td><td>U3.75 72.2% +1.1%<br>buy≥1.35 · floor −9.8</td></tr><tr><td colspan="3"><sub>🏆 1st leg Fenerbahce 1-1 Lyon · level 1-1 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔵 26-08 21:00 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21</td><td>U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9</td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 7' 0-0 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (80.8 −3.0)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21 · <i>room for 4 · half from the 4th</i></td><td>U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9 · <i>room for 3</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-08 23:00 <b>Boyacá Chicó v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 81.9% +2.2%<br>buy≥1.35</td><td>U4.25 92.8% +1.2%<br>buy≥1.14 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-08 00:00 <b>Coquimbo v U. Católica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.5 +0.2)</td><td>O1.5 76.8% +0.5%<br>buy≥1.37</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-08 01:20 <b>América de Cali v Junior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (83.0 −4.0)</td><td>U3.0 80.5% +0.8%<br>buy≥1.39</td><td>U2.75 60.3% +1.0%<br>buy≥1.57 · floor −14.7</td></tr></table>
@@ -299,6 +299,8 @@ that premium the book is keeping the insurance money.
 | — open | Plzeň v Crvena zvezda | U3.5 | 1.43 | — | rule-6 harder line, needed ~1.32, +14.2% at strike |
 | — open | Riga v Klaksvík | U3.5 | 1.47 | — | rule-6 harder line, needed ~1.41, +9.7% at strike |
 | — open | CSKA Sofia v OFI | U3.5 | 1.36 | — | rule-6 harder line, needed ~1.32, +8.4% at strike |
+| — open | AGF v Benfica | U4.5 | 1.22 | — | cup lane, softer line above the U4.25 tip, +8.8% at strike |
+| — open | Kauno Žalgiris v Beşiktaş | U3.5 | 1.35 | — | rule-6 harder line, needed ~1.37 — two cents short, +3.8% at strike |
 
 ## Engine state — 24 Aug 2026
 
@@ -993,6 +995,19 @@ seasons (+0.097 / +0.106), monotone by tercile in both windows. In the
 live shape it improves both: hit **81.8 → 82.5** and **83.9 → 85.2**.
 Shipped as `B3`; the wired path now grades **84.3% pooled with a +0.1
 gap** (24-25 −1.2, 25-26 +1.4).
+
+**First legs versus second legs** (5,341 legs, 2009-2026). The folk
+wisdom is half right. Second legs really are the open ones — **2.81
+goals against first legs' 2.59**, +0.132 over baseline (t 3.97) and
+holding both windows (+0.15, +0.12). But **first-leg caution has faded**:
+−0.188 (t −4.28) in the older half, +0.023 (t +0.48) in the newer. That
+is an era effect, not a law, and pooling the two halves would have
+shipped it as a permanent knob. Against the engine's OWN mu neither leg
+is detectable (leg 1 −0.081 t −1.07, leg 2 +0.053 t +0.70, no window
+significant), so nothing ships. The practical residue: the competition
+baseline mixes both legs, so a second leg sits marginally above the
+number the mu leans on — not enough to move a tip, enough to prefer the
+softer line when a price is borderline.
 
 **What a level tie actually looks like** (645 second legs at x-x, 24% of
 all second legs). The goals are ordinary — **2.74 against the usual
