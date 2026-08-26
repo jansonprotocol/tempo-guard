@@ -314,26 +314,30 @@ async function askAthena() {
       + "first.</div>"; return;
   }
   const comp = BANK[code];
-  let hits = LOOKUP[code + "|" + norm(A) + "|" + norm(B)] || [];
-  let note = "";
-  if (!hits.length) {
-    hits = LOOKUP[code + "|" + norm(B) + "|" + norm(A)] || [];
-    if (hits.length) note = "shown home-first, as it was played";
-  }
-  if (!hits.length) {
+  // Both venue orders, every meeting Athena has run, oldest to newest.
+  const all = [...(LOOKUP[code + "|" + norm(A) + "|" + norm(B)] || []),
+               ...(LOOKUP[code + "|" + norm(B) + "|" + norm(A)] || [])]
+    .sort((x, y) => x.d.localeCompare(y.d));
+  if (!all.length) {
     out.innerHTML = '<div class="askerr">Athena has not run this matchup. '
       + "The board carries what the operator feeds in, and past matches "
       + "cover roughly each competition's last 200 games — try the "
-      + "suggestions while typing, or the reverse fixture.</div>";
+      + "suggestions while typing.</div>";
     return;
   }
-  let show = hits;
+  let show = all, head = "";
   if (D) {
-    const exact = hits.filter(m => m.d === D);
+    const exact = all.filter(m => m.d === D);
     if (exact.length) show = exact;
-    else note = "not on " + D + " — showing the date(s) Athena ran it";
+    else head = '<div class="dim" style="margin-bottom:6px">Not on ' + D
+      + " — showing every meeting Athena has run:</div>";
+  } else {
+    head = '<div class="dim" style="margin-bottom:6px">' + all.length
+      + " meeting" + (all.length > 1 ? "s" : "") + " on record — newest "
+      + "last:</div>";
   }
-  out.innerHTML = show.slice(-3).map(m => askCard(m, comp, note)).join("");
+  out.innerHTML = head
+    + show.map(m => askCard(m, comp, "")).join("");
 }
 </script>
 </body></html>
