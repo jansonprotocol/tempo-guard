@@ -29,12 +29,23 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "web" / "index.html"
 TITLE = "ATHENA — TEMPO GUARD"
 STAGE = "BETA STAGE 2"        # bumped at each stage transition, deliberately
-SESSION_NO = 3                # bumped when a run closes and a new one opens
-SESSION_START = "24 Aug"      # the reset date of the current run
+SESSION_NO = 4                # bumped when a run closes and a new one opens
+SESSION_START = "28 Aug"      # the reset date of the current run
 
 # The archived eras: frozen history, recorded once (the numbers live in
 # archive/*/log.md and the README's archive section; they never change).
 SESSIONS = [
+    dict(name="The cup run", dates="24–27 Aug 2026",
+         nums=[("Tip 1", "57/69 · 82.6%"), ("Tip 2", "39/55 · 70.9%"),
+               ("Playable", "41/48 · 85.4%"), ("Bets", "25/35 · ROI −7.5%")],
+         patches=["Cups reopened on the probationary Club Elo lane and "
+                  "graded 12/16 on their first playoff night",
+                  "Rules 5 and 6 became numbers; the board became this app",
+                  "The calibration day: the retrosim page forced every "
+                  "number to be defended — HIGH_SAYS_DEBIT, per-league "
+                  "floors under an ROI constraint, board-wide 82.4 → 83.7",
+                  "Closed at 82.6% tips / −7.5% ROI: the gap between "
+                  "hitrate and price is the lesson Session #4 inherits"]),
     dict(name="First calibrated slate", dates="23–24 Aug 2026",
          nums=[("Tip 1", "56/65 · 86.2%"), ("Tip 2", "37/50 · 74.0%"),
                ("Bets", "22/27 · ROI +6.1%")],
@@ -600,6 +611,9 @@ def main() -> None:
     hero_rate = (sum(1 for _d, mk in window if mk.startswith("✅"))
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
+    live_line = (f"Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on "
+                 f"{h1}/{n1} settled, found bets <b>{roi:+.1f}%</b> ROI "
+                 f"on {bh}/{bn}." if n1 else "First results land tonight.")
 
     # Visitors think of a UCL qualifier as a UCL game, so the form does
     # too: the -Q competitions fold into their parents for lookup. The
@@ -1027,8 +1041,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    discipline, flat 4% stakes, the winner's-curse haircut, in-play rung
    pricing. Those 65 settled tips became the measuring stick every later
    change is validated against.</div>
-  <div class="run"><b>Session #{SESSION_NO} <span class="when">· {SESSION_START}
-   2026 – running</span></b>The cup run. Cups had been taken off the
+  <div class="run"><b>Session #3 <span class="when">· 24–27 Aug
+   2026 · closed</span></b>The cup run. Cups had been taken off the
    board entirely at −11.4, and this run reopened them on a Club Elo
    strength lane — still <b>probationary</b>. Rules 5 and 6 became
    numbers, the board became this app, and four separate ideas were
@@ -1039,9 +1053,14 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    the fourteen weakest leagues with per-league floors — and rolled two
    of those floors back when the new buy-from column showed their
    hitrate was bought with unbuyable odds. A page built to display
-   numbers ended up correcting the engine that produces them.
-   Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on {h1}/{n1} settled,
-   found bets <b>{roi:+.1f}%</b> ROI on {bh}/{bn}.</div>
+   numbers ended up correcting the engine that produces them. Closed at
+   Tip 1 <b>82.6%</b> on 69 settled, found bets <b>−7.5%</b> ROI — the
+   gap between hitrate and price is the lesson the next run inherits.</div>
+  <div class="run"><b>Session #{SESSION_NO} <span class="when">· {SESSION_START}
+   2026 – running</span></b>The current run: the first full session on the
+   calibrated floors, the high-says debit and the buy-from discipline —
+   everything Session #3 measured, now facing fixtures it has never
+   seen. {live_line}</div>
  </div>
  <p class="dim">The per-run numbers, frozen at close, are on the
  <a href="#sessions">Past sessions</a> page. What each run changed, and

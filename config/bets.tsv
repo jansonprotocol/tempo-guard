@@ -17,38 +17,3 @@
 #           the pre-match number no longer describes it
 #
 # fixture	rung	odds	side	cashout	[p_override]
-Fulham v Chelsea	U3.75	1.36	-	0		pre-refresh Tip 2; the refresh flipped the fixture
-Málaga v Deportivo	O0.5	1.35	H	0		pre-refresh team lane; later dropped off the fixture
-Málaga v Deportivo	O1.5	1.48	-	0		pre-refresh Tip 1
-Sport Recife v América-MG	U3.5	1.28	-	0		same tier as the U3.0 tip
-Brøndby v Silkeborg	U3.75	1.50	-	0		Tip 2
-Brøndby v Silkeborg	U4.5	1.26	-	0		same tier, softer settlement
-Malmö v Djurgården	O1.5	1.93	H	0		the star lane, bought at 1.93 vs buy≥1.80
-Osasuna v Levante	O1.5	1.30	-	0		filler, under buy-from
-Al-Ittihad v Al-Hazem	U4.5	1.22	-	0		filler
-Fulham v Chelsea	O1.5	1.23	-	0		the tip, at break-even
-Bologna v Lazio	U3.5	1.22	-	0		filler, under buy-from
-Cúcuta v Alianza Valledupar	U3.0	1.24	-	0		the tip, 9 cents under buy-from
-Reims v Annecy	DNB	1.35	H	0		experimental
-Al-Shabab v Al-Riyadh	DNB	1.27	H	0		experimental
-Neom v Al-Qadsiah	DNB	1.22	A	0		experimental
-Everton v U. de Concepción	DNB	1.22	H	0		experimental
-Jong FC Utrecht v Heracles	DNB	1.23	A	0		experimental, engine's steepest DNB verdict
-Jong PSV v TOP Oss	U4.5	1.30	-	0		clean buy, +7.1% at strike
-Juventude v CRB	U3.5	1.20	-	0		same tier as the flipped U3.0 tip, extra cushion; U3.0 unavailable
-Athletic v Novorizontino	DNB	1.63	A	0		experimental, derived from the Athletic U1.5 team lane
-LASK v Celtic	U4.5	1.20	-	0		first cup-lane bet, probationary; tip U4.25, book line U4.5 softer, +4.6% at strike
-Bodø/Glimt v NEC	U4.5	1.42	-	0		cup lane, probationary; +22.9% EV at strike, the board price of the slate
-Rapid Vienna v Hearts	U4.5	1.18	-	0		cup lane, softer line above U4.25 tip, +3.1% at strike
-Plzeň v Crvena zvezda	U4.5	1.14	-	1		cashed out at stake, replaced with the U3.5 below
-Thun v Lech	U4.5	1.19	-	0		cup lane, +7.0% at strike, best EV of the five
-St. Gallen v Nordsjælland	U4.5	1.20	-	0		cup lane, +6.1% at strike
-Celta v Osasuna	DNB	1.38	H	0		experimental; O0.5-pointed read, the rung the backtest flagged
-Borac v Víkingur	U4.5	1.17	-	0		cup lane, +3.9% at strike
-Viking v Dinamo Zagreb	U3.5	1.45	-	0		rule-6 harder line, needed ~1.41, +8.1% at strike
-Plzeň v Crvena zvezda	U3.5	1.43	-	0		rule-6 harder line, needed ~1.32, +14.2% at strike
-Riga v Klaksvík	U3.5	1.47	-	0		rule-6 harder line, needed ~1.41, +9.7% at strike
-CSKA Sofia v OFI	U3.5	1.36	-	0		rule-6 harder line, needed ~1.32, +8.4% at strike
-AGF v Benfica	U4.5	1.22	-	0		cup lane, softer line above the U4.25 tip, +8.8% at strike
-Kauno Žalgiris v Beşiktaş	U3.5	1.35	-	0		rule-6 harder line, needed ~1.37 — two cents short, +3.8% at strike
-Larne v Lincoln RI	U3.5	1.30	-	0		rule-6 harder line off the U3.75 lane (79.0%); needed ~1.33, three cents short, +2.7% at strike
