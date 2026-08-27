@@ -943,6 +943,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    strength lane — still <b>probationary</b>. Rules 5 and 6 became
    numbers, the board became this app, and four separate ideas were
    measured and declined for the same reason: real signal, no edge.
+   Building the Retrosim page then forced a calibration day: measuring
+   every league at real sample size exposed the old table as mostly
+   noise, found one true engine-wide bias (fixed with a debit), lifted
+   the fourteen weakest leagues with per-league floors — and rolled two
+   of those floors back when the new buy-from column showed their
+   hitrate was bought with unbuyable odds. A page built to display
+   numbers ended up correcting the engine that produces them.
    Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on {h1}/{n1} settled,
    found bets <b>{roi:+.1f}%</b> ROI on {bh}/{bn}.</div>
  </div>
