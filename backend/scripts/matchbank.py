@@ -31,7 +31,13 @@ from scripts.two_tips import _buy
 
 OUT = Path(__file__).resolve().parents[2] / "config" / "matchbank_retro.json"
 SKIP = {"COPA-L", "EC", "WC"}
-N = 200
+# Up to two seasons per competition, same window the retrosim table runs.
+# The bank doubles as the hero number's sample: at 200 rows per comp the
+# most recent 300 playable graded lanes spanned barely two weeks; at the
+# full test-run window the search module answers far more matchups and
+# the hero window can widen without reaching into stale engine eras.
+N = 800
+DAYS = 730
 
 
 def league_entries(code: str) -> tuple[list[str], list[dict]]:
@@ -40,7 +46,10 @@ def league_entries(code: str) -> tuple[list[str], list[dict]]:
         return [], []
     cfg = config.get(code)
     flags = ModuleFlags(**(cfg.module_overrides or {}))
-    rows = df.dropna(subset=["hg", "ag"]).sort_values("date").tail(N)
+    rows = df.dropna(subset=["hg", "ag"]).sort_values("date")
+    import pandas as pd
+    cut = rows["date"].max() - pd.Timedelta(days=DAYS)
+    rows = rows[rows["date"] >= cut].tail(N)
     teams = sorted(set(map(str, rows["home"])) | set(map(str, rows["away"])))
     out = []
     for _, r in rows.iterrows():

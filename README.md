@@ -307,7 +307,7 @@ that premium the book is keeping the insurance money.
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 23 verified, 8 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 23 verified, 9 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
 ### 🟢 Verified and helping — 23
 
@@ -339,12 +339,13 @@ Cleared two separate time windows and is live in the engine today.
 | 🟢 | 08-24 | engine | **mu is over-spread** | The founding recalibration: MU_SHRINK to 0.60 with the floor moved to match, the single largest accuracy change the engine has had |
 | 🟢 | 08-24 | engine | **The weakest sides are rated too low** | TEAM_RATE_FLOOR 0.95 |
 
-### 🟠 Unfinished — 8
+### 🟠 Unfinished — 9
 
 Measured but not concluded, or shipped on **probation** and still waiting on live results.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🟠 | 08-27 | engine | **Balance means hit × buy≥, and five leagues fail it** | EV at the printed buy-from across the table runs 1.02–1.15. The extremes people worry about are HONEST — ITA-SB (77.2 hit, 1.46 odds) sits near the top at 1.127, JPN-J1 (88.6, 1.20) clears 1.063 — but the overconfident rows cannot cover their own price: MLS 1.017, ESP-L2 1.025, MEX-LMX 1.027, UEL-Q 1.033, FRA-L2 1.055. Their fix is per-league calibration or a cull, not floor tuning; pending |
 | 🟠 | 08-27 | engine | **TUR-SL and ESP-L2 are overconfident in their RECENT two seasons** | The only two rows that survive the noise-aware re-measure: TUR-SL −5.2 (n 391), ESP-L2 −4.3 (n 525) — both read fine over a longer trail (−2.6 / −2.8 at n≈740), so the miss is concentrated in the current window. Cause not yet diagnosed |
 | 🟠 | 08-27 | engine | **IRL-PD and MAR-BP price on a mu that carries no information** | At n≈800 IRL-PD's residual slope is −2.8 (t −3.0) and NEGATIVE IN BOTH WINDOWS — mu is anti-correlated with outcomes there; MAR-BP reads −0.8 (t −2.2). Their hitrates survive because the league mean carries them, but the stated probabilities pretend knowledge. Cull candidates, decision pending |
 | 🟠 | 08-27 | cups | **The whole Club Elo cup lane** | PROBATIONARY. 92% coverage, all windows same-signed, a 202-fixture dress rehearsal at 89.1% and a pooled gap of +0.1 after B3 — but cups have failed this project twice before, so it stays labelled until a full slate of live results confirms it |

@@ -514,7 +514,7 @@ def main() -> None:
             if float(e.group(1).replace("−", "-")) > 1.0:
                 graded.append((m["d"], m["mark"]))
     graded.sort(reverse=True)
-    window = graded[:300]
+    window = graded[:500]
     hero_rate = (sum(1 for _d, mk in window if mk.startswith("✅"))
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
@@ -783,7 +783,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div class="hero-text">
    <h1>{TITLE}</h1>
    <p class="tag">The most accurate football predictor{hero_sub}</p>
-   <p class="fine">Tip 1 · the 300 most recent graded playable lanes</p>
+   <p class="fine">Tip 1 · the 500 most recent graded playable lanes</p>
   </div>
  </div>
  <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}</div>
