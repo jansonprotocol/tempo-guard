@@ -94,32 +94,58 @@ def board_day(code: str, day: str) -> list[dict]:
 def regulation(slug: str, ev: dict) -> tuple[int, int] | None:
     """The 90-minute score of a match that went to extra time.
 
-    Every market on this board settles on the 90, so a 5-2 after extra
-    time is a 3-2 for our purposes. Counted from the goal timeline; None
-    when the timeline is unavailable, which is a reason to abstain rather
-    than to guess.
+    Every market on this board settles on the 90 (stoppage time
+    included), so a 5-1 after extra time is a 4-1 for our purposes.
+
+    Read from the RUNNING SCORE in the goal narration, never by counting
+    goal events: ESPN's keyEvents feed drops events (Plzen's 2-1 and 4-1
+    goals were simply absent), and a count of an incomplete list graded
+    Plzen 2-1 when the 90 ended 4-1 — flipping two ledger positions the
+    wrong way. Each "Goal! Home X, Away Y." line carries the cumulative
+    score, so the last such line at minute <= 90 IS the regulation score
+    even when earlier lines are missing. The commentary feed (complete)
+    is preferred; keyEvents is the fallback. None when neither carries a
+    goal line — a reason to abstain, not to guess.
     """
     data = _get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/"
                 f"{slug}/summary?event={ev['id']}")
     if not data:
         return None
-    comp = ev["competitions"][0]
-    home = next(x for x in comp["competitors"] if x["homeAway"] == "home")
-    away = next(x for x in comp["competitors"] if x["homeAway"] == "away")
-    hg = ag = 0
-    for k in data.get("keyEvents") or []:
-        if "Goal" not in (k.get("type") or {}).get("text", ""):
-            continue
-        clock = (k.get("clock") or {}).get("displayValue", "")
-        minute = int(clock.split("'")[0].split("+")[0] or 0)
-        if minute > 90:
-            continue
-        team = (k.get("team") or {}).get("displayName", "")
-        if liveline.same_club(team, home["team"]["displayName"]):
-            hg += 1
-        elif liveline.same_club(team, away["team"]["displayName"]):
-            ag += 1
-    return hg, ag
+    import re as _re
+
+    def _score(items, minute_of, text_of):
+        best, best_min = None, -1
+        for it in items or []:
+            text = text_of(it) or ""
+            if not text.startswith("Goal!"):
+                continue
+            clock = minute_of(it) or ""
+            try:
+                minute = int(clock.split("'")[0].split("+")[0] or 0)
+            except ValueError:
+                continue
+            if minute > 90:      # "90'+5'" parses as 90 and stays IN
+                continue
+            m = _re.search(r"(\d+), .*?(\d+)\.", text)
+            if m and minute >= best_min:
+                best, best_min = (int(m.group(1)), int(m.group(2))), minute
+        return best
+
+    got = _score(data.get("commentary"),
+                 lambda c: (c.get("time") or {}).get("displayValue"),
+                 lambda c: c.get("text"))
+    if got is None:
+        got = _score(data.get("keyEvents"),
+                     lambda k: (k.get("clock") or {}).get("displayValue"),
+                     lambda k: k.get("text"))
+    if got is None:
+        # A feed with entries but no pre-90 goal line is a goalless
+        # regulation (Inter Escaldes 0-0, decided in ET), not an unknown.
+        if data.get("commentary") or data.get("keyEvents"):
+            return 0, 0
+        return None
+    # The narration names the HOME side first on ESPN soccer feeds.
+    return got
 
 
 def settle(cell: str, teams: str, hg: int, ag: int):
