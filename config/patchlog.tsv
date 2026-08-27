@@ -1,6 +1,10 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-08-27	interface	The search bank widened to the test-run window — 60 competitions, ~30k graded matches on the current build (was ~11.5k on stale floors) — Ask Athena answers far more matchups and the hero window grows to the 500 most recent graded playable lanes
+2026-08-27	board	Balance audited as hit × buy≥: the corners are honest (long odds pay for low hit and vice versa) — the real imbalance is the five overconfident leagues (MLS, ESP-L2, MEX-LMX, UEL-Q, FRA-L2) whose printed price their hit cannot cover; flagged for calibration or cull
+2026-08-27	engine	The floors re-decided under an ROI constraint the first pass missed: hitrate must not be bought with unbuyable rungs. Highest floor keeping ≥2/3 of playable volume — six leagues at 0.82, one at 0.80, seven at 0.78, and GRE-SL and PER-L1 REVERTED (GRE-SL's 91.7 came at 66% → 6% playable share, a mirage). Retrosim gains a buy-from column so this can never hide again
+2026-08-27	engine	The cup playbook transplanted: probability floor 0.82 on the sixteen weakest domestic leagues — selection climbs to safer rungs, both windows improve in every one (ENG-L2 80.6→88.9, ITA-SA 79.1→88.5, GRE-SL 80.9→91.7), zero volume cost. MLS declined (the floor makes it worse) and ITA-SB has no soft rungs to climb to
 2026-08-27	interface	Back-to-top fixed: an inline handler runs with the element in scope and Element has its own scrollTo, so the bare call scrolled the button's own content and silently did nothing — window.scrollTo now, verified 2552 → 0
 2026-08-27	interface	websitebanner_4 heads the Retrosim page, same treatment as the others
 2026-08-27	interface	Banners: hero on Home with the title and a live subheader — Tip 1 over the 300 most recent graded playable lanes, computed from the match bank at render so it can never rot — and page banners on About and Past sessions

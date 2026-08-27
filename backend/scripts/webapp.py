@@ -257,20 +257,26 @@ def _hitrates_rows() -> str:
     """One row per league. The gap is colored only when it clears two
     standard errors of its OWN row — a −2.1 on 200 fixtures is one SE from
     honest, and painting it red taught exactly the wrong lesson: sixteen
-    'broken' leagues that re-measured into one small shared bias."""
+    'broken' leagues that re-measured into one small shared bias.
+
+    The buy-from column is the average buy≥ a card would have printed for
+    that league's tips — the ROI half of the story. A league can hit 90%
+    and still be unbuyable if its rungs price at 1.10."""
     import math
     rows = []
     for ln in (ROOT / "config" / "league_hitrates.tsv").read_text().splitlines():
         if not ln.strip() or ln.startswith("#"):
             continue
-        lg, n, hit, gap = ln.split("\t")
+        parts = ln.split("\t")
+        lg, n, hit, gap = parts[:4]
+        buy = parts[4] if len(parts) > 4 and parts[4] else "—"
         g = float(gap.replace("−", "-"))
         p = float(hit) / 100
         se = math.sqrt(max(p * (1 - p), 1e-9) / int(n)) * 100
         cls = "dim" if abs(g) < 2 * se else "pos" if g > 0 else "neg"
         rows.append(f"<tr><td>{html.escape(lg)}</td><td>{hit}%</td>"
-                    f'<td class="{cls}">{gap}</td><td class="dim">{n}</td>'
-                    f"</tr>")
+                    f'<td class="{cls}">{gap}</td><td>{buy}</td>'
+                    f'<td class="dim">{n}</td></tr>')
     return "".join(rows)
 
 
@@ -508,7 +514,7 @@ def main() -> None:
             if float(e.group(1).replace("−", "-")) > 1.0:
                 graded.append((m["d"], m["mark"]))
     graded.sort(reverse=True)
-    window = graded[:300]
+    window = graded[:500]
     hero_rate = (sum(1 for _d, mk in window if mk.startswith("✅"))
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
@@ -777,7 +783,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div class="hero-text">
    <h1>{TITLE}</h1>
    <p class="tag">The most accurate football predictor{hero_sub}</p>
-   <p class="fine">Tip 1 · the 300 most recent graded playable lanes</p>
+   <p class="fine">Tip 1 · the 500 most recent graded playable lanes</p>
   </div>
  </div>
  <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}</div>
@@ -852,7 +858,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  with, so the gap compares like with like.</p>
  <div class="wrap"><table id="retro" class="sortable">
  <tr><th data-sort="t">League</th><th data-sort="n">Hit</th>
- <th data-sort="n">Gap</th><th data-sort="n">n</th></tr>
+ <th data-sort="n">Gap</th><th data-sort="n">Buy from</th>
+ <th data-sort="n">n</th></tr>
  {_hitrates_rows()}</table></div>
 </section>
 

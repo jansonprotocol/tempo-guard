@@ -89,6 +89,7 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
 
     hits = tips = skips = 0
     p_sum = 0.0
+    buys: list[float] = []
     for _, r in recent.iterrows():
         d = r["date"].date() if hasattr(r["date"], "date") else r["date"]
         try:
@@ -114,15 +115,26 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
         tips += 1
         # The PUBLISHED probability, debits included — the table grades
         # the number a visitor actually sees, not the raw engine one.
-        p_sum += market_select.stated(league, mk,
-                                      market_select.p_win(mk, req.mu_total))
+        p_st = market_select.stated(league, mk,
+                                    market_select.p_win(mk, req.mu_total))
+        p_sum += p_st
+        # And the buy-from a card would have printed for this tip — the
+        # price below which it is not worth money, which is what decides
+        # whether a lane can ever be BOUGHT, not just whether it lands.
+        from scripts.two_tips import buy_value
+        edge = p_st - market_select.p_win(mk, req.league_mu) \
+            if req.league_mu else None
+        bv = buy_value(mk, req.mu_total, p_st, edge, league)
+        if bv is not None:
+            buys.append(bv)
         hits += res is True or res == "half_win"
 
     if not tips:
         return {}
     lo, hi = wilson(hits, tips)
     return dict(league=league, n=tips, skip=skips / (tips + skips),
-                says=p_sum / tips, hit=hits / tips, lo=lo, hi=hi)
+                says=p_sum / tips, hit=hits / tips, lo=lo, hi=hi,
+                buy=sum(buys) / len(buys) if buys else None)
 
 
 def main() -> None:
@@ -148,10 +160,13 @@ def main() -> None:
         if out:
             rows.append(out)
             r = out
-            print(f"{r['league']:9}{r['n']:5}{r['skip']*100:6.0f}%"
-                  f"{r['says']*100:8.1f}%{r['hit']*100:8.1f}%"
-                  f"{(r['hit']-r['says'])*100:+7.1f}"
-                  f"   [{r['lo']*100:.0f}-{r['hi']*100:.0f}]", flush=True)
+            line = (f"{r['league']:9}{r['n']:5}{r['skip']*100:6.0f}%"
+                    f"{r['says']*100:8.1f}%{r['hit']*100:8.1f}%"
+                    f"{(r['hit']-r['says'])*100:+7.1f}"
+                    f"   [{r['lo']*100:.0f}-{r['hi']*100:.0f}]")
+            if r.get("buy"):
+                line += f"   buy {r['buy']:.2f}"
+            print(line, flush=True)
 
     if not rows:
         return
