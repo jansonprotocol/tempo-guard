@@ -484,6 +484,31 @@ def main() -> None:
         if rd:
             entry["kw"] = rd[0]
         comp["matches"].append(entry)
+    # The hero banner's number: Tip 1 over the most recent 300 graded
+    # matches AT THE PLAYABLE STANDARD (edge above +1%) — the lanes the
+    # site actually offers, not every tip the engine ran (the sub-bar
+    # band was measured 27 Aug as the one that grades below its own
+    # stated probability, so averaging it in would understate the
+    # product AND overstate the discipline). Derived from the same bank
+    # the Ask Athena form answers from, so it refreshes with the bank
+    # and can never be a typed number that quietly rots.
+    graded = []
+    for comp in bank.values():
+        for m in comp["matches"]:
+            if m.get("mark") not in ("✅", "✅½", "◦", "❌"):
+                continue
+            e = re.search(r"([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)",
+                          m.get("tip", ""))
+            if not e:
+                continue
+            if float(e.group(1).replace("−", "-")) > 1.0:
+                graded.append((m["d"], m["mark"]))
+    graded.sort(reverse=True)
+    window = graded[:300]
+    hero_rate = (sum(1 for _d, mk in window if mk.startswith("✅"))
+                 / len(window) * 100) if len(window) >= 100 else None
+    hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
+
     # Visitors think of a UCL qualifier as a UCL game, so the form does
     # too: the -Q competitions fold into their parents for lookup. The
     # board itself keeps the distinction (different baselines, different
@@ -669,6 +694,26 @@ td.note, .dim {{ color:var(--dim); }}
 td.pos {{ color:var(--green); }} td.neg {{ color:#e07a6a; }}
 .area {{ background:#111622; border-radius:5px; padding:2px 7px;
   font-size:11px; color:var(--gold); }}
+.hero {{ position:relative; border-radius:12px; overflow:hidden;
+  background-size:cover; background-position:right center;
+  min-height:230px; margin-bottom:14px; display:flex; align-items:center;
+  border:1px solid var(--edge); }}
+.hero-text {{ padding:26px 30px; max-width:52%; }}
+.hero-text h1 {{ margin:0 0 8px; font-size:clamp(19px,3.2vw,30px);
+  letter-spacing:.4px; color:#f4f0e4;
+  text-shadow:0 1px 8px rgba(0,0,0,.85); }}
+.hero-text .tag {{ margin:0; font-size:clamp(13px,1.9vw,17px);
+  color:var(--gold); font-weight:650;
+  text-shadow:0 1px 6px rgba(0,0,0,.9); }}
+.hero-text .fine {{ margin:7px 0 0; font-size:11px; color:#b9b39f;
+  text-shadow:0 1px 4px rgba(0,0,0,.9); }}
+@media (max-width:640px) {{
+  .hero {{ min-height:150px; }}
+  .hero-text {{ max-width:78%; padding:16px 18px; }}
+}}
+.pagebanner {{ width:100%; max-height:260px; object-fit:cover;
+  object-position:center 30%; border-radius:12px;
+  border:1px solid var(--edge); margin-bottom:16px; display:block; }}
 .session {{ background:var(--card); border:1px solid var(--edge);
   border-radius:10px; padding:14px 16px; margin-bottom:12px; }}
 .session ul {{ margin:4px 0 2px 18px; color:var(--dim); }}
@@ -724,6 +769,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 </nav>
 
 <section class="page" id="p-home">
+ <div class="hero" style="background-image:url('banner-home.jpg')">
+  <div class="hero-text">
+   <h1>{TITLE}</h1>
+   <p class="tag">The most accurate football predictor{hero_sub}</p>
+   <p class="fine">Tip 1 · the 300 most recent graded playable lanes</p>
+  </div>
+ </div>
  <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}</div>
  <div class="tiles">{tiles}</div>
  <div class="ask">
@@ -768,6 +820,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 </section>
 
 <section class="page" id="p-sessions">
+ <img class="pagebanner" src="banner-sessions.jpg" alt="">
  <h2>Past sessions</h2>
  <p class="dim">Every era is archived whole and never edited — the numbers
  below are how each run actually ended.</p>
@@ -813,6 +866,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 </section>
 
 <section class="page about" id="p-about">
+ <img class="pagebanner" src="banner-about.jpg" alt="">
  <h2>About</h2>
  <p class="mission">Mission: give the best possible accuracy on
  value bets.</p>
