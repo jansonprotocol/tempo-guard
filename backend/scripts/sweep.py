@@ -174,6 +174,39 @@ def main() -> None:
     lines = FIXTURES.read_text().split("\n")
     changed, missing, still = [], [], []
 
+    # Rows settled mid-ET carry "(90'; to extra time)" with no final —
+    # once ESPN marks the match finished, the note gains the AET score,
+    # so the board tells the whole story: the 90 it settled on AND how
+    # the tie actually ended. The MARK never changes here; only the note.
+    finals = [f for f in fixtures
+              if f.settled and f.status.endswith("(90'; to extra time)")]
+    for f in finals:
+        day = f.kickoff.split(" ")[0]
+        key = (f.code, day)
+        if key not in cache:
+            cache[key] = board_day(f.code, day)
+        home, away = (x.strip() for x in f.teams.split(" v ", 1))
+        for cand in cache[key]:
+            comp = cand["competitions"][0]
+            ch = next(x for x in comp["competitors"] if x["homeAway"] == "home")
+            ca = next(x for x in comp["competitors"] if x["homeAway"] == "away")
+            if not (liveline.same_club(home, ch["team"]["displayName"])
+                    and liveline.same_club(away, ca["team"]["displayName"])):
+                continue
+            if cand["status"]["type"].get("state") == "post":
+                fin = f"{int(ch.get('score') or 0)}-{int(ca.get('score') or 0)}"
+                status = f.status.replace("(90'; to extra time)",
+                                          f"(90'; {fin} aet)")
+                for i, ln in enumerate(lines):
+                    parts = ln.split("\t")
+                    if len(parts) == 7 and parts[0] == f.kickoff \
+                            and parts[3] == f.teams:
+                        parts[6] = status
+                        lines[i] = "\t".join(parts)
+                        break
+                changed.append(f"{f.teams}: {status}")
+            break
+
     for f in todo:
         day = f.kickoff.split(" ")[0]
         key = (f.code, day)
