@@ -377,7 +377,11 @@ def _learn() -> str:
             f'read a block</h2><div class="grid" style="max-width:420px">'
             f"{card}</div><div class=\"wrap\" style=\"margin-top:10px\">"
             f"<table>{items}</table></div>"
-            f'<button class="btn" onclick="scrollTo({{top:0,'
+            # window. is not optional here: an inline handler runs with
+            # the element in its scope chain, and Element.prototype has a
+            # scrollTo of its own — so a bare scrollTo scrolled the
+            # button's own (unscrollable) content and silently did nothing.
+            f'<button class="btn" onclick="window.scrollTo({{top:0,'
             f'behavior:\'smooth\'}})">\u2191 Back to top</button></div>')
 
 
@@ -828,6 +832,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 </section>
 
 <section class="page" id="p-retrosim">
+ <img class="pagebanner" src="banner-retrosim.jpg" alt="">
  <h2>Retrosim confirmed hitrates</h2>
  <p class="dim">Every league's Tip 1, replayed as-of on the current build
  over its most recent fixtures — up to 800, capped at two seasons.

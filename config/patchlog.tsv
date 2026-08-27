@@ -1,6 +1,8 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-08-27	interface	Back-to-top fixed: an inline handler runs with the element in scope and Element has its own scrollTo, so the bare call scrolled the button's own content and silently did nothing — window.scrollTo now, verified 2552 → 0
+2026-08-27	interface	websitebanner_4 heads the Retrosim page, same treatment as the others
 2026-08-27	interface	Banners: hero on Home with the title and a live subheader — Tip 1 over the 300 most recent graded playable lanes, computed from the match bank at render so it can never rot — and page banners on About and Past sessions
 2026-08-27	board	The full table re-measured: 58 leagues, 29,763 fixtures, weighted gap −0.3 with the debits in. Two rows survive at real sample size — TUR-SL −5.2 and ESP-L2 −4.3, both concentrated in their most recent two seasons — and only those two now color red
 2026-08-27	engine	HIGH_SAYS_DEBIT 0.012: above says 90% the domestic board reads a measured 1.2 points hot (32,493 tips, 45 leagues, both windows, stronger in the played set) — published probability, edge and buy≥ carry the debit, selection stays raw
