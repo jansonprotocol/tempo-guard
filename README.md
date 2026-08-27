@@ -202,6 +202,11 @@ that premium the book is keeping the insurance money.
 | — open | Shenzhen v Port | U4.5 | 1.20 | — | softer line above the U4.25 tip (+5.3%) |
 | — open | Braunschweig v Hertha | O1.5 | 1.19 | — | = Tip 1 rung (83.5% +2.9%, buy≥ not met — widened) |
 | — open | Bochum v Osnabrück | DNB (home) | 1.25 | — | rule 5 shape, home favourite |
+| — open | Gençlerbirliği v Erzurumspor | U1.5 (away) | 1.36 | — | widened: away team under beside the U4.25 tip (89.5%) |
+| — open | Genk v Beveren | U4.5 | 1.20 | — | softer line above the U4.25 tip (86.7% +1.3%) |
+| — open | Crystal Palace v Man City | O1.5 (away) | 1.61 | — | widened: Man City team over |
+| — open | Crystal Palace v Man City | O1.5 | 1.20 | — | = Tip 1 rung (84.3% +4.5%), under buy≥ — widened |
+| — open | Comerciantes Unidos v Cajamarca | DNB (home) | 1.24 | — | rule 5 shape, home side of the O1.5 tip |
 
 <!-- HYPOTHESES:START -->
 
