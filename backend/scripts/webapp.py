@@ -289,11 +289,20 @@ def _card(f, kind: str, reads: dict) -> str:
                 f'<span class="dim">Context only — Athena prices the '
                 f'match total and does not see the tie.</span></div>'
                 if tie else "")
+    # On the PLAYABLE tab a card leads with the lane that put it there.
+    # A fixture whose Tip 1 sits under the bar can still be playable
+    # through Tip 2 — leading with the sub-bar Tip 1 put a −1.5% headline
+    # on the playable tab, which read as a mistake and effectively was
+    # one. Everywhere else Tip 1 leads as before; the expanded body
+    # always carries the other lane.
+    lead, rest = (1, f.tip1), (2, f.tip2)
+    if kind == "play" and not f.settled and not f.lane(1) and f.lane(2):
+        lead, rest = (2, f.tip2), (1, f.tip1)
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{lane(1, f.tip1)}")
-    body = lane(2, f.tip2) + tie_html
+           f"{lane(*lead)}")
+    body = lane(*rest) + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
     if not body:
