@@ -70,7 +70,7 @@ def _dom(code: str, home: str, away: str, when: date):
     stakes = [t.table for t in (h, a) if t.table and not
               t.table.startswith("top")]
     if stakes:
-        s += f" Stakes on the table: {' / '.join(stakes)}."
+        s += f" By results this season: {' / '.join(stakes)}."
     return kw, s
 
 
