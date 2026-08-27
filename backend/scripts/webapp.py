@@ -377,7 +377,11 @@ def _learn() -> str:
             f'read a block</h2><div class="grid" style="max-width:420px">'
             f"{card}</div><div class=\"wrap\" style=\"margin-top:10px\">"
             f"<table>{items}</table></div>"
-            f'<button class="btn" onclick="scrollTo({{top:0,'
+            # window. is not optional here: an inline handler runs with
+            # the element in its scope chain, and Element.prototype has a
+            # scrollTo of its own — so a bare scrollTo scrolled the
+            # button's own (unscrollable) content and silently did nothing.
+            f'<button class="btn" onclick="window.scrollTo({{top:0,'
             f'behavior:\'smooth\'}})">\u2191 Back to top</button></div>')
 
 
