@@ -7,18 +7,16 @@ The era that reopened the cups. Frozen at archive time (23:00 CEST, 27 Aug);
 ## Final numbers
 
     lane                        Tip 1              Tip 2
-    all matches             57 / 69   82.6%     39 / 55   70.9%
-    played lanes  >+1%      41 / 48   85.4%
+    all matches             59 / 72   81.9%     41 / 58   70.7%
+    played lanes  >+1%      43 / 51   84.3%
     placed bets             25 / 35   71.4%    ROI -7.5%
 
-Larne v Lincoln RI settled minutes after the era closed — ✅ 0-2 on the
-90, both tips in, the open U3.5 at 1.30 won — and is graded here in its
-own era rather than polluting the next one; the numbers above include
-it. Still unresolved at archive time: Barcelona v Athletic, Partizan v
-Getafe and Hibernian v Gent (in play on the closing night, carried onto
-the Session #4 board as marked stragglers), plus Sétif v Ben Aknoun and
-MC Alger v Oran, whose scores never surfaced (ESPN carries no Algerian
-league).
+The closing night's stragglers settled within the hour and are graded
+here in their own era: Larne ✅ 0-2 (both tips and the open U3.5 at 1.30
+won), Barcelona v Athletic ✅ 2-0 (the Athletic U1.5 team lane in),
+Partizan v Getafe ✅ 2-1, Hibernian v Gent ❌ 2-3. Sétif v Ben Aknoun and
+MC Alger v Oran remain ungraded forever — no source carries the Algerian
+league, and a row with no result is recorded as exactly that.
 
 ## What this era built
 

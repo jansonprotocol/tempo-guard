@@ -36,15 +36,15 @@ SESSION_START = "28 Aug"      # the reset date of the current run
 # archive/*/log.md and the README's archive section; they never change).
 SESSIONS = [
     dict(name="The cup run", dates="24–27 Aug 2026",
-         nums=[("Tip 1", "57/69 · 82.6%"), ("Tip 2", "39/55 · 70.9%"),
-               ("Playable", "41/48 · 85.4%"), ("Bets", "25/35 · ROI −7.5%")],
+         nums=[("Tip 1", "59/72 · 81.9%"), ("Tip 2", "41/58 · 70.7%"),
+               ("Playable", "43/51 · 84.3%"), ("Bets", "25/35 · ROI −7.5%")],
          patches=["Cups reopened on the probationary Club Elo lane and "
                   "graded 12/16 on their first playoff night",
                   "Rules 5 and 6 became numbers; the board became this app",
                   "The calibration day: the retrosim page forced every "
                   "number to be defended — HIGH_SAYS_DEBIT, per-league "
                   "floors under an ROI constraint, board-wide 82.4 → 83.7",
-                  "Closed at 82.6% tips / −7.5% ROI: the gap between "
+                  "Closed at 81.9% tips / −7.5% ROI: the gap between "
                   "hitrate and price is the lesson Session #4 inherits"]),
     dict(name="First calibrated slate", dates="23–24 Aug 2026",
          nums=[("Tip 1", "56/65 · 86.2%"), ("Tip 2", "37/50 · 74.0%"),
@@ -1059,7 +1059,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    of those floors back when the new buy-from column showed their
    hitrate was bought with unbuyable odds. A page built to display
    numbers ended up correcting the engine that produces them. Closed at
-   Tip 1 <b>82.6%</b> on 69 settled, found bets <b>−7.5%</b> ROI — the
+   Tip 1 <b>81.9%</b> on 72 settled, found bets <b>−7.5%</b> ROI — the
    gap between hitrate and price is the lesson the next run inherits.</div>
   <div class="run"><b>Session #{SESSION_NO} <span class="when">· {SESSION_START}
    2026 – running</span></b>The current run: the first full session on the

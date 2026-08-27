@@ -12,8 +12,8 @@
 
 **Session #4 opened 28 Aug 2026.** Session #3 (24–27 Aug, the cup run) is
 archived whole at **[archive/2026-08-24-session-3-cup-run/](archive/2026-08-24-session-3-cup-run/)** —
-final read: Tip 1 82.6% on 69 settled, playable lanes 85.4%, bets ROI −7.5%.
-Six closing-night stragglers (marked below) carry over and settle here.
+final read: Tip 1 81.9% on 72 settled, playable lanes 84.3%, bets ROI −7.5%.
+Every straggler is settled and graded in the archive; this board is purely Session #4.
 
 ## The four rules the last slate established
 
@@ -83,11 +83,6 @@ that premium the book is keeping the insurance money.
 
 **Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
 
-<table align="left"><tr><th align="left">🟢 27-08 20:00 <b>Sétif v Ben Aknoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (87.4 +0.8)</td><td>U3.0 84.9% +1.8%<br>buy≥1.29</td><td>U2.75 66.5% +2.6%<br>buy≥1.43 · floor −8.5</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 73' 1-0 <b>Barcelona v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (83.1 +2.8)</td><td>O1.5 78.3% +4.0%<br>buy≥1.38 · <i>needs 1 more</i></td><td><b>Athletic Club U1.5</b> 75.3% +7.1%<br>buy≥1.44 · team · <i>room for 1</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 78' 2-1 <b>Partizan v Getafe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (86.1 −0.1)</td><td>U4.25 87.4% +1.8%<br>buy≥1.21 · <i>room for 1 · half from the 1st</i></td><td>U3.75 73.1% +2.7%<br>buy≥1.33 · floor −8.9 · <i>next goal hurts</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Getafe 3-1 Partizan Belgrade · Getafe lead 4-3 on aggregate — Partizan need 1 to level it.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 85' 2-2 <b>Hibernian v Gent</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (86.1 −0.1)</td><td>U4.25 89.0% +3.4%<br>buy≥1.19 · <i>half safe</i></td><td>U3.75 75.5% +5.2%<br>buy≥1.34 · floor −6.5 · <i>half gone</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg KAA Gent 0-0 Hibernian · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🟢 27-08 22:00 <b>MC Alger v Oran</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (87.4 +0.8)</td><td>— under +1%</td><td><b>MC Alger O0.5</b> 81.2% +7.2%<br>buy≥1.33 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>— under +1%</td><td>O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>— under +1%</td><td><b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 13:35 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26</td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.93 · team</td></tr></table>
@@ -133,11 +128,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 27-08 20:00 <b>Sétif v Ben Aknoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (87.4 +0.8)</td><td>U3.0 84.9% +1.8%<br>buy≥1.29</td><td>U2.75 66.5% +2.6%<br>buy≥1.43 · floor −8.5</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 73' 1-0 <b>Barcelona v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (83.1 +2.8)</td><td>O1.5 78.3% +4.0%<br>buy≥1.38 · <i>needs 1 more</i></td><td><b>Athletic Club U1.5</b> 75.3% +7.1%<br>buy≥1.44 · team · <i>room for 1</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 78' 2-1 <b>Partizan v Getafe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (86.1 −0.1)</td><td>U4.25 87.4% +1.8%<br>buy≥1.21 · <i>room for 1 · half from the 1st</i></td><td>U3.75 73.1% +2.7%<br>buy≥1.33 · floor −8.9 · <i>next goal hurts</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg Getafe 3-1 Partizan Belgrade · Getafe lead 4-3 on aggregate — Partizan need 1 to level it.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 85' 2-2 <b>Hibernian v Gent</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UECL Playoff · probationary (86.1 −0.1)</td><td>U4.25 89.0% +3.4%<br>buy≥1.19 · <i>half safe</i></td><td>U3.75 75.5% +5.2%<br>buy≥1.34 · floor −6.5 · <i>half gone</i></td></tr><tr><td colspan="3"><sub>🏆 1st leg KAA Gent 0-0 Hibernian · level 2-2 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔵 27-08 22:00 <b>MC Alger v Oran</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue Professionnelle 1 (87.4 +0.8)</td><td>U4.25 92.1% <b>−1.3%</b><br>buy≥1.14</td><td><b>MC Alger O0.5</b> 81.2% +7.2%<br>buy≥1.33 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td><b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 13:35 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26</td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.93 · team</td></tr></table>
