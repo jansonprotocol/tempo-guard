@@ -50,13 +50,14 @@ def tips(lg: str, h: str, a: str, d: date):
     sc = [(m, e, p) for m, e, p, _q in
           market_select.score_markets(req.mu_total, req.league_mu)
           if market_select.playable(m, cfg.max_under_line, cfg.min_over_line)]
-    # Cup over rungs read a measured 3.5 points hot (see club_elo). The
-    # debit lands on stated probability AND edge — so a cup over must clear
-    # the playable bar on its honest number — while Tip 1's SELECTION stays
+    # Every measured overconfidence lands on the PUBLISHED numbers — cup
+    # overs read 3.5 points hot, domestic rungs above says 90% read 1.2 —
+    # through one gate (market_select.stated). The debit hits stated
+    # probability AND edge by the same amount, so a hot tip must clear the
+    # playable bar on its honest number, while Tip 1's SELECTION stays
     # with the engine, untouched as ever.
-    if lg in club_elo.CUPS:
-        sc = [(m, e - (club_elo.OVER_SAYS_DEBIT if m.startswith("O") else 0),
-               club_elo.stated_p(lg, m, p)) for m, e, p in sc]
+    sc = [(m, e - (p - market_select.stated(lg, m, p)),
+           market_select.stated(lg, m, p)) for m, e, p in sc]
     by = {m: (e, p) for m, e, p in sc}
     if t1 not in by:
         return None
@@ -91,6 +92,20 @@ def tips(lg: str, h: str, a: str, d: date):
                 t1=(t1, p1, e1), t2=t2)
 
 
+def _undebited(lg: str, market: str, p: float) -> float:
+    """The raw engine probability behind a published one — the gate run
+    backwards. Exact everywhere except the plateau at the domestic knee,
+    where the conservative (larger) end is returned, which prices the
+    break-even on the honest side."""
+    if lg in club_elo.CUPS:
+        if market.split()[-1].startswith("O"):
+            return p + club_elo.OVER_SAYS_DEBIT
+        return p
+    if p >= market_select.HIGH_SAYS_FROM:
+        return p + market_select.HIGH_SAYS_DEBIT
+    return p
+
+
 def _buy(market: str, mu: float, p: float, edge: float | None = None,
          lg: str | None = None) -> str:
     """
@@ -108,14 +123,16 @@ def _buy(market: str, mu: float, p: float, edge: float | None = None,
     """
     try:
         be = pricing.buy_from(market, mu, stated_edge=edge)
-        # Cup overs are priced from a mu that reads 3.5 points hot, so the
+        # A debited tip is priced from a mu that reads hot, so the
         # goal-distribution break-even inherits the optimism. `p` arrives
-        # already debited; scaling by (p + debit) / p converts the price to
+        # already debited; scaling by raw / debited converts the price to
         # the honest probability — exact for .5 lines, a stated
-        # approximation for quarter-line pushes.
-        if (lg in club_elo.CUPS and market.split()[-1].startswith("O")
-                and p > 0):
-            be *= (p + club_elo.OVER_SAYS_DEBIT) / p
+        # approximation for quarter-line pushes. The raw number is
+        # recovered from the gate itself rather than re-derived here.
+        if lg is not None and p > 0:
+            raw = _undebited(lg, market, p)
+            if raw > p:
+                be *= raw / p
         return f"buy>={be:.2f}"
     except (ValueError, IndexError):
         pass

@@ -254,13 +254,20 @@ def _grid(cards, kind, reads):
 
 
 def _hitrates_rows() -> str:
+    """One row per league. The gap is colored only when it clears two
+    standard errors of its OWN row — a −2.1 on 200 fixtures is one SE from
+    honest, and painting it red taught exactly the wrong lesson: sixteen
+    'broken' leagues that re-measured into one small shared bias."""
+    import math
     rows = []
     for ln in (ROOT / "config" / "league_hitrates.tsv").read_text().splitlines():
         if not ln.strip() or ln.startswith("#"):
             continue
         lg, n, hit, gap = ln.split("\t")
-        cls = "pos" if not gap.startswith("-") and not gap.startswith("−") \
-            else "neg"
+        g = float(gap.replace("−", "-"))
+        p = float(hit) / 100
+        se = math.sqrt(max(p * (1 - p), 1e-9) / int(n)) * 100
+        cls = "dim" if abs(g) < 2 * se else "pos" if g > 0 else "neg"
         rows.append(f"<tr><td>{html.escape(lg)}</td><td>{hit}%</td>"
                     f'<td class="{cls}">{gap}</td><td class="dim">{n}</td>'
                     f"</tr>")
@@ -769,11 +776,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 
 <section class="page" id="p-retrosim">
  <h2>Retrosim confirmed hitrates</h2>
- <p class="dim">Every league's Tip 1, replayed as-of over its 200 most
- recent matches on the current build. <b>hit</b> is what landed;
- <b>gap</b> is hit minus what the engine claimed — near zero means the
- engine tells the truth about itself. Cup lanes use debited
- probabilities. <b>Click a column to sort</b> — again to reverse.</p>
+ <p class="dim">Every league's Tip 1, replayed as-of on the current build
+ over its most recent fixtures — up to 800, capped at two seasons.
+ <b>hit</b> is what landed; <b>gap</b> is hit minus what the engine
+ claimed — near zero means the engine tells the truth about itself, and
+ at this sample size a row inside ±3 is within noise of honest. All
+ published debits included. <b>Click a column to sort</b> — again to
+ reverse.</p>
  <div class="wrap"><table id="retro" class="sortable">
  <tr><th data-sort="t">League</th><th data-sort="n">Hit</th>
  <th data-sort="n">Gap</th><th data-sort="n">n</th></tr>

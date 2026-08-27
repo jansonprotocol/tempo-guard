@@ -307,14 +307,16 @@ that premium the book is keeping the insurance money.
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 20 verified, 6 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 22 verified, 7 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
-### 🟢 Verified and helping — 20
+### 🟢 Verified and helping — 22
 
 Cleared two separate time windows and is live in the engine today.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🟢 | 08-27 | engine | **Above says 90% the domestic board is too sure of itself** | Measured on 32,493 tips across 45 leagues: below 90% the gap is −0.2 (honest); at 90%+ it is −1.2 ± 0.3, holds in both windows (−1.0 / −1.5) and is STRONGER in the played population (−1.8 / −1.4). Flat inside the band, so HIGH_SAYS_DEBIT 0.012 ships on the published number — selection stays raw |
+| 🟢 | 08-27 | board | **Per-league gaps at n=200 are mostly noise wearing a number** | The worst sixteen rows, re-measured at ~780 each: ROU-L1 −11.6 → −2.8, and every one of them collapsed into a band of −2.8 to +1.7 around a pooled −1.7. One row in the whole table cleared two standard errors. The table now replays up to 800 fixtures capped at two seasons |
 | 🟢 | 08-27 | interface | **One update is never one match** | The sweep checks every unsettled fixture against ESPN, grades on the 90 with extra time peeled off, and refuses to leave neighbours stale — the human failure it replaces was updating one score and leaving three settled bets showing as open |
 | 🟢 | 08-27 | interface | **ESPN files by the competition's local day** | A Chilean 18:00 sits on our previous date, so the sweep asked for one day and was told nothing was there; neighbouring days are now merged, which covers the Americas below us and Asia above |
 | 🟢 | 08-27 | interface | **Club identity across sources** | NFD leaves ø, đ, ł and ß whole (Lillestrøm was not Lillestrom), and a translated name shares no letters with its original (Red Star Belgrade is Crvena zvezda) — folded and aliased through the nickname file |
@@ -336,12 +338,13 @@ Cleared two separate time windows and is live in the engine today.
 | 🟢 | 08-24 | engine | **mu is over-spread** | The founding recalibration: MU_SHRINK to 0.60 with the floor moved to match, the single largest accuracy change the engine has had |
 | 🟢 | 08-24 | engine | **The weakest sides are rated too low** | TEAM_RATE_FLOOR 0.95 |
 
-### 🟠 Unfinished — 6
+### 🟠 Unfinished — 7
 
 Measured but not concluded, or shipped on **probation** and still waiting on live results.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🟠 | 08-27 | engine | **IRL-PD and MAR-BP price on a mu that carries no information** | At n≈800 IRL-PD's residual slope is −2.8 (t −3.0) and NEGATIVE IN BOTH WINDOWS — mu is anti-correlated with outcomes there; MAR-BP reads −0.8 (t −2.2). Their hitrates survive because the league mean carries them, but the stated probabilities pretend knowledge. Cull candidates, decision pending |
 | 🟠 | 08-27 | cups | **The whole Club Elo cup lane** | PROBATIONARY. 92% coverage, all windows same-signed, a 202-fixture dress rehearsal at 89.1% and a pooled gap of +0.1 after B3 — but cups have failed this project twice before, so it stays labelled until a full slate of live results confirms it |
 | 🟠 | 08-26 | cups | **Level-aggregate second legs are decided at home, not through goals** | Profiled on 645 ties: goals ordinary (2.74 v 2.67 usual) but the home side wins 49.1% and 21.7% go to extra time. Real, and printed as context beside the tip — it is not yet a term in the mu |
 | 🟠 | 08-26 | cups | **First-leg caution has faded** | Second legs run 2.81 goals against first legs' 2.59 and hold both windows, but the caution effect is gone (older −0.19, t −4.28; newer +0.02). Recorded, not acted on |
@@ -406,6 +409,12 @@ describes.
                                        validated dead knob, kept at its value
                                        so the sweep is not repeated
     MIN_WIN_PROB           0.75        probability floor, re-tuned with the shrink
+    HIGH_SAYS_DEBIT        0.012       above says 90% the domestic board reads a
+                                       measured 1.2 points hot (32,493 tips, both
+                                       windows, stronger in the played set) — the
+                                       PUBLISHED probability, edge and buy≥ carry
+                                       the debit; selection stays raw
+    HIGH_SAYS_FROM         0.90        where that band starts
 
 The cup lane — **probationary**, and priced from Club Elo rather than from
 form, because domestic form carries no cup signal at all (slope 0.017):
