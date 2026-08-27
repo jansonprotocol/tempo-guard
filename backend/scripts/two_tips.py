@@ -106,6 +106,27 @@ def _undebited(lg: str, market: str, p: float) -> float:
     return p
 
 
+def buy_value(market: str, mu: float, p: float, edge: float | None = None,
+              lg: str | None = None) -> float | None:
+    """The buy-from threshold as a number — everything _buy prints except
+    the formatting, so instruments can average what a card would say."""
+    try:
+        be = pricing.buy_from(market, mu, stated_edge=edge)
+        if lg is not None and p > 0:
+            raw = _undebited(lg, market, p)
+            if raw > p:
+                be *= raw / p
+        return be
+    except (ValueError, IndexError):
+        pass
+    if p <= 0:
+        return None
+    be = (1 / p) * (1 + pricing.DEFAULT_MARGIN)
+    if edge is not None and edge > pricing.CURSE_EDGE:
+        be *= 1 + pricing.CURSE_HAIRCUT
+    return be
+
+
 def _buy(market: str, mu: float, p: float, edge: float | None = None,
          lg: str | None = None) -> str:
     """

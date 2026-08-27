@@ -84,7 +84,17 @@ def sweep(code: str, floors) -> list[dict]:
             w = hit_weight(res)
             if w < 0:
                 continue
-            slot["rows"].append((r.date, w >= 1.0))
+            # What the card would have priced this tip at — the ROI half
+            # of the question. A floor that lifts hitrate by climbing to
+            # rungs nobody can buy edge on has not improved anything.
+            from app.engine import market_select
+            from scripts.two_tips import buy_value
+            p_st = market_select.stated(code, mk,
+                                        market_select.p_win(mk, req.mu_total))
+            edge = (p_st - market_select.p_win(mk, req.league_mu)
+                    if req.league_mu else None)
+            bv = buy_value(mk, req.mu_total, p_st, edge, code)
+            slot["rows"].append((r.date, w >= 1.0, bv, edge))
     return out
 
 
@@ -97,7 +107,7 @@ def main() -> None:
               if "--floors" in args else FLOORS)
 
     print(f"{'league':8}{'floor':>7}{'n':>6}{'keep':>6}{'hit':>7}"
-          f"{'older':>7}{'newer':>7}   verdict")
+          f"{'older':>7}{'newer':>7}   avg buy≥ · playable share · verdict")
     for code in codes:
         got = sweep(code, floors)
         if not got:
@@ -106,19 +116,19 @@ def main() -> None:
         base = got[0]["rows"]
         if not base:
             continue
-        mid = sorted(d for d, _ in base)[len(base) // 2]
-        bh = sum(1 for _d, h in base if h) / len(base) * 100
-        bo = [h for d, h in base if d < mid]
-        bn = [h for d, h in base if d >= mid]
+        mid = sorted(d for d, *_ in base)[len(base) // 2]
+        bh = sum(1 for _d, h, _b, _e in base if h) / len(base) * 100
+        bo = [h for d, h, _b, _e in base if d < mid]
+        bn = [h for d, h, _b, _e in base if d >= mid]
         bho = sum(bo) / len(bo) * 100 if bo else 0
         bhn = sum(bn) / len(bn) * 100 if bn else 0
         for slot in got:
             rows = slot["rows"]
             if not rows:
                 continue
-            hit = sum(1 for _d, h in rows if h) / len(rows) * 100
-            o = [h for d, h in rows if d < mid]
-            n_ = [h for d, h in rows if d >= mid]
+            hit = sum(1 for _d, h, _b, _e in rows if h) / len(rows) * 100
+            o = [h for d, h, _b, _e in rows if d < mid]
+            n_ = [h for d, h, _b, _e in rows if d >= mid]
             ho = sum(o) / len(o) * 100 if o else 0
             hn = sum(n_) / len(n_) * 100 if n_ else 0
             keep = len(rows) / len(base) * 100
@@ -131,8 +141,14 @@ def main() -> None:
                            else "one window short" if (ho > bho) != (hn > bhn)
                            else "no lift")
             fl = "cfg" if slot["floor"] is None else f"{slot['floor']:.2f}"
+            bs = [b for _d, _h, b, _e in rows if b]
+            es = [e for _d, _h, _b, e in rows if e is not None]
+            play = (sum(1 for e in es if e > 0.01) / len(es) * 100
+                    if es else 0)
+            buy = sum(bs) / len(bs) if bs else 0
             print(f"{code:8}{fl:>7}{len(rows):>6}{keep:>5.0f}%{hit:>7.1f}"
-                  f"{ho:>7.1f}{hn:>7.1f}   {verdict}", flush=True)
+                  f"{ho:>7.1f}{hn:>7.1f}  buy {buy:.2f}"
+                  f"  playable {play:3.0f}%   {verdict}", flush=True)
         print()
 
 

@@ -69,7 +69,7 @@ def rates() -> dict[str, str]:
     for ln in RATES.read_text().splitlines():
         if ln.startswith("#") or not ln.strip():
             continue
-        code, _n, hit, gap = ln.split("\t")
+        code, _n, hit, gap = ln.split("\t")[:4]
         out[code] = f"({hit} {gap.replace('-', '−')})"
     return out
 
