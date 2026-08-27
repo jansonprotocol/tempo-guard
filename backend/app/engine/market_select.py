@@ -116,6 +116,34 @@ _MAX_TOTAL = 12
 # 45%.
 MIN_WIN_PROB = 0.75
 
+# Above 90%, the board is measurably too sure of itself. Measured across
+# 32,493 domestic tips over 45 leagues at ~780 per league
+# (scripts/says_calibration.py, 27 Aug 2026): below says 90% the gap is
+# −0.2, honest; at 90%+ it is −1.2 ± 0.3 pooled, holds in BOTH windows
+# (−1.0 / −1.5) and is STRONGER in the played population (−1.8 / −1.4).
+# Flat inside the band — 90–92 / 92–94 / 94+ read −1.1 / −1.2 / −1.7 — so
+# it takes a flat debit, the same shape the cup over-debit took.
+#
+# Selection is untouched, as always: Tip 1 stays the engine's raw pick,
+# and the debit lands on the PUBLISHED probability, the published edge,
+# and through them the printed buy≥ — so a 92% tip must clear the playable
+# bar and price itself on its honest 90.8. The knee is a plateau rather
+# than a step (min/max below) so the published number stays monotonic in
+# the raw one: a raw 90.5 prints 90.0, never less than a raw 89.9.
+HIGH_SAYS_FROM = 0.90
+HIGH_SAYS_DEBIT = 0.012
+
+
+def stated(league_code: str, market: str, p: float) -> float:
+    """The probability to PUBLISH for a tip — the raw engine number less
+    every measured, validated overconfidence. Cups carry their own debit
+    (club_elo, over rungs 3.5 points); domestic rungs carry the high-says
+    debit above. Selection never reads this."""
+    from app.data import club_elo
+    if league_code in club_elo.CUPS:
+        return club_elo.stated_p(league_code, market, p)
+    return min(p, max(HIGH_SAYS_FROM, p - HIGH_SAYS_DEBIT))
+
 # ── Playability: which rungs are worth offering in a given league ────────────
 # Two attempts to derive this failed, and both failures are instructive.
 #

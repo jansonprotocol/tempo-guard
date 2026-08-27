@@ -58,7 +58,8 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return ((c - m) / d, (c + m) / d)
 
 
-def replay(league: str, n: int, back: int = 0, min_rows: int = 200) -> dict:
+def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
+           days: int = 0) -> dict:
     # The 200-row floor keeps thin domestic leagues out of a sweep, where a
     # league with 60 results would be read as a calibration verdict. The cup
     # QUALIFIERS sit just under it by nature — UCL-Q carries 182 results in
@@ -77,6 +78,11 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200) -> dict:
     ordered = df.sort_values("date")
     if back:
         ordered = ordered.iloc[:-back]
+    # Two seasons is this project's widest validation window; a table row
+    # must not quietly reach past it just because a league plays often.
+    if days:
+        cut = ordered["date"].max() - timedelta(days=days)
+        ordered = ordered[ordered["date"] >= cut]
     recent = ordered.tail(n)
     cfg = config.get(league)
     flags = ModuleFlags(**(cfg.module_overrides or {}))
@@ -106,7 +112,10 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200) -> dict:
             skips += 1
             continue
         tips += 1
-        p_sum += market_select.p_win(mk, req.mu_total)
+        # The PUBLISHED probability, debits included — the table grades
+        # the number a visitor actually sees, not the raw engine one.
+        p_sum += market_select.stated(league, mk,
+                                      market_select.p_win(mk, req.mu_total))
         hits += res is True or res == "half_win"
 
     if not tips:
@@ -123,6 +132,7 @@ def main() -> None:
         n = int(args[args.index("--n") + 1])
     back = int(args[args.index("--back") + 1]) if "--back" in args else 0
     min_rows = int(args[args.index("--min") + 1]) if "--min" in args else 200
+    days = int(args[args.index("--days") + 1]) if "--days" in args else 0
     if "--leagues" in args:
         codes = args[args.index("--leagues") + 1].split(",")
     else:
@@ -131,7 +141,7 @@ def main() -> None:
     rows = []
     for lg in codes:
         try:
-            out = replay(lg, n, back, min_rows)
+            out = replay(lg, n, back, min_rows, days)
         except Exception as exc:
             print(f"{lg:9} FAILED {exc}", file=sys.stderr)
             continue

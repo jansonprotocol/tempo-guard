@@ -590,6 +590,8 @@ def verify(quiet: bool = False) -> None:
         "DEFENSE_BLEND": features.DEFENSE_BLEND,
         "VENUE_BLEND": features.VENUE_BLEND,
         "MIN_WIN_PROB": market_select.MIN_WIN_PROB,
+        "HIGH_SAYS_DEBIT": market_select.HIGH_SAYS_DEBIT,
+        "HIGH_SAYS_FROM": market_select.HIGH_SAYS_FROM,
         "B1": club_elo.B1, "B2": club_elo.B2, "B3": club_elo.B3,
         "B0_FALLBACK": club_elo.B0_FALLBACK,
         "OVER_SAYS_DEBIT": club_elo.OVER_SAYS_DEBIT,
