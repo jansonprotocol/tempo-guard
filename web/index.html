@@ -230,6 +230,15 @@ footer { color:var(--dim); font-size:12px; margin:26px 0 8px; }
  at this sample size a row inside ±3 is within noise of honest. All
  published debits included. <b>Click a column to sort</b> — again to
  reverse.</p>
+ <p class="dim"><b>What this table is and is not:</b> a backtest on the
+ real as-of code path — nothing dated after a match is read when pricing
+ it — but the engine's constants were tuned on windows that overlap these
+ fixtures, so read it as the engine describing itself, not as
+ out-of-sample proof. The number that carries no such caveat is the
+ <a href="#home">confirmed hitrate</a> on the Home page, measured only on
+ tips published before kickoff. A push or half-win counts as a hit, a
+ half-loss as a miss — the same rule the stated probability is computed
+ with, so the gap compares like with like.</p>
  <div class="wrap"><table id="retro" class="sortable">
  <tr><th data-sort="t">League</th><th data-sort="n">Hit</th>
  <th data-sort="n">Gap</th><th data-sort="n">n</th></tr>
