@@ -828,6 +828,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 </section>
 
 <section class="page" id="p-retrosim">
+ <img class="pagebanner" src="banner-retrosim.jpg" alt="">
  <h2>Retrosim confirmed hitrates</h2>
  <p class="dim">Every league's Tip 1, replayed as-of on the current build
  over its most recent fixtures — up to 800, capped at two seasons.
