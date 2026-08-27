@@ -58,8 +58,77 @@ def _fmt(cell: str) -> str:
     return s.replace(" · ", "<br>")
 
 
+def _alignment(name: str, rung: str, side: str, tipmap: dict) -> str:
+    """How the placed bet relates to what Athena published for that match.
+
+    The ledger's own history is that most positions are NOT the printed
+    rung — thirty of thirty-five one evening were Rule-6 ladder plays on a
+    neighbouring line — so a bare fixture name says nothing about whether
+    a bet followed the engine or overrode it. This names the relation:
+    the tip itself, a Rule-6 neighbour of it, the Rule-5 DNB lane (which
+    never has a printed rung), or off the board entirely.
+    """
+    got = tipmap.get(name)
+    if got is None:
+        return "—"
+    t1, t2, t2side = got
+    if rung == "DNB":
+        return "Rule 5 · DNB"
+    if side in ("H", "A"):
+        # a team-total position aligns only with a team-lane Tip 2
+        if t2 and t2side and side == t2side and rung == t2:
+            return "= Tip 2 (team)"
+        return "team lane, own read"
+    for label, tip in (("Tip 1", t1), ("Tip 2", t2)):
+        if not tip or t2side and label == "Tip 2":
+            continue
+        if rung == tip:
+            return f"= {label}"
+        if rung[0] == tip[0] and abs(float(rung[1:]) - float(tip[1:])) <= 0.5:
+            softer = (float(rung[1:]) > float(tip[1:])) == (rung[0] == "U")
+            return f"{label} · R6 {'softer' if softer else 'harder'}"
+    return "off board"
+
+
+def _tipmap() -> dict:
+    """fixture name -> (tip1 market, tip2 market, tip2 team side or None)."""
+    out = {}
+    for f in board.load():
+        def market(cell, teams):
+            c = re.sub(r"[✅❌◦]½?\s*", "", cell).replace("**", "").strip()
+            if c.startswith("—"):
+                return None, None
+            toks = c.split()
+            for i, tk in enumerate(toks[:4]):
+                if re.fullmatch(r"[OU]\d+(?:\.\d+)?", tk):
+                    if i == 0:
+                        return tk, None
+                    # a team lane leads with the club: "MC Alger O0.5"
+                    club = " ".join(toks[:i])
+                    h, a = (x.strip() for x in teams.split(" v ", 1)) \
+                        if " v " in teams else (teams, "")
+                    return tk, ("H" if club == h else "A" if club == a
+                                else None)
+            return None, None
+        t1, _s1 = market(f.tip1, f.teams)
+        t2, s2 = market(f.tip2, f.teams)
+        out[f.teams] = (t1, t2, s2)
+    return out
+
+
+def _align_cls(a: str) -> str:
+    if a.startswith("="):
+        return "hit"
+    if "R6" in a or a.startswith("Rule 5"):
+        return "rule"
+    if a == "off board":
+        return "off"
+    return ""
+
+
 def _bets_rows() -> list[dict]:
     fixtures = ledger.read_fixtures()
+    tipmap = _tipmap()
     MARK = {1.0: "✅", 0.5: "✅½", 0.0: "◦", -0.5: "❌½", -1.0: "❌"}
     out = []
     for ln in ledger.BETS.read_text().splitlines():
@@ -70,14 +139,15 @@ def _bets_rows() -> list[dict]:
         note = parts[6] if len(parts) > 6 else ""
         lane = rung if side == "-" else (
             f"{rung} ({'home' if side == 'H' else 'away'})")
+        align = _alignment(name, rung, side, tipmap)
         if len(parts) > 4 and parts[4] == "1":
             out.append(dict(mark="◦", name=name, lane=lane, odds=odds,
-                            ret="1.00x", note=note))
+                            ret="1.00x", note=note, align=align))
             continue
         fx = fixtures.get(name)
         if fx is None or fx["hg"] is None:
             out.append(dict(mark="open", name=name, lane=lane, odds=odds,
-                            ret="—", note=note))
+                            ret="—", note=note, align=align))
             continue
         if rung == "DNB":
             gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
@@ -89,7 +159,7 @@ def _bets_rows() -> list[dict]:
             s = ledger.pricing.settle_fraction(rung, goals)
         ret = max(s, 0.0) * odds + (1 - abs(s))
         out.append(dict(mark=MARK[s], name=name, lane=lane, odds=odds,
-                        ret=f"{ret:.2f}x", note=note))
+                        ret=f"{ret:.2f}x", note=note, align=align))
     return out
 
 
@@ -445,7 +515,10 @@ def main() -> None:
     bets_html = "".join(
         f'<tr><td class="mk">{b["mark"]}</td><td>{html.escape(b["name"])}'
         f'</td><td>{html.escape(b["lane"])}</td><td>{b["odds"]:.2f}</td>'
-        f'<td>{b["ret"]}</td><td class="note">{html.escape(b["note"])}</td>'
+        f'<td>{b["ret"]}</td>'
+        f'<td><span class="align {_align_cls(b["align"])}">'
+        f'{html.escape(b["align"])}</span></td>'
+        f'<td class="note">{html.escape(b["note"])}</td>'
         f"</tr>" for b in _bets_rows())
 
     sessions_html = ""
@@ -704,6 +777,11 @@ td.note, .dim {{ color:var(--dim); }}
 td.pos {{ color:var(--green); }} td.neg {{ color:#e07a6a; }}
 .area {{ background:#111622; border-radius:5px; padding:2px 7px;
   font-size:11px; color:var(--gold); }}
+.align {{ background:#111622; border-radius:5px; padding:2px 7px;
+  font-size:11px; white-space:nowrap; color:var(--dim); }}
+.align.hit {{ color:var(--green); }}
+.align.rule {{ color:var(--gold); }}
+.align.off {{ color:#e07a6a; }}
 .hero {{ position:relative; border-radius:12px; overflow:hidden;
   background-size:cover; background-position:right center;
   min-height:230px; margin-bottom:14px; display:flex; align-items:center;
@@ -823,7 +901,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets"><div class="wrap"><table>
   <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Odds</th><th>Return</th>
-  <th>Note</th></tr>{bets_html}</table></div></div>
+  <th>Athena says</th><th>Note</th></tr>{bets_html}</table></div></div>
  <div class="tabpane" id="t-lanes">{_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
  {_learn()}

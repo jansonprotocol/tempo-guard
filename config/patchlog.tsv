@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-08-27	interface	Found bets gains an 'Athena says' column — each position's relation to the published tip, derived from the board: = Tip 1/2, a Rule-6 softer/harder neighbour, the Rule-5 DNB lane, a team lane on its own read, or off board. The run's shape at a glance: 21 of 35 are Rule-6 ladder plays, 7 DNB, 3 exact tips, 2 off board
 2026-08-27	board	Proof in hindsight: the pre-calibration era (69.9% on 73 undisciplined bets, ROI −10.1) replayed through today's engine grades 84.2% take-all and 83.3% at the playable bar; the first calibrated slate's 63 lanes filter to 42 at the bar and hit 95.0%. The gap between the old record and today's number is discipline plus calibration, measured — with the in-sample caveat stated: these are the very weeks the constants were tuned on
 2026-08-27	board	Both archived eras replayed on the finished engine with the bet counterfactual (changed lane + bet = unplaced; changed lane + no bet = placed on the new lane): first slate 14/63 lanes change, bets 80.8 → 83.3; pre-calibration 36/118, bets 69.9 → 71.2 — the record survives its own counterfactual, in-sample caveat noted
 2026-08-27	board	Calibration day summarised in the README and About: the Retrosim page forced every number to be defended, and one page built to display numbers ended up correcting the engine — board-wide retrosim hit 82.4 → 83.7 on the same fixtures
