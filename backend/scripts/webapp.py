@@ -85,6 +85,8 @@ def _alignment(name: str, rung: str, side: str, tipmap: dict) -> str:
     t1, t2, t2side = got
     if rung == "DNB":
         return "Rule 5 · DNB"
+    if rung in ("1X", "X2"):
+        return "own read · DC"
     if side in ("H", "A"):
         # a team-total position aligns only with a team-lane Tip 2
         if t2 and t2side and side == t2side and rung == t2:
@@ -164,6 +166,9 @@ def _bets_rows() -> list[dict]:
             gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
                       else (fx["ag"], fx["hg"]))
             s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        elif rung in ("1X", "X2"):
+            s = -1.0 if ((fx["hg"] > fx["ag"]) if rung == "X2"
+                         else (fx["ag"] > fx["hg"])) else 1.0
         else:
             goals = (fx["hg"] + fx["ag"]) if side == "-" else (
                 fx["hg"] if side == "H" else fx["ag"])

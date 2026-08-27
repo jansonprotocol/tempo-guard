@@ -17,3 +17,21 @@
 #           the pre-match number no longer describes it
 #
 # fixture	rung	odds	side	cashout	[p_override]
+Clermont v Sochaux	U1.5	1.41	A	0		widened: team under on the away side
+Montpellier v Boulogne	DNB	1.26	H	0		rule 5 shape, home favourite
+Laval v Grenoble	U3.5	1.24	-	0		rule-6 harder line off the U3.0 tip (79.9%)
+Den Bosch v Vitesse	X2	1.46	A	0		own read: double chance Vitesse or draw
+Volendam v Dordrecht	O1.5	1.62	H	0		widened: Volendam team over
+Volendam v Dordrecht	O1.5	1.18	-	0		softer companion to the O1.5 tip
+Jong AZ v MVV	U4.5	1.28	-	0		softer line above the U4.25 tip
+Roda v NAC Breda	U4.5	1.20	-	0		softer line above the U4.25 tip
+TOP Oss v Jong FC Utrecht	U4.5	1.22	-	0		softer line above the U4.25 tip
+Groningen v Fortuna Sittard	U4.5	1.24	-	0		softer line above the U4.25 tip (+5.8%)
+Legia v Śląsk	DNB	1.17	H	0		rule 5 shape on the sub-bar fixture
+Milan v Venezia	U3.5	1.37	-	0		softer line above the U3.0 tip (+5.2%)
+Al-Riyadh v Neom	DNB	1.42	A	0		rule 5 shape, away side
+Dalian Yingbo v Guoan	DNB	1.53	A	0		rule 5 shape, away side
+Shenhua v Taishan	O0.5	1.18	A	0		= Tip 2 team lane (81.8% +9.2%, buy≥1.32 — taken under it, widened)
+Shenzhen v Port	U4.5	1.20	-	0		softer line above the U4.25 tip (+5.3%)
+Braunschweig v Hertha	O1.5	1.19	-	0		= Tip 1 rung (83.5% +2.9%, buy≥ not met — widened)
+Bochum v Osnabrück	DNB	1.25	H	0		rule 5 shape, home favourite

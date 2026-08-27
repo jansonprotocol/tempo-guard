@@ -404,6 +404,11 @@ def render_bets() -> list[str]:
             gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
                       else (fx["ag"], fx["hg"]))
             s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        elif rung in ("1X", "X2"):
+            # Double chance: the named side or the draw. No push exists —
+            # the bet wins unless the other side wins outright.
+            s = -1.0 if ((fx["hg"] > fx["ag"]) if rung == "X2"
+                         else (fx["ag"] > fx["hg"])) else 1.0
         else:
             goals = (fx["hg"] + fx["ag"]) if side == "-" else (
                 fx["hg"] if side == "H" else fx["ag"])
