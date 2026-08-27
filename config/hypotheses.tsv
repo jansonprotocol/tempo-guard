@@ -1,0 +1,64 @@
+# Every feature suggestion and hypothesis this project has put through the
+# bar, and what happened to it. Typed by hand like the patch log is; read
+# by scripts/board.py for the README and scripts/webapp.py for the app, so
+# one edit here updates both surfaces and they cannot disagree.
+#
+# The status is a verdict, not a mood:
+#
+#   green    verified and helping — cleared two separate time windows and
+#            is live in the engine today
+#   orange   unfinished — measured but not concluded, or shipped on
+#            PROBATION and still waiting on live results to confirm it
+#   red      declined — tested and rejected, with the number that killed
+#            it. These are kept deliberately: a dead idea that stays
+#            written down does not get re-proposed every fortnight.
+#
+# Columns: status, date, area, hypothesis, verdict.
+green	2026-08-27	interface	One update is never one match	The sweep checks every unsettled fixture against ESPN, grades on the 90 with extra time peeled off, and refuses to leave neighbours stale — the human failure it replaces was updating one score and leaving three settled bets showing as open
+green	2026-08-27	interface	ESPN files by the competition's local day	A Chilean 18:00 sits on our previous date, so the sweep asked for one day and was told nothing was there; neighbouring days are now merged, which covers the Americas below us and Asia above
+green	2026-08-27	interface	Club identity across sources	NFD leaves ø, đ, ł and ß whole (Lillestrøm was not Lillestrom), and a translated name shares no letters with its original (Red Star Belgrade is Crvena zvezda) — folded and aliased through the nickname file
+green	2026-08-27	board	The +1% edge bar separates rather than thins	This run's settled Tip 1: 75.0% held (says 82.7, gap −7.7) · 86.7% at +1–3% · 100% at +3%+. The withheld band is the only one grading BELOW its own stated probability
+green	2026-08-26	interface	The renderer must verify itself	Every fixture on every surface, tallies matching, ledger complete, generated script parsing — a mismatch refuses to finish. Written after a syntax error blanked every page while the file still looked fine
+green	2026-08-26	interface	A live lane should say what the score did to it	Landed, needs N more, room for N, half gone — read from the ledger's own settlement so a push is never called a loss
+green	2026-08-26	cups	The cup mu is blind to WHICH side is strong	It priced from |elo gap|, symmetric, so a strong home side and a strong away side got the same number. B3 is the strongest term the cup lane has produced (t 4.95) and improves both windows live: 83.3 → 84.3
+green	2026-08-26	cups	Cup over-tips are systematically hot	Measured 3.5 points hot in both seasons and flat across bands, so a flat debit is the right shape — OVER_SAYS_DEBIT ships, windows close at +0.0 / −0.1
+green	2026-08-26	cups	Hitrate-first selection beats edge-first on cups	A probability floor of 0.82 on all six cup codes lifts ~80 → ~83 at zero volume cost
+green	2026-08-26	ledger	A cashed-out position settles at cashout, not at the result	The column existed and was not being read; a position cashed at stake settles 1.00x immediately
+green	2026-08-25	rules	Rule 5, DNB confluence	Backtested on 6,354 pointed pairs: the pointed-team lane is real at 78%, and the home+strong rung avoids defeat 83.9% — leg 4 stops being judgement and becomes a number
+green	2026-08-25	rules	Rule 6, the line-translation ladder	Softer line first, printed line second, harder half-line only at buy≥ +0.07–0.10
+green	2026-08-25	engine	Team lanes should see the opponent's defense	DEFENSE_BLEND 0.5 — worth +7 to +11 points on team lanes
+green	2026-08-25	engine	Top-six clashes are priced too high	BIG_MATCH_DEBIT 0.15 goals, validated on both windows
+green	2026-08-25	data	A league can be launched same-day	NED-D2 taken from check data → calibrate → futurematch in one sitting, and went 4-for-4 on its first slate
+green	2026-08-24	engine	A promoted club can be priced from its lower-division history	Cross-division fallback at measured exchange rates (×0.754 scored, ×1.516 conceded), validated on 608 historical tips
+green	2026-08-24	engine	The published buy≥ thresholds were all too low	Re-derived from settlement rather than from stated probability, with the winner's-curse haircut folded into buy_from — hand rules became code
+green	2026-08-24	engine	The team lane was split by venue and four checks missed it	Found and fixed; the "side split" it appeared to leave behind was then measured and is not real
+green	2026-08-24	engine	mu is over-spread	The founding recalibration: MU_SHRINK to 0.60 with the floor moved to match, the single largest accuracy change the engine has had
+green	2026-08-24	engine	The weakest sides are rated too low	TEAM_RATE_FLOOR 0.95
+orange	2026-08-27	cups	The whole Club Elo cup lane	PROBATIONARY. 92% coverage, all windows same-signed, a 202-fixture dress rehearsal at 89.1% and a pooled gap of +0.1 after B3 — but cups have failed this project twice before, so it stays labelled until a full slate of live results confirms it
+orange	2026-08-26	cups	Level-aggregate second legs are decided at home, not through goals	Profiled on 645 ties: goals ordinary (2.74 v 2.67 usual) but the home side wins 49.1% and 21.7% go to extra time. Real, and printed as context beside the tip — it is not yet a term in the mu
+orange	2026-08-26	cups	First-leg caution has faded	Second legs run 2.81 goals against first legs' 2.59 and hold both windows, but the caution effect is gone (older −0.19, t −4.28; newer +0.02). Recorded, not acted on
+orange	2026-08-25	engine	The big-match effect has a season-phase structure	The structure is real and measured; no constant has been cut from it yet
+orange	2026-08-27	cups	UEFA country coefficients as a cup strength source	Proposed and never measured — Club Elo was taken instead because it prices CLUBS directly rather than their federations. Still open if the Elo lane fails probation
+orange	2026-08-27	data	ALG-L1 has no ESPN coverage	Every slug returns 400, so Algerian fixtures cannot be swept and must be graded by hand. No second provider wired in yet
+red	2026-08-26	engine	Domestic context: the mismatch term	The fourth "signal without edge" in a day. Clears the residual bar outright (+0.241 ± 0.063, t 3.81, both windows) and still LOSES hitrate when converted to tips: 86.4 → 85.9 and 86.4 → 85.7
+red	2026-08-26	engine	Domestic context: league table position	+0.103 ± 0.035, t 2.94 — but windows t 2.42 / 1.75, one window short
+red	2026-08-26	engine	Domestic context: three-season stature	"Barcelona is always top three" as a number. t 2.06 pooled, windows 1.17 / 1.79 — fails the bar
+red	2026-08-26	engine	Domestic context: which side is better (signed PPG)	The domestic echo of the cup fix. t 2.40 pooled, windows 1.92 / 1.46 — the hole B3 filled in cups does not exist here, because domestic mu is already built from each side's own rate at its own venue
+red	2026-08-26	engine	Domestic context: the reverse fixture	t 1.32. Nothing
+red	2026-08-26	engine	MU_SHRINK is over-correcting the extremes	Refuted directly. If it were, the residual would concentrate where mu sits far from the league mean; instead it is strongest in the MIDDLE (near +0.116, middling +0.358, far +0.251)
+red	2026-08-26	cups	The aggregate score should move the mu	The apparent lead effect was the strength gap that created the lead — against the engine's own mu the aggregate adds nothing (t ≈ 1)
+red	2026-08-26	cups	First and second legs should be priced differently	Profiled across 5,341 legs. Against the engine's own mu neither leg is detectable, so no leg term
+red	2026-08-26	cups	Elo plus domestic form	Goal-tempo terms carry real signal (t 2.6, 2.1) but no window improves when graded; results-based form and Elo momentum are flat outright
+red	2026-08-25	cups	A Swiss-era club composite	The closest any pre-Elo cup model came, and still short: −0.6 / −4.0
+red	2026-08-25	cups	League bridge ratings	Real ratings, genuinely informative, and one window short — the recurring cup failure signature
+red	2026-08-25	cups	Domestic form carries cup signal	Slope 0.017. Zero
+red	2026-08-25	cups	The pointed gate can rescue cups	It helps in BOTH directions (+0.7 vs −2.3 forward, −3.4 vs −4.6 reverse) and still fails, because the reverse window's miss is a LEVEL error and no selection rule fixes a mis-levelled mu
+red	2026-08-25	cups	Tightening cup EDGE improves cup tips	It hurts — the winner's curse. High printed edge often means the mu is wrong, not that the price is generous. Tightening PROBABILITY is what worked
+red	2026-08-25	rules	The O0.5 tag on a pointed team	The trap in Rule 5: it looks like the safest rung on the board and grades worst
+red	2026-08-24	engine	VENUE_BLEND is a live knob	Swept for the first time and closed: dead at 0.35
+red	2026-08-24	engine	Defense belongs in the MATCH mu too	~+1 point, and it double-counts what the rates already carry
+red	2026-08-24	engine	Season restart is an effect of its own	It was a symptom of the over-spread mu; once MU_SHRINK landed, it disappeared
+red	2026-08-24	engine	The rung defect is a Poisson shape error	The sixth hypothesis for that defect, and dead like the five before it
+red	2026-08-24	engine	The freshness gate should be made binding	Staleness costs about a point; making the gate binding costs more than that in withheld fixtures
+red	2026-08-24	engine	A relegation variant of the big-match debit	Measured alongside the top-six version and declined
+red	2026-08-23	cups	The cup family as originally built	Measured at −11.4 and taken off the board entirely — the failure that started the whole cup investigation

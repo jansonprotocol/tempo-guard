@@ -233,6 +233,45 @@ def _patch_rows() -> str:
     return "".join(out)
 
 
+def _hypothesis_html() -> str:
+    """The ledger of everything tried, grouped by verdict.
+
+    Same file the README renders, so the two cannot drift. The declined
+    group is the largest and is shown in full rather than folded away —
+    what did NOT work is the more expensive half of this project's
+    knowledge, and hiding it is how an idea gets proposed twice.
+    """
+    from scripts.board import load_hypotheses
+    rows = load_hypotheses()
+    heads = (
+        ("green", "Verified and helping",
+         "Cleared two separate time windows and is live in the engine "
+         "today."),
+        ("orange", "Unfinished",
+         "Measured but not concluded, or shipped on probation and still "
+         "waiting on live results to confirm it."),
+        ("red", "Declined",
+         "Tested and rejected, with the number that killed it. Kept on "
+         "purpose — a dead idea that stays written down does not get "
+         "re-proposed every fortnight."),
+    )
+    out = []
+    for key, title, blurb in heads:
+        got = [r for r in rows if r[0] == key]
+        body = "".join(
+            f'<tr><td class="dim">{html.escape(d[5:])}</td>'
+            f'<td><span class="area">{html.escape(a)}</span></td>'
+            f"<td><b>{html.escape(n)}</b><br>"
+            f'<span class="dim">{html.escape(v)}</span></td></tr>'
+            for _s, d, a, n, v in got)
+        out.append(
+            f'<h3 class="hyp {key}"><span class="dot"></span>{title}'
+            f'<span class="n">{len(got)}</span></h3>'
+            f'<p class="dim">{blurb}</p>'
+            f'<div class="wrap"><table class="hyptable">{body}</table></div>')
+    return "".join(out)
+
+
 def _learn() -> str:
     """The teaching block: one example card, each part explained in a line."""
     card = """<details class="card play" open>
@@ -578,7 +617,25 @@ td.pos {{ color:var(--green); }} td.neg {{ color:#e07a6a; }}
 .session {{ background:var(--card); border:1px solid var(--edge);
   border-radius:10px; padding:14px 16px; margin-bottom:12px; }}
 .session ul {{ margin:4px 0 2px 18px; color:var(--dim); }}
+h3.hyp {{ display:flex; align-items:center; gap:9px; margin:26px 0 4px;
+  font-size:15px; }}
+h3.hyp .dot {{ width:11px; height:11px; border-radius:50%; flex:none; }}
+h3.hyp.green .dot {{ background:var(--green); }}
+h3.hyp.orange .dot {{ background:#e0a23c; }}
+h3.hyp.red .dot {{ background:#e07a6a; }}
+h3.hyp .n {{ background:var(--card); border:1px solid var(--edge);
+  border-radius:20px; padding:1px 9px; font-size:11px; color:var(--dim); }}
+.hyptable td:first-child {{ white-space:nowrap; width:1%; }}
+.hyptable td:nth-child(2) {{ width:1%; }}
+.hyptable td b {{ font-weight:650; }}
 .about p {{ margin:10px 0; max-width:74ch; }}
+.about h3 {{ margin:26px 0 6px; font-size:15px; color:var(--gold); }}
+.runs {{ display:grid; gap:10px; margin:12px 0 4px; }}
+.run {{ background:var(--card); border:1px solid var(--edge);
+  border-left:3px solid var(--gold); border-radius:8px; padding:11px 14px;
+  max-width:74ch; }}
+.run b {{ display:block; margin-bottom:3px; }}
+.run .when {{ color:var(--dim); font-size:12px; }}
 .about .mission {{ font-size:18px; font-weight:700; color:var(--gold);
   margin:14px 0; }}
 .page {{ display:none; }} .page.on {{ display:block; }}
@@ -664,6 +721,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  behind every line lives in the repository's README and scripts.</p>
  <div class="wrap"><table><tr><th>Date</th><th>Area</th><th>Change</th>
  </tr>{_patch_rows()}</table></div>
+
+ <h2 style="margin-top:34px">The ledger of everything tried</h2>
+ <p class="dim">Every feature suggestion and hypothesis put through the
+ bar. Green cleared it, orange has not finished, red was rejected — and
+ the number that rejected it is kept beside it.</p>
+ {_hypothesis_html()}
 </section>
 
 <section class="page about" id="p-about">
@@ -699,6 +762,45 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  the international cups) run <b>probationary</b> until live results
  confirm the backtests. When the engine doesn't know, it says nothing —
  an abstained match is an answer, not a failure.</p>
+
+ <h3>Run sessions — how this project is measured</h3>
+ <p>Athena is not developed against a fixed test set. It is developed
+ against <b>runs</b>: a run opens, the engine publishes tips on real
+ fixtures for as long as the run lasts, and the run closes when the slate
+ does. Whatever it scored is then frozen and archived, untouched, and the
+ next run starts from the engine the last one ended with. A run is
+ therefore both the product and the experiment — the only honest test of
+ a change is the next run's number, because that is the only sample the
+ engine has never seen.</p>
+ <p>Three runs so far, and the arc between them is the whole story:</p>
+ <div class="runs">
+  <div class="run"><b>Pre-calibration <span class="when">· 20–23 Aug
+   2026</span></b>Tip 1 landed 84.2% and the run still LOST money —
+   ROI −10.1%. The engine was pricing about 10.8 points optimistic, so
+   every tip was bought at a price that could not pay for its real
+   strike rate. This is the founding lesson of the project and the reason
+   no number here is ever quoted without the price beside it: a strike
+   rate you overpaid for is a loss.</div>
+  <div class="run"><b>First calibrated slate <span class="when">· 23–24
+   Aug 2026</span></b>Tip 1 56/65 (86.2%), Tip 2 37/50 (74.0%), and the
+   bets turned positive at ROI +6.1% on 22/27. Five engine defects were
+   found and fixed while it ran, and Rules 1–4 were measured here — buy≥
+   discipline, flat 4% stakes, the winner's-curse haircut, in-play rung
+   pricing. Those 65 settled tips became the measuring stick every later
+   change is validated against.</div>
+  <div class="run"><b>Session #{SESSION_NO} <span class="when">· {SESSION_START}
+   2026 – running</span></b>The cup run. Cups had been taken off the
+   board entirely at −11.4, and this run reopened them on a Club Elo
+   strength lane — still <b>probationary</b>. Rules 5 and 6 became
+   numbers, the board became this app, and four separate ideas were
+   measured and declined for the same reason: real signal, no edge.
+   Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on {h1}/{n1} settled,
+   found bets <b>{roi:+.1f}%</b> ROI on {bh}/{bn}.</div>
+ </div>
+ <p class="dim">The per-run numbers, frozen at close, are on the
+ <a href="#sessions">Past sessions</a> page. What each run changed, and
+ everything it tried and rejected, is on
+ <a href="#patches">Patches &amp; notes</a>.</p>
 </section>
 
 <footer>Derived from config/fixtures.tsv · bets.tsv · league_hitrates.tsv ·

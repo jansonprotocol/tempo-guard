@@ -48,7 +48,11 @@ MIN_EDGE = playable.MIN_EDGE
 # on — the same trap the playable block hit when its threshold renamed it.
 STARTS = ("## 🟢 Playable lanes", "## Playable lanes")
 ENDS = ("### 🟡 Actual placed bets", "### Actual placed bets")
-TAIL = "## Engine state"
+# The board region ends where the hypothesis ledger begins. That anchor is
+# a comment rather than a heading on purpose: a heading can be renamed by
+# the very render that keys off it, which is the trap STARTS carries two
+# spellings to survive.
+TAIL = "<!-- HYPOTHESES:START -->"
 HEAD_START = "## CURRENT CONFIRMED HITRATE"
 HEAD_END = "live tips, not backtests"
 
@@ -290,6 +294,72 @@ def render_board(fixtures: list[Fixture]) -> str:
     return "\n".join(out)
 
 
+HYPOTHESES = ROOT / "config" / "hypotheses.tsv"
+HYP_START = "<!-- HYPOTHESES:START -->"
+HYP_END = "<!-- HYPOTHESES:END -->"
+DOT = {"green": "🟢", "orange": "🟠", "red": "🔴"}
+
+
+def load_hypotheses() -> list[tuple[str, str, str, str, str]]:
+    """The ledger of everything tried, newest first within each verdict."""
+    out = []
+    for ln in HYPOTHESES.read_text().splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        parts = ln.split("\t")
+        if len(parts) == 5:
+            out.append(tuple(parts))
+    return out
+
+
+def render_hypotheses() -> str:
+    """Every idea this project has tested, and what killed or kept it.
+
+    The red rows are the point of this table. A rejected idea that is not
+    written down gets re-proposed every fortnight, and each time it costs
+    a day to re-measure — so the number that killed it is recorded beside
+    it, and the entry is never deleted. Green is what survived two
+    windows; orange is honest about what is still unfinished, including
+    the cup lane that is live but on probation.
+    """
+    rows = load_hypotheses()
+    by = {k: [r for r in rows if r[0] == k]
+          for k in ("green", "orange", "red")}
+    out = [HYP_START, "",
+           "## The ledger of everything tried", "",
+           f"Every feature suggestion and hypothesis put through the bar — "
+           f"{len(by['green'])} verified, {len(by['orange'])} unfinished, "
+           f"{len(by['red'])} declined. Typed in "
+           f"`config/hypotheses.tsv`; this table and the app's Patches page "
+           f"both render from it, so they cannot disagree.", ""]
+    heads = (
+        ("green", "🟢 Verified and helping",
+         "Cleared two separate time windows and is live in the engine "
+         "today."),
+        ("orange", "🟠 Unfinished",
+         "Measured but not concluded, or shipped on **probation** and "
+         "still waiting on live results."),
+        ("red", "🔴 Declined",
+         "Tested and rejected, with the number that killed it. Kept "
+         "deliberately — a dead idea that stays written down does not get "
+         "re-proposed."),
+    )
+    for key, title, blurb in heads:
+        out += [f"### {title} — {len(by[key])}", "", blurb, "",
+                "| | Date | Area | Hypothesis | Verdict |",
+                "|---|---|---|---|---|"]
+        for status, date, area, name, verdict in by[key]:
+            # A pipe is a column separator here, and "|elo gap|" is a real
+            # phrase in this ledger — escape or the row collapses.
+            def cell(s):
+                return _html(s).replace("|", "\\|")
+            out.append(f"| {DOT[status]} | {date[5:]} | {area} | "
+                       f"**{cell(name)}** | {cell(verdict)} |")
+        out.append("")
+    out.append(HYP_END)
+    return "\n".join(out)
+
+
 def render_bets() -> list[str]:
     """The placed-bets block, settled by the ledger's own rules.
 
@@ -357,8 +427,12 @@ def rewrite(text: str) -> str:
         raise ValueError("board region not found in README")
     e = min(text.index(m, s) for m in ENDS if m in text)
     e2 = text.index(TAIL, e)
-    return (text[:s] + render_board(fixtures) + "\n"
+    text = (text[:s] + render_board(fixtures) + "\n"
             + "\n".join(render_bets()) + "\n" + text[e2:])
+
+    hs = text.index(HYP_START)
+    he = text.index(HYP_END, hs) + len(HYP_END)
+    return text[:hs] + render_hypotheses() + text[he:]
 
 
 def liveline_score(status: str):
@@ -500,7 +574,41 @@ def verify(quiet: bool = False) -> None:
             except Exception as exc:
                 bad.append(f"matchbank.json is unreadable: {exc}")
 
-    # 10. No fixture quietly rots. A match that kicked off hours ago and
+    # 10. The Engine state block describes the engine that is actually
+    #     running. It is prose, so nothing forced it to keep up: the block
+    #     sat dated 24 Aug while DEFENSE_BLEND, the whole Club Elo cup lane
+    #     and the 0.82 cup floor shipped underneath it. Now every constant
+    #     it names is read back out of the live code and compared.
+    import re
+    from app.data import club_elo, features
+    from app.engine import market_select
+    live = {
+        "MU_SHRINK": features.MU_SHRINK,
+        "TEAM_SHRINK": features.TEAM_SHRINK,
+        "BIG_MATCH_DEBIT": features.BIG_MATCH_DEBIT,
+        "TEAM_RATE_FLOOR": features.TEAM_RATE_FLOOR,
+        "DEFENSE_BLEND": features.DEFENSE_BLEND,
+        "VENUE_BLEND": features.VENUE_BLEND,
+        "MIN_WIN_PROB": market_select.MIN_WIN_PROB,
+        "B1": club_elo.B1, "B2": club_elo.B2, "B3": club_elo.B3,
+        "B0_FALLBACK": club_elo.B0_FALLBACK,
+        "OVER_SAYS_DEBIT": club_elo.OVER_SAYS_DEBIT,
+        "MAX_STALE_DAYS": club_elo.MAX_STALE_DAYS,
+    }
+    block = readme[readme.index("## Engine state"):
+                   readme.index("### Recalibration")]
+    for name, value in live.items():
+        m = re.search(rf"^    {re.escape(name)}\s+(−?-?[\d.]+)",
+                      block, re.M)
+        if not m:
+            bad.append(f"Engine state block never names {name}")
+            continue
+        shown = float(m.group(1).replace("−", "-"))
+        if abs(shown - float(value)) > 1e-9:
+            bad.append(f"Engine state says {name} {shown}, "
+                       f"the code runs {value}")
+
+    # 11. No fixture quietly rots. A match that kicked off hours ago and
     #     still shows nothing means the last update touched one row and
     #     left its neighbours behind — the exact failure sweep.py exists
     #     to prevent, so the board refuses to render until it is swept.

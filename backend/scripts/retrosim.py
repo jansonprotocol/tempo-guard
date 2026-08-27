@@ -25,6 +25,7 @@ A league is only worth acting on when the gap is large AND n is big enough to
 mean something. Wilson intervals are printed for exactly that reason.
 
 Usage:  python scripts/retrosim.py [--n 150] [--leagues MLS,JPN-J1]
+                                  [--min 150]   lower the 200-row floor
 """
 from __future__ import annotations
 
@@ -57,9 +58,15 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return ((c - m) / d, (c + m) / d)
 
 
-def replay(league: str, n: int, back: int = 0) -> dict:
+def replay(league: str, n: int, back: int = 0, min_rows: int = 200) -> dict:
+    # The 200-row floor keeps thin domestic leagues out of a sweep, where a
+    # league with 60 results would be read as a calibration verdict. The cup
+    # QUALIFIERS sit just under it by nature — UCL-Q carries 182 results in
+    # total — and were silently returning nothing, which is how their badges
+    # went a day stale without anyone noticing. So the floor is a parameter
+    # now: the sweep keeps 200, the cup rebuild passes what it means.
     df = store.load_results(league)
-    if df is None or len(df) < 200:
+    if df is None or len(df) < min_rows:
         return {}
     # `back` drops the most recent `back` matches before taking the window, so
     # a mid-season stretch can be scored instead of the season restart. The last
@@ -115,6 +122,7 @@ def main() -> None:
     if "--n" in args:
         n = int(args[args.index("--n") + 1])
     back = int(args[args.index("--back") + 1]) if "--back" in args else 0
+    min_rows = int(args[args.index("--min") + 1]) if "--min" in args else 200
     if "--leagues" in args:
         codes = args[args.index("--leagues") + 1].split(",")
     else:
@@ -123,7 +131,7 @@ def main() -> None:
     rows = []
     for lg in codes:
         try:
-            out = replay(lg, n, back)
+            out = replay(lg, n, back, min_rows)
         except Exception as exc:
             print(f"{lg:9} FAILED {exc}", file=sys.stderr)
             continue
