@@ -17,7 +17,9 @@ For every fixture not already graded, this asks ESPN for its state and:
 Extra time is handled where it matters: every market here settles on the
 90, so a match ending AET is graded from its goal timeline, counting only
 goals scored inside regulation. Sabah 5-2 was 3-2 at the whistle, and the
-board says 3-2.
+board says 3-2. And a match still IN extra time settles immediately — the
+90 is already history the moment ET kicks off, so the row moves to
+completed rather than sitting live over a decided bet.
 
 Nothing is guessed. A fixture ESPN does not carry is left exactly as it
 was and named in the summary, so it can be graded by hand.
@@ -177,14 +179,41 @@ def main() -> None:
             still.append(f.teams)
             continue
 
-        if st.get("state") == "in":
+        in_play = st.get("state") == "in"
+        # HARDCODED: a match in extra time is settled NOW. Every market on
+        # this board settles on the 90, and once ET has kicked off the 90
+        # is history — holding the row open only makes a decided bet look
+        # live. ESPN marks ET as STATUS_OVERTIME / period 3+, and the
+        # regulation score comes from the goal timeline, same as AET.
+        in_et = in_play and ((ev["status"].get("period") or 0) >= 3
+                             or "OVERTIME" in (st.get("name") or ""))
+        if in_play and not in_et:
             status = f"LIVE {detail} {hg}-{ag}"
             tip2 = f.tip2
         else:
-            # Finished. Markets settle on the 90, so extra time is peeled
-            # back off the scoreline before anything is graded.
+            # Finished (or in extra time, which settles the same way).
+            # Markets settle on the 90, so anything after it is peeled
+            # back off the scoreline before grading.
             note = ""
-            if "AET" in detail or "PEN" in detail or "ET" == detail:
+            if in_et:
+                reg = regulation(SLUGS[f.code], ev)
+                if reg is None:
+                    # no timeline yet — leave it visibly live instead
+                    status = f"LIVE {detail} {hg}-{ag}"
+                    tip2 = f.tip2
+                    if status != f.status:
+                        for i, ln in enumerate(lines):
+                            parts = ln.split("\t")
+                            if len(parts) == 7 and parts[0] == f.kickoff \
+                                    and parts[3] == f.teams:
+                                parts[6] = status
+                                lines[i] = "\t".join(parts)
+                                break
+                        changed.append(f"{f.teams}: {status}")
+                    continue
+                note = " (90'; to extra time)"
+                hg, ag = reg
+            elif "AET" in detail or "PEN" in detail or "ET" == detail:
                 reg = regulation(SLUGS[f.code], ev)
                 if reg is None:
                     missing.append(f"{f.teams} (finished AET, no timeline)")
