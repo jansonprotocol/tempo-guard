@@ -1,6 +1,8 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-08-27	interface	The sweep was blind to three continents: ESPN files a fixture under the COMPETITION's local day, so a Chilean 18:00 sat on our previous date and was reported missing — neighbouring days are asked for too and merged
+2026-08-27	interface	Club identity across sources hardened: ø/đ/ł/æ/ß folded (Lillestrøm was not Lillestrom) and translated names resolved through the nickname file (Red Star Belgrade is Crvena zvezda) — no fuzzy rule could ever have paired those
 2026-08-26	interface	Live lanes state what the score has done to them — landed, needs N more, room for N, half gone — read from the ledger's own settlement, on every tab and in the README
 2026-08-26	interface	One update is never one match: scripts/sweep.py checks every unsettled fixture against ESPN, grades finished ones on the 90 (extra time peeled off the scoreline) and refuses to leave neighbours stale; the renderer fails on any fixture four hours past kickoff with no result
 2026-08-26	interface	The renderer now verifies itself: every fixture must appear on every surface it belongs to, tallies must match, the ledger must be complete and the app script must parse — a mismatch refuses to finish

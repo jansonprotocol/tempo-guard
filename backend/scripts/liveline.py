@@ -128,8 +128,18 @@ _DROP = {"fc", "fk", "cf", "sc", "ac", "afc", "bk", "if", "sk", "club",
          "cp", "of", "the", "ri"}
 
 
+# Letters that carry no accent to strip: NFD leaves ø, đ, ł and ß whole,
+# so "Lillestrøm" and ESPN's "Lillestrom" came out as different clubs.
+_FOLD = str.maketrans({"ø": "o", "Ø": "o", "đ": "d", "Đ": "d", "ł": "l",
+                       "Ł": "l", "ð": "d", "þ": "th", "ı": "i"})
+_SPELL = {"æ": "ae", "Æ": "ae", "œ": "oe", "ß": "ss"}
+
+
 def _words(s: str) -> set:
     import unicodedata
+    for ch, rep in _SPELL.items():
+        s = s.replace(ch, rep)
+    s = s.translate(_FOLD)
     s = unicodedata.normalize("NFD", s)
     s = "".join(c for c in s if not unicodedata.combining(c)).lower()
     for ch in ".-'()/":
@@ -137,11 +147,43 @@ def _words(s: str) -> set:
     return {w for w in s.split() if w not in _DROP}
 
 
+def _aliases() -> dict:
+    """Alias -> display name, from config/club_nicknames.tsv.
+
+    Spelling tolerance cannot reach a TRANSLATED name: ESPN's "Red Star
+    Belgrade" and the board's "Crvena zvezda" share no letters, so no
+    fuzzy rule will ever pair them. Those are culture, not data, and they
+    already have a home — the same hand-typed file the Ask Athena form
+    reads, so a club keeps one identity across the whole project.
+    """
+    global _ALIAS
+    if _ALIAS is None:
+        _ALIAS = {}
+        path = _LEGS.parent / "club_nicknames.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.strip() and not ln.startswith("#") and "\t" in ln:
+                    a, d = (x.strip() for x in ln.split("\t", 1))
+                    _ALIAS[frozenset(_words(a))] = d
+    return _ALIAS
+
+
+_ALIAS: dict | None = None
+
+
+def _identity(s: str) -> set:
+    """Every word a name answers to, its display name included."""
+    w = _words(s)
+    display = _aliases().get(frozenset(w))
+    return w | _words(display) if display else w
+
+
 def same_club(a: str, b: str) -> bool:
-    """Loose club identity across sources: accents stripped, club words
-    dropped, and one token allowed to be a prefix of another so "Hearts"
-    finds "Heart of Midlothian"."""
-    x, y = _words(a), _words(b)
+    """Loose club identity across sources: accents and Nordic letters
+    folded, club words dropped, translated names resolved through the
+    nickname file, and one token allowed to be a prefix of another so
+    "Hearts" finds "Heart of Midlothian"."""
+    x, y = _identity(a), _identity(b)
     if not x or not y:
         return False
     for p in x:
