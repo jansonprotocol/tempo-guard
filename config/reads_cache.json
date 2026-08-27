@@ -5,11 +5,11 @@
 ],
 "SAU-PL|Neom v Al-Qadsiah|2026-08-24": [
 "good form",
-"<b>Neom SC</b>: good form, top of the table (1) — against <b>Al Qadsiah</b>: elite attack, solid defence, possession-dominant, in form."
+"<b>Neom SC</b>: good form, top by results (1) — against <b>Al Qadsiah</b>: elite attack, solid defence, possession-dominant, in form."
 ],
 "DEN-SL|Brøndby v Silkeborg|2026-08-24": [
 "good form",
-"<b>Brondby</b>: good form, top of the table (1) — against <b>Silkeborg</b>: weak attack, leaky defence, struggling."
+"<b>Brondby</b>: good form, top by results (1) — against <b>Silkeborg</b>: weak attack, leaky defence, struggling."
 ],
 "ESP-L2|Celta Fortuna v FC Andorra|2026-08-24": [
 "weak attack",
@@ -25,7 +25,7 @@
 ],
 "NED-D2|Jong FC Utrecht v Heracles|2026-08-24": [
 "weak attack",
-"<b>Jong FC Utrecht</b>: weak attack, relegation danger (20) — against <b>Heracles Almelo</b>: elite attack, solid defence, in form. Stakes on the table: relegation danger (20)."
+"<b>Jong FC Utrecht</b>: weak attack, bottom of the results table (20) — against <b>Heracles Almelo</b>: elite attack, solid defence, in form. By results this season: bottom of the results table (20)."
 ],
 "NED-D2|Jong PSV v TOP Oss|2026-08-24": [
 "poor attack",
@@ -33,15 +33,15 @@
 ],
 "SAU-PL|Al-Ittihad v Al-Hazem|2026-08-24": [
 "good form",
-"<b>Al Ittihad</b>: good form, promotion/europe hunt (6) — against <b>Al Hazem</b>: weak attack, solid defence, cedes possession. Stakes on the table: promotion/europe hunt (6)."
+"<b>Al Ittihad</b>: good form, chasing the top (6) — against <b>Al Hazem</b>: weak attack, solid defence, cedes possession. By results this season: chasing the top (6)."
 ],
 "TUR-SL|Kocaelispor v Amed|2026-08-24": [
 "weak attack",
-"<b>Kocaelispor</b>: weak attack, relegation danger (18) — against <b>Amedspor</b>: an average side. Stakes on the table: relegation danger (18)."
+"<b>Kocaelispor</b>: weak attack, bottom of the results table (18) — against <b>Amedspor</b>: an average side. By results this season: bottom of the results table (18)."
 ],
 "FRA-L2|Reims v Annecy|2026-08-24": [
 "two organised defences",
-"<b>Reims</b>: elite attack, elite defence, in form — against <b>Annecy</b>: strong attack, solid defence, good form, top of the table (1). Two organised defences meeting is unders territory."
+"<b>Reims</b>: elite attack, elite defence, in form — against <b>Annecy</b>: strong attack, solid defence, good form, top by results (1). Two organised defences meeting is unders territory."
 ],
 "ITA-SA|Roma v Fiorentina|2026-08-24": [
 "solid defence",
@@ -57,7 +57,7 @@
 ],
 "ESP-L2|Granada v Mallorca|2026-08-24": [
 "two organised defences",
-"<b>Granada</b>: elite defence — against <b>Mallorca</b>: elite defence, in form, top of the table (1). Two organised defences meeting is unders territory."
+"<b>Granada</b>: elite defence — against <b>Mallorca</b>: elite defence, in form, top by results (1). Two organised defences meeting is unders territory."
 ],
 "ESP-L2|Málaga v Deportivo|2026-08-24": [
 "elite defence",
@@ -65,11 +65,11 @@
 ],
 "BRA-SB|Athletic v Novorizontino|2026-08-25": [
 "two organised defences",
-"<b>Athletic</b>: weak attack, solid defence, cedes possession — against <b>Novorizontino</b>: elite attack, elite defence, good form, promotion/europe hunt (5). Two organised defences meeting is unders territory. Stakes on the table: promotion/europe hunt (5)."
+"<b>Athletic</b>: weak attack, solid defence, cedes possession — against <b>Novorizontino</b>: elite attack, elite defence, good form, chasing the top (5). Two organised defences meeting is unders territory. By results this season: chasing the top (5)."
 ],
 "BRA-SB|Sport Recife v América-MG|2026-08-25": [
 "strong attack vs porous defence",
-"<b>Sport</b>: strong attack, porous defence, controls the ball — against <b>América Mineiro</b>: poor attack, porous defence, poor form, relegation danger (19). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. Stakes on the table: relegation danger (19)."
+"<b>Sport</b>: strong attack, porous defence, controls the ball — against <b>América Mineiro</b>: poor attack, porous defence, poor form, bottom of the results table (19). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. By results this season: bottom of the results table (19)."
 ],
 "BRA-SA|Botafogo v Athletico|2026-08-25": [
 "solid defence",
@@ -87,13 +87,17 @@
 "controls the ball",
 "<b>Al Taawoun</b>: controls the ball, struggling — against <b>Al Fayha</b>: weak attack, porous defence, cedes possession, poor form."
 ],
+"UCL-Q|Sabah v H. Be'er Sheva|2026-08-25": [
+"Elo 1308 v 1481 · Elo edge away",
+"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Sabah</b> at 1308 against <b>H. Be'er Sheva</b> at 1481: a clear edge to <b>H. Be'er Sheva</b>."
+],
 "SAU-PL|Al-Ettifaq v Al-Nassr|2026-08-25": [
 "strong attack",
-"<b>Al Ettifaq</b>: strong attack, good form, top of the table (2) — against <b>Al Nassr</b>: elite attack, elite defence, controls the ball, in form, promotion/europe hunt (4). Stakes on the table: promotion/europe hunt (4)."
+"<b>Al Ettifaq</b>: strong attack, good form, top by results (2) — against <b>Al Nassr</b>: elite attack, elite defence, controls the ball, in form, chasing the top (4). By results this season: chasing the top (4)."
 ],
 "SAU-PL|Al-Shabab v Al-Riyadh|2026-08-25": [
 "leaky defence",
-"<b>Al Shabab</b>: leaky defence, poor form — against <b>Al Riyadh</b>: leaky defence, direct / low possession, relegation danger (17). Stakes on the table: relegation danger (17)."
+"<b>Al Shabab</b>: leaky defence, poor form — against <b>Al Riyadh</b>: leaky defence, direct / low possession, bottom of the results table (17). By results this season: bottom of the results table (17)."
 ],
 "ESP-LL|Valencia v Real Betis|2026-08-25": [
 "weak attack",
@@ -113,7 +117,7 @@
 ],
 "BRA-SB|Juventude v CRB|2026-08-26": [
 "elite defence",
-"<b>Juventude</b>: elite defence, in form, top of the table (2) — against <b>CRB</b>: in form."
+"<b>Juventude</b>: elite defence, in form, top by results (2) — against <b>CRB</b>: in form."
 ],
 "COL-PA|Cúcuta v Alianza Valledupar|2026-08-26": [
 "weak attack (away) vs leaky defence",
@@ -121,7 +125,7 @@
 ],
 "SAU-PL|Al-Faisaly v Al-Fateh|2026-08-26": [
 "poor attack",
-"<b>Al-Faisaly</b>: an average side — against <b>Al Fateh</b>: poor attack, solid defence, struggling, relegation danger (18). Stakes on the table: relegation danger (18)."
+"<b>Al-Faisaly</b>: an average side — against <b>Al Fateh</b>: poor attack, solid defence, struggling, bottom of the results table (18). By results this season: bottom of the results table (18)."
 ],
 "UECL-Q|Rapid Vienna v Hearts|2026-08-26": [
 "Elo 1348 v 1457 · even tie on Elo",
@@ -153,15 +157,19 @@
 ],
 "COL-PA|Boyacá Chicó v Fortaleza|2026-08-26": [
 "poor attack",
-"<b>Boyacá Chicó FC</b>: poor attack, leaky defence, struggling, relegation danger (19) — against <b>Fortaleza CEIF</b>: controls the ball. Stakes on the table: relegation danger (19)."
+"<b>Boyacá Chicó FC</b>: poor attack, leaky defence, struggling, bottom of the results table (19) — against <b>Fortaleza CEIF</b>: controls the ball. By results this season: bottom of the results table (19)."
 ],
 "CHI-PD|Coquimbo v U. Católica|2026-08-27": [
 "elite attack",
-"<b>Coquimbo Unido</b>: an average side — against <b>Universidad Católica</b>: elite attack, controls the ball, promotion/europe hunt (5). Stakes on the table: promotion/europe hunt (5)."
+"<b>Coquimbo Unido</b>: an average side — against <b>Universidad Católica</b>: elite attack, controls the ball, chasing the top (5). By results this season: chasing the top (5)."
 ],
 "COL-PA|América de Cali v Junior|2026-08-27": [
 "strong attack",
-"<b>América de Cali</b>: strong attack, elite defence, in form, top of the table (2) — against <b>Atlético Junior</b>: promotion/europe hunt (4). Stakes on the table: promotion/europe hunt (4)."
+"<b>América de Cali</b>: strong attack, elite defence, in form, top by results (2) — against <b>Atlético Junior</b>: chasing the top (4). By results this season: chasing the top (4)."
+],
+"COL-PA|Atl. Nacional v Dep. Cali|2026-08-27": [
+"two organised defences",
+"<b>Atlético Nacional</b>: elite attack, solid defence, possession-dominant, in form, top by results (1) — against <b>Deportivo Cali</b>: elite defence, good form. Two organised defences meeting is unders territory."
 ],
 "UECL-Q|KuPS v Shamrock Rovers|2026-08-27": [
 "Elo 1306 v 1313 · even tie on Elo",
@@ -171,6 +179,7 @@
 "Elo 1249 v 1455 · Elo edge away",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Ararat-Armenia</b> at 1249 against <b>U. Craiova</b> at 1455: a clear edge to <b>U. Craiova</b>."
 ],
+"UEL-Q|Iberia v Jagiellonia|2026-08-27": null,
 "UECL-Q|Jablonec v Rangers|2026-08-27": [
 "Elo 1493 v 1533 · even tie on Elo",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Jablonec</b> at 1493 against <b>Rangers</b> at 1533: an even tie on club strength."
@@ -199,14 +208,17 @@
 "Elo 1131 v 1503 · Elo mismatch",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Kauno Žalgiris</b> at 1131 against <b>Beşiktaş</b> at 1503: a mismatch — <b>Beşiktaş</b> is the far stronger club."
 ],
+"UEL-Q|Lillestrøm v Egnatia|2026-08-27": null,
 "UEL-Q|Omonia v St. Truiden|2026-08-27": [
 "Elo 1485 v 1517 · even tie on Elo",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Omonia</b> at 1485 against <b>St. Truiden</b> at 1517: an even tie on club strength."
 ],
+"UEL-Q|Salzburg v Mjällby|2026-08-27": null,
 "UECL-Q|Hradec Králové v Panathinaikos|2026-08-27": [
 "Elo 1425 v 1541 · even tie on Elo",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Hradec Králové</b> at 1425 against <b>Panathinaikos</b> at 1541: an even tie on club strength."
 ],
+"UECL-Q|København v Inter Turku|2026-08-27": null,
 "UECL-Q|Inter Escaldes v Drita|2026-08-27": [
 "Elo 1002 v 1251 · Elo edge away",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Inter Escaldes</b> at 1002 against <b>Drita</b> at 1251: a clear edge to <b>Drita</b>."
@@ -227,6 +239,7 @@
 "Elo 1523 v 1610 · even tie on Elo",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Brann</b> at 1523 against <b>PAOK</b> at 1610: an even tie on club strength."
 ],
+"ALG-L1|Sétif v Ben Aknoun|2026-08-27": null,
 "UEL-Q|AGF v Benfica|2026-08-27": [
 "Elo 1569 v 1807 · Elo edge away",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>AGF</b> at 1569 against <b>Benfica</b> at 1807: a clear edge to <b>Benfica</b>."
@@ -271,6 +284,10 @@
 "Elo 1411 v 1673 · Elo mismatch",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Austria Wien</b> at 1411 against <b>Braga</b> at 1673: a mismatch — <b>Braga</b> is the far stronger club."
 ],
+"UECL-Q|Borac v Víkingur|2026-08-27": [
+"Elo 1211 v 1285 · even tie on Elo",
+"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Borac</b> at 1211 against <b>Víkingur</b> at 1285: an even tie on club strength."
+],
 "UECL-Q|Rijeka v Midtjylland|2026-08-27": [
 "Elo 1402 v 1679 · Elo mismatch",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Rijeka</b> at 1402 against <b>Midtjylland</b> at 1679: a mismatch — <b>Midtjylland</b> is the far stronger club."
@@ -293,24 +310,7 @@
 ],
 "ALG-L1|MC Alger v Oran|2026-08-27": [
 "elite attack vs porous defence",
-"<b>MC Alger</b>: elite attack, in form, top of the table (1) — against <b>MC Oran</b>: poor attack, porous defence, poor form. That pairing — firepower against a defence that leaks — is where the goals in this tip come from."
-],
-"UCL-Q|Sabah v H. Be'er Sheva|2026-08-25": [
-"Elo 1308 v 1481 · Elo edge away",
-"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Sabah</b> at 1308 against <b>H. Be'er Sheva</b> at 1481: a clear edge to <b>H. Be'er Sheva</b>."
-],
-"COL-PA|Atl. Nacional v Dep. Cali|2026-08-27": [
-"two organised defences",
-"<b>Atlético Nacional</b>: elite attack, solid defence, possession-dominant, in form, top of the table (1) — against <b>Deportivo Cali</b>: elite defence, good form. Two organised defences meeting is unders territory."
-],
-"UEL-Q|Iberia v Jagiellonia|2026-08-27": null,
-"UEL-Q|Lillestrøm v Egnatia|2026-08-27": null,
-"UEL-Q|Salzburg v Mjällby|2026-08-27": null,
-"UECL-Q|København v Inter Turku|2026-08-27": null,
-"ALG-L1|Sétif v Ben Aknoun|2026-08-27": null,
-"UECL-Q|Borac v Víkingur|2026-08-27": [
-"Elo 1211 v 1285 · even tie on Elo",
-"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Borac</b> at 1211 against <b>Víkingur</b> at 1285: an even tie on club strength."
+"<b>MC Alger</b>: elite attack, in form, top by results (1) — against <b>MC Oran</b>: poor attack, porous defence, poor form. That pairing — firepower against a defence that leaks — is where the goals in this tip come from."
 ],
 "COL-PA|Llaneros v Millonarios|2026-08-28": [
 "weak attack",
@@ -322,11 +322,11 @@
 ],
 "CHN-SL|Dalian Yingbo v Guoan|2026-08-28": [
 "elite attack",
-"<b>Dalian Yingbo</b>: an average side — against <b>Beijing Guoan</b>: elite attack, elite defence, in form, top of the table (2)."
+"<b>Dalian Yingbo</b>: an average side — against <b>Beijing Guoan</b>: elite attack, elite defence, in form, top by results (2)."
 ],
 "CHN-SL|Shenhua v Taishan|2026-08-28": [
-"promotion/europe hunt (4)",
-"<b>Shanghai Shenhua</b>: promotion/europe hunt (4) — against <b>Shandong Taishan</b>: strong attack, good form, promotion/europe hunt (3). Stakes on the table: promotion/europe hunt (4) / promotion/europe hunt (3)."
+"chasing the top (4)",
+"<b>Shanghai Shenhua</b>: chasing the top (4) — against <b>Shandong Taishan</b>: strong attack, good form, chasing the top (3). By results this season: chasing the top (4) / chasing the top (3)."
 ],
 "CHN-SL|Shenzhen v Port|2026-08-28": [
 "poor attack",
@@ -334,11 +334,11 @@
 ],
 "NGA-PL|Shooting Stars SC v Inter Lagos|2026-08-28": [
 "elite attack",
-"<b>Shooting Stars SC</b>: elite attack, good form, promotion/europe hunt (3) — against <b>Inter Lagos</b>: an average side. Stakes on the table: promotion/europe hunt (3)."
+"<b>Shooting Stars SC</b>: elite attack, good form, chasing the top (3) — against <b>Inter Lagos</b>: an average side. By results this season: chasing the top (3)."
 ],
 "SAU-PL|Al-Riyadh v Neom|2026-08-28": [
 "leaky defence",
-"<b>Al Riyadh</b>: leaky defence, direct / low possession, relegation danger (17) — against <b>Neom SC</b>: good form, top of the table (1). Stakes on the table: relegation danger (17)."
+"<b>Al Riyadh</b>: leaky defence, direct / low possession, bottom of the results table (17) — against <b>Neom SC</b>: good form, top by results (1). By results this season: bottom of the results table (17)."
 ],
 "POL-EK|Wisła Płock v Korona|2026-08-28": [
 "poor attack",
@@ -350,11 +350,11 @@
 ],
 "GER-B2|Braunschweig v Hertha|2026-08-28": [
 "strong attack",
-"<b>Braunschweig</b>: strong attack — against <b>Hertha</b>: elite attack, good form, top of the table (2)."
+"<b>Braunschweig</b>: strong attack — against <b>Hertha</b>: elite attack, good form, top by results (2)."
 ],
 "GER-B2|Bochum v Osnabrück|2026-08-28": [
 "strong attack vs leaky defence",
-"<b>Bochum</b>: strong attack, good form, promotion/europe hunt (5) — against <b>Osnabruck</b>: weak attack, leaky defence, struggling, relegation danger (17). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. Stakes on the table: promotion/europe hunt (5) / relegation danger (17)."
+"<b>Bochum</b>: strong attack, good form, chasing the top (5) — against <b>Osnabruck</b>: weak attack, leaky defence, struggling, bottom of the results table (17). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. By results this season: chasing the top (5) / bottom of the results table (17)."
 ],
 "DEN-SL|Horsens v Viborg FF|2026-08-28": [
 "strong attack",
@@ -370,11 +370,11 @@
 ],
 "FRA-L2|Montpellier v Boulogne|2026-08-28": [
 "elite defence",
-"<b>Montpellier</b>: elite defence, in form, promotion/europe hunt (5) — against <b>Boulogne</b>: weak attack, poor form. Stakes on the table: promotion/europe hunt (5)."
+"<b>Montpellier</b>: elite defence, in form, chasing the top (5) — against <b>Boulogne</b>: weak attack, poor form. By results this season: chasing the top (5)."
 ],
 "FRA-L2|Nancy v Dunkerque|2026-08-28": [
 "poor attack vs porous defence",
-"<b>Nancy</b>: poor attack, leaky defence, poor form — against <b>Dunkerque</b>: porous defence, promotion/europe hunt (3). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. Stakes on the table: promotion/europe hunt (3)."
+"<b>Nancy</b>: poor attack, leaky defence, poor form — against <b>Dunkerque</b>: porous defence, chasing the top (3). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. By results this season: chasing the top (3)."
 ],
 "FRA-L2|Rodez v Pau|2026-08-28": [
 "good form",
@@ -398,11 +398,11 @@
 ],
 "NED-D2|Jong Ajax v Helmond Sport|2026-08-28": [
 "poor attack (away) vs leaky defence",
-"<b>Jong Ajax</b>: weak attack, leaky defence, poor form, relegation danger (19) — against <b>Helmond Sport</b>: poor attack, elite defence, cedes possession, struggling. That pairing — firepower against a defence that leaks — is where the goals in this tip come from. Stakes on the table: relegation danger (19)."
+"<b>Jong Ajax</b>: weak attack, leaky defence, poor form, bottom of the results table (19) — against <b>Helmond Sport</b>: poor attack, elite defence, cedes possession, struggling. That pairing — firepower against a defence that leaks — is where the goals in this tip come from. By results this season: bottom of the results table (19)."
 ],
 "NED-D2|Jong AZ v MVV|2026-08-28": [
 "poor attack (away) vs leaky defence",
-"<b>Jong AZ</b>: leaky defence — against <b>MVV Maastricht</b>: poor attack, cedes possession, top of the table (2). That pairing — firepower against a defence that leaks — is where the goals in this tip come from."
+"<b>Jong AZ</b>: leaky defence — against <b>MVV Maastricht</b>: poor attack, cedes possession, top by results (2). That pairing — firepower against a defence that leaks — is where the goals in this tip come from."
 ],
 "NED-D2|Waalwijk v Jong PSV|2026-08-28": [
 "elite attack",
@@ -410,27 +410,27 @@
 ],
 "NED-D2|Roda v NAC Breda|2026-08-28": [
 "weak attack",
-"<b>Roda JC Kerkrade</b>: weak attack, elite defence, controls the ball, promotion/europe hunt (5) — against <b>NAC Breda</b>: controls the ball, promotion/europe hunt (6). Stakes on the table: promotion/europe hunt (5) / promotion/europe hunt (6)."
+"<b>Roda JC Kerkrade</b>: weak attack, elite defence, controls the ball, chasing the top (5) — against <b>NAC Breda</b>: controls the ball, chasing the top (6). By results this season: chasing the top (5) / chasing the top (6)."
 ],
 "NED-D2|TOP Oss v Jong FC Utrecht|2026-08-28": [
 "strong attack",
-"<b>TOP Oss</b>: strong attack, direct / low possession, good form — against <b>Jong FC Utrecht</b>: weak attack, relegation danger (20). Stakes on the table: relegation danger (20)."
+"<b>TOP Oss</b>: strong attack, direct / low possession, good form — against <b>Jong FC Utrecht</b>: weak attack, bottom of the results table (20). By results this season: bottom of the results table (20)."
 ],
 "SAU-PL|Al-Khaleej v Al-Hilal|2026-08-28": [
 "elite attack (away) vs porous defence",
-"<b>Al Khaleej</b>: weak attack, porous defence, struggling — against <b>Al Hilal</b>: elite attack, elite defence, possession-dominant, in form, promotion/europe hunt (3). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. Stakes on the table: promotion/europe hunt (3)."
+"<b>Al Khaleej</b>: weak attack, porous defence, struggling — against <b>Al Hilal</b>: elite attack, elite defence, possession-dominant, in form, chasing the top (3). That pairing — firepower against a defence that leaks — is where the goals in this tip come from. By results this season: chasing the top (3)."
 ],
 "SAU-PL|Al-Nassr v Al-Taawoun|2026-08-28": [
 "elite attack",
-"<b>Al Nassr</b>: elite attack, elite defence, controls the ball, in form, promotion/europe hunt (4) — against <b>Al Taawoun</b>: controls the ball, struggling. Stakes on the table: promotion/europe hunt (4)."
+"<b>Al Nassr</b>: elite attack, elite defence, controls the ball, in form, chasing the top (4) — against <b>Al Taawoun</b>: controls the ball, struggling. By results this season: chasing the top (4)."
 ],
 "ITA-SB|Cremonese v Modena|2026-08-28": [
-"promotion/europe hunt (6)",
-"<b>Cremonese</b>: an average side — against <b>Modena</b>: promotion/europe hunt (6). Stakes on the table: promotion/europe hunt (6)."
+"chasing the top (6)",
+"<b>Cremonese</b>: an average side — against <b>Modena</b>: chasing the top (6). By results this season: chasing the top (6)."
 ],
 "GER-BL|Bayern v Stuttgart|2026-08-28": [
 "elite attack",
-"<b>Bayern Munich</b>: elite attack, solid defence, in form, top of the table (1) — against <b>Stuttgart</b>: strong attack, good form, promotion/europe hunt (4). Stakes on the table: promotion/europe hunt (4)."
+"<b>Bayern Munich</b>: elite attack, solid defence, in form, top by results (1) — against <b>Stuttgart</b>: strong attack, good form, chasing the top (4). By results this season: chasing the top (4)."
 ],
 "TUR-SL|Gençlerbirliği v Erzurumspor|2026-08-28": [
 "weak attack vs leaky defence",
@@ -438,7 +438,7 @@
 ],
 "POL-EK|Legia v Śląsk|2026-08-28": [
 "elite attack",
-"<b>Legia</b>: elite attack, elite defence, in form, top of the table (1) — against <b>Slask Wroclaw</b>: poor attack, struggling."
+"<b>Legia</b>: elite attack, elite defence, in form, top by results (1) — against <b>Slask Wroclaw</b>: poor attack, struggling."
 ],
 "FRA-L1|Lille v PSG|2026-08-28": [
 "elite defence",
@@ -462,7 +462,7 @@
 ],
 "ESP-L2|Tenerife v Sporting Gijón|2026-08-28": [
 "two organised defences",
-"<b>Tenerife</b>: elite defence, good form, promotion/europe hunt (7) — against <b>Sp Gijon</b>: solid defence, good form. Two organised defences meeting is unders territory. Stakes on the table: promotion/europe hunt (7)."
+"<b>Tenerife</b>: elite defence, good form, chasing the top (7) — against <b>Sp Gijon</b>: solid defence, good form. Two organised defences meeting is unders territory. By results this season: chasing the top (7)."
 ],
 "POR-PL|Rio Ave v Sporting CP|2026-08-28": [
 "two organised defences",
@@ -474,6 +474,6 @@
 ],
 "PER-L1|Comerciantes Unidos v Cajamarca|2026-08-28": [
 "controls the ball",
-"<b>Comerciantes Unidos</b>: controls the ball, struggling — against <b>FC Cajamarca</b>: strong attack, porous defence, relegation danger (17). Stakes on the table: relegation danger (17)."
+"<b>Comerciantes Unidos</b>: controls the ball, struggling — against <b>FC Cajamarca</b>: strong attack, porous defence, bottom of the results table (17). By results this season: bottom of the results table (17)."
 ]
 }

@@ -221,12 +221,19 @@ def for_team(league_code: str, team: str, match_date: date) -> TeamTags:
             total = len(table)
             tags.detail["position"] = pos
             tags.detail["points"] = pts
+            # These positions are computed from RESULTS alone. Federations
+            # dock points (CSL 2026: Shenhua sit 9th official but 4th by
+            # results), so this is not always the official table — and for
+            # goal modelling the results version is the meaningful one.
+            # The wording says which it is, and stays league-agnostic:
+            # "promotion/europe hunt" read as nonsense in a Chinese or
+            # Saudi top flight.
             if pos <= max(2, total // 8):
-                tags.table = f"top of the table ({pos})"
+                tags.table = f"top by results ({pos})"
             elif pos <= total // 3:
-                tags.table = f"promotion/europe hunt ({pos})"
+                tags.table = f"chasing the top ({pos})"
             elif pos > total - max(2, total // 8):
-                tags.table = f"relegation danger ({pos})"
+                tags.table = f"bottom of the results table ({pos})"
     return tags
 
 
