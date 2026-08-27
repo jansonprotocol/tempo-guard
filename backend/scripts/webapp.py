@@ -146,6 +146,42 @@ def _reads(fixtures) -> dict:
     return cache
 
 
+def _sortkeys(f) -> str:
+    """The numbers a card can be reordered by, stamped onto the element.
+
+    Sorting happens in the browser, so each card has to carry its own keys
+    rather than the page re-deriving them from rendered text — a string
+    scrape would break the first time a cell's wording changed. The card's
+    LEADING lane supplies probability, edge and side: Tip 1 by
+    construction is the higher-probability rung, so it leads whenever it
+    carries numbers, and Tip 2 stands in when Tip 1 abstained.
+
+    A card with no numbers at all (an abstention, a stale-Elo row) gets
+    −1, which parks it at the bottom of every numeric sort instead of
+    scattering it through the middle.
+    """
+    from scripts.playable import LANE
+    p = e = -1.0
+    side = "z"                    # z sorts last: neither over nor under
+    for cell in (f.tip1, f.tip2):
+        m = LANE.match(cell)
+        if not m:
+            continue
+        label = m.group(1).strip(" *·")
+        if not label or label.startswith("—"):
+            continue
+        p = float(m.group(2))
+        e = float(m.group(3).replace("−", "-"))
+        rung = re.search(r"\b([OU])\d", label)
+        side = ("o" if rung.group(1) == "O" else "u") if rung else "z"
+        break
+    badge = rates().get(f.code) or ""
+    hr = re.search(r"([\d.]+)", badge)
+    return (f'data-p="{p}" data-e="{e}" data-ou="{side}" '
+            f'data-hr="{hr.group(1) if hr else -1}" '
+            f'data-k="{html.escape(f.kickoff)}"')
+
+
 def _card(f, kind: str, reads: dict) -> str:
     badge = rates().get(f.code)
     league = html.escape(f.league) + (
@@ -194,15 +230,27 @@ def _card(f, kind: str, reads: dict) -> str:
         body = '<div class="read dim">nothing more on this one</div>'
     return (f'<details class="card {kind}" '
             f'data-t="{html.escape(f.teams.lower())} '
-            f'{html.escape(f.league.lower())} {f.code.lower()}">'
+            f'{html.escape(f.league.lower())} {f.code.lower()}" '
+            f"{_sortkeys(f)}>"
             f"<summary>{top}</summary>{body}</details>")
 
 
+SORTS = (("k", "kickoff"), ("p", "probability"), ("e", "edge"),
+         ("hr", "league hitrate"), ("o", "overs first"),
+         ("u", "unders first"))
+
+
 def _grid(cards, kind, reads):
-    return ('<div class="grid">'
+    """One tab's cards, with the sort bar that reorders them in place."""
+    if not cards:
+        return '<p class="dim">nothing here right now</p>'
+    bar = "".join(
+        f'<button class="sortb{" on" if key == "k" else ""}" '
+        f'data-s="{key}">{label}</button>' for key, label in SORTS)
+    return (f'<div class="sortbar"><span class="dim">sort</span>{bar}</div>'
+            '<div class="grid">'
             + "".join(_card(f, kind, reads) for f in cards)
-            + "</div>") if cards \
-        else '<p class="dim">nothing here right now</p>'
+            + "</div>")
 
 
 def _hitrates_rows() -> str:
@@ -617,6 +665,21 @@ td.pos {{ color:var(--green); }} td.neg {{ color:#e07a6a; }}
 .session {{ background:var(--card); border:1px solid var(--edge);
   border-radius:10px; padding:14px 16px; margin-bottom:12px; }}
 .session ul {{ margin:4px 0 2px 18px; color:var(--dim); }}
+.sortbar {{ display:flex; flex-wrap:wrap; align-items:center; gap:6px;
+  margin:0 0 12px; font-size:12px; }}
+.sortbar .dim {{ margin-right:2px; }}
+button.sortb {{ background:var(--card); border:1px solid var(--edge);
+  color:var(--dim); border-radius:20px; padding:4px 11px; font:inherit;
+  font-size:12px; cursor:pointer; }}
+button.sortb:hover {{ color:var(--fg); border-color:var(--gold); }}
+button.sortb.on {{ background:var(--gold); border-color:var(--gold);
+  color:#12161f; font-weight:600; }}
+th.sortcol {{ cursor:pointer; user-select:none; white-space:nowrap; }}
+th.sortcol:hover {{ color:var(--gold); }}
+th.sortcol::after {{ content:"\\2195"; opacity:.3; margin-left:5px; }}
+th.sortcol.desc::after {{ content:"\\2193"; opacity:1;
+  color:var(--gold); }}
+th.sortcol.asc::after {{ content:"\\2191"; opacity:1; color:var(--gold); }}
 h3.hyp {{ display:flex; align-items:center; gap:9px; margin:26px 0 4px;
   font-size:15px; }}
 h3.hyp .dot {{ width:11px; height:11px; border-radius:50%; flex:none; }}
@@ -710,9 +773,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  recent matches on the current build. <b>hit</b> is what landed;
  <b>gap</b> is hit minus what the engine claimed — near zero means the
  engine tells the truth about itself. Cup lanes use debited
- probabilities.</p>
- <div class="wrap"><table><tr><th>League</th><th>Hit</th><th>Gap</th>
- <th>n</th></tr>{_hitrates_rows()}</table></div>
+ probabilities. <b>Click a column to sort</b> — again to reverse.</p>
+ <div class="wrap"><table id="retro" class="sortable">
+ <tr><th data-sort="t">League</th><th data-sort="n">Hit</th>
+ <th data-sort="n">Gap</th><th data-sort="n">n</th></tr>
+ {_hitrates_rows()}</table></div>
 </section>
 
 <section class="page" id="p-patches">
@@ -829,6 +894,79 @@ window.addEventListener("error", () => {{
   // the failure stay local to Ask Athena.
   try {{ route(); }} catch (e) {{}}
 }});
+
+// ---- sorting -------------------------------------------------------
+// Cards carry their own keys (data-p, data-e, data-hr, data-ou, data-k),
+// so reordering never re-reads rendered text. Highest first on every
+// numeric key, because the question a sort answers here is always "what
+// is the strongest one" — and cards with no numbers hold -1, so they
+// settle at the bottom instead of scattering through the middle.
+function sortGrid(bar, key) {{
+  const grid = bar.parentElement.querySelector(".grid");
+  if (!grid) return;
+  const cards = [...grid.children];
+  const num = c => parseFloat(c.dataset.p) || -1;
+  // 0 first, 2 last; "z" (no over/under rung at all) always ends up 2.
+  const rank = (c, first) => c.dataset.ou === "z" ? 2
+    : c.dataset.ou === first ? 0 : 1;
+  const cmp = {{
+    k: (a, b) => a.dataset.k.localeCompare(b.dataset.k),
+    p: (a, b) => b.dataset.p - a.dataset.p,
+    e: (a, b) => b.dataset.e - a.dataset.e,
+    hr: (a, b) => b.dataset.hr - a.dataset.hr,
+    // Side sorts group first and rank inside the group by probability,
+    // so "overs first" is a grouping, not a different ordering. The
+    // ranks are explicit rather than a reversed string compare: simply
+    // flipping o-vs-u also flips the abstained cards to the TOP, and
+    // they belong at the bottom of every sort.
+    o: (a, b) => rank(a, "o") - rank(b, "o") || num(b) - num(a),
+    u: (a, b) => rank(a, "u") - rank(b, "u") || num(b) - num(a),
+  }}[key];
+  if (!cmp) return;
+  cards.sort(cmp).forEach(c => grid.appendChild(c));
+  for (const b of bar.querySelectorAll(".sortb"))
+    b.classList.toggle("on", b.dataset.s === key);
+}}
+for (const bar of document.querySelectorAll(".sortbar"))
+  bar.addEventListener("click", e => {{
+    const b = e.target.closest(".sortb");
+    if (b) sortGrid(bar, b.dataset.s);
+  }});
+
+// The retrosim table: click a header to sort, click again to reverse.
+// "t" columns compare as text, "n" columns as numbers — the gap column
+// carries a typographic minus, which parseFloat does not read, so it is
+// folded to ASCII first.
+for (const table of document.querySelectorAll("table.sortable")) {{
+  const head = table.rows[0];
+  [...head.cells].forEach((th, i) => {{
+    if (!th.dataset.sort) return;
+    th.classList.add("sortcol");
+    th.addEventListener("click", () => {{
+      // First click follows what the column is FOR: a number opens on its
+      // largest, a name opens at A. After that each click toggles.
+      const desc = th.dataset.dir
+        ? th.dataset.dir !== "desc" : th.dataset.sort === "n";
+      for (const c of head.cells) {{
+        delete c.dataset.dir; c.classList.remove("asc", "desc");
+      }}
+      th.dataset.dir = desc ? "desc" : "asc";
+      th.classList.add(desc ? "desc" : "asc");
+      const val = tr => {{
+        const s = tr.cells[i].textContent.trim().replace(/[−–]/g, "-");
+        return th.dataset.sort === "n"
+          ? (parseFloat(s.replace("%", "")) || 0) : s.toLowerCase();
+      }};
+      [...table.rows].slice(1)
+        .sort((a, b) => {{
+          const x = val(a), y = val(b);
+          const r = typeof x === "number" ? x - y : x.localeCompare(y);
+          return desc ? -r : r;
+        }})
+        .forEach(tr => table.tBodies[0].appendChild(tr));
+    }});
+  }});
+}}
 
 let BANK = null, LOOKUP = null, ALIAS = null, NAMES = null, DATES = null;
 const norm = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
