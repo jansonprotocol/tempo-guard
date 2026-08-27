@@ -100,19 +100,19 @@ that premium the book is keeping the insurance money.
 
 **Playable — 42 / 50   ·   84.0%**   ·   **Tip 1 — 21 / 23   ·   91.3%**   ·   **Tip 2 — 21 / 27   ·   77.8%**
 
-<table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (79.1 −1.4)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.5 +0.8)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 (half win at 4) · 24-08 19:00 <b>Brøndby v Silkeborg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (83.1 −0.3)</td><td>U4.25 82.2% +1.1%<br>buy≥1.30</td><td>❌ U3.75 65.6% +1.4%<br>buy≥1.47 · floor −9.4</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-3 · 24-08 19:00 <b>Malmö v Djurgården</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (81.7 −1.3)</td><td>O1.5 84.8% +5.9%<br>buy≥1.28</td><td>❌ <b>Malmö O1.5</b> 60.1% +12.8%<br>buy≥1.80 · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 24-08 19:30 <b>Osasuna v Levante</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (83.1 +2.8)</td><td>O1.5 75.7% +1.4%<br>buy≥1.39</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-6 · 24-08 20:00 <b>Jong FC Utrecht v Heracles</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (82.2 −0.6)</td><td>O1.5 83.9% +2.3%<br>buy≥1.25</td><td>✅ <b>Heracles O0.5</b> 83.8% +11.1%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 24-08 20:00 <b>Jong PSV v TOP Oss</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (82.2 −0.6)</td><td>U4.25 82.4% +2.6%<br>buy≥1.30</td><td>✅ U3.75 65.9% +3.5%<br>buy≥1.46 · floor −9.1</td></tr></table>
-<table align="left"><tr><th align="left">✅ 3-1 · 24-08 20:45 <b>Reims v Annecy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (78.8 −3.8)</td><td>O1.5 77.4% +5.5%<br>buy≥1.40</td><td>✅ <b>Reims O0.5</b> 81.4% +7.6%<br>buy≥1.33 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 24-08 20:45 <b>Reims v Annecy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (86.4 −1.9)</td><td>O1.5 77.4% +5.5%<br>buy≥1.40</td><td>✅ <b>Reims O0.5</b> 81.4% +7.6%<br>buy≥1.33 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-3 · 24-08 21:00 <b>Fulham v Chelsea</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (83.6 +0.1)</td><td>O1.5 81.3% +1.4%<br>buy≥1.29</td><td>✅ <b>Chelsea O0.5</b> 84.0% +9.2%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 24-08 21:30 <b>Málaga v Deportivo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 −4.3)</td><td>U3.0 79.1% +1.1%<br>buy≥1.42</td><td>✅ U2.75 58.5% +1.4%<br>buy≥1.61 · floor −16.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-4 · 25-08 00:30 <b>Athletic v Novorizontino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (86.6 −0.4)</td><td>— under +1%</td><td>✅ <b>Athletic U1.5</b> 75.2% +13.1%<br>buy≥1.44 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 (push at 3) · 25-08 00:30 <b>Sport Recife v América-MG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (86.6 −0.4)</td><td>U3.0 83.1% +1.4%<br>buy≥1.33</td><td>❌ U2.75 63.9% +1.9%<br>buy≥1.48 · floor −11.1</td></tr></table>
-<table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (80.7 −0.8)</td><td>— under +1%</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (85.8 −0.8)</td><td>— under +1%</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>✅ U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>✅ U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-3 · 25-08 20:00 <b>Al-Ettifaq v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>O1.5 84.2% +4.5%<br>buy≥1.29</td><td>✅ <b>Al-Nassr O1.5</b> 56.4% +18.2%<br>buy≥1.92 · team</td></tr></table>
@@ -215,7 +215,7 @@ that premium the book is keeping the insurance money.
 
 **Tip 1 — 33 / 39   ·   84.6%**   ·   **Tip 2 — 21 / 28   ·   75.0%**
 
-<table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (79.1 −1.4)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 24-08 18:30 <b>Bologna v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.5 +0.8)</td><td>U3.0 77.4% +2.3%<br>buy≥1.47</td><td>✅ U4.25 90.1% +1.4%<br>buy≥1.17 · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 24-08 18:40 <b>Neom v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>O1.5 83.9% +4.3%<br>buy≥1.29</td><td>✅ <b>Al-Qadsiah O1.5</b> 57.1% +19.0%<br>buy≥1.90 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 (half win at 4) · 24-08 19:00 <b>Brøndby v Silkeborg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (83.1 −0.3)</td><td>U4.25 82.2% +1.1%<br>buy≥1.30</td><td>❌ U3.75 65.6% +1.4%<br>buy≥1.47 · floor −9.4</td></tr></table>
 <table align="left"><tr><th align="left">⚪ 3-2 (no tip) · 24-08 19:00 <b>Celta Fortuna v FC Andorra</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 −4.3)</td><td>— no tip, Celta B has 1 row (reserve side, promoted)</td><td>—</td></tr></table>
@@ -224,9 +224,9 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-6 · 24-08 20:00 <b>Jong FC Utrecht v Heracles</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (82.2 −0.6)</td><td>O1.5 83.9% +2.3%<br>buy≥1.25</td><td>✅ <b>Heracles O0.5</b> 83.8% +11.1%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 24-08 20:00 <b>Jong PSV v TOP Oss</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (82.2 −0.6)</td><td>U4.25 82.4% +2.6%<br>buy≥1.30</td><td>✅ U3.75 65.9% +3.5%<br>buy≥1.46 · floor −9.1</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 (two penalties) · 24-08 20:00 <b>Al-Ittihad v Al-Hazem</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>U4.25 82.5% +0.5%<br>buy≥1.30</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">⚪ 2-0 (no tip) · 24-08 20:30 <b>Kocaelispor v Amed</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (78.3 −5.2)</td><td>— no tip, Amedspor has 1 row (promoted)</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">✅ 3-1 · 24-08 20:45 <b>Reims v Annecy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (78.8 −3.8)</td><td>O1.5 77.4% +5.5%<br>buy≥1.40</td><td>✅ <b>Reims O0.5</b> 81.4% +7.6%<br>buy≥1.33 · team</td></tr></table>
-<table align="left"><tr><th align="left">✅ 4-0 (half win at 4) · 24-08 20:45 <b>Roma v Fiorentina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (79.1 −1.4)</td><td>U4.25 88.4% <b>−0.3%</b><br>buy≥1.20</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">⚪ 2-0 (no tip) · 24-08 20:30 <b>Kocaelispor v Amed</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (83.1 −1.4)</td><td>— no tip, Amedspor has 1 row (promoted)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 24-08 20:45 <b>Reims v Annecy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (86.4 −1.9)</td><td>O1.5 77.4% +5.5%<br>buy≥1.40</td><td>✅ <b>Reims O0.5</b> 81.4% +7.6%<br>buy≥1.33 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 4-0 (half win at 4) · 24-08 20:45 <b>Roma v Fiorentina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.5 +0.8)</td><td>U4.25 88.4% <b>−0.3%</b><br>buy≥1.20</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-3 · 24-08 21:00 <b>Fulham v Chelsea</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (83.6 +0.1)</td><td>O1.5 81.3% +1.4%<br>buy≥1.29</td><td>✅ <b>Chelsea O0.5</b> 84.0% +9.2%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 24-08 21:15 <b>Gil Vicente v Casa Pia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (82.4 +2.0)</td><td>U4.25 86.8% +0.5%<br>buy≥1.22</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 24-08 21:30 <b>Granada v Mallorca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 −4.3)</td><td>U3.0 78.1% +0.1%<br>buy≥1.45</td><td>— none</td></tr></table>
@@ -234,7 +234,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-4 · 25-08 00:30 <b>Athletic v Novorizontino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (86.6 −0.4)</td><td>O1.0 89.2% +0.2%<br>buy≥1.22</td><td>✅ <b>Athletic U1.5</b> 75.2% +13.1%<br>buy≥1.44 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 (push at 3) · 25-08 00:30 <b>Sport Recife v América-MG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (86.6 −0.4)</td><td>U3.0 83.1% +1.4%<br>buy≥1.33</td><td>❌ U2.75 63.9% +1.9%<br>buy≥1.48 · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">❌ 2-3 · 25-08 01:00 <b>Botafogo v Athletico</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (81.3 −1.1)</td><td>U4.25 88.5% <b>−0.4%</b><br>buy≥1.20</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (80.7 −0.8)</td><td>O1.5 76.5% +0.1%<br>buy≥1.37</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-1 · 25-08 01:30 <b>Everton v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (85.8 −0.8)</td><td>O1.5 76.5% +0.1%<br>buy≥1.37</td><td>✅ <b>Everton O0.5</b> 83.7% +5.8%<br>buy≥1.29 · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 25-08 18:05 <b>Abha v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>U4.25 85.8% +3.9%<br>buy≥1.28</td><td>✅ U3.75 70.7% +5.5%<br>buy≥1.42 · floor −4.3</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 25-08 18:10 <b>Al-Taawoun v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (84.1 +0.8)</td><td>U4.25 85.4% +3.5%<br>buy≥1.25</td><td>✅ U3.75 70.0% +4.8%<br>buy≥1.43 · floor −5.0</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 (90'+4; 5-2 aet) · 25-08 18:45 <b>Sabah v H. Be'er Sheva</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (82.5 −2.4)</td><td>U4.25 86.5% +0.4%<br>buy≥1.23</td><td>— none</td></tr><tr><td colspan="3"><sub>🏆 1st leg Hapoel Be'er 2-1 Sabah FK · level 4-4 on aggregate — as it stands this goes to extra time.</sub></td></tr></table>
@@ -255,7 +255,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 26-08 21:00 <b>Lyon v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (82.5 −2.4)</td><td>U4.25 86.8% <b>+0.8%</b><br>buy≥1.22</td><td>✅ U3.75 72.2% +1.1%<br>buy≥1.35 · floor −9.8</td></tr><tr><td colspan="3"><sub>🏆 1st leg Fenerbahce 1-1 Lyon · Fenerbahçe lead 3-2 on aggregate — Lyon need 1 to level it.</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 26-08 21:00 <b>Viking v Dinamo Zagreb</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UCL Playoff · probationary (82.5 −2.4)</td><td>U4.25 87.4% +1.3%<br>buy≥1.21</td><td>❌ U3.75 73.1% +2.0%<br>buy≥1.33 · floor −8.9</td></tr><tr><td colspan="3"><sub>🏆 1st leg Dinamo Zagreb 2-2 Viking FK · Viking lead 5-3 on aggregate — Dinamo Zagreb need 2 to level.</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 26-08 23:00 <b>Boyacá Chicó v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U3.0 81.9% +2.2%<br>buy≥1.35</td><td>✅ U4.25 92.8% +1.2%<br>buy≥1.14 · lower edge</td></tr></table>
-<table align="left"><tr><th align="left">✅ 1-2 · 27-08 00:00 <b>Coquimbo v U. Católica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (80.7 −0.8)</td><td>O1.5 76.8% +0.5%<br>buy≥1.37</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 27-08 00:00 <b>Coquimbo v U. Católica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (85.8 −0.8)</td><td>O1.5 76.8% +0.5%<br>buy≥1.37</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">❌ 4-2 · 27-08 01:20 <b>América de Cali v Junior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U3.0 80.5% +0.8%<br>buy≥1.39</td><td>❌ U2.75 60.3% +1.0%<br>buy≥1.57 · floor −14.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 27-08 03:30 <b>Atl. Nacional v Dep. Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U4.25 88.1% <b>−3.4%</b><br>buy≥1.20</td><td>✅ O1.75 72.8% +5.6%<br>buy≥1.57 · floor −2.2</td></tr></table>
 
@@ -307,14 +307,15 @@ that premium the book is keeping the insurance money.
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 22 verified, 8 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 23 verified, 8 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
-### 🟢 Verified and helping — 22
+### 🟢 Verified and helping — 23
 
 Cleared two separate time windows and is live in the engine today.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🟢 | 08-27 | engine | **The weakest leagues can be lifted the way the cups were** | Probability floor 0.82 on the sixteen bottom-of-table domestic leagues: selection climbs the ladder to safer rungs, hitrate improves in BOTH halves of every shipped league (pooled lifts of +2.4 to +10.8), and the fallback keeps volume at 100%. The two abstainers are the proof it is not a free lunch: MLS gets worse (its mu is the problem) and ITA-SB's caps leave nothing to climb to |
 | 🟢 | 08-27 | engine | **Above says 90% the domestic board is too sure of itself** | Measured on 32,493 tips across 45 leagues: below 90% the gap is −0.2 (honest); at 90%+ it is −1.2 ± 0.3, holds in both windows (−1.0 / −1.5) and is STRONGER in the played population (−1.8 / −1.4). Flat inside the band, so HIGH_SAYS_DEBIT 0.012 ships on the published number — selection stays raw |
 | 🟢 | 08-27 | board | **Per-league gaps at n=200 are mostly noise wearing a number** | The worst sixteen rows, re-measured at ~780 each: ROU-L1 −11.6 → −2.8, and every one of them collapsed into a band of −2.8 to +1.7 around a pooled −1.7. One row in the whole table cleared two standard errors. The table now replays up to 800 fixtures capped at two seasons |
 | 🟢 | 08-27 | interface | **One update is never one match** | The sweep checks every unsettled fixture against ESPN, grades on the 90 with extra time peeled off, and refuses to leave neighbours stale — the human failure it replaces was updating one score and leaving three settled bets showing as open |
@@ -433,8 +434,13 @@ form, because domestic form carries no cup signal at all (slope 0.017):
                                        both seasons and flat across bands
     MAX_STALE_DAYS         400         no tip when a club's Elo is older than
                                        this — an abstention, not a guess
-    min_win_prob           0.82        on all six cup codes: hitrate-first
-                                       selection, ~80 → ~83 at zero volume cost
+    min_win_prob           0.82        on all six cup codes (~80 → ~83 at zero
+                                       volume cost) AND, since 27 Aug, on the
+                                       sixteen weakest domestic leagues — the
+                                       same hitrate-first selection, both
+                                       windows up in every one, lifts of +2.4
+                                       to +10.8. MLS and ITA-SB measured and
+                                       left alone: the floor cannot help them
 
     weighted calibration gap    -0.6 in-sample, -1.5 out-of-sample  (was -4.4)
     realised edge over base     +2.23                               (was +1.35)

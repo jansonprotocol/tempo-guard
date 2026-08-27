@@ -1,7 +1,8 @@
 # Per-league Tip 1 hitrate, replayed as-of on the current build over the
 # league's most recent fixtures — up to 800, capped at two seasons, which
 # is this project's widest validation window. Written by scripts/retrosim.py
-# (27 Aug 2026, published says: cup and high-says debits included); read by
+# (27 Aug 2026, published says: cup and high-says debits included; the 16
+# weakest leagues re-run same day on their new 0.82 floors); read by
 # scripts/league_badges.py. At this size the standard error on a row is
 # ~1.3-1.5 points; the n=200 table this replaces carried ~2.8 and its worst
 # rows were mostly noise (ROU-L1 -11.6 remeasured at -2.8).
@@ -46,21 +47,21 @@ UCL	379	81.3	+0.8
 BRA-SA	744	81.3	-1.1
 SCO-L2	360	81.1	+0.6
 AUT-BL	391	81.1	-1.4
-GRE-SL	445	80.9	-0.6
-CHI-PD	466	80.7	-0.8
-RUS-PL	457	80.7	+0.4
-JPN-J1	710	80.7	+0.2
-ENG-L2	800	80.6	-0.3
-CRO-1L	329	80.5	-0.6
-FIN-VL	352	80.1	-2.8
-PER-L1	607	79.6	-1.7
-ROU-L1	582	79.6	-2.4
-POL-EK	555	79.5	-1.4
-CZE-FL	544	79.4	-2.4
-SCO-CH	363	79.3	-1.2
-MEX-LMX	628	79.1	-2.9
-ITA-SA	741	79.1	-1.4
+GRE-SL	445	91.7	+0.8
+CHI-PD	466	85.8	-0.8
+RUS-PL	457	85.8	-0.9
+JPN-J1	710	88.6	+0.1
+ENG-L2	800	88.9	+1.3
+CRO-1L	329	86.0	-1.2
+FIN-VL	352	82.7	-1.6
+PER-L1	607	86.8	-0.8
+ROU-L1	582	88.3	-0.2
+POL-EK	555	85.4	-0.7
+CZE-FL	544	84.9	-0.9
+SCO-CH	363	87.9	+0.1
+MEX-LMX	628	81.5	-3.5
+ITA-SA	741	88.5	+0.8
 MLS	572	78.8	-2.9
-FRA-L2	397	78.8	-3.8
-TUR-SL	391	78.3	-5.2
+FRA-L2	397	86.4	-1.9
+TUR-SL	391	83.1	-1.4
 ITA-SB	732	77.2	-0.2
