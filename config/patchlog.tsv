@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-08-27	interface	Playable cards lead with the lane that made them playable — a fixture on the tab through its Tip 2 no longer headlines a sub-bar Tip 1 (Llaneros showed U4.25 −1.5% while its O1.75 +2.3% hid behind 'more')
 2026-08-27	interface	Grading defect found by the bettor, not the verifier: ESPN's keyEvents feed silently drops goal events, and counting an incomplete list graded Plzeň 2-1 when the 90 ended 4-1. regulation() now reads the RUNNING SCORE from the goal narration (commentary feed first) — every ET row re-verified: Plzeň ✅→❌ 4-1, Raków ✅→❌ 2-2, Celje's score text corrected, eight others confirmed. Hitrate 85.5 → 81.8, ROI −1.6 → −6.7 — the honest numbers
 2026-08-27	interface	Hardcoded: a match in extra time settles immediately — the 90 is history the moment ET kicks off, so the sweep grades it from the goal timeline (ESPN STATUS_OVERTIME / period 3+) instead of holding a decided bet open. First live test: Jablonec 1-0 and Qarabağ 1-2 both settled mid-ET, both U4.25 hits
 2026-08-27	interface	Found bets gains an 'Athena says' column — each position's relation to the published tip, derived from the board: = Tip 1/2, a Rule-6 softer/harder neighbour, the Rule-5 DNB lane, a team lane on its own read, or off board. The run's shape at a glance: 21 of 35 are Rule-6 ladder plays, 7 DNB, 3 exact tips, 2 off board
