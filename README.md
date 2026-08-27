@@ -194,12 +194,30 @@ that premium the book is keeping the insurance money.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
+| — open | Clermont v Sochaux | U1.5 (away) | 1.41 | — | widened: team under on the away side |
+| — open | Montpellier v Boulogne | DNB (home) | 1.26 | — | rule 5 shape, home favourite |
+| — open | Laval v Grenoble | U3.5 | 1.24 | — | rule-6 harder line off the U3.0 tip (79.9%) |
+| — open | Den Bosch v Vitesse | X2 (away) | 1.46 | — | own read: double chance Vitesse or draw |
+| — open | Volendam v Dordrecht | O1.5 (home) | 1.62 | — | widened: Volendam team over |
+| — open | Volendam v Dordrecht | O1.5 | 1.18 | — | softer companion to the O1.5 tip |
+| — open | Jong AZ v MVV | U4.5 | 1.28 | — | softer line above the U4.25 tip |
+| — open | Roda v NAC Breda | U4.5 | 1.20 | — | softer line above the U4.25 tip |
+| — open | TOP Oss v Jong FC Utrecht | U4.5 | 1.22 | — | softer line above the U4.25 tip |
+| — open | Groningen v Fortuna Sittard | U4.5 | 1.24 | — | softer line above the U4.25 tip (+5.8%) |
+| — open | Legia v Śląsk | DNB (home) | 1.17 | — | rule 5 shape on the sub-bar fixture |
+| — open | Milan v Venezia | U3.5 | 1.37 | — | softer line above the U3.0 tip (+5.2%) |
+| — open | Al-Riyadh v Neom | DNB (away) | 1.42 | — | rule 5 shape, away side |
+| — open | Dalian Yingbo v Guoan | DNB (away) | 1.53 | — | rule 5 shape, away side |
+| — open | Shenhua v Taishan | O0.5 (away) | 1.18 | — | = Tip 2 team lane (81.8% +9.2%, buy≥1.32 — taken under it, widened) |
+| — open | Shenzhen v Port | U4.5 | 1.20 | — | softer line above the U4.25 tip (+5.3%) |
+| — open | Braunschweig v Hertha | O1.5 | 1.19 | — | = Tip 1 rung (83.5% +2.9%, buy≥ not met — widened) |
+| — open | Bochum v Osnabrück | DNB (home) | 1.25 | — | rule 5 shape, home favourite |
 
 <!-- HYPOTHESES:START -->
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 24 verified, 11 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 24 verified, 12 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
 ### 🟢 Verified and helping — 24
 
@@ -232,12 +250,13 @@ Cleared two separate time windows and is live in the engine today.
 | 🟢 | 08-24 | engine | **mu is over-spread** | The founding recalibration: MU_SHRINK to 0.60 with the floor moved to match, the single largest accuracy change the engine has had |
 | 🟢 | 08-24 | engine | **The weakest sides are rated too low** | TEAM_RATE_FLOOR 0.95 |
 
-### 🟠 Unfinished — 11
+### 🟠 Unfinished — 12
 
 Measured but not concluded, or shipped on **probation** and still waiting on live results.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🟠 | 08-28 | ledger | **The widened staking strategy — taking lanes under buy≥ when probability still clears** | The bettor's own call, now instrumented: 18 positions logged on the Session #4 slate, 8 on engine-priced rungs of which 1 sits above buy≥, 3 between break-even and buy≥, and 4 marginally under stated break-even (−0.01 to −0.04). The played-lane record historically grades 1–2 points ABOVE its stated probability, which covers most of that shortfall — but not with a margin. The ledger measures it live: alignment column plus stored odds settle the question in a week of results |
 | 🟠 | 08-27 | data | **Official tables can diverge from results tables (points deductions)** | CSL 2026: Shenhua 28 pts official vs 35 by results, Taishan 33 vs 39, Guoan 36 vs 40 — every stored result verified correct against ESPN, so the gap is federation deductions the walked table cannot see. Reads now say 'by results'; no engine impact (mu never reads standings, and the pos_signed term was measured and declined). Open question: whether any consumer ever NEEDS the official table |
 | 🟠 | 08-27 | cups | **The playoff DECIDER round may run hotter than the lane prices** | Live probation evidence from the 27 Aug slate: U4.25 tips stating 87–91 covered 20/28 (71%) across the run's cup fixtures — six 5+ goal matches in one night — while our O1.5 tips landed at their stated rate (calibrated, not underrated). One knockout round, ~2 SE, rhymes with the qualifiers' standing −3.2/−3.5 gaps. Untested: whether elimination-night second legs are structurally hotter than earlier rounds. Measure before the next playoff window |
 | 🟠 | 08-27 | engine | **Balance means hit × buy≥, and five leagues fail it** | EV at the printed buy-from across the table runs 1.02–1.15. The extremes people worry about are HONEST — ITA-SB (77.2 hit, 1.46 odds) sits near the top at 1.127, JPN-J1 (88.6, 1.20) clears 1.063 — but the overconfident rows cannot cover their own price: MLS 1.017, ESP-L2 1.025, MEX-LMX 1.027, UEL-Q 1.033, FRA-L2 1.055. Their fix is per-league calibration or a cull, not floor tuning; pending |
