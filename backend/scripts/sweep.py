@@ -41,10 +41,14 @@ from scripts.live_scores import ESPN
 
 # Cup codes ESPN serves under their own slugs; the qualifiers share the
 # board's own codes, so both live here rather than in two places.
+#
+# ALG-L1 is deliberately absent: ESPN carries no Algerian league at any
+# slug (400 on every one tried), so a mapping there would only pretend to
+# have looked. Its fixtures come back named for grading by hand.
 SLUGS = dict(ESPN, **{
     "UEL-Q": "uefa.europa_qual", "UECL-Q": "uefa.europa.conf_qual",
     "UCL": "uefa.champions", "UEL": "uefa.europa",
-    "UECL": "uefa.europa.conf", "ALG-L1": "alg.1", "NOR-EL": "nor.1",
+    "UECL": "uefa.europa.conf", "NOR-EL": "nor.1",
     "SCO-PL": "sco.1", "GER-BL": "ger.1", "BEL-PL": "bel.1",
     "NED-ED": "ned.1", "ARG-PD": "arg.1", "MEX-LMX": "mex.1",
 })
@@ -59,14 +63,30 @@ def _get(url: str):
 
 
 def board_day(code: str, day: str) -> list[dict]:
-    """ESPN's events for one competition on one day."""
+    """ESPN's events for one competition around one board day.
+
+    ESPN files a fixture under the COMPETITION's local calendar day; the
+    board keeps kickoffs in European time. For Europe the two agree, but a
+    Chilean 18:00 is our next midnight and a Saudi late game is our
+    previous night — Coquimbo v U. Católica sat on `dates=20260826` while
+    the board called it the 27th, and the sweep saw nothing there. So the
+    neighbouring days are asked for too and the answers merged; a fixture
+    is then found by its clubs, whichever bucket ESPN filed it in.
+    """
     slug = SLUGS.get(code)
     if not slug:
         return []
-    d = day.replace("-", "")
-    data = _get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/"
-                f"{slug}/scoreboard?dates={d}")
-    return (data or {}).get("events", [])
+    d0 = datetime.strptime(day, "%Y-%m-%d").date()
+    out, seen = [], set()
+    for off in (-1, 0, 1):
+        d = (d0 + timedelta(days=off)).strftime("%Y%m%d")
+        data = _get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/"
+                    f"{slug}/scoreboard?dates={d}")
+        for ev in (data or {}).get("events", []):
+            if ev["id"] not in seen:
+                seen.add(ev["id"])
+                out.append(ev)
+    return out
 
 
 def regulation(slug: str, ev: dict) -> tuple[int, int] | None:
