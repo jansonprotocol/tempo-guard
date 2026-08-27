@@ -1,0 +1,127 @@
+# The typed source of truth for the fixture board. One row per fixture;
+# every block in README.md is rendered from this file by scripts/board.py.
+# Grade a fixture by filling `status` (e.g. "✅ HIT — 2-1"), then re-render.
+# kickoff	code	league	teams	tip1	tip2	status
+2026-08-24 18:30	ITA-SA	Serie A	Bologna v Lazio	U3.0 77.4% +2.3% · buy≥1.47	✅ U4.25 90.1% +1.4% (lower edge) · buy≥1.17	✅ HIT — 0-1
+2026-08-24 18:40	SAU-PL	Saudi Pro League	Neom v Al-Qadsiah	O1.5 83.9% +4.3% · buy≥1.29	✅ **Al-Qadsiah O1.5** 57.1% +19.0% (team) · buy≥1.90	✅ HIT — 0-2
+2026-08-24 19:00	DEN-SL	Danish Superliga	Brøndby v Silkeborg	U4.25 82.2% +1.1% · buy≥1.30	❌ U3.75 65.6% +1.4% (floor −9.4) · buy≥1.47	✅ HIT — 3-1 (half win at 4)
+2026-08-24 19:00	ESP-L2	LaLiga 2	Celta Fortuna v FC Andorra	— no tip, Celta B has 1 row (reserve side, promoted)	—	FT 3-2 (no tip)
+2026-08-24 19:00	SWE-AL	Allsvenskan	Malmö v Djurgården	O1.5 84.8% +5.9% · buy≥1.28	❌ **Malmö O1.5** 60.1% +12.8% (team) · buy≥1.80	✅ HIT — 0-3
+2026-08-24 19:30	ESP-LL	LaLiga	Osasuna v Levante	O1.5 75.7% +1.4% · buy≥1.39	— none	❌ MISS — 0-0
+2026-08-24 20:00	NED-D2	Eerste Divisie	Jong FC Utrecht v Heracles	O1.5 83.9% +2.3% · buy≥1.25	✅ **Heracles O0.5** 83.8% +11.1% (team) · buy≥1.29	✅ HIT — 1-6
+2026-08-24 20:00	NED-D2	Eerste Divisie	Jong PSV v TOP Oss	U4.25 82.4% +2.6% · buy≥1.30	✅ U3.75 65.9% +3.5% (floor −9.1) · buy≥1.46	✅ HIT — 1-0
+2026-08-24 20:00	SAU-PL	Saudi Pro League	Al-Ittihad v Al-Hazem	U4.25 82.5% +0.5% · buy≥1.30	— none	❌ MISS — 3-2 (two penalties)
+2026-08-24 20:30	TUR-SL	Trendyol Süper Lig	Kocaelispor v Amed	— no tip, Amedspor has 1 row (promoted)	—	FT 2-0 (no tip)
+2026-08-24 20:45	FRA-L2	Ligue 2	Reims v Annecy	O1.5 77.4% +5.5% · buy≥1.40	✅ **Reims O0.5** 81.4% +7.6% (team) · buy≥1.33	✅ HIT — 3-1
+2026-08-24 20:45	ITA-SA	Serie A	Roma v Fiorentina	U4.25 88.4% **−0.3%** · buy≥1.20	— none	✅ HIT — 4-0 (half win at 4)
+2026-08-24 21:00	ENG-PL	Premier League	Fulham v Chelsea	O1.5 81.3% +1.4% · buy≥1.29	✅ **Chelsea O0.5** 84.0% +9.2% (team) · buy≥1.29	✅ HIT — 2-3
+2026-08-24 21:15	POR-PL	Liga Portugal	Gil Vicente v Casa Pia	U4.25 86.8% +0.5% · buy≥1.22	— none	✅ HIT — 2-0
+2026-08-24 21:30	ESP-L2	LaLiga 2	Granada v Mallorca	U3.0 78.1% +0.1% · buy≥1.45	— none	✅ HIT — 2-0
+2026-08-24 21:30	ESP-L2	LaLiga 2	Málaga v Deportivo	U3.0 79.1% +1.1% · buy≥1.42	✅ U2.75 58.5% +1.4% (floor −16.5) · buy≥1.61	✅ HIT — 1-1
+2026-08-25 00:30	BRA-SB	Brasileirão Série B	Athletic v Novorizontino	O1.0 89.2% +0.2% · buy≥1.22	✅ **Athletic U1.5** 75.2% +13.1% (team) · buy≥1.44	✅ HIT — 1-4
+2026-08-25 00:30	BRA-SB	Brasileirão Série B	Sport Recife v América-MG	U3.0 83.1% +1.4% · buy≥1.33	❌ U2.75 63.9% +1.9% (floor −11.1) · buy≥1.48	✅ HIT — 3-0 (push at 3)
+2026-08-25 01:00	BRA-SA	Brasileirão	Botafogo v Athletico	U4.25 88.5% **−0.4%** · buy≥1.20	— none	❌ MISS — 2-3
+2026-08-25 01:30	CHI-PD	Liga de Primera	Everton v U. de Concepción	O1.5 76.5% +0.1% · buy≥1.37	✅ **Everton O0.5** 83.7% +5.8% (team) · buy≥1.29	✅ HIT — 3-1
+2026-08-25 18:05	SAU-PL	Saudi Pro League	Abha v Al-Khaleej	U4.25 85.8% +3.9% · buy≥1.28	✅ U3.75 70.7% +5.5% (floor −4.3) · buy≥1.42	✅ HIT — 1-1
+2026-08-25 18:10	SAU-PL	Saudi Pro League	Al-Taawoun v Al-Fayha	U4.25 85.4% +3.5% · buy≥1.25	✅ U3.75 70.0% +4.8% (floor −5.0) · buy≥1.43	✅ HIT — 0-0
+2026-08-25 18:45	UCL-Q	UCL Playoff · probationary	Sabah v H. Be'er Sheva	U4.25 86.5% +0.4% · buy≥1.23	— none	❌ MISS — 3-2 (90'+4; 5-2 aet)
+2026-08-25 20:00	SAU-PL	Saudi Pro League	Al-Ettifaq v Al-Nassr	O1.5 84.2% +4.5% · buy≥1.29	✅ **Al-Nassr O1.5** 56.4% +18.2% (team) · buy≥1.92	✅ HIT — 2-3
+2026-08-25 20:00	SAU-PL	Saudi Pro League	Al-Shabab v Al-Riyadh	O1.5 79.9% +0.2% · buy≥1.31	✅ **Al-Shabab O0.5** 84.0% +5.9% (team) · buy≥1.29	✅ HIT — 3-3
+2026-08-25 21:00	ESP-LL	LaLiga	Valencia v Real Betis	U4.25 88.0% +1.1% · buy≥1.21	✅ U3.75 74.0% +1.7% (floor −1.0) · buy≥1.32	✅ HIT — 0-1
+2026-08-25 21:00	UCL-Q	UCL Playoff · probationary	Bodø/Glimt v NEC	U4.25 86.6% +0.5% · buy≥1.23	— none	✅ HIT — 3-0
+2026-08-25 21:00	UCL-Q	UCL Playoff · probationary	LASK v Celtic	U4.25 87.2% +1.1% · buy≥1.22	❌ U3.75 72.7% +1.6% (floor −9.3) · buy≥1.34	❌ MISS — 4-1 (90'; goal at 90', tie to ET)
+2026-08-26 00:30	BRA-SB	Brasileirão Série B	Atlético-GO v Botafogo-SP	U3.0 81.9% +0.1% · buy≥1.36	— none	✅ HIT — 3-0 (push at 3)
+2026-08-26 00:30	BRA-SB	Brasileirão Série B	Juventude v CRB	U3.0 83.3% +1.5% · buy≥1.32	❌ U2.75 64.1% +2.0% (floor −10.9) · buy≥1.48	✅ HIT — 2-1 (push at 3)
+2026-08-26 03:00	COL-PA	Categoría Primera A	Cúcuta v Alianza Valledupar	U3.0 83.0% +3.3% · buy≥1.33	✅ U4.25 93.3% +1.8% (lower edge) · buy≥1.13	✅ HIT — 1-0
+2026-08-26 18:00	SAU-PL	Saudi Pro League	Al-Faisaly v Al-Fateh	— no tip, Al-Faisaly too little top-flight history (promoted)	—	FT 1-1 (no tip)
+2026-08-26 18:45	UECL-Q	UECL Playoff · probationary	Rapid Vienna v Hearts	U4.25 87.4% +1.8% · buy≥1.22	✅ U3.75 73.0% +2.7% (floor −9.0) · buy≥1.33	✅ HIT — 1-1 (90'; level 3-3, to extra time)
+2026-08-26 20:00	SAU-PL	Saudi Pro League	Al Diriyah v Al-Kholood	— no tip, both promoted, too little top-flight history	—	FT 1-1 (no tip)
+2026-08-26 21:00	ESP-LL	LaLiga	Real Madrid v Real Sociedad	O1.5 81.2% +6.8% · buy≥1.33	✅ **Real Madrid O1.5** 67.0% +24.7% (team) · buy≥1.62	✅ HIT — 4-1
+2026-08-26 21:00	UCL-Q	UCL Playoff · probationary	AEK Athens v Levski Sofia	U4.25 82.5% **-3.6%** · buy≥1.30	— none	✅ HIT — 4-0
+2026-08-26 21:00	UCL-Q	UCL Playoff · probationary	Celje v Slovan Bratislava	U4.25 87.6% +1.5% · buy≥1.21	✅ U3.75 73.3% +2.2% (floor −8.7) · buy≥1.33	✅ HIT — 1-1 (90'; 1-2 aet)
+2026-08-26 21:00	UCL-Q	UCL Playoff · probationary	Lyon v Fenerbahçe	U4.25 86.8% **+0.8%** · buy≥1.22	✅ U3.75 72.2% +1.1% (floor −9.8) · buy≥1.35	✅ HIT — 1-2
+2026-08-26 21:00	UCL-Q	UCL Playoff · probationary	Viking v Dinamo Zagreb	U4.25 87.4% +1.3% · buy≥1.21	❌ U3.75 73.1% +2.0% (floor −8.9) · buy≥1.33	✅ HIT — 3-1
+2026-08-26 23:00	COL-PA	Categoría Primera A	Boyacá Chicó v Fortaleza	U3.0 81.9% +2.2% · buy≥1.35	✅ U4.25 92.8% +1.2% (lower edge) · buy≥1.14	✅ HIT — 0-0
+2026-08-27 00:00	CHI-PD	Liga de Primera	Coquimbo v U. Católica	O1.5 76.8% +0.5% · buy≥1.37	— none	✅ HIT — 1-2
+2026-08-27 01:20	COL-PA	Categoría Primera A	América de Cali v Junior	U3.0 80.5% +0.8% · buy≥1.39	❌ U2.75 60.3% +1.0% (floor −14.7) · buy≥1.57	❌ MISS — 4-2
+2026-08-27 03:30	COL-PA	Categoría Primera A	Atl. Nacional v Dep. Cali	U4.25 88.1% **−3.4%** · buy≥1.20	✅ O1.75 72.8% +5.6% (floor −2.2) · buy≥1.57	✅ HIT — 2-1
+2026-08-27 17:00	UECL-Q	UECL Playoff · probationary	KuPS v Shamrock Rovers	U4.25 90.0% +4.5% · buy≥1.21	✅ U3.75 77.3% +6.9% (floor −4.7) · buy≥1.31	✅ HIT — 1-0
+2026-08-27 18:00	UEL-Q	UEL Playoff · probationary	Ararat-Armenia v U. Craiova	U4.25 90.9% +2.4% · buy≥1.16	✅ U3.75 78.7% +3.9% (floor −3.3) · buy≥1.29	✅ HIT — 1-0
+2026-08-27 18:00	UEL-Q	UEL Playoff · probationary	Iberia v Jagiellonia	— no tip: Iberia has no Club Elo rating	—	FT 1-2 (no tip)
+2026-08-27 18:00	UECL-Q	UECL Playoff · probationary	Jablonec v Rangers	U4.25 88.9% +3.3% · buy≥1.19	✅ U3.75 75.4% +5.0% (floor −6.6) · buy≥1.34	✅ HIT — 1-0 (90'; 1-0 aet)
+2026-08-27 18:00	UECL-Q	UECL Playoff · probationary	M. Tel-Aviv v Lugano	U4.25 89.3% +3.7% · buy≥1.22	✅ U3.75 76.0% +5.6% (floor −6.0) · buy≥1.33	✅ HIT — 1-1
+2026-08-27 18:00	UECL-Q	UECL Playoff · probationary	Qarabağ v Twente	U4.25 88.8% +3.2% · buy≥1.19	✅ U3.75 75.3% +4.9% (floor −6.7) · buy≥1.34	✅ HIT — 1-2 (90'; 1-4 aet)
+2026-08-27 18:45	UECL-Q	UECL Playoff · probationary	Monaco v Górnik	O1.5 79.4% +3.4% · buy≥1.32	✅ O2.25 58.6% +6.8% (floor −23.4) · buy≥1.66	✅ HIT — 4-1
+2026-08-27 18:45	UECL-Q	UECL Playoff · probationary	Freiburg v Motherwell	O1.5 82.3% +6.3% · buy≥1.32	✅ O2.25 63.3% +11.5% (floor −18.7) · buy≥1.55	✅ HIT — 4-1
+2026-08-27 19:00	UEL-Q	UEL Playoff · probationary	Plzeň v Crvena zvezda	U4.25 91.5% +2.9% · buy≥1.15	❌ U3.75 79.7% +4.8% (floor −2.3) · buy≥1.28	❌ MISS — 4-1 (90'; 5-1 aet)
+2026-08-27 19:00	UEL-Q	UEL Playoff · probationary	Kauno Žalgiris v Beşiktaş	U4.25 89.8% +1.3% · buy≥1.18	✅ U3.75 76.9% +2.0% (floor −5.1) · buy≥1.28	✅ HIT — 1-0
+2026-08-27 19:00	UEL-Q	UEL Playoff · probationary	Lillestrøm v Egnatia	— no tip: Lillestrøm's Elo is 17 months stale (freshness guard)	—	FT 1-1 (no tip)
+2026-08-27 19:00	UEL-Q	UEL Playoff · probationary	Omonia v St. Truiden	U4.25 91.6% +3.0% · buy≥1.15	❌ U3.75 79.8% +5.0% (floor −2.2) · buy≥1.28	❌ MISS — 4-2
+2026-08-27 19:00	UEL-Q	UEL Playoff · probationary	Salzburg v Mjällby	— no tip: Mjällby has no Club Elo rating	—	FT 3-0 (no tip)
+2026-08-27 19:00	UECL-Q	UECL Playoff · probationary	Hradec Králové v Panathinaikos	U4.25 88.4% +2.8% · buy≥1.20	✅ U3.75 74.6% +4.2% (floor −7.4) · buy≥1.35	✅ HIT — 1-1 (90'; 1-2 aet)
+2026-08-27 19:00	UECL-Q	UECL Playoff · probationary	København v Inter Turku	— no tip: Inter Turku's Elo is 3 years stale (freshness guard)	—	FT 4-1 (no tip)
+2026-08-27 19:00	UECL-Q	UECL Playoff · probationary	Inter Escaldes v Drita	U4.25 89.0% +3.4% · buy≥1.19	✅ U3.75 75.5% +5.1% (floor −6.5) · buy≥1.34	✅ HIT — 0-0 (90'; 0-0 aet)
+2026-08-27 19:00	UECL-Q	UECL Playoff · probationary	Pafos v Dinamo City	O1.5 81.9% +5.9% · buy≥1.32	✅ O2.25 62.6% +10.9% (floor −19.4) · buy≥1.56	✅ HIT — 2-2 (90'; 4-2 aet)
+2026-08-27 19:00	UECL-Q	UECL Playoff · probationary	Raków v Hajduk	U4.25 84.2% **−1.3%** · buy≥1.27	— none	❌ MISS — 2-2 (90'; 2-3 aet)
+2026-08-27 19:00	UECL-Q	UECL Playoff · probationary	Riga v Klaksvík	U4.25 87.1% +1.5% · buy≥1.22	✅ U3.75 72.6% +2.2% (floor −9.4) · buy≥1.34	✅ HIT — 2-1
+2026-08-27 19:00	UECL-Q	UECL Playoff · probationary	Brann v PAOK	U4.25 88.2% +2.6% · buy≥1.20	❌ U3.75 74.4% +4.0% (floor −7.6) · buy≥1.36	❌ MISS — 3-2
+2026-08-27 20:00	ALG-L1	Ligue Professionnelle 1	Sétif v Ben Aknoun	U3.0 84.9% +1.8% · buy≥1.29	U2.75 66.5% +2.6% (floor −8.5) · buy≥1.43	
+2026-08-27 20:00	UEL-Q	UEL Playoff · probationary	AGF v Benfica	U4.25 89.2% **+0.7%** · buy≥1.19	❌ U3.75 75.9% +1.1% (floor −6.1) · buy≥1.29	✅ HIT — 1-3
+2026-08-27 20:00	UEL-Q	UEL Playoff · probationary	CSKA Sofia v OFI	U4.25 90.8% +2.3% · buy≥1.16	✅ U3.75 78.6% +3.7% (floor −3.4) · buy≥1.29	✅ HIT — 0-2
+2026-08-27 20:00	UEL-Q	UEL Playoff · probationary	Thun v Lech	U4.25 91.2% +2.7% · buy≥1.16	❌ U3.75 79.2% +4.4% (floor −2.8) · buy≥1.29	✅ HIT — 2-2
+2026-08-27 20:00	UECL-Q	UECL Playoff · probationary	Ajax v Sion	O1.5 77.6% +1.6% · buy≥1.35	✅ O2.25 55.7% +3.9% (floor −26.3) · buy≥1.73	✅ HIT — 5-3
+2026-08-27 20:00	UECL-Q	UECL Playoff · probationary	St. Gallen v Nordsjælland	U4.25 89.0% +3.4% · buy≥1.19	❌ U3.75 75.5% +5.2% (floor −6.5) · buy≥1.34	❌ MISS — 2-3
+2026-08-27 20:00	UECL-Q	UECL Playoff · probationary	H. Tel Aviv v Atalanta	U4.25 84.1% **−1.5%** · buy≥1.27	— none	✅ HIT — 0-1
+2026-08-27 20:30	ESP-LL	LaLiga	Celta v Osasuna	U4.25 87.1% **+0.1%** · buy≥1.22	— none	✅ HIT — 1-2
+2026-08-27 20:30	UEL-Q	UEL Playoff · probationary	Ferencváros v Trabzonspor	U4.25 91.2% +2.6% · buy≥1.16	❌ U3.75 79.1% +4.3% (floor −2.9) · buy≥1.29	✅ HIT — 4-0
+2026-08-27 20:30	UEL-Q	UEL Playoff · probationary	Anderlecht v Kairat	U4.25 82.3% **−6.2%** · buy≥1.30	✅ O1.75 75.9% +3.7% (floor −6.1) · buy≥1.48	✅ HIT — 3-0
+2026-08-27 20:30	UECL-Q	UECL Playoff · probationary	Brighton v Tromsø	O1.5 83.3% +7.3% · buy≥1.30	✅ O2.25 65.0% +13.3% (floor −17.0) · buy≥1.51	✅ HIT — 4-0
+2026-08-27 20:30	UECL-Q	UECL Playoff · probationary	Austria Wien v Braga	U4.25 86.9% +1.3% · buy≥1.22	✅ U3.75 72.3% +1.9% (floor −9.7) · buy≥1.35	✅ HIT — 0-0
+2026-08-27 20:30	UECL-Q	UECL Playoff · probationary	Borac v Víkingur	U4.25 89.8% +4.2% · buy≥1.22	❌ U3.75 76.8% +6.5% (floor −5.2) · buy≥1.32	✅ HIT — 3-1
+2026-08-27 20:45	UECL-Q	UECL Playoff · probationary	Rijeka v Midtjylland	U4.25 86.7% +1.2% · buy≥1.23	❌ U3.75 72.1% +1.7% (floor −9.9) · buy≥1.35	❌ MISS — 1-4
+2026-08-27 21:00	ESP-LL	LaLiga	Barcelona v Athletic Club	O1.5 78.3% +4.0% · buy≥1.38	**Athletic Club U1.5** 75.3% +7.1% (team) · buy≥1.44	LIVE 73' 1-0
+2026-08-27 21:00	UECL-Q	UECL Playoff · probationary	Partizan v Getafe	U4.25 87.4% +1.8% · buy≥1.21	U3.75 73.1% +2.7% (floor −8.9) · buy≥1.33	LIVE 78' 2-1
+2026-08-27 21:00	UECL-Q	UECL Playoff · probationary	Hibernian v Gent	U4.25 89.0% +3.4% · buy≥1.19	U3.75 75.5% +5.2% (floor −6.5) · buy≥1.34	LIVE 85' 2-2
+2026-08-27 21:00	UECL-Q	UECL Playoff · probationary	Larne v Lincoln RI	U4.25 91.1% +5.5% · buy≥1.20	U3.75 79.0% +8.7% (floor −3.0) · buy≥1.29	LIVE 85' 0-1
+2026-08-27 22:00	ALG-L1	Ligue Professionnelle 1	MC Alger v Oran	U4.25 92.1% **−1.3%** · buy≥1.14	**MC Alger O0.5** 81.2% +7.2% (team) · buy≥1.33	
+2026-08-28 01:10	COL-PA	Categoría Primera A	Llaneros v Millonarios	U4.25 90.0% **−1.5%** · buy≥1.19	O1.75 69.5% +2.3% (floor −5.5) · buy≥1.62	
+2026-08-28 03:15	COL-PA	Categoría Primera A	Internacional de Bogotá v Deportivo Pasto	U4.25 90.0% **−1.5%** · buy≥1.18	**Internacional de Bogotá O0.5** 82.9% +7.5% (team) · buy≥1.31	
+2026-08-28 13:35	CHN-SL	Chinese Super League	Dalian Yingbo v Guoan	O1.5 83.0% +1.1% · buy≥1.26	**Guoan O1.5** 56.2% +17.2% (team) · buy≥1.93	
+2026-08-28 13:35	CHN-SL	Chinese Super League	Shenhua v Taishan	U4.25 79.7% **+0.4%** · buy≥1.35	**Taishan O0.5** 81.8% +9.2% (team) · buy≥1.32	
+2026-08-28 14:00	CHN-SL	Chinese Super League	Shenzhen v Port	U4.25 84.7% +5.3% · buy≥1.30	**Port O1.5** 57.3% +18.4% (team) · buy≥1.89	
+2026-08-28 17:00	NGA-PL	NPFL	Shooting Stars SC v Inter Lagos	— no tip: Inter Lagos has no history in the data	—	
+2026-08-28 17:50	SAU-PL	Saudi Pro League	Al-Riyadh v Neom	U4.25 82.6% **+0.7%** · buy≥1.30	**Neom O0.5** 81.4% +8.5% (team) · buy≥1.33	
+2026-08-28 18:00	POL-EK	Ekstraklasa	Wisła Płock v Korona	U3.0 79.2% +9.0% · buy≥1.47	U4.25 90.0% +4.5% (lower edge) · buy≥1.21	
+2026-08-28 18:00	SAU-PL	Saudi Pro League	Al-Fayha v Abha	U4.25 85.9% +4.0% · buy≥1.28	U3.75 70.8% +5.6% (floor −4.2) · buy≥1.41	
+2026-08-28 18:30	GER-B2	2. Bundesliga	Braunschweig v Hertha	O1.5 83.5% +2.9% · buy≥1.26	**Hertha O0.5** 81.9% +8.5% (team) · buy≥1.32	
+2026-08-28 18:30	GER-B2	2. Bundesliga	Bochum v Osnabrück	U4.25 82.7% +1.9% · buy≥1.29	**Bochum O1.5** 56.4% +8.3% (team) · buy≥1.92	
+2026-08-28 19:00	DEN-SL	Danish Superliga	Horsens v Viborg FF	— no tip: Horsens has 4 stored matches (promoted; no Danish lower-division source)	—	
+2026-08-28 19:00	ESP-LL	LaLiga	Racing Santander v Elche	U3.0 76.1% +3.6% · buy≥1.56	U4.25 89.3% +2.3% (lower edge) · buy≥1.19	
+2026-08-28 20:00	FRA-L2	Ligue 2	Clermont v Sochaux	U4.25 89.3% **+0.7%** · buy≥1.19	**Sochaux U1.5** 75.4% +6.8% (team) · buy≥1.44	
+2026-08-28 20:00	FRA-L2	Ligue 2	Montpellier v Boulogne	U4.25 89.4% **+0.7%** · buy≥1.19	**Boulogne U1.5** 75.4% +6.8% (team) · buy≥1.44	
+2026-08-28 20:00	FRA-L2	Ligue 2	Nancy v Dunkerque	U4.25 89.6% **+0.9%** · buy≥1.18	U3.75 76.5% +1.5% (floor −1.5) · buy≥1.28	
+2026-08-28 20:00	FRA-L2	Ligue 2	Rodez v Pau	U4.25 88.1% **−0.6%** · buy≥1.20	— none	
+2026-08-28 20:00	FRA-L2	Ligue 2	Laval v Grenoble	U3.0 79.9% +5.0% · buy≥1.45	U4.25 90.4% +1.8% (lower edge) · buy≥1.17	
+2026-08-28 20:00	NED-ED	Eredivisie	Groningen v Fortuna Sittard	U4.25 85.2% +5.8% · buy≥1.29	U3.75 69.7% +7.9% (floor −5.3) · buy≥1.43	
+2026-08-28 20:00	NED-D2	Eerste Divisie	Den Bosch v Vitesse	O1.5 83.0% +1.4% · buy≥1.26	**Vitesse O0.5** 81.1% +8.4% (team) · buy≥1.34	
+2026-08-28 20:00	NED-D2	Eerste Divisie	Volendam v Dordrecht	O1.5 82.0% **+0.4%** · buy≥1.28	**Volendam O1.5** 57.5% +6.1% (team) · buy≥1.88	
+2026-08-28 20:00	NED-D2	Eerste Divisie	Jong Ajax v Helmond Sport	U4.25 85.0% +5.3% · buy≥1.29	U3.75 69.6% +7.2% (floor −5.4) · buy≥1.44	
+2026-08-28 20:00	NED-D2	Eerste Divisie	Jong AZ v MVV	U4.25 81.2% +1.4% · buy≥1.32	**Jong AZ O1.5** 56.0% +4.6% (team) · buy≥1.94	
+2026-08-28 20:00	NED-D2	Eerste Divisie	Waalwijk v Jong PSV	O1.5 82.2% **+0.6%** · buy≥1.28	**Waalwijk O1.5** 58.1% +6.7% (team) · buy≥1.87	
+2026-08-28 20:00	NED-D2	Eerste Divisie	Roda v NAC Breda	U4.25 81.6% +1.8% · buy≥1.31	U3.75 64.8% +2.4% (floor −10.2) · buy≥1.49	
+2026-08-28 20:00	NED-D2	Eerste Divisie	TOP Oss v Jong FC Utrecht	U4.25 81.6% +1.8% · buy≥1.31	U3.75 64.8% +2.4% (floor −10.2) · buy≥1.49	
+2026-08-28 20:00	SAU-PL	Saudi Pro League	Al-Khaleej v Al-Hilal	O1.5 82.3% +2.5% · buy≥1.28	**Al-Hilal O1.5** 64.5% +26.3% (team) · buy≥1.68	
+2026-08-28 20:00	SAU-PL	Saudi Pro League	Al-Nassr v Al-Taawoun	O1.5 82.8% +3.0% · buy≥1.27	**Al-Nassr O1.5** 60.5% +15.4% (team) · buy≥1.79	
+2026-08-28 20:30	ITA-SB	Serie B	Cremonese v Modena	U3.0 74.4% **−1.0%** · buy≥1.56	— none	
+2026-08-28 20:30	GER-BL	Bundesliga	Bayern v Stuttgart	O1.5 88.8% +6.1% · buy≥1.22	**Bayern O1.5** 72.6% +22.1% (team) · buy≥1.49	
+2026-08-28 20:30	TUR-SL	Trendyol Süper Lig	Gençlerbirliği v Erzurumspor	U4.25 89.5% +5.3% · buy≥1.22	**Erzurumspor U1.5** 75.1% +8.8% (team) · buy≥1.44	
+2026-08-28 20:30	POL-EK	Ekstraklasa	Legia v Śląsk	U4.25 84.3% **−1.2%** · buy≥1.27	**Legia O1.5** 55.0% +9.5% (team) · buy≥1.97	
+2026-08-28 20:45	FRA-L1	Ligue 1	Lille v PSG	O1.5 80.1% +2.8% · buy≥1.31	O2.25 57.7% +4.1% (floor −17.3) · buy≥1.67	
+2026-08-28 20:45	ITA-SA	Serie A	Milan v Venezia	U3.0 80.3% +5.2% · buy≥1.44	U4.25 90.6% +1.9% (lower edge) · buy≥1.17	
+2026-08-28 20:45	BEL-PL	Belgian Pro League	Genk v Beveren	U4.25 86.7% +1.3% · buy≥1.23	**Beveren U1.5** 75.4% +9.8% (team) · buy≥1.44	
+2026-08-28 21:00	ENG-PL	Premier League	Crystal Palace v Man City	O1.5 84.3% +4.5% · buy≥1.29	**Man City O1.5** 69.8% +30.5% (team) · buy≥1.55	
+2026-08-28 21:00	ENG-CH	Championship	Wrexham v Birmingham	U3.0 76.3% +2.0% · buy≥1.50	U4.25 89.4% +1.3% (lower edge) · buy≥1.18	
+2026-08-28 21:00	ESP-L2	LaLiga 2	Tenerife v Sporting Gijón	U3.0 79.5% +1.7% · buy≥1.41	U2.75 59.1% +2.2% (floor −15.9) · buy≥1.60	
+2026-08-28 21:15	POR-PL	Liga Portugal	Rio Ave v Sporting CP	O1.5 79.6% +4.5% · buy≥1.36	**Sporting CP O0.5** 80.0% +11.7% (team) · buy≥1.35	
+2026-08-28 21:30	ESP-LL	LaLiga	Alavés v Villarreal	O1.5 76.3% +2.1% · buy≥1.38	— none	
+2026-08-28 22:00	PER-L1	Liga 1	Comerciantes Unidos v Cajamarca	O1.5 76.3% +2.7% · buy≥1.38	**Comerciantes Unidos O0.5** 83.5% +3.6% (team) · buy≥1.30	
