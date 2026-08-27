@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-08-27	board	Both archived eras replayed on the finished engine with the bet counterfactual (changed lane + bet = unplaced; changed lane + no bet = placed on the new lane): first slate 14/63 lanes change, bets 80.8 → 83.3; pre-calibration 36/118, bets 69.9 → 71.2 — the record survives its own counterfactual, in-sample caveat noted
 2026-08-27	board	Calibration day summarised in the README and About: the Retrosim page forced every number to be defended, and one page built to display numbers ended up correcting the engine — board-wide retrosim hit 82.4 → 83.7 on the same fixtures
 2026-08-27	board	Pending rows re-priced on the finished engine: MC Alger carries the high-says debit (93.3 → 92.1), Celta v Osasuna genuinely re-priced on fresh results (O1.5 → U4.25, out of playable), no pending tip moved by the floors — tonight's slate has none of the fourteen floored leagues
 2026-08-27	interface	The search bank widened to the test-run window — 60 competitions, ~30k graded matches on the current build (was ~11.5k on stale floors) — Ask Athena answers far more matchups and the hero window grows to the 500 most recent graded playable lanes
