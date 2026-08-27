@@ -929,7 +929,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    every tip was bought at a price that could not pay for its real
    strike rate. This is the founding lesson of the project and the reason
    no number here is ever quoted without the price beside it: a strike
-   rate you overpaid for is a loss.</div>
+   rate you overpaid for is a loss. <b>Proof in hindsight (27 Aug):</b>
+   this same weekend, replayed through the finished engine, grades 84.2%
+   taking every tip — the losing record was undisciplined volume on an
+   uncalibrated engine, not the slate itself.</div>
   <div class="run"><b>First calibrated slate <span class="when">· 23–24
    Aug 2026</span></b>Tip 1 56/65 (86.2%), Tip 2 37/50 (74.0%), and the
    bets turned positive at ROI +6.1% on 22/27. Five engine defects were
@@ -943,6 +946,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    strength lane — still <b>probationary</b>. Rules 5 and 6 became
    numbers, the board became this app, and four separate ideas were
    measured and declined for the same reason: real signal, no edge.
+   Building the Retrosim page then forced a calibration day: measuring
+   every league at real sample size exposed the old table as mostly
+   noise, found one true engine-wide bias (fixed with a debit), lifted
+   the fourteen weakest leagues with per-league floors — and rolled two
+   of those floors back when the new buy-from column showed their
+   hitrate was bought with unbuyable odds. A page built to display
+   numbers ended up correcting the engine that produces them.
    Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on {h1}/{n1} settled,
    found bets <b>{roi:+.1f}%</b> ROI on {bh}/{bn}.</div>
  </div>
