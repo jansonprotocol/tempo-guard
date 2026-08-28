@@ -28,7 +28,7 @@ from scripts.league_badges import rates
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "web" / "index.html"
 TITLE = "ATHENA — TEMPO GUARD"
-STAGE = "BETA STAGE 2"        # bumped at each stage transition, deliberately
+STAGE = "PRE-ALFA 1"          # bumped at each stage transition, deliberately
 SESSION_NO = 4                # bumped when a run closes and a new one opens
 SESSION_START = "28 Aug"      # the reset date of the current run
 
