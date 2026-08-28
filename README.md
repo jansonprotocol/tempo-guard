@@ -118,6 +118,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🟢 28-08 21:15 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin)</td><td><b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 21:30 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 22:00 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin)</td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">🟢 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>— under +1%</td><td>O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
+<table align="left"><tr><th align="left">🟢 29-08 01:30 <b>Náutico v Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 83.1% +1.4%<br>buy≥1.32 (+4.3% margin)</td><td>U2.75 63.9% +2.0%<br>buy≥1.25 (−11.7% margin) · floor −11.1</td></tr></table>
 
 <br clear="all">
 
@@ -162,6 +164,10 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 28-08 21:15 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin)</td><td><b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 21:30 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 22:00 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin)</td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">🔵 29-08 00:30 <b>Goiás v São Bernardo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.23 (+6.1% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 29-08 00:30 <b>Cobresal v Palestino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 84.6% <b>−0.8%</b><br>buy≥1.27 (+5.7% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.22 (+6.1% margin)</td><td>O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
+<table align="left"><tr><th align="left">🔵 29-08 01:30 <b>Náutico v Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 83.1% +1.4%<br>buy≥1.32 (+4.3% margin)</td><td>U2.75 63.9% +2.0%<br>buy≥1.25 (−11.7% margin) · floor −11.1</td></tr></table>
 
 <br clear="all">
 
