@@ -540,6 +540,12 @@ def main() -> None:
              f"Tip 1 · {h1}/{n1} settled"),
         tile("played lanes &gt;+1%", f"{p1 / q1 * 100:.1f}%" if q1 else "—",
              f"Tip 1 · {p1}/{q1}"),
+        # The bettor's own record beside the engine's: most positions are
+        # Tip 2, Rule-6 translations, team lanes or double chance — none of
+        # which the Tip 1 tiles count — so without this tile a 24-bet night
+        # was invisible on the front page and the 75% looked wrong.
+        tile("the book", f"{bh / bn * 100:.1f}%" if bn else "—",
+             f"your lanes · {bh}/{bn} hits"),
         tile("found bets", f"{roi:+.1f}%", f"ROI · {bh}/{bn} settled"),
         tile("pending", str(len(pending)),
              f"{len(playable)} playable"),
