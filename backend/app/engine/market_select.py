@@ -51,6 +51,7 @@ exactly the kind of duplicate truth that rots.
 from __future__ import annotations
 
 import math
+from pathlib import Path
 from functools import lru_cache
 from typing import Optional, Sequence
 
@@ -133,16 +134,55 @@ MIN_WIN_PROB = 0.75
 HIGH_SAYS_FROM = 0.90
 HIGH_SAYS_DEBIT = 0.012
 
+# A tip that claims to be much better than its league's PROVEN base rate is
+# usually bragging. Measured on 32,493 replayed domestic tips against each
+# league's own hit rate: within ±2 points of the league the claims are
+# honest (gap −0.1); past +2 every extra point of claim delivers about
+# −1.2 back (slope −1.27 / −1.04 in the two halves, on top of the
+# high-says debit), and the wide band (league+6 and up) ran 5.6 points
+# hot in BOTH windows. So the published number is pulled back toward the
+# league's record: debit 1.1 × the excess above league+2. The league base
+# is the outcome column of league_hitrates.tsv, which selection never
+# writes, so there is no feedback loop — and selection never reads any of
+# this, per the standing rule.
+REL_SAYS_FROM = 0.02
+REL_SAYS_SLOPE = 1.1
+_LEAGUE_HIT: dict[str, float] | None = None
+
+
+def _league_hit(league_code: str):
+    global _LEAGUE_HIT
+    if _LEAGUE_HIT is None:
+        _LEAGUE_HIT = {}
+        path = Path(__file__).resolve().parents[2].parent / "config" / \
+            "league_hitrates.tsv"
+        try:
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                parts = ln.split("\t")
+                _LEAGUE_HIT[parts[0]] = float(parts[2]) / 100.0
+        except OSError:
+            pass
+    return _LEAGUE_HIT.get(league_code)
+
 
 def stated(league_code: str, market: str, p: float) -> float:
     """The probability to PUBLISH for a tip — the raw engine number less
     every measured, validated overconfidence. Cups carry their own debit
     (club_elo, over rungs 3.5 points); domestic rungs carry the high-says
-    debit above. Selection never reads this."""
+    debit above and the relative-overreach debit against the league's own
+    base rate. Selection never reads this."""
     from app.data import club_elo
     if league_code in club_elo.CUPS:
         return club_elo.stated_p(league_code, market, p)
-    return min(p, max(HIGH_SAYS_FROM, p - HIGH_SAYS_DEBIT))
+    s = min(p, max(HIGH_SAYS_FROM, p - HIGH_SAYS_DEBIT))
+    base = _league_hit(league_code)
+    if base is not None:
+        excess = (s - base) - REL_SAYS_FROM
+        if excess > 0:
+            s -= REL_SAYS_SLOPE * excess
+    return s
 
 # ── Playability: which rungs are worth offering in a given league ────────────
 # Two attempts to derive this failed, and both failures are instructive.
