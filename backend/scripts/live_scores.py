@@ -43,7 +43,8 @@ ESPN = {
     "BRA-SA": "bra.1", "CHI-PD": "chi.1", "COL-PA": "col.1",
     "CHN-SL": "chn.1", "ENG-CH": "eng.2", "FRA-L1": "fra.1",
     "GER-B2": "ger.2", "ITA-SB": "ita.2", "PER-L1": "per.1",
-    "NGA-PL": "nga.1",
+    "NGA-PL": "nga.1", "SUI-SL": "sui.1",
+    "JPN-J1": "jpn.1",
     "UCL-Q": "uefa.champions_qual",
 }
 
