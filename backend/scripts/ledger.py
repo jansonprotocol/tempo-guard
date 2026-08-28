@@ -109,6 +109,9 @@ def bet_state(rung: str, side: str, fx: dict) -> float | None:
         return 1.0 if gf > ga else 0.0 if gf == ga else -1.0
     if rung in ("1X", "X2"):
         return -1.0 if ((hg > ag) if rung == "X2" else (ag > hg)) else 1.0
+    if rung == "12":
+        # Either side outright — the draw is the only losing result.
+        return -1.0 if hg == ag else 1.0
     goals = hg + ag if side == "-" else (hg if side == "H" else ag)
     s = pricing.settle_fraction(rung, goals)
     if live and s < 1.0:

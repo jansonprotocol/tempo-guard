@@ -85,7 +85,7 @@ def _alignment(name: str, rung: str, side: str, tipmap: dict) -> str:
     t1, t2, t2side = got
     if rung == "DNB":
         return "Rule 5 · DNB"
-    if rung in ("1X", "X2"):
+    if rung in ("1X", "X2", "12"):
         return "own read · DC"
     if side in ("H", "A"):
         # a team-total position aligns only with a team-lane Tip 2

@@ -176,7 +176,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 28-08 17:00 <b>Shooting Stars SC v Inter Lagos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>NPFL (88.7 −1.8)</td><td>— no tip: Inter Lagos has no history in the data</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 89' 2-0 <b>Lille v PSG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>O1.5 80.1% +2.8%<br>buy≥1.31 (+4.9% margin) · <i>✓ landed</i></td><td>O2.25 57.7% +4.1%<br>buy≥1.35 (−12.2% margin) · floor −17.3 · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 89' 1-4 <b>Crystal Palace v Man City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>O1.5 84.3% +4.5%<br>buy≥1.28 (+8.1% margin) · <i>✓ landed</i></td><td><b>Man City O1.5</b> 69.8% +30.5%<br>buy≥1.38 (−3.9% margin) · team · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 87' 1-2 <b>Wrexham v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.3% +2.0%<br>buy≥1.47 (+2.8% margin) · <i>push as it stands</i></td><td>U2.75 55.0% +2.4%<br>buy≥1.35 (−16.8% margin) · floor −20.0 · <i>half gone</i></td></tr></table>
@@ -265,6 +264,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 13:35 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26 (+4.5% margin)</td><td>❌ <b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.49 (−16.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 2-3 · 28-08 13:35 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 79.7% <b>+0.4%</b><br>buy≥1.31 (+1.9% margin)</td><td>✅ <b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.31 (+6.9% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 28-08 14:00 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 83.9% +4.6%<br>buy≥1.30 (+8.4% margin)</td><td>❌ <b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.48 (−15.1% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">⚪ — no source · 28-08 17:00 <b>Shooting Stars SC v Inter Lagos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>NPFL (88.7 −1.8)</td><td>— no tip: Inter Lagos has no history in the data</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 28-08 17:50 <b>Al-Riyadh v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 82.6% <b>+0.7%</b><br>buy≥1.27 (+2.9% margin)</td><td>❌ <b>Neom O0.5</b> 81.4% +8.5%<br>buy≥1.29 (+5.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 18:00 <b>Wisła Płock v Korona</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U3.0 79.2% +9.0%<br>buy≥1.47 (+8.9% margin)</td><td>✅ U2.75 58.7% +10.6%<br>buy≥1.39 (−8.9% margin) · floor −19.3</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 28-08 18:00 <b>Al-Fayha v Abha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 85.9% +4.0%<br>buy≥1.28 (+8.5% margin)</td><td>❌ U3.75 70.8% +5.6%<br>buy≥1.26 (−3.5% margin) · floor −4.2</td></tr></table>
@@ -328,6 +328,30 @@ that premium the book is keeping the insurance money.
 | ❌ | Jong Ajax v Helmond Sport | U4.5 | 1.21 | 0.00x | R6 softer line above the U4.25 tip (84.1% +4.4%, buy≥1.29) |
 | ✅ | Lille v PSG | O1.5 | 1.22 | 1.22x | = Tip 1 rung (80.1% +2.8%), under buy≥1.31 — widened |
 | — open | Náutico v Athletic | U3.5 | 1.20 | — | R6 softer line above the U3.0 tip (83.1% +1.4%, buy≥1.32) |
+| — open | Gamba Osaka v Sanfrecce | U4.5 | 1.19 | — | R6 softer above the U4.25 tip |
+| — open | Mito Hollyhock v Machida Zelvia | X2 | 1.18 | — | Machida or draw — own read on the promoted host |
+| — open | Qingdao Hainiu v Wuhan Three Towns | O0.5 (away) | 1.18 | — | Three Towns to score — team lane own read |
+| — open | Kawasaki v Chiba | U4.5 | 1.18 | — | R6 softer above the U4.25 tip (90.0% +1.7%) |
+| — open | Nagoya v Okayama | O1.5 | 1.35 | — | own read against the sub-bar U-tip |
+| — open | Tokyo Verdy v Kashima | O0.5 (away) | 1.18 | — | Kashima to score — team lane own read |
+| — open | Heidenheim v Dresden | 12 | 1.23 | — | either side outright — own read DC |
+| — open | Cottbus v Fürth | U4.5 | 1.23 | — | R6 softer above the U4.25 tip (+3.9%) |
+| — open | Zhejiang v Yunnan Yukun | 12 | 1.21 | — | either side outright — own read DC |
+| — open | Liverpool v Nottingham Forest | O1.5 | 1.18 | — | = Tip 1 rung (84.2% +4.4%), under buy≥1.28 — widened |
+| — open | Middlesbrough v West Brom | O1.5 | 1.24 | — | = Tip 1 rung (76.5% +3.8%), under buy≥1.39 — widened |
+| — open | Häcken v Västerås SK | U4.5 | 1.30 | — | R6 softer above the U4.25 tip |
+| — open | Köln v Hoffenheim | O0.5 (home) | 1.20 | — | Köln to score — team lane own read |
+| — open | Mainz v Paderborn | DNB (home) | 1.26 | — | rule 5 shape, Mainz side |
+| — open | Leipzig v Mönchengladbach | O1.5 (home) | 1.42 | — | Leipzig team over — own read |
+| — open | Elversberg v Leverkusen | O1.5 (away) | 1.42 | — | Leverkusen team over — own read |
+| — open | Bournemouth v Everton | O1.5 | 1.24 | — | vs the board's lane — widened |
+| — open | Coventry v Hull | 1X | 1.20 | — | Coventry or draw — own read DC |
+| — open | Blackburn v QPR | U3.5 | 1.26 | — | R6 off the U-tip |
+| — open | Bristol City v Portsmouth | O1.5 | 1.30 | — | vs the board's lane — widened |
+| — open | Charlton v Preston | U3.5 | 1.22 | — | R6 off the U-tip |
+| — open | Norwich v Burnley | O1.5 | 1.24 | — | vs the board's lane — widened |
+| — open | Watford v West Ham | O1.5 (away) | 1.67 | — | West Ham team over — own read, the slip's big price |
+| — open | La Louvière v Mechelen | O0.5 (home) | 1.30 | — | La Louvière to score — team lane own read |
 
 <!-- HYPOTHESES:START -->
 
