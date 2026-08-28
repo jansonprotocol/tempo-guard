@@ -174,7 +174,8 @@ def _cell(raw: str) -> str:
     if raw.startswith("—") or not raw:
         return raw or "—"
     import re
-    m = re.match(r"^(.*?)\s*(\([^)]*\))?\s*· (buy≥\S+)\s*$", raw)
+    m = re.match(r"^(.*?)\s*(\([^)]*\))?\s*· (buy≥\S+(?:\s*\([^)]*\))?)\s*$",
+                 raw)
     if not m:
         return raw.replace(" · buy≥", "<br>buy≥")
     top, note, buy = m.groups()
@@ -586,7 +587,7 @@ def verify(quiet: bool = False) -> None:
     #     it names is read back out of the live code and compared.
     import re
     from app.data import club_elo, features
-    from app.engine import market_select
+    from app.engine import market_select, pricing
     live = {
         "MU_SHRINK": features.MU_SHRINK,
         "TEAM_SHRINK": features.TEAM_SHRINK,
@@ -595,6 +596,8 @@ def verify(quiet: bool = False) -> None:
         "DEFENSE_BLEND": features.DEFENSE_BLEND,
         "VENUE_BLEND": features.VENUE_BLEND,
         "MIN_WIN_PROB": market_select.MIN_WIN_PROB,
+        "BUY_BLEND_BELOW": pricing.BUY_BLEND_BELOW,
+        "BUY_BLEND_ABOVE": pricing.BUY_BLEND_ABOVE,
         "REL_SAYS_FROM": market_select.REL_SAYS_FROM,
         "REL_SAYS_SLOPE": market_select.REL_SAYS_SLOPE,
         "HIGH_SAYS_DEBIT": market_select.HIGH_SAYS_DEBIT,

@@ -150,6 +150,30 @@ CURSE_EDGE = 0.035
 CURSE_HAIRCUT = 0.032
 
 
+# The buy-from probability is a BLEND of the bet's own stated probability
+# and its league's proven playable hitrate — the bettor's rule, stated
+# 28 Aug: a tip is one estimate, the league's playable record is thousands
+# of settled ones, and the price should listen to both. Below the league's
+# record the tip carries 0.4 and the league 0.6, which pulls the required
+# price DOWN and makes lower-probability lanes reachable at real-world
+# odds; above it the tip carries 0.8 and the league 0.2, which asks a
+# little extra of the "easy" lanes. The two weights meet exactly at the
+# league's own number, so the blend is continuous. Predictions never read
+# this — it is a decision-layer rule about what to PAY, like the margin
+# and the haircut beside it.
+BUY_BLEND_BELOW = 0.4
+BUY_BLEND_ABOVE = 0.8
+
+
+def blend_p(p: float, league_play_hit: float | None) -> float:
+    """The probability the buy-from price is computed on: the tip blended
+    with its league's playable record. No record, no blend."""
+    if not league_play_hit or p <= 0:
+        return p
+    w = BUY_BLEND_ABOVE if p >= league_play_hit else BUY_BLEND_BELOW
+    return w * p + (1 - w) * league_play_hit
+
+
 def buy_from(market: str, mu: float, margin: float = DEFAULT_MARGIN,
              stated_edge: float | None = None) -> float:
     """

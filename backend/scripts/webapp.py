@@ -442,10 +442,10 @@ def _learn() -> str:
     """The teaching block: one example card, each part explained in a line."""
     card = """<details class="card play" open>
 <summary><div class="teams">Real Madrid v Real Sociedad<span class="more">more \u25be</span></div>
-<div class="meta">\U0001f551 26-08 21:00 \u00b7 LaLiga <span class="badge">(80.5 \u22120.1)</span></div>
+<div class="meta">\U0001f551 26-08 21:00 \u00b7 LaLiga <span class="badge">(81.7 +3.4)</span></div>
 <div class="kw">\U0001f9e0 elite attack vs leaky defence</div>
-<div class="lane pl"><span class="which">Tip 1</span> O1.5 81.2% +6.8%<br>buy\u22651.33</div></summary>
-<div class="lane pl"><span class="which">Tip 2</span> <b>Real Madrid O1.5</b> 67.0% +24.7% (team)<br>buy\u22651.62</div>
+<div class="lane pl"><span class="which">Tip 1</span> O1.5 81.2% +6.8%<br>buy\u22651.32 (+8.0% margin)</div></summary>
+<div class="lane pl"><span class="which">Tip 2</span> <b>Real Madrid O1.5</b> 67.0% +24.7% (team)<br>buy\u22651.43 (\u22124.2% margin)</div>
 <div class="read"><b>Real Madrid</b>: elite attack, elite defence, in form \u2014 against <b>Real Sociedad</b>: leaky defence, struggling. That pairing \u2014 firepower against a defence that leaks \u2014 is where the goals in this tip come from.</div>
 </details>"""
     rows = [
@@ -457,18 +457,24 @@ def _learn() -> str:
         ("The league line", "the competition. On cup cards, \u00b7 "
          "probationary marks a lane still earning trust with live "
          "results."),
-        ("(80.5 \u22120.1)", "the league's proven record: hitrate over its "
-         "last 200 matches, replayed as-of, and the gap between what Athena "
-         "claimed and what actually landed. Near zero = the engine tells "
-         "the truth here."),
+        ("(81.7 +3.4)", "the league's proven PLAYABLE record: how its "
+         "above-bar lanes \u2014 the ones worth betting \u2014 actually land, and "
+         "how far that sits from the league's all-tips baseline. A "
+         "consensus-cap league shows (82.0 capped): no lane there may "
+         "claim edge, so it has no playable record to show."),
         ("\U0001f9e0 the read", "what Athena measured in this matchup, in "
          "keywords \u2014 tap the card for the full story in sentences."),
         ("Tip 1", "the engine's best market. O1.5 = over 1.5 goals in the "
          "match; 81.2% = claimed probability; +6.8% = edge over a typical "
          "match."),
-        ("buy\u22651.33", "the minimum odds that make this tip worth "
-         "money \u2014 margin included. Never buy below it; the margin IS "
-         "the edge."),
+        ("buy\u22651.32 (+8.0% margin)", "the minimum odds that make this tip "
+         "worth money. The price listens to the tip AND the league's "
+         "playable record \u2014 a tip below that record leans on it (0.4/0.6), "
+         "one above it mostly trusts itself (0.8/0.2) \u2014 so lower-"
+         "probability lanes become reachable at real-world odds. The "
+         "bracket is what margin the printed price still holds over the "
+         "tip's own break-even: negative means the blend is reaching down "
+         "to make the lane buyable, eyes open."),
         ("Green border / lane", "a playable lane: edge above +1%. These "
          "are the tips with real value \u2014 the rest are shown for "
          "honesty, not for money."),
