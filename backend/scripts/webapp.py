@@ -365,11 +365,16 @@ def _hitrates_rows() -> str:
         parts = ln.split("\t")
         lg, n, hit, gap = parts[:4]
         buy = parts[4] if len(parts) > 4 and parts[4] else "—"
+        p_hit = parts[5] if len(parts) > 5 and parts[5] else ""
+        p_n = parts[6] if len(parts) > 6 and parts[6] else ""
+        play = (f'{p_hit}% <span class="dim">({p_n})</span>'
+                if p_hit else "—")
         g = float(gap.replace("−", "-"))
         p = float(hit) / 100
         se = math.sqrt(max(p * (1 - p), 1e-9) / int(n)) * 100
         cls = "dim" if abs(g) < 2 * se else "pos" if g > 0 else "neg"
         rows.append(f"<tr><td>{html.escape(lg)}</td><td>{hit}%</td>"
+                    f"<td>{play}</td>"
                     f'<td class="{cls}">{gap}</td><td>{buy}</td>'
                     f'<td class="dim">{n}</td></tr>')
     return "".join(rows)
@@ -946,7 +951,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 <section class="page" id="p-retrosim">
  <img class="pagebanner" src="banner-retrosim.jpg" alt="">
  <h2>Retrosim confirmed hitrates</h2>
- <p class="dim">Every league's Tip 1, replayed as-of on the current build
+  <p class="dim"><b>Hit</b> grades every Tip 1 the league produced,
+ filter or no filter; <b>Playable hit</b> is the same replay narrowed to
+ the lanes the board actually offers (edge above +1%) — the number the
+ Playable tab lives on, with that subset's tip count in brackets.</p>
+<p class="dim">Every league's Tip 1, replayed as-of on the current build
  over its most recent fixtures — up to 800, capped at two seasons.
  <b>hit</b> is what landed; <b>gap</b> is hit minus what the engine
  claimed — near zero means the engine tells the truth about itself, and
@@ -964,6 +973,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  with, so the gap compares like with like.</p>
  <div class="wrap"><table id="retro" class="sortable">
  <tr><th data-sort="t">League</th><th data-sort="n">Hit</th>
+ <th data-sort="n">Playable hit</th>
  <th data-sort="n">Gap</th><th data-sort="n">Buy from</th>
  <th data-sort="n">n</th></tr>
  {_hitrates_rows()}</table></div>

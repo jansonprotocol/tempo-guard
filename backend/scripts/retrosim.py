@@ -91,6 +91,7 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
     hits = tips = skips = 0
     p_sum = 0.0
     buys: list[float] = []
+    p_hits = p_tips = 0                 # the playable (edge > +1%) subset
     for _, r in recent.iterrows():
         d = r["date"].date() if hasattr(r["date"], "date") else r["date"]
         try:
@@ -128,6 +129,9 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
         bv = buy_value(mk, req.mu_total, p_st, edge, league)
         if bv is not None:
             buys.append(bv)
+        if edge is not None and edge > 0.01:
+            p_tips += 1
+            p_hits += res is True or res == "half_win"
         hits += res is True or res == "half_win"
 
     if not tips:
@@ -135,7 +139,8 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
     lo, hi = wilson(hits, tips)
     return dict(league=league, n=tips, skip=skips / (tips + skips),
                 says=p_sum / tips, hit=hits / tips, lo=lo, hi=hi,
-                buy=sum(buys) / len(buys) if buys else None)
+                buy=sum(buys) / len(buys) if buys else None,
+                p_hit=p_hits / p_tips if p_tips else None, p_n=p_tips)
 
 
 def main() -> None:
@@ -167,6 +172,8 @@ def main() -> None:
                     f"   [{r['lo']*100:.0f}-{r['hi']*100:.0f}]")
             if r.get("buy"):
                 line += f"   buy {r['buy']:.2f}"
+            if r.get("p_hit") is not None:
+                line += f"   play {r['p_hit']*100:.1f}% ({r['p_n']})"
             print(line, flush=True)
 
     if not rows:
@@ -191,14 +198,20 @@ def main() -> None:
             if r is None:
                 continue
             buy = f"{r['buy']:.2f}" if r.get("buy") else ""
+            ph = (f"{r['p_hit']*100:.1f}" if r.get("p_hit") is not None
+                  else "")
             lines[i] = (f"{parts[0]}\t{r['n']}\t{r['hit']*100:.1f}\t"
-                        f"{(r['hit']-r['says'])*100:+.1f}\t{buy}")
+                        f"{(r['hit']-r['says'])*100:+.1f}\t{buy}\t"
+                        f"{ph}\t{r.get('p_n') or ''}")
             hit_file.add(parts[0])
         for code, r in fresh.items():
             if code not in hit_file:
                 buy = f"{r['buy']:.2f}" if r.get("buy") else ""
+                ph = (f"{r['p_hit']*100:.1f}"
+                      if r.get("p_hit") is not None else "")
                 lines.append(f"{code}\t{r['n']}\t{r['hit']*100:.1f}\t"
-                             f"{(r['hit']-r['says'])*100:+.1f}\t{buy}")
+                             f"{(r['hit']-r['says'])*100:+.1f}\t{buy}\t"
+                             f"{ph}\t{r.get('p_n') or ''}")
         path.write_text("\n".join(lines))
         print(f"league_hitrates.tsv: {len(fresh)} rows written")
 

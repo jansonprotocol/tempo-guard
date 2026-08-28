@@ -1,65 +1,66 @@
 # Per-league Tip 1 hitrate, replayed as-of on the current build over the
 # league's most recent fixtures — up to 800, capped at two seasons. Written
-# by scripts/retrosim.py (27 Aug 2026, published says with every debit, on
-# the final per-league floors); read by scripts/league_badges.py and the
-# app's Retrosim page. buy = the average buy-from a card would have printed
-# for that league's tips — a league can hit 90% and still be unbuyable.
-# league	n	hit	gap	buy (avg card buy-from)
-NGA-PL	566	90.5	+2.6	1.23
-JPN-J1	710	88.6	+0.1	1.20
-ENG-L2	800	88.1	+1.4	1.24
-ARG-PD	733	87.9	+0.6	1.26
-SCO-CH	363	87.9	+0.1	1.21
-ALG-L1	350	87.4	+0.8	1.26
-ARG-CLP	408	87.0	+2.9	1.32
-BRA-SB	762	86.6	-0.4	1.26
-UECL-Q	490	86.1	-0.1	1.24
-SCO-L1	358	86.0	+2.8	1.28
-UEL	372	85.5	+1.9	1.28
-CRO-1L	329	85.4	-1.1	1.24
-UECL	299	85.3	+0.6	1.26
-NED-ED	572	85.3	+1.8	1.29
-CHI-PD	466	85.2	-0.9	1.24
-RUS-PL	457	85.1	+0.3	1.28
-ROU-L1	582	85.1	-0.4	1.28
-GER-BL	603	84.9	+2.0	1.30
-CZE-FL	544	84.9	-0.9	1.25
-MAR-BP	390	84.4	-2.1	1.26
-NOR-EL	231	84.4	+0.8	1.29
-COL-PA	795	84.3	-2.3	1.26
-POL-EK	555	84.3	-0.7	1.26
-ITA-SA	741	84.2	-1.1	1.28
-SAU-PL	602	84.1	+0.8	1.29
-ENG-NL	781	84.1	+1.7	1.31
-UEL-Q	162	84.0	-3.0	1.23
-BEL-PL	610	83.9	+1.5	1.30
-ENG-PL	700	83.6	+0.1	1.29
-SCO-PL	462	83.5	+0.5	1.29
-IRL-PD	368	83.2	-1.6	1.29
-DEN-SL	531	83.1	-0.3	1.29
-ESP-LL	739	83.1	+2.8	1.38
-TUR-SL	391	83.1	-1.4	1.27
-EGY-PL	424	82.8	-1.5	1.31
-GER-B2	383	82.8	-0.7	1.28
-UKR-PL	421	82.7	-0.0	1.34
-ESP-L2	525	82.7	-4.3	1.24
-FIN-VL	352	82.7	-1.6	1.27
-UCL-Q	177	82.5	-2.4	1.26
-POR-PL	573	82.4	+2.0	1.38
-FRA-L2	397	82.4	-2.9	1.28
-NED-D2	768	82.2	-0.6	1.29
-ENG-CH	771	82.0	+1.4	1.38
-CHN-SL	450	82.0	-1.4	1.28
-SUI-SL	221	81.9	-1.0	1.29
-SWE-AL	240	81.7	+0.1	1.29
-FRA-L1	583	81.6	-0.5	1.32
-ENG-L1	798	81.5	+0.5	1.37
-MEX-LMX	628	81.5	-3.5	1.26
-UCL	379	81.3	+0.8	1.31
-BRA-SA	744	81.3	-1.1	1.34
-SCO-L2	360	81.1	+0.6	1.35
-AUT-BL	391	81.1	-1.4	1.31
-GRE-SL	445	80.9	-0.6	1.37
-PER-L1	607	79.6	-1.7	1.35
-MLS	572	78.8	-2.9	1.29
-ITA-SB	732	77.2	-0.2	1.46
+# by scripts/retrosim.py --write (28 Aug 2026, published says with every
+# debit, REL included); read by scripts/league_badges.py and the app's
+# Retrosim page. buy = the average buy-from a card would have printed.
+# play_hit/play_n = the same replay filtered to lanes above the +1% edge
+# bar — the number the Playable tab lives on.
+# league	n	hit	gap	buy	play_hit	play_n
+NGA-PL	566	90.5	+2.7	1.23	88.7	282
+JPN-J1	710	88.6	+0.2	1.20	90.0	300
+ENG-L2	800	88.1	+1.4	1.24	86.6	352
+ARG-PD	733	87.9	+0.6	1.25	88.0	507
+SCO-CH	363	87.9	+0.1	1.21	90.5	200
+ALG-L1	350	87.4	+1.2	1.25	81.3	171
+ARG-CLP	408	87.0	+3.4	1.32	84.3	236
+BRA-SB	762	86.6	-0.0	1.26	84.0	181
+UECL-Q	490	86.1	-0.1	1.24	89.0	299
+SCO-L1	358	86.0	+2.8	1.28	86.0	257
+UEL	372	85.5	+1.9	1.28	85.2	209
+CRO-1L	329	85.4	-0.2	1.24	73.0	74
+UECL	299	85.3	+0.6	1.26	86.3	205
+NED-ED	572	85.3	+1.9	1.29	84.6	469
+CHI-PD	466	85.2	-0.4	1.24	81.9	72
+RUS-PL	457	85.1	+0.9	1.28	84.8	151
+ROU-L1	582	85.1	+0.7	1.28	77.4	208
+GER-BL	603	84.9	+2.1	1.30	84.0	470
+CZE-FL	544	84.9	-0.1	1.24	85.5	255
+MAR-BP	390	84.4	-0.3	1.25	76.4	182
+NOR-EL	231	84.4	+1.0	1.29	82.9	193
+COL-PA	795	84.3	-0.1	1.25	76.6	290
+POL-EK	555	84.3	+0.2	1.26	77.2	136
+ITA-SA	741	84.2	+0.3	1.28	75.4	248
+SAU-PL	602	84.1	+1.0	1.28	85.4	478
+ENG-NL	781	84.1	+2.1	1.30	84.4	590
+UEL-Q	162	84.0	-3.0	1.23	84.8	79
+BEL-PL	610	83.9	+1.9	1.29	84.7	326
+ENG-PL	700	83.6	+0.4	1.29	84.7	535
+SCO-PL	462	83.5	+1.2	1.29	84.0	257
+IRL-PD	368	83.2	+1.2	1.29	68.6	35
+DEN-SL	531	83.1	+0.0	1.29	82.2	427
+ESP-LL	739	83.1	+3.5	1.38	81.7	556
+TUR-SL	391	83.1	-0.7	1.26	80.3	295
+EGY-PL	424	82.8	+0.3	1.31	81.3	246
+GER-B2	383	82.8	-0.3	1.28	82.3	294
+UKR-PL	421	82.7	+1.2	1.34	79.9	283
+ESP-L2	525	82.7	-0.8	1.24	76.2	143
+FIN-VL	352	82.7	-0.7	1.27	81.9	160
+UCL-Q	177	82.5	-2.4	1.26	81.1	95
+POR-PL	573	82.4	+2.8	1.38	80.4	428
+FRA-L2	397	82.4	-0.3	1.28	75.9	145
+NED-D2	768	82.2	-0.4	1.28	84.3	529
+ENG-CH	771	82.0	+2.6	1.38	79.0	481
+CHN-SL	450	82.0	-0.6	1.28	83.7	331
+SUI-SL	221	81.9	+0.1	1.29	82.6	69
+SWE-AL	240	81.7	+0.1	1.29	83.0	100
+FRA-L1	583	81.6	+0.7	1.32	80.3	319
+ENG-L1	798	81.5	+2.3	1.37	78.8	466
+MEX-LMX	628	81.5	-1.3	1.26	72.3	94
+UCL	379	81.3	+0.8	1.31	84.5	97
+BRA-SA	744	81.3	+1.1	1.34	75.8	389
+SCO-L2	360	81.1	+2.2	1.35	75.6	217
+AUT-BL	391	81.1	+0.9	1.31	77.2	206
+GRE-SL	445	80.9	+2.0	1.36	75.7	292
+PER-L1	607	79.6	+1.0	1.35	75.5	355
+MLS	572	78.8	-1.6	1.29	76.5	119
+ITA-SB	732	77.2	+0.2	1.46	79.5	430
