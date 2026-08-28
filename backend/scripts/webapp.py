@@ -608,30 +608,29 @@ def main() -> None:
         if rd:
             entry["kw"] = rd[0]
         comp["matches"].append(entry)
-    # The hero banner's number: Tip 1 over the most recent 300 graded
-    # matches AT THE PLAYABLE STANDARD (edge above +1%) — the lanes the
-    # site actually offers, not every tip the engine ran (the sub-bar
-    # band was measured 27 Aug as the one that grades below its own
-    # stated probability, so averaging it in would understate the
-    # product AND overstate the discipline). Derived from the same bank
-    # the Ask Athena form answers from, so it refreshes with the bank
-    # and can never be a typed number that quietly rots.
-    graded = []
-    for comp in bank.values():
-        for m in comp["matches"]:
-            if m.get("mark") not in ("✅", "✅½", "◦", "❌"):
-                continue
-            e = re.search(r"([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)",
-                          m.get("tip", ""))
-            if not e:
-                continue
-            if float(e.group(1).replace("−", "-")) > 1.0:
-                graded.append((m["d"], m["mark"]))
-    graded.sort(reverse=True)
-    window = graded[:500]
-    hero_rate = (sum(1 for _d, mk in window if mk.startswith("✅"))
-                 / len(window) * 100) if len(window) >= 100 else None
+    # The hero banner's number: the OVERALL AVERAGE PLAYABLE hitrate —
+    # every playable lane (edge above +1%) the replay graded, across
+    # every league that has any, weighted by each league's playable
+    # count. Sub-bar tips are excluded (measured 27 Aug as the band that
+    # grades below its own claim) and the consensus-cap leagues
+    # contribute nothing because they have no playable lanes to grade.
+    # Derived from the play columns of league_hitrates.tsv — the same
+    # rows the Retrosim page prints — so the headline and the table can
+    # never tell two different stories.
+    ph_sum, pn_tot, lg_n = 0.0, 0, 0
+    for ln in (ROOT / "config" / "league_hitrates.tsv").read_text() \
+            .splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        parts = ln.split("\t")
+        if len(parts) > 6 and parts[5] and parts[6]:
+            ph_sum += float(parts[5]) * int(parts[6])
+            pn_tot += int(parts[6])
+            lg_n += 1
+    hero_rate = ph_sum / pn_tot if pn_tot else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
+    hero_fine = (f"Tip 1 · all {pn_tot:,} playable lanes replayed "
+                 f"across {lg_n} leagues, two-season window")
     live_line = (f"Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on "
                  f"{h1}/{n1} settled, found bets <b>{roi:+.1f}%</b> ROI "
                  f"on {bh}/{bn}." if n1 else "First results land tonight.")
@@ -905,7 +904,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div class="hero-text">
    <h1>{TITLE}</h1>
    <p class="tag">The most accurate football predictor{hero_sub}</p>
-   <p class="fine">Tip 1 · the 500 most recent graded playable lanes</p>
+   <p class="fine">{hero_fine}</p>
   </div>
  </div>
  <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}</div>
