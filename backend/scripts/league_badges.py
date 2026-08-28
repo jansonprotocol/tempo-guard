@@ -1,13 +1,14 @@
 """
 Stamp each league's measured form into the fixture tables' League column.
 
-    | — | LaLiga (80.5 −0.1) | Osasuna v Levante | ...
+    | — | LaLiga (81.7 +3.4) | Osasuna v Levante | ...
 
-Two numbers, from `config/league_hitrates.tsv`: the league's Tip 1 hit rate
-over its most recent 200 replayed matches, and the GAP between that and what
-the engine claimed. The gap is the one to read before trusting a row — a
-league at (70.7 −11.6) is telling you its probabilities are broken however
-pretty the tip looks, and a league at (82.0 +5.3) under-claims.
+Two numbers, from `config/league_hitrates.tsv`: the league's PLAYABLE
+hitrate — how its above-bar lanes, the ones worth betting, actually land —
+and the distance between that and the league's all-tips baseline. A badge
+of (83.7 +1.7) says playable lanes here land 83.7, 1.7 better than the
+baseline; a consensus-cap league has no playable subset by construction
+and its badge says (82.0 capped) instead of pretending one.
 
 The badge is DERIVED, same rule as every number on the page: the tsv is
 written from a stored replay run, this script stamps it, and re-running both
@@ -65,12 +66,22 @@ HEADERS = ("| Live | League | Teams | Tip 1 | Tip 2 | Kickoff |",
 
 
 def rates() -> dict[str, str]:
+    """Badge per league: the PLAYABLE hitrate and its distance from the
+    league's all-tips baseline — `(83.7 +1.7)` reads "playable lanes land
+    83.7 here, 1.7 above the baseline". The consensus-cap leagues have no
+    playable subset by construction and say so instead of showing one."""
     out = {}
     for ln in RATES.read_text().splitlines():
         if ln.startswith("#") or not ln.strip():
             continue
-        code, _n, hit, gap = ln.split("\t")[:4]
-        out[code] = f"({hit} {gap.replace('-', '−')})"
+        parts = ln.split("\t")
+        code, _n, hit = parts[:3]
+        play = parts[5] if len(parts) > 5 and parts[5] else ""
+        if play:
+            d = float(play) - float(hit)
+            out[code] = f"({play} {d:+.1f})".replace("-", "−")
+        else:
+            out[code] = f"({hit} capped)"
     return out
 
 

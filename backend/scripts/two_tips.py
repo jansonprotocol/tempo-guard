@@ -106,31 +106,52 @@ def _undebited(lg: str, market: str, p: float) -> float:
     return p
 
 
-def buy_value(market: str, mu: float, p: float, edge: float | None = None,
-              lg: str | None = None) -> float | None:
-    """The buy-from threshold as a number — everything _buy prints except
-    the formatting, so instruments can average what a card would say."""
+def buy_parts(market: str, mu: float, p: float, edge: float | None = None,
+              lg: str | None = None) -> tuple[float, float] | None:
+    """(buy-from price, margin over the tip's own break-even) — or None.
+
+    The price is computed on the BLENDED probability (pricing.blend_p):
+    the tip's published number pulled toward its league's playable record,
+    0.4/0.6 below it and 0.8/0.2 above it. The margin is what the printed
+    price still holds over the tip's OWN break-even — it shrinks when the
+    blend reaches down to make a lower-probability lane buyable, and can
+    go negative there, which is the bettor's declared trade, printed
+    rather than hidden."""
+    play = market_select.league_play_hit(lg) if lg else None
+    pb = pricing.blend_p(p, play) if p > 0 else p
+    hc = (1 + pricing.CURSE_HAIRCUT
+          if edge is not None and edge > pricing.CURSE_EDGE else 1.0)
+    mg = ((1 + pricing.DEFAULT_MARGIN) * hc * (p / pb) - 1) if p > 0 else 0.0
     try:
         be = pricing.buy_from(market, mu, stated_edge=edge)
         if lg is not None and p > 0:
             raw = _undebited(lg, market, p)
             if raw > p:
                 be *= raw / p
-        return be
+        if p > 0:
+            be *= p / pb
+        return be, mg
     except (ValueError, IndexError):
         pass
     if p <= 0:
         return None
-    be = (1 / p) * (1 + pricing.DEFAULT_MARGIN)
-    if edge is not None and edge > pricing.CURSE_EDGE:
-        be *= 1 + pricing.CURSE_HAIRCUT
-    return be
+    return (1 / pb) * (1 + pricing.DEFAULT_MARGIN) * hc, mg
+
+
+def buy_value(market: str, mu: float, p: float, edge: float | None = None,
+              lg: str | None = None) -> float | None:
+    """The buy-from threshold as a number — everything _buy prints except
+    the formatting, so instruments can average what a card would say."""
+    parts = buy_parts(market, mu, p, edge, lg)
+    return parts[0] if parts else None
 
 
 def _buy(market: str, mu: float, p: float, edge: float | None = None,
          lg: str | None = None) -> str:
     """
-    The price to check the book against: break-even, margin, curse haircut.
+    The price to check the book against: break-even, margin, curse haircut,
+    all on the blended probability — plus the honest label of what margin
+    survives over the tip's own break-even after the blend.
 
     Match rungs are priced from the goal distribution, because a quarter or
     whole line can push and `1 / p` would misprice it. Every team rung on offer
@@ -142,27 +163,12 @@ def _buy(market: str, mu: float, p: float, edge: float | None = None,
     adds ~3% for anything above +3.5%. That was a rule applied by hand on every
     bet; the printed number now already includes it.
     """
-    try:
-        be = pricing.buy_from(market, mu, stated_edge=edge)
-        # A debited tip is priced from a mu that reads hot, so the
-        # goal-distribution break-even inherits the optimism. `p` arrives
-        # already debited; scaling by raw / debited converts the price to
-        # the honest probability — exact for .5 lines, a stated
-        # approximation for quarter-line pushes. The raw number is
-        # recovered from the gate itself rather than re-derived here.
-        if lg is not None and p > 0:
-            raw = _undebited(lg, market, p)
-            if raw > p:
-                be *= raw / p
-        return f"buy>={be:.2f}"
-    except (ValueError, IndexError):
-        pass
-    if p <= 0:
+    parts = buy_parts(market, mu, p, edge, lg)
+    if parts is None:
         return "buy>=  — "
-    be = (1 / p) * (1 + pricing.DEFAULT_MARGIN)
-    if edge is not None and edge > pricing.CURSE_EDGE:
-        be *= 1 + pricing.CURSE_HAIRCUT
-    return f"buy>={be:.2f}"
+    be, mg = parts
+    return (f"buy>={be:.2f} ({mg * 100:+.1f}% margin)"
+            .replace("(-", "(−"))
 
 
 def main() -> None:

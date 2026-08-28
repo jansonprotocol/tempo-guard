@@ -42,7 +42,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.board import FIXTURES, load
-from scripts.two_tips import buy_value, tips
+from scripts.two_tips import buy_parts, tips
 
 
 def _fmt_edge1(e: float) -> str:
@@ -50,17 +50,24 @@ def _fmt_edge1(e: float) -> str:
     return s if e >= 0.01 else f"**{s}**"
 
 
+def _buy_str(m: str, mu: float, p: float, e: float, lg: str) -> str:
+    """buy≥ on the blended probability, and in brackets the margin the
+    printed price still holds over the tip's own break-even — negative
+    when the blend reaches down to make a lane buyable."""
+    b, mg = buy_parts(m, mu, p, e, lg)
+    return f"buy≥{b:.2f} ({mg*100:+.1f}% margin)".replace("(-", "(−")
+
+
 def cell1(r: dict, lg: str) -> str:
     m, p, e = r["t1"]
-    b = buy_value(m, r["mu"], p, e, lg)
-    return f"{m} {p*100:.1f}% {_fmt_edge1(e)} · buy≥{b:.2f}"
+    return (f"{m} {p*100:.1f}% {_fmt_edge1(e)} · "
+            f"{_buy_str(m, r['mu'], p, e, lg)}")
 
 
 def cell2(r: dict, lg: str, home: str, away: str) -> str:
     if not r["t2"]:
         return "— none"
     m, p, e, why = r["t2"]
-    b = buy_value(m, r["mu"], p, e, lg)
     label, note = m, why
     if why == "team total":
         side = home if m.startswith("TA") else away
@@ -69,7 +76,7 @@ def cell2(r: dict, lg: str, home: str, away: str) -> str:
     else:
         note = why.replace("-", "−")
     return (f"{label} {p*100:.1f}% {e*100:+.1f}% ({note}) · "
-            f"buy≥{b:.2f}").replace("+−", "−")
+            f"{_buy_str(m, r['mu'], p, e, lg)}").replace("+−", "−")
 
 
 def price(code: str, teams: str, day: str):

@@ -168,6 +168,9 @@ CONSENSUS_CAP_LEAGUES = frozenset({
 _LEAGUE_HIT: dict[str, float] | None = None
 
 
+_LEAGUE_PLAY: dict[str, float] | None = None
+
+
 def _league_hit(league_code: str):
     global _LEAGUE_HIT
     if _LEAGUE_HIT is None:
@@ -183,6 +186,28 @@ def _league_hit(league_code: str):
         except OSError:
             pass
     return _LEAGUE_HIT.get(league_code)
+
+
+def league_play_hit(league_code: str):
+    """The league's PLAYABLE hitrate (the play_hit column), the record the
+    buy-from blend listens to. Falls back to the all-tips hitrate where no
+    playable subset exists — the consensus-cap leagues — so a price there
+    still has a league record to lean on."""
+    global _LEAGUE_PLAY
+    if _LEAGUE_PLAY is None:
+        _LEAGUE_PLAY = {}
+        path = Path(__file__).resolve().parents[2].parent / "config" / \
+            "league_hitrates.tsv"
+        try:
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                parts = ln.split("\t")
+                cell = parts[5] if len(parts) > 5 and parts[5] else parts[2]
+                _LEAGUE_PLAY[parts[0]] = float(cell) / 100.0
+        except OSError:
+            pass
+    return _LEAGUE_PLAY.get(league_code)
 
 
 def stated(league_code: str, market: str, p: float,
