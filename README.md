@@ -212,6 +212,9 @@ that premium the book is keeping the insurance money.
 | — open | Crystal Palace v Man City | O1.5 (away) | 1.61 | — | widened: Man City team over |
 | — open | Crystal Palace v Man City | O1.5 | 1.20 | — | = Tip 1 rung (84.3% +4.5%), under buy≥ — widened |
 | — open | Comerciantes Unidos v Cajamarca | DNB (home) | 1.24 | — | rule 5 shape, home side of the O1.5 tip |
+| — open | Jong Ajax v Helmond Sport | U4.5 | 1.21 | — | R6 softer line above the U4.25 tip (84.1% +4.4%, buy≥1.29) |
+| — open | Lille v PSG | O1.5 | 1.22 | — | = Tip 1 rung (80.1% +2.8%), under buy≥1.31 — widened |
+| — open | Náutico v Athletic | U3.5 | 1.20 | — | R6 softer line above the U3.0 tip (83.1% +1.4%, buy≥1.32) |
 
 <!-- HYPOTHESES:START -->
 
