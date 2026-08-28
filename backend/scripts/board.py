@@ -68,8 +68,12 @@ class Fixture:
     @property
     def settled(self) -> bool:
         # "FT ..." is finished with nothing to grade — an abstained fixture
-        # that played out. It moves to the completed block but feeds no tally.
-        return self.status[:1] in ("✅", "❌") or self.status.startswith("FT")
+        # that played out. It moves to the completed block but feeds no
+        # tally. "◦" is a finished fixture whose TIP pushed — settled all
+        # the same; without it, Laval's 0-3 push sat "pending" forever and
+        # held the bettor's won U3.5 open with it.
+        return (self.status[:1] in ("✅", "❌", "◦")
+                or self.status.startswith("FT"))
 
     def lane(self, which: int):
         cell = self.tip1 if which == 1 else self.tip2
