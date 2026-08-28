@@ -59,6 +59,13 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return ((c - m) / d, (c + m) / d)
 
 
+# --dump collects one row per priced tip here so the playable bar can be
+# swept OFFLINE on the current engine instead of re-running the replay per
+# candidate threshold. None means the feature is off and replay() costs
+# nothing extra.
+DUMP: list | None = None
+
+
 def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
            days: int = 0) -> dict:
     # The 200-row floor keeps thin domestic leagues out of a sweep, where a
@@ -133,6 +140,9 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
             p_tips += 1
             p_hits += res is True or res == "half_win"
         hits += res is True or res == "half_win"
+        if DUMP is not None:
+            DUMP.append(dict(code=league, d=d, mk=mk, says=p_st, edge=edge,
+                             hit=res is True or res == "half_win", res=res))
 
     if not tips:
         return {}
@@ -155,6 +165,11 @@ def main() -> None:
         codes = args[args.index("--leagues") + 1].split(",")
     else:
         codes = sorted(store.available_leagues())
+    dump_path = None
+    if "--dump" in args:
+        dump_path = Path(args[args.index("--dump") + 1])
+        global DUMP
+        DUMP = []
 
     rows = []
     for lg in codes:
@@ -175,6 +190,11 @@ def main() -> None:
             if r.get("p_hit") is not None:
                 line += f"   play {r['p_hit']*100:.1f}% ({r['p_n']})"
             print(line, flush=True)
+
+    if dump_path is not None and DUMP is not None:
+        import pickle
+        dump_path.write_bytes(pickle.dumps(DUMP))
+        print(f"dumped {len(DUMP)} per-tip rows -> {dump_path}")
 
     if not rows:
         return
