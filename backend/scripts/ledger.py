@@ -62,7 +62,11 @@ def read_fixtures() -> dict[str, dict]:
         # scores too ("LIVE: 2-1 (90')"), and an earlier version matched those
         # as final — settling bets off matches still being played, which is the
         # same mistake that mis-graded Antwerp off an in-play 1-1.
-        s = SCORE.search(status) if status[:1] in ("✅", "❌") else None
+        # Any finished status carries the final score a bet settles on:
+        # graded (✅/❌), tip-pushed (◦), or abstained-but-played (FT).
+        s = (SCORE.search(status)
+             if status[:1] in ("✅", "❌", "◦") or status.startswith("FT")
+             else None)
         # A live row's running score, kept apart from the final one: it may
         # only ever settle a bet that cannot move again (see bet_state).
         lv = None
@@ -105,6 +109,9 @@ def bet_state(rung: str, side: str, fx: dict) -> float | None:
         return 1.0 if gf > ga else 0.0 if gf == ga else -1.0
     if rung in ("1X", "X2"):
         return -1.0 if ((hg > ag) if rung == "X2" else (ag > hg)) else 1.0
+    if rung == "12":
+        # Either side outright — the draw is the only losing result.
+        return -1.0 if hg == ag else 1.0
     goals = hg + ag if side == "-" else (hg if side == "H" else ag)
     s = pricing.settle_fraction(rung, goals)
     if live and s < 1.0:

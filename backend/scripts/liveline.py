@@ -125,7 +125,12 @@ def _legs() -> dict:
 
 
 _DROP = {"fc", "fk", "cf", "sc", "ac", "afc", "bk", "if", "sk", "club",
-         "cp", "of", "the", "ri"}
+         "cp", "of", "the", "ri",
+         # The Arabic article and its Egyptian spelling. Kept as tokens,
+         # they made every Saudi club "the same club" through the
+         # x & y fallback in same_club — Al-Nassr wore Al-Khaleej's 1-5
+         # live on the board (28 Aug) because {al} intersected.
+         "al", "el"}
 
 
 # Letters that carry no accent to strip: NFD leaves ø, đ, ł and ß whole,
