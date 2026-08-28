@@ -124,8 +124,10 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
         tips += 1
         # The PUBLISHED probability, debits included — the table grades
         # the number a visitor actually sees, not the raw engine one.
-        p_st = market_select.stated(league, mk,
-                                    market_select.p_win(mk, req.mu_total))
+        p_st = market_select.stated(
+            league, mk, market_select.p_win(mk, req.mu_total),
+            base_p=(market_select.p_win(mk, req.league_mu)
+                    if req.league_mu else None))
         p_sum += p_st
         # And the buy-from a card would have printed for this tip — the
         # price below which it is not worth money, which is what decides

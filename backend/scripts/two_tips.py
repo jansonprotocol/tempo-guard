@@ -56,8 +56,8 @@ def tips(lg: str, h: str, a: str, d: date):
     # probability AND edge by the same amount, so a hot tip must clear the
     # playable bar on its honest number, while Tip 1's SELECTION stays
     # with the engine, untouched as ever.
-    sc = [(m, e - (p - market_select.stated(lg, m, p)),
-           market_select.stated(lg, m, p)) for m, e, p in sc]
+    sc = [(m, e - (p - market_select.stated(lg, m, p, base_p=p - e)),
+           market_select.stated(lg, m, p, base_p=p - e)) for m, e, p in sc]
     by = {m: (e, p) for m, e, p in sc}
     if t1 not in by:
         return None

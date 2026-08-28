@@ -616,6 +616,13 @@ def verify(quiet: bool = False) -> None:
         if abs(shown - float(value)) > 1e-9:
             bad.append(f"Engine state says {name} {shown}, "
                        f"the code runs {value}")
+    # The consensus cap is a league SET, not a number, so the float regex
+    # above cannot guard it — the block must name the exact set the code
+    # runs, or the two drift apart the way prose always does.
+    caps = ", ".join(sorted(market_select.CONSENSUS_CAP_LEAGUES))
+    if caps not in block:
+        bad.append(f"Engine state block must list the consensus-cap "
+                   f"leagues exactly as: {caps}")
 
     # 11. No fixture quietly rots. A match that kicked off hours ago and
     #     still shows nothing means the last update touched one row and

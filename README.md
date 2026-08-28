@@ -297,7 +297,7 @@ Tested and rejected, with the number that killed it. Kept deliberately — a dea
 
 <!-- HYPOTHESES:END -->
 
-## Engine state — 27 Aug 2026
+## Engine state — 28 Aug 2026
 
 Every constant below is checked against the live code on each render
 (`scripts/board.py verify`), so this block cannot drift from the engine it
@@ -352,6 +352,15 @@ form, because domestic form carries no cup signal at all (slope 0.017):
                                        excess point — wide-high claims ran 5.6
                                        hot in both windows; published number
                                        only, selection stays raw
+
+The consensus cap — in seven leagues the model's disagreement with the
+league consensus IS the error (positive-edge lanes read a flat 6–7 points
+hot in both half-windows, pooled −6.4 / −7.5 on the 29,763-tip current-
+engine replay, while their consensus lanes underclaim +3.4), so the
+published probability there is capped at the market's league-baseline
+chance and no lane can ever badge playable:
+
+    CONSENSUS_CAP_LEAGUES  COL-PA, CRO-1L, ESP-L2, IRL-PD, ITA-SA, MAR-BP, MEX-LMX
     min_win_prob           0.82        on all six cup codes (~80 → ~83 at zero
                                        volume cost) and, since 27 Aug, raised
                                        per-league on fourteen weak domestic
@@ -368,9 +377,10 @@ form, because domestic form carries no cup signal at all (slope 0.017):
     realised edge over base     +2.23                               (was +1.35)
     top market share            41%                                 (was 54%)
 
-All 37 tippable leagues retrosimmed. Three remain cull candidates rather than
-tuning targets — `IRL-PD` (residual slope -0.600, anti-correlated), `COL-PA`
-(-0.06, no usable signal) and `MLS` (-5.2 out of sample).
+All 37 tippable leagues retrosimmed. The former cull candidates (`IRL-PD`,
+`COL-PA`, `MAR-BP`) were resolved on 28 Aug by the consensus cap above —
+culled at the claim layer, tips still on the board honestly. `MLS` (-5.2
+out of sample) remains the one open calibration question.
 
 
 ### Recalibration — archived

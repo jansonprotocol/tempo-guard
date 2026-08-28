@@ -89,8 +89,10 @@ def sweep(code: str, floors) -> list[dict]:
             # rungs nobody can buy edge on has not improved anything.
             from app.engine import market_select
             from scripts.two_tips import buy_value
-            p_st = market_select.stated(code, mk,
-                                        market_select.p_win(mk, req.mu_total))
+            p_st = market_select.stated(
+                code, mk, market_select.p_win(mk, req.mu_total),
+                base_p=(market_select.p_win(mk, req.league_mu)
+                        if req.league_mu else None))
             edge = (p_st - market_select.p_win(mk, req.league_mu)
                     if req.league_mu else None)
             bv = buy_value(mk, req.mu_total, p_st, edge, code)

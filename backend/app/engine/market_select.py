@@ -147,6 +147,24 @@ HIGH_SAYS_DEBIT = 0.012
 # this, per the standing rule.
 REL_SAYS_FROM = 0.02
 REL_SAYS_SLOPE = 1.1
+
+# In a few leagues the model's DISAGREEMENT with the league consensus is
+# itself the error. Measured on the 29,763-tip current-engine replay
+# (28 Aug 2026, scripts/retrosim.py --dump): board-wide the playable layer
+# is calibrated to −0.1, but seven leagues overclaim their positive-edge
+# lanes by more than 4 points in BOTH half-windows — pooled −6.4 / −7.5 —
+# while their CONSENSUS lanes (edge <= 0) underclaim by +3.4. The shape is
+# flat: any positive edge there reads ~6–7 points hot regardless of size,
+# and the implied proportional debit (k ≈ 2.0 / 2.3) would empty the
+# playable set anyway. So the published probability is CAPPED at the
+# market's league-baseline chance: in these leagues a tip never claims to
+# know more than the consensus. Published edge can then never exceed zero,
+# which is what removes their fictional playable badges — the honest
+# statement, not a side effect. Monotonic in the raw number (min is), and
+# selection reads none of this, per the standing rule.
+CONSENSUS_CAP_LEAGUES = frozenset({
+    "CRO-1L", "MEX-LMX", "IRL-PD", "MAR-BP", "COL-PA", "ESP-L2", "ITA-SA",
+})
 _LEAGUE_HIT: dict[str, float] | None = None
 
 
@@ -167,12 +185,16 @@ def _league_hit(league_code: str):
     return _LEAGUE_HIT.get(league_code)
 
 
-def stated(league_code: str, market: str, p: float) -> float:
+def stated(league_code: str, market: str, p: float,
+           base_p: float | None = None) -> float:
     """The probability to PUBLISH for a tip — the raw engine number less
     every measured, validated overconfidence. Cups carry their own debit
     (club_elo, over rungs 3.5 points); domestic rungs carry the high-says
     debit above and the relative-overreach debit against the league's own
-    base rate. Selection never reads this."""
+    base rate. In the consensus-cap leagues the result is additionally
+    capped at `base_p`, the market's chance in a typical fixture of the
+    league — callers that know the league mu pass it. Selection never
+    reads this."""
     from app.data import club_elo
     if league_code in club_elo.CUPS:
         return club_elo.stated_p(league_code, market, p)
@@ -182,6 +204,8 @@ def stated(league_code: str, market: str, p: float) -> float:
         excess = (s - base) - REL_SAYS_FROM
         if excess > 0:
             s -= REL_SAYS_SLOPE * excess
+    if base_p is not None and league_code in CONSENSUS_CAP_LEAGUES:
+        s = min(s, base_p)
     return s
 
 # ── Playability: which rungs are worth offering in a given league ────────────

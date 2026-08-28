@@ -367,8 +367,13 @@ def _hitrates_rows() -> str:
         buy = parts[4] if len(parts) > 4 and parts[4] else "—"
         p_hit = parts[5] if len(parts) > 5 and parts[5] else ""
         p_n = parts[6] if len(parts) > 6 and parts[6] else ""
+        from app.engine.market_select import CONSENSUS_CAP_LEAGUES
         play = (f'{p_hit}% <span class="dim">({p_n})</span>'
-                if p_hit else "—")
+                if p_hit else
+                '<span class="dim" title="published probability capped at '
+                'the league consensus — no lane here can claim edge">'
+                'capped</span>'
+                if lg in CONSENSUS_CAP_LEAGUES else "—")
         g = float(gap.replace("−", "-"))
         p = float(hit) / 100
         se = math.sqrt(max(p * (1 - p), 1e-9) / int(n)) * 100
@@ -954,7 +959,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <p class="dim"><b>Hit</b> grades every Tip 1 the league produced,
  filter or no filter; <b>Playable hit</b> is the same replay narrowed to
  the lanes the board actually offers (edge above +1%) — the number the
- Playable tab lives on, with that subset's tip count in brackets.</p>
+ Playable tab lives on, with that subset's tip count in brackets. This
+ very column exposed seven leagues whose above-bar lanes ran a flat 6–7
+ points hot in both half-windows while their consensus lanes underclaimed:
+ there the published probability is now <b>capped</b> at the league
+ consensus, so no lane can claim edge and none can badge playable.</p>
 <p class="dim">Every league's Tip 1, replayed as-of on the current build
  over its most recent fixtures — up to 800, capped at two seasons.
  <b>hit</b> is what landed; <b>gap</b> is hit minus what the engine
