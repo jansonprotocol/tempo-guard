@@ -398,22 +398,12 @@ def render_bets() -> list[str]:
             out.append(f"| ◦ | {name} | {lane} | {odds:.2f} | 1.00x | {note} |")
             continue
         fx = fixtures.get(name)
-        if fx is None or fx["hg"] is None:
+        # One settlement gate for every surface (ledger.bet_state): FT for
+        # anything that can still move, immediate for a clinched over.
+        s = ledger.bet_state(rung, side, fx) if fx else None
+        if s is None:
             out.append(f"| — open | {name} | {lane} | {odds:.2f} | — | {note} |")
             continue
-        if rung == "DNB":
-            gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
-                      else (fx["ag"], fx["hg"]))
-            s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
-        elif rung in ("1X", "X2"):
-            # Double chance: the named side or the draw. No push exists —
-            # the bet wins unless the other side wins outright.
-            s = -1.0 if ((fx["hg"] > fx["ag"]) if rung == "X2"
-                         else (fx["ag"] > fx["hg"])) else 1.0
-        else:
-            goals = (fx["hg"] + fx["ag"]) if side == "-" else (
-                fx["hg"] if side == "H" else fx["ag"])
-            s = ledger.pricing.settle_fraction(rung, goals)
         ret = max(s, 0.0) * odds + (1 - abs(s))
         mark, _w = MARK[s]
         out.append(f"| {mark} | {name} | {lane} | {odds:.2f} "

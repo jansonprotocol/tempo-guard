@@ -158,21 +158,13 @@ def _bets_rows() -> list[dict]:
                             ret="1.00x", note=note, align=align))
             continue
         fx = fixtures.get(name)
-        if fx is None or fx["hg"] is None:
+        # ledger.bet_state, same gate as the README block: FT for anything
+        # that can still move, immediate for a clinched over.
+        s = ledger.bet_state(rung, side, fx) if fx else None
+        if s is None:
             out.append(dict(mark="open", name=name, lane=lane, odds=odds,
                             ret="—", note=note, align=align))
             continue
-        if rung == "DNB":
-            gf, ga = ((fx["hg"], fx["ag"]) if side == "H"
-                      else (fx["ag"], fx["hg"]))
-            s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
-        elif rung in ("1X", "X2"):
-            s = -1.0 if ((fx["hg"] > fx["ag"]) if rung == "X2"
-                         else (fx["ag"] > fx["hg"])) else 1.0
-        else:
-            goals = (fx["hg"] + fx["ag"]) if side == "-" else (
-                fx["hg"] if side == "H" else fx["ag"])
-            s = ledger.pricing.settle_fraction(rung, goals)
         ret = max(s, 0.0) * odds + (1 - abs(s))
         out.append(dict(mark=MARK[s], name=name, lane=lane, odds=odds,
                         ret=f"{ret:.2f}x", note=note, align=align))

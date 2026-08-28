@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches              2 / 2   100.0%      2 / 2   100.0%
     played lanes  >+1%       0 / 0               2 / 2   100.0%
-    placed bets              0 / 0             ROI +0.0%
+    placed bets              1 / 1   100.0%    ROI +18.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -85,9 +85,9 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 80' 1-1 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26 (+4.5% margin) · <i>✓ landed</i></td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.49 (−16.3% margin) · team · <i>needs 1 more</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 80' 2-2 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>— under +1%</td><td><b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.31 (+6.9% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 56' 0-0 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 83.9% +4.6%<br>buy≥1.30 (+8.4% margin) · <i>room for 4 · half from the 4th</i></td><td><b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.48 (−15.1% margin) · team · <i>needs 2 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 83' 1-1 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26 (+4.5% margin) · <i>✓ landed</i></td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.49 (−16.3% margin) · team · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 83' 2-2 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>— under +1%</td><td><b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.31 (+6.9% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 59' 0-0 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 83.9% +4.6%<br>buy≥1.30 (+8.4% margin) · <i>room for 4 · half from the 4th</i></td><td><b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.48 (−15.1% margin) · team · <i>needs 2 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 17:50 <b>Al-Riyadh v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>— under +1%</td><td><b>Neom O0.5</b> 81.4% +8.5%<br>buy≥1.29 (+5.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 18:00 <b>Wisła Płock v Korona</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U3.0 79.2% +9.0%<br>buy≥1.47 (+8.9% margin)</td><td>U2.75 58.7% +10.6%<br>buy≥1.39 (−8.9% margin) · floor −19.3</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 18:00 <b>Al-Fayha v Abha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 85.9% +4.0%<br>buy≥1.28 (+8.5% margin)</td><td>U3.75 70.8% +5.6%<br>buy≥1.26 (−3.5% margin) · floor −4.2</td></tr></table>
@@ -126,9 +126,9 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 80' 1-1 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26 (+4.5% margin) · <i>✓ landed</i></td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.49 (−16.3% margin) · team · <i>needs 1 more</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 80' 2-2 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 79.7% <b>+0.4%</b><br>buy≥1.31 (+1.9% margin) · <i>half safe</i></td><td><b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.31 (+6.9% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 56' 0-0 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 83.9% +4.6%<br>buy≥1.30 (+8.4% margin) · <i>room for 4 · half from the 4th</i></td><td><b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.48 (−15.1% margin) · team · <i>needs 2 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 83' 1-1 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26 (+4.5% margin) · <i>✓ landed</i></td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.49 (−16.3% margin) · team · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 83' 2-2 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 79.7% <b>+0.4%</b><br>buy≥1.31 (+1.9% margin) · <i>half safe</i></td><td><b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.31 (+6.9% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 59' 0-0 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 83.9% +4.6%<br>buy≥1.30 (+8.4% margin) · <i>room for 4 · half from the 4th</i></td><td><b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.48 (−15.1% margin) · team · <i>needs 2 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 17:00 <b>Shooting Stars SC v Inter Lagos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>NPFL (88.7 −1.8)</td><td>— no tip: Inter Lagos has no history in the data</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 17:50 <b>Al-Riyadh v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 82.6% <b>+0.7%</b><br>buy≥1.27 (+2.9% margin)</td><td><b>Neom O0.5</b> 81.4% +8.5%<br>buy≥1.29 (+5.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 18:00 <b>Wisła Płock v Korona</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U3.0 79.2% +9.0%<br>buy≥1.47 (+8.9% margin)</td><td>U2.75 58.7% +10.6%<br>buy≥1.39 (−8.9% margin) · floor −19.3</td></tr></table>
@@ -179,7 +179,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 0 / 0  ·  ROI +0.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 1 / 1  ·  ROI +18.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -197,7 +197,7 @@ that premium the book is keeping the insurance money.
 | — open | Milan v Venezia | U3.5 | 1.37 | — | softer line above the U3.0 tip (+5.2%) |
 | — open | Al-Riyadh v Neom | DNB (away) | 1.42 | — | rule 5 shape, away side |
 | — open | Dalian Yingbo v Guoan | DNB (away) | 1.53 | — | rule 5 shape, away side |
-| — open | Shenhua v Taishan | O0.5 (away) | 1.18 | — | = Tip 2 team lane (81.8% +9.2%, buy≥1.32 — taken under it, widened) |
+| ✅ | Shenhua v Taishan | O0.5 (away) | 1.18 | 1.18x | = Tip 2 team lane (81.8% +9.2%, buy≥1.32 — taken under it, widened) |
 | — open | Shenzhen v Port | U4.5 | 1.20 | — | softer line above the U4.25 tip (+5.3%) |
 | — open | Braunschweig v Hertha | O1.5 | 1.19 | — | = Tip 1 rung (83.5% +2.9%, buy≥ not met — widened) |
 | — open | Bochum v Osnabrück | DNB (home) | 1.25 | — | rule 5 shape, home favourite |

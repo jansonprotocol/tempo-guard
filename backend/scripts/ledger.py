@@ -63,6 +63,12 @@ def read_fixtures() -> dict[str, dict]:
         # as final — settling bets off matches still being played, which is the
         # same mistake that mis-graded Antwerp off an in-play 1-1.
         s = SCORE.search(status) if status[:1] in ("✅", "❌") else None
+        # A live row's running score, kept apart from the final one: it may
+        # only ever settle a bet that cannot move again (see bet_state).
+        lv = None
+        if s is None and status:
+            from scripts import liveline
+            lv = liveline.score_of(status)
         m2 = TIP.search(tip2)
         out[name] = {
             "rung": m.group(1),
@@ -71,8 +77,39 @@ def read_fixtures() -> dict[str, dict]:
             "p2": float(m2.group(2)) / 100 if m2 else None,
             "hg": int(s.group(1)) if s else None,
             "ag": int(s.group(2)) if s else None,
+            "lhg": lv[0] if lv else None,
+            "lag": lv[1] if lv else None,
         }
     return out
+
+
+def bet_state(rung: str, side: str, fx: dict) -> float | None:
+    """Settlement fraction for one bet against its fixture row, or None
+    while the bet is still open.
+
+    Settles from the FINAL score once the fixture is graded — and EARLY,
+    from the live score, in exactly one case: an OVER lane (match or team
+    total) already at its MAXIMUM settlement. Goals only accumulate, so a
+    fully-won over can never be taken back — the bettor's rule, 28 Aug.
+    Everything that can still move waits for the whistle: unders, DNB,
+    double chance, and a quarter-line over sitting on a half-win that one
+    more goal would upgrade to a full one."""
+    hg, ag, live = fx["hg"], fx["ag"], False
+    if hg is None:
+        if rung.startswith("O") and fx.get("lhg") is not None:
+            hg, ag, live = fx["lhg"], fx["lag"], True
+        else:
+            return None
+    if rung == "DNB":
+        gf, ga = (hg, ag) if side == "H" else (ag, hg)
+        return 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+    if rung in ("1X", "X2"):
+        return -1.0 if ((hg > ag) if rung == "X2" else (ag > hg)) else 1.0
+    goals = hg + ag if side == "-" else (hg if side == "H" else ag)
+    s = pricing.settle_fraction(rung, goals)
+    if live and s < 1.0:
+        return None
+    return s
 
 
 def main() -> None:
