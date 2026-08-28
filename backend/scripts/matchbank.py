@@ -68,7 +68,9 @@ def league_entries(code: str) -> tuple[list[str], list[dict]]:
         if res is None:
             continue
         p = market_select.stated(code, mk,
-                                 market_select.p_win(mk, req.mu_total))
+                                 market_select.p_win(mk, req.mu_total),
+                                 base_p=market_select.p_win(
+                                     mk, req.league_mu))
         edge = p - market_select.p_win(mk, req.league_mu)
         w = hit_weight(res)
         mark = "✅" if w >= 1.0 else "✅½" if w > 0 else \

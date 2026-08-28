@@ -595,6 +595,8 @@ def verify(quiet: bool = False) -> None:
         "DEFENSE_BLEND": features.DEFENSE_BLEND,
         "VENUE_BLEND": features.VENUE_BLEND,
         "MIN_WIN_PROB": market_select.MIN_WIN_PROB,
+        "REL_SAYS_FROM": market_select.REL_SAYS_FROM,
+        "REL_SAYS_SLOPE": market_select.REL_SAYS_SLOPE,
         "HIGH_SAYS_DEBIT": market_select.HIGH_SAYS_DEBIT,
         "HIGH_SAYS_FROM": market_select.HIGH_SAYS_FROM,
         "B1": club_elo.B1, "B2": club_elo.B2, "B3": club_elo.B3,
@@ -614,6 +616,13 @@ def verify(quiet: bool = False) -> None:
         if abs(shown - float(value)) > 1e-9:
             bad.append(f"Engine state says {name} {shown}, "
                        f"the code runs {value}")
+    # The consensus cap is a league SET, not a number, so the float regex
+    # above cannot guard it — the block must name the exact set the code
+    # runs, or the two drift apart the way prose always does.
+    caps = ", ".join(sorted(market_select.CONSENSUS_CAP_LEAGUES))
+    if caps not in block:
+        bad.append(f"Engine state block must list the consensus-cap "
+                   f"leagues exactly as: {caps}")
 
     # 11. No fixture quietly rots. A match that kicked off hours ago and
     #     still shows nothing means the last update touched one row and

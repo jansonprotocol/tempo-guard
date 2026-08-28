@@ -51,6 +51,7 @@ exactly the kind of duplicate truth that rots.
 from __future__ import annotations
 
 import math
+from pathlib import Path
 from functools import lru_cache
 from typing import Optional, Sequence
 
@@ -133,16 +134,79 @@ MIN_WIN_PROB = 0.75
 HIGH_SAYS_FROM = 0.90
 HIGH_SAYS_DEBIT = 0.012
 
+# A tip that claims to be much better than its league's PROVEN base rate is
+# usually bragging. Measured on 32,493 replayed domestic tips against each
+# league's own hit rate: within ±2 points of the league the claims are
+# honest (gap −0.1); past +2 every extra point of claim delivers about
+# −1.2 back (slope −1.27 / −1.04 in the two halves, on top of the
+# high-says debit), and the wide band (league+6 and up) ran 5.6 points
+# hot in BOTH windows. So the published number is pulled back toward the
+# league's record: debit 1.1 × the excess above league+2. The league base
+# is the outcome column of league_hitrates.tsv, which selection never
+# writes, so there is no feedback loop — and selection never reads any of
+# this, per the standing rule.
+REL_SAYS_FROM = 0.02
+REL_SAYS_SLOPE = 1.1
 
-def stated(league_code: str, market: str, p: float) -> float:
+# In a few leagues the model's DISAGREEMENT with the league consensus is
+# itself the error. Measured on the 29,763-tip current-engine replay
+# (28 Aug 2026, scripts/retrosim.py --dump): board-wide the playable layer
+# is calibrated to −0.1, but seven leagues overclaim their positive-edge
+# lanes by more than 4 points in BOTH half-windows — pooled −6.4 / −7.5 —
+# while their CONSENSUS lanes (edge <= 0) underclaim by +3.4. The shape is
+# flat: any positive edge there reads ~6–7 points hot regardless of size,
+# and the implied proportional debit (k ≈ 2.0 / 2.3) would empty the
+# playable set anyway. So the published probability is CAPPED at the
+# market's league-baseline chance: in these leagues a tip never claims to
+# know more than the consensus. Published edge can then never exceed zero,
+# which is what removes their fictional playable badges — the honest
+# statement, not a side effect. Monotonic in the raw number (min is), and
+# selection reads none of this, per the standing rule.
+CONSENSUS_CAP_LEAGUES = frozenset({
+    "CRO-1L", "MEX-LMX", "IRL-PD", "MAR-BP", "COL-PA", "ESP-L2", "ITA-SA",
+})
+_LEAGUE_HIT: dict[str, float] | None = None
+
+
+def _league_hit(league_code: str):
+    global _LEAGUE_HIT
+    if _LEAGUE_HIT is None:
+        _LEAGUE_HIT = {}
+        path = Path(__file__).resolve().parents[2].parent / "config" / \
+            "league_hitrates.tsv"
+        try:
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                parts = ln.split("\t")
+                _LEAGUE_HIT[parts[0]] = float(parts[2]) / 100.0
+        except OSError:
+            pass
+    return _LEAGUE_HIT.get(league_code)
+
+
+def stated(league_code: str, market: str, p: float,
+           base_p: float | None = None) -> float:
     """The probability to PUBLISH for a tip — the raw engine number less
     every measured, validated overconfidence. Cups carry their own debit
     (club_elo, over rungs 3.5 points); domestic rungs carry the high-says
-    debit above. Selection never reads this."""
+    debit above and the relative-overreach debit against the league's own
+    base rate. In the consensus-cap leagues the result is additionally
+    capped at `base_p`, the market's chance in a typical fixture of the
+    league — callers that know the league mu pass it. Selection never
+    reads this."""
     from app.data import club_elo
     if league_code in club_elo.CUPS:
         return club_elo.stated_p(league_code, market, p)
-    return min(p, max(HIGH_SAYS_FROM, p - HIGH_SAYS_DEBIT))
+    s = min(p, max(HIGH_SAYS_FROM, p - HIGH_SAYS_DEBIT))
+    base = _league_hit(league_code)
+    if base is not None:
+        excess = (s - base) - REL_SAYS_FROM
+        if excess > 0:
+            s -= REL_SAYS_SLOPE * excess
+    if base_p is not None and league_code in CONSENSUS_CAP_LEAGUES:
+        s = min(s, base_p)
+    return s
 
 # ── Playability: which rungs are worth offering in a given league ────────────
 # Two attempts to derive this failed, and both failures are instructive.

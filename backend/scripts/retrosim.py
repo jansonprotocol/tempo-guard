@@ -25,6 +25,7 @@ A league is only worth acting on when the gap is large AND n is big enough to
 mean something. Wilson intervals are printed for exactly that reason.
 
 Usage:  python scripts/retrosim.py [--n 150] [--leagues MLS,JPN-J1]
+                                  [--write]     update league_hitrates.tsv in place
                                   [--min 150]   lower the 200-row floor
 """
 from __future__ import annotations
@@ -56,6 +57,13 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     c = p + z * z / (2 * n)
     m = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))
     return ((c - m) / d, (c + m) / d)
+
+
+# --dump collects one row per priced tip here so the playable bar can be
+# swept OFFLINE on the current engine instead of re-running the replay per
+# candidate threshold. None means the feature is off and replay() costs
+# nothing extra.
+DUMP: list | None = None
 
 
 def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
@@ -90,6 +98,7 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
     hits = tips = skips = 0
     p_sum = 0.0
     buys: list[float] = []
+    p_hits = p_tips = 0                 # the playable (edge > +1%) subset
     for _, r in recent.iterrows():
         d = r["date"].date() if hasattr(r["date"], "date") else r["date"]
         try:
@@ -115,8 +124,10 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
         tips += 1
         # The PUBLISHED probability, debits included — the table grades
         # the number a visitor actually sees, not the raw engine one.
-        p_st = market_select.stated(league, mk,
-                                    market_select.p_win(mk, req.mu_total))
+        p_st = market_select.stated(
+            league, mk, market_select.p_win(mk, req.mu_total),
+            base_p=(market_select.p_win(mk, req.league_mu)
+                    if req.league_mu else None))
         p_sum += p_st
         # And the buy-from a card would have printed for this tip — the
         # price below which it is not worth money, which is what decides
@@ -127,14 +138,21 @@ def replay(league: str, n: int, back: int = 0, min_rows: int = 200,
         bv = buy_value(mk, req.mu_total, p_st, edge, league)
         if bv is not None:
             buys.append(bv)
+        if edge is not None and edge > 0.01:
+            p_tips += 1
+            p_hits += res is True or res == "half_win"
         hits += res is True or res == "half_win"
+        if DUMP is not None:
+            DUMP.append(dict(code=league, d=d, mk=mk, says=p_st, edge=edge,
+                             hit=res is True or res == "half_win", res=res))
 
     if not tips:
         return {}
     lo, hi = wilson(hits, tips)
     return dict(league=league, n=tips, skip=skips / (tips + skips),
                 says=p_sum / tips, hit=hits / tips, lo=lo, hi=hi,
-                buy=sum(buys) / len(buys) if buys else None)
+                buy=sum(buys) / len(buys) if buys else None,
+                p_hit=p_hits / p_tips if p_tips else None, p_n=p_tips)
 
 
 def main() -> None:
@@ -149,6 +167,11 @@ def main() -> None:
         codes = args[args.index("--leagues") + 1].split(",")
     else:
         codes = sorted(store.available_leagues())
+    dump_path = None
+    if "--dump" in args:
+        dump_path = Path(args[args.index("--dump") + 1])
+        global DUMP
+        DUMP = []
 
     rows = []
     for lg in codes:
@@ -166,10 +189,54 @@ def main() -> None:
                     f"   [{r['lo']*100:.0f}-{r['hi']*100:.0f}]")
             if r.get("buy"):
                 line += f"   buy {r['buy']:.2f}"
+            if r.get("p_hit") is not None:
+                line += f"   play {r['p_hit']*100:.1f}% ({r['p_n']})"
             print(line, flush=True)
+
+    if dump_path is not None and DUMP is not None:
+        import pickle
+        dump_path.write_bytes(pickle.dumps(DUMP))
+        print(f"dumped {len(DUMP)} per-tip rows -> {dump_path}")
 
     if not rows:
         return
+
+    # --write: the table refresh is part of the instrument, not a
+    # scratchpad regex. Only the leagues actually run are touched; the
+    # header and every other row stay as they are. This is what keeps
+    # league_hitrates.tsv — the badges, the Retrosim page, the REL debit's
+    # base rates — from going a day stale the way the cup rows once did.
+    if "--write" in sys.argv:
+        path = Path(__file__).resolve().parents[2] / "config" / \
+            "league_hitrates.tsv"
+        lines = path.read_text().split("\n")
+        fresh = {r["league"]: r for r in rows}
+        hit_file = set()
+        for i, ln in enumerate(lines):
+            parts = ln.split("\t")
+            if ln.startswith("#") or len(parts) < 4:
+                continue
+            r = fresh.get(parts[0])
+            if r is None:
+                continue
+            buy = f"{r['buy']:.2f}" if r.get("buy") else ""
+            ph = (f"{r['p_hit']*100:.1f}" if r.get("p_hit") is not None
+                  else "")
+            lines[i] = (f"{parts[0]}\t{r['n']}\t{r['hit']*100:.1f}\t"
+                        f"{(r['hit']-r['says'])*100:+.1f}\t{buy}\t"
+                        f"{ph}\t{r.get('p_n') or ''}")
+            hit_file.add(parts[0])
+        for code, r in fresh.items():
+            if code not in hit_file:
+                buy = f"{r['buy']:.2f}" if r.get("buy") else ""
+                ph = (f"{r['p_hit']*100:.1f}"
+                      if r.get("p_hit") is not None else "")
+                lines.append(f"{code}\t{r['n']}\t{r['hit']*100:.1f}\t"
+                             f"{(r['hit']-r['says'])*100:+.1f}\t{buy}\t"
+                             f"{ph}\t{r.get('p_n') or ''}")
+        path.write_text("\n".join(lines))
+        print(f"league_hitrates.tsv: {len(fresh)} rows written")
+
     tot_n = sum(r["n"] for r in rows)
     w_says = sum(r["says"] * r["n"] for r in rows) / tot_n
     w_hit = sum(r["hit"] * r["n"] for r in rows) / tot_n
