@@ -1,12 +1,12 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 82.8%
+## CURRENT CONFIRMED HITRATE: 83.3%
 
     lane                        Tip 1              Tip 2
-    all matches             24 / 29   82.8%     17 / 27   63.0%
+    all matches             25 / 30   83.3%     17 / 27   63.0%
     played lanes  >+1%      12 / 16   75.0%     17 / 27   63.0%
-    placed bets             17 / 21   81.0%    ROI +1.5%
+    placed bets             19 / 23   82.6%    ROI +3.9%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -111,13 +111,13 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 5-1 · 28-08 20:30 <b>Bayern v Stuttgart</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Bundesliga (84.0 −0.9)</td><td>O1.5 86.7% +4.0%<br>buy≥1.23 (+9.0% margin)</td><td>✅ <b>Bayern O1.5</b> 72.6% +22.1%<br>buy≥1.36 (−1.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 20:30 <b>Gençlerbirliği v Erzurumspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>— under +1%</td><td>✅ <b>Erzurumspor U1.5</b> 75.1% +8.8%<br>buy≥1.39 (+4.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 20:30 <b>Legia v Śląsk</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— under +1%</td><td>❌ <b>Legia O1.5</b> 55.0% +9.5%<br>buy≥1.59 (−12.7% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 83' 1-0 <b>Lille v PSG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>O1.5 80.1% +2.8%<br>buy≥1.31 (+4.9% margin) · <i>needs 1 more</i></td><td>O2.25 57.7% +4.1%<br>buy≥1.35 (−12.2% margin) · floor −17.3 · <i>needs 2 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 89' 2-0 <b>Lille v PSG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>O1.5 80.1% +2.8%<br>buy≥1.31 (+4.9% margin) · <i>✓ landed</i></td><td>O2.25 57.7% +4.1%<br>buy≥1.35 (−12.2% margin) · floor −17.3 · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-0 · 28-08 20:45 <b>Genk v Beveren</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Belgian Pro League (84.7 +0.8)</td><td>— under +1%</td><td>✅ <b>Beveren U1.5</b> 75.4% +9.8%<br>buy≥1.34 (+0.9% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 83' 1-3 <b>Crystal Palace v Man City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>O1.5 84.3% +4.5%<br>buy≥1.28 (+8.1% margin) · <i>✓ landed</i></td><td><b>Man City O1.5</b> 69.8% +30.5%<br>buy≥1.38 (−3.9% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 80' 1-2 <b>Wrexham v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.3% +2.0%<br>buy≥1.47 (+2.8% margin) · <i>push as it stands</i></td><td>U2.75 55.0% +2.4%<br>buy≥1.35 (−16.8% margin) · floor −20.0 · <i>half gone</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 65' 0-4 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin) · <i>✓ landed</i></td><td><b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 55' 1-0 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin) · <i>needs 1 more</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 12' 0-1 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin) · <i>needs 1 more</i></td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 89' 1-4 <b>Crystal Palace v Man City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>O1.5 84.3% +4.5%<br>buy≥1.28 (+8.1% margin) · <i>✓ landed</i></td><td><b>Man City O1.5</b> 69.8% +30.5%<br>buy≥1.38 (−3.9% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 87' 1-2 <b>Wrexham v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.3% +2.0%<br>buy≥1.47 (+2.8% margin) · <i>push as it stands</i></td><td>U2.75 55.0% +2.4%<br>buy≥1.35 (−16.8% margin) · floor −20.0 · <i>half gone</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 71' 0-4 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin) · <i>✓ landed</i></td><td><b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 62' 1-0 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin) · <i>needs 1 more</i></td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 18' 0-2 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin) · <i>✓ landed</i></td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>— under +1%</td><td>O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-08 01:30 <b>Náutico v Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 83.1% +1.4%<br>buy≥1.32 (+4.3% margin)</td><td>U2.75 63.9% +2.0%<br>buy≥1.25 (−11.7% margin) · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-08 11:00 <b>Gamba Osaka v Sanfrecce</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>— under +1%</td><td><b>Sanfrecce O0.5</b> 83.6% +14.6%<br>buy≥1.24 (+3.6% margin) · team</td></tr></table>
@@ -179,14 +179,13 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 28-08 17:00 <b>Shooting Stars SC v Inter Lagos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>NPFL (88.7 −1.8)</td><td>— no tip: Inter Lagos has no history in the data</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔴 ◦ PUSH — 0-3 <b>Laval v Grenoble</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (75.9 −6.5)</td><td>U3.0 79.9% +5.0%<br>buy≥1.46 (+9.5% margin) · <i>push as it stands</i></td><td>❌ U2.75 59.6% +6.1%<br>buy≥1.40 (−6.9% margin) · floor −18.4 · <i>half gone</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 ◦ PUSH — 0-3 <b>Cremonese v Modena</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (79.5 +2.3)</td><td>U3.0 74.4% <b>−1.0%</b><br>buy≥1.50 (+0.9% margin) · <i>push as it stands</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 83' 1-0 <b>Lille v PSG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>O1.5 80.1% +2.8%<br>buy≥1.31 (+4.9% margin) · <i>needs 1 more</i></td><td>O2.25 57.7% +4.1%<br>buy≥1.35 (−12.2% margin) · floor −17.3 · <i>needs 2 more</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90' 1-0 <b>Milan v Venezia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>U3.0 75.1% <b>+0.0%</b><br>buy≥1.30 (−2.1% margin) · <i>room for 1</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 83' 1-3 <b>Crystal Palace v Man City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>O1.5 84.3% +4.5%<br>buy≥1.28 (+8.1% margin) · <i>✓ landed</i></td><td><b>Man City O1.5</b> 69.8% +30.5%<br>buy≥1.38 (−3.9% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 80' 1-2 <b>Wrexham v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.3% +2.0%<br>buy≥1.47 (+2.8% margin) · <i>push as it stands</i></td><td>U2.75 55.0% +2.4%<br>buy≥1.35 (−16.8% margin) · floor −20.0 · <i>half gone</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 82' 0-1 <b>Tenerife v Sporting Gijón</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 capped)</td><td>U3.0 77.8% <b>+0.0%</b><br>buy≥1.36 (+1.2% margin) · <i>room for 1</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 65' 0-4 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin) · <i>✓ landed</i></td><td><b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 55' 1-0 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin) · <i>needs 1 more</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 12' 0-1 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin) · <i>needs 1 more</i></td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 89' 2-0 <b>Lille v PSG</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>O1.5 80.1% +2.8%<br>buy≥1.31 (+4.9% margin) · <i>✓ landed</i></td><td>O2.25 57.7% +4.1%<br>buy≥1.35 (−12.2% margin) · floor −17.3 · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 89' 1-4 <b>Crystal Palace v Man City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>O1.5 84.3% +4.5%<br>buy≥1.28 (+8.1% margin) · <i>✓ landed</i></td><td><b>Man City O1.5</b> 69.8% +30.5%<br>buy≥1.38 (−3.9% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 87' 1-2 <b>Wrexham v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.3% +2.0%<br>buy≥1.47 (+2.8% margin) · <i>push as it stands</i></td><td>U2.75 55.0% +2.4%<br>buy≥1.35 (−16.8% margin) · floor −20.0 · <i>half gone</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 88' 0-1 <b>Tenerife v Sporting Gijón</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 capped)</td><td>U3.0 77.8% <b>+0.0%</b><br>buy≥1.36 (+1.2% margin) · <i>room for 1</i></td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 71' 0-4 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin) · <i>✓ landed</i></td><td><b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 62' 1-0 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin) · <i>needs 1 more</i></td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 18' 0-2 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin) · <i>✓ landed</i></td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 00:30 <b>Goiás v São Bernardo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.23 (+6.1% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 00:30 <b>Cobresal v Palestino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 84.6% <b>−0.8%</b><br>buy≥1.27 (+5.7% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.22 (+6.1% margin)</td><td>O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
@@ -261,7 +260,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 24 / 29   ·   82.8%**   ·   **Tip 2 — 17 / 27   ·   63.0%**
+**Tip 1 — 25 / 30   ·   83.3%**   ·   **Tip 2 — 17 / 27   ·   63.0%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
@@ -292,13 +291,14 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 5-1 · 28-08 20:30 <b>Bayern v Stuttgart</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Bundesliga (84.0 −0.9)</td><td>O1.5 86.7% +4.0%<br>buy≥1.23 (+9.0% margin)</td><td>✅ <b>Bayern O1.5</b> 72.6% +22.1%<br>buy≥1.36 (−1.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 20:30 <b>Gençlerbirliği v Erzurumspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>U4.25 84.7% <b>+0.5%</b><br>buy≥1.20 (+6.1% margin)</td><td>✅ <b>Erzurumspor U1.5</b> 75.1% +8.8%<br>buy≥1.39 (+4.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 20:30 <b>Legia v Śląsk</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 84.3% <b>−1.2%</b><br>buy≥1.29 (+6.8% margin)</td><td>❌ <b>Legia O1.5</b> 55.0% +9.5%<br>buy≥1.59 (−12.7% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 28-08 20:45 <b>Milan v Venezia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>U3.0 75.1% <b>+0.0%</b><br>buy≥1.30 (−2.1% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-0 · 28-08 20:45 <b>Genk v Beveren</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Belgian Pro League (84.7 +0.8)</td><td>U4.25 85.8% <b>+0.4%</b><br>buy≥1.23 (+5.3% margin)</td><td>✅ <b>Beveren U1.5</b> 75.4% +9.8%<br>buy≥1.34 (+0.9% margin) · team</td></tr></table>
 
 <br clear="all">
 
 ### 🟡 Actual placed bets
 
-**Settled: 17 / 21  ·  ROI +1.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 19 / 23  ·  ROI +3.9%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -313,7 +313,7 @@ that premium the book is keeping the insurance money.
 | ✅ | TOP Oss v Jong FC Utrecht | U4.5 | 1.22 | 1.22x | softer line above the U4.25 tip |
 | ❌ | Groningen v Fortuna Sittard | U4.5 | 1.24 | 0.00x | softer line above the U4.25 tip (+5.8%) |
 | ◦ | Legia v Śląsk | DNB (home) | 1.17 | 1.00x | rule 5 shape on the sub-bar fixture |
-| — open | Milan v Venezia | U3.5 | 1.37 | — | softer line above the U3.0 tip (+5.2%) |
+| ✅ | Milan v Venezia | U3.5 | 1.37 | 1.37x | softer line above the U3.0 tip (+5.2%) |
 | ❌ | Al-Riyadh v Neom | DNB (away) | 1.42 | 0.00x | rule 5 shape, away side |
 | ◦ | Dalian Yingbo v Guoan | DNB (away) | 1.53 | 1.00x | rule 5 shape, away side |
 | ✅ | Shenhua v Taishan | O0.5 (away) | 1.18 | 1.18x | = Tip 2 team lane (81.8% +9.2%, buy≥1.32 — taken under it, widened) |
@@ -326,7 +326,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Crystal Palace v Man City | O1.5 | 1.20 | 1.20x | = Tip 1 rung (84.3% +4.5%), under buy≥ — widened |
 | — open | Comerciantes Unidos v Cajamarca | DNB (home) | 1.24 | — | rule 5 shape, home side of the O1.5 tip |
 | ❌ | Jong Ajax v Helmond Sport | U4.5 | 1.21 | 0.00x | R6 softer line above the U4.25 tip (84.1% +4.4%, buy≥1.29) |
-| — open | Lille v PSG | O1.5 | 1.22 | — | = Tip 1 rung (80.1% +2.8%), under buy≥1.31 — widened |
+| ✅ | Lille v PSG | O1.5 | 1.22 | 1.22x | = Tip 1 rung (80.1% +2.8%), under buy≥1.31 — widened |
 | — open | Náutico v Athletic | U3.5 | 1.20 | — | R6 softer line above the U3.0 tip (83.1% +1.4%, buy≥1.32) |
 
 <!-- HYPOTHESES:START -->
