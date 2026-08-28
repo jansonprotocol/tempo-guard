@@ -27,12 +27,23 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.board import load
 
-# Board league code -> ESPN scoreboard slug. Extend as slates need it.
+# Board league code -> ESPN scoreboard slug. Extend as slates need it —
+# every slug here answered 200 with real events before being added
+# (28 Aug: eight board leagues were silently unmapped and three LIVE
+# Chinese games swept as "not on ESPN" while ESPN carried all three).
+# POL-EK is deliberately absent alongside ALG-L1: 400 at every slug
+# tried, so a mapping would only pretend to have looked. NGA-PL answers
+# 200 but has listed no NPFL fixtures yet — mapped so the day ESPN adds
+# them the sweep starts seeing them, and until then those rows come back
+# named for hand-grading exactly as before.
 ESPN = {
     "ITA-SA": "ita.1", "SAU-PL": "ksa.1", "DEN-SL": "den.1", "SWE-AL": "swe.1",
     "ESP-L2": "esp.2", "ESP-LL": "esp.1", "NED-D2": "ned.2", "ENG-PL": "eng.1",
     "POR-PL": "por.1", "FRA-L2": "fra.2", "TUR-SL": "tur.1", "BRA-SB": "bra.2",
     "BRA-SA": "bra.1", "CHI-PD": "chi.1", "COL-PA": "col.1",
+    "CHN-SL": "chn.1", "ENG-CH": "eng.2", "FRA-L1": "fra.1",
+    "GER-B2": "ger.2", "ITA-SB": "ita.2", "PER-L1": "per.1",
+    "NGA-PL": "nga.1",
     "UCL-Q": "uefa.champions_qual",
 }
 
