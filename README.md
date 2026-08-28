@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · BETA STAGE 2
 
 
-## CURRENT CONFIRMED HITRATE: 0.0%
+## CURRENT CONFIRMED HITRATE: 100.0%
 
     lane                        Tip 1              Tip 2
-    all matches              0 / 0               0 / 0
-    played lanes  >+1%       0 / 0               0 / 0
+    all matches              2 / 2   100.0%      2 / 2   100.0%
+    played lanes  >+1%       0 / 0               2 / 2   100.0%
     placed bets              0 / 0             ROI +0.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -81,10 +81,10 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 0 / 0**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+**Playable — 2 / 2   ·   100.0%**   ·   **Tip 1 — 0 / 0**   ·   **Tip 2 — 2 / 2   ·   100.0%**
 
-<table align="left"><tr><th align="left">🟢 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>— under +1%</td><td>O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
-<table align="left"><tr><th align="left">🟢 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>— under +1%</td><td><b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 13:35 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26</td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.93 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 13:35 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>— under +1%</td><td><b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.32 · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-08 14:00 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>U4.25 84.7% +5.3%<br>buy≥1.30</td><td><b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.89 · team</td></tr></table>
@@ -128,8 +128,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
-<table align="left"><tr><th align="left">🔵 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td><b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 13:35 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26</td><td><b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.93 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 13:35 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>U4.25 79.7% <b>+0.4%</b><br>buy≥1.35</td><td><b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.32 · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-08 14:00 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (82.0 −1.4)</td><td>U4.25 84.7% +5.3%<br>buy≥1.30</td><td><b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.89 · team</td></tr></table>
@@ -174,9 +172,12 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 0 / 0**   ·   **Tip 2 — 0 / 0**
+**Tip 1 — 2 / 2   ·   100.0%**   ·   **Tip 2 — 2 / 2   ·   100.0%**
 
-*(nothing settled yet on this slate)*
+<table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 −2.3)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
+
+<br clear="all">
 
 ### 🟡 Actual placed bets
 

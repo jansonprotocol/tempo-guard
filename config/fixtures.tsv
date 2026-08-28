@@ -2,8 +2,8 @@
 # every block in README.md is rendered from this file by scripts/board.py.
 # Grade a fixture by filling `status` (e.g. "✅ HIT — 2-1"), then re-render.
 # kickoff	code	league	teams	tip1	tip2	status
-2026-08-28 01:10	COL-PA	Categoría Primera A	Llaneros v Millonarios	U4.25 90.0% **−1.5%** · buy≥1.19	O1.75 69.5% +2.3% (floor −5.5) · buy≥1.62	
-2026-08-28 03:15	COL-PA	Categoría Primera A	Internacional de Bogotá v Deportivo Pasto	U4.25 90.0% **−1.5%** · buy≥1.18	**Internacional de Bogotá O0.5** 82.9% +7.5% (team) · buy≥1.31	
+2026-08-28 01:10	COL-PA	Categoría Primera A	Llaneros v Millonarios	U4.25 90.0% **−1.5%** · buy≥1.19	✅ O1.75 69.5% +2.3% (floor −5.5) · buy≥1.62	✅ HIT — 0-2
+2026-08-28 03:15	COL-PA	Categoría Primera A	Internacional de Bogotá v Deportivo Pasto	U4.25 90.0% **−1.5%** · buy≥1.18	✅ **Internacional de Bogotá O0.5** 82.9% +7.5% (team) · buy≥1.31	✅ HIT — 1-1
 2026-08-28 13:35	CHN-SL	Chinese Super League	Dalian Yingbo v Guoan	O1.5 83.0% +1.1% · buy≥1.26	**Guoan O1.5** 56.2% +17.2% (team) · buy≥1.93	
 2026-08-28 13:35	CHN-SL	Chinese Super League	Shenhua v Taishan	U4.25 79.7% **+0.4%** · buy≥1.35	**Taishan O0.5** 81.8% +9.2% (team) · buy≥1.32	
 2026-08-28 14:00	CHN-SL	Chinese Super League	Shenzhen v Port	U4.25 84.7% +5.3% · buy≥1.30	**Port O1.5** 57.3% +18.4% (team) · buy≥1.89	
