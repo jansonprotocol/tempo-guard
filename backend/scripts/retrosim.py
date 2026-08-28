@@ -25,6 +25,7 @@ A league is only worth acting on when the gap is large AND n is big enough to
 mean something. Wilson intervals are printed for exactly that reason.
 
 Usage:  python scripts/retrosim.py [--n 150] [--leagues MLS,JPN-J1]
+                                  [--write]     update league_hitrates.tsv in place
                                   [--min 150]   lower the 200-row floor
 """
 from __future__ import annotations
@@ -170,6 +171,37 @@ def main() -> None:
 
     if not rows:
         return
+
+    # --write: the table refresh is part of the instrument, not a
+    # scratchpad regex. Only the leagues actually run are touched; the
+    # header and every other row stay as they are. This is what keeps
+    # league_hitrates.tsv — the badges, the Retrosim page, the REL debit's
+    # base rates — from going a day stale the way the cup rows once did.
+    if "--write" in sys.argv:
+        path = Path(__file__).resolve().parents[2] / "config" / \
+            "league_hitrates.tsv"
+        lines = path.read_text().split("\n")
+        fresh = {r["league"]: r for r in rows}
+        hit_file = set()
+        for i, ln in enumerate(lines):
+            parts = ln.split("\t")
+            if ln.startswith("#") or len(parts) < 4:
+                continue
+            r = fresh.get(parts[0])
+            if r is None:
+                continue
+            buy = f"{r['buy']:.2f}" if r.get("buy") else ""
+            lines[i] = (f"{parts[0]}\t{r['n']}\t{r['hit']*100:.1f}\t"
+                        f"{(r['hit']-r['says'])*100:+.1f}\t{buy}")
+            hit_file.add(parts[0])
+        for code, r in fresh.items():
+            if code not in hit_file:
+                buy = f"{r['buy']:.2f}" if r.get("buy") else ""
+                lines.append(f"{code}\t{r['n']}\t{r['hit']*100:.1f}\t"
+                             f"{(r['hit']-r['says'])*100:+.1f}\t{buy}")
+        path.write_text("\n".join(lines))
+        print(f"league_hitrates.tsv: {len(fresh)} rows written")
+
     tot_n = sum(r["n"] for r in rows)
     w_says = sum(r["says"] * r["n"] for r in rows) / tot_n
     w_hit = sum(r["hit"] * r["n"] for r in rows) / tot_n

@@ -451,6 +451,39 @@ python athena.py tips --days 7
 committed, everything else works offline — and because the snapshots are in the
 repo, a fresh clone can predict immediately without syncing at all.
 
+## The three operating commands
+
+Each command has a contract: what it reads, what it must write, and the
+verify that refuses a half-done job. Nothing on any surface is ever
+updated by hand.
+
+**1 · Update fixtures** — `python scripts/sweep.py`
+Fetch every unsettled fixture's state from ESPN (all of them, never one —
+hard-locked). In play → `LIVE 63' 2-1` with per-lane room/landed states;
+in extra time → settled NOW on the 90-minute score from the goal
+narration; finished → Tip 1 graded into the status, Tip 2 into its own
+cell. Writes `config/fixtures.tsv`, then renders README and app — where
+found bets, ROI and both hitrate tiles are DERIVED from the ledger and
+the graded rows, so settling a fixture settles its bets everywhere at
+once. Ends in `board.verify()`: every fixture on every surface, tallies
+matching, no row four hours stale.
+
+**2 · Futurematch** — `python scripts/futurematch.py slate.tsv | --reprice`
+Run Athena on new fixtures and put them on the board (an abstention is
+added too, with its reason in the tip cell), or re-price every pending
+row after an engine change — board rows are typed at slate time and do
+not move by themselves. Writes the rows, renders both surfaces, verifies.
+
+**3 · Calibrations and tests** — the instruments in `backend/scripts/`
+A measurement writes nothing but its verdict (docstring, patch note,
+hypotheses ledger). A SHIPPED change must be followed by, in order:
+`retrosim --write` for the affected leagues (refreshes
+`league_hitrates.tsv` — the badges, the Retrosim page and the REL
+debit's base rates), then `futurematch.py --reprice` (pending cards onto
+the new engine), then the render. The Engine state block is checked
+against the live constants on every render, so a shipped constant that
+skips the README fails the build.
+
 ## The two flows
 
 ### Calibration
