@@ -309,8 +309,8 @@ def _card(f, kind: str, reads: dict) -> str:
     # Tip 3 rides the card FACE, not the fold — a lane nobody sees is a
     # lane that can never earn its way off probation.
     t3 = (f'<div class="lane"><span class="which">Tip 3</span> '
-          f'{_fmt(f.tip3)} <span class="dim">· result lane, probation'
-          f'</span></div>' if f.tip3.strip() else "")
+          f'{_fmt(f.tip3)} <span class="dim">· result lane</span></div>'
+          if f.tip3.strip() else "")
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
@@ -529,12 +529,16 @@ def main() -> None:
     # Tip 3 grades off its own column marks — on probation it feeds no
     # other tally, but its record is public from the first settled lane.
     # A ◦ (DNB draw) counts as a hit, same convention as everywhere.
-    h3 = n3 = 0
+    # Hindsight rows — session fixtures that settled before the lane
+    # existed, graded retroactively at the bettor's request — are counted
+    # but named in the tile, so the live record can never hide behind them.
+    h3 = n3 = hs3 = 0
     for f in fixtures:
         mark = f.tip3.lstrip()[:1] if f.tip3.strip() else ""
         if mark in ("✅", "❌", "◦"):
             n3 += 1
             h3 += mark != "❌"
+            hs3 += "hindsight" in f.tip3
 
     reads = _reads(fixtures)
     pending = [f for f in fixtures if not f.settled]
@@ -561,7 +565,8 @@ def main() -> None:
         tile("tip 2", f"{h2 / n2 * 100:.1f}%" if n2 else "—",
              f"{h2}/{n2} settled"),
         tile("tip 3", f"{h3 / n3 * 100:.1f}%" if n3 else "—",
-             f"{h3}/{n3} settled · probation" if n3
+             (f"{h3}/{n3} · probation" +
+              (f" · {hs3} hindsight" if hs3 else "")) if n3
              else "probation · first grades tonight"),
         tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
              f"your lanes · {bh}/{bn} hits"),
