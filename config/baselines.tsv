@@ -1,0 +1,7 @@
+# Baseline hitrates per league: each tip replayed as-of over the
+# league's most recent 60 fixtures on the current build, push
+# counted as a hit. Written by scripts/baselines.py — derived,
+# never typed. Read by the app's hero baseline bar, which averages
+# the per-league rates with equal weight.
+# league	t1_hits	t1_n	t2_hits	t2_n	t3_hits	t3_n
+NED-D2	49	60	35	50	10	12
