@@ -107,11 +107,13 @@ def lane(cell: str, status: str, which: int) -> tuple | None:
         return None
     bf = BUY.search(cell)
     # Tip 1's result is the status cell; Tip 2 carries its own tick.
+    # A push grades as a win: the standing offset plays U3.0 as U3.5, so
+    # the actual bet wins where the printed rung pushes.
     if which == 1:
-        res = ("✅" if status.startswith("✅") else
+        res = ("✅" if status.startswith(("✅", "◦")) else
                "❌" if status.startswith("❌") else None)
     else:
-        res = ("✅" if cell.startswith("✅") else
+        res = ("✅" if cell.startswith(("✅", "◦")) else
                "❌" if cell.startswith("❌") else None)
     return (label, m.group(2), edge, bf.group(1) if bf else None, res)
 

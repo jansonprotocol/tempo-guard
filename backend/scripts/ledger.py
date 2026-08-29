@@ -54,7 +54,7 @@ def read_fixtures() -> dict[str, dict]:
     for ln in (ROOT / "config" / "fixtures.tsv").read_text().splitlines():
         if ln.startswith("#") or not ln.strip():
             continue
-        _ko, _code, _league, name, tip1, tip2, status = ln.split("\t")
+        _ko, _code, _league, name, tip1, tip2, status = ln.split("\t")[:7]
         m = TIP.search(tip1)
         if not m:
             continue

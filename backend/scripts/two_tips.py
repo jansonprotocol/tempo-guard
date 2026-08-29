@@ -83,13 +83,27 @@ def tips(lg: str, h: str, a: str, d: date):
     # A team total is a different market rather than another rung, so it is
     # compared on EDGE — how far each beats a typical fixture of its own kind —
     # and only replaces the ladder runner-up when it beats it on that measure.
+    # The streak debit lands here, on the PUBLISHED number and edge, before
+    # that comparison — both sides of it are then published figures, the same
+    # footing the ladder lanes already stand on through stated().
     tt = team_total.candidates(lg, d, req.p_home_tt05, req.p_away_tt05)
     if tt:
         m3, p3, e3 = tt[0]
-        if t2 is None or e3 > t2[2]:
+        side = h if m3.startswith("TA") else a
+        deb = team_total.streak_debit(lg, side, d, m3)
+        p3, e3 = p3 - deb, e3 - deb
+        # The debited edge must still clear the same bar candidates()
+        # applied to the raw one — a streak-inflated offer that only
+        # existed because of its streak stops printing here.
+        if e3 >= team_total.MIN_EDGE and (t2 is None or e3 > t2[2]):
             t2 = (m3, p3, e3, "team total")
+    # Tip 3 — the result lane, on probation. Priced from the same per-side
+    # expectations the team lane cuts; result_market carries the tilt, the
+    # floor and the DNB upgrade, all measured before shipping.
+    from app.engine import result_market
+    t3 = result_market.choose(lg, d, req.p_home_tt05, req.p_away_tt05)
     return dict(lg=lg, mu=req.mu_total, lmu=req.league_mu,
-                t1=(t1, p1, e1), t2=t2)
+                t1=(t1, p1, e1), t2=t2, t3=t3)
 
 
 def _undebited(lg: str, market: str, p: float) -> float:

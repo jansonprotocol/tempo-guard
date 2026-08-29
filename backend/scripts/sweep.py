@@ -57,11 +57,19 @@ SLUGS = dict(ESPN, **{
 
 
 def _get(url: str):
-    try:
-        with urllib.request.urlopen(url, timeout=15) as r:
-            return json.load(r)
-    except Exception:
-        return None
+    # One retry after a short pause: on a busy Saturday ESPN drops the odd
+    # request, and a single failed fetch used to silently blank a whole
+    # league for the pass — the 16:00 Championship wall one sweep, the
+    # Bundesliga the next — misread as "not on ESPN".
+    import time
+    for attempt in (0, 1):
+        try:
+            with urllib.request.urlopen(url, timeout=15) as r:
+                return json.load(r)
+        except Exception:
+            if attempt == 0:
+                time.sleep(1.5)
+    return None
 
 
 def board_day(code: str, day: str) -> list[dict]:
@@ -199,7 +207,7 @@ def main() -> None:
                                           f"(90'; {fin} aet)")
                 for i, ln in enumerate(lines):
                     parts = ln.split("\t")
-                    if len(parts) == 7 and parts[0] == f.kickoff \
+                    if len(parts) in (7, 8) and parts[0] == f.kickoff \
                             and parts[3] == f.teams:
                         parts[6] = status
                         lines[i] = "\t".join(parts)
@@ -233,6 +241,7 @@ def main() -> None:
         ca = next(x for x in comp["competitors"] if x["homeAway"] == "away")
         hg, ag = int(ch.get("score") or 0), int(ca.get("score") or 0)
         detail = st.get("shortDetail", "")
+        tip3 = f.tip3
 
         if st.get("state") == "pre":
             still.append(f.teams)
@@ -263,7 +272,7 @@ def main() -> None:
                     if status != f.status:
                         for i, ln in enumerate(lines):
                             parts = ln.split("\t")
-                            if len(parts) == 7 and parts[0] == f.kickoff \
+                            if len(parts) in (7, 8) and parts[0] == f.kickoff \
                                     and parts[3] == f.teams:
                                 parts[6] = status
                                 lines[i] = "\t".join(parts)
@@ -284,6 +293,16 @@ def main() -> None:
             got2 = settle(f.tip2, f.teams, hg, ag)
             if got2 and not tip2.lstrip().startswith(("✅", "❌", "◦")):
                 tip2 = f"{got2[0]} {tip2}"
+            # Tip 3 settles on the RESULT, not the total — a DNB draw is
+            # the one push in the family.
+            if tip3.strip() and not tip3.lstrip().startswith(("✅", "❌", "◦")):
+                from app.engine import result_market
+                try:
+                    g3 = result_market.won(tip3.split()[0], hg, ag)
+                    tip3 = ("◦ " if g3 is None else
+                            "✅ " if g3 else "❌ ") + tip3
+                except (ValueError, IndexError):
+                    pass
             if got1 is None:
                 status = f"FT {hg}-{ag} (no tip)"
             else:
@@ -291,12 +310,14 @@ def main() -> None:
                         "PUSH" if got1[1] == 0 else "MISS")
                 status = f"{got1[0]} {word} — {hg}-{ag}{note}"
 
-        if status == f.status and tip2 == f.tip2:
+        if status == f.status and tip2 == f.tip2 and tip3 == f.tip3:
             continue
         for i, ln in enumerate(lines):
             parts = ln.split("\t")
-            if len(parts) == 7 and parts[0] == f.kickoff and parts[3] == f.teams:
+            if len(parts) in (7, 8) and parts[0] == f.kickoff and parts[3] == f.teams:
                 parts[5], parts[6] = tip2, status
+                if len(parts) == 8:
+                    parts[7] = tip3
                 lines[i] = "\t".join(parts)
                 break
         changed.append(f"{f.teams}: {status}")
