@@ -581,6 +581,15 @@ that premium the book is keeping the insurance money.
 | — open | Darmstadt v Hannover | U4.5 | 1.22 | — | R6 softer off the U4.25 tip |
 | — open | Lyngby v OB | U4.5 | 1.18 | — | R6 softer off the U4.25 tip |
 | — open | Silkeborg v Midtjylland | U4.5 | 1.25 | — | R6 softer off the U4.25 tip |
+| — open | Gent v Club Brugge | O1.5 | 1.19 | — | tip 1 rung, bought under buy≥1.27 |
+| — open | Vålerenga v Molde | 12 | 1.20 | — | own read DC — lane unpriced (card predates tip 3) |
+| — open | AIK v Hammarby | 12 | 1.20 | — | own read DC — no tip 3 print on this card |
+| — open | Willem II v Heerenveen | U4.5 | 1.26 | — | R6 softer off the U4.25 tip |
+| — open | Raków v Jagiellonia | O1.5 | 1.22 | — | tip 1 rung, bought under buy≥1.34 |
+| — open | Chelsea v Brighton | DNB (home) | 1.33 | — | = tip 3's DNB1 (81.1%) ABOVE its buy≥1.29 — Rule 7 compliant buy |
+| — open | Sunderland v Fulham | 1X | 1.37 | — | = tip 3's 1X print (74.4%), just under buy≥1.41 |
+| — open | Paris FC v Nice | O1.5 | 1.32 | — | = tip 1 rung above buy≥1.31 — clean buy |
+| — open | Freiburg v Bremen | 12 | 1.29 | — | = tip 3's 12 print (76.8%), under buy≥1.37 |
 
 <!-- HYPOTHESES:START -->
 
