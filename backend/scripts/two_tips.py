@@ -97,8 +97,13 @@ def tips(lg: str, h: str, a: str, d: date):
         # existed because of its streak stops printing here.
         if e3 >= team_total.MIN_EDGE and (t2 is None or e3 > t2[2]):
             t2 = (m3, p3, e3, "team total")
+    # Tip 3 — the result lane, on probation. Priced from the same per-side
+    # expectations the team lane cuts; result_market carries the tilt, the
+    # floor and the DNB upgrade, all measured before shipping.
+    from app.engine import result_market
+    t3 = result_market.choose(lg, d, req.p_home_tt05, req.p_away_tt05)
     return dict(lg=lg, mu=req.mu_total, lmu=req.league_mu,
-                t1=(t1, p1, e1), t2=t2)
+                t1=(t1, p1, e1), t2=t2, t3=t3)
 
 
 def _undebited(lg: str, market: str, p: float) -> float:

@@ -79,17 +79,31 @@ def cell2(r: dict, lg: str, home: str, away: str) -> str:
             f"{_buy_str(m, r['mu'], p, e, lg)}").replace("+−", "−")
 
 
+def cell3(r: dict) -> str:
+    """The result lane's cell. Priced at plain break-even plus margin —
+    the buy-blend stays out of it: the league's playable record describes
+    totals lanes and says nothing about a double chance. Probation is
+    printed on the cell, the same way the cup lane wore it."""
+    if not r.get("t3"):
+        return ""
+    lane, p, e = r["t3"]
+    from app.engine import pricing
+    be = (1 / p) * (1 + pricing.DEFAULT_MARGIN)
+    return (f"{lane} {p*100:.1f}% {e*100:+.1f}% · buy≥{be:.2f} · "
+            f"probation")
+
+
 def price(code: str, teams: str, day: str):
-    """(tip1 cell, tip2 cell) for one fixture, or an abstention row."""
+    """(tip1, tip2, tip3 cells) for one fixture, or an abstention row."""
     h, a = (x.strip() for x in teams.split(" v ", 1))
     try:
         r = tips(code, h, a, date.fromisoformat(day))
     except Exception as exc:
-        return f"— no tip: {exc}", "—"
+        return f"— no tip: {exc}", "—", ""
     if r is None:
         return ("— no tip: engine abstained (thin history or an "
-                "unresolved name)"), "—"
-    return cell1(r, code), cell2(r, code, h, a)
+                "unresolved name)"), "—", ""
+    return cell1(r, code), cell2(r, code, h, a), cell3(r)
 
 
 def add_slate(path: Path) -> None:
@@ -98,13 +112,13 @@ def add_slate(path: Path) -> None:
         if ln.startswith("#") or not ln.strip():
             continue
         ko, code, league, teams = ln.split("\t")[:4]
-        t1, t2 = price(code, teams, ko.split(" ")[0])
+        t1, t2, t3 = price(code, teams, ko.split(" ")[0])
         if not t1.startswith("—"):
             edge = float(t1.split("%")[1].split()[-1].replace("−", "-")
                          .replace("**", "").lstrip("+"))
             playable += edge > 1.0
-        rows.append(f"{ko}\t{code}\t{league}\t{teams}\t{t1}\t{t2}\t")
-        print(f"  {teams}: {t1}")
+        rows.append(f"{ko}\t{code}\t{league}\t{teams}\t{t1}\t{t2}\t\t{t3}")
+        print(f"  {teams}: {t1}" + (f"   ·   T3 {t3}" if t3 else ""))
     FIXTURES.write_text(FIXTURES.read_text().rstrip("\n") + "\n"
                         + "\n".join(rows) + "\n")
     print(f"{len(rows)} fixtures added · ~{playable} playable at tip 1")
@@ -117,13 +131,16 @@ def reprice() -> None:
         if f.settled or f.status or " v " not in f.teams \
                 or f.tip1.startswith("—"):
             continue                      # live and graded rows never move
-        n1, n2 = price(f.code, f.teams, f.kickoff.split(" ")[0])
-        if n1.startswith("—") or (n1 == f.tip1 and n2 == f.tip2):
+        n1, n2, n3 = price(f.code, f.teams, f.kickoff.split(" ")[0])
+        if n1.startswith("—") or (n1 == f.tip1 and n2 == f.tip2
+                                  and n3 == f.tip3):
             continue
         for i, ln in enumerate(lines):
             p = ln.split("\t")
-            if len(p) == 7 and p[0] == f.kickoff and p[3] == f.teams:
+            if len(p) in (7, 8) and p[0] == f.kickoff and p[3] == f.teams:
                 p[4], p[5] = n1, n2
+                # a 7-column row grows its result-lane column here
+                p = p[:7] + [n3]
                 lines[i] = "\t".join(p)
                 changed += 1
                 if f.tip1.split()[0] != n1.split()[0]:

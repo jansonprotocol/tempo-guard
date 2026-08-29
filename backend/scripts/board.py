@@ -58,12 +58,17 @@ HEAD_END = "live tips, not backtests"
 
 
 class Fixture:
-    __slots__ = ("kickoff", "code", "league", "teams", "tip1", "tip2", "status")
+    __slots__ = ("kickoff", "code", "league", "teams", "tip1", "tip2",
+                 "status", "tip3")
 
-    def __init__(self, kickoff, code, league, teams, tip1, tip2, status):
+    # tip3 is the 8th column, APPENDED AFTER status so every parser that
+    # indexed the original seven keeps its indices; a 7-column row is a
+    # fixture from before the result lane existed and reads as tip3="".
+    def __init__(self, kickoff, code, league, teams, tip1, tip2, status,
+                 tip3=""):
         self.kickoff, self.code, self.league = kickoff, code, league
         self.teams, self.tip1, self.tip2 = teams, tip1, tip2
-        self.status = status
+        self.status, self.tip3 = status, tip3
 
     @property
     def settled(self) -> bool:
@@ -86,8 +91,8 @@ def load() -> list[Fixture]:
         if ln.startswith("#") or not ln.strip():
             continue
         parts = ln.split("\t")
-        if len(parts) != 7:
-            raise ValueError(f"fixtures.tsv row needs 7 columns: {ln!r}")
+        if len(parts) not in (7, 8):
+            raise ValueError(f"fixtures.tsv row needs 7-8 columns: {ln!r}")
         out.append(Fixture(*parts))
     return sorted(out, key=lambda f: f.kickoff)
 
@@ -139,13 +144,16 @@ def _cards(entries: list[tuple[Fixture, str, str, str]]) -> list[str]:
         # goals and has no concept of an aggregate.
         row = (f'<tr><td colspan="3"><sub>🏆 {_html(tie)}</sub></td></tr>'
                if tie else "")
+        t3row = (f'<tr><td colspan="3"><sub>Tip 3 · {_html(f.tip3)} — '
+                 f'result lane, outside every tally until it earns in'
+                 f'</sub></td></tr>' if f.tip3.strip() else "")
         out.append(
             '<table align="left">'
             f'<tr><th align="left">{_html(_head(f, glyph))}</th>'
             '<th align="left">Tip 1</th><th align="left">Tip 2</th></tr>'
             f'<tr><td>{_html(_badge(f))}</td>'
             f'<td>{_html(t1)}</td><td>{_html(t2)}</td></tr>'
-            f'{row}</table>')
+            f'{t3row}{row}</table>')
     if out:
         out += ['', '<br clear="all">', '']
     return out
@@ -585,7 +593,7 @@ def verify(quiet: bool = False) -> None:
     #     it names is read back out of the live code and compared.
     import re
     from app.data import club_elo, features
-    from app.engine import market_select, pricing, team_total
+    from app.engine import market_select, pricing, result_market, team_total
     live = {
         "MU_SHRINK": features.MU_SHRINK,
         "TEAM_SHRINK": features.TEAM_SHRINK,
@@ -598,6 +606,9 @@ def verify(quiet: bool = False) -> None:
         "BUY_BLEND_ABOVE": pricing.BUY_BLEND_ABOVE,
         "STREAK_FROM": team_total.STREAK_FROM,
         "STREAK_SLOPE": team_total.STREAK_SLOPE,
+        "RESULT_TILT": result_market.RESULT_TILT,
+        "DC_FLOOR": result_market.DC_FLOOR,
+        "DNB_FROM": result_market.DNB_FROM,
         "REL_SAYS_FROM": market_select.REL_SAYS_FROM,
         "REL_SAYS_SLOPE": market_select.REL_SAYS_SLOPE,
         "HIGH_SAYS_DEBIT": market_select.HIGH_SAYS_DEBIT,
