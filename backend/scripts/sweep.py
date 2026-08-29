@@ -57,11 +57,19 @@ SLUGS = dict(ESPN, **{
 
 
 def _get(url: str):
-    try:
-        with urllib.request.urlopen(url, timeout=15) as r:
-            return json.load(r)
-    except Exception:
-        return None
+    # One retry after a short pause: on a busy Saturday ESPN drops the odd
+    # request, and a single failed fetch used to silently blank a whole
+    # league for the pass — the 16:00 Championship wall one sweep, the
+    # Bundesliga the next — misread as "not on ESPN".
+    import time
+    for attempt in (0, 1):
+        try:
+            with urllib.request.urlopen(url, timeout=15) as r:
+                return json.load(r)
+        except Exception:
+            if attempt == 0:
+                time.sleep(1.5)
+    return None
 
 
 def board_day(code: str, day: str) -> list[dict]:
