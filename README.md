@@ -465,6 +465,15 @@ that premium the book is keeping the insurance money.
 | — open | Zwolle v NEC | 12 | 1.23 | — | either side outright — own read DC |
 | — open | Sevilla v Atlético Madrid | U3.5 | 1.28 | — | R6 softer above the U3.0 tip (+5.3%) |
 | — open | Girona v Las Palmas | U1.5 (away) | 1.20 | — | Las Palmas team under — own read |
+| — open | Deportes Limache v Everton | O0.5 (away) | 1.22 | — | Everton to score — team lane own read |
+| — open | NY Red Bulls v Philadelphia | 12 | 1.25 | — | either side outright — own read DC |
+| — open | Ñublense v Deportes Concepción | O0.5 (home) | 1.22 | — | Ñublense to score — team lane own read |
+| — open | Vasco v Cruzeiro | U3.5 | 1.26 | — | R6 off the U-tip |
+| — open | Houston v San Jose | DNB (home) | 1.28 | — | rule 5 shape, Houston side |
+| — open | Nashville v Cincinnati | 12 | 1.23 | — | either side outright — own read DC |
+| — open | Kansas City v Vancouver | U4.5 | 1.32 | — | R6 softer off the U-tip |
+| — open | Colorado v Salt Lake | U4.5 | 1.19 | — | R6 softer off the U-tip |
+| — open | Portland v Austin | DNB (home) | 1.22 | — | = tip 3's DNB1 print (82.8%) — following the probation lane |
 
 <!-- HYPOTHESES:START -->
 
