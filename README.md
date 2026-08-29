@@ -1,12 +1,12 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 82.9%
+## CURRENT CONFIRMED HITRATE: 84.6%
 
     lane                        Tip 1              Tip 2
-    all matches             29 / 35   82.9%     20 / 32   62.5%
-    played lanes  >+1%      15 / 20   75.0%     20 / 32   62.5%
-    placed bets             20 / 24   83.3%    ROI +4.7%
+    all matches             33 / 39   84.6%     22 / 35   62.9%
+    played lanes  >+1%      16 / 21   76.2%     22 / 35   62.9%
+    placed bets             21 / 26   80.8%    ROI +1.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -81,7 +81,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 35 / 52   ·   67.3%**   ·   **Tip 1 — 15 / 20   ·   75.0%**   ·   **Tip 2 — 20 / 32   ·   62.5%**
+**Playable — 38 / 56   ·   67.9%**   ·   **Tip 1 — 16 / 21   ·   76.2%**   ·   **Tip 2 — 22 / 35   ·   62.9%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
@@ -117,9 +117,9 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">◦ 1-2 · 28-08 21:00 <b>Wrexham v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.3% +2.0%<br>buy≥1.47 (+2.8% margin)</td><td>❌ U2.75 55.0% +2.4%<br>buy≥1.35 (−16.8% margin) · floor −20.0</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-4 · 28-08 21:15 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin)</td><td>✅ <b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-0 · 28-08 21:30 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 69' 2-2 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin) · <i>✓ landed</i></td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🟢 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>— under +1%</td><td>O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
-<table align="left"><tr><th align="left">🟢 29-08 01:30 <b>Náutico v Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 83.1% +1.4%<br>buy≥1.32 (+4.3% margin)</td><td>U2.75 63.9% +2.0%<br>buy≥1.25 (−11.7% margin) · floor −11.1</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-3 · 28-08 22:00 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin)</td><td>✅ <b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>— under +1%</td><td>✅ O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
+<table align="left"><tr><th align="left">◦ 2-1 · 29-08 01:30 <b>Náutico v Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 83.1% +1.4%<br>buy≥1.32 (+4.3% margin)</td><td>❌ U2.75 63.9% +2.0%<br>buy≥1.25 (−11.7% margin) · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-08 11:00 <b>Gamba Osaka v Sanfrecce</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>— under +1%</td><td><b>Sanfrecce O0.5</b> 83.6% +14.6%<br>buy≥1.24 (+3.6% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-08 11:00 <b>Mito Hollyhock v Machida Zelvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>— under +1%</td><td><b>Machida Zelvia O0.5</b> 82.0% +13.0%<br>buy≥1.25 (+2.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-08 11:00 <b>Qingdao Hainiu v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 81.3% +1.9%<br>buy≥1.30 (+3.2% margin)</td><td><b>Wuhan Three Towns O0.5</b> 80.8% +8.2%<br>buy≥1.31 (+6.1% margin) · team</td></tr></table>
@@ -176,11 +176,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 69' 2-2 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin) · <i>✓ landed</i></td><td><b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔵 29-08 00:30 <b>Goiás v São Bernardo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.23 (+6.1% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔵 29-08 00:30 <b>Cobresal v Palestino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 84.6% <b>−0.8%</b><br>buy≥1.27 (+5.7% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔵 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.22 (+6.1% margin)</td><td>O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
-<table align="left"><tr><th align="left">🔵 29-08 01:30 <b>Náutico v Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 83.1% +1.4%<br>buy≥1.32 (+4.3% margin)</td><td>U2.75 63.9% +2.0%<br>buy≥1.25 (−11.7% margin) · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 11:00 <b>Gamba Osaka v Sanfrecce</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>U4.25 81.9% <b>−6.3%</b><br>buy≥1.23 (−0.8% margin)</td><td><b>Sanfrecce O0.5</b> 83.6% +14.6%<br>buy≥1.24 (+3.6% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 11:00 <b>Mito Hollyhock v Machida Zelvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>U4.25 87.2% <b>−1.0%</b><br>buy≥1.19 (+3.0% margin)</td><td><b>Machida Zelvia O0.5</b> 82.0% +13.0%<br>buy≥1.25 (+2.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 11:00 <b>Qingdao Hainiu v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 81.3% +1.9%<br>buy≥1.30 (+3.2% margin)</td><td><b>Wuhan Three Towns O0.5</b> 80.8% +8.2%<br>buy≥1.31 (+6.1% margin) · team</td></tr></table>
@@ -251,7 +246,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 29 / 35   ·   82.9%**   ·   **Tip 2 — 20 / 32   ·   62.5%**
+**Tip 1 — 33 / 39   ·   84.6%**   ·   **Tip 2 — 22 / 35   ·   62.9%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr></table>
@@ -293,12 +288,17 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-1 · 28-08 21:00 <b>Tenerife v Sporting Gijón</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 capped)</td><td>U3.0 77.8% <b>+0.0%</b><br>buy≥1.36 (+1.2% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-4 · 28-08 21:15 <b>Rio Ave v Sporting CP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 79.6% +4.5%<br>buy≥1.35 (+7.7% margin)</td><td>✅ <b>Sporting CP O0.5</b> 80.0% +11.7%<br>buy≥1.35 (+8.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-0 · 28-08 21:30 <b>Alavés v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.1%<br>buy≥1.32 (+0.7% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-3 · 28-08 22:00 <b>Comerciantes Unidos v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 76.3% +2.7%<br>buy≥1.38 (+5.2% margin)</td><td>✅ <b>Comerciantes Unidos O0.5</b> 83.5% +3.6%<br>buy≥1.32 (+10.5% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 29-08 00:30 <b>Goiás v São Bernardo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.23 (+6.1% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 29-08 00:30 <b>Cobresal v Palestino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 84.6% <b>−0.8%</b><br>buy≥1.27 (+5.7% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 29-08 01:30 <b>Novorizontino v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.6%</b><br>buy≥1.22 (+6.1% margin)</td><td>✅ O1.75 67.4% +2.5%<br>buy≥1.47 (−8.5% margin) · floor −7.6</td></tr></table>
+<table align="left"><tr><th align="left">◦ 2-1 · 29-08 01:30 <b>Náutico v Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 83.1% +1.4%<br>buy≥1.32 (+4.3% margin)</td><td>❌ U2.75 63.9% +2.0%<br>buy≥1.25 (−11.7% margin) · floor −11.1</td></tr></table>
 
 <br clear="all">
 
 ### 🟡 Actual placed bets
 
-**Settled: 20 / 24  ·  ROI +4.7%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 21 / 26  ·  ROI +1.3%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -324,10 +324,10 @@ that premium the book is keeping the insurance money.
 | ✅ | Genk v Beveren | U4.5 | 1.20 | 1.20x | softer line above the U4.25 tip (86.7% +1.3%) |
 | ✅ | Crystal Palace v Man City | O1.5 (away) | 1.61 | 1.61x | widened: Man City team over |
 | ✅ | Crystal Palace v Man City | O1.5 | 1.20 | 1.20x | = Tip 1 rung (84.3% +4.5%), under buy≥ — widened |
-| — open | Comerciantes Unidos v Cajamarca | DNB (home) | 1.24 | — | rule 5 shape, home side of the O1.5 tip |
+| ❌ | Comerciantes Unidos v Cajamarca | DNB (home) | 1.24 | 0.00x | rule 5 shape, home side of the O1.5 tip |
 | ❌ | Jong Ajax v Helmond Sport | U4.5 | 1.21 | 0.00x | R6 softer line above the U4.25 tip (84.1% +4.4%, buy≥1.29) |
 | ✅ | Lille v PSG | O1.5 | 1.22 | 1.22x | = Tip 1 rung (80.1% +2.8%), under buy≥1.31 — widened |
-| — open | Náutico v Athletic | U3.5 | 1.20 | — | R6 softer line above the U3.0 tip (83.1% +1.4%, buy≥1.32) |
+| ✅ | Náutico v Athletic | U3.5 | 1.20 | 1.20x | R6 softer line above the U3.0 tip (83.1% +1.4%, buy≥1.32) |
 | — open | Gamba Osaka v Sanfrecce | U4.5 | 1.19 | — | R6 softer above the U4.25 tip |
 | — open | Mito Hollyhock v Machida Zelvia | X2 | 1.18 | — | Machida or draw — own read on the promoted host |
 | — open | Qingdao Hainiu v Wuhan Three Towns | O0.5 (away) | 1.18 | — | Three Towns to score — team lane own read |
