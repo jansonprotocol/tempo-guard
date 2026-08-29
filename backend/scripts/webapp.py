@@ -306,14 +306,16 @@ def _card(f, kind: str, reads: dict) -> str:
     lead, rest = (1, f.tip1), (2, f.tip2)
     if kind == "play" and not f.settled and not f.lane(1) and f.lane(2):
         lead, rest = (2, f.tip2), (1, f.tip1)
-    top = (f'<div class="teams">{html.escape(f.teams)}'
-           f'<span class="more">more ▾</span></div>'
-           f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{lane(*lead)}")
+    # Tip 3 rides the card FACE, not the fold — a lane nobody sees is a
+    # lane that can never earn its way off probation.
     t3 = (f'<div class="lane"><span class="which">Tip 3</span> '
           f'{_fmt(f.tip3)} <span class="dim">· result lane, probation'
           f'</span></div>' if f.tip3.strip() else "")
-    body = lane(*rest) + t3 + tie_html
+    top = (f'<div class="teams">{html.escape(f.teams)}'
+           f'<span class="more">more ▾</span></div>'
+           f'<div class="meta">{head} · {league}</div>{kw}'
+           f"{lane(*lead)}{t3}")
+    body = lane(*rest) + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
     if not body:
