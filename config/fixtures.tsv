@@ -81,28 +81,28 @@
 2026-08-29 15:30	GER-BL	Bundesliga	Leipzig v Mönchengladbach	O1.5 85.9% +3.2% · buy≥1.23 (+5.5% margin)	✅ **Leipzig O1.5** 65.8% +15.3% (team) · buy≥1.41 (−7.0% margin)	✅ HIT — 3-0	✅ 12 80.5% +6.0% · hindsight
 2026-08-29 15:30	GER-BL	Bundesliga	Elversberg v Leverkusen	O1.5 84.3% +1.5% · buy≥1.25 (+5.1% margin)	✅ **Leverkusen O1.5** 69.1% +27.6% (team) · buy≥1.39 (−4.1% margin)	✅ HIT — 3-2	✅ 12 80.2% +5.8% · hindsight
 2026-08-29 16:00	ENG-PL	Premier League	Bournemouth v Everton	O1.5 80.0% **+0.1%** · buy≥1.27 (+1.4% margin)	✅ **Bournemouth O0.5** 80.7% +2.0% (team) · buy≥1.26 (+1.9% margin)	✅ HIT — 1-1	◦ DNB1 69.8% +12.3% · hindsight
-2026-08-29 16:00	ENG-PL	Premier League	Coventry v Hull	U4.25 85.4% +3.6% · buy≥1.29 (+8.5% margin)	**Coventry O1.5** 55.8% +6.7% (team) · buy≥1.48 (−17.3% margin)	LIVE 90'+4' 0-1
+2026-08-29 16:00	ENG-PL	Premier League	Coventry v Hull	U4.25 85.4% +3.6% · buy≥1.29 (+8.5% margin)	❌ **Coventry O1.5** 55.8% +6.7% (team) · buy≥1.48 (−17.3% margin)	✅ HIT — 0-1
 2026-08-29 16:00	ENG-CH	Championship	Blackburn v QPR	U3.0 76.1% +1.8% · buy≥1.47 (+2.6% margin)	— none	◦ PUSH — 1-2
-2026-08-29 16:00	ENG-CH	Championship	Bolton v Lincoln	— no tip: Invalid value '[3.016 1.508 0.754 2.262 2.262]' for dtype 'int64'	—	LIVE 90'+6' 0-1
-2026-08-29 16:00	ENG-CH	Championship	Bristol City v Portsmouth	O1.5 75.8% +3.2% · buy≥1.35 (+2.4% margin)	— none	LIVE 90'+4' 2-0
+2026-08-29 16:00	ENG-CH	Championship	Bolton v Lincoln	— no tip: Invalid value '[3.016 1.508 0.754 2.262 2.262]' for dtype 'int64'	—	FT 0-1 (no tip)
+2026-08-29 16:00	ENG-CH	Championship	Bristol City v Portsmouth	O1.5 75.8% +3.2% · buy≥1.35 (+2.4% margin)	— none	✅ HIT — 2-1
 2026-08-29 16:00	ENG-CH	Championship	Cardiff v Sheffield United	U4.25 83.6% **−4.6%** · buy≥1.22 (+6.2% margin)	— none	✅ HIT — 2-2
-2026-08-29 16:00	ENG-CH	Championship	Charlton v Preston	U3.0 81.1% +6.9% · buy≥1.43 (+8.9% margin)	U2.75 61.2% +8.6% (floor −13.8) · buy≥1.36 (−7.7% margin)	LIVE 90'+5' 1-0
-2026-08-29 16:00	ENG-CH	Championship	Norwich v Burnley	O1.5 76.9% +4.2% · buy≥1.39 (+6.6% margin)	— none	LIVE 90'+4' 4-1
-2026-08-29 16:00	ENG-CH	Championship	Southampton v Millwall	U4.25 83.6% **−4.5%** · buy≥1.23 (+6.2% margin)	— none	LIVE 90'+2' 5-1
+2026-08-29 16:00	ENG-CH	Championship	Charlton v Preston	U3.0 81.1% +6.9% · buy≥1.43 (+8.9% margin)	✅ U2.75 61.2% +8.6% (floor −13.8) · buy≥1.36 (−7.7% margin)	✅ HIT — 1-0
+2026-08-29 16:00	ENG-CH	Championship	Norwich v Burnley	O1.5 76.9% +4.2% · buy≥1.39 (+6.6% margin)	— none	✅ HIT — 4-1
+2026-08-29 16:00	ENG-CH	Championship	Southampton v Millwall	U4.25 83.6% **−4.5%** · buy≥1.23 (+6.2% margin)	— none	❌ MISS — 5-1
 2026-08-29 16:00	ENG-CH	Championship	Watford v West Ham	O1.5 79.9% +7.3% · buy≥1.36 (+8.6% margin)	❌ **West Ham O1.5** 55.7% +24.2% (team) · buy≥1.56 (−13.4% margin)	✅ HIT — 1-1	❌ 12 78.0% +4.4% · hindsight
 2026-08-29 16:00	NOR-EL	Eliteserien	Vålerenga v Molde	O1.5 83.2% +3.1% · buy≥1.26 (+5.1% margin)	**Vålerenga O1.5** 55.1% +7.1% (team) · buy≥1.51 (−16.8% margin)	
-2026-08-29 16:00	BEL-PL	Belgian Pro League	La Louvière v Mechelen	U4.25 85.7% **+0.3%** · buy≥1.21 (+5.2% margin)	**La Louvière O0.5** 83.0% +5.1% (team) · buy≥1.29 (+7.0% margin)	LIVE 90'+1' 2-2
-2026-08-29 16:30	NED-ED	Eredivisie	Excelsior v Sparta Rotterdam	U4.25 82.7% +3.4% · buy≥1.28 (+3.6% margin)	U3.75 66.3% +4.4% (floor −8.7) · buy≥1.29 (−7.0% margin)	LIVE 64' 1-1
-2026-08-29 16:30	NED-D2	Eerste Divisie	De Graafschap v Almere City	O1.5 84.2% +2.6% · buy≥1.24 (+4.9% margin)	**Almere City O0.5** 80.1% +7.4% (team) · buy≥1.31 (+5.0% margin)	LIVE 66' 1-1
-2026-08-29 16:30	POR-PL	Liga Portugal	Alverca v Santa Clara	U3.0 76.1% +4.7% · buy≥1.51 (+4.8% margin)	— none	LIVE 61' 0-0
-2026-08-29 16:30	POR-PL	Liga Portugal	Arouca v Marítimo	O1.5 76.5% +1.4% · buy≥1.33 (+1.9% margin)	**Arouca O0.5** 80.5% +5.2% (team) · buy≥1.35 (+8.4% margin)	LIVE 62' 2-1
-2026-08-29 17:00	ESP-LL	LaLiga	Levante v Real Betis	O1.5 78.2% +3.9% · buy≥1.35 (+5.5% margin)	— none	LIVE 45'+6' 2-2
-2026-08-29 17:00	ESP-L2	LaLiga 2	Sabadell v Almería	U4.25 84.2% **−6.2%** · buy≥1.18 (+5.4% margin)	**Sabadell U1.5** 75.4% +17.0% (team) · buy≥1.36 (+2.4% margin)	LIVE 45'+8' 0-0
-2026-08-29 17:15	FRA-L1	Ligue 1	Strasbourg v Lens	O1.5 79.9% +2.6% · buy≥1.31 (+4.7% margin)	**Lens O0.5** 80.9% +11.9% (team) · buy≥1.34 (+8.5% margin)	LIVE 38' 0-1
-2026-08-29 17:30	SWE-AL	Allsvenskan	Halmstad v Kalmar	U3.0 75.6% +8.7% · buy≥1.48 (+2.3% margin)	— none	LIVE 22' 0-0
+2026-08-29 16:00	BEL-PL	Belgian Pro League	La Louvière v Mechelen	U4.25 85.7% **+0.3%** · buy≥1.21 (+5.2% margin)	✅ **La Louvière O0.5** 83.0% +5.1% (team) · buy≥1.29 (+7.0% margin)	✅ HIT — 2-2
+2026-08-29 16:30	NED-ED	Eredivisie	Excelsior v Sparta Rotterdam	U4.25 82.7% +3.4% · buy≥1.28 (+3.6% margin)	U3.75 66.3% +4.4% (floor −8.7) · buy≥1.29 (−7.0% margin)	LIVE 73' 1-1
+2026-08-29 16:30	NED-D2	Eerste Divisie	De Graafschap v Almere City	O1.5 84.2% +2.6% · buy≥1.24 (+4.9% margin)	**Almere City O0.5** 80.1% +7.4% (team) · buy≥1.31 (+5.0% margin)	LIVE 74' 1-2
+2026-08-29 16:30	POR-PL	Liga Portugal	Alverca v Santa Clara	U3.0 76.1% +4.7% · buy≥1.51 (+4.8% margin)	— none	LIVE 69' 0-0
+2026-08-29 16:30	POR-PL	Liga Portugal	Arouca v Marítimo	O1.5 76.5% +1.4% · buy≥1.33 (+1.9% margin)	**Arouca O0.5** 80.5% +5.2% (team) · buy≥1.35 (+8.4% margin)	LIVE 70' 2-1
+2026-08-29 17:00	ESP-LL	LaLiga	Levante v Real Betis	O1.5 78.2% +3.9% · buy≥1.35 (+5.5% margin)	— none	LIVE HT 2-2
+2026-08-29 17:00	ESP-L2	LaLiga 2	Sabadell v Almería	U4.25 84.2% **−6.2%** · buy≥1.18 (+5.4% margin)	**Sabadell U1.5** 75.4% +17.0% (team) · buy≥1.36 (+2.4% margin)	LIVE HT 0-0
+2026-08-29 17:15	FRA-L1	Ligue 1	Strasbourg v Lens	O1.5 79.9% +2.6% · buy≥1.31 (+4.7% margin)	**Lens O0.5** 80.9% +11.9% (team) · buy≥1.34 (+8.5% margin)	LIVE 45'+1' 0-1
+2026-08-29 17:30	SWE-AL	Allsvenskan	Halmstad v Kalmar	U3.0 75.6% +8.7% · buy≥1.48 (+2.3% margin)	— none	LIVE 30' 0-0
 2026-08-29 17:30	POL-EK	Ekstraklasa	Wisła Kraków v Wieczysta	— no tip: engine abstained (thin history or an unresolved name)	—	
 2026-08-29 18:00	NOR-EL	Eliteserien	Viking v Aalesund	O1.5 85.8% +5.7% · buy≥1.27 (+9.1% margin)	**Viking O1.5** 76.6% +28.5% (team) · buy≥1.35 (+3.2% margin)		DNB1 82.9% +23.3% · buy≥1.27 · probation
-2026-08-29 18:00	TUR-SL	Trendyol Süper Lig	Konyaspor v Kocaelispor	U4.25 84.9% **+0.7%** · buy≥1.23 (+6.1% margin)	U3.75 72.7% +4.4% (floor −9.3) · buy≥1.30 (+2.0% margin)	
+2026-08-29 18:00	TUR-SL	Trendyol Süper Lig	Konyaspor v Kocaelispor	U4.25 84.9% **+0.7%** · buy≥1.23 (+6.1% margin)	U3.75 72.7% +4.4% (floor −9.3) · buy≥1.30 (+2.0% margin)	LIVE 1' 0-0
 2026-08-29 18:00	SUI-SL	Swiss Super League	Lausanne v Zürich	O1.5 79.8% **+1.0%** · buy≥1.29 (+2.8% margin)	**Lausanne O1.5** 56.0% +5.5% (team) · buy≥1.51 (−15.7% margin)		12 78.0% +2.9% · buy≥1.35 · probation
 2026-08-29 18:00	SUI-SL	Swiss Super League	Servette v Luzern	O1.5 80.1% +1.3% · buy≥1.29 (+3.1% margin)	**Servette O1.5** 59.9% +9.4% (team) · buy≥1.47 (−11.7% margin)		12 79.1% +4.0% · buy≥1.33 · probation
 2026-08-29 18:05	SAU-PL	Saudi Pro League	Al-Kholood v Al-Ahli	O1.5 79.9% **+0.1%** · buy≥1.26 (+0.8% margin)	**Al-Ahli O0.5** 81.9% +8.9% (team) · buy≥1.29 (+5.6% margin)	
