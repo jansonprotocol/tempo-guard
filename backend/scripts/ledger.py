@@ -100,7 +100,7 @@ def bet_state(rung: str, side: str, fx: dict) -> float | None:
     more goal would upgrade to a full one."""
     hg, ag, live = fx["hg"], fx["ag"], False
     if hg is None:
-        if rung.startswith("O") and fx.get("lhg") is not None:
+        if rung[:1] in ("O", "U") and fx.get("lhg") is not None:
             hg, ag, live = fx["lhg"], fx["lag"], True
         else:
             return None
@@ -114,8 +114,15 @@ def bet_state(rung: str, side: str, fx: dict) -> float | None:
         return -1.0 if hg == ag else 1.0
     goals = hg + ag if side == "-" else (hg if side == "H" else ag)
     s = pricing.settle_fraction(rung, goals)
-    if live and s < 1.0:
-        return None
+    if live:
+        # Goals only accumulate, so mid-game a total settles only at the
+        # end of its own scale: an over at its MAXIMUM (+1, fully cleared,
+        # can't be taken back) or an under at its MINIMUM (−1, fully
+        # busted, can't recover) — the bettor's rule and its mirror.
+        # Anything between — half-wins, half-losses, a push in reach —
+        # can still move and waits for the whistle.
+        final = 1.0 if rung.startswith("O") else -1.0
+        return s if s == final else None
     return s
 
 
