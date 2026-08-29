@@ -573,6 +573,7 @@ def main() -> None:
         tile("roi", f"{roi:+.1f}%", f"flat stakes · {bn} settled"),
     ])
 
+    bet_rows = _bets_rows()
     bets_html = "".join(
         f'<tr><td class="mk">{b["mark"]}</td><td>{html.escape(b["name"])}'
         f'</td><td>{html.escape(b["lane"])}</td><td>{b["odds"]:.2f}</td>'
@@ -580,7 +581,19 @@ def main() -> None:
         f'<td><span class="align {_align_cls(b["align"])}">'
         f'{html.escape(b["align"])}</span></td>'
         f'<td class="note">{html.escape(b["note"])}</td>'
-        f"</tr>" for b in _bets_rows())
+        f"</tr>" for b in bet_rows)
+    # The book's price profile in one line: what the average ticket pays,
+    # over everything logged and over what has already settled — the
+    # number to hold the ROI against (an 84% hit rate only pays at these
+    # odds if they average above ~1.19).
+    all_odds = [b["odds"] for b in bet_rows]
+    set_odds = [b["odds"] for b in bet_rows if b["mark"] != "open"]
+    bets_meta = (
+        f'<p class="dim">average odds <b>{sum(all_odds)/len(all_odds):.2f}'
+        f'</b> across {len(all_odds)} positions'
+        + (f' · <b>{sum(set_odds)/len(set_odds):.2f}</b> on the '
+           f'{len(set_odds)} settled' if set_odds else "") + "</p>"
+        if all_odds else "")
 
     sessions_html = ""
     for s in SESSIONS:
@@ -973,7 +986,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   oninput="for(const c of document.querySelectorAll('.card'))
   c.style.display=c.dataset.t.includes(this.value.toLowerCase())?'':'none'">
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
- <div class="tabpane" id="t-bets"><div class="wrap"><table>
+ <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
   <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Odds</th><th>Return</th>
   <th>Athena says</th><th>Note</th></tr>{bets_html}</table></div></div>
  <div class="tabpane" id="t-lanes">{_grid(waiting, "pend", reads)}</div>
