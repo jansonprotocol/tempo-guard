@@ -78,6 +78,57 @@ RUNGS: dict[str, tuple] = {
 # Ranked on near-ties: a rung that pays 1.42 beats one paying 1.14 for the same
 # information, and O0.5's price is why it sits last despite a healthy edge.
 PREFER = ["O1.5", "U1.5", "O0.5"]
+
+# The streak debit — the bettor's regime-break hypothesis, measured on
+# 8,404 replayed team-lane offers across 52 leagues (29 Aug 2026,
+# scripts/team_attrib.py). When the credited side's RECENT scoring stub
+# (last 8 matches) diverges from its long record in the direction that
+# inflates the read — a hot streak under an over, a cold one under an
+# under — the claim runs hot, monotonically: stable reads +1.2 honest,
+# mild inflation −1.7, strong inflation (0.8+ goals/match) −3.2 with
+# BOTH half-windows negative (−3.9 / −2.5). Depth of record showed no
+# consistent effect and shipped nothing — the streak was the disease.
+# The debit lands on the PUBLISHED probability and edge at 0.05 per
+# goal-per-match of aligned excess above 0.35; post-debit the treated
+# region reads +0.4 / −1.0 per half. Deflated reads underclaim (+3.3)
+# and are deliberately not credited — one-sided, like every says debit
+# before it. ~2.7% of offers fall under MIN_EDGE and stop printing:
+# Yunnan Yukun's +22% "strong attack away" among them.
+STREAK_FROM = 0.35
+STREAK_SLOPE = 0.05
+RECENT_STUB = 8
+
+
+def streak_debit(league_code: str, team: str, match_date: date,
+                 market: str) -> float:
+    """How much the credited side's streak inflates this rung's claim.
+
+    Aligned divergence: recent-stub goals per match minus the long
+    record's, signed toward the rung (a hot streak inflates an Over
+    read, a cold one inflates an Under read). Returns the debit to take
+    off the published probability — 0.0 when the record is too short,
+    the name unresolvable, or the streak points the honest way.
+    """
+    from app.data.features import _match_team
+    df = store.load_results(league_code)
+    if df is None or df.empty:
+        return 0.0
+    names = sorted(set(df["home"].astype(str)) | set(df["away"].astype(str)))
+    resolved = _match_team(team, names)
+    if resolved is None:
+        return 0.0
+    cutoff = datetime.combine(match_date, datetime.min.time())
+    past = df[(df["date"] < cutoff)
+              & ((df["home"] == resolved) | (df["away"] == resolved))]
+    if len(past) <= RECENT_STUB:
+        return 0.0
+    gf = [(r["hg"] if r["home"] == resolved else r["ag"])
+          for _, r in past.sort_values("date").iterrows()]
+    gf = [0 if g != g else int(g) for g in gf]
+    recent, long = gf[-RECENT_STUB:], gf[:-RECENT_STUB]
+    d = sum(recent) / len(recent) - sum(long) / len(long)
+    aligned = d if market.split()[1].startswith("O") else -d
+    return STREAK_SLOPE * max(0.0, aligned - STREAK_FROM)
 TIE = 0.02
 
 # Minimum edge over the as-of base rate. A rung that merely matches how often it

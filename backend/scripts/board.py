@@ -585,7 +585,7 @@ def verify(quiet: bool = False) -> None:
     #     it names is read back out of the live code and compared.
     import re
     from app.data import club_elo, features
-    from app.engine import market_select, pricing
+    from app.engine import market_select, pricing, team_total
     live = {
         "MU_SHRINK": features.MU_SHRINK,
         "TEAM_SHRINK": features.TEAM_SHRINK,
@@ -596,6 +596,8 @@ def verify(quiet: bool = False) -> None:
         "MIN_WIN_PROB": market_select.MIN_WIN_PROB,
         "BUY_BLEND_BELOW": pricing.BUY_BLEND_BELOW,
         "BUY_BLEND_ABOVE": pricing.BUY_BLEND_ABOVE,
+        "STREAK_FROM": team_total.STREAK_FROM,
+        "STREAK_SLOPE": team_total.STREAK_SLOPE,
         "REL_SAYS_FROM": market_select.REL_SAYS_FROM,
         "REL_SAYS_SLOPE": market_select.REL_SAYS_SLOPE,
         "HIGH_SAYS_DEBIT": market_select.HIGH_SAYS_DEBIT,
