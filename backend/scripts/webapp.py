@@ -139,6 +139,26 @@ def _align_cls(a: str) -> str:
     return ""
 
 
+def _baselines() -> dict[str, float] | None:
+    """Average per-league baseline hitrate for each tip, from the derived
+    file scripts/baselines.py writes (each league's most recent 300
+    fixtures replayed as-of, push counted as a hit, leagues weighted
+    equally). None — and no bar — when the file is missing: a missing
+    baseline is better than a stale-looking typed one."""
+    path = ROOT / "config" / "baselines.tsv"
+    if not path.exists():
+        return None
+    sums: dict[str, list[float]] = {"t1": [], "t2": [], "t3": []}
+    for ln in path.read_text().splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        p = ln.split("\t")
+        for key, hi, ni in (("t1", 1, 2), ("t2", 3, 4), ("t3", 5, 6)):
+            if int(p[ni]) >= 30:
+                sums[key].append(int(p[hi]) / int(p[ni]))
+    return {k: sum(v) / len(v) * 100 for k, v in sums.items() if v} or None
+
+
 def _bets_rows() -> list[dict]:
     fixtures = ledger.read_fixtures()
     tipmap = _tipmap()
@@ -600,6 +620,25 @@ def main() -> None:
 
     bet_rows = _bets_rows()
 
+    # Longest run of consecutive hits over the settled book, in the order
+    # the bets were logged — pushes count as hits, the board's convention.
+    streak = best_streak = 0
+    for b in bet_rows:
+        if b["mark"] == "open":
+            continue
+        streak = 0 if b["mark"].startswith("❌") else streak + 1
+        best_streak = max(best_streak, streak)
+
+    base = _baselines()
+    basebar = ""
+    if base:
+        cells = " · ".join(
+            f"tip {i} <b>{base[k]:.1f}%</b>"
+            for i, k in (("1", "t1"), ("2", "t2"), ("3", "t3")) if k in base)
+        basebar = (f'<div class="basebar">Baselines: {cells} '
+                   f'<span class="dim">— every tip replayed over each '
+                   f'league’s last 300 matches, averaged</span></div>')
+
     def _bet_tr(b):
         # Every field is searchable through the same bar the cards use —
         # the row carries its own lowercase haystack in data-t.
@@ -832,6 +871,10 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .tile .s {{ color:var(--dim); font-size:12px; }}
 .session {{ color:var(--gold); font-size:12px; letter-spacing:.18em;
   text-transform:uppercase; margin:2px 0 8px; }}
+.basebar {{ background:var(--card); border:1px solid var(--edge);
+  border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
+.basebar b {{ color:var(--gold); }}
+.basebar .dim {{ font-size:11px; }}
 .ask {{ background:var(--card); border:1px solid var(--edge);
   border-radius:10px; padding:12px 14px; margin:0 0 12px; font-size:13px; }}
 .askrow {{ display:grid; gap:8px; margin-top:10px;
@@ -998,7 +1041,9 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    <p class="fine">{hero_fine}</p>
   </div>
  </div>
- <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}</div>
+ {basebar}
+ <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}{
+    f" · longest hit streak <b>{best_streak}</b>" if best_streak else ""}</div>
  <div class="tiles">{tiles}</div>
  <div class="ask">
   <b>🔎 Ask Athena</b> <span class="dim">— look up any matchup it has run;
