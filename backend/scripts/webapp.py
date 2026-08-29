@@ -554,16 +554,19 @@ def main() -> None:
                 f'<div class="l">{label}</div><div class="s">{sub}</div></div>')
 
     # The six-tile row the bettor specified: every lane family's record,
-    # then the money. "All lanes" pools everything the engine published
-    # and graded, Tip 3 included from the day it starts grading.
-    ha, na = h1 + h2 + h3, n1 + n2 + n3
+    # then the money — PLAYABLE lanes only (edge above the bar), because
+    # those are the lanes anyone actually acts on; the sub-bar band is
+    # published for honesty, not for the scoreboard. Tip 3 qualifies
+    # whole: it only ever prints above its own floor and edge bar.
+    (pb1, pq1), (pb2, pq2) = p[1], p[2]
+    ha, na = pb1 + pb2 + h3, pq1 + pq2 + n3
     tiles = "".join([
         tile("all lanes", f"{ha / na * 100:.1f}%" if na else "—",
-             f"every graded lane · {ha}/{na}"),
-        tile("tip 1", f"{h1 / n1 * 100:.1f}%" if n1 else "—",
-             f"{h1}/{n1} settled"),
-        tile("tip 2", f"{h2 / n2 * 100:.1f}%" if n2 else "—",
-             f"{h2}/{n2} settled"),
+             f"every graded playable lane · {ha}/{na}"),
+        tile("tip 1", f"{pb1 / pq1 * 100:.1f}%" if pq1 else "—",
+             f"playable · {pb1}/{pq1} settled"),
+        tile("tip 2", f"{pb2 / pq2 * 100:.1f}%" if pq2 else "—",
+             f"playable · {pb2}/{pq2} settled"),
         tile("tip 3", f"{h3 / n3 * 100:.1f}%" if n3 else "—",
              (f"{h3}/{n3} · probation" +
               (f" · {hs3} hindsight" if hs3 else "")) if n3
