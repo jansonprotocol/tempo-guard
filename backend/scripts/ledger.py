@@ -40,6 +40,7 @@ README = ROOT / "README.md"
 BETS = ROOT / "config" / "bets.tsv"
 
 TIP = re.compile(r"\b([OU]\d+(?:\.\d+)?)\*{0,2}\s+(\d+(?:\.\d+)?)%")
+TIP3 = re.compile(r"^(?:[✅❌◦]\s*)?(1X|X2|12|DNB[12])\s+(\d+(?:\.\d+)?)%")
 SCORE = re.compile(r"(\d+)\s*-\s*(\d+)")
 
 
@@ -74,17 +75,49 @@ def read_fixtures() -> dict[str, dict]:
             from scripts import liveline
             lv = liveline.score_of(status)
         m2 = TIP.search(tip2)
+        tip3 = ln.split("\t")[7] if len(ln.split("\t")) > 7 else ""
+        m3 = TIP3.match(tip3.strip())
         out[name] = {
             "rung": m.group(1),
             "p": float(m.group(2)) / 100,
             "rung2": m2.group(1) if m2 else None,
             "p2": float(m2.group(2)) / 100 if m2 else None,
+            "lane3": m3.group(1) if m3 else None,
+            "p3": float(m3.group(2)) / 100 if m3 else None,
             "hg": int(s.group(1)) if s else None,
             "ag": int(s.group(2)) if s else None,
             "lhg": lv[0] if lv else None,
             "lag": lv[1] if lv else None,
         }
     return out
+
+
+def bet_prob(rung: str, side: str, fx: dict) -> float | None:
+    """The engine's probability for THIS bet's lane, where derivable.
+
+    A match total prices off the goal expectation inverted from the
+    published Tip 1 (the same inversion the ledger CLI uses). A team or
+    result lane is only quoted when it IS a published lane — Tip 2's rung
+    or Tip 3's — because their probabilities live in per-side numbers the
+    cells don't carry. None means "the engine never priced your exact
+    lane", shown as a dash, never guessed."""
+    if rung in ("DNB", "1X", "X2", "12"):
+        want = ("DNB1" if side == "H" else "DNB2") if rung == "DNB" else rung
+        if fx.get("lane3") == want:
+            return fx["p3"]
+        return None
+    if side == "-":
+        mu = mu_for(fx["rung"], fx["p"])
+        if mu is None:
+            return None
+        from app.engine import market_select
+        try:
+            return market_select.p_win(rung, mu)
+        except Exception:
+            return None
+    if fx.get("rung2") == rung and fx.get("p2"):
+        return fx["p2"]
+    return None
 
 
 def bet_state(rung: str, side: str, fx: dict) -> float | None:

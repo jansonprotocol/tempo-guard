@@ -158,16 +158,18 @@ def _bets_rows() -> list[dict]:
                             ret="1.00x", note=note, align=align))
             continue
         fx = fixtures.get(name)
+        prob = ledger.bet_prob(rung, side, fx) if fx else None
         # ledger.bet_state, same gate as the README block: FT for anything
         # that can still move, immediate for a clinched over.
         s = ledger.bet_state(rung, side, fx) if fx else None
         if s is None:
             out.append(dict(mark="open", name=name, lane=lane, odds=odds,
-                            ret="—", note=note, align=align))
+                            ret="—", note=note, align=align, prob=prob))
             continue
         ret = max(s, 0.0) * odds + (1 - abs(s))
         out.append(dict(mark=MARK[s], name=name, lane=lane, odds=odds,
-                        ret=f"{ret:.2f}x", note=note, align=align))
+                        ret=f"{ret:.2f}x", note=note, align=align,
+                        prob=prob))
     return out
 
 
@@ -597,25 +599,39 @@ def main() -> None:
     ])
 
     bet_rows = _bets_rows()
-    bets_html = "".join(
-        f'<tr><td class="mk">{b["mark"]}</td><td>{html.escape(b["name"])}'
-        f'</td><td>{html.escape(b["lane"])}</td><td>{b["odds"]:.2f}</td>'
-        f'<td>{b["ret"]}</td>'
-        f'<td><span class="align {_align_cls(b["align"])}">'
-        f'{html.escape(b["align"])}</span></td>'
-        f'<td class="note">{html.escape(b["note"])}</td>'
-        f"</tr>" for b in bet_rows)
+
+    def _bet_tr(b):
+        # Every field is searchable through the same bar the cards use —
+        # the row carries its own lowercase haystack in data-t.
+        prob = f'{b["prob"]*100:.1f}%' if b["prob"] else "—"
+        hay = " ".join([b["name"], b["lane"], b["align"], b["note"],
+                        b["mark"], f'{b["odds"]:.2f}', prob]).lower()
+        return (f'<tr data-t="{html.escape(hay)}">'
+                f'<td class="mk">{b["mark"]}</td>'
+                f'<td>{html.escape(b["name"])}</td>'
+                f'<td>{html.escape(b["lane"])}</td>'
+                f'<td class="dim">{prob}</td>'
+                f'<td>{b["odds"]:.2f}</td><td>{b["ret"]}</td>'
+                f'<td><span class="align {_align_cls(b["align"])}">'
+                f'{html.escape(b["align"])}</span></td>'
+                f'<td class="note">{html.escape(b["note"])}</td></tr>')
+
+    bets_html = "".join(_bet_tr(b) for b in bet_rows)
     # The book's price profile in one line: what the average ticket pays,
     # over everything logged and over what has already settled — the
     # number to hold the ROI against (an 84% hit rate only pays at these
     # odds if they average above ~1.19).
     all_odds = [b["odds"] for b in bet_rows]
     set_odds = [b["odds"] for b in bet_rows if b["mark"] != "open"]
+    probs = [b["prob"] for b in bet_rows if b["prob"]]
     bets_meta = (
         f'<p class="dim">average odds <b>{sum(all_odds)/len(all_odds):.2f}'
         f'</b> across {len(all_odds)} positions'
         + (f' · <b>{sum(set_odds)/len(set_odds):.2f}</b> on the '
-           f'{len(set_odds)} settled' if set_odds else "") + "</p>"
+           f'{len(set_odds)} settled' if set_odds else "")
+        + (f' · average probability <b>'
+           f'{100*sum(probs)/len(probs):.1f}%</b> on the {len(probs)} '
+           f'the engine priced' if probs else "") + "</p>"
         if all_odds else "")
 
     sessions_html = ""
@@ -949,6 +965,14 @@ h3.hyp .n {{ background:var(--card); border:1px solid var(--edge);
   max-width:74ch; }}
 .run b {{ display:block; margin-bottom:3px; }}
 .run .when {{ color:var(--dim); font-size:12px; }}
+.feats {{ display:grid; gap:8px; margin:12px 0 4px;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); max-width:74ch; }}
+.feat {{ background:var(--card); border:1px solid var(--edge);
+  border-radius:8px; padding:9px 12px; display:flex; gap:10px;
+  align-items:flex-start; }}
+.feat .ico {{ font-size:20px; line-height:1.3; }}
+.feat b {{ display:block; font-size:13px; }}
+.feat span {{ color:var(--dim); font-size:12px; }}
 .about .mission {{ font-size:18px; font-weight:700; color:var(--gold);
   margin:14px 0; }}
 .page {{ display:none; }} .page.on {{ display:block; }}
@@ -1006,12 +1030,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   .scrollIntoView({{behavior:'smooth'}})">🎓 Learn Athena — how to read
   these blocks</button>
  <input id="q" placeholder="filter — team, league, code…"
-  oninput="for(const c of document.querySelectorAll('.card'))
-  c.style.display=c.dataset.t.includes(this.value.toLowerCase())?'':'none'">
+  oninput="for(const c of document.querySelectorAll('.card,#t-bets tr[data-t]'))
+  c.style.display=(c.dataset.t||'').includes(this.value.toLowerCase())?'':'none'">
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
-  <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Odds</th><th>Return</th>
-  <th>Athena says</th><th>Note</th></tr>{bets_html}</table></div></div>
+  <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Prob</th><th>Odds</th>
+  <th>Return</th><th>Athena says</th><th>Note</th></tr>
+  {bets_html}</table></div></div>
  <div class="tabpane" id="t-lanes">{_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
  {_learn()}
@@ -1095,6 +1120,41 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  real prices. Everything on every page is computed from three small data
  files; no number is ever typed by hand, so nothing can quietly go
  stale.</p>
+ <h3>What Athena can read</h3>
+ <div class="feats">
+  <div class="feat"><div class="ico">⚽</div><div><b>Team scoring &amp;
+   conceding</b><span>every goal for and against, split by home and
+   away, blended with the opponent's defence</span></div></div>
+  <div class="feat"><div class="ico">📈</div><div><b>Team form</b>
+   <span>recent matches weigh more than old ones, and a scoring streak
+   that breaks from a team's own record is treated with
+   suspicion</span></div></div>
+  <div class="feat"><div class="ico">🏟️</div><div><b>League
+   cultures</b><span>each league has its own goal rhythm — a 2.1-goal
+   league and a 3.2-goal league are priced as different worlds</span>
+   </div></div>
+  <div class="feat"><div class="ico">🏆</div><div><b>International cup
+   culture</b><span>continental ties run on a Club Elo strength lane
+   with their own goal climate — still probationary</span></div></div>
+  <div class="feat"><div class="ico">↕️</div><div><b>Over &amp; under
+   predictions</b><span>the whole totals ladder, match and team lanes —
+   Tips 1 and 2 are the two best rungs it finds</span></div></div>
+  <div class="feat"><div class="ico">🥇</div><div><b>Possible
+   winners</b><span>the result lane — double chance and draw no bet as
+   Tip 3, on probation until live results confirm it</span></div></div>
+  <div class="feat"><div class="ico">🎯</div><div><b>Team totals</b>
+   <span>one side's goals alone — sometimes the strongest signal is
+   that a single team scores, whatever the other does</span></div></div>
+  <div class="feat"><div class="ico">🧮</div><div><b>Honest
+   probabilities</b><span>debits, caps and floors measured on two
+   separate time windows before any of them is allowed to
+   ship</span></div></div>
+  <div class="feat"><div class="ico">💰</div><div><b>Prices as a
+   decision layer only</b><span>odds never touch a prediction — they
+   only decide, afterwards, whether a tip is worth buying</span></div>
+   </div>
+ </div>
+
  <p><b>What it does not see:</b> Athena prices one match's goal total.
  It has no concept of a two-legged tie, an aggregate score, or what a
  side needs on the night — and that matters, because a team chasing a
