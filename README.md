@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 83.1%
+## CURRENT CONFIRMED HITRATE: 83.5%
 
     lane                        Tip 1              Tip 2
-    all matches             69 / 83   83.1%     38 / 60   63.3%
-    played lanes  >+1%      34 / 44   77.3%     38 / 60   63.3%
+    all matches             71 / 85   83.5%     39 / 61   63.9%
+    played lanes  >+1%      34 / 44   77.3%     39 / 61   63.9%
     placed bets             43 / 52   82.7%    ROI +3.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -81,7 +81,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 72 / 104   ·   69.2%**   ·   **Tip 1 — 34 / 44   ·   77.3%**   ·   **Tip 2 — 38 / 60   ·   63.3%**
+**Playable — 73 / 105   ·   69.5%**   ·   **Tip 1 — 34 / 44   ·   77.3%**   ·   **Tip 2 — 39 / 61   ·   63.9%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -127,7 +127,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 29-08 12:00 <b>Nagoya v Okayama</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>— under +1%</td><td>✅ O1.75 76.2% +3.7%<br>buy≥1.34 (−2.2% margin) · floor −5.8</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 29-08 12:00 <b>Tokyo Verdy v Kashima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>— under +1%</td><td>✅ <b>Kashima O0.5</b> 80.1% +11.1%<br>buy≥1.26 (+0.9% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 29-08 12:00 <b>Urawa Reds v Yokohama FM</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>U4.25 90.0% +1.7%<br>buy≥1.18 (+5.0% margin)</td><td>❌ U3.75 78.2% +3.8%<br>buy≥1.19 (−0.6% margin) · floor −3.8</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 1X 73.3% +5.8% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 57' 1-1 <b>Radomiak v Cracovia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— under +1%</td><td>U3.75 75.5% +5.2%<br>buy≥1.32 (+6.9% margin) · floor −2.5 · <i>room for 1</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 29-08 12:15 <b>Radomiak v Cracovia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— under +1%</td><td>✅ U3.75 75.5% +5.2%<br>buy≥1.32 (+6.9% margin) · floor −2.5</td></tr></table>
 <table align="left"><tr><th align="left">❌ 5-3 · 29-08 13:00 <b>Heidenheim v Dresden</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>U4.25 82.1% +1.2%<br>buy≥1.30 (+4.8% margin)</td><td>✅ <b>Heidenheim O0.5</b> 83.4% +3.2%<br>buy≥1.26 (+5.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.8% +18.7% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-4 · 29-08 13:00 <b>Cottbus v Fürth</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>U4.25 84.8% +3.9%<br>buy≥1.30 (+9.0% margin)</td><td>❌ U3.75 69.8% +6.0%<br>buy≥1.29 (−2.2% margin) · floor −5.2</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-5 · 29-08 13:00 <b>Karlsruhe v Wolfsburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>O1.5 82.1% +1.4%<br>buy≥1.28 (+4.8% margin)</td><td>✅ O2.25 60.8% +2.2%<br>buy≥1.27 (−13.4% margin) · floor −14.2</td></tr></table>
@@ -211,8 +211,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 57' 1-1 <b>Radomiak v Cracovia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 86.0% <b>+0.5%</b><br>buy≥1.22 (+7.2% margin) · <i>room for 2 · half from the 2nd</i></td><td>U3.75 75.5% +5.2%<br>buy≥1.32 (+6.9% margin) · floor −2.5 · <i>room for 1</i></td></tr></table>
-<table align="left"><tr><th align="left">🔵 29-08 14:45 <b>Motor Lublin v Piast Gliwice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 85.7% <b>+0.1%</b><br>buy≥1.27 (+7.1% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.5% +4.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 16:00 <b>Vålerenga v Molde</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eliteserien (82.9 −1.5)</td><td>O1.5 83.2% +3.1%<br>buy≥1.26 (+5.1% margin)</td><td><b>Vålerenga O1.5</b> 55.1% +7.1%<br>buy≥1.51 (−16.8% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 73' 1-1 <b>Excelsior v Sparta Rotterdam</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>U4.25 82.7% +3.4%<br>buy≥1.28 (+3.6% margin) · <i>room for 2 · half from the 2nd</i></td><td>U3.75 66.3% +4.4%<br>buy≥1.29 (−7.0% margin) · floor −8.7 · <i>room for 1</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 74' 1-2 <b>De Graafschap v Almere City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>O1.5 84.2% +2.6%<br>buy≥1.24 (+4.9% margin) · <i>✓ landed</i></td><td><b>Almere City O0.5</b> 80.1% +7.4%<br>buy≥1.31 (+5.0% margin) · team · <i>✓ landed</i></td></tr></table>
@@ -222,7 +220,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-0 <b>Sabadell v Almería</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 capped)</td><td>U4.25 84.2% <b>−6.2%</b><br>buy≥1.18 (+5.4% margin) · <i>room for 4 · half from the 4th</i></td><td><b>Sabadell U1.5</b> 75.4% +17.0%<br>buy≥1.36 (+2.4% margin) · team · <i>room for 1</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 45'+1' 0-1 <b>Strasbourg v Lens</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>O1.5 79.9% +2.6%<br>buy≥1.31 (+4.7% margin) · <i>needs 1 more</i></td><td><b>Lens O0.5</b> 80.9% +11.9%<br>buy≥1.34 (+8.5% margin) · team · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 30' 0-0 <b>Halmstad v Kalmar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>U3.0 75.6% +8.7%<br>buy≥1.48 (+2.3% margin) · <i>room for 2</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔵 29-08 17:30 <b>Wisła Kraków v Wieczysta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 18:00 <b>Viking v Aalesund</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eliteserien (82.9 −1.5)</td><td>O1.5 85.8% +5.7%<br>buy≥1.27 (+9.1% margin)</td><td><b>Viking O1.5</b> 76.6% +28.5%<br>buy≥1.35 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 82.9% +23.3% · buy≥1.27 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 1' 0-0 <b>Konyaspor v Kocaelispor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>U4.25 84.9% <b>+0.7%</b><br>buy≥1.23 (+6.1% margin) · <i>room for 4 · half from the 4th</i></td><td>U3.75 72.7% +4.4%<br>buy≥1.30 (+2.0% margin) · floor −9.3 · <i>room for 3</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-08 18:00 <b>Lausanne v Zürich</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Swiss Super League (82.6 +0.7)</td><td>O1.5 79.8% <b>+1.0%</b><br>buy≥1.29 (+2.8% margin)</td><td><b>Lausanne O1.5</b> 56.0% +5.5%<br>buy≥1.51 (−15.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.0% +2.9% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -293,7 +290,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 69 / 83   ·   83.1%**   ·   **Tip 2 — 38 / 60   ·   63.3%**
+**Tip 1 — 71 / 85   ·   83.5%**   ·   **Tip 2 — 39 / 61   ·   63.9%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -351,6 +348,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-2 · 29-08 12:00 <b>Tokyo Verdy v Kashima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>U4.25 89.3% <b>+1.0%</b><br>buy≥1.18 (+4.5% margin)</td><td>✅ <b>Kashima O0.5</b> 80.1% +11.1%<br>buy≥1.26 (+0.9% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 29-08 12:00 <b>Urawa Reds v Yokohama FM</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>U4.25 90.0% +1.7%<br>buy≥1.18 (+5.0% margin)</td><td>❌ U3.75 78.2% +3.8%<br>buy≥1.19 (−0.6% margin) · floor −3.8</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 1X 73.3% +5.8% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 29-08 12:00 <b>Vissel Kobe v Cerezo Osaka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>U4.25 88.6% <b>+0.4%</b><br>buy≥1.18 (+4.0% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 29-08 12:15 <b>Radomiak v Cracovia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 86.0% <b>+0.5%</b><br>buy≥1.22 (+7.2% margin)</td><td>✅ U3.75 75.5% +5.2%<br>buy≥1.32 (+6.9% margin) · floor −2.5</td></tr></table>
 <table align="left"><tr><th align="left">❌ 5-3 · 29-08 13:00 <b>Heidenheim v Dresden</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>U4.25 82.1% +1.2%<br>buy≥1.30 (+4.8% margin)</td><td>✅ <b>Heidenheim O0.5</b> 83.4% +3.2%<br>buy≥1.26 (+5.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.8% +18.7% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-4 · 29-08 13:00 <b>Cottbus v Fürth</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>U4.25 84.8% +3.9%<br>buy≥1.30 (+9.0% margin)</td><td>❌ U3.75 69.8% +6.0%<br>buy≥1.29 (−2.2% margin) · floor −5.2</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-5 · 29-08 13:00 <b>Karlsruhe v Wolfsburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>O1.5 82.1% +1.4%<br>buy≥1.28 (+4.8% margin)</td><td>✅ O2.25 60.8% +2.2%<br>buy≥1.27 (−13.4% margin) · floor −14.2</td></tr></table>
@@ -364,6 +362,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 29-08 14:00 <b>Annecy v Metz</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (75.9 −6.5)</td><td>U4.25 84.4% <b>−4.2%</b><br>buy≥1.29 (+7.2% margin)</td><td>✅ O1.75 77.2% +5.2%<br>buy≥1.47 (+8.7% margin) · floor −0.8</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-4 · 29-08 14:00 <b>Red Star v Reims</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (75.9 −6.5)</td><td>U4.25 84.0% <b>−4.6%</b><br>buy≥1.23 (+7.1% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">⚪ 1-1 (no tip) · 29-08 14:00 <b>Henan v Chongqing Tongliang Long</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 29-08 14:45 <b>Motor Lublin v Piast Gliwice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 85.7% <b>+0.1%</b><br>buy≥1.27 (+7.1% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 76.5% +4.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-3 · 29-08 15:00 <b>Häcken v Västerås SK</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>U4.25 83.5% <b>+0.4%</b><br>buy≥1.25 (+5.1% margin)</td><td>❌ U3.75 70.3% +3.4%<br>buy≥1.24 (−5.3% margin) · floor −4.7</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 71.4% +14.7% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 29-08 15:00 <b>Elfsborg v Degerfors</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>U4.25 83.4% <b>+0.3%</b><br>buy≥1.23 (+5.1% margin)</td><td>✅ U3.75 71.4% +4.5%<br>buy≥1.28 (−1.3% margin) · floor −3.6</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 71.2% +14.5% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-2 · 29-08 15:30 <b>Köln v Hoffenheim</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Bundesliga (84.0 −0.9)</td><td>O1.5 83.3% <b>+0.6%</b><br>buy≥1.25 (+4.5% margin)</td><td>✅ <b>Köln O1.5</b> 56.4% +5.9%<br>buy≥1.49 (−16.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.4% +4.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -382,6 +381,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 5-1 · 29-08 16:00 <b>Southampton v Millwall</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U4.25 83.6% <b>−4.5%</b><br>buy≥1.23 (+6.2% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 29-08 16:00 <b>Watford v West Ham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>O1.5 79.9% +7.3%<br>buy≥1.36 (+8.6% margin)</td><td>❌ <b>West Ham O1.5</b> 55.7% +24.2%<br>buy≥1.56 (−13.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 78.0% +4.4% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 29-08 16:00 <b>La Louvière v Mechelen</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Belgian Pro League (84.7 +0.8)</td><td>U4.25 85.7% <b>+0.3%</b><br>buy≥1.21 (+5.2% margin)</td><td>✅ <b>La Louvière O0.5</b> 83.0% +5.1%<br>buy≥1.29 (+7.0% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">⚪ 2-0 (no tip) · 29-08 17:30 <b>Wisła Kraków v Wieczysta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 
 <br clear="all">
 
@@ -464,7 +464,7 @@ that premium the book is keeping the insurance money.
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 28 verified, 14 unfinished, 22 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 28 verified, 14 unfinished, 23 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
 ### 🟢 Verified and helping — 28
 
@@ -522,12 +522,13 @@ Measured but not concluded, or shipped on **probation** and still waiting on liv
 | 🟠 | 08-27 | cups | **UEFA country coefficients as a cup strength source** | Proposed and never measured — Club Elo was taken instead because it prices CLUBS directly rather than their federations. Still open if the Elo lane fails probation |
 | 🟠 | 08-27 | data | **ALG-L1 has no ESPN coverage** | Every slug returns 400, so Algerian fixtures cannot be swept and must be graded by hand. No second provider wired in yet |
 
-### 🔴 Declined — 22
+### 🔴 Declined — 23
 
 Tested and rejected, with the number that killed it. Kept deliberately — a dead idea that stays written down does not get re-proposed.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🔴 | 08-29 | engine | **A min or max stated-probability filter on the tips would lift the hitrate** | Banded says-vs-hit on the current dumps, last 300 per league, two half-windows: Tip 1 calibrates at every band (worst −1.4, the 70-75 band OVER-delivers +5.7/+2.5), and the team lanes behind Tip 2's cold tile calibrate too — the O1.5s claiming 55-65 hit 58 on a 59 claim in BOTH halves. Nothing overclaims consistently at either end, so a probability cut would only refuse honest low-claim lanes to flatter the tile — the GRE-SL floor mirage again. Declined; instead the tiles now print the family's average CLAIM beside its hit (tip 2: 63.3 vs claims 69.0), so a low number reads as what it promised, not as failure |
 | 🔴 | 08-26 | engine | **Domestic context: the mismatch term** | The fourth "signal without edge" in a day. Clears the residual bar outright (+0.241 ± 0.063, t 3.81, both windows) and still LOSES hitrate when converted to tips: 86.4 → 85.9 and 86.4 → 85.7 |
 | 🔴 | 08-26 | engine | **Domestic context: league table position** | +0.103 ± 0.035, t 2.94 — but windows t 2.42 / 1.75, one window short |
 | 🔴 | 08-26 | engine | **Domestic context: three-season stature** | "Barcelona is always top three" as a number. t 2.06 pooled, windows 1.17 / 1.79 — fails the bar |

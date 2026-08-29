@@ -58,7 +58,7 @@
 2026-08-29 12:00	JPN-J1	J1 League	Tokyo Verdy v Kashima	U4.25 89.3% **+1.0%** · buy≥1.18 (+4.5% margin)	✅ **Kashima O0.5** 80.1% +11.1% (team) · buy≥1.26 (+0.9% margin)	✅ HIT — 0-2
 2026-08-29 12:00	JPN-J1	J1 League	Urawa Reds v Yokohama FM	U4.25 90.0% +1.7% · buy≥1.18 (+5.0% margin)	❌ U3.75 78.2% +3.8% (floor −3.8) · buy≥1.19 (−0.6% margin)	❌ MISS — 3-2	✅ 1X 73.3% +5.8% · hindsight
 2026-08-29 12:00	JPN-J1	J1 League	Vissel Kobe v Cerezo Osaka	U4.25 88.6% **+0.4%** · buy≥1.18 (+4.0% margin)	— none	✅ HIT — 1-0
-2026-08-29 12:15	POL-EK	Ekstraklasa	Radomiak v Cracovia	U4.25 86.0% **+0.5%** · buy≥1.22 (+7.2% margin)	U3.75 75.5% +5.2% (floor −2.5) · buy≥1.32 (+6.9% margin)	LIVE 57' 1-1
+2026-08-29 12:15	POL-EK	Ekstraklasa	Radomiak v Cracovia	U4.25 86.0% **+0.5%** · buy≥1.22 (+7.2% margin)	✅ U3.75 75.5% +5.2% (floor −2.5) · buy≥1.32 (+6.9% margin)	✅ HIT — 2-1
 2026-08-29 13:00	GER-B2	2. Bundesliga	Heidenheim v Dresden	U4.25 82.1% +1.2% · buy≥1.30 (+4.8% margin)	✅ **Heidenheim O0.5** 83.4% +3.2% (team) · buy≥1.26 (+5.3% margin)	❌ MISS — 5-3	✅ DNB1 76.8% +18.7% · hindsight
 2026-08-29 13:00	GER-B2	2. Bundesliga	Cottbus v Fürth	U4.25 84.8% +3.9% · buy≥1.30 (+9.0% margin)	❌ U3.75 69.8% +6.0% (floor −5.2) · buy≥1.29 (−2.2% margin)	❌ MISS — 3-4
 2026-08-29 13:00	GER-B2	2. Bundesliga	Karlsruhe v Wolfsburg	O1.5 82.1% +1.4% · buy≥1.28 (+4.8% margin)	✅ O2.25 60.8% +2.2% (floor −14.2) · buy≥1.27 (−13.4% margin)	✅ HIT — 2-5
@@ -72,7 +72,7 @@
 2026-08-29 14:00	FRA-L2	Ligue 2	Annecy v Metz	U4.25 84.4% **−4.2%** · buy≥1.29 (+7.2% margin)	✅ O1.75 77.2% +5.2% (floor −0.8) · buy≥1.47 (+8.7% margin)	✅ HIT — 1-1
 2026-08-29 14:00	FRA-L2	Ligue 2	Red Star v Reims	U4.25 84.0% **−4.6%** · buy≥1.23 (+7.1% margin)	— none	❌ MISS — 1-4
 2026-08-29 14:00	CHN-SL	Chinese Super League	Henan v Chongqing Tongliang Long	— no tip: engine abstained (thin history or an unresolved name)	—	FT 1-1 (no tip)
-2026-08-29 14:45	POL-EK	Ekstraklasa	Motor Lublin v Piast Gliwice	U4.25 85.7% **+0.1%** · buy≥1.27 (+7.1% margin)	— none		12 76.5% +4.0% · buy≥1.37 · probation
+2026-08-29 14:45	POL-EK	Ekstraklasa	Motor Lublin v Piast Gliwice	U4.25 85.7% **+0.1%** · buy≥1.27 (+7.1% margin)	— none	✅ HIT — 0-2	✅ 12 76.5% +4.0% · buy≥1.37 · probation
 2026-08-29 15:00	SWE-AL	Allsvenskan	Häcken v Västerås SK	U4.25 83.5% **+0.4%** · buy≥1.25 (+5.1% margin)	❌ U3.75 70.3% +3.4% (floor −4.7) · buy≥1.24 (−5.3% margin)	✅ HIT — 1-3	❌ DNB1 71.4% +14.7% · hindsight
 2026-08-29 15:00	SWE-AL	Allsvenskan	Elfsborg v Degerfors	U4.25 83.4% **+0.3%** · buy≥1.23 (+5.1% margin)	✅ U3.75 71.4% +4.5% (floor −3.6) · buy≥1.28 (−1.3% margin)	✅ HIT — 2-0	✅ DNB1 71.2% +14.5% · hindsight
 2026-08-29 15:30	GER-BL	Bundesliga	Köln v Hoffenheim	O1.5 83.3% **+0.6%** · buy≥1.25 (+4.5% margin)	✅ **Köln O1.5** 56.4% +5.9% (team) · buy≥1.49 (−16.3% margin)	✅ HIT — 3-2	✅ 12 78.4% +4.0% · hindsight
@@ -100,7 +100,7 @@
 2026-08-29 17:00	ESP-L2	LaLiga 2	Sabadell v Almería	U4.25 84.2% **−6.2%** · buy≥1.18 (+5.4% margin)	**Sabadell U1.5** 75.4% +17.0% (team) · buy≥1.36 (+2.4% margin)	LIVE HT 0-0
 2026-08-29 17:15	FRA-L1	Ligue 1	Strasbourg v Lens	O1.5 79.9% +2.6% · buy≥1.31 (+4.7% margin)	**Lens O0.5** 80.9% +11.9% (team) · buy≥1.34 (+8.5% margin)	LIVE 45'+1' 0-1
 2026-08-29 17:30	SWE-AL	Allsvenskan	Halmstad v Kalmar	U3.0 75.6% +8.7% · buy≥1.48 (+2.3% margin)	— none	LIVE 30' 0-0
-2026-08-29 17:30	POL-EK	Ekstraklasa	Wisła Kraków v Wieczysta	— no tip: engine abstained (thin history or an unresolved name)	—	
+2026-08-29 17:30	POL-EK	Ekstraklasa	Wisła Kraków v Wieczysta	— no tip: engine abstained (thin history or an unresolved name)	—	FT 2-0 (no tip)
 2026-08-29 18:00	NOR-EL	Eliteserien	Viking v Aalesund	O1.5 85.8% +5.7% · buy≥1.27 (+9.1% margin)	**Viking O1.5** 76.6% +28.5% (team) · buy≥1.35 (+3.2% margin)		DNB1 82.9% +23.3% · buy≥1.27 · probation
 2026-08-29 18:00	TUR-SL	Trendyol Süper Lig	Konyaspor v Kocaelispor	U4.25 84.9% **+0.7%** · buy≥1.23 (+6.1% margin)	U3.75 72.7% +4.4% (floor −9.3) · buy≥1.30 (+2.0% margin)	LIVE 1' 0-0
 2026-08-29 18:00	SUI-SL	Swiss Super League	Lausanne v Zürich	O1.5 79.8% **+1.0%** · buy≥1.29 (+2.8% margin)	**Lausanne O1.5** 56.0% +5.5% (team) · buy≥1.51 (−15.7% margin)		12 78.0% +2.9% · buy≥1.35 · probation
