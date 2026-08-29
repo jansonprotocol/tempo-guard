@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            106 / 125  84.8%     60 / 89   67.4%
     played lanes  >+1%      52 / 64   81.2%     60 / 89   67.4%
-    placed bets             60 / 73   82.2%    ROI +3.6%
+    placed bets             62 / 75   82.7%    ROI +3.5%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -408,7 +408,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 60 / 73  ·  ROI +3.6%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 62 / 75  ·  ROI +3.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -496,8 +496,8 @@ that premium the book is keeping the insurance money.
 | — open | Colorado v Salt Lake | U4.5 | 1.19 | — | R6 softer off the U-tip |
 | — open | Portland v Austin | DNB (home) | 1.22 | — | = tip 3's DNB1 print (82.8%) — following the probation lane |
 | — open | Utrecht v PSV | 12 | 1.21 | — | = tip 3's 12 print (79.3%) — draw the only out |
-| — open | Eindhoven v Heracles | DNB (away) | 1.23 | — | Heracles side off the team-over read |
-| — open | Gent v Club Brugge | DNB (away) | 1.27 | — | = tip 3's DNB2 print (73.2% +32.4%) — following the probation lane |
+| ◦ | Eindhoven v Heracles | DNB (away) | 1.23 | 1.00x | Heracles side off the team-over read — cashed out 100% pre-match, Rule 7 applied (DNB under 1.35 / below buy≥) |
+| ◦ | Gent v Club Brugge | DNB (away) | 1.27 | 1.00x | = tip 3's DNB2 print (73.2% +32.4%) — following the probation lane — cashed out 100% pre-match, Rule 7 applied (DNB under 1.35 / below buy≥) |
 | — open | Magdeburg v Kiel | U4.5 | 1.21 | — | R6 softer off the U4.25 tip |
 | — open | Darmstadt v Hannover | U4.5 | 1.22 | — | R6 softer off the U4.25 tip |
 | — open | Lyngby v OB | U4.5 | 1.18 | — | R6 softer off the U4.25 tip |
