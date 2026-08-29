@@ -560,13 +560,33 @@ def main() -> None:
     # whole: it only ever prints above its own floor and edge bar.
     (pb1, pq1), (pb2, pq2) = p[1], p[2]
     ha, na = pb1 + pb2 + h3, pq1 + pq2 + n3
+    # The claim each family carried into those graded lanes, so a low
+    # tile reads as WHAT IT PROMISED, not as failure: measured this week,
+    # every says band delivers its claim in both half-windows — the only
+    # honest "filter" is the expectation printed beside the outcome.
+    from scripts.playable import LANE
+    says = {1: [], 2: [], 3: []}
+    for f in fixtures:
+        for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
+            if not f.lane(which) if which < 3 else False:
+                continue
+            src = cell if which < 3 else f.tip3
+            mark = (f.status[:1] if which == 1 else src.lstrip()[:1])
+            if mark not in ("✅", "❌", "◦"):
+                continue
+            m = LANE.match(src.lstrip("✅❌◦ "))
+            if m:
+                says[which].append(float(m.group(2)))
+    def claims(w):
+        return (f" · claims {sum(says[w])/len(says[w]):.1f}"
+                if says[w] else "")
     tiles = "".join([
         tile("all lanes", f"{ha / na * 100:.1f}%" if na else "—",
              f"every graded playable lane · {ha}/{na}"),
         tile("tip 1", f"{pb1 / pq1 * 100:.1f}%" if pq1 else "—",
-             f"playable · {pb1}/{pq1} settled"),
+             f"playable · {pb1}/{pq1}{claims(1)}"),
         tile("tip 2", f"{pb2 / pq2 * 100:.1f}%" if pq2 else "—",
-             f"playable · {pb2}/{pq2} settled"),
+             f"playable · {pb2}/{pq2}{claims(2)}"),
         tile("tip 3", f"{h3 / n3 * 100:.1f}%" if n3 else "—",
              (f"{h3}/{n3} · probation" +
               (f" · {hs3} hindsight" if hs3 else "")) if n3
