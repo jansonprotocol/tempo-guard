@@ -459,6 +459,12 @@ that premium the book is keeping the insurance money.
 | — open | Lyon v Le Havre | O1.5 | 1.20 | — | vs the board's lane — widened |
 | — open | Juventus v Parma | U3.5 | 1.44 | — | R6 off the U-tip |
 | — open | Cercle Brugge v Lommel | O1.5 (home) | 1.44 | — | Cercle team over — own read |
+| — open | Tottenham v Newcastle | 12 | 1.28 | — | either side outright — taken IN-PLAY at 0-1, the tip3 lane |
+| — open | Auxerre v Angers | DNB (home) | 1.43 | — | rule 5 shape, Auxerre side |
+| — open | Ascoli v Carrarese | U3.5 | 1.28 | — | R6 off the U-tip |
+| — open | Zwolle v NEC | 12 | 1.23 | — | either side outright — own read DC |
+| — open | Sevilla v Atlético Madrid | U3.5 | 1.28 | — | R6 softer above the U3.0 tip (+5.3%) |
+| — open | Girona v Las Palmas | U1.5 (away) | 1.20 | — | Las Palmas team under — own read |
 
 <!-- HYPOTHESES:START -->
 
