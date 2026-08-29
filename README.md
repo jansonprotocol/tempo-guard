@@ -409,6 +409,17 @@ that premium the book is keeping the insurance money.
 | — open | Halmstad v Kalmar | U3.5 | 1.32 | — | R6 off the U-tip |
 | — open | Lausanne v Zürich | O1.5 (home) | 1.62 | — | Lausanne team over — own read |
 | — open | Servette v Luzern | 1X | 1.25 | — | Servette or draw — own read DC |
+| — open | Al-Kholood v Al-Ahli | O1.5 | 1.19 | — | vs the board's lane — widened |
+| — open | Tottenham v Newcastle | O0.5 (away) | 1.25 | — | Newcastle to score — team lane own read |
+| — open | Monza v Udinese | X2 | 1.36 | — | Udinese or draw — own read DC |
+| — open | AZ v Go Ahead Eagles | O2.5 | 1.35 | — | harder line off the O-tip |
+| — open | Real Sociedad v Espanyol | O1.5 | 1.24 | — | vs the board's lane — widened |
+| — open | Al-Fateh v Al-Ittihad | U4.5 | 1.23 | — | R6 softer off the U-tip |
+| — open | Nürnberg v Bielefeld | O1.5 | 1.20 | — | vs the board's lane — widened |
+| — open | Galatasaray v Göztepe | U4.5 | 1.21 | — | R6 softer off the U-tip |
+| — open | Lyon v Le Havre | O1.5 | 1.20 | — | vs the board's lane — widened |
+| — open | Juventus v Parma | U3.5 | 1.44 | — | R6 off the U-tip |
+| — open | Cercle Brugge v Lommel | O1.5 (home) | 1.44 | — | Cercle team over — own read |
 
 <!-- HYPOTHESES:START -->
 
