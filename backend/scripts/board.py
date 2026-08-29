@@ -196,10 +196,14 @@ def _tallies(fixtures: list[Fixture]):
             cell = f.tip1 if which == 1 else f.tip2
             m = playable.LANE.match(cell)
             if m and not m.group(1).strip(" *·").startswith("—"):
+                # "◦" — the tip pushed — counts as a HIT: the bettor's
+                # standing offset means a printed U3.0 is played as U3.5,
+                # and the actual play WINS where the printed rung pushes.
+                # Same doctrine hit_weight documents for half-wins.
                 mark = f.status[:1] if which == 1 else cell[:1]
-                if mark in ("✅", "❌"):
+                if mark in ("✅", "❌", "◦"):
                     t[which][1] += 1
-                    t[which][0] += mark == "✅"
+                    t[which][0] += mark != "❌"
             got = f.lane(which)
             if got and got[4] in ("✅", "❌"):
                 p[which][1] += 1

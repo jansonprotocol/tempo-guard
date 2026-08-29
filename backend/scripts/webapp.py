@@ -633,7 +633,10 @@ def main() -> None:
                 graded.append((m["d"], m["mark"]))
     graded.sort(reverse=True)
     window = graded[:300]
-    hero_rate = (sum(1 for _d, mk in window if mk.startswith("✅"))
+    # A push counts as a hit, same as everywhere on the board: the
+    # standing offset plays the rung a notch softer, which wins there.
+    hero_rate = (sum(1 for _d, mk in window
+                     if mk.startswith("✅") or mk == "◦")
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
     hero_fine = "Tip 1 · the 300 most recent graded playable lanes"
