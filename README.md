@@ -493,6 +493,13 @@ that premium the book is keeping the insurance money.
 | — open | Kansas City v Vancouver | U4.5 | 1.32 | — | R6 softer off the U-tip |
 | — open | Colorado v Salt Lake | U4.5 | 1.19 | — | R6 softer off the U-tip |
 | — open | Portland v Austin | DNB (home) | 1.22 | — | = tip 3's DNB1 print (82.8%) — following the probation lane |
+| — open | Utrecht v PSV | 12 | 1.21 | — | = tip 3's 12 print (79.3%) — draw the only out |
+| — open | Eindhoven v Heracles | DNB (away) | 1.23 | — | Heracles side off the team-over read |
+| — open | Gent v Club Brugge | DNB (away) | 1.27 | — | = tip 3's DNB2 print (73.2% +32.4%) — following the probation lane |
+| — open | Magdeburg v Kiel | U4.5 | 1.21 | — | R6 softer off the U4.25 tip |
+| — open | Darmstadt v Hannover | U4.5 | 1.22 | — | R6 softer off the U4.25 tip |
+| — open | Lyngby v OB | U4.5 | 1.18 | — | R6 softer off the U4.25 tip |
+| — open | Silkeborg v Midtjylland | U4.5 | 1.25 | — | R6 softer off the U4.25 tip |
 
 <!-- HYPOTHESES:START -->
 
