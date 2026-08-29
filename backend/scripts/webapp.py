@@ -306,14 +306,16 @@ def _card(f, kind: str, reads: dict) -> str:
     lead, rest = (1, f.tip1), (2, f.tip2)
     if kind == "play" and not f.settled and not f.lane(1) and f.lane(2):
         lead, rest = (2, f.tip2), (1, f.tip1)
+    # Tip 3 rides the card FACE, not the fold — a lane nobody sees is a
+    # lane that can never earn its way off probation.
+    t3 = (f'<div class="lane"><span class="which">Tip 3</span> '
+          f'{_fmt(f.tip3)} <span class="dim">· result lane</span></div>'
+          if f.tip3.strip() else "")
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{lane(*lead)}")
-    t3 = (f'<div class="lane"><span class="which">Tip 3</span> '
-          f'{_fmt(f.tip3)} <span class="dim">· result lane, probation'
-          f'</span></div>' if f.tip3.strip() else "")
-    body = lane(*rest) + t3 + tie_html
+           f"{lane(*lead)}{t3}")
+    body = lane(*rest) + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
     if not body:
@@ -521,9 +523,22 @@ def _check_js(page: str) -> None:
 def main() -> None:
     fixtures = board.load()
     t, p = board._tallies(fixtures)
-    (h1, n1), _ = t[1], t[2]
+    (h1, n1), (h2, n2) = t[1], t[2]
     (p1, q1), _ = p[1], p[2]
     bh, bn, roi = headline.bets()
+    # Tip 3 grades off its own column marks — on probation it feeds no
+    # other tally, but its record is public from the first settled lane.
+    # A ◦ (DNB draw) counts as a hit, same convention as everywhere.
+    # Hindsight rows — session fixtures that settled before the lane
+    # existed, graded retroactively at the bettor's request — are counted
+    # but named in the tile, so the live record can never hide behind them.
+    h3 = n3 = hs3 = 0
+    for f in fixtures:
+        mark = f.tip3.lstrip()[:1] if f.tip3.strip() else ""
+        if mark in ("✅", "❌", "◦"):
+            n3 += 1
+            h3 += mark != "❌"
+            hs3 += "hindsight" in f.tip3
 
     reads = _reads(fixtures)
     pending = [f for f in fixtures if not f.settled]
@@ -538,20 +553,24 @@ def main() -> None:
         return (f'<div class="tile"><div class="v">{value}</div>'
                 f'<div class="l">{label}</div><div class="s">{sub}</div></div>')
 
+    # The six-tile row the bettor specified: every lane family's record,
+    # then the money. "All lanes" pools everything the engine published
+    # and graded, Tip 3 included from the day it starts grading.
+    ha, na = h1 + h2 + h3, n1 + n2 + n3
     tiles = "".join([
-        tile("confirmed hitrate", f"{h1 / n1 * 100:.1f}%" if n1 else "—",
-             f"Tip 1 · {h1}/{n1} settled"),
-        tile("played lanes &gt;+1%", f"{p1 / q1 * 100:.1f}%" if q1 else "—",
-             f"Tip 1 · {p1}/{q1}"),
-        # The bettor's own record beside the engine's: most positions are
-        # Tip 2, Rule-6 translations, team lanes or double chance — none of
-        # which the Tip 1 tiles count — so without this tile a 24-bet night
-        # was invisible on the front page and the 75% looked wrong.
-        tile("the book", f"{bh / bn * 100:.1f}%" if bn else "—",
+        tile("all lanes", f"{ha / na * 100:.1f}%" if na else "—",
+             f"every graded lane · {ha}/{na}"),
+        tile("tip 1", f"{h1 / n1 * 100:.1f}%" if n1 else "—",
+             f"{h1}/{n1} settled"),
+        tile("tip 2", f"{h2 / n2 * 100:.1f}%" if n2 else "—",
+             f"{h2}/{n2} settled"),
+        tile("tip 3", f"{h3 / n3 * 100:.1f}%" if n3 else "—",
+             (f"{h3}/{n3} · probation" +
+              (f" · {hs3} hindsight" if hs3 else "")) if n3
+             else "probation · first grades tonight"),
+        tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
              f"your lanes · {bh}/{bn} hits"),
-        tile("found bets", f"{roi:+.1f}%", f"ROI · {bh}/{bn} settled"),
-        tile("pending", str(len(pending)),
-             f"{len(playable)} playable"),
+        tile("roi", f"{roi:+.1f}%", f"flat stakes · {bn} settled"),
     ])
 
     bets_html = "".join(
