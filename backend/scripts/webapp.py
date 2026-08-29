@@ -173,12 +173,12 @@ def _bets_rows() -> list[dict]:
         lane = rung if side == "-" else (
             f"{rung} ({'home' if side == 'H' else 'away'})")
         align = _alignment(name, rung, side, tipmap)
-        if len(parts) > 4 and parts[4] == "1":
-            out.append(dict(mark="◦", name=name, lane=lane, odds=odds,
-                            ret="1.00x", note=note, align=align))
-            continue
         fx = fixtures.get(name)
         prob = ledger.bet_prob(rung, side, fx) if fx else None
+        if len(parts) > 4 and parts[4] == "1":
+            out.append(dict(mark="◦", name=name, lane=lane, odds=odds,
+                            ret="1.00x", note=note, align=align, prob=prob))
+            continue
         # ledger.bet_state, same gate as the README block: FT for anything
         # that can still move, immediate for a clinched over.
         s = ledger.bet_state(rung, side, fx) if fx else None
