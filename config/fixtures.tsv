@@ -42,16 +42,16 @@
 2026-08-28 21:00	ESP-L2	LaLiga 2	Tenerife v Sporting Gijón	U3.0 77.8% **+0.0%** · buy≥1.36 (+1.2% margin)	— none	✅ HIT — 0-1
 2026-08-28 21:15	POR-PL	Liga Portugal	Rio Ave v Sporting CP	O1.5 79.6% +4.5% · buy≥1.35 (+7.7% margin)	✅ **Sporting CP O0.5** 80.0% +11.7% (team) · buy≥1.35 (+8.0% margin)	✅ HIT — 0-4
 2026-08-28 21:30	ESP-LL	LaLiga	Alavés v Villarreal	O1.5 76.3% +2.1% · buy≥1.32 (+0.7% margin)	— none	❌ MISS — 1-0
-2026-08-28 22:00	PER-L1	Liga 1	Comerciantes Unidos v Cajamarca	O1.5 76.3% +2.7% · buy≥1.38 (+5.2% margin)	**Comerciantes Unidos O0.5** 83.5% +3.6% (team) · buy≥1.32 (+10.5% margin)	LIVE 69' 2-2
-2026-08-29 00:30	BRA-SB	Brasileirão Série B	Goiás v São Bernardo	O1.0 88.5% **−0.6%** · buy≥1.23 (+6.1% margin)	— none	
-2026-08-29 00:30	CHI-PD	Liga de Primera	Cobresal v Palestino	U4.25 84.6% **−0.8%** · buy≥1.27 (+5.7% margin)	— none	
-2026-08-29 01:30	BRA-SB	Brasileirão Série B	Novorizontino v Sport Recife	O1.0 88.5% **−0.6%** · buy≥1.22 (+6.1% margin)	O1.75 67.4% +2.5% (floor −7.6) · buy≥1.47 (−8.5% margin)	
-2026-08-29 01:30	BRA-SB	Brasileirão Série B	Náutico v Athletic	U3.0 83.1% +1.4% · buy≥1.32 (+4.3% margin)	U2.75 63.9% +2.0% (floor −11.1) · buy≥1.25 (−11.7% margin)	
-2026-08-29 11:00	JPN-J1	J1 League	Gamba Osaka v Sanfrecce	U4.25 81.9% **−6.3%** · buy≥1.23 (−0.8% margin)	**Sanfrecce O0.5** 83.6% +14.6% (team) · buy≥1.24 (+3.6% margin)	
-2026-08-29 11:00	JPN-J1	J1 League	Mito Hollyhock v Machida Zelvia	U4.25 87.2% **−1.0%** · buy≥1.19 (+3.0% margin)	**Machida Zelvia O0.5** 82.0% +13.0% (team) · buy≥1.25 (+2.4% margin)	
-2026-08-29 11:00	CHN-SL	Chinese Super League	Qingdao Hainiu v Wuhan Three Towns	U4.25 81.3% +1.9% · buy≥1.30 (+3.2% margin)	**Wuhan Three Towns O0.5** 80.8% +8.2% (team) · buy≥1.31 (+6.1% margin)	
-2026-08-29 11:30	JPN-J1	J1 League	Shimizu v Kashiwa	U4.25 88.3% **+0.1%** · buy≥1.19 (+3.8% margin)	— none	
-2026-08-29 11:30	JPN-J1	J1 League	Nagasaki v FC Tokyo	U4.25 88.2% **−0.0%** · buy≥1.19 (+3.8% margin)	— none	
+2026-08-28 22:00	PER-L1	Liga 1	Comerciantes Unidos v Cajamarca	O1.5 76.3% +2.7% · buy≥1.38 (+5.2% margin)	✅ **Comerciantes Unidos O0.5** 83.5% +3.6% (team) · buy≥1.32 (+10.5% margin)	✅ HIT — 2-3
+2026-08-29 00:30	BRA-SB	Brasileirão Série B	Goiás v São Bernardo	O1.0 88.5% **−0.6%** · buy≥1.23 (+6.1% margin)	— none	✅ HIT — 2-1
+2026-08-29 00:30	CHI-PD	Liga de Primera	Cobresal v Palestino	U4.25 84.6% **−0.8%** · buy≥1.27 (+5.7% margin)	— none	✅ HIT — 2-0
+2026-08-29 01:30	BRA-SB	Brasileirão Série B	Novorizontino v Sport Recife	O1.0 88.5% **−0.6%** · buy≥1.22 (+6.1% margin)	✅ O1.75 67.4% +2.5% (floor −7.6) · buy≥1.47 (−8.5% margin)	✅ HIT — 2-1
+2026-08-29 01:30	BRA-SB	Brasileirão Série B	Náutico v Athletic	U3.0 83.1% +1.4% · buy≥1.32 (+4.3% margin)	❌ U2.75 63.9% +2.0% (floor −11.1) · buy≥1.25 (−11.7% margin)	◦ PUSH — 2-1
+2026-08-29 11:00	JPN-J1	J1 League	Gamba Osaka v Sanfrecce	U4.25 81.9% **−6.3%** · buy≥1.23 (−0.8% margin)	**Sanfrecce O0.5** 83.6% +14.6% (team) · buy≥1.24 (+3.6% margin)	LIVE 45'+1' 0-0
+2026-08-29 11:00	JPN-J1	J1 League	Mito Hollyhock v Machida Zelvia	U4.25 87.2% **−1.0%** · buy≥1.19 (+3.0% margin)	**Machida Zelvia O0.5** 82.0% +13.0% (team) · buy≥1.25 (+2.4% margin)	LIVE 45'+1' 1-1
+2026-08-29 11:00	CHN-SL	Chinese Super League	Qingdao Hainiu v Wuhan Three Towns	U4.25 81.3% +1.9% · buy≥1.30 (+3.2% margin)	**Wuhan Three Towns O0.5** 80.8% +8.2% (team) · buy≥1.31 (+6.1% margin)	LIVE HT 0-2
+2026-08-29 11:30	JPN-J1	J1 League	Shimizu v Kashiwa	U4.25 88.3% **+0.1%** · buy≥1.19 (+3.8% margin)	— none	LIVE 16' 0-0
+2026-08-29 11:30	JPN-J1	J1 League	Nagasaki v FC Tokyo	U4.25 88.2% **−0.0%** · buy≥1.19 (+3.8% margin)	— none	LIVE 15' 0-0
 2026-08-29 12:00	JPN-J1	J1 League	Kawasaki v Chiba	U4.25 90.0% +1.7% · buy≥1.19 (+5.0% margin)	**Chiba U1.5** 75.2% +8.0% (team) · buy≥1.29 (−3.1% margin)	
 2026-08-29 12:00	JPN-J1	J1 League	Kyoto Sanga v Fukuoka	U4.25 88.6% **+0.3%** · buy≥1.19 (+4.0% margin)	— none	
 2026-08-29 12:00	JPN-J1	J1 League	Nagoya v Okayama	U4.25 85.4% **−2.9%** · buy≥1.21 (+1.7% margin)	O1.75 76.2% +3.7% (floor −5.8) · buy≥1.34 (−2.2% margin)	
