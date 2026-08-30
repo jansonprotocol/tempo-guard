@@ -351,37 +351,36 @@ def _card(f, kind: str, reads: dict) -> str:
     else:
         head = f"🕑 {board._stamp(f)}"
 
-    # The protocol's accent: in a strong-tier league (tip 1 baseline 85%+
-    # on the replay) a playable tip 1 is the lane to read first; in a
+    # The protocol's accent: the lane to read first. In a
     # weak-tier or consensus-capped league it is tip 3. The accent is
     # reading guidance, so settled cards drop it. Derived from
     # baselines.tsv, so a league changing tier moves its cards' accent
     # on the next replay without anyone editing anything.
     capped = "capped" in (rates().get(f.code) or "")
-    t1r = _t1_rates().get(f.code)
     best = 0
     if not f.settled:
-        if f.tip3.strip() and (f.code in _weak_leagues() or capped):
+        # Athena marks exactly ONE preferred lane per card (the bettor's
+        # rule, 30 Aug), and the order is what the measurement supports.
+        # final_pick.py replayed this chooser over 16,554 fixtures: every
+        # deviation from tip 1 grades WORSE on hitrate (tip 2 −12.7, tip
+        # 3 −5.9 points), and a sub-bar tip 1 still lands 84.5%. So a
+        # PLAYABLE tip 1 always wins the star; the tier rule only picks
+        # the lane to read when tip 1 has nothing playable to say; and
+        # the star means "read this first", never "this is the better
+        # bet" — the buy≥ bracket decides that.
+        if f.lane(1):
+            best = 1
+        elif f.tip3.strip() and (f.code in _weak_leagues() or capped):
             best = 3
-        elif t1r is not None and t1r >= 0.85 and f.lane(1):
-            best = 1
-        # Mid-tier: no tier preference, so the star goes to whichever
-        # lane carries the playable badge — the lane that put the card
-        # on the playable tab is the one to read first (the bettor's
-        # question on the Randers card, 30 Aug).
-        elif f.lane(1):
-            best = 1
         elif f.lane(2):
             best = 2
-        # Nothing playable anywhere: Athena still marks ONE preferred
-        # lane (the bettor's rule, 30 Aug) — a printed result lane
-        # first, else tip 1 as the engine's own pick. The final_pick
-        # instrument grades this exact chooser against always-tip-1.
         elif f.tip3.strip():
             best = 3
         elif f.tip1.strip() and not f.tip1.startswith("—"):
             best = 1
-    star = '<span class="best-tag">★ read first</span>'
+    star = ('<span class="best-tag" title="The lane to read first on this '
+            'card — not a claim that it is the better bet; the buy≥ '
+            'bracket decides that">★ read first</span>')
 
     def lane(which, cell):
         if cell.strip() in ("", "—", "— none"):
@@ -1319,12 +1318,18 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  much as the level: a plus sign means the league is running above its own
  nature. At 84%+ with a plus, tip 1 is the engine's home turf — read it
  first and buy it when the bookmaker clears the buy≥.</p>
- <p><b>2. In a weak or capped league, skip to tip 3.</b> Measured on the
- full baseline replay: tip 3 does not inherit a league's tip 1 weakness,
- because it reads who is stronger, not how many goals — a signal that
- survives totals-chaos. The table below is derived from the same replay
- the baselines bar uses and moves when it is re-run.</p>
+ <p><b>2. In a weak or capped league with no playable tip 1, read tip
+ 3.</b> Tip 3 does not inherit a league's tip 1 weakness — it reads who
+ is stronger, not how many goals, a signal that survives totals-chaos:</p>
  {read_tiers}
+ <p class="dim">Corrected the same day it was written. Replaying the
+ star's chooser over 16,554 fixtures showed every deviation from tip 1
+ grading WORSE on hitrate — tip 2 by 12.7 points, tip 3 by 5.9 — and,
+ the real surprise, a tip 1 that misses the playable bar still lands
+ <b>84.5%</b>. A thin edge means the league baseline is already high,
+ not that the tip is weak. So tip 1 keeps the star whenever it is
+ playable, and the tier rule only chooses which lane to read when tip 1
+ has nothing playable to say.</p>
  <p><b>3. Between two result-lane prints at the same probability, prefer
  DNB or 1X over 12.</b> The 15,048-fixture dive found DNB underclaims —
  the higher it says, the more it is right (+4.2 overall, +8.7 in its top

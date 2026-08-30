@@ -610,7 +610,7 @@ that premium the book is keeping the insurance money.
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 29 verified, 14 unfinished, 23 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 29 verified, 14 unfinished, 24 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
 ### 🟢 Verified and helping — 29
 
@@ -669,12 +669,13 @@ Measured but not concluded, or shipped on **probation** and still waiting on liv
 | 🟠 | 08-27 | cups | **UEFA country coefficients as a cup strength source** | Proposed and never measured — Club Elo was taken instead because it prices CLUBS directly rather than their federations. Still open if the Elo lane fails probation |
 | 🟠 | 08-27 | data | **ALG-L1 has no ESPN coverage** | Every slug returns 400, so Algerian fixtures cannot be swept and must be graded by hand. No second provider wired in yet |
 
-### 🔴 Declined — 23
+### 🔴 Declined — 24
 
 Tested and rejected, with the number that killed it. Kept deliberately — a dead idea that stays written down does not get re-proposed.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🔴 | 08-30 | board | **Final picking: is the card's starred lane better than always taking tip 1?** | No — measured before trusting it. The star's chooser replayed per league at n=300 (16,554 graded fixtures, bank freshly merged with the board's own results): league-average 79.5% against always-tip-1's 83.5%. Every deviation costs — tip 2 picks grade 72.6 where tip 1 would have graded 85.3 (−12.7), tip 3 picks 77.2 vs 83.1 (−5.9). The finding underneath is the valuable one: a tip 1 that MISSES the playable bar still lands 84.5%, because a thin edge means the league's baseline is already high, not that the tip is weak. The star stays (one preferred lane per card was the ask) but now yields to any playable tip 1, and is labelled read-first rather than best-bet — the buy≥ bracket decides what to buy. The About protocol's step 2 was corrected the same day it was written |
 | 🔴 | 08-29 | engine | **A min or max stated-probability filter on the tips would lift the hitrate** | Banded says-vs-hit on the current dumps, last 300 per league, two half-windows: Tip 1 calibrates at every band (worst −1.4, the 70-75 band OVER-delivers +5.7/+2.5), and the team lanes behind Tip 2's cold tile calibrate too — the O1.5s claiming 55-65 hit 58 on a 59 claim in BOTH halves. Nothing overclaims consistently at either end, so a probability cut would only refuse honest low-claim lanes to flatter the tile — the GRE-SL floor mirage again. Declined; instead the tiles now print the family's average CLAIM beside its hit (tip 2: 63.3 vs claims 69.0), so a low number reads as what it promised, not as failure |
 | 🔴 | 08-26 | engine | **Domestic context: the mismatch term** | The fourth "signal without edge" in a day. Clears the residual bar outright (+0.241 ± 0.063, t 3.81, both windows) and still LOSES hitrate when converted to tips: 86.4 → 85.9 and 86.4 → 85.7 |
 | 🔴 | 08-26 | engine | **Domestic context: league table position** | +0.103 ± 0.035, t 2.94 — but windows t 2.42 / 1.75, one window short |
