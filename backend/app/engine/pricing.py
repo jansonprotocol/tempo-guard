@@ -163,6 +163,15 @@ CURSE_HAIRCUT = 0.032
 # and the haircut beside it.
 BUY_BLEND_BELOW = 0.4
 BUY_BLEND_ABOVE = 0.8
+# How far the blend may lift the pricing probability ABOVE the lane's own
+# number. Measured 30 Aug on 8,404 team-lane offers: every claimed band
+# lands within two points of its claim, in BOTH half-windows (sub-65
+# lanes: says 59.1 lands 59.2 older half, says 58.8 lands 57.0 recent),
+# so a 56% lane's fair price really is ~1.79 and the uncapped blend
+# printing 1.47 was reaching 18% below reality. The blend keeps its role
+# above the record (asking extra of easy lanes) and keeps a small reach
+# below it, but may no longer manufacture a price the lane cannot pay.
+BUY_REACH_CAP = 0.03
 
 
 def blend_p(p: float, league_play_hit: float | None) -> float:
@@ -171,7 +180,7 @@ def blend_p(p: float, league_play_hit: float | None) -> float:
     if not league_play_hit or p <= 0:
         return p
     w = BUY_BLEND_ABOVE if p >= league_play_hit else BUY_BLEND_BELOW
-    return w * p + (1 - w) * league_play_hit
+    return min(w * p + (1 - w) * league_play_hit, p + BUY_REACH_CAP)
 
 
 def buy_from(market: str, mu: float, margin: float = DEFAULT_MARGIN,
