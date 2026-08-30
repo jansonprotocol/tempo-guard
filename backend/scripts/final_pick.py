@@ -112,6 +112,44 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
     return rows
 
 
+OUT = Path(__file__).resolve().parents[2] / "config" / "final_pick.tsv"
+
+
+def chosen(r: dict) -> int:
+    """The shipped chooser: a playable tip 1, else a printed result
+    lane, else tip 1. Tip 2 is never picked — it graded 12.7 points
+    below tip 1 on the same fixtures (30 Aug)."""
+    if r["t1_play"]:
+        return 1
+    return 3 if r["has_t3"] else 1
+
+
+def write_table(rows: list[dict]) -> None:
+    """Per-league final-pick record, for the app's baseline bar."""
+    per: dict[str, list[int]] = {}
+    for r in rows:
+        lane = chosen(r)
+        hit = r["hit_t3"] if lane == 3 else r["hit_t1"]
+        if hit is None:
+            hit = r["hit_t1"]
+        d = per.setdefault(r["code"], [0, 0])
+        d[0] += bool(hit)
+        d[1] += 1
+    lines = [
+        "# Final-pick record per league: the card's starred lane replayed",
+        "# as-of over the league's most recent fixtures. Written by",
+        "# scripts/final_pick.py --write — derived, never typed. Read by",
+        "# the app's baseline bar, which averages the leagues equally.",
+        "# league\thits\tn",
+    ]
+    for code, (h, n) in sorted(per.items()):
+        lines.append(f"{code}\t{h}\t{n}")
+    OUT.write_text("\n".join(lines) + "\n")
+    rates = [h / n for h, n in per.values() if n >= 30]
+    print(f"final pick: {sum(rates)/len(rates)*100:.1f}% over {len(rates)} "
+          f"leagues -> {OUT}")
+
+
 def main() -> None:
     args = sys.argv[1:]
     n = int(args[args.index("--n") + 1]) if "--n" in args else DEFAULT_N
@@ -142,6 +180,8 @@ def main() -> None:
 
     if dump:
         dump.write_bytes(pickle.dumps(allrows))
+    if "--write" in args:
+        write_table(allrows)
     if per:
         ap = sum(p for _c, p, _t, _n in per) / len(per)
         a1 = sum(t for _c, _p, t, _n in per) / len(per)
