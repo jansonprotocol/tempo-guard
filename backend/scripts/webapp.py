@@ -159,6 +159,36 @@ def _baselines() -> dict[str, float] | None:
     return {k: sum(v) / len(v) * 100 for k, v in sums.items() if v} or None
 
 
+def _read_tiers() -> str:
+    """The About page's proof that tip 3 ignores league tier — derived
+    from baselines.tsv at render so it moves when the replay is re-run."""
+    path = ROOT / "config" / "baselines.tsv"
+    if not path.exists():
+        return ""
+    tiers = {"under 80%": [], "80–85%": [], "85%+": []}
+    for ln in path.read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        p = ln.split("\t")
+        if int(p[2]) < 30:
+            continue
+        t1 = int(p[1]) / int(p[2])
+        t3 = int(p[5]) / int(p[6]) if int(p[6]) >= 30 else None
+        key = "under 80%" if t1 < .80 else "80–85%" if t1 < .85 else "85%+"
+        tiers[key].append((t1, t3))
+    rows = ""
+    for name, g in tiers.items():
+        if not g:
+            continue
+        t3s = [t3 for _t1, t3 in g if t3 is not None]
+        rows += (f"<tr><td>tip 1 {name}</td><td>{len(g)}</td>"
+                 f"<td>{sum(t1 for t1, _ in g)/len(g)*100:.1f}%</td>"
+                 f"<td>{sum(t3s)/len(t3s)*100:.1f}%</td></tr>") if t3s else ""
+    return (f'<div class="wrap"><table class="tiertable"><tr><th>league tier'
+            f"</th><th>leagues</th><th>avg tip 1</th><th>avg tip 3</th></tr>"
+            f"{rows}</table></div>")
+
+
 def _bets_rows() -> list[dict]:
     fixtures = ledger.read_fixtures()
     tipmap = _tipmap()
@@ -629,6 +659,7 @@ def main() -> None:
         streak = 0 if b["mark"].startswith("❌") else streak + 1
         best_streak = max(best_streak, streak)
 
+    read_tiers = _read_tiers()
     base = _baselines()
     basebar = ""
     if base:
@@ -1018,6 +1049,8 @@ h3.hyp .n {{ background:var(--card); border:1px solid var(--edge);
 .feat span {{ color:var(--dim); font-size:12px; }}
 .about .mission {{ font-size:18px; font-weight:700; color:var(--gold);
   margin:14px 0; }}
+.tiertable {{ margin:6px 0 10px; }}
+.tiertable td, .tiertable th {{ padding:4px 12px 4px 0; }}
 .page {{ display:none; }} .page.on {{ display:block; }}
 .tabpane {{ display:none; }} .tabpane.on {{ display:block; }}
 .wrap {{ overflow-x:auto; }}
@@ -1199,6 +1232,32 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    only decide, afterwards, whether a tip is worth buying</span></div>
    </div>
  </div>
+
+ <h3>How to read a card — the bettor's protocol</h3>
+ <p>Written down 30 Aug after the first hundred positions, so the next
+ run inherits it instead of rediscovering it. Four steps, in order:</p>
+ <p><b>1. Start at the league badge.</b> It shows the playable record and
+ its distance from baseline — <i>(83.7 +1.7)</i>. The delta matters as
+ much as the level: a plus sign means the league is running above its own
+ nature. At 84%+ with a plus, tip 1 is the engine's home turf — read it
+ first and buy it when the bookmaker clears the buy≥.</p>
+ <p><b>2. In a weak or capped league, skip to tip 3.</b> Measured on the
+ full baseline replay: tip 3 does not inherit a league's tip 1 weakness,
+ because it reads who is stronger, not how many goals — a signal that
+ survives totals-chaos. The table below is derived from the same replay
+ the baselines bar uses and moves when it is re-run.</p>
+ {read_tiers}
+ <p><b>3. Between two result-lane prints at the same probability, prefer
+ DNB or 1X over 12.</b> The 15,048-fixture dive found DNB underclaims —
+ the higher it says, the more it is right (+4.2 overall, +8.7 in its top
+ band) — while 12 is the family's one overclaimer (−2.0 on 7,884
+ prints).</p>
+ <p><b>4. The price gate never sleeps.</b> Whatever the card says, the
+ buy≥ and its margin bracket are the final word — no ticket below a
+ negative-bracket lane's asking price, no ticket on a lane the engine
+ never priced, DNB never under ~1.35 (Rule 7). A great prediction at the
+ wrong price is still a losing bet; that is the founding lesson of this
+ project.</p>
 
  <p><b>What it does not see:</b> Athena prices one match's goal total.
  It has no concept of a two-legged tie, an aggregate score, or what a
