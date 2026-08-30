@@ -646,6 +646,13 @@ that premium the book is keeping the insurance money.
 | — open | Casa Pia v Moreirense | 1X | 1.37 | — | = tip 3's 1X print (72.5%), under buy≥1.45 |
 | — open | Westerlo v Zulte Waregem | U4.5 | 1.21 | — | R6 softer off the U4.25 tip |
 | — open | Cambuur v Twente | U4.5 | 1.29 | — | R6 softer off the U4.25 tip |
+| — open | Widzew v Lech | O1.5 | 1.18 | — | tip 1 rung, bought under buy≥1.34 |
+| — open | Samsunspor v Fenerbahçe | O1.5 | 1.17 | — | tip 1 rung, bought well under buy≥1.32 |
+| — open | Monaco v Marseille | 12 | 1.27 | — | own read DC — card's tip 3 is DNB1, not the 12 |
+| — open | Lazio v Genoa | U3.5 | 1.18 | — | R6 softer off the U3.0 tip |
+| — open | Benevento v Südtirol | 1X | 1.22 | — | own read DC — card's tip 3 is DNB1, not the 1X |
+| — open | Pisa v Catanzaro | O1.5 | 1.38 | — | = tip 1 rung at 1.38, one cent under buy≥1.39 |
+| — open | Corinthians v Santos | 12 | 1.30 | — | = tip 3's 12 print (75.6%), under buy≥1.39 |
 
 <!-- HYPOTHESES:START -->
 
