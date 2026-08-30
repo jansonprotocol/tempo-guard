@@ -1319,12 +1319,16 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  {read_tiers}
  <p class="dim">Corrected the same day it was written. Replaying the
  star's chooser over 16,554 fixtures showed every deviation from tip 1
- grading WORSE on hitrate — tip 2 by 12.7 points, tip 3 by 5.9 — and,
- the real surprise, a tip 1 that misses the playable bar still lands
- <b>84.5%</b>. A thin edge means the league baseline is already high,
- not that the tip is weak. So tip 1 keeps the star whenever it is
- playable, and the tier rule only chooses which lane to read when tip 1
- has nothing playable to say.</p>
+ grading WORSE on hitrate, and — the real surprise — a tip 1 that misses
+ the playable bar still lands <b>84.3%</b>: a thin edge means the
+ league's baseline is already high, not that the tip is weak. Dropping
+ tip 2 from the chooser recovered most of the loss (79.5% → 82.1%
+ against always-tip-1's 83.5%), so the star is now only ever tip 1 or
+ tip 3. The residue is honest and stays: where the star leaves a
+ sub-bar tip 1 for a result lane, that lane lands 77.9% against tip 1's
+ 84.3% on the same fixtures — a swap that pays only if the result lane
+ is priced at least 8% above the total. Which is exactly what the buy≥
+ bracket is for, and why the star says read first, not bet this.</p>
  <p><b>3. Between two result-lane prints at the same probability, prefer
  DNB or 1X over 12.</b> The 15,048-fixture dive found DNB underclaims —
  the higher it says, the more it is right (+4.2 overall, +8.7 in its top

@@ -610,7 +610,7 @@ that premium the book is keeping the insurance money.
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 29 verified, 14 unfinished, 24 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 29 verified, 15 unfinished, 24 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
 ### 🟢 Verified and helping — 29
 
@@ -648,12 +648,13 @@ Cleared two separate time windows and is live in the engine today.
 | 🟢 | 08-24 | engine | **The weakest sides are rated too low** | TEAM_RATE_FLOOR 0.95 |
 | 🟢 | 08-27 | engine | **IRL-PD and MAR-BP price on a mu that carries no information** | At n≈800 IRL-PD's residual slope is −2.8 (t −3.0) and NEGATIVE IN BOTH WINDOWS — mu is anti-correlated with outcomes there; MAR-BP reads −0.8 (t −2.2). Their hitrates survive because the league mean carries them, but the stated probabilities pretend knowledge. RESOLVED 28 Aug by the consensus cap: both are in CONSENSUS_CAP_LEAGUES, so their published numbers never claim more than the league baseline and no lane there badges playable — the cull happened at the claim layer, and the tips stay on the board honestly |
 
-### 🟠 Unfinished — 14
+### 🟠 Unfinished — 15
 
 Measured but not concluded, or shipped on **probation** and still waiting on live results.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🟠 | 08-30 | board | **The star restricted to tip 1 or tip 3 (the bettor's follow-up to the final-picking table)** | Scored offline from the upgraded dump — the instrument now stores every lane's grade per fixture, so a variant costs a query instead of a replay. Dropping tip 2 recovers most of the loss: 79.5% -> 82.1% league-average, against always-tip-1's 83.5%. The residue is one honest swap: on the 3,715 fixtures with no playable tip 1 but a printed result lane, tip 3 lands 77.9% where tip 1 lands 84.3%. On HITRATE the star should never leave tip 1. On MONEY it can — the swap pays if the result lane is priced 8%+ above the total, which the buy>= bracket already answers per card. Orange because the money side is unmeasured: no odds history exists to settle it, and the live book is the only instrument that can |
 | 🟠 | 08-29 | engine | **Tip 3 — the result lane (1X/X2/12, sharpening to DNB when one side dominates), the bettor's proposal, SHIPPED ON PROBATION** | Measured first on 15,048 fixtures across 52 leagues (scripts/result_lanes.py): the per-side expectations through two Poissons price the result market honestly once the home side is tilted 1.10 (raw home wins ran +3.2 hot in both halves; tilted, all six outcome gaps close within 1.4). The feared Poisson draw bias never appears — TEAM_SHRINK compresses the sides and pumps the draw by roughly what Poisson drops it. The strongest-DC band that supplies three quarters of prints grades +0.1/−0.5; every stronger band and every DNB band UNDERCLAIMS (+1.3 to +8.5) — the lane's failure mode is modesty. Prints from DC_FLOOR 0.72 with edge ≥2 over the league's as-of base rate; DNB upgrade at 0.65 of the no-draw mass. Outside every tally and the hero until live results earn it in, exactly the cup lane's probation path |
 | 🟠 | 08-29 | engine | **A push should count as a win at the ROOT, not just in the tallies — the bettor's rule: the standing offset plays U3.0 as U3.5, so the actual play wins where the printed rung pushes** | The board's counters, playable tallies and hero window now grade ◦ as a hit (shipped 29 Aug). The deeper change — hit_weight("push")=1.0, which would fold push totals into winning_totals and hence into the PUBLISHED probabilities and selection ties — is a real engine change: U3.0 would collapse into the U3.25/U3.5 tier, tips would reshuffle, and every baseline (retrosim table, REL bases, floors) needs re-derivation on two windows before it ships. Until then the claims exclude the push and the tally credits it, which overstates hit vs says by the push rate (~1-2 points on U3.0-heavy lanes) — known, accepted, and queued |
 | 🟠 | 08-28 | engine | **The buy≥ gate prices REL-debited and capped lanes from the raw engine number** | _undebited() reverses the cup-over and high-says debits but not REL or the consensus cap, so a debited lane's printed buy≥ sits a few percent below its honest break-even. Capped lanes all land sub-bar where nothing is bought, and REL rarely bites hard on board lanes — small, but the gate run backwards should someday reverse everything the gate applies |
