@@ -95,12 +95,20 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
             pick, mk = 3, t3[0]
         else:
             pick, mk = 1, t1mk
-        g_pick = grade(pick, mk, hg, ag)
         g_t1 = grade(1, t1mk, hg, ag)
         if g_t1 is None:
             continue
-        rows.append(dict(code=league, d=d, pick=pick, mk=mk,
-                         hit_pick=g_pick, hit_t1=g_t1))
+        # Every lane's grade is stored, not just the one the chooser
+        # took, so a new chooser variant can be scored from the dump
+        # instead of costing another full replay (the bettor's
+        # tip-2-never variant, 30 Aug, was answered this way).
+        rows.append(dict(
+            code=league, d=d, pick=pick, mk=mk,
+            hit_pick=grade(pick, mk, hg, ag), hit_t1=g_t1,
+            t1_play=t1_play, t2_play=t2_play,
+            hit_t2=grade(2, t2[0], hg, ag) if t2 else None,
+            hit_t3=grade(3, t3[0], hg, ag) if t3 else None,
+            has_t3=t3 is not None))
     return rows
 
 

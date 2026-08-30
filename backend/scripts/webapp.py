@@ -351,29 +351,24 @@ def _card(f, kind: str, reads: dict) -> str:
     else:
         head = f"🕑 {board._stamp(f)}"
 
-    # The protocol's accent: the lane to read first. In a
-    # weak-tier or consensus-capped league it is tip 3. The accent is
-    # reading guidance, so settled cards drop it. Derived from
-    # baselines.tsv, so a league changing tier moves its cards' accent
-    # on the next replay without anyone editing anything.
-    capped = "capped" in (rates().get(f.code) or "")
+    # The protocol's accent: the lane to read first on this card.
+    # Reading guidance only, so settled cards drop it.
     best = 0
     if not f.settled:
         # Athena marks exactly ONE preferred lane per card (the bettor's
         # rule, 30 Aug), and the order is what the measurement supports.
-        # final_pick.py replayed this chooser over 16,554 fixtures: every
-        # deviation from tip 1 grades WORSE on hitrate (tip 2 −12.7, tip
-        # 3 −5.9 points), and a sub-bar tip 1 still lands 84.5%. So a
-        # PLAYABLE tip 1 always wins the star; the tier rule only picks
-        # the lane to read when tip 1 has nothing playable to say; and
-        # the star means "read this first", never "this is the better
-        # bet" — the buy≥ bracket decides that.
+        # final_pick.py replayed the chooser over 16,554 fixtures: tip 2
+        # picks graded 12.7 points BELOW what tip 1 would have done on
+        # those same fixtures, tip 3 picks 5.9 below, and a sub-bar tip 1
+        # still landed 84.5% — a thin edge means the league baseline is
+        # already high, not that the tip is weak. So the star can only
+        # ever be tip 1 or tip 3 (the bettor's rule after reading that
+        # table): a playable tip 1 first, then a printed result lane,
+        # then tip 1 as the engine's own pick. Tip 2 is never starred,
+        # whatever its badge. The star means "read this first", never
+        # "this is the better bet" — the buy≥ bracket decides that.
         if f.lane(1):
             best = 1
-        elif f.tip3.strip() and (f.code in _weak_leagues() or capped):
-            best = 3
-        elif f.lane(2):
-            best = 2
         elif f.tip3.strip():
             best = 3
         elif f.tip1.strip() and not f.tip1.startswith("—"):
