@@ -217,9 +217,14 @@ def _bets_rows() -> list[dict]:
         align = _alignment(name, rung, side, tipmap)
         fx = fixtures.get(name)
         prob = ledger.bet_prob(rung, side, fx) if fx else None
-        if len(parts) > 4 and parts[4] == "1":
-            out.append(dict(mark="◦", name=name, lane=lane, odds=odds,
-                            ret="1.00x", note=note, align=align, prob=prob))
+        # Column 5 is the cash-out's return multiple — "1" for the full
+        # stake, a fraction for a partial (see headline.bets).
+        if len(parts) > 4 and parts[4] not in ("", "0"):
+            got = float(parts[4])
+            out.append(dict(mark="◦" if got >= 1 else "❌",
+                            name=name, lane=lane, odds=odds,
+                            ret=f"{got:.2f}x", note=note, align=align,
+                            prob=prob))
             continue
         # ledger.bet_state, same gate as the README block: FT for anything
         # that can still move, immediate for a clinched over.

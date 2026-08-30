@@ -123,7 +123,7 @@ VVV-Venlo v Emmen	12	1.22	-	0		own read DC — no tip 3 print on this card
 HamKam v Kristiansund	U1.5	1.41	A	0		= tip 2's team lane (75.4%) bought ABOVE its buy≥1.36 — clean buy
 IK Start v KFUM Oslo	U3.5	1.41	-	0		R6 harder line, priced well over buy≥1.26 +0.10
 Tromsø v Sarpsborg 08	O2.5	1.50	-	0		R6 harder line, priced well over buy≥1.27 +0.10
-Randers v AGF	O1.5	1.83	A	0		= tip 2's starred lane (60.1%) ABOVE its buy≥1.72 — the accent's first sale
+Randers v AGF	O1.5	1.83	A	0.63		= tip 2's starred lane (60.1%) ABOVE its buy≥1.72 — the accent's first sale — cashed out €0.57 of €0.90 while AGF trailed; the lane later missed
 Augsburg v Schalke	O0.5	1.19	H	0		R6 softer off tip 2's Augsburg O1.5 team lane
 Nordsjælland v Brøndby	U4.5	1.21	-	0		R6 softer off the U4.25 tip
 Al-Hazem v Al-Shabab	O0.5	1.33	H	0		= tip 2's team lane (80.6%) ABOVE its buy≥1.26 — clean buy
@@ -140,3 +140,9 @@ Lazio v Genoa	U3.5	1.18	-	0		R6 softer off the U3.0 tip
 Benevento v Südtirol	1X	1.22	-	0		own read DC — card's tip 3 is DNB1, not the 1X
 Pisa v Catanzaro	O1.5	1.38	-	0		= tip 1 rung at 1.38, one cent under buy≥1.39
 Corinthians v Santos	12	1.30	-	0		= tip 3's 12 print (75.6%), under buy≥1.39
+América-MG v Ponte Preta	U3.5	1.72	-	0		R6 softer off the U3.0 tip (85.6%) — 1.72 is far above its ask
+Avaí v Atlético-GO	U3.5	1.19	-	0		R6 softer off the U3.0 tip
+Celta Vigo v Athletic Bilbao	O1.5	1.35	-	0		= tip 1 rung ABOVE buy≥1.32 — clean buy
+Famalicão v Gil Vicente	DNB	1.48	H	0		= tip 3's DNB1 (68.0%), under buy≥1.54 but clear of the 1.35 floor
+Sport Boys v Sporting Cristal	12	1.29	-	0		own read DC — card's tip 3 is DNB1, not the 12
+Grêmio v Chapecoense	U3.5	1.35	-	0		R6 softer off the U3.0 tip (83.1%, +10.3% margin)

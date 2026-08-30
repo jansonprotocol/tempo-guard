@@ -69,15 +69,20 @@ def bets() -> tuple[int, int, float]:
             continue
         parts = ln.split("\t")
         name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
-        # A position cashed out at stake (cashout flag, column 5) is realised
-        # money: it settles the moment it is flagged, at exactly 1.00x, no
-        # matter what the fixture later does — the fixture's result belongs
-        # to whatever bet replaced it, never to this one twice.
-        if len(parts) > 4 and parts[4] == "1":
+        # A cashed-out position is realised money: it settles the moment it
+        # is flagged, at whatever multiple of the stake came back, no matter
+        # what the fixture later does — the fixture's result belongs to
+        # whatever bet replaced it, never to this one twice. Column 5 holds
+        # that multiple: "1" is the full stake (the original flag, still
+        # read the same way), and a partial cash-out carries its own figure
+        # (Randers 0.57 of 0.90 = 0.63, the bettor's first, 30 Aug). A
+        # cash-out counts as a hit only when it returned at least the stake.
+        if len(parts) > 4 and parts[4] not in ("", "0"):
+            got = float(parts[4])
             staked += 1
-            returned += 1.0
+            returned += got
             n += 1
-            hits += 1
+            hits += got >= 1.0
             continue
         fx = fixtures.get(name)
         # ledger.bet_state is the one settlement gate: DNB and double

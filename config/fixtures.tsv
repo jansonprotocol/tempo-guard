@@ -199,26 +199,26 @@
 2026-08-30 17:00	ESP-LL	LaLiga	Real Madrid v Málaga	O1.5 77.3% +3.1% · buy≥1.31 (+1.5% margin)	✅ **Real Madrid O1.5** 63.6% +21.3% (team) · buy≥1.63 (+3.5% margin)	✅ HIT — 4-0	✅ DNB1 83.6% +21.0% · buy≥1.26 · probation
 2026-08-30 17:00	ESP-L2	LaLiga 2	Andorra v Eibar	U4.25 84.4% **−6.0%** · buy≥1.21 (+5.4% margin)	— none	✅ HIT — 0-1	✅ 12 75.1% +4.7% · buy≥1.40 · probation
 2026-08-30 17:15	FRA-L1	Ligue 1	Rennes v Le Mans	U4.25 83.4% **−1.0%** · buy≥1.26 (+5.8% margin)	**Rennes O1.5** 55.1% +10.5% (team) · buy≥1.86 (+2.8% margin)		DNB1 79.4% +21.8% · buy≥1.32 · probation
-2026-08-30 17:30	ENG-PL	Premier League	Man United v Ipswich	U4.25 81.9% **+0.1%** · buy≥1.28 (+2.9% margin)	**Man United O1.5** 58.3% +9.1% (team) · buy≥1.77 (+3.1% margin)	LIVE 83' 4-1	DNB1 73.7% +16.2% · buy≥1.42 · probation
-2026-08-30 17:30	GER-BL	Bundesliga	Augsburg v Schalke	U4.25 78.5% **+0.2%** · buy≥1.32 (+1.1% margin)	**Augsburg O1.5** 59.4% +8.9% (team) · buy≥1.74 (+3.1% margin)	LIVE 84' 2-0	12 79.1% +4.7% · buy≥1.33 · probation
+2026-08-30 17:30	ENG-PL	Premier League	Man United v Ipswich	U4.25 81.9% **+0.1%** · buy≥1.28 (+2.9% margin)	✅ **Man United O1.5** 58.3% +9.1% (team) · buy≥1.77 (+3.1% margin)	❌ MISS — 5-2	✅ DNB1 73.7% +16.2% · buy≥1.42 · probation
+2026-08-30 17:30	GER-BL	Bundesliga	Augsburg v Schalke	U4.25 78.5% **+0.2%** · buy≥1.32 (+1.1% margin)	✅ **Augsburg O1.5** 59.4% +8.9% (team) · buy≥1.74 (+3.1% margin)	✅ HIT — 3-0	✅ 12 79.1% +4.7% · buy≥1.33 · probation
 2026-08-30 17:30	POL-EK	Ekstraklasa	Górnik Zabrze v GKS Katowice	U4.25 85.3% **−0.2%** · buy≥1.27 (+7.0% margin)	— none		
-2026-08-30 18:00	DEN-SL	Danish Superliga	Nordsjælland v Brøndby	U4.25 83.0% +1.9% · buy≥1.29 (+5.2% margin)	U3.75 66.7% +2.6% (floor −8.3) · buy≥1.38 (+0.5% margin)	LIVE 53' 2-0	
-2026-08-30 18:00	TUR-SL	Trendyol Süper Lig	Eyüpspor v Alanyaspor	U4.25 84.8% **+0.6%** · buy≥1.21 (+6.1% margin)	U3.75 74.4% +6.0% (floor −7.6) · buy≥1.30 (+4.2% margin)	LIVE 53' 1-1	
-2026-08-30 18:00	PER-L1	Liga 1	Moquegua v Alianza Atlético	U4.25 80.9% **−6.5%** · buy≥1.22 (+6.4% margin)	U3.75 74.4% +1.2% (floor −0.6) · buy≥1.30 (+4.1% margin)	LIVE 50' 1-1	
-2026-08-30 18:05	SAU-PL	Saudi Pro League	Al-Hazem v Al-Shabab	U4.25 82.2% **+0.3%** · buy≥1.27 (+2.6% margin)	**Al-Hazem O0.5** 80.6% +2.5% (team) · buy≥1.26 (+1.4% margin)	LIVE HT 0-0	
-2026-08-30 18:30	ITA-SA	Serie A	Napoli v Como	U4.25 86.1% **−2.6%** · buy≥1.24 (+5.5% margin)	— none	LIVE 39' 1-2	
-2026-08-30 19:00	ITA-SB	Serie B	Arezzo v Palermo	O1.5 74.8% +3.3% · buy≥1.35 (+1.2% margin)	— none	LIVE 10' 0-0	12 74.8% +7.1% · buy≥1.40 · probation
-2026-08-30 19:00	ITA-SB	Serie B	Mantova v Empoli	O1.5 73.5% +1.9% · buy≥1.37 (+0.9% margin)	— none	LIVE 10' 0-0	12 75.6% +8.0% · buy≥1.39 · probation
-2026-08-30 19:00	ESP-L2	LaLiga 2	Cádiz v Real Valladolid	U3.0 77.8% **+0.0%** · buy≥1.29 (+1.2% margin)	**Real Valladolid U1.5** 75.4% +2.2% (team) · buy≥1.34 (+1.0% margin)	LIVE 11' 0-0	
-2026-08-30 19:00	ESP-L2	LaLiga 2	Mallorca v Ceuta	— no tip: engine abstained (thin history or an unresolved name)	—	LIVE 10' 0-0	
-2026-08-30 19:00	POR-PL	Liga Portugal	Casa Pia v Moreirense	U4.25 84.0% **−2.3%** · buy≥1.21 (+5.9% margin)	U3.75 74.3% +2.8% (floor −0.7) · buy≥1.26 (+0.9% margin)	LIVE 11' 0-0	1X 72.5% +4.0% · buy≥1.45 · probation
-2026-08-30 19:15	NOR-EL	Eliteserien	Lillestrøm v Fredrikstad	U4.25 86.4% +4.8% · buy≥1.28 (+9.2% margin)	U3.75 71.6% +6.8% (floor −3.4) · buy≥1.34 (+4.0% margin)		DNB1 65.3% +5.7% · buy≥1.61 · probation
-2026-08-30 19:15	BEL-PL	Belgian Pro League	Westerlo v Zulte Waregem	U4.25 85.5% **+0.1%** · buy≥1.25 (+5.2% margin)	**Zulte Waregem O0.5** 79.1% +9.9% (team) · buy≥1.32 (+4.4% margin)		12 75.4% +2.4% · buy≥1.39 · probation
-2026-08-30 19:30	ESP-LL	LaLiga	Deportivo La Coruña v Valencia	U3.0 76.8% +4.3% · buy≥1.48 (+4.3% margin)	U2.75 55.6% +5.0% (floor −19.4) · buy≥1.65 (+2.8% margin)		
-2026-08-30 20:00	NED-ED	Eredivisie	Cambuur v Twente	U4.25 80.8% +1.5% · buy≥1.29 (+2.1% margin)	**Twente O1.5** 57.4% +15.9% (team) · buy≥1.79 (+3.0% margin)		12 78.0% +3.5% · buy≥1.35 · probation
-2026-08-30 20:00	SAU-PL	Saudi Pro League	Al-Qadsiah v Al Faisaly	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-08-30 18:00	DEN-SL	Danish Superliga	Nordsjælland v Brøndby	U4.25 83.0% +1.9% · buy≥1.29 (+5.2% margin)	❌ U3.75 66.7% +2.6% (floor −8.3) · buy≥1.38 (+0.5% margin)	✅ HIT — 3-1	
+2026-08-30 18:00	TUR-SL	Trendyol Süper Lig	Eyüpspor v Alanyaspor	U4.25 84.8% **+0.6%** · buy≥1.21 (+6.1% margin)	✅ U3.75 74.4% +6.0% (floor −7.6) · buy≥1.30 (+4.2% margin)	✅ HIT — 2-1	
+2026-08-30 18:00	PER-L1	Liga 1	Moquegua v Alianza Atlético	U4.25 80.9% **−6.5%** · buy≥1.22 (+6.4% margin)	❌ U3.75 74.4% +1.2% (floor −0.6) · buy≥1.30 (+4.1% margin)	❌ MISS — 1-4	
+2026-08-30 18:05	SAU-PL	Saudi Pro League	Al-Hazem v Al-Shabab	U4.25 82.2% **+0.3%** · buy≥1.27 (+2.6% margin)	✅ **Al-Hazem O0.5** 80.6% +2.5% (team) · buy≥1.26 (+1.4% margin)	✅ HIT — 1-1	
+2026-08-30 18:30	ITA-SA	Serie A	Napoli v Como	U4.25 86.1% **−2.6%** · buy≥1.24 (+5.5% margin)	— none	LIVE 75' 1-2	
+2026-08-30 19:00	ITA-SB	Serie B	Arezzo v Palermo	O1.5 74.8% +3.3% · buy≥1.35 (+1.2% margin)	— none	LIVE 49' 0-1	12 74.8% +7.1% · buy≥1.40 · probation
+2026-08-30 19:00	ITA-SB	Serie B	Mantova v Empoli	O1.5 73.5% +1.9% · buy≥1.37 (+0.9% margin)	— none	LIVE 51' 0-0	12 75.6% +8.0% · buy≥1.39 · probation
+2026-08-30 19:00	ESP-L2	LaLiga 2	Cádiz v Real Valladolid	U3.0 77.8% **+0.0%** · buy≥1.29 (+1.2% margin)	**Real Valladolid U1.5** 75.4% +2.2% (team) · buy≥1.34 (+1.0% margin)	LIVE 49' 1-1	
+2026-08-30 19:00	ESP-L2	LaLiga 2	Mallorca v Ceuta	— no tip: engine abstained (thin history or an unresolved name)	—	LIVE 48' 1-0	
+2026-08-30 19:00	POR-PL	Liga Portugal	Casa Pia v Moreirense	U4.25 84.0% **−2.3%** · buy≥1.21 (+5.9% margin)	U3.75 74.3% +2.8% (floor −0.7) · buy≥1.26 (+0.9% margin)	LIVE 51' 0-1	1X 72.5% +4.0% · buy≥1.45 · probation
+2026-08-30 19:15	NOR-EL	Eliteserien	Lillestrøm v Fredrikstad	U4.25 86.4% +4.8% · buy≥1.28 (+9.2% margin)	U3.75 71.6% +6.8% (floor −3.4) · buy≥1.34 (+4.0% margin)	LIVE HT 1-2	DNB1 65.3% +5.7% · buy≥1.61 · probation
+2026-08-30 19:15	BEL-PL	Belgian Pro League	Westerlo v Zulte Waregem	U4.25 85.5% **+0.1%** · buy≥1.25 (+5.2% margin)	**Zulte Waregem O0.5** 79.1% +9.9% (team) · buy≥1.32 (+4.4% margin)	LIVE HT 1-1	12 75.4% +2.4% · buy≥1.39 · probation
+2026-08-30 19:30	ESP-LL	LaLiga	Deportivo La Coruña v Valencia	U3.0 76.8% +4.3% · buy≥1.48 (+4.3% margin)	U2.75 55.6% +5.0% (floor −19.4) · buy≥1.65 (+2.8% margin)	LIVE 37' 2-1	
+2026-08-30 20:00	NED-ED	Eredivisie	Cambuur v Twente	U4.25 80.8% +1.5% · buy≥1.29 (+2.1% margin)	**Twente O1.5** 57.4% +15.9% (team) · buy≥1.79 (+3.0% margin)	LIVE 10' 0-0	12 78.0% +3.5% · buy≥1.35 · probation
+2026-08-30 20:00	SAU-PL	Saudi Pro League	Al-Qadsiah v Al Faisaly	— no tip: engine abstained (thin history or an unresolved name)	—	LIVE 9' 1-0	
 2026-08-30 16:00	BRA-SA	Brasileirão	Athletico Paranaense v Fluminense	U4.25 82.9% **−6.0%** · buy≥1.23 (+6.8% margin)	✅ O1.75 73.6% +2.0% (floor −1.4) · buy≥1.48 (+3.1% margin)	❌ MISS — 3-3	
-2026-08-30 18:30	BEL-PL	Belgian Pro League	St. Gilloise v Anderlecht	O1.5 79.0% +2.8% · buy≥1.28 (+1.2% margin)	**St. Gilloise O1.5** 57.3% +13.6% (team) · buy≥1.80 (+3.0% margin)	LIVE 39' 1-0	12 78.5% +5.4% · buy≥1.34 · probation
+2026-08-30 18:30	BEL-PL	Belgian Pro League	St. Gilloise v Anderlecht	O1.5 79.0% +2.8% · buy≥1.28 (+1.2% margin)	**St. Gilloise O1.5** 57.3% +13.6% (team) · buy≥1.80 (+3.0% margin)	LIVE 77' 2-0	12 78.5% +5.4% · buy≥1.34 · probation
 2026-08-30 20:15	POL-EK	Ekstraklasa	Widzew v Lech	O1.5 78.4% +2.4% · buy≥1.34 (+5.3% margin)	O2.25 55.1% +3.4% (floor −22.9) · buy≥1.60 (−0.4% margin)		
 2026-08-30 20:15	PER-L1	Liga 1	ADT v Sport Huancayo	U4.25 81.0% **−6.3%** · buy≥1.23 (+6.4% margin)	— none		
 2026-08-30 20:30	TUR-SL	Trendyol Süper Lig	Başakşehir v Kasımpaşa	U4.25 83.1% **−1.1%** · buy≥1.30 (+5.7% margin)	**Başakşehir O0.5** 81.9% +3.7% (team) · buy≥1.33 (+8.8% margin)		DNB1 70.7% +9.4% · buy≥1.48 · probation
@@ -242,3 +242,12 @@
 2026-08-30 23:00	BRA-SB	Brasileirão Série B	CRB v Criciúma	O1.0 88.5% **−0.6%** · buy≥1.22 (+6.1% margin)	O1.75 66.9% +2.0% (floor −8.1) · buy≥1.62 (+0.5% margin)		
 2026-08-30 23:10	COL-PA	Categoría Primera A	Independiente Medellín v Llaneros	U4.25 85.9% **−5.5%** · buy≥1.17 (+5.4% margin)	— none		DNB1 68.6% +4.3% · buy≥1.53 · probation
 2026-08-30 23:30	BRA-SA	Brasileirão	Grêmio v Chapecoense	U3.0 83.1% +7.7% · buy≥1.39 (+10.3% margin)	U2.75 63.9% +9.9% (floor −11.1) · buy≥1.46 (+3.5% margin)		DNB1 69.7% +4.9% · buy≥1.51 · probation
+2026-08-30 23:30	BRA-SA	Brasileirão	Mirassol v Palmeiras	O1.5 75.5% +3.8% · buy≥1.43 (+8.1% margin)	**Palmeiras O0.5** 83.1% +17.3% (team) · buy≥1.33 (+10.3% margin)		12 76.2% +2.9% · buy≥1.38 · probation
+2026-08-30 23:30	BRA-SB	Brasileirão Série B	Vila Nova v Ceará	O1.0 88.5% **−0.6%** · buy≥1.23 (+6.1% margin)	— none		DNB1 69.4% +2.8% · buy≥1.51 · probation
+2026-08-30 23:30	CHI-PD	Liga de Primera	Colo-Colo v Audax Italiano	O1.5 79.3% +3.1% · buy≥1.30 (+3.0% margin)	**Colo-Colo O1.5** 54.8% +7.2% (team) · buy≥1.87 (+2.7% margin)		DNB1 79.2% +19.5% · buy≥1.33 · probation
+2026-08-31 00:30	BRA-SA	Brasileirão	Bahia v Internacional	U4.25 82.8% **−6.1%** · buy≥1.22 (+6.8% margin)	— none		
+2026-08-31 01:00	MLS	MLS	St. Louis v Dallas	O1.5 80.6% **−0.6%** · buy≥1.28 (+6.1% margin)	O2.25 61.9% +2.5% (floor −13.1) · buy≥1.45 (+0.1% margin)		12 77.5% +2.5% · buy≥1.35 · probation
+2026-08-31 01:15	COL-PA	Categoría Primera A	Millonarios v Inter de Bogotá	U4.25 86.1% **−5.3%** · buy≥1.21 (+5.4% margin)	**Millonarios O0.5** 84.0% +8.6% (team) · buy≥1.29 (+8.1% margin)		DNB1 73.6% +9.4% · buy≥1.43 · probation
+2026-08-31 02:00	PER-L1	Liga 1	Cienciano v Cusco	O1.5 75.6% +1.8% · buy≥1.39 (+5.0% margin)	— none		
+2026-08-31 02:00	CHI-PD	Liga de Primera	Coquimbo v Huachipato	U4.25 86.6% +1.2% · buy≥1.24 (+6.1% margin)	**Coquimbo O0.5** 83.1% +5.4% (team) · buy≥1.31 (+8.7% margin)		DNB1 73.5% +13.9% · buy≥1.43 · probation
+2026-08-31 03:20	COL-PA	Categoría Primera A	Deportivo Cali v Bucaramanga	U4.25 85.9% **−5.5%** · buy≥1.16 (+5.4% margin)	— none		
