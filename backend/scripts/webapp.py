@@ -373,6 +373,14 @@ def _card(f, kind: str, reads: dict) -> str:
             best = 1
         elif f.lane(2):
             best = 2
+        # Nothing playable anywhere: Athena still marks ONE preferred
+        # lane (the bettor's rule, 30 Aug) — a printed result lane
+        # first, else tip 1 as the engine's own pick. The final_pick
+        # instrument grades this exact chooser against always-tip-1.
+        elif f.tip3.strip():
+            best = 3
+        elif f.tip1.strip() and not f.tip1.startswith("—"):
+            best = 1
     star = '<span class="best-tag">★ read first</span>'
 
     def lane(which, cell):

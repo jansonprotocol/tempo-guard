@@ -1,0 +1,145 @@
+"""
+Final picking: is the card's starred lane better than always taking tip 1?
+
+The app now marks exactly ONE preferred lane per card (the ★), chosen by
+the bettor's protocol. This instrument replays that chooser per league
+over the most recent 300 fixtures — the bank now includes the board's
+own completed matches via ingest_board — and grades it against the
+baseline of always following tip 1. Same as-of discipline as every
+other replay.
+
+The chooser, exactly as the card applies it:
+  1. weak-tier (tip 1 baseline < 80%) or consensus-capped league, and a
+     result lane printed             -> tip 3
+  2. tip 1 playable (edge > +1%)    -> tip 1
+  3. tip 2 playable                 -> tip 2
+  4. a result lane printed          -> tip 3
+  5. otherwise                      -> tip 1
+
+Usage:  python scripts/final_pick.py [--n 300] [--leagues A,B]
+                                     [--dump path.pkl]
+"""
+from __future__ import annotations
+
+import pickle
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from app.data import store
+from app.engine import market_select, result_market, team_total
+from app.util.asian_lines import evaluate_market
+from scripts.two_tips import tips
+
+DEFAULT_N = 300
+MIN_ROWS = 200
+BASELINES = Path(__file__).resolve().parents[2] / "config" / "baselines.tsv"
+
+
+def weak_set() -> set:
+    out = set()
+    for ln in BASELINES.read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        p = ln.split("\t")
+        if int(p[2]) >= 30 and int(p[1]) / int(p[2]) < 0.80:
+            out.add(p[0])
+    return out
+
+
+def _hit(res) -> bool:
+    return res in (True, "half_win", "push")
+
+
+def grade(lane_kind, mk, hg, ag):
+    if lane_kind == 3:
+        won = result_market.won(mk, hg, ag)
+        return True if won is None else won      # DNB push = hit
+    try:
+        res = (team_total.won(mk, hg, ag) if mk.startswith("T")
+               else evaluate_market(mk, hg, ag))
+    except (ValueError, TypeError):
+        return None
+    if res is None:
+        return None
+    return _hit(res if isinstance(res, str) else bool(res))
+
+
+def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
+    df = store.load_results(league)
+    if df is None or len(df) < MIN_ROWS:
+        return []
+    recent = df.sort_values("date").tail(n)
+    rows = []
+    for _, r in recent.iterrows():
+        d = r["date"].date() if hasattr(r["date"], "date") else r["date"]
+        hg, ag = int(r["hg"]), int(r["ag"])
+        try:
+            out = tips(league, str(r["home"]), str(r["away"]), d)
+        except Exception:
+            continue
+        if out is None:
+            continue
+        t1mk, p1, e1 = out["t1"]
+        t2, t3 = out["t2"], out["t3"]
+        t1_play = e1 > 0.01
+        t2_play = t2 is not None and t2[2] > 0.01
+        if (league in weak or league in capped) and t3 is not None:
+            pick, mk = 3, t3[0]
+        elif t1_play:
+            pick, mk = 1, t1mk
+        elif t2_play:
+            pick, mk = 2, t2[0]
+        elif t3 is not None:
+            pick, mk = 3, t3[0]
+        else:
+            pick, mk = 1, t1mk
+        g_pick = grade(pick, mk, hg, ag)
+        g_t1 = grade(1, t1mk, hg, ag)
+        if g_t1 is None:
+            continue
+        rows.append(dict(code=league, d=d, pick=pick, mk=mk,
+                         hit_pick=g_pick, hit_t1=g_t1))
+    return rows
+
+
+def main() -> None:
+    args = sys.argv[1:]
+    n = int(args[args.index("--n") + 1]) if "--n" in args else DEFAULT_N
+    codes = (args[args.index("--leagues") + 1].split(",")
+             if "--leagues" in args else sorted(store.available_leagues()))
+    dump = Path(args[args.index("--dump") + 1]) if "--dump" in args else None
+
+    weak = weak_set()
+    capped = set(market_select.CONSENSUS_CAP_LEAGUES)
+    allrows = []
+    per = []
+    for lg in codes:
+        try:
+            rows = replay(lg, n, weak, capped)
+        except Exception as exc:
+            print(f"{lg:9} FAILED {exc}", file=sys.stderr)
+            continue
+        if not rows:
+            continue
+        allrows += rows
+        graded = [r for r in rows if r["hit_pick"] is not None]
+        hp = sum(r["hit_pick"] for r in graded)
+        h1 = sum(r["hit_t1"] for r in graded)
+        per.append((lg, hp / len(graded), h1 / len(graded), len(graded)))
+        print(f"{lg:9} pick {hp/len(graded)*100:5.1f}%  "
+              f"tip1 {h1/len(graded)*100:5.1f}%  "
+              f"({len(graded)} graded)", flush=True)
+
+    if dump:
+        dump.write_bytes(pickle.dumps(allrows))
+    if per:
+        ap = sum(p for _c, p, _t, _n in per) / len(per)
+        a1 = sum(t for _c, _p, t, _n in per) / len(per)
+        print(f"\nleague-average: final pick {ap*100:.1f}% "
+              f"vs always-tip-1 {a1*100:.1f}%  over {len(per)} leagues")
+
+
+if __name__ == "__main__":
+    main()
