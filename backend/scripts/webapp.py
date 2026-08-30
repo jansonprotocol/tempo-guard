@@ -312,25 +312,30 @@ def _sortkeys(f) -> str:
             f'data-k="{html.escape(f.kickoff)}"')
 
 
-_WEAK: set | None = None
+_T1RATES: dict | None = None
 
 
-def _weak_leagues() -> set:
-    """Leagues whose tip 1 baseline runs under 80% on the 300-window
-    replay — the protocol's 'read tip 3 first' tier, derived from the
-    same file as the About page's proof table."""
-    global _WEAK
-    if _WEAK is None:
-        _WEAK = set()
+def _t1_rates() -> dict:
+    """Per-league tip 1 baseline from the 300-window replay — the tier
+    every protocol-driven accent derives from, same file as the About
+    page's proof table."""
+    global _T1RATES
+    if _T1RATES is None:
+        _T1RATES = {}
         path = ROOT / "config" / "baselines.tsv"
         if path.exists():
             for ln in path.read_text().splitlines():
                 if ln.startswith("#") or not ln.strip():
                     continue
                 p = ln.split("\t")
-                if int(p[2]) >= 30 and int(p[1]) / int(p[2]) < 0.80:
-                    _WEAK.add(p[0])
-    return _WEAK
+                if int(p[2]) >= 30:
+                    _T1RATES[p[0]] = int(p[1]) / int(p[2])
+    return _T1RATES
+
+
+def _weak_leagues() -> set:
+    """The protocol's 'read tip 3 first' tier: tip 1 baseline under 80%."""
+    return {c for c, r in _t1_rates().items() if r < 0.80}
 
 
 def _card(f, kind: str, reads: dict) -> str:
@@ -346,10 +351,28 @@ def _card(f, kind: str, reads: dict) -> str:
     else:
         head = f"🕑 {board._stamp(f)}"
 
+    # The protocol's accent: in a strong-tier league (tip 1 baseline 85%+
+    # on the replay) a playable tip 1 is the lane to read first; in a
+    # weak-tier or consensus-capped league it is tip 3. The accent is
+    # reading guidance, so settled cards drop it. Derived from
+    # baselines.tsv, so a league changing tier moves its cards' accent
+    # on the next replay without anyone editing anything.
+    capped = "capped" in (rates().get(f.code) or "")
+    t1r = _t1_rates().get(f.code)
+    best = 0
+    if not f.settled:
+        if f.tip3.strip() and (f.code in _weak_leagues() or capped):
+            best = 3
+        elif t1r is not None and t1r >= 0.85 and f.lane(1):
+            best = 1
+    star = '<span class="best-tag">★ read first</span>'
+
     def lane(which, cell):
         if cell.strip() in ("", "—", "— none"):
             return ""
         pl = " pl" if (not f.settled and f.lane(which)) else ""
+        if which == best:
+            pl += " best"
         # While the match runs, say what the score has done to this lane.
         live = ""
         if not f.settled and f.status:
@@ -360,7 +383,8 @@ def _card(f, kind: str, reads: dict) -> str:
                        else "won" if s.startswith("✓") else "")
                 live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell)}{live}</div>")
+                f"</span> {_fmt(cell)}"
+                f"{star if which == best else ''}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -381,8 +405,10 @@ def _card(f, kind: str, reads: dict) -> str:
         lead, rest = (2, f.tip2), (1, f.tip1)
     # Tip 3 rides the card FACE, not the fold — a lane nobody sees is a
     # lane that can never earn its way off probation.
-    t3 = (f'<div class="lane"><span class="which">Tip 3</span> '
-          f'{_fmt(f.tip3)} <span class="dim">· result lane</span></div>'
+    t3 = (f'<div class="lane{" best" if best == 3 else ""}">'
+          f'<span class="which">Tip 3</span> '
+          f'{_fmt(f.tip3)} <span class="dim">· result lane</span>'
+          f'{star if best == 3 else ""}</div>'
           if f.tip3.strip() else "")
     # Protocol step 2, applied to the layout itself: in a league whose
     # tip 1 baseline runs under 80% — or a consensus-capped one — a card
@@ -984,6 +1010,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .lane {{ background:#111622; border-radius:7px; padding:7px 9px;
   font-size:13px; margin-top:6px; }}
 .lane.pl {{ outline:1px solid #234d33; }}
+.lane.best {{ outline:1px solid rgba(230,195,92,.55); background:#171c2a;
+  box-shadow:0 0 10px rgba(230,195,92,.10) inset; }}
+.best-tag {{ color:var(--gold); font-size:10px; text-transform:uppercase;
+  letter-spacing:.12em; margin-left:8px; white-space:nowrap; }}
 .lane .which {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-right:6px; }}
 .prog {{ margin-top:5px; font-size:11px; letter-spacing:.04em;

@@ -604,6 +604,7 @@ def verify(quiet: bool = False) -> None:
         "MIN_WIN_PROB": market_select.MIN_WIN_PROB,
         "BUY_BLEND_BELOW": pricing.BUY_BLEND_BELOW,
         "BUY_BLEND_ABOVE": pricing.BUY_BLEND_ABOVE,
+        "BUY_REACH_CAP": pricing.BUY_REACH_CAP,
         "STREAK_FROM": team_total.STREAK_FROM,
         "STREAK_SLOPE": team_total.STREAK_SLOPE,
         "RESULT_TILT": result_market.RESULT_TILT,
