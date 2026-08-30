@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            153 / 184  83.2%     90 / 136  66.2%
     played lanes  >+1%      77 / 96   80.2%     90 / 136  66.2%
-    placed bets             86 / 108  79.6%    ROI -0.8%
+    placed bets             86 / 108  79.6%    ROI -0.2%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -526,7 +526,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 86 / 108  ·  ROI -0.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 86 / 108  ·  ROI -0.2%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -636,7 +636,7 @@ that premium the book is keeping the insurance money.
 | ❌ | HamKam v Kristiansund | U1.5 (away) | 1.41 | 0.00x | = tip 2's team lane (75.4%) bought ABOVE its buy≥1.36 — clean buy |
 | ❌ | IK Start v KFUM Oslo | U3.5 | 1.41 | 0.00x | R6 harder line, priced well over buy≥1.26 +0.10 |
 | ❌ | Tromsø v Sarpsborg 08 | O2.5 | 1.50 | 0.00x | R6 harder line, priced well over buy≥1.27 +0.10 |
-| ❌ | Randers v AGF | O1.5 (away) | 1.83 | 0.00x | = tip 2's starred lane (60.1%) ABOVE its buy≥1.72 — the accent's first sale |
+| ❌ | Randers v AGF | O1.5 (away) | 1.83 | 0.00x | = tip 2's starred lane (60.1%) ABOVE its buy≥1.72 — the accent's first sale — cashed out €0.57 of €0.90 while AGF trailed; the lane later missed |
 | ✅ | Augsburg v Schalke | O0.5 (home) | 1.19 | 1.19x | R6 softer off tip 2's Augsburg O1.5 team lane |
 | — open | Nordsjælland v Brøndby | U4.5 | 1.21 | — | R6 softer off the U4.25 tip |
 | — open | Al-Hazem v Al-Shabab | O0.5 (home) | 1.33 | — | = tip 2's team lane (80.6%) ABOVE its buy≥1.26 — clean buy |
