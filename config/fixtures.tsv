@@ -201,7 +201,7 @@
 2026-08-30 17:15	FRA-L1	Ligue 1	Rennes v Le Mans	U4.25 83.4% **−1.0%** · buy≥1.26 (+5.8% margin)	✅ **Rennes O1.5** 55.1% +10.5% (team) · buy≥1.86 (+2.8% margin)	❌ MISS — 3-2	✅ DNB1 79.4% +21.8% · buy≥1.32 · probation
 2026-08-30 17:30	ENG-PL	Premier League	Man United v Ipswich	U4.25 81.9% **+0.1%** · buy≥1.28 (+2.9% margin)	✅ **Man United O1.5** 58.3% +9.1% (team) · buy≥1.77 (+3.1% margin)	❌ MISS — 5-2	✅ DNB1 73.7% +16.2% · buy≥1.42 · probation
 2026-08-30 17:30	GER-BL	Bundesliga	Augsburg v Schalke	U4.25 78.5% **+0.2%** · buy≥1.32 (+1.1% margin)	✅ **Augsburg O1.5** 59.4% +8.9% (team) · buy≥1.74 (+3.1% margin)	✅ HIT — 3-0	✅ 12 79.1% +4.7% · buy≥1.33 · probation
-2026-08-30 17:30	POL-EK	Ekstraklasa	Górnik Zabrze v GKS Katowice	U4.25 85.3% **−0.2%** · buy≥1.27 (+7.0% margin)	— none		
+2026-08-30 17:30	POL-EK	Ekstraklasa	Górnik Zabrze v GKS Katowice	U4.25 85.4% **−0.2%** · buy≥1.27 (+7.0% margin)	— none		
 2026-08-30 18:00	DEN-SL	Danish Superliga	Nordsjælland v Brøndby	U4.25 83.0% +1.9% · buy≥1.29 (+5.2% margin)	❌ U3.75 66.7% +2.6% (floor −8.3) · buy≥1.38 (+0.5% margin)	✅ HIT — 3-1	
 2026-08-30 18:00	TUR-SL	Trendyol Süper Lig	Eyüpspor v Alanyaspor	U4.25 84.8% **+0.6%** · buy≥1.21 (+6.1% margin)	✅ U3.75 74.4% +6.0% (floor −7.6) · buy≥1.30 (+4.2% margin)	✅ HIT — 2-1	
 2026-08-30 18:00	PER-L1	Liga 1	Moquegua v Alianza Atlético	U4.25 80.9% **−6.5%** · buy≥1.22 (+6.4% margin)	❌ U3.75 74.4% +1.2% (floor −0.6) · buy≥1.30 (+4.1% margin)	❌ MISS — 1-4	
@@ -251,19 +251,42 @@
 2026-08-31 02:00	PER-L1	Liga 1	Cienciano v Cusco	O1.5 75.6% +1.8% · buy≥1.39 (+5.0% margin)	— none		
 2026-08-31 02:00	CHI-PD	Liga de Primera	Coquimbo v Huachipato	U4.25 86.6% +1.2% · buy≥1.24 (+6.1% margin)	**Coquimbo O0.5** 83.1% +5.4% (team) · buy≥1.31 (+8.7% margin)		DNB1 73.5% +13.9% · buy≥1.43 · probation
 2026-08-31 03:20	COL-PA	Categoría Primera A	Deportivo Cali v Bucaramanga	U4.25 85.9% **−5.5%** · buy≥1.16 (+5.4% margin)	— none		
-2026-08-30 20:30	TUR-SL	Trendyol Süper Lig	Amed v Trabzonspor	— no tip: engine abstained (thin history or an unresolved name)	—		
-2026-08-30 20:30	TUR-SL	Trendyol Süper Lig	Beşiktaş v Çorum	— no tip: engine abstained (thin history or an unresolved name)	—		
-2026-08-30 20:45	FRA-L2	Ligue 2	Dijon v Saint-Étienne	U4.25 84.2% **−4.4%** · buy≥1.26 (+7.1% margin)	O1.75 75.1% +3.1% (floor −2.9) · buy≥1.46 (+4.3% margin)		
-2026-08-30 20:45	ITA-SA	Serie A	Atalanta v Bologna	U4.25 86.0% **−2.7%** · buy≥1.21 (+5.4% margin)	— none		
-2026-08-30 21:00	ENG-PL	Premier League	Aston Villa v Arsenal	O1.5 82.0% +2.1% · buy≥1.26 (+2.9% margin)	**Arsenal O0.5** 80.4% +5.6% (team) · buy≥1.31 (+5.0% margin)		
-2026-08-30 21:15	POR-PL	Liga Portugal	Benfica v Estoril	O1.5 78.7% +3.5% · buy≥1.36 (+7.0% margin)	**Benfica O1.5** 58.1% +15.8% (team) · buy≥1.77 (+3.0% margin)		DNB1 80.6% +23.4% · buy≥1.30 · probation
-2026-08-30 21:15	POR-PL	Liga Portugal	Braga v Vitória	O1.5 78.1% +2.9% · buy≥1.32 (+3.1% margin)	**Braga O0.5** 80.7% +5.4% (team) · buy≥1.34 (+8.4% margin)		DNB1 69.1% +12.0% · buy≥1.52 · probation
-2026-08-30 21:30	ESP-LL	LaLiga	Barcelona v Rayo Vallecano	O1.5 75.8% +1.4% · buy≥1.33 (+1.0% margin)	**Rayo Vallecano U1.5** 75.3% +7.2% (team) · buy≥1.38 (+4.2% margin)		DNB1 76.7% +14.0% · buy≥1.37 · probation
-2026-08-30 21:30	ESP-L2	LaLiga 2	Celta Fortuna v Castellón	U3.0 77.9% **+0.0%** · buy≥1.39 (+1.2% margin)	— none		DNB1 75.4% +10.8% · buy≥1.39 · probation
-2026-08-30 22:00	PER-L1	Liga 1	Atlético Grau v Melgar	O1.5 75.2% +1.4% · buy≥1.39 (+4.8% margin)	— none		
 2026-09-01 00:15	CHI-PD	Liga de Primera	Unión La Calera v La Serena	U4.25 86.0% **+0.6%** · buy≥1.25 (+6.0% margin)	— none		
 2026-09-01 00:30	BRA-SB	Brasileirão Série B	Fortaleza v Operário-PR	O1.0 88.5% **−0.7%** · buy≥1.23 (+6.1% margin)	O1.75 66.2% +1.2% (floor −8.8) · buy≥1.65 (+0.5% margin)		
 2026-09-01 01:00	BRA-SA	Brasileirão	Remo v Coritiba	U3.0 75.5% **+0.2%** · buy≥1.52 (+4.8% margin)	— none		
 2026-09-01 01:00	COL-PA	Categoría Primera A	Deportivo Pasto v Deportivo Pereira	U3.0 79.5% **+0.0%** · buy≥1.23 (+1.3% margin)	— none		
 2026-09-01 02:45	CHI-PD	Liga de Primera	Universidad Católica v O'Higgins	U4.25 84.7% **−0.7%** · buy≥1.27 (+5.7% margin)	**Universidad Católica O0.5** 80.6% +3.0% (team) · buy≥1.29 (+4.0% margin)		
 2026-09-01 03:05	COL-PA	Categoría Primera A	Tolima v Cúcuta	U3.0 79.5% **+0.0%** · buy≥1.36 (+1.3% margin)	— none		DNB1 73.9% +9.7% · buy≥1.42 · probation
+2026-08-31 20:30	TUR-SL	Trendyol Süper Lig	Amed v Trabzonspor	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-08-31 20:30	TUR-SL	Trendyol Süper Lig	Beşiktaş v Çorum	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-08-31 20:45	FRA-L2	Ligue 2	Dijon v Saint-Étienne	U4.25 84.2% **−4.4%** · buy≥1.26 (+7.1% margin)	O1.75 75.1% +3.1% (floor −2.9) · buy≥1.46 (+4.3% margin)		
+2026-08-31 20:45	ITA-SA	Serie A	Atalanta v Bologna	U4.25 86.0% **−2.7%** · buy≥1.21 (+5.4% margin)	— none		
+2026-08-31 21:00	ENG-PL	Premier League	Aston Villa v Arsenal	O1.5 82.0% +2.1% · buy≥1.26 (+2.9% margin)	**Arsenal O0.5** 80.4% +5.6% (team) · buy≥1.31 (+5.0% margin)		
+2026-08-31 21:15	POR-PL	Liga Portugal	Benfica v Estoril	O1.5 78.7% +3.5% · buy≥1.36 (+7.0% margin)	**Benfica O1.5** 58.1% +15.8% (team) · buy≥1.77 (+3.0% margin)		DNB1 80.6% +23.4% · buy≥1.30 · probation
+2026-08-31 21:15	POR-PL	Liga Portugal	Braga v Vitória	O1.5 78.1% +2.9% · buy≥1.32 (+3.1% margin)	**Braga O0.5** 80.7% +5.4% (team) · buy≥1.34 (+8.4% margin)		DNB1 69.1% +12.0% · buy≥1.52 · probation
+2026-08-31 21:30	ESP-LL	LaLiga	Barcelona v Rayo Vallecano	O1.5 75.8% +1.4% · buy≥1.33 (+1.0% margin)	**Rayo Vallecano U1.5** 75.3% +7.2% (team) · buy≥1.38 (+4.2% margin)		DNB1 76.7% +14.0% · buy≥1.37 · probation
+2026-08-31 21:30	ESP-L2	LaLiga 2	Celta Fortuna v Castellón	U3.0 77.9% **+0.0%** · buy≥1.39 (+1.2% margin)	— none		DNB1 75.4% +10.8% · buy≥1.39 · probation
+2026-08-31 22:00	PER-L1	Liga 1	Atlético Grau v Melgar	O1.5 75.2% +1.4% · buy≥1.39 (+4.8% margin)	— none		
+2026-09-01 20:00	SAU-PL	Saudi Pro League	Al-Hilal v Al-Ahli	O1.5 84.9% +5.0% · buy≥1.27 (+8.0% margin)	O2.25 65.3% +8.0% (floor −9.7) · buy≥1.43 (+3.6% margin)		
+2026-09-01 20:30	SUI-SL	Swiss Super League	Zürich v Young Boys	O1.5 83.8% +4.9% · buy≥1.28 (+8.7% margin)	**Young Boys O1.5** 62.4% +29.5% (team) · buy≥1.66 (+3.4% margin)		12 79.5% +4.7% · buy≥1.32 · probation
+2026-09-01 20:45	ENG-CH	Championship	Lincoln v Blackburn	— no tip: Invalid value '[3.016 1.508 0.754 2.262 2.262]' for dtype 'int64'	—		
+2026-09-01 20:45	ENG-CH	Championship	Portsmouth v Derby	U4.25 83.7% **−4.4%** · buy≥1.24 (+6.2% margin)	**Portsmouth O0.5** 81.1% +4.2% (team) · buy≥1.34 (+8.9% margin)		12 76.4% +2.7% · buy≥1.37 · probation
+2026-09-01 20:45	ENG-CH	Championship	Preston v Bristol City	U3.0 76.9% +2.8% · buy≥1.46 (+3.3% margin)	U2.75 55.8% +3.3% (floor −19.2) · buy≥1.60 (−0.4% margin)		
+2026-09-01 20:45	ENG-CH	Championship	Sheffield United v Bolton	U3.0 76.8% +2.7% · buy≥1.46 (+3.3% margin)	**Bolton U1.5** 72.0% +3.5% (team) · buy≥1.40 (+0.8% margin)		DNB1 76.1% +16.9% · buy≥1.38 · probation
+2026-09-01 20:45	ENG-CH	Championship	Swansea v Watford	U4.25 83.6% **−4.5%** · buy≥1.22 (+6.2% margin)	**Watford U1.5** 74.3% +5.8% (team) · buy≥1.40 (+4.4% margin)		DNB1 68.0% +8.8% · buy≥1.54 · probation
+2026-09-01 20:45	ENG-CH	Championship	West Ham v Wolves	O1.5 82.6% +9.8% · buy≥1.32 (+9.3% margin)	O2.25 61.5% +14.0% (floor −13.5) · buy≥1.50 (+3.3% margin)		12 77.5% +3.8% · buy≥1.35 · probation
+2026-09-01 21:00	ENG-CH	Championship	Birmingham v Southampton	U4.25 83.6% **−4.5%** · buy≥1.22 (+6.2% margin)	— none		
+2026-09-01 21:00	ENG-CH	Championship	Stoke v Norwich	U4.25 83.8% **−4.3%** · buy≥1.24 (+6.2% margin)	O1.75 75.0% +2.2% (floor −0.0) · buy≥1.42 (+1.7% margin)		
+2026-09-02 00:30	BRA-SB	Brasileirão Série B	Londrina v Juventude	U3.0 82.0% **+0.6%** · buy≥1.33 (+3.5% margin)	**Londrina U1.5** 75.0% +13.3% (team) · buy≥1.39 (+4.2% margin)		
+2026-09-02 03:00	COL-PA	Categoría Primera A	Fortaleza CEIF v Once Caldas	U4.25 86.0% **−5.3%** · buy≥1.19 (+5.4% margin)	— none		
+2026-09-02 12:00	JPN-J1	J1 League	Avispa Fukuoka v Urawa Reds	U4.25 88.2% **−0.1%** · buy≥1.19 (+3.7% margin)	— none		
+2026-09-02 12:00	JPN-J1	J1 League	Cerezo Osaka v Kashiwa	U4.25 83.7% **−4.6%** · buy≥1.23 (+1.4% margin)	O1.75 78.1% +5.6% (floor −3.9) · buy≥1.39 (+4.3% margin)		12 75.9% +2.5% · buy≥1.38 · probation
+2026-09-02 12:00	JPN-J1	J1 League	JEF United Chiba v Okayama	U4.25 88.8% **+0.5%** · buy≥1.18 (+4.1% margin)	**Okayama O0.5** 82.3% +13.2% (team) · buy≥1.27 (+4.5% margin)		12 75.7% +2.3% · buy≥1.39 · probation
+2026-09-02 12:00	JPN-J1	J1 League	Machida Zelvia v Kawasaki	U4.25 85.9% **−2.4%** · buy≥1.20 (+2.1% margin)	O1.75 75.6% +3.1% (floor −6.4) · buy≥1.40 (+1.0% margin)		DNB1 68.1% +12.5% · buy≥1.54 · probation
+2026-09-02 12:00	JPN-J1	J1 League	Mito Hollyhock v Kashima	U4.25 88.0% **−0.3%** · buy≥1.19 (+3.6% margin)	**Kashima O0.5** 80.4% +11.2% (team) · buy≥1.30 (+4.5% margin)		
+2026-09-02 12:00	JPN-J1	J1 League	Sanfrecce v Nagoya	U4.25 81.2% **−7.1%** · buy≥1.28 (+1.3% margin)	**Sanfrecce O1.5** 59.3% +20.3% (team) · buy≥1.74 (+3.1% margin)		DNB1 77.0% +21.5% · buy≥1.36 · probation
+2026-09-02 12:00	JPN-J1	J1 League	Shimizu v FC Tokyo	U4.25 89.2% **+0.9%** · buy≥1.18 (+4.4% margin)	U3.75 75.9% +1.4% (floor −6.1) · buy≥1.24 (+1.0% margin)		
+2026-09-02 12:00	JPN-J1	J1 League	Tokyo Verdy v Vissel Kobe	U4.25 89.6% +1.3% · buy≥1.18 (+4.7% margin)	U3.75 76.5% +2.1% (floor −5.5) · buy≥1.23 (+1.0% margin)		
+2026-09-02 12:00	JPN-J1	J1 League	Nagasaki v Gamba Osaka	U4.25 87.5% **−0.8%** · buy≥1.19 (+3.2% margin)	**Gamba Osaka O0.5** 80.6% +11.5% (team) · buy≥1.30 (+4.5% margin)		
+2026-09-02 12:00	JPN-J1	J1 League	Yokohama FM v Kyoto Sanga	U4.25 90.2% +1.9% · buy≥1.17 (+5.1% margin)	U3.75 79.6% +5.1% (floor −2.4) · buy≥1.23 (+4.4% margin)		
+2026-09-01 20:45	ENG-CH	Championship	Lincoln v Blackburn	U4.25 83.7% **−4.5%** · buy≥1.23 (+6.2% margin)	— none		

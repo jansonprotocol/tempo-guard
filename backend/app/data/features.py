@@ -1340,6 +1340,13 @@ def _cross_division_rows(
 
         def scale(frame: pd.DataFrame) -> pd.DataFrame:
             out = frame.copy()
+            # Goals are stored as integers; the promotion scaling makes
+            # them fractional, and pandas refuses to write a float into
+            # an int64 column (it raised rather than upcasting, which
+            # killed the whole fallback for any promoted club — Lincoln
+            # and Athletico Paranaense both abstained on it, 30 Aug).
+            out["hg"] = out["hg"].astype(float)
+            out["ag"] = out["ag"].astype(float)
             is_home = out["home"].astype(str) == matched
             out.loc[is_home, "hg"] = out.loc[is_home, "hg"] * sf
             out.loc[is_home, "ag"] = out.loc[is_home, "ag"] * cf
