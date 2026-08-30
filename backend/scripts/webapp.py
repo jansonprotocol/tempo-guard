@@ -365,6 +365,14 @@ def _card(f, kind: str, reads: dict) -> str:
             best = 3
         elif t1r is not None and t1r >= 0.85 and f.lane(1):
             best = 1
+        # Mid-tier: no tier preference, so the star goes to whichever
+        # lane carries the playable badge — the lane that put the card
+        # on the playable tab is the one to read first (the bettor's
+        # question on the Randers card, 30 Aug).
+        elif f.lane(1):
+            best = 1
+        elif f.lane(2):
+            best = 2
     star = '<span class="best-tag">★ read first</span>'
 
     def lane(which, cell):
