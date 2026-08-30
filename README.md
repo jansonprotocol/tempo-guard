@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 83.3%
+## CURRENT CONFIRMED HITRATE: 83.4%
 
     lane                        Tip 1              Tip 2
-    all matches            125 / 150  83.3%     70 / 106  66.0%
-    played lanes  >+1%      55 / 70   78.6%     70 / 106  66.0%
+    all matches            126 / 151  83.4%     71 / 107  66.4%
+    played lanes  >+1%      55 / 70   78.6%     71 / 107  66.4%
     placed bets             70 / 87   80.5%    ROI +0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -81,7 +81,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 125 / 176   ·   71.0%**   ·   **Tip 1 — 55 / 70   ·   78.6%**   ·   **Tip 2 — 70 / 106   ·   66.0%**
+**Playable — 126 / 177   ·   71.2%**   ·   **Tip 1 — 55 / 70   ·   78.6%**   ·   **Tip 2 — 71 / 107   ·   66.4%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -172,7 +172,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 29-08 19:00 <b>Real Sociedad v Espanyol</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 75.3% +1.1%<br>buy≥1.33 (−0.1% margin)</td><td>✅ <b>Real Sociedad O0.5</b> 82.2% +2.9%<br>buy≥1.28 (+5.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 72.7% +10.0% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 29-08 20:00 <b>Al-Fateh v Al-Ittihad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 82.9% +1.1%<br>buy≥1.27 (+3.2% margin)</td><td>✅ U3.75 66.6% +1.5%<br>buy≥1.24 (−10.2% margin) · floor −8.4</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-4 · 29-08 20:00 <b>Los Chankas v Juan Pablo II</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Peruvian Liga 1 (75.5 −4.1)</td><td>U3.0 75.1% +1.9%<br>buy≥1.53 (+4.7% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">⚪ — no source · 29-08 20:15 <b>Zagłębie v Pogoń</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— under +1%</td><td>U3.75 73.8% +3.5%<br>buy≥1.33 (+5.5% margin) · floor −4.2</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-0 · 29-08 20:15 <b>Zagłębie v Pogoń</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— under +1%</td><td>✅ U3.75 73.8% +3.5%<br>buy≥1.33 (+5.5% margin) · floor −4.2</td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-1 · 29-08 20:30 <b>Nürnberg v Bielefeld</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>— under +1%</td><td>✅ <b>Bielefeld O0.5</b> 81.0% +7.6%<br>buy≥1.33 (+7.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.0% +3.0% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 29-08 20:30 <b>Galatasaray v Göztepe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>— under +1%</td><td>❌ <b>Göztepe U1.5</b> 74.0% +7.7%<br>buy≥1.39 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 71.5% +10.0% · buy≥1.47 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">⚪ — no source · 29-08 20:30 <b>Young Boys v Basel</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Swiss Super League (82.6 +0.7)</td><td>O1.5 83.3% +4.5%<br>buy≥1.21 (+8.5% margin)</td><td><b>Basel O1.5</b> 67.2% +34.7%<br>buy≥1.42 (−4.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 81.1% +6.0% · buy≥1.29 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -315,7 +315,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 125 / 150   ·   83.3%**   ·   **Tip 2 — 70 / 106   ·   66.0%**
+**Tip 1 — 126 / 151   ·   83.4%**   ·   **Tip 2 — 71 / 107   ·   66.4%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -436,7 +436,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">⚪ 0-3 (no tip) · 29-08 20:00 <b>Al-Ettifaq v Al Diriyah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 29-08 20:00 <b>Al-Fateh v Al-Ittihad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 82.9% +1.1%<br>buy≥1.27 (+3.2% margin)</td><td>✅ U3.75 66.6% +1.5%<br>buy≥1.24 (−10.2% margin) · floor −8.4</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-4 · 29-08 20:00 <b>Los Chankas v Juan Pablo II</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Peruvian Liga 1 (75.5 −4.1)</td><td>U3.0 75.1% +1.9%<br>buy≥1.53 (+4.7% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">⚪ — no source · 29-08 20:15 <b>Zagłębie v Pogoń</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 86.1% <b>+0.6%</b><br>buy≥1.23 (+7.2% margin)</td><td>U3.75 73.8% +3.5%<br>buy≥1.33 (+5.5% margin) · floor −4.2</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-0 · 29-08 20:15 <b>Zagłębie v Pogoń</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 86.1% <b>+0.6%</b><br>buy≥1.23 (+7.2% margin)</td><td>✅ U3.75 73.8% +3.5%<br>buy≥1.33 (+5.5% margin) · floor −4.2</td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-1 · 29-08 20:30 <b>Nürnberg v Bielefeld</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>O1.5 81.5% <b>+0.9%</b><br>buy≥1.28 (+4.4% margin)</td><td>✅ <b>Bielefeld O0.5</b> 81.0% +7.6%<br>buy≥1.33 (+7.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.0% +3.0% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 29-08 20:30 <b>Galatasaray v Göztepe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>U4.25 81.3% <b>−2.9%</b><br>buy≥1.32 (+5.3% margin)</td><td>❌ <b>Göztepe U1.5</b> 74.0% +7.7%<br>buy≥1.39 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 71.5% +10.0% · buy≥1.47 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 29-08 20:30 <b>Gaziantep v Rizespor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>U4.25 83.2% <b>−1.0%</b><br>buy≥1.29 (+5.7% margin)</td><td>— none</td></tr></table>
