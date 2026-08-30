@@ -312,6 +312,27 @@ def _sortkeys(f) -> str:
             f'data-k="{html.escape(f.kickoff)}"')
 
 
+_WEAK: set | None = None
+
+
+def _weak_leagues() -> set:
+    """Leagues whose tip 1 baseline runs under 80% on the 300-window
+    replay — the protocol's 'read tip 3 first' tier, derived from the
+    same file as the About page's proof table."""
+    global _WEAK
+    if _WEAK is None:
+        _WEAK = set()
+        path = ROOT / "config" / "baselines.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                p = ln.split("\t")
+                if int(p[2]) >= 30 and int(p[1]) / int(p[2]) < 0.80:
+                    _WEAK.add(p[0])
+    return _WEAK
+
+
 def _card(f, kind: str, reads: dict) -> str:
     badge = rates().get(f.code)
     league = html.escape(f.league) + (
@@ -363,10 +384,21 @@ def _card(f, kind: str, reads: dict) -> str:
     t3 = (f'<div class="lane"><span class="which">Tip 3</span> '
           f'{_fmt(f.tip3)} <span class="dim">· result lane</span></div>'
           if f.tip3.strip() else "")
+    # Protocol step 2, applied to the layout itself: in a league whose
+    # tip 1 baseline runs under 80% — or a consensus-capped one — a card
+    # whose tip 1 did not clear the playable bar leads with tip 3
+    # instead. Same principle as the playable tab's lead swap: a card
+    # leads with the lane worth reading first. Settled cards keep the
+    # tip 1 order so grading reads consistently.
+    face = f"{lane(*lead)}{t3}"
+    if (t3 and not f.settled and not f.lane(1)
+            and (f.code in _weak_leagues()
+                 or "capped" in (rates().get(f.code) or ""))):
+        face = f"{t3}{lane(*lead)}"
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{lane(*lead)}{t3}")
+           f"{face}")
     body = lane(*rest) + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
