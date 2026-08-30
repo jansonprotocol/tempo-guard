@@ -594,7 +594,7 @@ that premium the book is keeping the insurance money.
 | — open | Antwerp v St. Truiden | O1.5 | 1.23 | — | tip 1 rung, bought under buy≥1.28 |
 | — open | Nacional v Estrela Amadora | U3.5 | 1.29 | — | R6 softer off the U3.0 tip |
 | — open | VVV-Venlo v Emmen | 12 | 1.22 | — | own read DC — no tip 3 print on this card |
-| — open | HamKam v Kristiansund | U1.5 (away) | 1.41 | — | Kristiansund team under — own read off the big U4.25 |
+| — open | HamKam v Kristiansund | U1.5 (away) | 1.41 | — | = tip 2's team lane (75.4%) bought ABOVE its buy≥1.36 — clean buy |
 | — open | IK Start v KFUM Oslo | U3.5 | 1.41 | — | R6 harder line, priced well over buy≥1.26 +0.10 |
 | — open | Tromsø v Sarpsborg 08 | O2.5 | 1.50 | — | R6 harder line, priced well over buy≥1.27 +0.10 |
 
