@@ -148,7 +148,7 @@ def _baselines() -> dict[str, float] | None:
     path = ROOT / "config" / "baselines.tsv"
     if not path.exists():
         return None
-    sums: dict[str, list[float]] = {"t1": [], "t2": [], "t3": []}
+    sums: dict[str, list[float]] = {"fp": [], "t1": [], "t2": [], "t3": []}
     for ln in path.read_text().splitlines():
         if not ln.strip() or ln.startswith("#"):
             continue
@@ -156,6 +156,18 @@ def _baselines() -> dict[str, float] | None:
         for key, hi, ni in (("t1", 1, 2), ("t2", 3, 4), ("t3", 5, 6)):
             if int(p[ni]) >= 30:
                 sums[key].append(int(p[hi]) / int(p[ni]))
+    # The final pick — the card's starred lane — replayed over the same
+    # window by scripts/final_pick.py --write. It leads the bar because
+    # it is the one number describing what a reader following the star
+    # would have scored.
+    fp = ROOT / "config" / "final_pick.tsv"
+    if fp.exists():
+        for ln in fp.read_text().splitlines():
+            if not ln.strip() or ln.startswith("#"):
+                continue
+            p = ln.split("\t")
+            if int(p[2]) >= 30:
+                sums["fp"].append(int(p[1]) / int(p[2]))
     return {k: sum(v) / len(v) * 100 for k, v in sums.items() if v} or None
 
 
@@ -679,7 +691,21 @@ def main() -> None:
     # published for honesty, not for the scoreboard. Tip 3 qualifies
     # whole: it only ever prints above its own floor and edge bar.
     (pb1, pq1), (pb2, pq2) = p[1], p[2]
-    ha, na = pb1 + pb2 + h3, pq1 + pq2 + n3
+    # The FINAL PICK tile: the card's starred lane, graded on every
+    # completed fixture of this session — the same chooser the board
+    # renders (playable tip 1, else a printed result lane, else tip 1),
+    # so the tile answers "what would following the ★ have scored".
+    fh = fn = fp3 = 0
+    for f in fixtures:
+        if not f.settled:
+            continue
+        pick = 1 if f.lane(1) else (3 if f.tip3.strip() else 1)
+        mark = f.status[:1] if pick == 1 else f.tip3.lstrip()[:1]
+        if mark not in ("✅", "❌", "◦"):
+            continue
+        fn += 1
+        fh += mark != "❌"
+        fp3 += pick == 3
     # The claim each family carried into those graded lanes, so a low
     # tile reads as WHAT IT PROMISED, not as failure: measured this week,
     # every says band delivers its claim in both half-windows — the only
@@ -701,8 +727,9 @@ def main() -> None:
         return (f" · claims {sum(says[w])/len(says[w]):.1f}"
                 if says[w] else "")
     tiles = "".join([
-        tile("all lanes", f"{ha / na * 100:.1f}%" if na else "—",
-             f"every graded playable lane · {ha}/{na}"),
+        tile("final pick", f"{fh / fn * 100:.1f}%" if fn else "—",
+             f"the ★ lane · {fh}/{fn}"
+             + (f" · {fp3} on tip 3" if fp3 else "")),
         tile("tip 1", f"{pb1 / pq1 * 100:.1f}%" if pq1 else "—",
              f"playable · {pb1}/{pq1}{claims(1)}"),
         tile("tip 2", f"{pb2 / pq2 * 100:.1f}%" if pq2 else "—",
@@ -732,8 +759,9 @@ def main() -> None:
     basebar = ""
     if base:
         cells = " · ".join(
-            f"tip {i} <b>{base[k]:.1f}%</b>"
-            for i, k in (("1", "t1"), ("2", "t2"), ("3", "t3")) if k in base)
+            f"{n} <b>{base[k]:.1f}%</b>"
+            for n, k in (("final pick", "fp"), ("tip 1", "t1"),
+                         ("tip 2", "t2"), ("tip 3", "t3")) if k in base)
         basebar = (f'<div class="basebar">Baselines: {cells} '
                    f'<span class="dim">— every tip replayed over each '
                    f'league’s last 300 matches, averaged</span></div>')
@@ -1319,12 +1347,16 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  {read_tiers}
  <p class="dim">Corrected the same day it was written. Replaying the
  star's chooser over 16,554 fixtures showed every deviation from tip 1
- grading WORSE on hitrate — tip 2 by 12.7 points, tip 3 by 5.9 — and,
- the real surprise, a tip 1 that misses the playable bar still lands
- <b>84.5%</b>. A thin edge means the league baseline is already high,
- not that the tip is weak. So tip 1 keeps the star whenever it is
- playable, and the tier rule only chooses which lane to read when tip 1
- has nothing playable to say.</p>
+ grading WORSE on hitrate, and — the real surprise — a tip 1 that misses
+ the playable bar still lands <b>84.3%</b>: a thin edge means the
+ league's baseline is already high, not that the tip is weak. Dropping
+ tip 2 from the chooser recovered most of the loss (79.5% → 82.1%
+ against always-tip-1's 83.5%), so the star is now only ever tip 1 or
+ tip 3. The residue is honest and stays: where the star leaves a
+ sub-bar tip 1 for a result lane, that lane lands 77.9% against tip 1's
+ 84.3% on the same fixtures — a swap that pays only if the result lane
+ is priced at least 8% above the total. Which is exactly what the buy≥
+ bracket is for, and why the star says read first, not bet this.</p>
  <p><b>3. Between two result-lane prints at the same probability, prefer
  DNB or 1X over 12.</b> The 15,048-fixture dive found DNB underclaims —
  the higher it says, the more it is right (+4.2 overall, +8.7 in its top
