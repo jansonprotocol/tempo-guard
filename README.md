@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 84.2%
+## CURRENT CONFIRMED HITRATE: 84.3%
 
     lane                        Tip 1              Tip 2
-    all matches            133 / 158  84.2%     76 / 113  67.3%
-    played lanes  >+1%      60 / 75   80.0%     76 / 113  67.3%
+    all matches            134 / 159  84.3%     77 / 114  67.5%
+    played lanes  >+1%      61 / 76   80.3%     77 / 114  67.5%
     placed bets             75 / 92   81.5%    ROI +1.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -81,7 +81,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 136 / 188   ·   72.3%**   ·   **Tip 1 — 60 / 75   ·   80.0%**   ·   **Tip 2 — 76 / 113   ·   67.3%**
+**Playable — 138 / 190   ·   72.6%**   ·   **Tip 1 — 61 / 76   ·   80.3%**   ·   **Tip 2 — 77 / 114   ·   67.5%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -208,7 +208,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔴 LIVE 16' 0-0 <b>Lyngby v OB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>U4.25 85.0% +3.9%<br>buy≥1.29 (+9.1% margin) · <i>room for 4 · half from the 4th</i></td><td>U3.75 70.6% +6.5%<br>buy≥1.29 (−1.4% margin) · floor −4.4 · <i>room for 3</i></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 30-08 14:00 <b>Silkeborg v Midtjylland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>U4.25 82.8% +1.7%<br>buy≥1.29 (+5.1% margin)</td><td>✅ <b>Midtjylland O0.5</b> 81.3% +6.7%<br>buy≥1.32 (+7.6% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-2 · 30-08 14:00 <b>AIK v Hammarby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>— under +1%</td><td>✅ <b>Hammarby O0.5</b> 81.7% +9.5%<br>buy≥1.31 (+7.3% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 29' 0-1 <b>Sion v Lugano</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Swiss Super League (82.6 +0.7)</td><td>O1.5 80.6% +1.8%<br>buy≥1.28 (+3.5% margin) · <i>needs 1 more</i></td><td>O2.25 58.5% +2.7%<br>buy≥1.28 (−15.8% margin) · floor −16.5 · <i>needs 2 more</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 30-08 14:00 <b>Sion v Lugano</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Swiss Super League (82.6 +0.7)</td><td>O1.5 80.6% +1.8%<br>buy≥1.28 (+3.5% margin)</td><td>✅ O2.25 58.5% +2.7%<br>buy≥1.28 (−15.8% margin) · floor −16.5</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 71' 3-1 <b>Bodø/Glimt v Rosenborg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eliteserien (82.9 −1.5)</td><td>O1.5 86.3% +6.3%<br>buy≥1.25 (+9.2% margin) · <i>✓ landed</i></td><td><b>Bodø/Glimt O1.5</b> 63.6% +15.6%<br>buy≥1.63 (+3.5% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.6% +20.0% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 70' 1-2 <b>Feyenoord v ADO</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>O1.5 84.9% +2.9%<br>buy≥1.24 (+5.1% margin) · <i>✓ landed</i></td><td><b>Feyenoord O1.5</b> 74.9% +25.3%<br>buy≥1.39 (+4.2% margin) · team · <i>needs 1 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 91.2% +32.4% · buy≥1.15 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 70' 1-1 <b>Willem II v Heerenveen</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>U4.25 82.9% +3.6%<br>buy≥1.32 (+7.0% margin) · <i>room for 2 · half from the 2nd</i></td><td>U3.75 66.6% +4.7%<br>buy≥1.43 (+3.7% margin) · floor −8.4 · <i>room for 1</i></td></tr></table>
@@ -257,7 +257,6 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔴 LIVE 16' 0-0 <b>Lyngby v OB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>U4.25 85.0% +3.9%<br>buy≥1.29 (+9.1% margin) · <i>room for 4 · half from the 4th</i></td><td>U3.75 70.6% +6.5%<br>buy≥1.29 (−1.4% margin) · floor −4.4 · <i>room for 3</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 29' 0-1 <b>Sion v Lugano</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Swiss Super League (82.6 +0.7)</td><td>O1.5 80.6% +1.8%<br>buy≥1.28 (+3.5% margin) · <i>needs 1 more</i></td><td>O2.25 58.5% +2.7%<br>buy≥1.28 (−15.8% margin) · floor −16.5 · <i>needs 2 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 71' 3-1 <b>Bodø/Glimt v Rosenborg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eliteserien (82.9 −1.5)</td><td>O1.5 86.3% +6.3%<br>buy≥1.25 (+9.2% margin) · <i>✓ landed</i></td><td><b>Bodø/Glimt O1.5</b> 63.6% +15.6%<br>buy≥1.63 (+3.5% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.6% +20.0% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 70' 1-2 <b>Feyenoord v ADO</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>O1.5 84.9% +2.9%<br>buy≥1.24 (+5.1% margin) · <i>✓ landed</i></td><td><b>Feyenoord O1.5</b> 74.9% +25.3%<br>buy≥1.39 (+4.2% margin) · team · <i>needs 1 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 91.2% +32.4% · buy≥1.15 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 70' 1-1 <b>Willem II v Heerenveen</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>U4.25 82.9% +3.6%<br>buy≥1.32 (+7.0% margin) · <i>room for 2 · half from the 2nd</i></td><td>U3.75 66.6% +4.7%<br>buy≥1.43 (+3.7% margin) · floor −8.4 · <i>room for 1</i></td></tr></table>
@@ -309,7 +308,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 133 / 158   ·   84.2%**   ·   **Tip 2 — 76 / 113   ·   67.3%**
+**Tip 1 — 134 / 159   ·   84.3%**   ·   **Tip 2 — 77 / 114   ·   67.5%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -480,6 +479,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 30-08 13:30 <b>St. Pauli v Kaiserslautern</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>O1.5 81.3% <b>+0.6%</b><br>buy≥1.28 (+4.2% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 30-08 14:00 <b>Silkeborg v Midtjylland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>U4.25 82.8% +1.7%<br>buy≥1.29 (+5.1% margin)</td><td>✅ <b>Midtjylland O0.5</b> 81.3% +6.7%<br>buy≥1.32 (+7.6% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-2 · 30-08 14:00 <b>AIK v Hammarby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 78.8% <b>+0.2%</b><br>buy≥1.29 (+1.7% margin)</td><td>✅ <b>Hammarby O0.5</b> 81.7% +9.5%<br>buy≥1.31 (+7.3% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 30-08 14:00 <b>Sion v Lugano</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Swiss Super League (82.6 +0.7)</td><td>O1.5 80.6% +1.8%<br>buy≥1.28 (+3.5% margin)</td><td>✅ O2.25 58.5% +2.7%<br>buy≥1.28 (−15.8% margin) · floor −16.5</td></tr></table>
 
 <br clear="all">
 
