@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            125 / 150  83.3%     70 / 106  66.0%
     played lanes  >+1%      55 / 70   78.6%     70 / 106  66.0%
-    placed bets             68 / 85   80.0%    ROI -0.2%
+    placed bets             69 / 86   80.2%    ROI +0.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -201,7 +201,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-0 · 30-08 03:30 <b>Colorado v Salt Lake</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (76.5 −2.3)</td><td>— under +1%</td><td>✅ U3.75 64.3% +1.3%<br>buy≥1.34 (−5.7% margin) · floor −10.7</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 68.0% +6.6% · buy≥1.54 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 30-08 04:30 <b>Portland v Austin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (76.5 −2.3)</td><td>— under +1%</td><td>❌ <b>Portland O1.5</b> 67.3% +15.3%<br>buy≥1.49 (+0.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 82.8% +21.4% · buy≥1.27 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-6 · 30-08 12:15 <b>Utrecht v PSV</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>O1.5 87.2% +5.3%<br>buy≥1.24 (+9.0% margin)</td><td>✅ <b>PSV O1.5</b> 64.6% +23.1%<br>buy≥1.41 (−8.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.3% +4.7% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🟢 30-08 12:15 <b>Utrecht v PSV</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>O1.5 87.2% +5.3%<br>buy≥1.24 (+9.0% margin)</td><td><b>PSV O1.5</b> 64.6% +23.1%<br>buy≥1.41 (−8.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 79.3% +4.7% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-3 · 30-08 12:15 <b>Eindhoven v Heracles</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>O1.5 83.7% +2.1%<br>buy≥1.25 (+4.5% margin)</td><td>✅ <b>Heracles O1.5</b> 63.8% +23.5%<br>buy≥1.42 (−9.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 41' 1-0 <b>Gent v Club Brugge</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Belgian Pro League (84.7 +0.8)</td><td>O1.5 79.5% +3.3%<br>buy≥1.27 (+1.0% margin) · <i>needs 1 more</i></td><td><b>Club Brugge O1.5</b> 53.5% +19.1%<br>buy≥1.50 (−19.7% margin) · team · <i>needs 2 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 73.2% +32.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 42' 0-0 <b>Magdeburg v Kiel</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>U4.25 83.2% +2.4%<br>buy≥1.29 (+5.2% margin) · <i>room for 4 · half from the 4th</i></td><td>U3.75 67.0% +3.2%<br>buy≥1.27 (−7.6% margin) · floor −8.0 · <i>room for 3</i></td></tr></table>
@@ -257,7 +256,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 30-08 12:15 <b>Utrecht v PSV</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (84.6 −0.7)</td><td>O1.5 87.2% +5.3%<br>buy≥1.24 (+9.0% margin)</td><td><b>PSV O1.5</b> 64.6% +23.1%<br>buy≥1.41 (−8.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 79.3% +4.7% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 41' 1-0 <b>Gent v Club Brugge</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Belgian Pro League (84.7 +0.8)</td><td>O1.5 79.5% +3.3%<br>buy≥1.27 (+1.0% margin) · <i>needs 1 more</i></td><td><b>Club Brugge O1.5</b> 53.5% +19.1%<br>buy≥1.50 (−19.7% margin) · team · <i>needs 2 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 73.2% +32.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 42' 0-0 <b>Magdeburg v Kiel</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>U4.25 83.2% +2.4%<br>buy≥1.29 (+5.2% margin) · <i>room for 4 · half from the 4th</i></td><td>U3.75 67.0% +3.2%<br>buy≥1.27 (−7.6% margin) · floor −8.0 · <i>room for 3</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 42' 0-0 <b>Darmstadt v Hannover</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (82.3 −0.5)</td><td>U4.25 82.6% +1.7%<br>buy≥1.30 (+5.1% margin) · <i>room for 4 · half from the 4th</i></td><td>U3.75 66.1% +2.3%<br>buy≥1.27 (−8.4% margin) · floor −8.9 · <i>room for 3</i></td></tr></table>
@@ -487,7 +485,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 68 / 85  ·  ROI -0.2%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 69 / 86  ·  ROI +0.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -574,7 +572,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Kansas City v Vancouver | U4.5 | 1.32 | 1.32x | R6 softer off the U-tip |
 | ✅ | Colorado v Salt Lake | U4.5 | 1.19 | 1.19x | R6 softer off the U-tip |
 | ❌ | Portland v Austin | DNB (home) | 1.22 | 0.00x | = tip 3's DNB1 print (82.8%) — following the probation lane |
-| — open | Utrecht v PSV | 12 | 1.21 | — | = tip 3's 12 print (79.3%) — draw the only out |
+| ✅ | Utrecht v PSV | 12 | 1.21 | 1.21x | = tip 3's 12 print (79.3%) — draw the only out |
 | ◦ | Eindhoven v Heracles | DNB (away) | 1.23 | 1.00x | Heracles side off the team-over read — cashed out 100% pre-match, Rule 7 applied (DNB under 1.35 / below buy≥) |
 | ◦ | Gent v Club Brugge | DNB (away) | 1.27 | 1.00x | = tip 3's DNB2 print (73.2% +32.4%) — following the probation lane — cashed out 100% pre-match, Rule 7 applied (DNB under 1.35 / below buy≥) |
 | — open | Magdeburg v Kiel | U4.5 | 1.21 | — | R6 softer off the U4.25 tip |
