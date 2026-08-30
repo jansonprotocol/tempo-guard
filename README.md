@@ -595,6 +595,12 @@ that premium the book is keeping the insurance money.
 | — open | HamKam v Kristiansund | U1.5 (away) | 1.41 | — | = tip 2's team lane (75.4%) bought ABOVE its buy≥1.36 — clean buy |
 | — open | IK Start v KFUM Oslo | U3.5 | 1.41 | — | R6 harder line, priced well over buy≥1.26 +0.10 |
 | — open | Tromsø v Sarpsborg 08 | O2.5 | 1.50 | — | R6 harder line, priced well over buy≥1.27 +0.10 |
+| — open | Randers v AGF | O1.5 (away) | 1.83 | — | = tip 2's starred lane (60.1%) ABOVE its buy≥1.72 — the accent's first sale |
+| — open | Augsburg v Schalke | O0.5 (home) | 1.19 | — | R6 softer off tip 2's Augsburg O1.5 team lane |
+| — open | Nordsjælland v Brøndby | U4.5 | 1.21 | — | R6 softer off the U4.25 tip |
+| — open | Al-Hazem v Al-Shabab | O0.5 (home) | 1.33 | — | = tip 2's team lane (80.6%) ABOVE its buy≥1.26 — clean buy |
+| — open | St. Gilloise v Anderlecht | O1.5 | 1.23 | — | tip 1 rung, a shade under buy≥1.27 |
+| — open | Arezzo v Palermo | 12 | 1.28 | — | = tip 3's 12 print (74.8%), under buy≥1.40 |
 
 <!-- HYPOTHESES:START -->
 
