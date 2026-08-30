@@ -749,6 +749,10 @@ def main() -> None:
     ])
 
     bet_rows = _bets_rows()
+    # Any lane priced through the cache this render is written back, so
+    # the next one costs nothing.
+    from scripts import lane_price
+    lane_price.flush()
 
     # Longest run of consecutive hits over the settled book, in the order
     # the bets were logged — pushes count as hits, the board's convention.

@@ -306,7 +306,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 30-08 17:30 <b>Górnik Zabrze v GKS Katowice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 85.4% <b>−0.2%</b><br>buy≥1.27 (+7.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 75' 0-2 <b>Celta Vigo v Athletic Bilbao</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>O1.5 76.3% +2.0%<br>buy≥1.32 (+1.0% margin) · <i>✓ landed</i></td><td><b>Celta Vigo O1.5</b> 55.4% +13.1%<br>buy≥1.85 (+2.8% margin) · team · <i>needs 2 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.1% +4.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 73' 1-1 <b>Córdoba v Granada</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 capped)</td><td>U3.0 77.9% <b>+0.0%</b><br>buy≥1.40 (+1.2% margin) · <i>next goal hurts</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 79' 0-0 <b>Famalicão v Gil Vicente</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>U4.25 84.0% <b>−2.3%</b><br>buy≥1.21 (+5.9% margin) · <i>room for 4 · half from the 4th</i></td><td>U3.75 74.7% +3.3%<br>buy≥1.26 (+0.9% margin) · floor −0.3 · <i>room for 3</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 68.0% +10.8% · buy≥1.54 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -570,6 +569,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-2 · 30-08 17:15 <b>Rennes v Le Mans</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>U4.25 83.4% <b>−1.0%</b><br>buy≥1.26 (+5.8% margin)</td><td>✅ <b>Rennes O1.5</b> 55.1% +10.5%<br>buy≥1.86 (+2.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 79.4% +21.8% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 5-2 · 30-08 17:30 <b>Man United v Ipswich</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>U4.25 81.9% <b>+0.1%</b><br>buy≥1.28 (+2.9% margin)</td><td>✅ <b>Man United O1.5</b> 58.3% +9.1%<br>buy≥1.77 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 73.7% +16.2% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 30-08 17:30 <b>Augsburg v Schalke</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Bundesliga (84.0 −0.9)</td><td>U4.25 78.5% <b>+0.2%</b><br>buy≥1.32 (+1.1% margin)</td><td>✅ <b>Augsburg O1.5</b> 59.4% +8.9%<br>buy≥1.74 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.1% +4.7% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">⚪ — no source · 30-08 17:30 <b>Górnik Zabrze v GKS Katowice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 85.4% <b>−0.2%</b><br>buy≥1.27 (+7.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 30-08 18:00 <b>Nordsjælland v Brøndby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>U4.25 83.0% +1.9%<br>buy≥1.29 (+5.2% margin)</td><td>❌ U3.75 66.7% +2.6%<br>buy≥1.38 (+0.5% margin) · floor −8.3</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 30-08 18:00 <b>Eyüpspor v Alanyaspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>U4.25 84.8% <b>+0.6%</b><br>buy≥1.21 (+6.1% margin)</td><td>✅ U3.75 74.4% +6.0%<br>buy≥1.30 (+4.2% margin) · floor −7.6</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-4 · 30-08 18:00 <b>Moquegua v Alianza Atlético</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>U4.25 80.9% <b>−6.5%</b><br>buy≥1.22 (+6.4% margin)</td><td>❌ U3.75 74.4% +1.2%<br>buy≥1.30 (+4.1% margin) · floor −0.6</td></tr></table>
@@ -743,6 +743,17 @@ that premium the book is keeping the insurance money.
 | — open | Aston Villa v Arsenal | O1.5 | 1.23 | — | = tip 1 rung, under buy≥1.26 |
 | — open | Braga v Vitória | O1.5 | 1.27 | — | = tip 1 rung, under buy≥1.32 |
 | — open | Atlético Grau v Melgar | O1.5 | 1.37 | — | = tip 1 rung at 1.37, two cents under buy≥1.39 |
+| — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy≥1.37 |
+| — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip |
+| — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip |
+| — open | Swansea v Watford | 1X | 1.22 | — | own read DC — card's tip 3 is DNB1 |
+| — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy≥1.32 |
+| — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
+| — open | Cerezo Osaka v Kashiwa | 12 | 1.24 | — | = tip 3's 12 print (75.9%), under buy≥1.38 |
+| — open | JEF United Chiba v Okayama | 12 | 1.26 | — | = tip 3's 12 print (75.7%), under buy≥1.39 |
+| — open | Machida Zelvia v Kawasaki | 12 | 1.25 | — | own read DC — card's tip 3 is DNB1 |
+| — open | Mito Hollyhock v Kashima | 12 | 1.29 | — | own read DC — no tip 3 on this card |
+| — open | Nagasaki v Gamba Osaka | 12 | 1.27 | — | own read DC — no tip 3 on this card |
 
 <!-- HYPOTHESES:START -->
 
