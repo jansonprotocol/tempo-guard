@@ -390,8 +390,11 @@ def _haystack(f) -> str:
             m = re.match(r"^(?:[✅❌◦]\s*)?(1X|X2|12|DNB[12])", c.lstrip())
             bits.append("result lane")
             if m:
-                bits.append("draw no bet dnb" if m.group(1).startswith("DNB")
-                            else "double chance")
+                fam = ("draw no bet dnb" if m.group(1).startswith("DNB")
+                       else "double chance")
+                bits += [fam, f"tip3 {fam}", f"tip 3 {fam}",
+                         f"tip3 {m.group(1).lower()}",
+                         f"tip 3 {m.group(1).lower()}"]
             continue
         rung = re.search(r"\b([OU])(\d+(?:\.\d+)?)", c)
         if not rung:
@@ -401,9 +404,14 @@ def _haystack(f) -> str:
         # Bare words find the card; the compound ones tie the word to
         # THIS lane, so "tip1 over" cannot be satisfied by tip 2's over
         # (the bettor's question, 31 Aug).
-        bits += [side, f"{kind} {side}",
-                 f"tip{which} {side}", f"tip{which} {kind} {side}",
-                 f"tip{which} {rung.group(0).lower()}"]
+        # Both spellings of the lane prefix — "tip1 under" and "tip 1
+        # under" — because either is natural to type (the bettor typed
+        # the spaced one, 31 Aug).
+        rung_l = rung.group(0).lower()
+        for pre in (f"tip{which}", f"tip {which}"):
+            bits += [f"{pre} {side}", f"{pre} {kind} {side}",
+                     f"{pre} {rung_l}"]
+        bits += [side, f"{kind} {side}"]
     if f.settled:
         mark = f.status.lstrip()[:1]
         bits.append({"✅": "hit won", "❌": "miss lost",
