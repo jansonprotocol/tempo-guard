@@ -752,7 +752,7 @@ that premium the book is keeping the insurance money.
 | — open | Cerezo Osaka v Kashiwa | 12 | 1.24 | — | = tip 3's 12 print (75.9%), under buy≥1.38 |
 | — open | JEF United Chiba v Okayama | 12 | 1.26 | — | = tip 3's 12 print (75.7%), under buy≥1.39 |
 | — open | Machida Zelvia v Kawasaki | 12 | 1.25 | — | own read DC — card's tip 3 is DNB1 |
-| — open | Mito Hollyhock v Kashima | 12 | 1.29 | — | own read DC — no tip 3 on this card |
+| — open | Mito Hollyhock v Kashima | O0.5 (away) | 1.21 | — | Kashima team over — swapped out of the 12 at 1.29 before kickoff |
 | — open | Nagasaki v Gamba Osaka | 12 | 1.27 | — | own read DC — no tip 3 on this card |
 
 <!-- HYPOTHESES:START -->

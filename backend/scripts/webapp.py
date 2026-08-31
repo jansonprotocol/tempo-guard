@@ -342,6 +342,115 @@ def _sortkeys(f) -> str:
             f'data-k="{html.escape(f.kickoff)}"')
 
 
+def _fold(s: str) -> str:
+    """Accent-free copy, so "serie b" finds "Série B" and "brasileirao"
+    finds "Brasileirão" — nobody types accents into a search box."""
+    import unicodedata
+    return (unicodedata.normalize("NFD", s)
+            .encode("ascii", "ignore").decode("ascii"))
+
+
+_COUNTRIES: dict | None = None
+
+
+def _country(code: str) -> str:
+    """The country behind a league code, for the search box. Typed in
+    config/countries.tsv — culture, not data; the engine never reads it."""
+    global _COUNTRIES
+    if _COUNTRIES is None:
+        _COUNTRIES = {}
+        path = ROOT / "config" / "countries.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or "\t" not in ln:
+                    continue
+                pre, name = ln.split("\t", 1)
+                _COUNTRIES[pre.strip()] = name.strip()
+    return _COUNTRIES.get(code.split("-")[0], "")
+
+
+def _haystack(f) -> str:
+    """Everything a card can be filtered on, lowercased.
+
+    Beyond the teams, league and code, this carries what each lane IS —
+    the printed rung, and the words for its kind: a team over, a team
+    under, a double chance, a draw no bet. So "team over" finds every
+    card offering one, and (with the comma AND) "real madrid, team over"
+    finds the ones that are both.
+    """
+    bits = [f.teams, f.league, f.code, _country(f.code)]
+    for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
+        c = cell.strip()
+        if not c or c.startswith("—"):
+            continue
+        bits += [c.replace("*", ""), f"tip{which}", f"tip {which}"]
+        if f.lane(which) if which < 3 else False:
+            bits.append("playable")
+        if which == 3:
+            m = re.match(r"^(?:[✅❌◦]\s*)?(1X|X2|12|DNB[12])", c.lstrip())
+            bits.append("result lane")
+            if m:
+                bits.append("draw no bet dnb" if m.group(1).startswith("DNB")
+                            else "double chance")
+            continue
+        rung = re.search(r"\b([OU])(\d+(?:\.\d+)?)", c)
+        if not rung:
+            continue
+        side = "over" if rung.group(1) == "O" else "under"
+        kind = "team" if "(team)" in c else "match"
+        # Bare words find the card; the compound ones tie the word to
+        # THIS lane, so "tip1 over" cannot be satisfied by tip 2's over
+        # (the bettor's question, 31 Aug).
+        bits += [side, f"{kind} {side}",
+                 f"tip{which} {side}", f"tip{which} {kind} {side}",
+                 f"tip{which} {rung.group(0).lower()}"]
+    if f.settled:
+        mark = f.status.lstrip()[:1]
+        bits.append({"✅": "hit won", "❌": "miss lost",
+                     "◦": "push"}.get(mark, "finished"))
+    elif f.status:
+        bits.append("live")
+    if "capped" in (rates().get(f.code) or ""):
+        bits.append("capped")
+    raw = " ".join(bits).lower()
+    folded = _fold(raw)
+    return html.escape(raw if folded == raw else raw + " " + folded)
+
+
+def _gradekeys(f) -> str:
+    """Each settled card carries its own four grades, so the filter bar
+    can recount hitrates for whatever subset is on screen — a league, a
+    team, a rung — without the page re-deriving anything from text.
+
+    EVERY graded lane on the card counts, playable or not — the counters
+    answer "how did the tips do on what I am looking at", which is not
+    the tiles' question (those keep the playable standard, because that
+    is the subset a bettor acts on). The bettor asked for this after a
+    J1 filter showed tip 1 at 0/2: six cards on screen, only two of them
+    above the bar. The final pick is the ★ lane's own grade.
+    """
+    if not f.settled:
+        return ""
+    def mark(which):
+        src = f.status if which == 1 else (f.tip2 if which == 2 else f.tip3)
+        m = src.lstrip()[:1]
+        return m if m in ("✅", "❌", "◦") else None
+
+    out = []
+    for which, key in ((1, "g1"), (2, "g2"), (3, "g3")):
+        cell = f.tip1 if which == 1 else (f.tip2 if which == 2 else f.tip3)
+        if not cell.strip() or cell.lstrip("✅❌◦ ").startswith("—"):
+            continue
+        m = mark(which)
+        if m:
+            out.append(f'{key}="{0 if m == "❌" else 1}"')
+    pick = 1 if f.lane(1) else (3 if f.tip3.strip() else 1)
+    m = mark(pick)
+    if m:
+        out.append(f'gf="{0 if m == "❌" else 1}"')
+    return (" data-" + " data-".join(out)) if out else ""
+
+
 _T1RATES: dict | None = None
 
 
@@ -471,9 +580,9 @@ def _card(f, kind: str, reads: dict) -> str:
     if not body:
         body = '<div class="read dim">nothing more on this one</div>'
     return (f'<details class="card {kind}" '
-            f'data-t="{html.escape(f.teams.lower())} '
-            f'{html.escape(f.league.lower())} {f.code.lower()}" '
-            f"{_sortkeys(f)}>"
+            f'data-t="{_haystack(f)}" '
+            f'data-lg="{html.escape(_fold(f.league.lower()))}" '
+            f"{_sortkeys(f)}{_gradekeys(f)}>"
             f"<summary>{top}</summary>{body}</details>")
 
 
@@ -798,13 +907,40 @@ def main() -> None:
                    f'<span class="dim">— every tip replayed over each '
                    f'league’s last 300 matches, averaged</span></div>')
 
+    # A bet's fixture, so a row can be filtered by league, country and
+    # lane kind exactly like a card is.
+    _fxmap = {f.teams: f for f in fixtures}
+
     def _bet_tr(b):
         # Every field is searchable through the same bar the cards use —
         # the row carries its own lowercase haystack in data-t.
         prob = f'{b["prob"]*100:.1f}%' if b["prob"] else "—"
-        hay = " ".join([b["name"], b["lane"], b["align"], b["note"],
-                        b["mark"], f'{b["odds"]:.2f}', prob]).lower()
-        return (f'<tr data-t="{html.escape(hay)}">'
+        bits = [b["name"], b["lane"], b["align"], b["note"],
+                b["mark"], f'{b["odds"]:.2f}', prob]
+        f = _fxmap.get(b["name"])
+        if f is not None:
+            bits += [f.league, f.code, _country(f.code)]
+        rung = b["lane"].split()[0]
+        if rung in ("1X", "X2", "12"):
+            bits.append("double chance result lane")
+        elif rung == "DNB":
+            bits += ["draw no bet", "dnb", "result lane"]
+        else:
+            side = "over" if rung.startswith("O") else "under"
+            kind = "team" if "(" in b["lane"] else "match"
+            bits += [side, f"{kind} {side}"]
+        bits.append({"✅": "hit won", "❌": "miss lost", "◦": "push",
+                     "open": "open pending"}.get(b["mark"], ""))
+        raw = " ".join(x for x in bits if x).lower()
+        folded = _fold(raw)
+        hay = raw if folded == raw else raw + " " + folded
+        # Settled rows carry their grade so the bets counter can total
+        # whatever the filter leaves on screen.
+        g = ("" if b["mark"] == "open"
+             else f' data-g="{0 if b["mark"].startswith("❌") else 1}"')
+        return (f'<tr data-t="{html.escape(hay)}"{g}'
+                + (f' data-lg="{html.escape(_fold(f.league.lower()))}"'
+                   if f is not None else "") + ">"
                 f'<td class="mk">{b["mark"]}</td>'
                 f'<td>{html.escape(b["name"])}</td>'
                 f'<td>{html.escape(b["lane"])}</td>'
@@ -912,6 +1048,24 @@ def main() -> None:
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
     hero_fine = "Tip 1 · the 300 most recent graded playable lanes"
+    # Only the league names that are CONTAINED IN another league's name
+    # need exact matching — "laliga" inside "laliga 2", "brasileirão"
+    # inside "brasileirão série b". Everything else stays a plain
+    # substring search, so "serie a" still finds the Italian and the
+    # Brazilian and the country term separates them.
+    # Exact matching is reserved for collisions the SAME COUNTRY cannot
+    # break: "laliga" inside "laliga 2", "bundesliga" inside "2.
+    # bundesliga", "brasileirao" inside "brasileirao serie b". Where the
+    # two leagues sit in different countries — Italy's Serie B inside
+    # Brazil's Brasileirão Série B — the country word already separates
+    # them, so "brazil, serie b" and "italy, serie b" both work and the
+    # name stays a plain substring (the bettor's rule, 31 Aug).
+    _lands: dict[str, set] = {}
+    for f in fixtures:
+        _lands.setdefault(_fold(f.league.lower()), set()).add(_country(f.code))
+    leagues_js = _json.dumps(sorted(
+        a for a in _lands
+        if any(a != b and a in b and _lands[a] & _lands[b] for b in _lands)))
     live_line = (f"Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on "
                  f"{h1}/{n1} settled, found bets <b>{roi:+.1f}%</b> ROI "
                  f"on {bh}/{bn}." if n1 else "First results land tonight.")
@@ -1030,6 +1184,15 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .tile .s {{ color:var(--dim); font-size:12px; }}
 .session {{ color:var(--gold); font-size:12px; letter-spacing:.18em;
   text-transform:uppercase; margin:2px 0 8px; }}
+.fcounts {{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px;
+  margin:0 0 12px; }}
+.fc {{ background:var(--card); border:1px solid var(--edge);
+  border-radius:8px; padding:7px 9px; text-align:center; }}
+.fc .v {{ font-size:17px; font-weight:700; }}
+.fc .l {{ color:var(--dim); font-size:10px; text-transform:uppercase;
+  letter-spacing:.1em; margin-top:1px; }}
+.fc .s {{ color:var(--dim); font-size:11px; }}
+.fcap {{ font-size:11px; margin:-8px 0 12px; }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -1239,9 +1402,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <button class="btn" onclick="document.getElementById('learn')
   .scrollIntoView({{behavior:'smooth'}})">🎓 Learn Athena — how to read
   these blocks</button>
- <input id="q" placeholder="filter — team, league, code…"
-  oninput="for(const c of document.querySelectorAll('.card,#t-bets tr[data-t]'))
-  c.style.display=(c.dataset.t||'').includes(this.value.toLowerCase())?'':'none'">
+ <input id="q" oninput="applyFilter(this.value)"
+  placeholder="filter — team, league, code, lane… commas narrow: real madrid, team over">
+ <div class="fcounts" id="fcounts"></div>
+ <div class="fcap dim" id="fcap"></div>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
   <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Prob</th><th>Odds</th>
@@ -1489,8 +1653,95 @@ function route() {{
     s.classList.toggle("on", s.id === "t-" + tab);
   for (const a of document.querySelectorAll(".tabs a"))
     a.classList.toggle("on", a.dataset.t === tab);
+  if (typeof recount === "function") recount();
 }}
-addEventListener("hashchange", route); route();
+// Commas narrow rather than widen: every term must be present, so
+// "real madrid, team over" is the Madrid cards that offer a team over.
+// A card's haystack carries its lanes' kinds as words, not just their
+// printed rungs — see _haystack.
+// A term that IS a league name matches that league exactly, because one
+// league's name can sit inside another's: "laliga" would otherwise drag
+// in every LaLiga 2 card, and no amount of typing could ask for the top
+// flight alone (the bettor's catch, 31 Aug). Everything else stays a
+// plain substring match, so partial words keep working.
+const LEAGUES = new Set({leagues_js});
+
+// Typed accents are folded away too, so "brasileirão" and
+// "brasileirao" are the same search — the card carries both spellings.
+const fold = s => s.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+
+function applyFilter(q) {{
+  const terms = fold(q.toLowerCase()).split(",")
+    .map(s => s.trim()).filter(Boolean);
+  for (const c of document.querySelectorAll(".card,#t-bets tr[data-t]")) {{
+    const hay = c.dataset.t || "";
+    const lg = c.dataset.lg;
+    c.style.display = terms.every(t =>
+      (LEAGUES.has(t) && lg !== undefined) ? lg === t : hay.includes(t)
+    ) ? "" : "none";
+  }}
+  recount();
+}}
+
+// The filter bar's own scoreboard: every settled card carries its four
+// grades, so whatever the filter leaves on screen — one league, one
+// team, one rung — gets counted live. No filter means the whole run.
+function recount() {{
+  const box = document.getElementById("fcounts");
+  if (!box) return;
+  const t = {{gf: [0, 0], g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
+  for (const c of document.querySelectorAll(".card.done")) {{
+    if (c.style.display === "none") continue;
+    for (const k of ["gf", "g1", "g2", "g3"]) {{
+      const v = c.dataset[k];
+      if (v === undefined) continue;
+      t[k][1]++; t[k][0] += (v === "1") ? 1 : 0;
+    }}
+  }}
+  const cell = (label, k) => {{
+    const [h, n] = t[k];
+    return '<div class="fc"><div class="v">' +
+      (n ? (h / n * 100).toFixed(1) + "%" : "—") +
+      '</div><div class="l">' + label + '</div><div class="s">' +
+      (n ? h + "/" + n : "no graded lanes") + "</div></div>";
+  }};
+  // Which counter belongs to the tab in view: the four lane records on
+  // Completed, the book's own record on Found bets, and nothing on the
+  // two pending tabs, where there is nothing yet to score.
+  const tab = (location.hash.split("/")[1] || "playable");
+  const cap = document.getElementById("fcap");
+  if (tab === "bets") {{
+    let h = 0, n = 0;
+    for (const r of document.querySelectorAll("#t-bets tr[data-g]")) {{
+      if (r.style.display === "none") continue;
+      n++; h += r.dataset.g === "1" ? 1 : 0;
+    }}
+    box.style.display = "";
+    box.style.gridTemplateColumns = "1fr";
+    box.innerHTML = '<div class="fc"><div class="v">' +
+      (n ? (h / n * 100).toFixed(1) + "%" : "—") +
+      '</div><div class="l">taken bets</div><div class="s">' +
+      (n ? h + "/" + n + " settled" : "nothing settled in this filter") +
+      "</div></div>";
+    if (cap) cap.textContent = "your own positions, pushes counted as hits";
+    return;
+  }}
+  if (tab !== "done") {{
+    box.style.display = "none";
+    if (cap) cap.textContent = "";
+    return;
+  }}
+  box.style.display = "";
+  box.style.gridTemplateColumns = "repeat(4,1fr)";
+  box.innerHTML = cell("final pick", "gf") + cell("tip 1", "g1") +
+                  cell("tip 2", "g2") + cell("tip 3", "g3");
+  if (cap) cap.textContent = t.g1[1] + t.g2[1] + t.g3[1] === 0
+    ? "no completed matches in this filter"
+    : "every graded lane on screen, playable or not — the tiles above "
+      + "keep the playable standard";
+}}
+
+addEventListener("hashchange", route); route(); recount();
 window.addEventListener("error", () => {{
   // A broken form must never hide the board: re-run the router and let
   // the failure stay local to Ask Athena.

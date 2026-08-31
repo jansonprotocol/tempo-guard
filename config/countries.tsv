@@ -1,0 +1,45 @@
+# League-code prefix -> country, for the app's search box only.
+# Typed by hand like the nickname file is: a country name is culture,
+# not data — the engine never reads this, and nothing derives from it.
+# The prefix is the part of a league code before the dash; codes with no
+# dash (MLS) are listed whole.
+# prefix	country
+ALG	Algeria
+ARG	Argentina
+AUT	Austria
+BEL	Belgium
+BRA	Brazil
+CHI	Chile
+CHN	China
+COL	Colombia
+CRO	Croatia
+DEN	Denmark
+ECU	Ecuador
+EGY	Egypt
+ENG	England
+ESP	Spain
+FRA	France
+GER	Germany
+IRL	Ireland
+ITA	Italy
+JPN	Japan
+MAR	Morocco
+MEX	Mexico
+MLS	United States
+NED	Netherlands
+NGA	Nigeria
+NOR	Norway
+PAR	Paraguay
+PER	Peru
+POL	Poland
+POR	Portugal
+RSA	South Africa
+SAU	Saudi Arabia
+SCO	Scotland
+SUI	Switzerland
+SWE	Sweden
+TUR	Turkey
+UKR	Ukraine
+UCL	Europe
+UEL	Europe
+UECL	Europe
