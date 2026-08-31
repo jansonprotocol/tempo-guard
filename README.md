@@ -750,10 +750,11 @@ that premium the book is keeping the insurance money.
 | — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy≥1.32 |
 | — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
 | — open | Cerezo Osaka v Kashiwa | O1.5 | 1.19 | — | match over — swapped out of the 12 at 1.24 |
-| — open | JEF United Chiba v Okayama | 12 | 1.26 | — | = tip 3's 12 print (75.7%), under buy≥1.39 |
+| — open | JEF United Chiba v Okayama | O0.5 (away) | 1.17 | — | Okayama team over — swapped out of the 12 at 1.26 |
 | — open | Machida Zelvia v Kawasaki | 12 | 1.25 | — | own read DC — card's tip 3 is DNB1 |
 | — open | Mito Hollyhock v Kashima | O0.5 (away) | 1.21 | — | Kashima team over — swapped out of the 12 at 1.29 before kickoff |
-| — open | Nagasaki v Gamba Osaka | 12 | 1.27 | — | own read DC — no tip 3 on this card |
+| — open | Nagasaki v Gamba Osaka | O0.5 (away) | 1.20 | — | Gamba team over — swapped out of the 12 at 1.27 |
+| — open | Sanfrecce v Nagoya | O1.5 (home) | 1.60 | — | Sanfrecce team over at a fair price — 1.60 against a fair 1.60 |
 
 <!-- HYPOTHESES:START -->
 
