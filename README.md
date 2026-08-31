@@ -1,12 +1,12 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 82.1%
+## CURRENT CONFIRMED HITRATE: 82.2%
 
     lane                        Tip 1              Tip 2
-    all matches            197 / 240  82.1%    121 / 179  67.6%
-    played lanes  >+1%      96 / 121  79.3%    121 / 179  67.6%
-    placed bets            106 / 132  80.3%    ROI +1.0%
+    all matches            199 / 242  82.2%    123 / 181  68.0%
+    played lanes  >+1%      97 / 122  79.5%    123 / 181  68.0%
+    placed bets            107 / 133  80.5%    ROI +1.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -81,7 +81,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 217 / 300   ·   72.3%**   ·   **Tip 1 — 96 / 121   ·   79.3%**   ·   **Tip 2 — 121 / 179   ·   67.6%**
+**Playable — 220 / 303   ·   72.6%**   ·   **Tip 1 — 97 / 122   ·   79.5%**   ·   **Tip 2 — 123 / 181   ·   68.0%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -279,8 +279,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 0-1 · 31-08 19:00 <b>Sirius v Malmo FF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.6% +5.0%<br>buy≥1.28 (+8.5% margin)</td><td>❌ <b>Sirius O1.5</b> 69.6% +22.5%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 81.4% +3.2% · buy≥1.29 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 31-08 19:00 <b>Burgos v Sociedad B</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 capped)</td><td>— under +1%</td><td>✅ <b>Burgos O0.5</b> 80.9% +5.3%<br>buy≥1.32 (+7.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 72.7% +8.1% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 31-08 19:30 <b>CA Osasuna v Getafe CF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>U3.0 77.5% +5.1%<br>buy≥1.47 (+4.9% margin)</td><td>✅ <b>Getafe CF U1.5</b> 75.4% +7.3%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 66.0% +3.3% · buy≥1.59 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 2-1 (83') <b>Jong AZ v Jong FC Utrecht</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>— under +1%</td><td><b>Jong AZ O1.5</b> 55.6% +4.2%<br>buy≥1.85 (+2.8% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 1-1 (84') <b>Jong PSV v Jong Ajax</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>U4.25 82.5% +3.0%<br>buy≥1.28 (+3.6% margin) · <i>room for 2 · half from the 2nd</i></td><td>U3.75 66.0% +3.9%<br>buy≥1.44 (+3.7% margin) · floor −9.0 · <i>room for 1</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 31-08 20:00 <b>Jong AZ v Jong FC Utrecht</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>— under +1%</td><td>✅ <b>Jong AZ O1.5</b> 55.6% +4.2%<br>buy≥1.85 (+2.8% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 31-08 20:00 <b>Jong PSV v Jong Ajax</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>U4.25 82.5% +3.0%<br>buy≥1.28 (+3.6% margin)</td><td>✅ U3.75 66.0% +3.9%<br>buy≥1.44 (+3.7% margin) · floor −9.0</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 1-1 (HT) <b>Dijon v Saint-Étienne</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (75.9 −6.5)</td><td>— under +1%</td><td>O1.75 75.1% +3.1%<br>buy≥1.46 (+4.3% margin) · floor −2.9 · <i>needs 1 more (half in)</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 0-0 (36') <b>Aston Villa v Arsenal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>O1.5 82.0% +2.1%<br>buy≥1.26 (+2.9% margin) · <i>needs 2 more</i></td><td><b>Arsenal O0.5</b> 80.4% +5.6%<br>buy≥1.31 (+5.0% margin) · team · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 31-08 21:15 <b>Benfica v Estoril</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (80.4 −2.0)</td><td>O1.5 78.7% +3.5%<br>buy≥1.36 (+7.0% margin)</td><td><b>Benfica O1.5</b> 58.1% +15.8%<br>buy≥1.77 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 80.6% +23.4% · buy≥1.30 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -315,8 +315,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 2-1 (83') <b>Jong AZ v Jong FC Utrecht</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>O1.5 81.9% <b>+0.1%</b><br>buy≥1.26 (+3.2% margin) · <i>✓ landed</i></td><td><b>Jong AZ O1.5</b> 55.6% +4.2%<br>buy≥1.85 (+2.8% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 1-1 (84') <b>Jong PSV v Jong Ajax</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>U4.25 82.5% +3.0%<br>buy≥1.28 (+3.6% margin) · <i>room for 2 · half from the 2nd</i></td><td>U3.75 66.0% +3.9%<br>buy≥1.44 (+3.7% margin) · floor −9.0 · <i>room for 1</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 0-1 (22') <b>Amed v Trabzonspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 1-0 (21') <b>Beşiktaş v Çorum</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 1-1 (HT) <b>Dijon v Saint-Étienne</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (75.9 −6.5)</td><td>U4.25 84.2% <b>−4.4%</b><br>buy≥1.26 (+7.1% margin) · <i>room for 2 · half from the 2nd</i></td><td>O1.75 75.1% +3.1%<br>buy≥1.46 (+4.3% margin) · floor −2.9 · <i>needs 1 more (half in)</i></td></tr></table>
@@ -361,7 +359,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 197 / 240   ·   82.1%**   ·   **Tip 2 — 121 / 179   ·   67.6%**
+**Tip 1 — 199 / 242   ·   82.2%**   ·   **Tip 2 — 123 / 181   ·   68.0%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -619,12 +617,14 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 0-1 · 31-08 19:00 <b>Sirius v Malmo FF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.6% +5.0%<br>buy≥1.28 (+8.5% margin)</td><td>❌ <b>Sirius O1.5</b> 69.6% +22.5%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 81.4% +3.2% · buy≥1.29 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 31-08 19:00 <b>Burgos v Sociedad B</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (82.7 capped)</td><td>U4.25 84.2% <b>−6.2%</b><br>buy≥1.18 (+5.4% margin)</td><td>✅ <b>Burgos O0.5</b> 80.9% +5.3%<br>buy≥1.32 (+7.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 72.7% +8.1% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 31-08 19:30 <b>CA Osasuna v Getafe CF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.7 −1.4)</td><td>U3.0 77.5% +5.1%<br>buy≥1.47 (+4.9% margin)</td><td>✅ <b>Getafe CF U1.5</b> 75.4% +7.3%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 66.0% +3.3% · buy≥1.59 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 31-08 20:00 <b>Jong AZ v Jong FC Utrecht</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>O1.5 81.9% <b>+0.1%</b><br>buy≥1.26 (+3.2% margin)</td><td>✅ <b>Jong AZ O1.5</b> 55.6% +4.2%<br>buy≥1.85 (+2.8% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 31-08 20:00 <b>Jong PSV v Jong Ajax</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.1)</td><td>U4.25 82.5% +3.0%<br>buy≥1.28 (+3.6% margin)</td><td>✅ U3.75 66.0% +3.9%<br>buy≥1.44 (+3.7% margin) · floor −9.0</td></tr></table>
 
 <br clear="all">
 
 ### 🟡 Actual placed bets
 
-**Settled: 106 / 132  ·  ROI +1.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 107 / 133  ·  ROI +1.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -778,7 +778,7 @@ that premium the book is keeping the insurance money.
 | — open | Braga v Vitória | DNB (home) | 1.29 | — | DNB1 print (69.1%) — under buy≥1.52 and under the 1.35 floor; Rule 7 |
 | ✅ | FC Copenhagen v Sonderjyske | O1.5 (home) | 1.30 | 1.30x | = tip 2 team lane (74.4%), taken under buy≥1.40 |
 | ✅ | CA Osasuna v Getafe CF | DNB (home) | 1.42 | 1.42x | DNB1 print (66.0%) — under buy≥1.59; Rule 7 |
-| — open | Jong PSV v Jong Ajax | U4.5 | 1.44 | — | softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21 |
+| ✅ | Jong PSV v Jong Ajax | U4.5 | 1.44 | 1.44x | softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21 |
 
 <!-- HYPOTHESES:START -->
 
