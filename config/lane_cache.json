@@ -24,6 +24,11 @@
 "pa": 0.722,
 "ph": 0.641
 },
+"ENG-CH|Sheffield United v Bolton|2026-09-01": {
+"mu": 2.449,
+"pa": 0.613,
+"ph": 0.818
+},
 "ENG-CH|Swansea v Watford|2026-09-01": {
 "mu": 2.566,
 "pa": 0.613,
@@ -68,6 +73,11 @@
 "mu": 2.279,
 "pa": 0.625,
 "ph": 0.746
+},
+"JPN-J1|Cerezo Osaka v Kashiwa|2026-09-02": {
+"mu": 2.87,
+"pa": 0.781,
+"ph": 0.778
 },
 "JPN-J1|Machida Zelvia v Kawasaki|2026-09-02": {
 "mu": 2.724,

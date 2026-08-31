@@ -745,11 +745,11 @@ that premium the book is keeping the insurance money.
 | — open | Atlético Grau v Melgar | O1.5 | 1.37 | — | = tip 1 rung at 1.37, two cents under buy≥1.39 |
 | — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy≥1.37 |
 | — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip |
-| — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip |
-| — open | Swansea v Watford | 1X | 1.22 | — | own read DC — card's tip 3 is DNB1 |
+| — open | Sheffield United v Bolton | DNB (home) | 1.26 | — | Sheffield DNB — swapped out of the U3.5 at 1.36 |
+| — open | Swansea v Watford | DNB (home) | 1.35 | — | Swansea DNB — swapped out of the 1X at 1.22; = tip 3's DNB1 lane |
 | — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy≥1.32 |
 | — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
-| — open | Cerezo Osaka v Kashiwa | 12 | 1.24 | — | = tip 3's 12 print (75.9%), under buy≥1.38 |
+| — open | Cerezo Osaka v Kashiwa | O1.5 | 1.19 | — | match over — swapped out of the 12 at 1.24 |
 | — open | JEF United Chiba v Okayama | 12 | 1.26 | — | = tip 3's 12 print (75.7%), under buy≥1.39 |
 | — open | Machida Zelvia v Kawasaki | 12 | 1.25 | — | own read DC — card's tip 3 is DNB1 |
 | — open | Mito Hollyhock v Kashima | O0.5 (away) | 1.21 | — | Kashima team over — swapped out of the 12 at 1.29 before kickoff |
