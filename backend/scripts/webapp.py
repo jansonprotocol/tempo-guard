@@ -2000,14 +2000,14 @@ document.getElementById("ask-lg").addEventListener("change", maybeAuto);
 function askHay(m, comp) {{
   const bits = [m.h, m.a, comp.name, COUNTRY[comp.code] || "", m.d,
                 m.tip, m.t2 || "", m.kw || ""];
-  const rung = /\b([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
+  const rung = /(?:^|[^A-Za-z])([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
   if (rung) {{
     const side = rung[1] === "O" ? "over" : "under";
     bits.push(side, "match " + side, "tip1 " + side, "tip 1 " + side,
               "tip1 " + rung[0].toLowerCase(), "tip 1 " + rung[0].toLowerCase());
   }}
   if (m.t2) {{
-    const r2 = /\b([OU])(\d+(?:\.\d+)?)/.exec(m.t2);
+    const r2 = /(?:^|[^A-Za-z])([OU])(\d+(?:\.\d+)?)/.exec(m.t2);
     if (r2) {{
       const s2 = r2[1] === "O" ? "over" : "under";
       const k2 = m.t2.includes("(team)") ? "team" : "match";
