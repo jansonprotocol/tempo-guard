@@ -1036,26 +1036,6 @@ def main() -> None:
     # nothing because no lane there can badge playable. Derived from the
     # same bank the Ask Athena form answers from, so it refreshes with
     # the bank and can never be a typed number that quietly rots.
-    graded = []
-    for comp in bank.values():
-        for m in comp["matches"]:
-            if m.get("mark") not in ("✅", "✅½", "◦", "❌"):
-                continue
-            e = re.search(r"([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)",
-                          m.get("tip", ""))
-            if not e:
-                continue
-            if float(e.group(1).replace("−", "-")) > 1.0:
-                graded.append((m["d"], m["mark"]))
-    graded.sort(reverse=True)
-    window = graded[:300]
-    # A push counts as a hit, same as everywhere on the board: the
-    # standing offset plays the rung a notch softer, which wins there.
-    hero_rate = (sum(1 for _d, mk in window
-                     if mk.startswith("✅") or mk == "◦")
-                 / len(window) * 100) if len(window) >= 100 else None
-    hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
-    hero_fine = "Tip 1 · the 300 most recent graded playable lanes"
     # Only the league names that are CONTAINED IN another league's name
     # need exact matching — "laliga" inside "laliga 2", "brasileirão"
     # inside "brasileirão série b". Everything else stays a plain
@@ -1138,6 +1118,43 @@ def main() -> None:
                 m[side] = g
                 alias[_jsnorm(m[fld])] = g
                 spellings.setdefault(g, set()).add(m[fld])
+    # A board fixture whose result has since been merged into the results
+    # store is ALREADY in the retro bank — replayed as-of and graded on
+    # all three lanes — so keeping the board copy too double-counts it.
+    # 288 rows after the 31 Aug ingest, which pulled the hero window down
+    # twice as far as the week deserved. The retro row wins; it carries
+    # every lane, where the board row carries at most two.
+    for comp in bank.values():
+        seen, keep = set(), []
+        for m in sorted(comp["matches"], key=lambda x: x.get("src") == "board"):
+            k = (m["d"], m.get("kh"), m.get("ka"))
+            if k in seen:
+                continue
+            seen.add(k)
+            keep.append(m)
+        comp["matches"] = sorted(keep, key=lambda x: x["d"])
+
+    graded = []
+    for comp in bank.values():
+        for m in comp["matches"]:
+            if m.get("mark") not in ("✅", "✅½", "◦", "❌"):
+                continue
+            e = re.search(r"([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)",
+                          m.get("tip", ""))
+            if not e:
+                continue
+            if float(e.group(1).replace("−", "-")) > 1.0:
+                graded.append((m["d"], m["mark"]))
+    graded.sort(reverse=True)
+    window = graded[:300]
+    # A push counts as a hit, same as everywhere on the board: the
+    # standing offset plays the rung a notch softer, which wins there.
+    hero_rate = (sum(1 for _d, mk in window
+                     if mk.startswith("✅") or mk == "◦")
+                 / len(window) * 100) if len(window) >= 100 else None
+    hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
+    hero_fine = "Tip 1 · the 300 most recent graded playable lanes"
+
     for shown in set(nick.values()):
         prefer[base_key(shown)] = shown
     for a, shown in nick.items():
@@ -1983,14 +2000,14 @@ document.getElementById("ask-lg").addEventListener("change", maybeAuto);
 function askHay(m, comp) {{
   const bits = [m.h, m.a, comp.name, COUNTRY[comp.code] || "", m.d,
                 m.tip, m.t2 || "", m.kw || ""];
-  const rung = /\b([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
+  const rung = /(?:^|[^A-Za-z])([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
   if (rung) {{
     const side = rung[1] === "O" ? "over" : "under";
     bits.push(side, "match " + side, "tip1 " + side, "tip 1 " + side,
               "tip1 " + rung[0].toLowerCase(), "tip 1 " + rung[0].toLowerCase());
   }}
   if (m.t2) {{
-    const r2 = /\b([OU])(\d+(?:\.\d+)?)/.exec(m.t2);
+    const r2 = /(?:^|[^A-Za-z])([OU])(\d+(?:\.\d+)?)/.exec(m.t2);
     if (r2) {{
       const s2 = r2[1] === "O" ? "over" : "under";
       const k2 = m.t2.includes("(team)") ? "team" : "match";
