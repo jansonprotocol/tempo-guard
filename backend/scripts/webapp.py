@@ -388,9 +388,12 @@ def _gradekeys(f) -> str:
     can recount hitrates for whatever subset is on screen — a league, a
     team, a rung — without the page re-deriving anything from text.
 
-    The four match the tiles exactly: tip 1 and tip 2 count only at the
-    playable standard, tip 3 counts whole (it only ever prints above its
-    own bar), and the final pick is the ★ lane's own grade.
+    EVERY graded lane on the card counts, playable or not — the counters
+    answer "how did the tips do on what I am looking at", which is not
+    the tiles' question (those keep the playable standard, because that
+    is the subset a bettor acts on). The bettor asked for this after a
+    J1 filter showed tip 1 at 0/2: six cards on screen, only two of them
+    above the bar. The final pick is the ★ lane's own grade.
     """
     if not f.settled:
         return ""
@@ -401,9 +404,8 @@ def _gradekeys(f) -> str:
 
     out = []
     for which, key in ((1, "g1"), (2, "g2"), (3, "g3")):
-        if which < 3 and not f.lane(which):
-            continue
-        if which == 3 and not f.tip3.strip():
+        cell = f.tip1 if which == 1 else (f.tip2 if which == 2 else f.tip3)
+        if not cell.strip() or cell.lstrip("✅❌◦ ").startswith("—"):
             continue
         m = mark(which)
         if m:
@@ -1110,6 +1112,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .fc .l {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-top:1px; }}
 .fc .s {{ color:var(--dim); font-size:11px; }}
+.fcap {{ font-size:11px; margin:-8px 0 12px; }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -1322,6 +1325,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <input id="q" oninput="applyFilter(this.value)"
   placeholder="filter — team, league, code, lane… commas narrow: real madrid, team over">
  <div class="fcounts" id="fcounts"></div>
+ <div class="fcap dim" id="fcap"></div>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
   <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Prob</th><th>Odds</th>
@@ -1608,6 +1612,11 @@ function recount() {{
   }};
   box.innerHTML = cell("final pick", "gf") + cell("tip 1", "g1") +
                   cell("tip 2", "g2") + cell("tip 3", "g3");
+  const cap = document.getElementById("fcap");
+  if (cap) cap.textContent = t.g1[1] + t.g2[1] + t.g3[1] === 0
+    ? "no completed matches in this filter"
+    : "every graded lane on screen, playable or not — the tiles above "
+      + "keep the playable standard";
 }}
 
 addEventListener("hashchange", route); route(); recount();
