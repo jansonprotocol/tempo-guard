@@ -431,6 +431,22 @@ def _haystack(f) -> str:
     return html.escape(raw if folded == raw else raw + " " + folded)
 
 
+def _probkeys(f) -> str:
+    """Each lane's own probability as a number, so the filter bar can be
+    asked for a threshold ("tip 2 <80") instead of only for words. The
+    first percentage in a lane cell is the lane's claim — what follows is
+    the edge and the margin, which are not what a threshold means."""
+    out = []
+    for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
+        c = (cell or "").strip()
+        if not c or c.startswith("—"):
+            continue
+        m = re.search(r"(\d+(?:\.\d+)?)%", c)
+        if m:
+            out.append(f'data-p{which}="{m.group(1)}"')
+    return (" " + " ".join(out) + " ") if out else " "
+
+
 def _gradekeys(f) -> str:
     """Each settled card carries its own four grades, so the filter bar
     can recount hitrates for whatever subset is on screen — a league, a
@@ -596,7 +612,7 @@ def _card(f, kind: str, reads: dict) -> str:
     return (f'<details class="card {kind}" '
             f'data-t="{_haystack(f)}" '
             f'data-lg="{html.escape(_fold(f.league.lower()))}" '
-            f"{_sortkeys(f)}{_gradekeys(f)}>"
+            f"{_sortkeys(f)}{_probkeys(f)}{_gradekeys(f)}>"
             f"<summary>{top}</summary>{body}</details>")
 
 
@@ -952,7 +968,11 @@ def main() -> None:
         # whatever the filter leaves on screen.
         g = ("" if b["mark"] == "open"
              else f' data-g="{0 if b["mark"].startswith("❌") else 1}"')
-        return (f'<tr data-t="{html.escape(hay)}"{g}'
+        # A taken bet is one lane, not three, so it carries a single
+        # probability — a bare "<80" reaches it, a lane-prefixed
+        # "tip 2 <80" does not, because the row has no such lane.
+        p = f' data-p="{b["prob"]*100:.1f}"' if b["prob"] else ""
+        return (f'<tr data-t="{html.escape(hay)}"{g}{p}'
                 + (f' data-lg="{html.escape(_fold(f.league.lower()))}"'
                    if f is not None else "") + ">"
                 f'<td class="mk">{b["mark"]}</td>'
@@ -1231,6 +1251,11 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   letter-spacing:.1em; margin-top:1px; }}
 .fc .s {{ color:var(--dim); font-size:11px; }}
 .fcap {{ font-size:11px; margin:-8px 0 12px; }}
+.fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
+.fhelp summary {{ cursor:pointer; }}
+.fhelp div {{ padding:8px 0 0 2px; line-height:1.7; }}
+.fhelp code {{ background:rgba(255,255,255,.06); border-radius:3px;
+  padding:1px 5px; color:#cfd6e4; }}
 .askq {{ width:100%; margin:10px 0 8px; }}
 .chip {{ display:inline-block; margin-left:4px; font-size:10px;
   background:#1b2233; border:1px solid var(--edge);
@@ -1455,6 +1480,23 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   placeholder="filter — team, league, code, lane, tip 2 none… commas narrow: real madrid, team over">
  <div class="fcounts" id="fcounts"></div>
  <div class="fcap dim" id="fcap"></div>
+ <details class="fhelp"><summary>what can I type in the filter?</summary>
+  <div><b>anything on the card</b> — a team, a league, a country, a code,
+  a rung (<code>o2.5</code>), a mark (<code>hit</code>, <code>miss</code>,
+  <code>push</code>, <code>open</code>).<br>
+  <b>lane kinds</b> — <code>team over</code>, <code>match under</code>,
+  <code>double chance</code>, <code>draw no bet</code>,
+  <code>result lane</code>, <code>playable</code>. Tie one to a lane with
+  <code>tip 1 under</code>, <code>tip 2 over</code>.<br>
+  <b>an absent lane</b> — <code>tip 2 none</code> (also
+  <code>no tip 3</code>): the cards where that lane never printed.<br>
+  <b>a probability threshold</b> — <code>tip 2 &lt;80</code>,
+  <code>tip 1 80&gt;</code>, <code>tip 3 &lt;=70</code>. The arrow points
+  at the side it keeps and can sit either way round; the % is optional. On
+  its own (<code>&lt;80</code>) it reads the headline number — tip 1 on a
+  card, the ticket's own probability on a taken bet.<br>
+  <b>commas narrow</b> — <code>brazil, serie b, tip 1 under, 80&gt;</code>
+  is all four at once.</div></details>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
   <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Prob</th><th>Odds</th>
@@ -1726,12 +1768,48 @@ const fold = s => s.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
 // come back with the cards that have no tip 2. Both bars read their
 // query through here, so both speak the same vocabulary.
 const NONEQ = /^(?:no[ -]?tip ?([123])|tip ?([123]) ?(?:none|empty|missing|absent))$/;
+
+// A threshold on a lane's probability: "tip 2 <80", "tip 1 80>",
+// "tip 3 <=70", or a bare "<80" for the headline number (tip 1 on a
+// card, the ticket's own probability on a taken bet). The arrow decides
+// the side it keeps and may sit before or after the number — "<80" and
+// "80<" both mean below 80 — because either reads naturally when you are
+// typing fast. The % is optional.
+const CMPQ = /^(?:tip ?([123])|prob|p)? *(?:(<=|>=|<|>) *(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?) *(<=|>=|<|>))$/;
+function parseCmp(s) {{
+  const m = CMPQ.exec(s.replace(/[%≤≥]/g, x => x === "≤" ? "<=" : x === "≥" ? ">=" : "")
+                      .replace(/\\s+/g, " ").trim());
+  if (!m) return null;
+  return {{lane: m[1] || null, op: m[2] || m[5],
+          val: parseFloat(m[3] !== undefined ? m[3] : m[4])}};
+}}
+function cmpOk(el, c) {{
+  const d = el.dataset;
+  const raw = c.lane ? d["p" + c.lane]
+            : (d.p1 !== undefined ? d.p1 : d.p);
+  const v = parseFloat(raw);
+  // No such lane, no number, no match — an absent lane is not "below 80".
+  // The card's headline data-p doubles as a sort key and parks a card
+  // with no numbers at −1, which must not read as a low probability.
+  if (!isFinite(v) || v < 0) return false;
+  return c.op === "<" ? v < c.val : c.op === "<=" ? v <= c.val
+       : c.op === ">" ? v > c.val : v >= c.val;
+}}
+
 function qterms(q) {{
   return fold((q || "").toLowerCase()).split(",").map(s => s.trim())
     .filter(Boolean).map(s => {{
-      const m = NONEQ.exec(s.replace(/\\s+/g, " "));
-      return m ? "~none" + (m[1] || m[2]) : s;
+      const flat = s.replace(/\\s+/g, " ");
+      const n = NONEQ.exec(flat);
+      if (n) return "~none" + (n[1] || n[2]);
+      return parseCmp(flat) || s;
     }});
+}}
+// One term against one element: a threshold, an exact league, or text.
+function termOk(t, el, hay, lg) {{
+  if (typeof t !== "string") return cmpOk(el, t);
+  if (LEAGUES.has(t) && lg !== undefined) return lg === t;
+  return hay.includes(t);
 }}
 
 function applyFilter(q) {{
@@ -1745,9 +1823,7 @@ function applyFilter(q) {{
     if (c.closest("#ask-out")) continue;
     const hay = c.dataset.t || "";
     const lg = c.dataset.lg;
-    c.style.display = terms.every(t =>
-      (LEAGUES.has(t) && lg !== undefined) ? lg === t : hay.includes(t)
-    ) ? "" : "none";
+    c.style.display = terms.every(t => termOk(t, c, hay, lg)) ? "" : "none";
   }}
   recount();
 }}
@@ -2072,6 +2148,12 @@ function askCard(m, comp, note, open) {{
   let g = "";
   for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
     if (gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
+  // Each lane's claim, for the threshold terms ("tip 2 <80"). First
+  // percentage in the cell is the probability; the rest is edge/margin.
+  for (const [k, key] of [["tip", "p1"], ["t2", "p2"], ["t3", "p3"]]) {{
+    const pm = /(\d+(?:\.\d+)?)%/.exec(m[k] || "");
+    if (pm) g += " data-" + key + '="' + pm[1] + '"';
+  }}
   // The lane marks on the summary line, so a long league list reads as a
   // scoreboard and only the card you open costs any space.
   const chips = [["1", m.mark], ["2", m.m2], ["3", m.m3]]
@@ -2096,7 +2178,7 @@ function askFilter() {{
   let shown = 0;
   for (const c of document.querySelectorAll("#ask-out .card")) {{
     const hay = c.dataset.t || "";
-    const vis = terms.every(x => hay.includes(x));
+    const vis = terms.every(x => termOk(x, c, hay, undefined));
     c.style.display = vis ? "" : "none";
     if (!vis) continue;
     shown++;
