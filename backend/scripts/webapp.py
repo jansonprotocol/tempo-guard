@@ -1047,8 +1047,26 @@ def main() -> None:
         if f.settled and "—" in f.status:
             entry["score"] = f.status.split("—")[-1].strip()
             entry["mark"] = f.status[:1]
-        if f.tip2.strip() not in ("", "—", "— none"):
-            entry["t2"] = re.sub(r"\*\*(.+?)\*\*", r"\1", f.tip2)
+        # Tip 2 and tip 3 as the retro bank stores them: the lane text in
+        # t2/t3 and its grade in m2/m3, NOT a glyph buried in the text.
+        # The board copy used to inline the mark and drop tip 3 entirely,
+        # so a board card in Ask Athena showed two lanes where the fixture
+        # file had three, and contributed nothing to the tip 2 and tip 3
+        # counters (found from the Casa Pia card, 31 Aug).
+        def _lane(cell):
+            c = re.sub(r"\*\*(.+?)\*\*", r"\1", (cell or "").strip())
+            if c in ("", "—", "— none") or c.startswith("—"):
+                return None, ""
+            m = re.match(r"^([✅❌◦])\s*", c)
+            return (c[m.end():], m.group(1)) if m else (c, "")
+
+        for key, cell in (("2", f.tip2), ("3", f.tip3)):
+            text, glyph = _lane(cell)
+            if text is None:
+                continue
+            entry["t" + key] = text
+            if glyph:
+                entry["m" + key] = glyph
         rd = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
         if rd:
             entry["kw"] = rd[0]
