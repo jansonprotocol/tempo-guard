@@ -745,7 +745,7 @@ that premium the book is keeping the insurance money.
 | — open | Atlético Grau v Melgar | O1.5 | 1.37 | — | = tip 1 rung at 1.37, two cents under buy≥1.39 |
 | — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy≥1.37 |
 | — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip |
-| — open | Sheffield United v Bolton | DNB (home) | 1.26 | — | Sheffield DNB — swapped out of the U3.5 at 1.36 |
+| — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip — swapped to a DNB and back; the under was the better price |
 | — open | Swansea v Watford | DNB (home) | 1.35 | — | Swansea DNB — swapped out of the 1X at 1.22; = tip 3's DNB1 lane |
 | — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy≥1.32 |
 | — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
