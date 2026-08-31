@@ -149,13 +149,19 @@ def _baselines() -> dict[str, float] | None:
     if not path.exists():
         return None
     sums: dict[str, list[float]] = {"fp": [], "t1": [], "t2": [], "t3": []}
+    # The claim behind those same lanes, where the replay recorded it — a
+    # hitrate is only half a verdict without what was promised beside it.
+    says: dict[str, list[float]] = {"fp": [], "t1": [], "t2": [], "t3": []}
     for ln in path.read_text().splitlines():
         if not ln.strip() or ln.startswith("#"):
             continue
         p = ln.split("\t")
-        for key, hi, ni in (("t1", 1, 2), ("t2", 3, 4), ("t3", 5, 6)):
+        for key, hi, ni, si in (("t1", 1, 2, 7), ("t2", 3, 4, 8),
+                                ("t3", 5, 6, 9)):
             if int(p[ni]) >= 30:
                 sums[key].append(int(p[hi]) / int(p[ni]))
+                if len(p) > si:
+                    says[key].append(float(p[si]) / int(p[ni]))
     # The final pick — the card's starred lane — replayed over the same
     # window by scripts/final_pick.py --write. It leads the bar because
     # it is the one number describing what a reader following the star
@@ -168,7 +174,14 @@ def _baselines() -> dict[str, float] | None:
             p = ln.split("\t")
             if int(p[2]) >= 30:
                 sums["fp"].append(int(p[1]) / int(p[2]))
-    return {k: sum(v) / len(v) * 100 for k, v in sums.items() if v} or None
+                if len(p) > 3:
+                    says["fp"].append(float(p[3]) / int(p[2]))
+    # (hitrate, claim) per lane — the claim stays None until the replay
+    # that records it has been re-run, and the bar then omits it.
+    out = {k: (sum(v) / len(v) * 100,
+               sum(says[k]) / len(says[k]) * 100 if says[k] else None)
+           for k, v in sums.items() if v}
+    return out or None
 
 
 def _read_tiers() -> str:
@@ -695,27 +708,32 @@ def main() -> None:
     # those are the lanes anyone actually acts on; the sub-bar band is
     # published for honesty, not for the scoreboard. Tip 3 qualifies
     # whole: it only ever prints above its own floor and edge bar.
+    from scripts.playable import LANE
     (pb1, pq1), (pb2, pq2) = p[1], p[2]
     # The FINAL PICK tile: the card's starred lane, graded on every
     # completed fixture of this session — the same chooser the board
     # renders (playable tip 1, else a printed result lane, else tip 1),
     # so the tile answers "what would following the ★ have scored".
     fh = fn = fp3 = 0
+    fsays: list[float] = []
     for f in fixtures:
         if not f.settled:
             continue
         pick = 1 if f.lane(1) else (3 if f.tip3.strip() else 1)
+        src = f.tip1 if pick == 1 else f.tip3
         mark = f.status[:1] if pick == 1 else f.tip3.lstrip()[:1]
         if mark not in ("✅", "❌", "◦"):
             continue
         fn += 1
         fh += mark != "❌"
         fp3 += pick == 3
+        sm = LANE.match(src.lstrip("✅❌◦ "))
+        if sm:
+            fsays.append(float(sm.group(2)))
     # The claim each family carried into those graded lanes, so a low
     # tile reads as WHAT IT PROMISED, not as failure: measured this week,
     # every says band delivers its claim in both half-windows — the only
     # honest "filter" is the expectation printed beside the outcome.
-    from scripts.playable import LANE
     says = {1: [], 2: [], 3: []}
     for f in fixtures:
         for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
@@ -734,13 +752,13 @@ def main() -> None:
     tiles = "".join([
         tile("final pick", f"{fh / fn * 100:.1f}%" if fn else "—",
              f"the ★ lane · {fh}/{fn}"
-             + (f" · {fp3} on tip 3" if fp3 else "")),
+             + (f" · claims {sum(fsays)/len(fsays):.1f}" if fsays else "")),
         tile("tip 1", f"{pb1 / pq1 * 100:.1f}%" if pq1 else "—",
              f"playable · {pb1}/{pq1}{claims(1)}"),
         tile("tip 2", f"{pb2 / pq2 * 100:.1f}%" if pq2 else "—",
              f"playable · {pb2}/{pq2}{claims(2)}"),
         tile("tip 3", f"{h3 / n3 * 100:.1f}%" if n3 else "—",
-             (f"{h3}/{n3} · probation" +
+             (f"{h3}/{n3} · probation{claims(3)}" +
               (f" · {hs3} hindsight" if hs3 else "")) if n3
              else "probation · first grades tonight"),
         tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
@@ -767,11 +785,16 @@ def main() -> None:
     base = _baselines()
     basebar = ""
     if base:
+        def cell(name, key):
+            hit, said = base[key]
+            claim = (f'<span class="dim"> vs {said:.1f} said</span>'
+                     if said else "")
+            return f"{name} <b>{hit:.1f}%</b>{claim}"
         cells = " · ".join(
-            f"{n} <b>{base[k]:.1f}%</b>"
-            for n, k in (("final pick", "fp"), ("tip 1", "t1"),
-                         ("tip 2", "t2"), ("tip 3", "t3")) if k in base)
-        basebar = (f'<div class="basebar">Baselines: {cells} '
+            cell(n, k) for n, k in (("final pick", "fp"), ("tip 1", "t1"),
+                                    ("tip 2", "t2"), ("tip 3", "t3"))
+            if k in base)
+        basebar = (f'<div class="basebar">Baselines — hit vs said: {cells} '
                    f'<span class="dim">— every tip replayed over each '
                    f'league’s last 300 matches, averaged</span></div>')
 
