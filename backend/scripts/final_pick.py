@@ -85,16 +85,15 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
         t2, t3 = out["t2"], out["t3"]
         t1_play = e1 > 0.01
         t2_play = t2 is not None and t2[2] > 0.01
-        if (league in weak or league in capped) and t3 is not None:
-            pick, mk = 3, t3[0]
-        elif t1_play:
+        # The SHIPPED chooser (see chosen() below): a playable tip 1,
+        # else a printed result lane, else tip 1. This used to run the
+        # older variant that could pick tip 2, so the console line
+        # disagreed with the table the same run wrote — the file was
+        # right and the print was stale. One chooser now, both places.
+        if t1_play or t3 is None:
             pick, mk = 1, t1mk
-        elif t2_play:
-            pick, mk = 2, t2[0]
-        elif t3 is not None:
-            pick, mk = 3, t3[0]
         else:
-            pick, mk = 1, t1mk
+            pick, mk = 3, t3[0]
         g_t1 = grade(1, t1mk, hg, ag)
         if g_t1 is None:
             continue
@@ -105,6 +104,8 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
         rows.append(dict(
             code=league, d=d, pick=pick, mk=mk,
             hit_pick=grade(pick, mk, hg, ag), hit_t1=g_t1,
+            says_pick=(t3[1] if pick == 3 else
+                       t2[1] if pick == 2 else p1),
             t1_play=t1_play, t2_play=t2_play,
             hit_t2=grade(2, t2[0], hg, ag) if t2 else None,
             hit_t3=grade(3, t3[0], hg, ag) if t3 else None,
@@ -132,20 +133,23 @@ def write_table(rows: list[dict]) -> None:
         hit = r["hit_t3"] if lane == 3 else r["hit_t1"]
         if hit is None:
             hit = r["hit_t1"]
-        d = per.setdefault(r["code"], [0, 0])
+        d = per.setdefault(r["code"], [0, 0, 0.0])
         d[0] += bool(hit)
         d[1] += 1
+        d[2] += r.get("says_pick") or 0.0
     lines = [
         "# Final-pick record per league: the card's starred lane replayed",
         "# as-of over the league's most recent fixtures. Written by",
         "# scripts/final_pick.py --write — derived, never typed. Read by",
         "# the app's baseline bar, which averages the leagues equally.",
-        "# league\thits\tn",
+        "# The trailing column is the summed CLAIM behind those picks, so",
+        "# the app can print the record against what was promised.",
+        "# league\thits\tn\tsays",
     ]
-    for code, (h, n) in sorted(per.items()):
-        lines.append(f"{code}\t{h}\t{n}")
+    for code, (h, n, s) in sorted(per.items()):
+        lines.append(f"{code}\t{h}\t{n}\t{s:.4f}")
     OUT.write_text("\n".join(lines) + "\n")
-    rates = [h / n for h, n in per.values() if n >= 30]
+    rates = [h / n for h, n, _s in per.values() if n >= 30]
     print(f"final pick: {sum(rates)/len(rates)*100:.1f}% over {len(rates)} "
           f"leagues -> {OUT}")
 

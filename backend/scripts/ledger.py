@@ -78,6 +78,7 @@ def read_fixtures() -> dict[str, dict]:
         tip3 = ln.split("\t")[7] if len(ln.split("\t")) > 7 else ""
         m3 = TIP3.match(tip3.strip())
         out[name] = {
+            "code": _code, "teams": name, "day": _ko.split(" ")[0],
             "rung": m.group(1),
             "p": float(m.group(2)) / 100,
             "rung2": m2.group(1) if m2 else None,
@@ -95,29 +96,34 @@ def read_fixtures() -> dict[str, dict]:
 def bet_prob(rung: str, side: str, fx: dict) -> float | None:
     """The engine's probability for THIS bet's lane, where derivable.
 
-    A match total prices off the goal expectation inverted from the
-    published Tip 1 (the same inversion the ledger CLI uses). A team or
-    result lane is only quoted when it IS a published lane — Tip 2's rung
-    or Tip 3's — because their probabilities live in per-side numbers the
-    cells don't carry. None means "the engine never priced your exact
-    lane", shown as a dash, never guessed."""
+    A published lane answers from the card itself — Tip 1's rung inverted
+    to a goal expectation, or Tip 2's and Tip 3's own printed numbers.
+    Anything else falls through to scripts.lane_price, which re-derives
+    the fixture's goal expectation and per-side scoring chances once and
+    prices the whole lane space from them, so a position on a lane the
+    card never offered still carries a real number instead of a dash (the
+    bettor's own reads were the one part of the book without one).
+
+    None only when the engine abstains on the fixture entirely — that is
+    an answer, and it stays a dash rather than a guess."""
     if rung in ("DNB", "1X", "X2", "12"):
         want = ("DNB1" if side == "H" else "DNB2") if rung == "DNB" else rung
         if fx.get("lane3") == want:
             return fx["p3"]
-        return None
-    if side == "-":
+    elif side == "-":
         mu = mu_for(fx["rung"], fx["p"])
-        if mu is None:
-            return None
-        from app.engine import market_select
-        try:
-            return market_select.p_win(rung, mu)
-        except Exception:
-            return None
-    if fx.get("rung2") == rung and fx.get("p2"):
+        if mu is not None:
+            from app.engine import market_select
+            try:
+                return market_select.p_win(rung, mu)
+            except Exception:
+                pass
+    elif fx.get("rung2") == rung and fx.get("p2"):
         return fx["p2"]
-    return None
+    if not fx.get("code"):
+        return None
+    from scripts import lane_price
+    return lane_price.price(rung, side, fx["code"], fx["teams"], fx["day"])
 
 
 def bet_state(rung: str, side: str, fx: dict) -> float | None:

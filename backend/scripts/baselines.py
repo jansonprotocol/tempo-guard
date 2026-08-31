@@ -48,9 +48,9 @@ def replay(league: str, n: int) -> dict | None:
     if df is None or len(df) < MIN_ROWS:
         return None
     recent = df.sort_values("date").tail(n)
-    t1 = [0, 0]
-    t2 = [0, 0]
-    t3 = [0, 0]
+    t1 = [0, 0, 0.0]
+    t2 = [0, 0, 0.0]
+    t3 = [0, 0, 0.0]
     for _, r in recent.iterrows():
         d = r["date"].date() if hasattr(r["date"], "date") else r["date"]
         hg, ag = int(r["hg"]), int(r["ag"])
@@ -64,6 +64,7 @@ def replay(league: str, n: int) -> dict | None:
         if res is not None:
             t1[1] += 1
             t1[0] += _hit(res)
+            t1[2] += out["t1"][1]
         if out["t2"] is not None:
             mk = out["t2"][0]
             try:
@@ -74,10 +75,12 @@ def replay(league: str, n: int) -> dict | None:
             if res is not None:
                 t2[1] += 1
                 t2[0] += _hit(res if isinstance(res, str) else bool(res))
+                t2[2] += out["t2"][1]
         if out["t3"] is not None:
             won = result_market.won(out["t3"][0], hg, ag)
             t3[1] += 1
             t3[0] += won is not False       # None = DNB push = hit
+            t3[2] += out["t3"][1]
     if not t1[1]:
         return None
     return dict(league=league, t1=t1, t2=t2, t3=t3)
@@ -109,12 +112,17 @@ def main() -> None:
         "# counted as a hit. Written by scripts/baselines.py — derived,",
         "# never typed. Read by the app's hero baseline bar, which averages",
         "# the per-league rates with equal weight.",
-        "# league\tt1_hits\tt1_n\tt2_hits\tt2_n\tt3_hits\tt3_n",
+        "# Trailing columns are the summed CLAIM behind those graded lanes,",
+        "# so the app can print hitrate against what the engine promised.",
+        "# league\tt1_hits\tt1_n\tt2_hits\tt2_n\tt3_hits\tt3_n"
+        "\tt1_says\tt2_says\tt3_says",
     ]
     for f in rows:
         lines.append(f"{f['league']}\t{f['t1'][0]}\t{f['t1'][1]}"
                      f"\t{f['t2'][0]}\t{f['t2'][1]}"
-                     f"\t{f['t3'][0]}\t{f['t3'][1]}")
+                     f"\t{f['t3'][0]}\t{f['t3'][1]}"
+                     f"\t{f['t1'][2]:.4f}\t{f['t2'][2]:.4f}"
+                     f"\t{f['t3'][2]:.4f}")
     OUT.write_text("\n".join(lines) + "\n")
 
     for name, key in (("tip 1", "t1"), ("tip 2", "t2"), ("tip 3", "t3")):

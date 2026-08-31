@@ -1,0 +1,142 @@
+{
+"CHI-PD|Deportes Limache v Everton|2026-08-29": {
+"mu": 3.0,
+"pa": 0.853,
+"ph": 0.788
+},
+"CHI-PD|\u00d1ublense v Deportes Concepci\u00f3n|2026-08-30": {
+"mu": 2.743,
+"pa": 0.71,
+"ph": 0.844
+},
+"CHN-SL|Dalian Yingbo v Guoan|2026-08-28": {
+"mu": 3.213,
+"pa": 0.848,
+"ph": 0.775
+},
+"ENG-CH|Portsmouth v Derby|2026-09-01": {
+"mu": 2.664,
+"pa": 0.73,
+"ph": 0.811
+},
+"ENG-CH|Preston v Bristol City|2026-09-01": {
+"mu": 2.444,
+"pa": 0.722,
+"ph": 0.641
+},
+"ENG-CH|Swansea v Watford|2026-09-01": {
+"mu": 2.566,
+"pa": 0.613,
+"ph": 0.742
+},
+"ENG-PL|Coventry v Hull|2026-08-29": {
+"mu": 2.76,
+"pa": 0.625,
+"ph": 0.847
+},
+"ENG-PL|Tottenham v Newcastle|2026-08-29": {
+"mu": 3.344,
+"pa": 0.882,
+"ph": 0.812
+},
+"FRA-L1|Monaco v Marseille|2026-08-30": {
+"mu": 3.019,
+"pa": 0.672,
+"ph": 0.845
+},
+"GER-B2|Heidenheim v Dresden|2026-08-29": {
+"mu": 2.971,
+"pa": 0.628,
+"ph": 0.834
+},
+"GER-BL|Augsburg v Schalke|2026-08-30": {
+"mu": 3.178,
+"pa": 0.789,
+"ph": 0.869
+},
+"GER-BL|K\u00f6ln v Hoffenheim|2026-08-29": {
+"mu": 3.235,
+"pa": 0.819,
+"ph": 0.849
+},
+"ITA-SA|Monza v Udinese|2026-08-29": {
+"mu": 2.439,
+"pa": 0.749,
+"ph": 0.613
+},
+"ITA-SB|Benevento v S\u00fcdtirol|2026-08-30": {
+"mu": 2.279,
+"pa": 0.625,
+"ph": 0.746
+},
+"JPN-J1|Machida Zelvia v Kawasaki|2026-09-02": {
+"mu": 2.724,
+"pa": 0.651,
+"ph": 0.774
+},
+"JPN-J1|Mito Hollyhock v Kashima|2026-09-02": {
+"mu": 2.579,
+"pa": 0.807,
+"ph": 0.677
+},
+"JPN-J1|Mito Hollyhock v Machida Zelvia|2026-08-29": {
+"mu": 2.637,
+"pa": 0.82,
+"ph": 0.625
+},
+"JPN-J1|Nagasaki v Gamba Osaka|2026-09-02": {
+"mu": 2.616,
+"pa": 0.806,
+"ph": 0.696
+},
+"NED-D2|Den Bosch v Vitesse|2026-08-28": {
+"mu": 3.211,
+"pa": 0.811,
+"ph": 0.787
+},
+"NED-D2|Eindhoven v Heracles|2026-08-30": {
+"mu": 3.268,
+"pa": 0.886,
+"ph": 0.756
+},
+"NED-D2|VVV-Venlo v Emmen|2026-08-30": {
+"mu": 3.235,
+"pa": 0.812,
+"ph": 0.836
+},
+"NOR-EL|V\u00e5lerenga v Molde|2026-08-30": {
+"mu": 3.222,
+"pa": 0.828,
+"ph": 0.863
+},
+"PER-L1|Comerciantes Unidos v Cajamarca|2026-08-28": {
+"mu": 2.768,
+"pa": 0.722,
+"ph": 0.835
+},
+"PER-L1|Sport Boys v Sporting Cristal|2026-08-30": {
+"mu": 2.701,
+"pa": 0.613,
+"ph": 0.79
+},
+"SAU-PL|Al-Riyadh v Neom|2026-08-28": {
+"mu": 2.934,
+"pa": 0.814,
+"ph": 0.747
+},
+"SUI-SL|Servette v Luzern|2026-08-29": {
+"mu": 3.002,
+"pa": 0.756,
+"ph": 0.868
+},
+"SUI-SL|Z\u00fcrich v Young Boys|2026-09-01": {
+"mu": 3.362,
+"pa": 0.893,
+"ph": 0.833
+},
+"SWE-AL|AIK v Hammarby|2026-08-30": {
+"mu": 2.914,
+"pa": 0.817,
+"ph": 0.738
+}
+}
