@@ -238,7 +238,8 @@ footer { color:var(--dim); font-size:12px; margin:26px 0 8px; }
   past matches are a retrosim (each competition's last ~200 games).</span>
   <div class="askrow">
    <input type="date" id="ask-d">
-   <select id="ask-lg"><option value="">League…</option></select>
+   <select id="ask-lg" onfocus="ensureBank()" onmousedown="ensureBank()">
+    <option value="">League…</option></select>
    <div class="combo"><input id="ask-a" placeholder="Team A"
     autocomplete="off" onfocus="ensureBank()"><div class="sug"
     id="sug-a"></div></div>
@@ -712,8 +713,15 @@ function refreshLeagues() {
   }
   sel.value = keep;
 }
+let BANKING = null;
 async function ensureBank() {
   if (BANK) return;
+  // The bank is several megabytes, so it is fetched on first use rather
+  // than on page load — and only once, however many controls ask for it.
+  if (BANKING) return BANKING;
+  const sel = document.getElementById("ask-lg");
+  if (sel && sel.options.length <= 1) sel.options[0].textContent = "loading…";
+  BANKING = (async () => {
   const raw = await (await fetch("matchbank.json")).json();
   BANK = raw.comps; ALIAS = raw.alias; NAMES = raw.names;
   LOOKUP = {}; DATES = {};
@@ -731,7 +739,10 @@ async function ensureBank() {
     if (!NAMES[key]) continue;
     (SEARCH[key] = SEARCH[key] || {name: NAMES[key], txt: []}).txt.push(txt);
   }
+  if (sel) sel.options[0].textContent = "League…";
   refreshLeagues();
+  })();
+  return BANKING;
 }
 let SEARCH = {};
 
