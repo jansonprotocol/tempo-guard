@@ -23,11 +23,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.data import club_elo, config, store
-from app.engine import market_select
-from app.engine.types import ModuleFlags
-from app.predict import build_request, predict_fixture
+from app.engine import result_market, team_total
 from app.util.asian_lines import evaluate_market, hit_weight
-from scripts.two_tips import _buy
+from scripts.futurematch import cell1, cell2, cell3
+from scripts.two_tips import tips
 
 OUT = Path(__file__).resolve().parents[2] / "config" / "matchbank_retro.json"
 SKIP = {"COPA-L", "EC", "WC"}
@@ -44,8 +43,6 @@ def league_entries(code: str) -> tuple[list[str], list[dict]]:
     df = store.load_results(code)
     if df is None or len(df) < 100:
         return [], []
-    cfg = config.get(code)
-    flags = ModuleFlags(**(cfg.module_overrides or {}))
     rows = df.dropna(subset=["hg", "ag"]).sort_values("date")
     import pandas as pd
     cut = rows["date"].max() - pd.Timedelta(days=DAYS)
@@ -54,33 +51,51 @@ def league_entries(code: str) -> tuple[list[str], list[dict]]:
     out = []
     for _, r in rows.iterrows():
         d = r["date"].date()
+        hg, ag = int(r["hg"]), int(r["ag"])
+        # One call through the live tip path, so the bank stores exactly
+        # the three lanes a card would have shown — and each is graded,
+        # which is what makes the bank cross-examinable (the bettor's
+        # ask, 31 Aug: tip 2 used to be present only on board rows and
+        # tip 3 not at all).
         try:
-            req = build_request(code, str(r["home"]), str(r["away"]), d)
-            if req is None or not req.mu_total:
-                continue
-            mk = predict_fixture(req, cfg,
-                                 module_flags=flags).translated_play.market
+            rr = tips(code, str(r["home"]), str(r["away"]), d)
         except Exception:
             continue
-        if not mk:
+        if rr is None:
             continue
-        res = evaluate_market(mk, int(r["hg"]), int(r["ag"]))
+        mk = rr["t1"][0]
+        res = evaluate_market(mk, hg, ag)
         if res is None:
             continue
-        p = market_select.stated(code, mk,
-                                 market_select.p_win(mk, req.mu_total),
-                                 base_p=market_select.p_win(
-                                     mk, req.league_mu))
-        edge = p - market_select.p_win(mk, req.league_mu)
         w = hit_weight(res)
         mark = "✅" if w >= 1.0 else "✅½" if w > 0 else \
             "◦" if res == "push" else "❌"
-        out.append(dict(
+
+        entry = dict(
             d=str(d), h=str(r["home"]), a=str(r["away"]),
-            tip=f"{mk} {p*100:.1f}% {edge*100:+.1f}% · "
-                f"{_buy(mk, req.mu_total, p, edge, code)}".replace(
-                    "buy>=", "buy≥"),
-            score=f"{int(r['hg'])}-{int(r['ag'])}", mark=mark))
+            tip=cell1(rr, code),
+            score=f"{hg}-{ag}", mark=mark)
+
+        if rr["t2"]:
+            m2 = rr["t2"][0]
+            try:
+                r2 = (team_total.won(m2, hg, ag) if m2.startswith("T")
+                      else evaluate_market(m2, hg, ag))
+            except (ValueError, TypeError):
+                r2 = None
+            if r2 is not None:
+                w2 = hit_weight(r2) if not isinstance(r2, bool) else \
+                    (1.0 if r2 else 0.0)
+                entry["t2"] = cell2(rr, code, str(r["home"]), str(r["away"]))
+                entry["m2"] = "✅" if w2 >= 1.0 else "✅½" if w2 > 0 else \
+                    "◦" if r2 == "push" else "❌"
+
+        if rr["t3"]:
+            won = result_market.won(rr["t3"][0], hg, ag)
+            entry["t3"] = cell3(rr)
+            entry["m3"] = "◦" if won is None else ("✅" if won else "❌")
+
+        out.append(entry)
     return teams, out
 
 

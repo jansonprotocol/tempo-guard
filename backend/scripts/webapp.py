@@ -1209,7 +1209,12 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .fc .s {{ color:var(--dim); font-size:11px; }}
 .fcap {{ font-size:11px; margin:-8px 0 12px; }}
 .askq {{ width:100%; margin:10px 0 8px; }}
-#ask-counts {{ grid-template-columns:repeat(2,1fr); }}
+.chip {{ display:inline-block; margin-left:4px; font-size:10px;
+  background:#1b2233; border:1px solid var(--edge);
+  border-radius:5px; padding:0 4px; color:var(--dim); }}
+#ask-out .card summary {{ cursor:pointer; }}
+#ask-out .grid {{ max-height:70vh; overflow-y:auto; }}
+#ask-counts {{ grid-template-columns:repeat(4,1fr); }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -1981,6 +1986,14 @@ function askHay(m, comp) {{
       bits.push(k2 + " " + s2, "tip2 " + s2, "tip 2 " + s2);
     }}
   }}
+  if (m.t3) {{
+    const l3 = /(1X|X2|12|DNB[12])/.exec(m.t3);
+    bits.push("result lane");
+    if (l3) bits.push(l3[1].startsWith("DNB") ? "draw no bet dnb"
+                                             : "double chance",
+                      "tip3 " + l3[1].toLowerCase(),
+                      "tip 3 " + l3[1].toLowerCase());
+  }}
   bits.push(m.mark === "✅" ? "hit won" : m.mark === "❌" ? "miss lost"
             : m.mark === "◦" ? "push" : "pending");
   const raw = bits.join(" ").toLowerCase();
@@ -1988,21 +2001,35 @@ function askHay(m, comp) {{
   return (f === raw ? raw : raw + " " + f).replace(/"/g, "");
 }}
 
-function askCard(m, comp, note) {{
-  const mark = m.mark ? m.mark + " " + (m.score || "") :
+function askCard(m, comp, note, open) {{
+  const gm = k => ("✅◦❌".includes(m[k] || "") && m[k])
+    ? (m[k] === "❌" ? "0" : "1") : null;
+  const head = m.mark ? m.mark + " " + (m.score || "") :
     (m.src === "board" ? "🕑 on the board" : "");
-  let body = "";
-  if (m.t2) body += '<div class="lane"><span class="which">Tip 2</span> '
-    + m.t2.replaceAll(" · ", "<br>") + "</div>";
-  const g = ("✅◦❌".includes(m.mark || "") && m.mark)
-    ? ' data-g1="' + (m.mark === "❌" ? 0 : 1) + '"' : "";
-  return '<div class="card play" data-t="' + askHay(m, comp) + '"' + g
-    + '><div class="teams">'
-    + m.h + " v " + m.a + '</div><div class="meta">' + mark + " · "
-    + m.d + " · " + comp.name + (note ? " · " + note : "") + "</div>"
-    + (m.kw ? '<div class="kw">🧠 ' + m.kw + "</div>" : "")
+  let body = (m.kw ? '<div class="kw">🧠 ' + m.kw + "</div>" : "")
     + '<div class="lane pl"><span class="which">Tip 1</span> '
-    + m.tip.replaceAll(" · ", "<br>") + "</div>" + body + "</div>";
+    + m.tip.replaceAll(" · ", "<br>") + "</div>";
+  if (m.t2) body += '<div class="lane"><span class="which">Tip 2</span> '
+    + (gm("m2") !== null ? m.m2 + " " : "")
+    + m.t2.replaceAll(" · ", "<br>") + "</div>";
+  if (m.t3) body += '<div class="lane"><span class="which">Tip 3</span> '
+    + (gm("m3") !== null ? m.m3 + " " : "")
+    + m.t3.replaceAll(" · ", "<br>") + "</div>";
+  let g = "";
+  for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
+    if (gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
+  // The lane marks on the summary line, so a long league list reads as a
+  // scoreboard and only the card you open costs any space.
+  const chips = [["1", m.mark], ["2", m.m2], ["3", m.m3]]
+    .filter(x => x[1] && "✅◦❌".includes(x[1]))
+    .map(x => '<span class="chip">' + x[1] + x[0] + "</span>").join("");
+  return '<details class="card play"' + (open ? " open" : "")
+    + ' data-t="' + askHay(m, comp) + '"' + g + "><summary>"
+    + '<div class="teams">' + m.h + " v " + m.a
+    + '<span class="more">more ▾</span></div>'
+    + '<div class="meta">' + head + " · " + m.d + " · " + comp.name
+    + (note ? " · " + note : "") + " " + chips + "</div>"
+    + "</summary>" + body + "</details>";
 }}
 
 // Narrow what the bank returned, and score it. Only tip 1 is graded in
@@ -2012,27 +2039,36 @@ function askFilter() {{
   const q = document.getElementById("ask-q");
   const terms = fold((q ? q.value : "").toLowerCase()).split(",")
     .map(s => s.trim()).filter(Boolean);
-  let h = 0, n = 0, shown = 0;
+  const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
+  let shown = 0;
   for (const c of document.querySelectorAll("#ask-out .card")) {{
     const hay = c.dataset.t || "";
-    const vis = terms.every(t => hay.includes(t));
+    const vis = terms.every(x => hay.includes(x));
     c.style.display = vis ? "" : "none";
     if (!vis) continue;
     shown++;
-    if (c.dataset.g1 !== undefined) {{ n++; h += c.dataset.g1 === "1" ? 1 : 0; }}
+    for (const k of ["g1", "g2", "g3"]) {{
+      const v = c.dataset[k];
+      if (v === undefined) continue;
+      t[k][1]++; t[k][0] += v === "1" ? 1 : 0;
+    }}
   }}
   const box = document.getElementById("ask-counts");
   if (!box) return;
   const any = document.querySelector("#ask-out .card");
   box.style.display = any ? "" : "none";
   if (q) q.style.display = any ? "" : "none";
-  box.innerHTML = '<div class="fc"><div class="v">' +
-    (n ? (h / n * 100).toFixed(1) + "%" : "—") +
-    '</div><div class="l">tip 1 · bank</div><div class="s">' +
-    (n ? h + "/" + n + " graded" : "nothing graded here") +
-    "</div></div>" +
+  const cell = (label, k) => {{
+    const [hh, nn] = t[k];
+    return '<div class="fc"><div class="v">' +
+      (nn ? (hh / nn * 100).toFixed(1) + "%" : "—") +
+      '</div><div class="l">' + label + '</div><div class="s">' +
+      (nn ? hh + "/" + nn : "not in this slice") + "</div></div>";
+  }};
+  box.innerHTML = cell("tip 1", "g1") + cell("tip 2", "g2") +
+    cell("tip 3", "g3") +
     '<div class="fc"><div class="v">' + shown +
-    '</div><div class="l">matches shown</div><div class="s">' +
+    '</div><div class="l">matches</div><div class="s">' +
     "of " + document.querySelectorAll("#ask-out .card").length + "</div></div>";
 }}
 async function askAthena() {{
@@ -2044,21 +2080,29 @@ async function askAthena() {{
   const D = document.getElementById("ask-d").value;
   const wrap = h => '<div class="grid">' + h + "</div>";
 
-  // League + date, no teams: that day's card set for the competition.
+  // A league alone answers with its whole bank; adding a date narrows to
+  // that day. Either way the filter bar below can cut it further, which
+  // is the point — the list is a working set, not a wall (the bettor's
+  // ask, 31 Aug).
   if (!A && !B) {{
-    if (!code || !D) {{
-      out.innerHTML = '<div class="askerr">Fill in both teams, or pick a '
-        + "league and a date to see that day's matches.</div>";
+    if (!code) {{
+      out.innerHTML = '<div class="askerr">Pick a league — on its own it '
+        + "lists everything Athena has run there; add a date to narrow to "
+        + "one day, or fill in both teams for a head-to-head.</div>";
+      askFilter();
       return;
     }}
-    const day = BANK[code].matches.filter(m => m.d === D);
-    out.innerHTML = day.length
-      ? '<div class="dim" style="margin-bottom:6px">' + day.length
-        + " match" + (day.length > 1 ? "es" : "") + " — " + BANK[code].name
-        + " on " + D + ":</div>"
-        + wrap(day.map(m => askCard(m, BANK[code], "")).join(""))
+    const list = D ? BANK[code].matches.filter(m => m.d === D)
+                   : BANK[code].matches.slice().sort(
+                       (x, y) => y.d.localeCompare(x.d));
+    out.innerHTML = list.length
+      ? '<div class="dim" style="margin-bottom:6px">' + list.length
+        + " match" + (list.length > 1 ? "es" : "") + " — " + BANK[code].name
+        + (D ? " on " + D : ", newest first") + ":</div>"
+        + wrap(list.map(m => askCard(m, BANK[code], "", list.length <= 6))
+               .join(""))
       : '<div class="askerr">Athena has nothing for ' + BANK[code].name
-        + " on " + D + ".</div>";
+        + (D ? " on " + D : "") + ".</div>";
     askFilter();
     return;
   }}
@@ -2085,7 +2129,8 @@ async function askAthena() {{
   if (D) {{
     const exact = all.filter(x => x[0].d === D);
     if (exact.length) {{
-      out.innerHTML = wrap(exact.map(x => askCard(x[0], x[1], "")).join(""));
+      out.innerHTML = wrap(exact.map(x => askCard(x[0], x[1], "", true))
+                           .join(""));
       askFilter();
     }} else {{
       out.innerHTML = '<div class="askerr">No ' + A + " v " + B + " on "
@@ -2097,7 +2142,8 @@ async function askAthena() {{
   out.innerHTML = '<div class="dim" style="margin-bottom:6px">' + all.length
     + " meeting" + (all.length > 1 ? "s" : "") + " on record — newest "
     + "last:</div>"
-    + wrap(all.map(x => askCard(x[0], x[1], "")).join(""));
+    + wrap(all.map(x => askCard(x[0], x[1], "", all.length <= 6))
+             .join(""));
   askFilter();
 }}
 </script>
