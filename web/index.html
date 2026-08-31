@@ -546,6 +546,12 @@ function applyFilter(q) {
   const terms = fold(q.toLowerCase()).split(",")
     .map(s => s.trim()).filter(Boolean);
   for (const c of document.querySelectorAll(".card,#t-bets tr[data-t]")) {
+    // Ask Athena renders bank cards with the same class into #ask-out,
+    // and it has a search bar of its own. The two bars are separate
+    // instruments: the board's filters the board, the ask bar filters
+    // the bank answer. Without this guard the board bar reached across
+    // and hid rows of an ask result that had nothing to do with it.
+    if (c.closest("#ask-out")) continue;
     const hay = c.dataset.t || "";
     const lg = c.dataset.lg;
     c.style.display = terms.every(t =>
@@ -563,7 +569,7 @@ function recount() {
   if (!box) return;
   const t = {gf: [0, 0], g1: [0, 0], g2: [0, 0], g3: [0, 0]};
   for (const c of document.querySelectorAll(".card.done")) {
-    if (c.style.display === "none") continue;
+    if (c.style.display === "none" || c.closest("#ask-out")) continue;
     for (const k of ["gf", "g1", "g2", "g3"]) {
       const v = c.dataset[k];
       if (v === undefined) continue;
