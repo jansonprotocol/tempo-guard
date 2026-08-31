@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 82.0%
+## CURRENT CONFIRMED HITRATE: 82.1%
 
     lane                        Tip 1              Tip 2
-    all matches            191 / 233  82.0%    116 / 172  67.4%
-    played lanes  >+1%      93 / 117  79.5%    116 / 172  67.4%
+    all matches            192 / 234  82.1%    117 / 173  67.6%
+    played lanes  >+1%      93 / 117  79.5%    117 / 173  67.6%
     placed bets            105 / 131  80.2%    ROI +0.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -81,7 +81,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 209 / 289   ·   72.3%**   ·   **Tip 1 — 93 / 117   ·   79.5%**   ·   **Tip 2 — 116 / 172   ·   67.4%**
+**Playable — 210 / 290   ·   72.4%**   ·   **Tip 1 — 93 / 117   ·   79.5%**   ·   **Tip 2 — 117 / 173   ·   67.6%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -272,7 +272,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-0 · 31-08 01:15 <b>Millonarios v Inter de Bogotá</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>— under +1%</td><td>❌ <b>Millonarios O0.5</b> 84.0% +8.6%<br>buy≥1.29 (+8.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 73.6% +9.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 31-08 02:00 <b>Cienciano v Cusco</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 75.6% +1.8%<br>buy≥1.39 (+5.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 31-08 02:00 <b>Coquimbo v Huachipato</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 86.6% +1.2%<br>buy≥1.24 (+6.1% margin)</td><td>❌ <b>Coquimbo O0.5</b> 83.1% +5.4%<br>buy≥1.31 (+8.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 73.5% +13.9% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🟢 31-08 18:30 <b>Lecce v AS Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>— under +1%</td><td><b>AS Roma O0.5</b> 78.2% +10.0%<br>buy≥1.33 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 67.2% +23.1% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-4 · 31-08 18:30 <b>Lecce v AS Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>— under +1%</td><td>✅ <b>AS Roma O0.5</b> 78.2% +10.0%<br>buy≥1.33 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB2 67.2% +23.1% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 2-1 (HT) <b>FC Copenhagen v Sonderjyske</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>O1.5 84.8% +4.3%<br>buy≥1.24 (+9.0% margin) · <i>✓ landed</i></td><td><b>FC Copenhagen O1.5</b> 74.4% +27.4%<br>buy≥1.40 (+4.2% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 92.1% +35.3% · buy≥1.14 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 31-08 19:00 <b>Djurgarden v Mjallby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.7% +5.1%<br>buy≥1.29 (+8.5% margin)</td><td><b>Djurgarden O1.5</b> 62.3% +15.3%<br>buy≥1.66 (+3.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 31-08 19:00 <b>GAIS v Brommapojkarna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>— under +1%</td><td>U3.75 67.9% +1.1%<br>buy≥1.36 (+0.6% margin) · floor −7.1</td></tr></table>
@@ -315,7 +315,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 31-08 18:30 <b>Lecce v AS Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>U4.25 86.0% <b>−2.6%</b><br>buy≥1.21 (+5.5% margin)</td><td><b>AS Roma O0.5</b> 78.2% +10.0%<br>buy≥1.33 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 67.2% +23.1% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 2-1 (HT) <b>FC Copenhagen v Sonderjyske</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>O1.5 84.8% +4.3%<br>buy≥1.24 (+9.0% margin) · <i>✓ landed</i></td><td><b>FC Copenhagen O1.5</b> 74.4% +27.4%<br>buy≥1.40 (+4.2% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 92.1% +35.3% · buy≥1.14 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 31-08 19:00 <b>Djurgarden v Mjallby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.7% +5.1%<br>buy≥1.29 (+8.5% margin)</td><td><b>Djurgarden O1.5</b> 62.3% +15.3%<br>buy≥1.66 (+3.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 31-08 19:00 <b>GAIS v Brommapojkarna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>U4.25 83.7% <b>+0.6%</b><br>buy≥1.27 (+5.2% margin)</td><td>U3.75 67.9% +1.1%<br>buy≥1.36 (+0.6% margin) · floor −7.1</td></tr></table>
@@ -368,7 +367,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 191 / 233   ·   82.0%**   ·   **Tip 2 — 116 / 172   ·   67.4%**
+**Tip 1 — 192 / 234   ·   82.1%**   ·   **Tip 2 — 117 / 173   ·   67.6%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -619,6 +618,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 31-08 02:00 <b>Cienciano v Cusco</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 75.6% +1.8%<br>buy≥1.39 (+5.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 31-08 02:00 <b>Coquimbo v Huachipato</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 86.6% +1.2%<br>buy≥1.24 (+6.1% margin)</td><td>❌ <b>Coquimbo O0.5</b> 83.1% +5.4%<br>buy≥1.31 (+8.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 73.5% +13.9% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 31-08 03:20 <b>Deportivo Cali v Bucaramanga</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.5%</b><br>buy≥1.16 (+5.4% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-4 · 31-08 18:30 <b>Lecce v AS Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>U4.25 86.0% <b>−2.6%</b><br>buy≥1.21 (+5.5% margin)</td><td>✅ <b>AS Roma O0.5</b> 78.2% +10.0%<br>buy≥1.33 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB2 67.2% +23.1% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
