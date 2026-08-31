@@ -777,6 +777,9 @@ that premium the book is keeping the insurance money.
 | — open | Nagasaki v Gamba Osaka | 12 | 1.27 | — | own read DC — no tip 3 on this card |
 | — open | Al-Hilal v Al-Ahli | O2.5 | 1.52 | — | harder line off tip 2's O2.25 (65.3%) — 1.52 against a fair 1.53 |
 | — open | Braga v Vitória | DNB (home) | 1.29 | — | DNB1 print (69.1%) — under buy≥1.52 and under the 1.35 floor; Rule 7 |
+| — open | FC Copenhagen v Sonderjyske | O1.5 (home) | 1.30 | — | = tip 2 team lane (74.4%), taken under buy≥1.40 |
+| — open | CA Osasuna v Getafe CF | DNB (home) | 1.42 | — | DNB1 print (66.0%) — under buy≥1.59; Rule 7 |
+| — open | Jong PSV v Jong Ajax | U4.5 | 1.44 | — | softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21 |
 
 <!-- HYPOTHESES:START -->
 
