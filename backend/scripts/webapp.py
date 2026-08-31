@@ -907,13 +907,40 @@ def main() -> None:
                    f'<span class="dim">— every tip replayed over each '
                    f'league’s last 300 matches, averaged</span></div>')
 
+    # A bet's fixture, so a row can be filtered by league, country and
+    # lane kind exactly like a card is.
+    _fxmap = {f.teams: f for f in fixtures}
+
     def _bet_tr(b):
         # Every field is searchable through the same bar the cards use —
         # the row carries its own lowercase haystack in data-t.
         prob = f'{b["prob"]*100:.1f}%' if b["prob"] else "—"
-        hay = " ".join([b["name"], b["lane"], b["align"], b["note"],
-                        b["mark"], f'{b["odds"]:.2f}', prob]).lower()
-        return (f'<tr data-t="{html.escape(hay)}">'
+        bits = [b["name"], b["lane"], b["align"], b["note"],
+                b["mark"], f'{b["odds"]:.2f}', prob]
+        f = _fxmap.get(b["name"])
+        if f is not None:
+            bits += [f.league, f.code, _country(f.code)]
+        rung = b["lane"].split()[0]
+        if rung in ("1X", "X2", "12"):
+            bits.append("double chance result lane")
+        elif rung == "DNB":
+            bits += ["draw no bet", "dnb", "result lane"]
+        else:
+            side = "over" if rung.startswith("O") else "under"
+            kind = "team" if "(" in b["lane"] else "match"
+            bits += [side, f"{kind} {side}"]
+        bits.append({"✅": "hit won", "❌": "miss lost", "◦": "push",
+                     "open": "open pending"}.get(b["mark"], ""))
+        raw = " ".join(x for x in bits if x).lower()
+        folded = _fold(raw)
+        hay = raw if folded == raw else raw + " " + folded
+        # Settled rows carry their grade so the bets counter can total
+        # whatever the filter leaves on screen.
+        g = ("" if b["mark"] == "open"
+             else f' data-g="{0 if b["mark"].startswith("❌") else 1}"')
+        return (f'<tr data-t="{html.escape(hay)}"{g}'
+                + (f' data-lg="{html.escape(_fold(f.league.lower()))}"'
+                   if f is not None else "") + ">"
                 f'<td class="mk">{b["mark"]}</td>'
                 f'<td>{html.escape(b["name"])}</td>'
                 f'<td>{html.escape(b["lane"])}</td>'
@@ -1626,6 +1653,7 @@ function route() {{
     s.classList.toggle("on", s.id === "t-" + tab);
   for (const a of document.querySelectorAll(".tabs a"))
     a.classList.toggle("on", a.dataset.t === tab);
+  if (typeof recount === "function") recount();
 }}
 // Commas narrow rather than widen: every term must be present, so
 // "real madrid, team over" is the Madrid cards that offer a team over.
@@ -1677,9 +1705,36 @@ function recount() {{
       '</div><div class="l">' + label + '</div><div class="s">' +
       (n ? h + "/" + n : "no graded lanes") + "</div></div>";
   }};
+  // Which counter belongs to the tab in view: the four lane records on
+  // Completed, the book's own record on Found bets, and nothing on the
+  // two pending tabs, where there is nothing yet to score.
+  const tab = (location.hash.split("/")[1] || "playable");
+  const cap = document.getElementById("fcap");
+  if (tab === "bets") {{
+    let h = 0, n = 0;
+    for (const r of document.querySelectorAll("#t-bets tr[data-g]")) {{
+      if (r.style.display === "none") continue;
+      n++; h += r.dataset.g === "1" ? 1 : 0;
+    }}
+    box.style.display = "";
+    box.style.gridTemplateColumns = "1fr";
+    box.innerHTML = '<div class="fc"><div class="v">' +
+      (n ? (h / n * 100).toFixed(1) + "%" : "—") +
+      '</div><div class="l">taken bets</div><div class="s">' +
+      (n ? h + "/" + n + " settled" : "nothing settled in this filter") +
+      "</div></div>";
+    if (cap) cap.textContent = "your own positions, pushes counted as hits";
+    return;
+  }}
+  if (tab !== "done") {{
+    box.style.display = "none";
+    if (cap) cap.textContent = "";
+    return;
+  }}
+  box.style.display = "";
+  box.style.gridTemplateColumns = "repeat(4,1fr)";
   box.innerHTML = cell("final pick", "gf") + cell("tip 1", "g1") +
                   cell("tip 2", "g2") + cell("tip 3", "g3");
-  const cap = document.getElementById("fcap");
   if (cap) cap.textContent = t.g1[1] + t.g2[1] + t.g3[1] === 0
     ? "no completed matches in this filter"
     : "every graded lane on screen, playable or not — the tiles above "
