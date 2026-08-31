@@ -342,6 +342,33 @@ def _sortkeys(f) -> str:
             f'data-k="{html.escape(f.kickoff)}"')
 
 
+def _fold(s: str) -> str:
+    """Accent-free copy, so "serie b" finds "Série B" and "brasileirao"
+    finds "Brasileirão" — nobody types accents into a search box."""
+    import unicodedata
+    return (unicodedata.normalize("NFD", s)
+            .encode("ascii", "ignore").decode("ascii"))
+
+
+_COUNTRIES: dict | None = None
+
+
+def _country(code: str) -> str:
+    """The country behind a league code, for the search box. Typed in
+    config/countries.tsv — culture, not data; the engine never reads it."""
+    global _COUNTRIES
+    if _COUNTRIES is None:
+        _COUNTRIES = {}
+        path = ROOT / "config" / "countries.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or "\t" not in ln:
+                    continue
+                pre, name = ln.split("\t", 1)
+                _COUNTRIES[pre.strip()] = name.strip()
+    return _COUNTRIES.get(code.split("-")[0], "")
+
+
 def _haystack(f) -> str:
     """Everything a card can be filtered on, lowercased.
 
@@ -351,7 +378,7 @@ def _haystack(f) -> str:
     card offering one, and (with the comma AND) "real madrid, team over"
     finds the ones that are both.
     """
-    bits = [f.teams, f.league, f.code]
+    bits = [f.teams, f.league, f.code, _country(f.code)]
     for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
         c = cell.strip()
         if not c or c.startswith("—"):
@@ -385,7 +412,9 @@ def _haystack(f) -> str:
         bits.append("live")
     if "capped" in (rates().get(f.code) or ""):
         bits.append("capped")
-    return html.escape(" ".join(bits).lower())
+    raw = " ".join(bits).lower()
+    folded = _fold(raw)
+    return html.escape(raw if folded == raw else raw + " " + folded)
 
 
 def _gradekeys(f) -> str:
@@ -552,7 +581,7 @@ def _card(f, kind: str, reads: dict) -> str:
         body = '<div class="read dim">nothing more on this one</div>'
     return (f'<details class="card {kind}" '
             f'data-t="{_haystack(f)}" '
-            f'data-lg="{html.escape(f.league.lower())}" '
+            f'data-lg="{html.escape(_fold(f.league.lower()))}" '
             f"{_sortkeys(f)}{_gradekeys(f)}>"
             f"<summary>{top}</summary>{body}</details>")
 
@@ -992,8 +1021,24 @@ def main() -> None:
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
     hero_fine = "Tip 1 · the 300 most recent graded playable lanes"
-    # Every league name on the board, for the filter's exact-match rule.
-    leagues_js = _json.dumps(sorted({f.league.lower() for f in fixtures}))
+    # Only the league names that are CONTAINED IN another league's name
+    # need exact matching — "laliga" inside "laliga 2", "brasileirão"
+    # inside "brasileirão série b". Everything else stays a plain
+    # substring search, so "serie a" still finds the Italian and the
+    # Brazilian and the country term separates them.
+    # Exact matching is reserved for collisions the SAME COUNTRY cannot
+    # break: "laliga" inside "laliga 2", "bundesliga" inside "2.
+    # bundesliga", "brasileirao" inside "brasileirao serie b". Where the
+    # two leagues sit in different countries — Italy's Serie B inside
+    # Brazil's Brasileirão Série B — the country word already separates
+    # them, so "brazil, serie b" and "italy, serie b" both work and the
+    # name stays a plain substring (the bettor's rule, 31 Aug).
+    _lands: dict[str, set] = {}
+    for f in fixtures:
+        _lands.setdefault(_fold(f.league.lower()), set()).add(_country(f.code))
+    leagues_js = _json.dumps(sorted(
+        a for a in _lands
+        if any(a != b and a in b and _lands[a] & _lands[b] for b in _lands)))
     live_line = (f"Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on "
                  f"{h1}/{n1} settled, found bets <b>{roi:+.1f}%</b> ROI "
                  f"on {bh}/{bn}." if n1 else "First results land tonight.")
@@ -1593,8 +1638,12 @@ function route() {{
 // plain substring match, so partial words keep working.
 const LEAGUES = new Set({leagues_js});
 
+// Typed accents are folded away too, so "brasileirão" and
+// "brasileirao" are the same search — the card carries both spellings.
+const fold = s => s.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+
 function applyFilter(q) {{
-  const terms = q.toLowerCase().split(",")
+  const terms = fold(q.toLowerCase()).split(",")
     .map(s => s.trim()).filter(Boolean);
   for (const c of document.querySelectorAll(".card,#t-bets tr[data-t]")) {{
     const hay = c.dataset.t || "";
