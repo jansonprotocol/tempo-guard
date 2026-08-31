@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            191 / 233  82.0%    116 / 172  67.4%
     played lanes  >+1%      93 / 117  79.5%    116 / 172  67.4%
-    placed bets            104 / 130  80.0%    ROI +0.5%
+    placed bets            105 / 131  80.2%    ROI +0.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -273,7 +273,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 31-08 02:00 <b>Cienciano v Cusco</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 75.6% +1.8%<br>buy≥1.39 (+5.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 31-08 02:00 <b>Coquimbo v Huachipato</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 86.6% +1.2%<br>buy≥1.24 (+6.1% margin)</td><td>❌ <b>Coquimbo O0.5</b> 83.1% +5.4%<br>buy≥1.31 (+8.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 73.5% +13.9% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 31-08 18:30 <b>Lecce v AS Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>— under +1%</td><td><b>AS Roma O0.5</b> 78.2% +10.0%<br>buy≥1.33 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 67.2% +23.1% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🟢 31-08 19:00 <b>FC Copenhagen v Sonderjyske</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>O1.5 84.8% +4.3%<br>buy≥1.24 (+9.0% margin)</td><td><b>FC Copenhagen O1.5</b> 74.4% +27.4%<br>buy≥1.40 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 92.1% +35.3% · buy≥1.14 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 2-1 (HT) <b>FC Copenhagen v Sonderjyske</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>O1.5 84.8% +4.3%<br>buy≥1.24 (+9.0% margin) · <i>✓ landed</i></td><td><b>FC Copenhagen O1.5</b> 74.4% +27.4%<br>buy≥1.40 (+4.2% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 92.1% +35.3% · buy≥1.14 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 31-08 19:00 <b>Djurgarden v Mjallby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.7% +5.1%<br>buy≥1.29 (+8.5% margin)</td><td><b>Djurgarden O1.5</b> 62.3% +15.3%<br>buy≥1.66 (+3.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 31-08 19:00 <b>GAIS v Brommapojkarna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>— under +1%</td><td>U3.75 67.9% +1.1%<br>buy≥1.36 (+0.6% margin) · floor −7.1</td></tr></table>
 <table align="left"><tr><th align="left">🟢 31-08 19:00 <b>Sirius v Malmo FF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.6% +5.0%<br>buy≥1.28 (+8.5% margin)</td><td><b>Sirius O1.5</b> 69.6% +22.5%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 81.4% +3.2% · buy≥1.29 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -316,7 +316,7 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔵 31-08 18:30 <b>Lecce v AS Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (84.2 capped)</td><td>U4.25 86.0% <b>−2.6%</b><br>buy≥1.21 (+5.5% margin)</td><td><b>AS Roma O0.5</b> 78.2% +10.0%<br>buy≥1.33 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 67.2% +23.1% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔵 31-08 19:00 <b>FC Copenhagen v Sonderjyske</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>O1.5 84.8% +4.3%<br>buy≥1.24 (+9.0% margin)</td><td><b>FC Copenhagen O1.5</b> 74.4% +27.4%<br>buy≥1.40 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 92.1% +35.3% · buy≥1.14 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 2-1 (HT) <b>FC Copenhagen v Sonderjyske</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>O1.5 84.8% +4.3%<br>buy≥1.24 (+9.0% margin) · <i>✓ landed</i></td><td><b>FC Copenhagen O1.5</b> 74.4% +27.4%<br>buy≥1.40 (+4.2% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 92.1% +35.3% · buy≥1.14 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 31-08 19:00 <b>Djurgarden v Mjallby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.7% +5.1%<br>buy≥1.29 (+8.5% margin)</td><td><b>Djurgarden O1.5</b> 62.3% +15.3%<br>buy≥1.66 (+3.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 31-08 19:00 <b>GAIS v Brommapojkarna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>U4.25 83.7% <b>+0.6%</b><br>buy≥1.27 (+5.2% margin)</td><td>U3.75 67.9% +1.1%<br>buy≥1.36 (+0.6% margin) · floor −7.1</td></tr></table>
 <table align="left"><tr><th align="left">🔵 31-08 19:00 <b>Sirius v Malmo FF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.0 +1.3)</td><td>O1.5 83.6% +5.0%<br>buy≥1.28 (+8.5% margin)</td><td><b>Sirius O1.5</b> 69.6% +22.5%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 81.4% +3.2% · buy≥1.29 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -624,7 +624,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 104 / 130  ·  ROI +0.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 105 / 131  ·  ROI +0.7%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -776,7 +776,7 @@ that premium the book is keeping the insurance money.
 | — open | Nagasaki v Gamba Osaka | 12 | 1.27 | — | own read DC — no tip 3 on this card |
 | — open | Al-Hilal v Al-Ahli | O2.5 | 1.52 | — | harder line off tip 2's O2.25 (65.3%) — 1.52 against a fair 1.53 |
 | — open | Braga v Vitória | DNB (home) | 1.29 | — | DNB1 print (69.1%) — under buy≥1.52 and under the 1.35 floor; Rule 7 |
-| — open | FC Copenhagen v Sonderjyske | O1.5 (home) | 1.30 | — | = tip 2 team lane (74.4%), taken under buy≥1.40 |
+| ✅ | FC Copenhagen v Sonderjyske | O1.5 (home) | 1.30 | 1.30x | = tip 2 team lane (74.4%), taken under buy≥1.40 |
 | — open | CA Osasuna v Getafe CF | DNB (home) | 1.42 | — | DNB1 print (66.0%) — under buy≥1.59; Rule 7 |
 | — open | Jong PSV v Jong Ajax | U4.5 | 1.44 | — | softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21 |
 
