@@ -370,8 +370,13 @@ def _haystack(f) -> str:
         if not rung:
             continue
         side = "over" if rung.group(1) == "O" else "under"
-        bits.append("team " + side if "(team)" in c else "match " + side)
-        bits.append(side)
+        kind = "team" if "(team)" in c else "match"
+        # Bare words find the card; the compound ones tie the word to
+        # THIS lane, so "tip1 over" cannot be satisfied by tip 2's over
+        # (the bettor's question, 31 Aug).
+        bits += [side, f"{kind} {side}",
+                 f"tip{which} {side}", f"tip{which} {kind} {side}",
+                 f"tip{which} {rung.group(0).lower()}"]
     if f.settled:
         mark = f.status.lstrip()[:1]
         bits.append({"✅": "hit won", "❌": "miss lost",
