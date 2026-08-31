@@ -24,6 +24,11 @@
 "pa": 0.722,
 "ph": 0.641
 },
+"ENG-CH|Sheffield United v Bolton|2026-09-01": {
+"mu": 2.449,
+"pa": 0.613,
+"ph": 0.818
+},
 "ENG-CH|Swansea v Watford|2026-09-01": {
 "mu": 2.566,
 "pa": 0.613,
@@ -69,6 +74,16 @@
 "pa": 0.625,
 "ph": 0.746
 },
+"JPN-J1|Cerezo Osaka v Kashiwa|2026-09-02": {
+"mu": 2.87,
+"pa": 0.781,
+"ph": 0.778
+},
+"JPN-J1|JEF United Chiba v Okayama|2026-09-02": {
+"mu": 2.526,
+"pa": 0.823,
+"ph": 0.658
+},
 "JPN-J1|Machida Zelvia v Kawasaki|2026-09-02": {
 "mu": 2.724,
 "pa": 0.651,
@@ -88,6 +103,11 @@
 "mu": 2.616,
 "pa": 0.806,
 "ph": 0.696
+},
+"JPN-J1|Sanfrecce v Nagoya|2026-09-02": {
+"mu": 3.022,
+"pa": 0.699,
+"ph": 0.879
 },
 "NED-D2|Den Bosch v Vitesse|2026-08-28": {
 "mu": 3.211,

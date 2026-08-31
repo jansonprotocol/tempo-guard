@@ -109,7 +109,11 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
             t1_play=t1_play, t2_play=t2_play,
             hit_t2=grade(2, t2[0], hg, ag) if t2 else None,
             hit_t3=grade(3, t3[0], hg, ag) if t3 else None,
-            has_t3=t3 is not None))
+            has_t3=t3 is not None,
+            # Tip 2's market, so the "what does tip 2's KIND say about the
+            # other lanes" question can be scored offline (the bettor's
+            # team-over / team-under observation, 31 Aug).
+            mk2=t2[0] if t2 else None))
     return rows
 
 

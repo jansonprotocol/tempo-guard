@@ -1071,6 +1071,13 @@ def main() -> None:
     _lands: dict[str, set] = {}
     for f in fixtures:
         _lands.setdefault(_fold(f.league.lower()), set()).add(_country(f.code))
+    # Country per competition code, for the bank cards' own filter.
+    _codes = {f.code for f in fixtures}
+    _bankfile = ROOT / "web" / "matchbank.json"
+    if _bankfile.exists():
+        _codes |= set(_json.loads(_bankfile.read_text())["comps"])
+    countries_js = _json.dumps({c: _country(c) for c in sorted(_codes)
+                                if _country(c)})
     leagues_js = _json.dumps(sorted(
         a for a in _lands
         if any(a != b and a in b and _lands[a] & _lands[b] for b in _lands)))
@@ -1201,6 +1208,8 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   letter-spacing:.1em; margin-top:1px; }}
 .fc .s {{ color:var(--dim); font-size:11px; }}
 .fcap {{ font-size:11px; margin:-8px 0 12px; }}
+.askq {{ width:100%; margin:10px 0 8px; }}
+#ask-counts {{ grid-template-columns:repeat(2,1fr); }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -1395,6 +1404,9 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
     id="sug-b"></div></div>
    <button class="btn askbtn" onclick="askAthena()">Enter</button>
   </div>
+  <input id="ask-q" class="askq" oninput="askFilter()" style="display:none"
+   placeholder="narrow these results — league, country, lane, hit/miss… commas narrow">
+  <div class="fcounts" id="ask-counts" style="display:none"></div>
   <div id="ask-out"></div>
  </div>
  <div class="tabs">
@@ -1673,6 +1685,7 @@ function route() {{
 // flight alone (the bettor's catch, 31 Aug). Everything else stays a
 // plain substring match, so partial words keep working.
 const LEAGUES = new Set({leagues_js});
+const COUNTRY = {countries_js};
 
 // Typed accents are folded away too, so "brasileirão" and
 // "brasileirao" are the same search — the card carries both spellings.
@@ -1949,18 +1962,78 @@ document.getElementById("ask-d").addEventListener("change", async () => {{
 }});
 document.getElementById("ask-lg").addEventListener("change", maybeAuto);
 
+// The same vocabulary the board's filter uses, so a bank result can be
+// narrowed by league, country, lane kind, date or mark — and counted.
+function askHay(m, comp) {{
+  const bits = [m.h, m.a, comp.name, COUNTRY[comp.code] || "", m.d,
+                m.tip, m.t2 || "", m.kw || ""];
+  const rung = /\b([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
+  if (rung) {{
+    const side = rung[1] === "O" ? "over" : "under";
+    bits.push(side, "match " + side, "tip1 " + side, "tip 1 " + side,
+              "tip1 " + rung[0].toLowerCase(), "tip 1 " + rung[0].toLowerCase());
+  }}
+  if (m.t2) {{
+    const r2 = /\b([OU])(\d+(?:\.\d+)?)/.exec(m.t2);
+    if (r2) {{
+      const s2 = r2[1] === "O" ? "over" : "under";
+      const k2 = m.t2.includes("(team)") ? "team" : "match";
+      bits.push(k2 + " " + s2, "tip2 " + s2, "tip 2 " + s2);
+    }}
+  }}
+  bits.push(m.mark === "✅" ? "hit won" : m.mark === "❌" ? "miss lost"
+            : m.mark === "◦" ? "push" : "pending");
+  const raw = bits.join(" ").toLowerCase();
+  const f = fold(raw);
+  return (f === raw ? raw : raw + " " + f).replace(/"/g, "");
+}}
+
 function askCard(m, comp, note) {{
   const mark = m.mark ? m.mark + " " + (m.score || "") :
     (m.src === "board" ? "🕑 on the board" : "");
   let body = "";
   if (m.t2) body += '<div class="lane"><span class="which">Tip 2</span> '
     + m.t2.replaceAll(" · ", "<br>") + "</div>";
-  return '<div class="card play"><div class="teams">'
+  const g = ("✅◦❌".includes(m.mark || "") && m.mark)
+    ? ' data-g1="' + (m.mark === "❌" ? 0 : 1) + '"' : "";
+  return '<div class="card play" data-t="' + askHay(m, comp) + '"' + g
+    + '><div class="teams">'
     + m.h + " v " + m.a + '</div><div class="meta">' + mark + " · "
     + m.d + " · " + comp.name + (note ? " · " + note : "") + "</div>"
     + (m.kw ? '<div class="kw">🧠 ' + m.kw + "</div>" : "")
     + '<div class="lane pl"><span class="which">Tip 1</span> '
     + m.tip.replaceAll(" · ", "<br>") + "</div>" + body + "</div>";
+}}
+
+// Narrow what the bank returned, and score it. Only tip 1 is graded in
+// the bank — the retrosim rows carry its mark and nothing else — so this
+// counts the one lane it can honestly count.
+function askFilter() {{
+  const q = document.getElementById("ask-q");
+  const terms = fold((q ? q.value : "").toLowerCase()).split(",")
+    .map(s => s.trim()).filter(Boolean);
+  let h = 0, n = 0, shown = 0;
+  for (const c of document.querySelectorAll("#ask-out .card")) {{
+    const hay = c.dataset.t || "";
+    const vis = terms.every(t => hay.includes(t));
+    c.style.display = vis ? "" : "none";
+    if (!vis) continue;
+    shown++;
+    if (c.dataset.g1 !== undefined) {{ n++; h += c.dataset.g1 === "1" ? 1 : 0; }}
+  }}
+  const box = document.getElementById("ask-counts");
+  if (!box) return;
+  const any = document.querySelector("#ask-out .card");
+  box.style.display = any ? "" : "none";
+  if (q) q.style.display = any ? "" : "none";
+  box.innerHTML = '<div class="fc"><div class="v">' +
+    (n ? (h / n * 100).toFixed(1) + "%" : "—") +
+    '</div><div class="l">tip 1 · bank</div><div class="s">' +
+    (n ? h + "/" + n + " graded" : "nothing graded here") +
+    "</div></div>" +
+    '<div class="fc"><div class="v">' + shown +
+    '</div><div class="l">matches shown</div><div class="s">' +
+    "of " + document.querySelectorAll("#ask-out .card").length + "</div></div>";
 }}
 async function askAthena() {{
   await ensureBank();
@@ -1986,6 +2059,7 @@ async function askAthena() {{
         + wrap(day.map(m => askCard(m, BANK[code], "")).join(""))
       : '<div class="askerr">Athena has nothing for ' + BANK[code].name
         + " on " + D + ".</div>";
+    askFilter();
     return;
   }}
   if (!A || !B) {{
@@ -2012,6 +2086,7 @@ async function askAthena() {{
     const exact = all.filter(x => x[0].d === D);
     if (exact.length) {{
       out.innerHTML = wrap(exact.map(x => askCard(x[0], x[1], "")).join(""));
+      askFilter();
     }} else {{
       out.innerHTML = '<div class="askerr">No ' + A + " v " + B + " on "
         + D + ". Athena has run it on: "
@@ -2023,6 +2098,7 @@ async function askAthena() {{
     + " meeting" + (all.length > 1 ? "s" : "") + " on record — newest "
     + "last:</div>"
     + wrap(all.map(x => askCard(x[0], x[1], "")).join(""));
+  askFilter();
 }}
 </script>
 </body></html>"""

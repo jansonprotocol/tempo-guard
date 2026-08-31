@@ -745,21 +745,24 @@ that premium the book is keeping the insurance money.
 | — open | Atlético Grau v Melgar | O1.5 | 1.37 | — | = tip 1 rung at 1.37, two cents under buy≥1.39 |
 | — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy≥1.37 |
 | — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip |
-| — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip |
-| — open | Swansea v Watford | 1X | 1.22 | — | own read DC — card's tip 3 is DNB1 |
+| — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip — swapped to a DNB and back; the under was the better price |
+| — open | Swansea v Watford | DNB (home) | 1.35 | — | Swansea DNB — swapped out of the 1X at 1.22; = tip 3's DNB1 lane |
 | — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy≥1.32 |
 | — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
-| — open | Cerezo Osaka v Kashiwa | 12 | 1.24 | — | = tip 3's 12 print (75.9%), under buy≥1.38 |
-| — open | JEF United Chiba v Okayama | 12 | 1.26 | — | = tip 3's 12 print (75.7%), under buy≥1.39 |
+| — open | Cerezo Osaka v Kashiwa | O1.5 | 1.19 | — | match over — swapped out of the 12 at 1.24 |
+| — open | JEF United Chiba v Okayama | O0.5 (away) | 1.17 | — | Okayama team over — held alongside the 12 |
 | — open | Machida Zelvia v Kawasaki | 12 | 1.25 | — | own read DC — card's tip 3 is DNB1 |
 | — open | Mito Hollyhock v Kashima | O0.5 (away) | 1.21 | — | Kashima team over — swapped out of the 12 at 1.29 before kickoff |
+| — open | Nagasaki v Gamba Osaka | O0.5 (away) | 1.20 | — | Gamba team over — held alongside the 12 |
+| — open | Sanfrecce v Nagoya | O1.5 (home) | 1.60 | — | Sanfrecce team over at a fair price — 1.60 against a fair 1.60 |
+| — open | JEF United Chiba v Okayama | 12 | 1.26 | — | = tip 3's 12 print (75.7%), under buy≥1.39 |
 | — open | Nagasaki v Gamba Osaka | 12 | 1.27 | — | own read DC — no tip 3 on this card |
 
 <!-- HYPOTHESES:START -->
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 29 verified, 15 unfinished, 25 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 29 verified, 15 unfinished, 26 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
 ### 🟢 Verified and helping — 29
 
@@ -819,12 +822,13 @@ Measured but not concluded, or shipped on **probation** and still waiting on liv
 | 🟠 | 08-27 | cups | **UEFA country coefficients as a cup strength source** | Proposed and never measured — Club Elo was taken instead because it prices CLUBS directly rather than their federations. Still open if the Elo lane fails probation |
 | 🟠 | 08-27 | data | **ALG-L1 has no ESPN coverage** | Every slug returns 400, so Algerian fixtures cannot be swept and must be graded by hand. No second provider wired in yet |
 
-### 🔴 Declined — 25
+### 🔴 Declined — 26
 
 Tested and rejected, with the number that killed it. Kept deliberately — a dead idea that stays written down does not get re-proposed.
 
 | | Date | Area | Hypothesis | Verdict |
 |---|---|---|---|---|
+| 🔴 | 08-31 | engine | **Does tip 2's KIND say which other lane to trust? (the bettor read it off the filter: team-over cards showed tip 1 at 91% and tip 3 at 80%, team-under cards the reverse at 72% and 92%)** | No. Replayed over 16,583 fixtures with tip 2's market in the dump: tip 1 is essentially INVARIANT to tip 2's kind — 82.7 on team-over cards, 83.1 on team-under, 84.7 ladder-over, 83.3 ladder-under, 84.4 with no tip 2 at all. A two-point range across four thousand-fixture buckets. The session's 91-versus-72 split was a 20-point gap between samples of 89 and 18 in a goal-heavy week. One real thing did fall out: tip 3's reliability DOES move with tip 2's kind (82.1 on team-over cards against 73.9 on ladder-over), but it never overtakes tip 1, so it changes nothing about the chooser. The proposed mechanism — a team under implying a decisive match — was a story fitted to noise |
 | 🔴 | 08-31 | board | **Should the chooser prefer a different lane PER LEAGUE? (the bettor read it off the new filter counters: tip 1 strong in England/Italy/MLS, tip 3 in Germany, tip 2 in France, tip 3 in Norway)** | Measured two ways and declined. (1) The 300-match replay per league disagrees with most of it: tip 1 leads in 18 of 20 leagues, including Germany (86.0 vs 80.3) and France (79.9 vs 66.4) where the session slice said otherwise. Only BRA-SA and NOR-EL show tip 3 ahead — Norway 85.4 vs 83.9, the one country read the replay corroborates. (2) The chooser variant scored out of sample (learn each league's best lane on its older half, score on the newer): 83.61% against always-tip-1's 83.71%. Learning the preference buys nothing even when it is allowed to learn. The cause is sample size: a session slice of 18 lanes at 80% carries a standard error of 9.4 points, so a 15-point country gap is one noisy weekend. The counters are a fine lens for spotting questions and a poor one for answering them — which is why the replay exists |
 | 🔴 | 08-30 | board | **Final picking: is the card's starred lane better than always taking tip 1?** | No — measured before trusting it. The star's chooser replayed per league at n=300 (16,554 graded fixtures, bank freshly merged with the board's own results): league-average 79.5% against always-tip-1's 83.5%. Every deviation costs — tip 2 picks grade 72.6 where tip 1 would have graded 85.3 (−12.7), tip 3 picks 77.2 vs 83.1 (−5.9). The finding underneath is the valuable one: a tip 1 that MISSES the playable bar still lands 84.5%, because a thin edge means the league's baseline is already high, not that the tip is weak. The star stays (one preferred lane per card was the ask) but now yields to any playable tip 1, and is labelled read-first rather than best-bet — the buy≥ bracket decides what to buy. The About protocol's step 2 was corrected the same day it was written |
 | 🔴 | 08-29 | engine | **A min or max stated-probability filter on the tips would lift the hitrate** | Banded says-vs-hit on the current dumps, last 300 per league, two half-windows: Tip 1 calibrates at every band (worst −1.4, the 70-75 band OVER-delivers +5.7/+2.5), and the team lanes behind Tip 2's cold tile calibrate too — the O1.5s claiming 55-65 hit 58 on a 59 claim in BOTH halves. Nothing overclaims consistently at either end, so a probability cut would only refuse honest low-claim lanes to flatter the tile — the GRE-SL floor mirage again. Declined; instead the tiles now print the family's average CLAIM beside its hit (tip 2: 63.3 vs claims 69.0), so a low number reads as what it promised, not as failure |
