@@ -972,10 +972,15 @@ def main() -> None:
         # probability — a bare "<80" reaches it, a lane-prefixed
         # "tip 2 <80" does not, because the row has no such lane.
         p = f' data-p="{b["prob"]*100:.1f}"' if b["prob"] else ""
+        # Kickoff, shown compact but sorted on the full stamp: "31-08"
+        # ahead of "01-09" is right by the calendar and wrong by string
+        # order, so the cell carries the ISO value for the sorter.
+        kick = (f'<td class="dim" data-v="{f.kickoff}">{board._stamp(f)}</td>'
+                if f is not None else '<td class="dim">—</td>')
         return (f'<tr data-t="{html.escape(hay)}"{g}{p}'
                 + (f' data-lg="{html.escape(_fold(f.league.lower()))}"'
                    if f is not None else "") + ">"
-                f'<td class="mk">{b["mark"]}</td>'
+                f'<td class="mk">{b["mark"]}</td>{kick}'
                 f'<td>{html.escape(b["name"])}</td>'
                 f'<td>{html.escape(b["lane"])}</td>'
                 f'<td class="dim">{prob}</td>'
@@ -1498,9 +1503,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <b>commas narrow</b> — <code>brazil, serie b, tip 1 under, 80&gt;</code>
   is all four at once.</div></details>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
- <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
-  <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Prob</th><th>Odds</th>
-  <th>Return</th><th>Athena says</th><th>Note</th></tr>
+ <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
+  <table id="t-betstable" class="sortable">
+  <tr><th data-sort="s">·</th><th data-sort="s">Kickoff</th>
+  <th data-sort="s">Fixture</th><th data-sort="s">Lane</th>
+  <th data-sort="n">Prob</th><th data-sort="n">Odds</th>
+  <th data-sort="n">Return</th><th data-sort="s">Athena says</th>
+  <th data-sort="s">Note</th></tr>
   {bets_html}</table></div></div>
  <div class="tabpane" id="t-lanes">{_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
@@ -1951,7 +1960,13 @@ for (const table of document.querySelectorAll("table.sortable")) {{
       th.dataset.dir = desc ? "desc" : "asc";
       th.classList.add(desc ? "desc" : "asc");
       const val = tr => {{
-        const s = tr.cells[i].textContent.trim().replace(/[−–]/g, "-");
+        const c = tr.cells[i];
+        if (!c) return th.dataset.sort === "n" ? 0 : "";
+        // A cell may carry its own sort value when what it SHOWS does not
+        // order correctly — a kickoff reads "31-08" but must sort behind
+        // "01-09", so the cell keeps the full stamp in data-v.
+        const s = (c.dataset.v !== undefined ? c.dataset.v : c.textContent)
+          .trim().replace(/[−–]/g, "-");
         return th.dataset.sort === "n"
           ? (parseFloat(s.replace("%", "")) || 0) : s.toLowerCase();
       }};
