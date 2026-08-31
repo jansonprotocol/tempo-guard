@@ -760,7 +760,6 @@ that premium the book is keeping the insurance money.
 | ❌ | Mirassol v Palmeiras | 12 | 1.32 | 0.00x | = tip 3's 12 print (76.2%), under buy≥1.38 |
 | — open | Aston Villa v Arsenal | O1.5 | 1.23 | — | = tip 1 rung, under buy≥1.26 |
 | — open | Braga v Vitória | O1.5 | 1.27 | — | = tip 1 rung, under buy≥1.32 |
-| — open | Atlético Grau v Melgar | O1.5 | 1.37 | — | = tip 1 rung at 1.37, two cents under buy≥1.39 |
 | — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy≥1.37 |
 | — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip |
 | — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip — swapped to a DNB and back; the under was the better price |
