@@ -610,6 +610,7 @@ def _card(f, kind: str, reads: dict) -> str:
     if not body:
         body = '<div class="read dim">nothing more on this one</div>'
     return (f'<details class="card {kind}" '
+            f'data-fx="{html.escape(f.teams)}" '
             f'data-t="{_haystack(f)}" '
             f'data-lg="{html.escape(_fold(f.league.lower()))}" '
             f"{_sortkeys(f)}{_probkeys(f)}{_gradekeys(f)}>"
@@ -981,8 +982,16 @@ def main() -> None:
                 + (f' data-lg="{html.escape(_fold(f.league.lower()))}"'
                    if f is not None else "") + ">"
                 f'<td class="mk">{b["mark"]}</td>{kick}'
-                f'<td>{html.escape(b["name"])}</td>'
-                f'<td>{html.escape(b["lane"])}</td>'
+                # The fixture opens its own card — the same element the
+                # board renders, not a second copy of it, so a position
+                # can always be read back against the lanes it was struck
+                # from. A bet whose fixture is no longer on the board
+                # stays plain text rather than offering a dead link.
+                + (f'<td><button class="fxopen" onclick="showCard(this)">'
+                   f'{html.escape(b["name"])}</button></td>'
+                   if f is not None else
+                   f'<td>{html.escape(b["name"])}</td>')
+                + f'<td>{html.escape(b["lane"])}</td>'
                 f'<td class="dim">{prob}</td>'
                 f'<td>{b["odds"]:.2f}</td><td>{b["ret"]}</td>'
                 f'<td><span class="align {_align_cls(b["align"])}">'
@@ -1274,6 +1283,18 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   letter-spacing:.1em; margin-top:1px; }}
 .fc .s {{ color:var(--dim); font-size:11px; }}
 .fcap {{ font-size:11px; margin:-8px 0 12px; }}
+.fxopen {{ background:none; border:0; padding:0; font:inherit; color:inherit;
+  cursor:pointer; text-align:left; border-bottom:1px dotted #55607a; }}
+.fxopen:hover {{ color:var(--gold); border-bottom-color:var(--gold); }}
+.fxmodal {{ position:fixed; inset:0; z-index:60; display:none;
+  background:rgba(6,8,12,.82); padding:24px 14px; overflow:auto; }}
+.fxmodal.on {{ display:block; }}
+.fxbox {{ max-width:520px; margin:0 auto; }}
+.fxbox .card {{ margin:0; }}
+.fxshut {{ display:block; margin:12px auto 0; background:#181d27;
+  border:1px solid #2b3242; color:#c8d0e0; border-radius:6px;
+  padding:7px 16px; font:inherit; cursor:pointer; }}
+.fxshut:hover {{ border-color:var(--gold); color:var(--gold); }}
 .fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
 .fhelp summary {{ cursor:pointer; }}
 .fhelp div {{ padding:8px 0 0 2px; line-height:1.7; }}
@@ -1520,6 +1541,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   card, the ticket's own probability on a taken bet.<br>
   <b>commas narrow</b> — <code>brazil, serie b, tip 1 under, 80&gt;</code>
   is all four at once.</div></details>
+ <div class="fxmodal" id="fxmodal" onclick="hideCard(event)">
+  <div class="fxbox" id="fxbox"></div>
+  <button class="fxshut" onclick="hideCard()">close</button>
+ </div>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
@@ -1832,6 +1857,33 @@ function qterms(q) {{
       return parseCmp(flat) || s;
     }});
 }}
+// A position opens the card it was struck from. The card is CLONED out of
+// the board rather than rebuilt, so what the modal shows is the same lanes,
+// numbers and marks the board is showing — a second renderer would drift
+// from the first the day either one changed.
+function showCard(btn) {{
+  const name = btn.textContent.trim();
+  const src = document.querySelector('.card[data-fx="' + name.replace(/"/g, "") + '"]');
+  const box = document.getElementById("fxbox");
+  if (!src || !box) return;
+  const copy = src.cloneNode(true);
+  copy.open = true;                 // the modal always shows the full card
+  copy.style.display = "";          // never inherit a filter's hidden state
+  const more = copy.querySelector(".more");
+  if (more) more.remove();          // nothing left to expand in here
+  box.innerHTML = "";
+  box.appendChild(copy);
+  document.getElementById("fxmodal").classList.add("on");
+}}
+function hideCard(ev) {{
+  // A click on the card itself must not close the sheet under the cursor.
+  if (ev && ev.target.closest && ev.target.closest(".fxbox")) return;
+  document.getElementById("fxmodal").classList.remove("on");
+}}
+document.addEventListener("keydown", e => {{
+  if (e.key === "Escape") hideCard();
+}});
+
 // One term against one element: a threshold, an exact league, or text.
 function termOk(t, el, hay, lg) {{
   if (typeof t !== "string") return cmpOk(el, t);
@@ -1847,7 +1899,10 @@ function applyFilter(q) {{
     // instruments: the board's filters the board, the ask bar filters
     // the bank answer. Without this guard the board bar reached across
     // and hid rows of an ask result that had nothing to do with it.
-    if (c.closest("#ask-out")) continue;
+    // #fxbox holds a CLONE of a board card while the modal is open —
+    // filtering it would hide the card the reader just asked for, and
+    // counting it would score the same fixture twice.
+    if (c.closest("#ask-out") || c.closest("#fxbox")) continue;
     const hay = c.dataset.t || "";
     const lg = c.dataset.lg;
     c.style.display = terms.every(t => termOk(t, c, hay, lg)) ? "" : "none";
@@ -1863,7 +1918,8 @@ function recount() {{
   if (!box) return;
   const t = {{gf: [0, 0], g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
   for (const c of document.querySelectorAll(".card.done")) {{
-    if (c.style.display === "none" || c.closest("#ask-out")) continue;
+    if (c.style.display === "none" || c.closest("#ask-out")
+        || c.closest("#fxbox")) continue;
     for (const k of ["gf", "g1", "g2", "g3"]) {{
       const v = c.dataset[k];
       if (v === undefined) continue;
