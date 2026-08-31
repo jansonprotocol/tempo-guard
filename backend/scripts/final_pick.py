@@ -85,16 +85,15 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
         t2, t3 = out["t2"], out["t3"]
         t1_play = e1 > 0.01
         t2_play = t2 is not None and t2[2] > 0.01
-        if (league in weak or league in capped) and t3 is not None:
-            pick, mk = 3, t3[0]
-        elif t1_play:
+        # The SHIPPED chooser (see chosen() below): a playable tip 1,
+        # else a printed result lane, else tip 1. This used to run the
+        # older variant that could pick tip 2, so the console line
+        # disagreed with the table the same run wrote — the file was
+        # right and the print was stale. One chooser now, both places.
+        if t1_play or t3 is None:
             pick, mk = 1, t1mk
-        elif t2_play:
-            pick, mk = 2, t2[0]
-        elif t3 is not None:
-            pick, mk = 3, t3[0]
         else:
-            pick, mk = 1, t1mk
+            pick, mk = 3, t3[0]
         g_t1 = grade(1, t1mk, hg, ag)
         if g_t1 is None:
             continue
