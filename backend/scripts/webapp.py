@@ -382,6 +382,12 @@ def _haystack(f) -> str:
     for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
         c = cell.strip()
         if not c or c.startswith("—"):
+            # An absent lane is a searchable fact of its own ("tip 2
+            # none"), but it must NOT answer a bare "tip 2" search, and
+            # the filter matches by plain substring. So the token carries
+            # no "tip 2" text at all; the query side rewrites the typed
+            # phrase to this same sentinel.
+            bits.append(f"~none{which}")
             continue
         bits += [c.replace("*", ""), f"tip{which}", f"tip {which}"]
         if f.lane(which) if which < 3 else False:
@@ -1428,7 +1434,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    <button class="btn askbtn" onclick="askAthena()">Enter</button>
   </div>
   <input id="ask-q" class="askq" oninput="askFilter()" style="display:none"
-   placeholder="narrow these results — league, country, lane, hit/miss… commas narrow">
+   placeholder="narrow these results — league, country, lane, hit/miss, tip 2 none… commas narrow">
   <div class="fcounts" id="ask-counts" style="display:none"></div>
   <div id="ask-out"></div>
  </div>
@@ -1446,7 +1452,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   .scrollIntoView({{behavior:'smooth'}})">🎓 Learn Athena — how to read
   these blocks</button>
  <input id="q" oninput="applyFilter(this.value)"
-  placeholder="filter — team, league, code, lane… commas narrow: real madrid, team over">
+  placeholder="filter — team, league, code, lane, tip 2 none… commas narrow: real madrid, team over">
  <div class="fcounts" id="fcounts"></div>
  <div class="fcap dim" id="fcap"></div>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
@@ -1714,9 +1720,22 @@ const COUNTRY = {countries_js};
 // "brasileirao" are the same search — the card carries both spellings.
 const fold = s => s.normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
 
+// "tip 2 none" / "no tip 3" — cards where that lane never printed. The
+// absent lane carries a sentinel token rather than any "tip 2" text,
+// because matching is plain substring and a bare "tip 2" search must not
+// come back with the cards that have no tip 2. Both bars read their
+// query through here, so both speak the same vocabulary.
+const NONEQ = /^(?:no[ -]?tip ?([123])|tip ?([123]) ?(?:none|empty|missing|absent))$/;
+function qterms(q) {{
+  return fold((q || "").toLowerCase()).split(",").map(s => s.trim())
+    .filter(Boolean).map(s => {{
+      const m = NONEQ.exec(s.replace(/\\s+/g, " "));
+      return m ? "~none" + (m[1] || m[2]) : s;
+    }});
+}}
+
 function applyFilter(q) {{
-  const terms = fold(q.toLowerCase()).split(",")
-    .map(s => s.trim()).filter(Boolean);
+  const terms = qterms(q);
   for (const c of document.querySelectorAll(".card,#t-bets tr[data-t]")) {{
     // Ask Athena renders bank cards with the same class into #ask-out,
     // and it has a search bar of its own. The two bars are separate
@@ -2019,7 +2038,8 @@ function askHay(m, comp) {{
       const k2 = m.t2.includes("(team)") ? "team" : "match";
       bits.push(k2 + " " + s2, "tip2 " + s2, "tip 2 " + s2);
     }}
-  }}
+  }} else bits.push("~none2");    // see NONEQ: "tip 2 none"
+  if (!m.tip) bits.push("~none1");
   if (m.t3) {{
     const l3 = /(1X|X2|12|DNB[12])/.exec(m.t3);
     bits.push("result lane");
@@ -2027,7 +2047,7 @@ function askHay(m, comp) {{
                                              : "double chance",
                       "tip3 " + l3[1].toLowerCase(),
                       "tip 3 " + l3[1].toLowerCase());
-  }}
+  }} else bits.push("~none3");
   bits.push(m.mark === "✅" ? "hit won" : m.mark === "❌" ? "miss lost"
             : m.mark === "◦" ? "push" : "pending");
   const raw = bits.join(" ").toLowerCase();
@@ -2071,8 +2091,7 @@ function askCard(m, comp, note, open) {{
 // counts the one lane it can honestly count.
 function askFilter() {{
   const q = document.getElementById("ask-q");
-  const terms = fold((q ? q.value : "").toLowerCase()).split(",")
-    .map(s => s.trim()).filter(Boolean);
+  const terms = qterms(q ? q.value : "");
   const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
   let shown = 0;
   for (const c of document.querySelectorAll("#ask-out .card")) {{
