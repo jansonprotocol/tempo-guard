@@ -342,6 +342,38 @@ def _sortkeys(f) -> str:
             f'data-k="{html.escape(f.kickoff)}"')
 
 
+def _gradekeys(f) -> str:
+    """Each settled card carries its own four grades, so the filter bar
+    can recount hitrates for whatever subset is on screen — a league, a
+    team, a rung — without the page re-deriving anything from text.
+
+    The four match the tiles exactly: tip 1 and tip 2 count only at the
+    playable standard, tip 3 counts whole (it only ever prints above its
+    own bar), and the final pick is the ★ lane's own grade.
+    """
+    if not f.settled:
+        return ""
+    def mark(which):
+        src = f.status if which == 1 else (f.tip2 if which == 2 else f.tip3)
+        m = src.lstrip()[:1]
+        return m if m in ("✅", "❌", "◦") else None
+
+    out = []
+    for which, key in ((1, "g1"), (2, "g2"), (3, "g3")):
+        if which < 3 and not f.lane(which):
+            continue
+        if which == 3 and not f.tip3.strip():
+            continue
+        m = mark(which)
+        if m:
+            out.append(f'{key}="{0 if m == "❌" else 1}"')
+    pick = 1 if f.lane(1) else (3 if f.tip3.strip() else 1)
+    m = mark(pick)
+    if m:
+        out.append(f'gf="{0 if m == "❌" else 1}"')
+    return (" data-" + " data-".join(out)) if out else ""
+
+
 _T1RATES: dict | None = None
 
 
@@ -473,7 +505,7 @@ def _card(f, kind: str, reads: dict) -> str:
     return (f'<details class="card {kind}" '
             f'data-t="{html.escape(f.teams.lower())} '
             f'{html.escape(f.league.lower())} {f.code.lower()}" '
-            f"{_sortkeys(f)}>"
+            f"{_sortkeys(f)}{_gradekeys(f)}>"
             f"<summary>{top}</summary>{body}</details>")
 
 
@@ -1030,6 +1062,14 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .tile .s {{ color:var(--dim); font-size:12px; }}
 .session {{ color:var(--gold); font-size:12px; letter-spacing:.18em;
   text-transform:uppercase; margin:2px 0 8px; }}
+.fcounts {{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px;
+  margin:0 0 12px; }}
+.fc {{ background:var(--card); border:1px solid var(--edge);
+  border-radius:8px; padding:7px 9px; text-align:center; }}
+.fc .v {{ font-size:17px; font-weight:700; }}
+.fc .l {{ color:var(--dim); font-size:10px; text-transform:uppercase;
+  letter-spacing:.1em; margin-top:1px; }}
+.fc .s {{ color:var(--dim); font-size:11px; }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -1241,7 +1281,9 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   these blocks</button>
  <input id="q" placeholder="filter — team, league, code…"
   oninput="for(const c of document.querySelectorAll('.card,#t-bets tr[data-t]'))
-  c.style.display=(c.dataset.t||'').includes(this.value.toLowerCase())?'':'none'">
+  c.style.display=(c.dataset.t||'').includes(this.value.toLowerCase())?'':'none';
+  recount()">
+ <div class="fcounts" id="fcounts"></div>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
   <tr><th>·</th><th>Fixture</th><th>Lane</th><th>Prob</th><th>Odds</th>
@@ -1490,7 +1532,33 @@ function route() {{
   for (const a of document.querySelectorAll(".tabs a"))
     a.classList.toggle("on", a.dataset.t === tab);
 }}
-addEventListener("hashchange", route); route();
+// The filter bar's own scoreboard: every settled card carries its four
+// grades, so whatever the filter leaves on screen — one league, one
+// team, one rung — gets counted live. No filter means the whole run.
+function recount() {{
+  const box = document.getElementById("fcounts");
+  if (!box) return;
+  const t = {{gf: [0, 0], g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
+  for (const c of document.querySelectorAll(".card.done")) {{
+    if (c.style.display === "none") continue;
+    for (const k of ["gf", "g1", "g2", "g3"]) {{
+      const v = c.dataset[k];
+      if (v === undefined) continue;
+      t[k][1]++; t[k][0] += (v === "1") ? 1 : 0;
+    }}
+  }}
+  const cell = (label, k) => {{
+    const [h, n] = t[k];
+    return '<div class="fc"><div class="v">' +
+      (n ? (h / n * 100).toFixed(1) + "%" : "—") +
+      '</div><div class="l">' + label + '</div><div class="s">' +
+      (n ? h + "/" + n : "no graded lanes") + "</div></div>";
+  }};
+  box.innerHTML = cell("final pick", "gf") + cell("tip 1", "g1") +
+                  cell("tip 2", "g2") + cell("tip 3", "g3");
+}}
+
+addEventListener("hashchange", route); route(); recount();
 window.addEventListener("error", () => {{
   // A broken form must never hide the board: re-run the router and let
   // the failure stay local to Ask Athena.
