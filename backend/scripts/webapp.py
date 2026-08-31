@@ -1209,7 +1209,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .fc .s {{ color:var(--dim); font-size:11px; }}
 .fcap {{ font-size:11px; margin:-8px 0 12px; }}
 .askq {{ width:100%; margin:10px 0 8px; }}
-#ask-counts {{ grid-template-columns:repeat(2,1fr); }}
+#ask-counts {{ grid-template-columns:repeat(4,1fr); }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -1981,6 +1981,14 @@ function askHay(m, comp) {{
       bits.push(k2 + " " + s2, "tip2 " + s2, "tip 2 " + s2);
     }}
   }}
+  if (m.t3) {{
+    const l3 = /(1X|X2|12|DNB[12])/.exec(m.t3);
+    bits.push("result lane");
+    if (l3) bits.push(l3[1].startsWith("DNB") ? "draw no bet dnb"
+                                             : "double chance",
+                      "tip3 " + l3[1].toLowerCase(),
+                      "tip 3 " + l3[1].toLowerCase());
+  }}
   bits.push(m.mark === "✅" ? "hit won" : m.mark === "❌" ? "miss lost"
             : m.mark === "◦" ? "push" : "pending");
   const raw = bits.join(" ").toLowerCase();
@@ -1991,11 +1999,20 @@ function askHay(m, comp) {{
 function askCard(m, comp, note) {{
   const mark = m.mark ? m.mark + " " + (m.score || "") :
     (m.src === "board" ? "🕑 on the board" : "");
+  const gm = k => ("✅◦❌".includes(m[k] || "") && m[k])
+    ? (m[k] === "❌" ? "0" : "1") : null;
   let body = "";
   if (m.t2) body += '<div class="lane"><span class="which">Tip 2</span> '
+    + (gm("m2") !== null ? m.m2 + " " : "")
     + m.t2.replaceAll(" · ", "<br>") + "</div>";
-  const g = ("✅◦❌".includes(m.mark || "") && m.mark)
-    ? ' data-g1="' + (m.mark === "❌" ? 0 : 1) + '"' : "";
+  if (m.t3) body += '<div class="lane"><span class="which">Tip 3</span> '
+    + (gm("m3") !== null ? m.m3 + " " : "")
+    + m.t3.replaceAll(" · ", "<br>") + "</div>";
+  let g = "";
+  for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
+    if (gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
+  const gf = (m.mark && "✅◦❌".includes(m.mark)) ? gm("mark") : null;
+  if (gf !== null) g += ' data-gf="' + gf + '"';
   return '<div class="card play" data-t="' + askHay(m, comp) + '"' + g
     + '><div class="teams">'
     + m.h + " v " + m.a + '</div><div class="meta">' + mark + " · "
@@ -2012,27 +2029,36 @@ function askFilter() {{
   const q = document.getElementById("ask-q");
   const terms = fold((q ? q.value : "").toLowerCase()).split(",")
     .map(s => s.trim()).filter(Boolean);
-  let h = 0, n = 0, shown = 0;
+  const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
+  let shown = 0;
   for (const c of document.querySelectorAll("#ask-out .card")) {{
     const hay = c.dataset.t || "";
-    const vis = terms.every(t => hay.includes(t));
+    const vis = terms.every(x => hay.includes(x));
     c.style.display = vis ? "" : "none";
     if (!vis) continue;
     shown++;
-    if (c.dataset.g1 !== undefined) {{ n++; h += c.dataset.g1 === "1" ? 1 : 0; }}
+    for (const k of ["g1", "g2", "g3"]) {{
+      const v = c.dataset[k];
+      if (v === undefined) continue;
+      t[k][1]++; t[k][0] += v === "1" ? 1 : 0;
+    }}
   }}
   const box = document.getElementById("ask-counts");
   if (!box) return;
   const any = document.querySelector("#ask-out .card");
   box.style.display = any ? "" : "none";
   if (q) q.style.display = any ? "" : "none";
-  box.innerHTML = '<div class="fc"><div class="v">' +
-    (n ? (h / n * 100).toFixed(1) + "%" : "—") +
-    '</div><div class="l">tip 1 · bank</div><div class="s">' +
-    (n ? h + "/" + n + " graded" : "nothing graded here") +
-    "</div></div>" +
+  const cell = (label, k) => {{
+    const [hh, nn] = t[k];
+    return '<div class="fc"><div class="v">' +
+      (nn ? (hh / nn * 100).toFixed(1) + "%" : "—") +
+      '</div><div class="l">' + label + '</div><div class="s">' +
+      (nn ? hh + "/" + nn : "not in this slice") + "</div></div>";
+  }};
+  box.innerHTML = cell("tip 1", "g1") + cell("tip 2", "g2") +
+    cell("tip 3", "g3") +
     '<div class="fc"><div class="v">' + shown +
-    '</div><div class="l">matches shown</div><div class="s">' +
+    '</div><div class="l">matches</div><div class="s">' +
     "of " + document.querySelectorAll("#ask-out .card").length + "</div></div>";
 }}
 async function askAthena() {{
