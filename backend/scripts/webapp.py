@@ -342,6 +342,47 @@ def _sortkeys(f) -> str:
             f'data-k="{html.escape(f.kickoff)}"')
 
 
+def _haystack(f) -> str:
+    """Everything a card can be filtered on, lowercased.
+
+    Beyond the teams, league and code, this carries what each lane IS —
+    the printed rung, and the words for its kind: a team over, a team
+    under, a double chance, a draw no bet. So "team over" finds every
+    card offering one, and (with the comma AND) "real madrid, team over"
+    finds the ones that are both.
+    """
+    bits = [f.teams, f.league, f.code]
+    for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
+        c = cell.strip()
+        if not c or c.startswith("—"):
+            continue
+        bits += [c.replace("*", ""), f"tip{which}", f"tip {which}"]
+        if f.lane(which) if which < 3 else False:
+            bits.append("playable")
+        if which == 3:
+            m = re.match(r"^(?:[✅❌◦]\s*)?(1X|X2|12|DNB[12])", c.lstrip())
+            bits.append("result lane")
+            if m:
+                bits.append("draw no bet dnb" if m.group(1).startswith("DNB")
+                            else "double chance")
+            continue
+        rung = re.search(r"\b([OU])(\d+(?:\.\d+)?)", c)
+        if not rung:
+            continue
+        side = "over" if rung.group(1) == "O" else "under"
+        bits.append("team " + side if "(team)" in c else "match " + side)
+        bits.append(side)
+    if f.settled:
+        mark = f.status.lstrip()[:1]
+        bits.append({"✅": "hit won", "❌": "miss lost",
+                     "◦": "push"}.get(mark, "finished"))
+    elif f.status:
+        bits.append("live")
+    if "capped" in (rates().get(f.code) or ""):
+        bits.append("capped")
+    return html.escape(" ".join(bits).lower())
+
+
 def _gradekeys(f) -> str:
     """Each settled card carries its own four grades, so the filter bar
     can recount hitrates for whatever subset is on screen — a league, a
@@ -503,8 +544,7 @@ def _card(f, kind: str, reads: dict) -> str:
     if not body:
         body = '<div class="read dim">nothing more on this one</div>'
     return (f'<details class="card {kind}" '
-            f'data-t="{html.escape(f.teams.lower())} '
-            f'{html.escape(f.league.lower())} {f.code.lower()}" '
+            f'data-t="{_haystack(f)}" '
             f"{_sortkeys(f)}{_gradekeys(f)}>"
             f"<summary>{top}</summary>{body}</details>")
 
@@ -1279,10 +1319,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <button class="btn" onclick="document.getElementById('learn')
   .scrollIntoView({{behavior:'smooth'}})">🎓 Learn Athena — how to read
   these blocks</button>
- <input id="q" placeholder="filter — team, league, code…"
-  oninput="for(const c of document.querySelectorAll('.card,#t-bets tr[data-t]'))
-  c.style.display=(c.dataset.t||'').includes(this.value.toLowerCase())?'':'none';
-  recount()">
+ <input id="q" oninput="applyFilter(this.value)"
+  placeholder="filter — team, league, code, lane… commas narrow: real madrid, team over">
  <div class="fcounts" id="fcounts"></div>
  <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap"><table>
@@ -1532,6 +1570,20 @@ function route() {{
   for (const a of document.querySelectorAll(".tabs a"))
     a.classList.toggle("on", a.dataset.t === tab);
 }}
+// Commas narrow rather than widen: every term must be present, so
+// "real madrid, team over" is the Madrid cards that offer a team over.
+// A card's haystack carries its lanes' kinds as words, not just their
+// printed rungs — see _haystack.
+function applyFilter(q) {{
+  const terms = q.toLowerCase().split(",")
+    .map(s => s.trim()).filter(Boolean);
+  for (const c of document.querySelectorAll(".card,#t-bets tr[data-t]")) {{
+    const hay = c.dataset.t || "";
+    c.style.display = terms.every(t => hay.includes(t)) ? "" : "none";
+  }}
+  recount();
+}}
+
 // The filter bar's own scoreboard: every settled card carries its four
 // grades, so whatever the filter leaves on screen — one league, one
 // team, one rung — gets counted live. No filter means the whole run.
