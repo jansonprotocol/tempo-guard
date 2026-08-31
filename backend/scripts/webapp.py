@@ -552,6 +552,7 @@ def _card(f, kind: str, reads: dict) -> str:
         body = '<div class="read dim">nothing more on this one</div>'
     return (f'<details class="card {kind}" '
             f'data-t="{_haystack(f)}" '
+            f'data-lg="{html.escape(f.league.lower())}" '
             f"{_sortkeys(f)}{_gradekeys(f)}>"
             f"<summary>{top}</summary>{body}</details>")
 
@@ -991,6 +992,8 @@ def main() -> None:
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
     hero_fine = "Tip 1 · the 300 most recent graded playable lanes"
+    # Every league name on the board, for the filter's exact-match rule.
+    leagues_js = _json.dumps(sorted({f.league.lower() for f in fixtures}))
     live_line = (f"Live so far: Tip 1 <b>{h1 / n1 * 100:.1f}%</b> on "
                  f"{h1}/{n1} settled, found bets <b>{roi:+.1f}%</b> ROI "
                  f"on {bh}/{bn}." if n1 else "First results land tonight.")
@@ -1583,12 +1586,22 @@ function route() {{
 // "real madrid, team over" is the Madrid cards that offer a team over.
 // A card's haystack carries its lanes' kinds as words, not just their
 // printed rungs — see _haystack.
+// A term that IS a league name matches that league exactly, because one
+// league's name can sit inside another's: "laliga" would otherwise drag
+// in every LaLiga 2 card, and no amount of typing could ask for the top
+// flight alone (the bettor's catch, 31 Aug). Everything else stays a
+// plain substring match, so partial words keep working.
+const LEAGUES = new Set({leagues_js});
+
 function applyFilter(q) {{
   const terms = q.toLowerCase().split(",")
     .map(s => s.trim()).filter(Boolean);
   for (const c of document.querySelectorAll(".card,#t-bets tr[data-t]")) {{
     const hay = c.dataset.t || "";
-    c.style.display = terms.every(t => hay.includes(t)) ? "" : "none";
+    const lg = c.dataset.lg;
+    c.style.display = terms.every(t =>
+      (LEAGUES.has(t) && lg !== undefined) ? lg === t : hay.includes(t)
+    ) ? "" : "none";
   }}
   recount();
 }}
