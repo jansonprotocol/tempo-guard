@@ -6,2059 +6,4203 @@
 # file is only the evidence they are applied to.
 # Club rows keep the last 40 cards; league and side rows keep everything.
 # league	kind	team	side	hits	n
-ALG-L1	LG			253	290
-ALG-L1	TEAM	NC Magra		29	36
-ALG-L1	TEAM	USM Khenchela		30	36
-ALG-L1	TEAM	US Souf		10	17
-ALG-L1	TEAM	USM Alger		35	38
-ALG-L1	TEAM	CS Constantine		34	37
-ALG-L1	TEAM	ES Ben Aknoun		14	18
-ALG-L1	TEAM	MC Alger		32	37
-ALG-L1	TEAM	US Biskra		35	38
-ALG-L1	TEAM	JS Saoura		31	36
-ALG-L1	TEAM	JS Kabylie		30	37
-ALG-L1	TEAM	ASO Chlef		29	36
-ALG-L1	TEAM	CR Bélouizdad		36	40
-ALG-L1	TEAM	MC El Bayadh		35	38
-ALG-L1	TEAM	MC Oran		33	36
-ALG-L1	TEAM	Paradou AC		32	35
-ALG-L1	TEAM	ES Sétif		31	35
-ALG-L1	TEAM	Olympique Akbou		15	15
+ALG-L1	LG			306	350
+ALG-L1	SIDE		U	300	343
+ALG-L1	TEAM	ASO Chlef		36	44
+ALG-L1	TEAM	CR Bélouizdad		40	45
+ALG-L1	TEAM	CS Constantine		40	44
+ALG-L1	TEAM	ES Ben Aknoun		20	25
 ALG-L1	TEAM	ES Mostaganem		15	15
-ALG-L1	SIDE		U	252	289
-ALG-L1	TS	NC Magra	U	29	36
-ALG-L1	TS	USM Khenchela	U	30	36
-ALG-L1	TS	US Souf	U	10	17
-ALG-L1	TS	USM Alger	U	35	38
-ALG-L1	TS	CS Constantine	U	33	36
-ALG-L1	TS	ES Ben Aknoun	U	14	18
-ALG-L1	TS	MC Alger	U	31	36
-ALG-L1	TS	US Biskra	U	35	38
-ALG-L1	TS	JS Saoura	U	31	36
-ALG-L1	TS	JS Kabylie	U	30	37
-ALG-L1	TS	ASO Chlef	U	29	36
-ALG-L1	TS	CR Bélouizdad	U	36	40
-ALG-L1	TS	MC El Bayadh	U	35	38
-ALG-L1	TS	MC Oran	U	33	36
-ALG-L1	TS	Paradou AC	U	32	35
-ALG-L1	TS	ES Sétif	U	31	35
-ALG-L1	TS	Olympique Akbou	U	15	15
+ALG-L1	TEAM	ES Sétif		40	44
+ALG-L1	TEAM	JS Kabylie		36	44
+ALG-L1	TEAM	JS Saoura		38	44
+ALG-L1	TEAM	MC Alger		39	45
+ALG-L1	TEAM	MC El Bayadh		41	45
+ALG-L1	TEAM	MC Oran		38	44
+ALG-L1	TEAM	NC Magra		37	44
+ALG-L1	TEAM	Olympique Akbou		15	15
+ALG-L1	TEAM	Paradou AC		40	44
+ALG-L1	TEAM	US Biskra		42	45
+ALG-L1	TEAM	US Souf		16	25
+ALG-L1	TEAM	USM Alger		41	44
+ALG-L1	TEAM	USM Khenchela		38	44
+ALG-L1	TS	ASO Chlef	U	36	44
+ALG-L1	TS	CR Bélouizdad	U	40	44
+ALG-L1	TS	CS Constantine	U	39	43
+ALG-L1	TS	ES Ben Aknoun	U	20	25
 ALG-L1	TS	ES Mostaganem	U	15	15
-ARG-CLP	LG			250	290
-ARG-CLP	TEAM	Instituto		16	19
-ARG-CLP	TEAM	Gimnasia L.P.		19	21
-ARG-CLP	TEAM	Banfield		20	22
-ARG-CLP	TEAM	Barracas Central		19	21
-ARG-CLP	TEAM	Velez Sarsfield		19	23
-ARG-CLP	TEAM	Atl. Tucuman		15	21
-ARG-CLP	TEAM	Belgrano		17	22
-ARG-CLP	TEAM	Boca Juniors		22	23
-ARG-CLP	TEAM	Central Cordoba		17	20
-ARG-CLP	TEAM	Lanus		17	20
-ARG-CLP	TEAM	Defensa y Justicia		18	21
-ARG-CLP	TEAM	Platense		20	23
-ARG-CLP	TEAM	Estudiantes L.P.		20	23
-ARG-CLP	TEAM	River Plate		19	22
-ARG-CLP	TEAM	Godoy Cruz		23	23
-ARG-CLP	TEAM	San Lorenzo		19	20
-ARG-CLP	TEAM	Independiente		17	19
-ARG-CLP	TEAM	Argentinos Jrs		17	21
-ARG-CLP	TEAM	Rosario Central		20	22
-ARG-CLP	TEAM	Sarmiento Junin		17	20
-ARG-CLP	TEAM	Racing Club		18	21
-ARG-CLP	TEAM	Tigre		16	20
-ARG-CLP	TEAM	Newells Old Boys		18	20
-ARG-CLP	TEAM	Huracan		17	20
-ARG-CLP	TEAM	Talleres Cordoba		15	20
-ARG-CLP	TEAM	Union de Santa Fe		15	20
-ARG-CLP	SIDE		U	169	201
-ARG-CLP	SIDE		O	81	89
-ARG-CLP	TS	Banfield	U	18	19
-ARG-CLP	TS	Barracas Central	U	13	15
-ARG-CLP	TS	Atl. Tucuman	U	14	19
-ARG-CLP	TS	Central Cordoba	U	15	18
-ARG-CLP	TS	Lanus	U	14	17
-ARG-CLP	TS	Defensa y Justicia	U	13	16
-ARG-CLP	TS	Platense	U	18	20
-ARG-CLP	TS	Estudiantes L.P.	U	14	16
-ARG-CLP	TS	River Plate	O	17	20
-ARG-CLP	TS	Godoy Cruz	U	16	16
-ARG-CLP	TS	San Lorenzo	U	18	19
-ARG-CLP	TS	Independiente	U	13	15
-ARG-CLP	TS	Sarmiento Junin	U	17	20
-ARG-CLP	TS	Tigre	U	14	18
-ARG-CLP	TS	Newells Old Boys	U	13	15
-ARG-CLP	TS	Union de Santa Fe	U	13	18
-ARG-CLP	TS	Racing Club	O	13	15
-ARG-PD	LG			231	263
-ARG-PD	TEAM	Tigre		15	19
-ARG-PD	TEAM	Racing Club		15	20
-ARG-PD	TEAM	Rosario Central		20	22
-ARG-PD	TEAM	River Plate		21	22
-ARG-PD	TEAM	Aldosivi		18	18
-ARG-PD	TEAM	Platense		14	18
-ARG-PD	TEAM	Independiente		17	18
-ARG-PD	TEAM	Banfield		14	17
-ARG-PD	TEAM	Boca Juniors		16	18
-ARG-PD	TEAM	Barracas Central		16	17
-ARG-PD	TEAM	Instituto		16	16
-ARG-PD	TEAM	Atl. Tucuman		13	16
-ARG-PD	TEAM	Defensa y Justicia		16	16
-ARG-PD	TEAM	Belgrano		15	20
-ARG-PD	TEAM	Estudiantes L.P.		14	16
-ARG-PD	TEAM	Sarmiento Junin		12	16
-ARG-PD	TEAM	Dep. Riestra		16	16
-ARG-PD	TEAM	Huracan		14	18
-ARG-PD	TEAM	Newells Old Boys		14	16
-ARG-PD	TEAM	Ind. Rivadavia		15	17
-ARG-PD	TEAM	Talleres Cordoba		13	17
-ARG-PD	TEAM	Gimnasia Mendoza		15	16
-ARG-PD	TEAM	Gimnasia L.P.		17	18
-ARG-PD	TEAM	Central Cordoba		13	16
-ARG-PD	TEAM	San Lorenzo		16	17
-ARG-PD	TEAM	Estudiantes Rio Cuarto		16	16
-ARG-PD	TEAM	Velez Sarsfield		14	17
-ARG-PD	TEAM	Union de Santa Fe		17	18
+ALG-L1	TS	ES Sétif	U	40	44
+ALG-L1	TS	JS Kabylie	U	35	43
+ALG-L1	TS	JS Saoura	U	37	43
+ALG-L1	TS	MC Alger	U	33	38
+ALG-L1	TS	MC El Bayadh	U	41	45
+ALG-L1	TS	MC Oran	U	38	44
+ALG-L1	TS	NC Magra	U	36	43
+ALG-L1	TS	Olympique Akbou	U	15	15
+ALG-L1	TS	Paradou AC	U	40	44
+ALG-L1	TS	US Biskra	U	42	45
+ALG-L1	TS	US Souf	U	15	24
+ALG-L1	TS	USM Alger	U	41	44
+ALG-L1	TS	USM Khenchela	U	37	43
+ARG-CLP	LG			664	822
+ARG-CLP	SIDE		O	331	395
+ARG-CLP	SIDE		U	332	426
+ARG-CLP	TEAM	Aldosivi		28	33
+ARG-CLP	TEAM	Argentinos Jrs		48	63
+ARG-CLP	TEAM	Arsenal Sarandi		34	46
+ARG-CLP	TEAM	Atl. Tucuman		48	60
+ARG-CLP	TEAM	Banfield		53	62
+ARG-CLP	TEAM	Barracas Central		33	37
+ARG-CLP	TEAM	Belgrano		18	24
+ARG-CLP	TEAM	Boca Juniors		54	68
+ARG-CLP	TEAM	Central Cordoba		48	59
+ARG-CLP	TEAM	Colon Santa FE		31	34
+ARG-CLP	TEAM	Defensa y Justicia		49	63
+ARG-CLP	TEAM	Estudiantes L.P.		53	65
+ARG-CLP	TEAM	Gimnasia L.P.		50	61
+ARG-CLP	TEAM	Godoy Cruz		53	61
+ARG-CLP	TEAM	Huracan		52	61
+ARG-CLP	TEAM	Independiente		48	61
+ARG-CLP	TEAM	Instituto		18	21
+ARG-CLP	TEAM	Lanus		49	59
+ARG-CLP	TEAM	Newells Old Boys		49	60
+ARG-CLP	TEAM	Patronato		24	33
+ARG-CLP	TEAM	Platense		40	52
+ARG-CLP	TEAM	Racing Club		51	66
+ARG-CLP	TEAM	River Plate		51	64
+ARG-CLP	TEAM	Rosario Central		55	64
+ARG-CLP	TEAM	San Lorenzo		49	60
+ARG-CLP	TEAM	Sarmiento Junin		37	50
+ARG-CLP	TEAM	Talleres Cordoba		48	60
+ARG-CLP	TEAM	Tigre		32	40
+ARG-CLP	TEAM	Union de Santa Fe		50	61
+ARG-CLP	TEAM	Velez Sarsfield		46	64
+ARG-CLP	TS	Aldosivi	O	14	15
+ARG-CLP	TS	Aldosivi	U	14	18
+ARG-CLP	TS	Argentinos Jrs	O	35	43
+ARG-CLP	TS	Argentinos Jrs	U	13	20
+ARG-CLP	TS	Arsenal Sarandi	O	19	22
+ARG-CLP	TS	Arsenal Sarandi	U	15	24
+ARG-CLP	TS	Atl. Tucuman	O	25	30
+ARG-CLP	TS	Atl. Tucuman	U	23	30
+ARG-CLP	TS	Banfield	O	26	30
+ARG-CLP	TS	Banfield	U	27	32
+ARG-CLP	TS	Barracas Central	U	20	24
+ARG-CLP	TS	Boca Juniors	O	36	45
+ARG-CLP	TS	Boca Juniors	U	18	23
+ARG-CLP	TS	Central Cordoba	O	19	20
+ARG-CLP	TS	Central Cordoba	U	29	39
+ARG-CLP	TS	Colon Santa FE	O	29	31
+ARG-CLP	TS	Defensa y Justicia	O	27	29
+ARG-CLP	TS	Defensa y Justicia	U	22	34
+ARG-CLP	TS	Estudiantes L.P.	O	25	30
+ARG-CLP	TS	Estudiantes L.P.	U	28	35
+ARG-CLP	TS	Gimnasia L.P.	O	34	38
+ARG-CLP	TS	Gimnasia L.P.	U	16	23
+ARG-CLP	TS	Godoy Cruz	O	25	26
+ARG-CLP	TS	Godoy Cruz	U	28	35
+ARG-CLP	TS	Huracan	O	24	26
+ARG-CLP	TS	Huracan	U	28	35
+ARG-CLP	TS	Independiente	O	19	27
+ARG-CLP	TS	Independiente	U	29	34
+ARG-CLP	TS	Lanus	O	23	26
+ARG-CLP	TS	Lanus	U	26	33
+ARG-CLP	TS	Newells Old Boys	O	23	28
+ARG-CLP	TS	Newells Old Boys	U	26	32
+ARG-CLP	TS	Patronato	U	20	26
+ARG-CLP	TS	Platense	U	30	40
+ARG-CLP	TS	Racing Club	O	34	43
+ARG-CLP	TS	Racing Club	U	17	23
+ARG-CLP	TS	River Plate	O	47	58
+ARG-CLP	TS	Rosario Central	O	27	31
+ARG-CLP	TS	Rosario Central	U	28	33
+ARG-CLP	TS	San Lorenzo	O	14	20
+ARG-CLP	TS	San Lorenzo	U	35	40
+ARG-CLP	TS	Sarmiento Junin	U	31	39
+ARG-CLP	TS	Talleres Cordoba	O	25	30
+ARG-CLP	TS	Talleres Cordoba	U	23	30
+ARG-CLP	TS	Tigre	U	23	29
+ARG-CLP	TS	Union de Santa Fe	O	18	22
+ARG-CLP	TS	Union de Santa Fe	U	32	39
+ARG-CLP	TS	Velez Sarsfield	O	28	40
+ARG-CLP	TS	Velez Sarsfield	U	18	24
+ARG-PD	LG			1231	1413
+ARG-PD	SIDE		O	554	633
+ARG-PD	SIDE		U	677	780
+ARG-PD	TEAM	Aldosivi		42	49
 ARG-PD	TEAM	Argentinos Jrs		17	19
+ARG-PD	TEAM	Argentinos Juniors		71	82
+ARG-PD	TEAM	Arsenal de Sarandí		38	39
+ARG-PD	TEAM	Atl. Tucuman		13	16
+ARG-PD	TEAM	Atlético Tucumán		71	82
+ARG-PD	TEAM	Banfield		87	99
+ARG-PD	TEAM	Barracas Central		89	102
+ARG-PD	TEAM	Belgrano		15	20
+ARG-PD	TEAM	Belgrano de Córdoba		59	65
+ARG-PD	TEAM	Boca Juniors		86	100
+ARG-PD	TEAM	Central Cordoba		13	16
+ARG-PD	TEAM	Central Córdoba SdE		69	81
+ARG-PD	TEAM	Colón de Santa Fe		32	39
+ARG-PD	TEAM	Defensa y Justicia		87	99
+ARG-PD	TEAM	Dep. Riestra		16	16
+ARG-PD	TEAM	Deportivo Riestra		27	37
+ARG-PD	TEAM	Estudiantes		71	81
+ARG-PD	TEAM	Estudiantes L.P.		14	16
+ARG-PD	TEAM	Estudiantes Rio Cuarto		16	16
+ARG-PD	TEAM	Gimnasia L.P.		17	18
+ARG-PD	TEAM	Gimnasia Mendoza		15	16
+ARG-PD	TEAM	Gimnasia de La Plata		71	82
+ARG-PD	TEAM	Godoy Cruz		71	81
+ARG-PD	TEAM	Huracan		14	18
+ARG-PD	TEAM	Huracán		69	80
+ARG-PD	TEAM	Ind. Rivadavia		15	17
+ARG-PD	TEAM	Independiente		88	100
+ARG-PD	TEAM	Independiente Rivadavia		34	38
+ARG-PD	TEAM	Instituto		16	16
+ARG-PD	TEAM	Instituto de Córdoba		57	65
 ARG-PD	TEAM	Lanus		13	16
-ARG-PD	SIDE		O	132	149
-ARG-PD	SIDE		U	99	114
-ARG-PD	TS	Racing Club	O	11	15
-ARG-PD	TS	Rosario Central	O	16	18
-ARG-PD	TS	River Plate	O	19	20
-ARG-PD	TS	Boca Juniors	O	14	16
-ARG-PD	TS	Dep. Riestra	U	15	15
-ARG-PD	TS	Ind. Rivadavia	O	15	17
+ARG-PD	TEAM	Lanús		75	81
+ARG-PD	TEAM	Newell's Old Boys		70	81
+ARG-PD	TEAM	Newells Old Boys		14	16
+ARG-PD	TEAM	Platense		91	101
+ARG-PD	TEAM	Racing Club		89	102
+ARG-PD	TEAM	River Plate		94	103
+ARG-PD	TEAM	Rosario Central		86	103
+ARG-PD	TEAM	San Lorenzo		87	99
+ARG-PD	TEAM	Sarmiento Junin		12	16
+ARG-PD	TEAM	Sarmiento de Junín		69	80
+ARG-PD	TEAM	Talleres Cordoba		13	17
+ARG-PD	TEAM	Talleres de Córdoba		73	83
+ARG-PD	TEAM	Tigre		89	100
+ARG-PD	TEAM	Union de Santa Fe		17	18
+ARG-PD	TEAM	Unión de Santa Fe		66	81
+ARG-PD	TEAM	Velez Sarsfield		14	17
+ARG-PD	TEAM	Vélez Sarsfield		70	83
+ARG-PD	TS	Aldosivi	U	33	38
+ARG-PD	TS	Argentinos Juniors	O	31	38
+ARG-PD	TS	Argentinos Juniors	U	40	44
+ARG-PD	TS	Arsenal de Sarandí	U	27	28
+ARG-PD	TS	Atlético Tucumán	O	31	33
+ARG-PD	TS	Atlético Tucumán	U	40	49
+ARG-PD	TS	Banfield	O	24	27
+ARG-PD	TS	Banfield	U	63	72
+ARG-PD	TS	Barracas Central	O	37	43
+ARG-PD	TS	Barracas Central	U	52	59
+ARG-PD	TS	Belgrano de Córdoba	O	20	21
+ARG-PD	TS	Belgrano de Córdoba	U	39	44
+ARG-PD	TS	Boca Juniors	O	58	68
+ARG-PD	TS	Boca Juniors	U	28	32
 ARG-PD	TS	Central Cordoba	U	12	15
+ARG-PD	TS	Central Córdoba SdE	O	39	43
+ARG-PD	TS	Central Córdoba SdE	U	30	38
+ARG-PD	TS	Colón de Santa Fe	U	23	29
+ARG-PD	TS	Defensa y Justicia	O	47	52
+ARG-PD	TS	Defensa y Justicia	U	40	47
+ARG-PD	TS	Dep. Riestra	U	15	15
+ARG-PD	TS	Deportivo Riestra	U	21	24
+ARG-PD	TS	Estudiantes	O	41	46
+ARG-PD	TS	Estudiantes	U	30	35
 ARG-PD	TS	Estudiantes Rio Cuarto	U	15	15
-AUT-BL	LG			248	300
-AUT-BL	TEAM	SC Rheindorf Altach		39	50
-AUT-BL	TEAM	TSV Hartberg		37	51
-AUT-BL	TEAM	SK Sturm Graz		44	50
-AUT-BL	TEAM	FC Blau-Weiß Linz		36	46
-AUT-BL	TEAM	LASK Linz		45	52
-AUT-BL	TEAM	Rapid Vienna		45	53
-AUT-BL	TEAM	Grazer AK		41	49
-AUT-BL	TEAM	Austria Vienna		44	48
-AUT-BL	TEAM	Wolfsberger		41	49
-AUT-BL	TEAM	RB Salzburg		42	48
-AUT-BL	TEAM	WSG Swarovski Tirol		35	48
-AUT-BL	TEAM	SV Josko Ried		35	39
-AUT-BL	SIDE		U	147	178
-AUT-BL	SIDE		O	98	119
-AUT-BL	TS	SC Rheindorf Altach	U	35	45
-AUT-BL	TS	TSV Hartberg	U	30	39
-AUT-BL	TS	SK Sturm Graz	O	25	30
-AUT-BL	TS	FC Blau-Weiß Linz	O	16	19
-AUT-BL	TS	LASK Linz	O	24	29
-AUT-BL	TS	Rapid Vienna	O	21	26
-AUT-BL	TS	Austria Vienna	O	15	17
-AUT-BL	TS	Rapid Vienna	U	24	27
-AUT-BL	TS	Wolfsberger	O	17	22
-AUT-BL	TS	LASK Linz	U	20	22
-AUT-BL	TS	RB Salzburg	O	35	40
-AUT-BL	TS	FC Blau-Weiß Linz	U	19	26
-AUT-BL	TS	WSG Swarovski Tirol	U	22	31
-AUT-BL	TS	Austria Vienna	U	28	30
-AUT-BL	TS	Grazer AK	U	33	40
-AUT-BL	TS	SK Sturm Graz	U	19	20
-AUT-BL	TS	WSG Swarovski Tirol	O	13	17
-AUT-BL	TS	Wolfsberger	U	24	27
-AUT-BL	TS	SV Josko Ried	U	25	28
-BEL-PL	LG			253	297
-BEL-PL	TEAM	Dender		28	31
-BEL-PL	TEAM	Oud-Heverlee Leuven		33	38
-BEL-PL	TEAM	Antwerp		33	38
-BEL-PL	TEAM	Mechelen		34	39
-BEL-PL	TEAM	Cercle Brugge		28	34
-BEL-PL	TEAM	St Truiden		30	36
-BEL-PL	TEAM	Charleroi		32	38
+ARG-PD	TS	Gimnasia de La Plata	O	18	19
+ARG-PD	TS	Gimnasia de La Plata	U	53	63
+ARG-PD	TS	Godoy Cruz	O	31	35
+ARG-PD	TS	Godoy Cruz	U	40	46
+ARG-PD	TS	Huracán	O	32	38
+ARG-PD	TS	Huracán	U	37	42
+ARG-PD	TS	Ind. Rivadavia	O	15	17
+ARG-PD	TS	Independiente	O	44	49
+ARG-PD	TS	Independiente	U	44	51
+ARG-PD	TS	Independiente Rivadavia	U	24	26
+ARG-PD	TS	Instituto de Córdoba	O	21	23
+ARG-PD	TS	Instituto de Córdoba	U	36	42
+ARG-PD	TS	Lanús	O	31	31
+ARG-PD	TS	Lanús	U	44	50
+ARG-PD	TS	Newell's Old Boys	O	23	27
+ARG-PD	TS	Newell's Old Boys	U	47	54
+ARG-PD	TS	Platense	O	20	24
+ARG-PD	TS	Platense	U	71	77
+ARG-PD	TS	Racing Club	O	69	75
+ARG-PD	TS	Racing Club	U	20	27
+ARG-PD	TS	River Plate	O	79	86
+ARG-PD	TS	River Plate	U	15	17
+ARG-PD	TS	Rosario Central	O	51	61
+ARG-PD	TS	Rosario Central	U	35	42
+ARG-PD	TS	San Lorenzo	O	21	29
+ARG-PD	TS	San Lorenzo	U	66	70
+ARG-PD	TS	Sarmiento de Junín	O	15	17
+ARG-PD	TS	Sarmiento de Junín	U	54	63
+ARG-PD	TS	Talleres de Córdoba	O	44	49
+ARG-PD	TS	Talleres de Córdoba	U	29	34
+ARG-PD	TS	Tigre	O	49	54
+ARG-PD	TS	Tigre	U	40	46
+ARG-PD	TS	Unión de Santa Fe	O	16	23
+ARG-PD	TS	Unión de Santa Fe	U	50	58
+ARG-PD	TS	Vélez Sarsfield	O	28	34
+ARG-PD	TS	Vélez Sarsfield	U	42	49
+AUT-BL	LG			1212	1475
+AUT-BL	SIDE		DNB1	33	38
+AUT-BL	SIDE		O	496	612
+AUT-BL	SIDE		U	681	822
+AUT-BL	TEAM	Austria Lustenau		51	65
+AUT-BL	TEAM	Austria Vienna		213	255
+AUT-BL	TEAM	FC Admira Wacker Modling		95	113
+AUT-BL	TEAM	FC Blau-Weiß Linz		68	90
+AUT-BL	TEAM	FC Wacker Innsbruck		14	18
+AUT-BL	TEAM	Grazer AK		52	63
+AUT-BL	TEAM	LASK Linz		210	247
+AUT-BL	TEAM	RB Salzburg		203	244
+AUT-BL	TEAM	Rapid Vienna		209	253
+AUT-BL	TEAM	SC Rheindorf Altach		210	245
+AUT-BL	TEAM	SK Austria Klagenfurt		98	123
+AUT-BL	TEAM	SK Sturm Graz		210	247
+AUT-BL	TEAM	SV Josko Ried		117	134
+AUT-BL	TEAM	SV Mattersburg		43	52
+AUT-BL	TEAM	St. Pölten		68	82
+AUT-BL	TEAM	TSV Hartberg		197	249
+AUT-BL	TEAM	WSG Swarovski Tirol		167	223
+AUT-BL	TEAM	Wolfsberger		199	247
+AUT-BL	TS	Austria Lustenau	U	41	53
+AUT-BL	TS	Austria Vienna	O	82	105
+AUT-BL	TS	Austria Vienna	U	128	147
+AUT-BL	TS	FC Admira Wacker Modling	O	12	16
+AUT-BL	TS	FC Admira Wacker Modling	U	79	92
+AUT-BL	TS	FC Blau-Weiß Linz	O	24	35
+AUT-BL	TS	FC Blau-Weiß Linz	U	43	54
+AUT-BL	TS	FC Wacker Innsbruck	U	12	16
+AUT-BL	TS	Grazer AK	O	17	20
+AUT-BL	TS	Grazer AK	U	35	43
+AUT-BL	TS	LASK Linz	O	103	126
+AUT-BL	TS	LASK Linz	U	103	117
+AUT-BL	TS	RB Salzburg	DNB1	22	23
+AUT-BL	TS	RB Salzburg	O	165	201
+AUT-BL	TS	RB Salzburg	U	14	17
+AUT-BL	TS	Rapid Vienna	O	116	141
+AUT-BL	TS	Rapid Vienna	U	91	108
+AUT-BL	TS	SC Rheindorf Altach	O	41	49
+AUT-BL	TS	SC Rheindorf Altach	U	167	194
+AUT-BL	TS	SK Austria Klagenfurt	O	39	48
+AUT-BL	TS	SK Austria Klagenfurt	U	57	73
+AUT-BL	TS	SK Sturm Graz	O	122	146
+AUT-BL	TS	SK Sturm Graz	U	85	97
+AUT-BL	TS	SV Josko Ried	O	19	21
+AUT-BL	TS	SV Josko Ried	U	96	111
+AUT-BL	TS	SV Mattersburg	U	33	40
+AUT-BL	TS	St. Pölten	O	16	17
+AUT-BL	TS	St. Pölten	U	47	58
+AUT-BL	TS	TSV Hartberg	O	71	93
+AUT-BL	TS	TSV Hartberg	U	122	151
+AUT-BL	TS	WSG Swarovski Tirol	O	54	68
+AUT-BL	TS	WSG Swarovski Tirol	U	107	147
+AUT-BL	TS	Wolfsberger	O	93	116
+AUT-BL	TS	Wolfsberger	U	102	126
+BEL-PL	LG			1244	1488
+BEL-PL	SIDE		DNB1	18	19
+BEL-PL	SIDE		O	605	738
+BEL-PL	SIDE		U	621	731
+BEL-PL	TEAM	Anderlecht		145	183
+BEL-PL	TEAM	Antwerp		144	183
+BEL-PL	TEAM	Beerschot VA		50	62
+BEL-PL	TEAM	Cercle Brugge		151	175
+BEL-PL	TEAM	Charleroi		150	177
+BEL-PL	TEAM	Club Brugge		151	182
+BEL-PL	TEAM	Dender		62	75
+BEL-PL	TEAM	Eupen		86	96
+BEL-PL	TEAM	Genk		151	184
+BEL-PL	TEAM	Gent		142	184
+BEL-PL	TEAM	Kortrijk		114	135
+BEL-PL	TEAM	Mechelen		153	182
+BEL-PL	TEAM	Oostende		56	60
+BEL-PL	TEAM	Oud-Heverlee Leuven		150	181
 BEL-PL	TEAM	RAAL La Louviere		28	33
-BEL-PL	TEAM	Westerlo		34	38
-BEL-PL	TEAM	Gent		31	39
-BEL-PL	TEAM	Club Brugge		34	39
-BEL-PL	TEAM	Standard		34	37
-BEL-PL	TEAM	St. Gilloise		28	37
-BEL-PL	TEAM	Anderlecht		33	38
-BEL-PL	TEAM	Genk		32	39
-BEL-PL	TEAM	Waregem		28	33
-BEL-PL	SIDE		U	148	170
-BEL-PL	SIDE		O	103	125
-BEL-PL	TS	Dender	U	24	26
-BEL-PL	TS	Oud-Heverlee Leuven	U	24	27
-BEL-PL	TS	Antwerp	U	25	26
-BEL-PL	TS	Mechelen	U	24	27
-BEL-PL	TS	Cercle Brugge	O	17	19
-BEL-PL	TS	St Truiden	O	16	19
-BEL-PL	TS	Charleroi	U	20	23
+BEL-PL	TEAM	RWD Molenbeek		27	31
+BEL-PL	TEAM	Seraing		54	60
+BEL-PL	TEAM	St Truiden		155	176
+BEL-PL	TEAM	St. Gilloise		149	181
+BEL-PL	TEAM	Standard		158	179
+BEL-PL	TEAM	Waregem		76	98
+BEL-PL	TEAM	Westerlo		133	155
+BEL-PL	TS	Anderlecht	O	89	115
+BEL-PL	TS	Anderlecht	U	54	66
+BEL-PL	TS	Antwerp	O	73	102
+BEL-PL	TS	Antwerp	U	70	80
+BEL-PL	TS	Beerschot VA	U	36	47
+BEL-PL	TS	Cercle Brugge	O	81	93
+BEL-PL	TS	Cercle Brugge	U	70	82
+BEL-PL	TS	Charleroi	O	62	77
+BEL-PL	TS	Charleroi	U	87	99
+BEL-PL	TS	Club Brugge	O	123	145
+BEL-PL	TS	Club Brugge	U	23	32
+BEL-PL	TS	Dender	O	18	23
+BEL-PL	TS	Dender	U	43	51
+BEL-PL	TS	Eupen	O	23	24
+BEL-PL	TS	Eupen	U	62	70
+BEL-PL	TS	Genk	O	109	134
+BEL-PL	TS	Genk	U	38	45
+BEL-PL	TS	Gent	O	89	115
+BEL-PL	TS	Gent	U	51	67
+BEL-PL	TS	Kortrijk	O	24	31
+BEL-PL	TS	Kortrijk	U	85	99
+BEL-PL	TS	Mechelen	O	81	96
+BEL-PL	TS	Mechelen	U	69	83
+BEL-PL	TS	Oostende	U	42	46
+BEL-PL	TS	Oud-Heverlee Leuven	O	59	73
+BEL-PL	TS	Oud-Heverlee Leuven	U	90	107
 BEL-PL	TS	RAAL La Louviere	U	24	29
-BEL-PL	TS	Westerlo	O	15	17
-BEL-PL	TS	Gent	O	16	21
-BEL-PL	TS	Club Brugge	O	25	27
-BEL-PL	TS	Standard	U	28	30
-BEL-PL	TS	St. Gilloise	O	17	25
-BEL-PL	TS	Genk	O	19	24
-BEL-PL	TS	Waregem	O	15	17
-BEL-PL	TS	Waregem	U	13	16
-BEL-PL	TS	Anderlecht	U	19	23
-BEL-PL	TS	Genk	U	13	15
-BEL-PL	TS	Charleroi	O	12	15
-BEL-PL	TS	Gent	U	15	18
-BEL-PL	TS	Cercle Brugge	U	11	15
-BEL-PL	TS	Westerlo	U	19	21
-BEL-PL	TS	St Truiden	U	14	17
-BRA-SA	LG			242	300
-BRA-SA	TEAM	São Paulo FC		24	30
-BRA-SA	TEAM	CR Flamengo		28	31
-BRA-SA	TEAM	EC Vitória		25	30
-BRA-SA	TEAM	SC Internacional		26	31
-BRA-SA	TEAM	RB Bragantino		26	30
-BRA-SA	TEAM	SC Corinthians Paulista		27	30
-BRA-SA	TEAM	Fluminense FC		26	31
-BRA-SA	TEAM	Mirassol FC		24	29
-BRA-SA	TEAM	SE Palmeiras		26	31
-BRA-SA	TEAM	Santos FC		24	30
-BRA-SA	TEAM	CA Mineiro		23	30
-BRA-SA	TEAM	CR Vasco da Gama		22	29
-BRA-SA	TEAM	EC Bahia		22	29
-BRA-SA	TEAM	Cruzeiro EC		23	30
-BRA-SA	TEAM	Grêmio FBPA		23	28
-BRA-SA	TEAM	Botafogo FR		22	28
+BEL-PL	TS	RWD Molenbeek	U	23	26
+BEL-PL	TS	Seraing	U	44	49
+BEL-PL	TS	St Truiden	O	65	74
+BEL-PL	TS	St Truiden	U	89	101
+BEL-PL	TS	St. Gilloise	O	115	143
+BEL-PL	TS	St. Gilloise	U	30	34
+BEL-PL	TS	Standard	O	38	50
+BEL-PL	TS	Standard	U	120	129
+BEL-PL	TS	Waregem	O	41	46
+BEL-PL	TS	Waregem	U	35	52
+BEL-PL	TS	Westerlo	O	78	89
+BEL-PL	TS	Westerlo	U	54	65
+BRA-SA	LG			1223	1473
+BRA-SA	SIDE		DNB1	26	28
+BRA-SA	SIDE		O	98	133
+BRA-SA	SIDE		U	1099	1312
+BRA-SA	TEAM	AC Goianiense		31	38
+BRA-SA	TEAM	América Mineiro		26	36
+BRA-SA	TEAM	Botafogo FR		105	134
+BRA-SA	TEAM	CA Mineiro		116	132
+BRA-SA	TEAM	CA Paranaense		84	94
+BRA-SA	TEAM	CR Flamengo		113	132
+BRA-SA	TEAM	CR Vasco da Gama		105	134
+BRA-SA	TEAM	Ceará SC		35	38
 BRA-SA	TEAM	Chapecoense AF		16	22
-BRA-SA	TEAM	CA Paranaense		21	23
-BRA-SA	TEAM	Coritiba FBC		17	23
 BRA-SA	TEAM	Clube do Remo		18	24
-BRA-SA	SIDE		U	186	233
-BRA-SA	SIDE		O	46	57
-BRA-SA	TS	São Paulo FC	U	20	25
-BRA-SA	TS	EC Vitória	U	22	26
-BRA-SA	TS	SC Internacional	U	24	29
-BRA-SA	TS	RB Bragantino	U	25	27
-BRA-SA	TS	SC Corinthians Paulista	U	25	28
-BRA-SA	TS	Fluminense FC	U	18	22
-BRA-SA	TS	Mirassol FC	U	18	21
-BRA-SA	TS	CA Mineiro	U	16	23
-BRA-SA	TS	CR Vasco da Gama	U	16	22
-BRA-SA	TS	EC Bahia	U	18	24
-BRA-SA	TS	Cruzeiro EC	U	19	24
-BRA-SA	TS	Santos FC	U	20	25
-BRA-SA	TS	Grêmio FBPA	U	14	18
-BRA-SA	TS	SE Palmeiras	U	15	17
-BRA-SA	TS	CR Flamengo	O	14	15
-BRA-SA	TS	Botafogo FR	O	15	18
+BRA-SA	TEAM	Coritiba FBC		43	60
+BRA-SA	TEAM	Criciúma EC		32	38
+BRA-SA	TEAM	Cruzeiro EC		119	136
+BRA-SA	TEAM	Cuiabá EC		68	74
+BRA-SA	TEAM	EC Bahia		113	136
+BRA-SA	TEAM	EC Juventude		60	76
+BRA-SA	TEAM	EC Vitória		81	99
+BRA-SA	TEAM	Fluminense FC		115	133
+BRA-SA	TEAM	Fortaleza EC		95	113
+BRA-SA	TEAM	Goiás EC		31	36
+BRA-SA	TEAM	Grêmio FBPA		105	135
+BRA-SA	TEAM	Mirassol FC		50	60
+BRA-SA	TEAM	RB Bragantino		114	131
+BRA-SA	TEAM	SC Corinthians Paulista		115	136
+BRA-SA	TEAM	SC Internacional		117	136
+BRA-SA	TEAM	SC Recife		22	33
+BRA-SA	TEAM	SE Palmeiras		108	136
+BRA-SA	TEAM	Santos FC		85	110
+BRA-SA	TEAM	São Paulo FC		128	149
+BRA-SA	TS	AC Goianiense	U	31	38
+BRA-SA	TS	América Mineiro	U	24	34
+BRA-SA	TS	Botafogo FR	O	19	30
+BRA-SA	TS	Botafogo FR	U	84	102
+BRA-SA	TS	CA Mineiro	U	103	118
+BRA-SA	TS	CA Paranaense	U	82	91
+BRA-SA	TS	CR Flamengo	O	25	30
+BRA-SA	TS	CR Flamengo	U	80	94
+BRA-SA	TS	CR Vasco da Gama	U	90	117
+BRA-SA	TS	Ceará SC	U	34	37
 BRA-SA	TS	Chapecoense AF	U	14	20
-BRA-SA	TS	CA Paranaense	U	19	21
-BRA-SA	TS	Coritiba FBC	U	16	20
 BRA-SA	TS	Clube do Remo	U	18	24
-BRA-SB	LG			252	295
-BRA-SB	TEAM	Novorizontino		26	30
-BRA-SB	TEAM	Atlético Goianiense		27	29
-BRA-SB	TEAM	Vila Nova		26	30
-BRA-SB	TEAM	América Mineiro		24	29
-BRA-SB	TEAM	CRB		27	29
-BRA-SB	TEAM	Athletic		28	30
-BRA-SB	TEAM	Avaí		25	30
-BRA-SB	TEAM	Criciúma		28	30
-BRA-SB	TEAM	Operário PR		22	29
-BRA-SB	TEAM	Botafogo-SP		24	29
-BRA-SB	TEAM	Cuiabá		28	31
-BRA-SB	TEAM	Goiás		26	31
+BRA-SA	TS	Coritiba FBC	U	41	56
+BRA-SA	TS	Criciúma EC	U	31	37
+BRA-SA	TS	Cruzeiro EC	U	110	125
+BRA-SA	TS	Cuiabá EC	U	67	73
+BRA-SA	TS	EC Bahia	U	101	120
+BRA-SA	TS	EC Juventude	U	58	74
+BRA-SA	TS	EC Vitória	U	74	91
+BRA-SA	TS	Fluminense FC	U	102	115
+BRA-SA	TS	Fortaleza EC	U	91	108
+BRA-SA	TS	Goiás EC	U	30	35
+BRA-SA	TS	Grêmio FBPA	O	14	19
+BRA-SA	TS	Grêmio FBPA	U	90	115
+BRA-SA	TS	Mirassol FC	O	12	16
+BRA-SA	TS	Mirassol FC	U	37	43
+BRA-SA	TS	RB Bragantino	U	108	122
+BRA-SA	TS	SC Corinthians Paulista	U	104	124
+BRA-SA	TS	SC Internacional	U	108	124
+BRA-SA	TS	SC Recife	U	22	33
+BRA-SA	TS	SE Palmeiras	O	19	30
+BRA-SA	TS	SE Palmeiras	U	80	97
+BRA-SA	TS	Santos FC	U	80	103
+BRA-SA	TS	São Paulo FC	U	118	136
+BRA-SB	LG			1294	1472
+BRA-SB	SIDE		O	752	827
+BRA-SB	SIDE		U	542	645
+BRA-SB	TEAM	ABC		36	38
+BRA-SB	TEAM	Amazonas		60	70
+BRA-SB	TEAM	América Mineiro		87	99
+BRA-SB	TEAM	Athletic		52	57
+BRA-SB	TEAM	Athletico-PR		36	38
+BRA-SB	TEAM	Atlético Goianiense		84	97
+BRA-SB	TEAM	Avaí		117	137
+BRA-SB	TEAM	Botafogo-SP		119	137
+BRA-SB	TEAM	Brusque		43	50
+BRA-SB	TEAM	CRB		132	146
+BRA-SB	TEAM	Ceará		87	98
+BRA-SB	TEAM	Chapecoense		115	124
+BRA-SB	TEAM	Coritiba		64	76
+BRA-SB	TEAM	Criciúma		105	111
+BRA-SB	TEAM	Cuiabá		54	61
+BRA-SB	TEAM	Ferroviária		27	33
 BRA-SB	TEAM	Fortaleza		18	23
-BRA-SB	TEAM	Sport		19	24
-BRA-SB	TEAM	Juventude		21	23
-BRA-SB	TEAM	Náutico		20	24
-BRA-SB	TEAM	Ponte Preta		20	24
-BRA-SB	TEAM	Londrina		17	24
-BRA-SB	TEAM	Ceará		20	23
+BRA-SB	TEAM	Goiás		89	101
+BRA-SB	TEAM	Guarani		75	88
+BRA-SB	TEAM	Ituano		74	88
+BRA-SB	TEAM	Juventude		54	61
+BRA-SB	TEAM	Londrina		63	74
+BRA-SB	TEAM	Mirassol		59	71
+BRA-SB	TEAM	Novorizontino		133	148
+BRA-SB	TEAM	Náutico		28	36
+BRA-SB	TEAM	Operário PR		95	111
+BRA-SB	TEAM	Paysandu		61	76
+BRA-SB	TEAM	Ponte Preta		101	111
+BRA-SB	TEAM	Remo		32	37
+BRA-SB	TEAM	Sampaio Corrêa		44	49
+BRA-SB	TEAM	Santos		33	37
+BRA-SB	TEAM	Sport		93	111
 BRA-SB	TEAM	São Bernardo		18	20
-BRA-SB	SIDE		U	103	127
-BRA-SB	SIDE		O	149	168
-BRA-SB	TS	Avaí	O	13	16
-BRA-SB	TS	Botafogo-SP	O	14	16
-BRA-SB	TS	Cuiabá	O	16	17
-BRA-SB	TS	Goiás	U	18	23
-BRA-SB	TS	Criciúma	U	18	19
-BRA-SB	TS	América Mineiro	O	14	15
-BRA-SB	TS	CRB	O	26	28
-BRA-SB	TS	Atlético Goianiense	O	14	16
-BRA-SB	TS	Operário PR	O	14	18
-BRA-SB	TS	Vila Nova	O	18	19
-BRA-SB	TS	Novorizontino	O	23	25
-BRA-SB	TS	Sport	O	16	19
-BRA-SB	TS	Athletic	U	15	16
-BRA-SB	TS	Ponte Preta	U	18	22
-CHI-PD	LG			247	295
-CHI-PD	TEAM	Unión Española		15	19
-CHI-PD	TEAM	Deportes Limache		32	38
-CHI-PD	TEAM	Deportes Iquique		16	18
-CHI-PD	TEAM	Colo Colo		35	40
-CHI-PD	TEAM	Unión La Calera		34	37
-CHI-PD	TEAM	Universidad Católica		31	36
-CHI-PD	TEAM	Huachipato		28	37
-CHI-PD	TEAM	Palestino		32	38
-CHI-PD	TEAM	La Serena		31	37
-CHI-PD	TEAM	O'Higgins		26	36
-CHI-PD	TEAM	Coquimbo Unido		28	34
-CHI-PD	TEAM	Universidad de Chile		34	39
-CHI-PD	TEAM	Ñublense		33	37
-CHI-PD	TEAM	Audax Italiano		30	37
-CHI-PD	TEAM	Everton CD		34	37
-CHI-PD	TEAM	Cobresal		26	37
-CHI-PD	TEAM	Universidad de Concepción		15	17
+BRA-SB	TEAM	Tombense		45	50
+BRA-SB	TEAM	Vila Nova		134	149
+BRA-SB	TEAM	Vitória		35	38
+BRA-SB	TEAM	Volta Redonda		32	33
+BRA-SB	TS	ABC	U	26	27
+BRA-SB	TS	Amazonas	O	25	28
+BRA-SB	TS	Amazonas	U	35	42
+BRA-SB	TS	América Mineiro	O	60	64
+BRA-SB	TS	América Mineiro	U	27	35
+BRA-SB	TS	Athletic	O	26	27
+BRA-SB	TS	Athletic	U	26	30
+BRA-SB	TS	Athletico-PR	O	33	34
+BRA-SB	TS	Atlético Goianiense	O	60	69
+BRA-SB	TS	Atlético Goianiense	U	24	28
+BRA-SB	TS	Avaí	O	55	66
+BRA-SB	TS	Avaí	U	62	71
+BRA-SB	TS	Botafogo-SP	O	44	47
+BRA-SB	TS	Botafogo-SP	U	75	90
+BRA-SB	TS	Brusque	O	13	15
+BRA-SB	TS	Brusque	U	30	35
+BRA-SB	TS	CRB	O	91	96
+BRA-SB	TS	CRB	U	41	50
+BRA-SB	TS	Ceará	O	66	72
+BRA-SB	TS	Ceará	U	21	26
+BRA-SB	TS	Chapecoense	O	74	77
+BRA-SB	TS	Chapecoense	U	41	47
+BRA-SB	TS	Coritiba	O	40	47
+BRA-SB	TS	Coritiba	U	24	29
+BRA-SB	TS	Criciúma	O	58	62
+BRA-SB	TS	Criciúma	U	47	49
+BRA-SB	TS	Cuiabá	O	38	40
+BRA-SB	TS	Cuiabá	U	16	21
+BRA-SB	TS	Ferroviária	O	17	17
+BRA-SB	TS	Ferroviária	U	10	16
+BRA-SB	TS	Goiás	O	55	58
+BRA-SB	TS	Goiás	U	34	43
+BRA-SB	TS	Guarani	O	45	52
+BRA-SB	TS	Guarani	U	30	36
+BRA-SB	TS	Ituano	O	37	42
+BRA-SB	TS	Ituano	U	37	46
+BRA-SB	TS	Juventude	O	28	32
+BRA-SB	TS	Juventude	U	26	29
+BRA-SB	TS	Londrina	O	30	34
+BRA-SB	TS	Londrina	U	33	40
+BRA-SB	TS	Mirassol	O	35	42
+BRA-SB	TS	Mirassol	U	24	29
+BRA-SB	TS	Novorizontino	O	90	97
+BRA-SB	TS	Novorizontino	U	43	51
+BRA-SB	TS	Náutico	O	13	15
+BRA-SB	TS	Náutico	U	15	21
+BRA-SB	TS	Operário PR	O	49	58
+BRA-SB	TS	Operário PR	U	46	53
+BRA-SB	TS	Paysandu	O	43	50
+BRA-SB	TS	Paysandu	U	18	26
+BRA-SB	TS	Ponte Preta	O	40	43
+BRA-SB	TS	Ponte Preta	U	61	68
+BRA-SB	TS	Remo	O	16	17
+BRA-SB	TS	Remo	U	16	20
+BRA-SB	TS	Sampaio Corrêa	O	21	24
+BRA-SB	TS	Sampaio Corrêa	U	23	25
+BRA-SB	TS	Santos	O	29	31
+BRA-SB	TS	Sport	O	65	74
+BRA-SB	TS	Sport	U	28	37
+BRA-SB	TS	Tombense	O	25	27
+BRA-SB	TS	Tombense	U	20	23
+BRA-SB	TS	Vila Nova	O	80	86
+BRA-SB	TS	Vila Nova	U	54	63
+BRA-SB	TS	Vitória	O	21	22
+BRA-SB	TS	Vitória	U	14	16
+BRA-SB	TS	Volta Redonda	U	22	22
+CHI-PD	LG			1269	1475
+CHI-PD	SIDE		O	63	83
+CHI-PD	SIDE		U	1206	1392
+CHI-PD	TEAM	Antofagasta		69	75
+CHI-PD	TEAM	Audax Italiano		154	180
+CHI-PD	TEAM	Cobreloa		25	30
+CHI-PD	TEAM	Cobresal		154	183
+CHI-PD	TEAM	Colo Colo		160	183
+CHI-PD	TEAM	Copiapó		45	55
+CHI-PD	TEAM	Coquimbo Unido		128	148
+CHI-PD	TEAM	Curicó Unido		86	102
 CHI-PD	TEAM	Deportes Concepcion		13	15
-CHI-PD	SIDE		U	227	267
-CHI-PD	SIDE		O	20	28
-CHI-PD	TS	Unión Española	U	14	18
-CHI-PD	TS	Deportes Limache	U	28	33
-CHI-PD	TS	Deportes Iquique	U	15	17
-CHI-PD	TS	Colo Colo	U	26	30
-CHI-PD	TS	Unión La Calera	U	33	36
-CHI-PD	TS	Universidad Católica	U	25	30
-CHI-PD	TS	Huachipato	U	25	32
-CHI-PD	TS	Palestino	U	31	36
-CHI-PD	TS	La Serena	U	30	36
-CHI-PD	TS	O'Higgins	U	24	32
-CHI-PD	TS	Coquimbo Unido	U	28	32
-CHI-PD	TS	Universidad de Chile	U	30	32
-CHI-PD	TS	Ñublense	U	33	37
-CHI-PD	TS	Audax Italiano	U	29	35
-CHI-PD	TS	Everton CD	U	31	33
-CHI-PD	TS	Cobresal	U	24	33
-CHI-PD	TS	Universidad de Concepción	U	15	17
-CHN-SL	LG			236	290
-CHN-SL	TEAM	Zhejiang Professional		28	35
-CHN-SL	TEAM	Yunnan Yukun		29	37
-CHN-SL	TEAM	Tianjin Jinmen Tiger		34	35
-CHN-SL	TEAM	Chengdu Rongcheng		27	37
-CHN-SL	TEAM	Shanghai Port		30	38
-CHN-SL	TEAM	Wuhan Three Towns		26	35
-CHN-SL	TEAM	Qingdao West Coast		32	37
-CHN-SL	TEAM	Dalian Yingbo		29	38
-CHN-SL	TEAM	Shandong Taishan		31	37
-CHN-SL	TEAM	Beijing Guoan		32	37
-CHN-SL	TEAM	Shanghai Shenhua		30	38
-CHN-SL	TEAM	Shenzhen Xinpengcheng		30	37
-CHN-SL	TEAM	Qingdao Hainiu		31	38
-CHN-SL	TEAM	Henan Songshan Longmen		29	36
+CHI-PD	TEAM	Deportes Iquique		64	72
+CHI-PD	TEAM	Deportes Limache		38	45
+CHI-PD	TEAM	Everton CD		161	183
+CHI-PD	TEAM	Huachipato		158	183
+CHI-PD	TEAM	La Serena		105	123
+CHI-PD	TEAM	Magallanes		21	25
+CHI-PD	TEAM	Melipilla		22	27
+CHI-PD	TEAM	O'Higgins		155	182
+CHI-PD	TEAM	Palestino		154	183
+CHI-PD	TEAM	Santiago Wanderers		29	32
+CHI-PD	TEAM	Universidad Católica		158	184
+CHI-PD	TEAM	Universidad de Chile		159	184
+CHI-PD	TEAM	Universidad de Concepción		27	29
+CHI-PD	TEAM	Unión Española		128	161
+CHI-PD	TEAM	Unión La Calera		161	183
+CHI-PD	TEAM	Ñublense		151	169
+CHI-PD	TS	Antofagasta	U	68	74
+CHI-PD	TS	Audax Italiano	U	152	176
+CHI-PD	TS	Cobreloa	U	24	29
+CHI-PD	TS	Cobresal	U	144	171
+CHI-PD	TS	Colo Colo	O	19	24
+CHI-PD	TS	Colo Colo	U	141	159
+CHI-PD	TS	Copiapó	U	44	53
+CHI-PD	TS	Coquimbo Unido	U	127	144
+CHI-PD	TS	Curicó Unido	U	85	99
+CHI-PD	TS	Deportes Iquique	U	59	67
+CHI-PD	TS	Deportes Limache	U	34	39
+CHI-PD	TS	Everton CD	U	152	172
+CHI-PD	TS	Huachipato	U	152	175
+CHI-PD	TS	La Serena	U	103	121
+CHI-PD	TS	Magallanes	U	21	25
+CHI-PD	TS	Melipilla	U	22	27
+CHI-PD	TS	O'Higgins	U	150	175
+CHI-PD	TS	Palestino	U	141	169
+CHI-PD	TS	Santiago Wanderers	U	28	31
+CHI-PD	TS	Universidad Católica	O	17	20
+CHI-PD	TS	Universidad Católica	U	141	164
+CHI-PD	TS	Universidad de Chile	O	12	20
+CHI-PD	TS	Universidad de Chile	U	147	164
+CHI-PD	TS	Universidad de Concepción	U	27	29
+CHI-PD	TS	Unión Española	U	120	151
+CHI-PD	TS	Unión La Calera	U	158	179
+CHI-PD	TS	Ñublense	U	147	163
+CHN-SL	LG			1152	1417
+CHN-SL	SIDE		DNB1	55	57
+CHN-SL	SIDE		O	514	636
+CHN-SL	SIDE		U	581	722
+CHN-SL	TEAM	Beijing Guoan		143	176
+CHN-SL	TEAM	Cangzhou		89	107
+CHN-SL	TEAM	Changchun Yatai		114	142
+CHN-SL	TEAM	Chengdu Rongcheng		107	141
+CHN-SL	TEAM	Chongqing Liangjiang Athletic		28	32
 CHN-SL	TEAM	Chongqing Tonglianglong		15	18
+CHN-SL	TEAM	Dalian Pro		82	97
+CHN-SL	TEAM	Dalian Yingbo		39	49
+CHN-SL	TEAM	Guangzhou City		41	51
+CHN-SL	TEAM	Guangzhou FC		39	50
+CHN-SL	TEAM	Hebei		52	68
+CHN-SL	TEAM	Henan Songshan Longmen		147	173
 CHN-SL	TEAM	Liaoning Tieren		13	18
-CHN-SL	SIDE		O	131	157
-CHN-SL	SIDE		U	104	132
-CHN-SL	TS	Zhejiang Professional	O	20	22
-CHN-SL	TS	Yunnan Yukun	O	22	26
-CHN-SL	TS	Tianjin Jinmen Tiger	O	16	17
-CHN-SL	TS	Chengdu Rongcheng	O	24	32
-CHN-SL	TS	Shanghai Port	O	22	27
-CHN-SL	TS	Wuhan Three Towns	U	16	22
-CHN-SL	TS	Qingdao West Coast	U	23	26
-CHN-SL	TS	Shandong Taishan	O	25	28
-CHN-SL	TS	Beijing Guoan	O	30	33
-CHN-SL	TS	Shanghai Shenhua	O	26	31
-CHN-SL	TS	Shenzhen Xinpengcheng	U	20	25
-CHN-SL	TS	Qingdao Hainiu	U	18	22
-CHN-SL	TS	Henan Songshan Longmen	U	16	20
-CHN-SL	TS	Henan Songshan Longmen	O	13	16
-CHN-SL	TS	Tianjin Jinmen Tiger	U	18	18
-CHN-SL	TS	Dalian Yingbo	U	19	25
-CHN-SL	TS	Qingdao Hainiu	O	13	16
+CHN-SL	TEAM	Meizhou Hakka		92	119
+CHN-SL	TEAM	Nantong Zhiyun		43	55
+CHN-SL	TEAM	Qingdao FC		26	32
+CHN-SL	TEAM	Qingdao Hainiu		81	106
+CHN-SL	TEAM	Qingdao West Coast		63	78
+CHN-SL	TEAM	Shandong Taishan		133	161
+CHN-SL	TEAM	Shanghai Port		133	164
+CHN-SL	TEAM	Shanghai Shenhua		153	179
+CHN-SL	TEAM	Shenzhen		78	94
+CHN-SL	TEAM	Shenzhen Xinpengcheng		61	77
+CHN-SL	TEAM	Tianjin Jinmen Tiger		145	176
+CHN-SL	TEAM	Wuhan FC		59	68
+CHN-SL	TEAM	Wuhan Three Towns		113	139
+CHN-SL	TEAM	Yunnan Yukun		36	48
+CHN-SL	TEAM	Zhejiang Professional		116	138
+CHN-SL	TS	Beijing Guoan	O	102	123
+CHN-SL	TS	Beijing Guoan	U	34	46
+CHN-SL	TS	Cangzhou	O	26	28
+CHN-SL	TS	Cangzhou	U	58	73
+CHN-SL	TS	Changchun Yatai	O	52	66
+CHN-SL	TS	Changchun Yatai	U	57	71
+CHN-SL	TS	Chengdu Rongcheng	O	75	100
+CHN-SL	TS	Chengdu Rongcheng	U	27	36
+CHN-SL	TS	Chongqing Liangjiang Athletic	U	24	28
 CHN-SL	TS	Chongqing Tonglianglong	U	14	16
-COL-PA	LG			252	300
-COL-PA	TEAM	Deportes Tolima		35	39
-COL-PA	TEAM	Llaneros FC		25	28
-COL-PA	TEAM	Atlético Nacional		31	38
-COL-PA	TEAM	Boyacá Chicó FC		21	25
-COL-PA	TEAM	América de Cali		33	36
-COL-PA	TEAM	Millonarios		23	26
-COL-PA	TEAM	Deportivo Pereira		15	24
-COL-PA	TEAM	Independiente Medellín		23	31
-COL-PA	TEAM	Águilas Doradas		23	25
-COL-PA	TEAM	Fortaleza CEIF		29	32
-COL-PA	TEAM	Atlético Junior		34	38
-COL-PA	TEAM	Once Caldas		23	28
-COL-PA	TEAM	Deportivo Pasto		23	29
-COL-PA	TEAM	Atlético Bucaramanga		27	32
-COL-PA	TEAM	Internacional de Bogotá		22	29
-COL-PA	TEAM	Alianza FC		22	26
-COL-PA	TEAM	Independiente Santa Fe		32	35
-COL-PA	TEAM	Deportivo Cali		24	25
-COL-PA	TEAM	Jaguares de Córdoba		19	25
+CHN-SL	TS	Dalian Pro	O	20	25
+CHN-SL	TS	Dalian Pro	U	62	72
+CHN-SL	TS	Dalian Yingbo	O	13	16
+CHN-SL	TS	Dalian Yingbo	U	26	33
+CHN-SL	TS	Guangzhou City	U	28	35
+CHN-SL	TS	Guangzhou FC	O	12	17
+CHN-SL	TS	Guangzhou FC	U	22	28
+CHN-SL	TS	Hebei	U	38	54
+CHN-SL	TS	Henan Songshan Longmen	O	59	71
+CHN-SL	TS	Henan Songshan Longmen	U	86	100
+CHN-SL	TS	Meizhou Hakka	O	35	44
+CHN-SL	TS	Meizhou Hakka	U	50	67
+CHN-SL	TS	Nantong Zhiyun	U	38	46
+CHN-SL	TS	Qingdao FC	U	23	29
+CHN-SL	TS	Qingdao Hainiu	O	25	35
+CHN-SL	TS	Qingdao Hainiu	U	53	68
+CHN-SL	TS	Qingdao West Coast	O	22	28
+CHN-SL	TS	Qingdao West Coast	U	40	49
+CHN-SL	TS	Shandong Taishan	O	102	121
+CHN-SL	TS	Shandong Taishan	U	22	31
+CHN-SL	TS	Shanghai Port	O	97	121
+CHN-SL	TS	Shanghai Port	U	26	33
+CHN-SL	TS	Shanghai Shenhua	O	75	89
+CHN-SL	TS	Shanghai Shenhua	U	72	84
+CHN-SL	TS	Shenzhen	O	13	16
+CHN-SL	TS	Shenzhen	U	58	71
+CHN-SL	TS	Shenzhen Xinpengcheng	O	19	24
+CHN-SL	TS	Shenzhen Xinpengcheng	U	38	49
+CHN-SL	TS	Tianjin Jinmen Tiger	O	52	68
+CHN-SL	TS	Tianjin Jinmen Tiger	U	88	103
+CHN-SL	TS	Wuhan FC	U	45	51
+CHN-SL	TS	Wuhan Three Towns	O	59	71
+CHN-SL	TS	Wuhan Three Towns	U	48	61
+CHN-SL	TS	Yunnan Yukun	O	27	34
+CHN-SL	TS	Zhejiang Professional	O	81	90
+CHN-SL	TS	Zhejiang Professional	U	30	43
+COL-PA	LG			1284	1495
+COL-PA	SIDE		O	11	16
+COL-PA	SIDE		U	1273	1479
+COL-PA	TEAM	Alianza FC		118	140
+COL-PA	TEAM	América de Cali		143	166
+COL-PA	TEAM	Atlético Bucaramanga		131	147
+COL-PA	TEAM	Atlético Huila		27	31
+COL-PA	TEAM	Atlético Junior		145	172
+COL-PA	TEAM	Atlético Nacional		148	172
+COL-PA	TEAM	Boyacá Chicó FC		116	137
 COL-PA	TEAM	Cúcuta Deportivo		15	24
-COL-PA	SIDE		U	248	293
-COL-PA	TS	Deportes Tolima	U	35	39
-COL-PA	TS	Llaneros FC	U	25	28
-COL-PA	TS	Atlético Nacional	U	28	33
-COL-PA	TS	Boyacá Chicó FC	U	21	25
-COL-PA	TS	América de Cali	U	32	34
-COL-PA	TS	Millonarios	U	23	26
-COL-PA	TS	Deportivo Pereira	U	15	24
-COL-PA	TS	Independiente Medellín	U	21	27
-COL-PA	TS	Fortaleza CEIF	U	29	32
-COL-PA	TS	Atlético Junior	U	33	36
-COL-PA	TS	Once Caldas	U	23	28
-COL-PA	TS	Deportivo Pasto	U	23	29
-COL-PA	TS	Atlético Bucaramanga	U	27	32
-COL-PA	TS	Internacional de Bogotá	U	22	29
-COL-PA	TS	Alianza FC	U	22	26
-COL-PA	TS	Independiente Santa Fe	U	32	35
-COL-PA	TS	Deportivo Cali	U	24	25
-COL-PA	TS	Águilas Doradas	U	22	24
-COL-PA	TS	Jaguares de Córdoba	U	19	25
+COL-PA	TEAM	Deportes Tolima		151	172
+COL-PA	TEAM	Deportivo Cali		112	137
+COL-PA	TEAM	Deportivo Pasto		127	148
+COL-PA	TEAM	Deportivo Pereira		111	137
+COL-PA	TEAM	Envigado FC		96	109
+COL-PA	TEAM	Fortaleza CEIF		96	108
+COL-PA	TEAM	Independiente Medellín		134	160
+COL-PA	TEAM	Independiente Santa Fe		146	164
+COL-PA	TEAM	Internacional de Bogotá		117	142
+COL-PA	TEAM	Jaguares de Córdoba		83	94
+COL-PA	TEAM	Llaneros FC		53	60
+COL-PA	TEAM	Millonarios		145	166
+COL-PA	TEAM	Once Caldas		139	152
+COL-PA	TEAM	Patriotas		33	38
+COL-PA	TEAM	Unión Magdalena		56	70
+COL-PA	TEAM	Águilas Doradas		126	144
+COL-PA	TS	Alianza FC	U	118	140
+COL-PA	TS	América de Cali	U	142	163
+COL-PA	TS	Atlético Bucaramanga	U	130	146
+COL-PA	TS	Atlético Huila	U	27	31
+COL-PA	TS	Atlético Junior	U	142	168
+COL-PA	TS	Atlético Nacional	U	143	164
+COL-PA	TS	Boyacá Chicó FC	U	116	137
 COL-PA	TS	Cúcuta Deportivo	U	15	24
-COPA-L	LG			149	199
-COPA-L	TEAM	SE Palmeiras		19	22
-COPA-L	TEAM	CA River Plate		11	16
-COPA-L	TEAM	Botafogo FR		11	16
-COPA-L	TEAM	CR Flamengo		13	18
-COPA-L	TEAM	Barcelona SC		13	16
-COPA-L	TEAM	Club Cerro Porteño		11	18
-COPA-L	SIDE		DNB1	23	25
-COPA-L	SIDE		O	29	54
-COPA-L	SIDE		U	97	120
-CRO-1L	LG			255	295
-CRO-1L	TEAM	Dinamo Zagreb		49	61
-CRO-1L	TEAM	Lokomotiva Zagreb		52	60
-CRO-1L	TEAM	HNK Rijeka		56	60
-CRO-1L	TEAM	Hajduk Split		53	60
-CRO-1L	TEAM	NK Rudeš		15	23
-CRO-1L	TEAM	HNK Gorica		53	59
-CRO-1L	TEAM	NK Osijek		53	59
-CRO-1L	TEAM	NK Istra 1961		50	59
-CRO-1L	TEAM	Slaven Belupo		44	58
-CRO-1L	TEAM	NK Varaždin		57	60
+COL-PA	TS	Deportes Tolima	U	147	168
+COL-PA	TS	Deportivo Cali	U	111	135
+COL-PA	TS	Deportivo Pasto	U	127	147
+COL-PA	TS	Deportivo Pereira	U	111	137
+COL-PA	TS	Envigado FC	U	96	109
+COL-PA	TS	Fortaleza CEIF	U	96	108
+COL-PA	TS	Independiente Medellín	U	129	153
+COL-PA	TS	Independiente Santa Fe	U	146	164
+COL-PA	TS	Internacional de Bogotá	U	117	142
+COL-PA	TS	Jaguares de Córdoba	U	83	94
+COL-PA	TS	Llaneros FC	U	53	60
+COL-PA	TS	Millonarios	U	145	166
+COL-PA	TS	Once Caldas	U	139	152
+COL-PA	TS	Patriotas	U	33	38
+COL-PA	TS	Unión Magdalena	U	56	70
+COL-PA	TS	Águilas Doradas	U	124	142
+COPA-L	LG			821	1041
+COPA-L	SIDE		DNB1	142	164
+COPA-L	SIDE		O	228	319
+COPA-L	SIDE		U	451	558
+COPA-L	TEAM	Alianza Lima		18	20
+COPA-L	TEAM	Athletico Paranaense		27	39
+COPA-L	TEAM	Atlético Junior		26	32
+COPA-L	TEAM	Atlético Mineiro		24	37
+COPA-L	TEAM	Atlético Nacional		23	30
+COPA-L	TEAM	Atlético Tucumán		11	15
+COPA-L	TEAM	Barcelona		31	37
+COPA-L	TEAM	Barcelona SC		16	20
+COPA-L	TEAM	Boca Juniors		49	55
+COPA-L	TEAM	Bolívar		16	20
+COPA-L	TEAM	Botafogo FR		11	17
+COPA-L	TEAM	CA Peñarol		10	15
+COPA-L	TEAM	CA River Plate		17	22
+COPA-L	TEAM	CAR Independiente del Valle		12	18
+COPA-L	TEAM	CR Flamengo		19	26
+COPA-L	TEAM	CSD Colo-Colo		14	15
+COPA-L	TEAM	Caracas FC		16	21
+COPA-L	TEAM	Cerro Porteño		29	36
+COPA-L	TEAM	Club Alianza Lima		13	16
+COPA-L	TEAM	Club Bolívar		17	20
+COPA-L	TEAM	Club Cerro Porteño		17	25
+COPA-L	TEAM	Club Libertad Asuncion		15	17
+COPA-L	TEAM	Club Nacional de Football		16	20
+COPA-L	TEAM	Club Olimpia		28	35
+COPA-L	TEAM	Colo-Colo		19	21
+COPA-L	TEAM	Corinthians SP		16	18
+COPA-L	TEAM	Cruzeiro		13	17
+COPA-L	TEAM	Deportes Tolima		12	15
+COPA-L	TEAM	Deportivo Lara		11	15
+COPA-L	TEAM	Emelec		21	25
+COPA-L	TEAM	Estudiantes		17	21
+COPA-L	TEAM	FBC Melgar		14	17
+COPA-L	TEAM	Flamengo RJ		48	57
+COPA-L	TEAM	Fluminense FC		19	21
+COPA-L	TEAM	Grêmio Porto Alegre		33	47
+COPA-L	TEAM	Guaraní		19	26
+COPA-L	TEAM	Independiente del Valle		24	30
+COPA-L	TEAM	Internacional		21	25
+COPA-L	TEAM	Jorge Wilstermann		14	22
+COPA-L	TEAM	LDU Quito		19	21
+COPA-L	TEAM	Libertad		34	44
+COPA-L	TEAM	Nacional		34	39
+COPA-L	TEAM	Palmeiras		47	61
+COPA-L	TEAM	Peñarol		22	28
+COPA-L	TEAM	Racing Club		28	37
+COPA-L	TEAM	River Plate		49	64
+COPA-L	TEAM	SE Palmeiras		26	32
+COPA-L	TEAM	San Lorenzo		15	20
+COPA-L	TEAM	Santa Fe		14	20
+COPA-L	TEAM	Santos FC		33	40
+COPA-L	TEAM	Sporting Cristal		21	23
+COPA-L	TEAM	São Paulo FC		28	35
+COPA-L	TEAM	The Strongest		28	35
+COPA-L	TEAM	Universidad Católica		22	27
+COPA-L	TEAM	Vélez Sarsfield		9	16
+COPA-L	TS	Alianza Lima	U	13	15
+COPA-L	TS	Athletico Paranaense	U	13	20
+COPA-L	TS	Atlético Junior	U	19	21
+COPA-L	TS	Atlético Mineiro	O	9	16
+COPA-L	TS	Atlético Nacional	U	13	17
+COPA-L	TS	Barcelona	U	20	22
+COPA-L	TS	Barcelona SC	U	14	17
+COPA-L	TS	Boca Juniors	O	19	25
+COPA-L	TS	Boca Juniors	U	25	25
+COPA-L	TS	Caracas FC	U	15	20
+COPA-L	TS	Cerro Porteño	U	22	26
+COPA-L	TS	Club Alianza Lima	U	13	16
+COPA-L	TS	Club Cerro Porteño	U	12	17
+COPA-L	TS	Club Libertad Asuncion	U	13	15
+COPA-L	TS	Club Olimpia	U	18	22
+COPA-L	TS	Colo-Colo	U	15	17
+COPA-L	TS	Flamengo RJ	O	26	32
+COPA-L	TS	Grêmio Porto Alegre	O	18	25
+COPA-L	TS	Grêmio Porto Alegre	U	11	15
+COPA-L	TS	Internacional	U	15	17
+COPA-L	TS	Libertad	U	17	24
+COPA-L	TS	Nacional	U	28	32
+COPA-L	TS	Palmeiras	DNB1	17	19
+COPA-L	TS	Palmeiras	O	27	36
+COPA-L	TS	Peñarol	U	13	18
+COPA-L	TS	Racing Club	O	11	19
+COPA-L	TS	River Plate	O	27	38
+COPA-L	TS	River Plate	U	13	16
+COPA-L	TS	SE Palmeiras	O	13	17
+COPA-L	TS	Santos FC	U	19	23
+COPA-L	TS	Sporting Cristal	U	14	15
+COPA-L	TS	São Paulo FC	O	12	18
+COPA-L	TS	The Strongest	U	16	20
+COPA-L	TS	Universidad Católica	U	13	16
+CRO-1L	LG			280	329
+CRO-1L	SIDE		O	10	20
+CRO-1L	SIDE		U	269	307
+CRO-1L	TEAM	Dinamo Zagreb		52	66
+CRO-1L	TEAM	HNK Gorica		60	66
+CRO-1L	TEAM	HNK Rijeka		61	67
 CRO-1L	TEAM	HNK Šibenik		28	31
-CRO-1L	SIDE		U	249	285
-CRO-1L	TS	Dinamo Zagreb	U	43	52
-CRO-1L	TS	Lokomotiva Zagreb	U	51	59
-CRO-1L	TS	HNK Rijeka	U	53	56
-CRO-1L	TS	Hajduk Split	U	53	57
-CRO-1L	TS	NK Rudeš	U	15	23
-CRO-1L	TS	HNK Gorica	U	52	58
-CRO-1L	TS	NK Osijek	U	52	57
-CRO-1L	TS	NK Istra 1961	U	50	59
-CRO-1L	TS	Slaven Belupo	U	44	58
-CRO-1L	TS	NK Varaždin	U	57	60
+CRO-1L	TEAM	Hajduk Split		57	67
+CRO-1L	TEAM	Lokomotiva Zagreb		57	66
+CRO-1L	TEAM	NK Istra 1961		56	67
+CRO-1L	TEAM	NK Osijek		58	65
+CRO-1L	TEAM	NK Rudeš		21	31
+CRO-1L	TEAM	NK Varaždin		63	67
+CRO-1L	TEAM	Slaven Belupo		47	65
+CRO-1L	TS	Dinamo Zagreb	U	45	55
+CRO-1L	TS	HNK Gorica	U	58	64
+CRO-1L	TS	HNK Rijeka	U	56	59
 CRO-1L	TS	HNK Šibenik	U	28	31
-CZE-FL	LG			258	300
-CZE-FL	TEAM	MFK Karviná		29	36
-CZE-FL	TEAM	Slovan Liberec		25	33
-CZE-FL	TEAM	FK Teplice		35	38
-CZE-FL	TEAM	Sigma Olomouc		32	36
-CZE-FL	TEAM	FC Hradec Králové		37	38
-CZE-FL	TEAM	FK Mladá Boleslav		35	39
-CZE-FL	TEAM	1. FC Slovácko		33	38
-CZE-FL	TEAM	AC Sparta Praha		33	38
-CZE-FL	TEAM	Baník Ostrava		28	38
-CZE-FL	TEAM	Slavia Praha		31	38
-CZE-FL	TEAM	Viktoria Plzeň		32	38
-CZE-FL	TEAM	Dynamo České Budějovice		32	38
-CZE-FL	TEAM	FK Jablonec		31	38
-CZE-FL	TEAM	FK Pardubice		36	38
-CZE-FL	TEAM	Bohemians Praha 1905		33	37
-CZE-FL	TEAM	FK Dukla Praha		30	35
-CZE-FL	SIDE		U	224	255
-CZE-FL	SIDE		O	30	41
-CZE-FL	TS	MFK Karviná	U	27	34
-CZE-FL	TS	Slovan Liberec	U	24	29
-CZE-FL	TS	FK Teplice	U	33	35
-CZE-FL	TS	Sigma Olomouc	U	28	31
-CZE-FL	TS	FC Hradec Králové	U	37	38
-CZE-FL	TS	FK Mladá Boleslav	U	33	36
-CZE-FL	TS	1. FC Slovácko	U	32	37
-CZE-FL	TS	Slavia Praha	O	14	20
-CZE-FL	TS	Dynamo České Budějovice	U	31	37
-CZE-FL	TS	FK Jablonec	U	26	31
-CZE-FL	TS	FK Pardubice	U	34	36
-CZE-FL	TS	Bohemians Praha 1905	U	32	35
-CZE-FL	TS	AC Sparta Praha	U	19	23
-CZE-FL	TS	Baník Ostrava	U	24	30
-CZE-FL	TS	FK Dukla Praha	U	29	34
-CZE-FL	TS	Viktoria Plzeň	U	21	25
-CZE-FL	TS	Slavia Praha	U	14	15
-DEN-SL	LG			253	295
-DEN-SL	TEAM	Sonderjyske		42	50
-DEN-SL	TEAM	FC Copenhagen		45	49
-DEN-SL	TEAM	Silkeborg		47	51
-DEN-SL	TEAM	Vejle		40	46
-DEN-SL	TEAM	Nordsjaelland		36	48
-DEN-SL	TEAM	Aarhus		47	49
-DEN-SL	TEAM	Brondby		38	49
-DEN-SL	TEAM	Odense		41	49
-DEN-SL	TEAM	Viborg		40	50
-DEN-SL	TEAM	Fredericia		38	46
-DEN-SL	TEAM	Midtjylland		40	49
-DEN-SL	TEAM	Randers FC		48	50
-DEN-SL	SIDE		O	87	97
-DEN-SL	SIDE		U	153	183
-DEN-SL	TS	Sonderjyske	O	16	18
-DEN-SL	TS	FC Copenhagen	O	22	22
-DEN-SL	TS	Silkeborg	U	26	30
-DEN-SL	TS	Vejle	U	26	30
-DEN-SL	TS	Nordsjaelland	O	14	18
-DEN-SL	TS	Aarhus	O	29	29
-DEN-SL	TS	Brondby	U	25	32
-DEN-SL	TS	Odense	U	27	31
-DEN-SL	TS	Viborg	U	28	36
-DEN-SL	TS	Fredericia	U	30	36
-DEN-SL	TS	Odense	O	14	18
-DEN-SL	TS	Midtjylland	O	14	18
-DEN-SL	TS	Randers FC	U	41	43
-DEN-SL	TS	Nordsjaelland	U	20	28
-DEN-SL	TS	Silkeborg	O	19	19
-DEN-SL	TS	Sonderjyske	U	26	32
-DEN-SL	TS	Aarhus	U	18	20
-DEN-SL	TS	FC Copenhagen	U	20	24
+CRO-1L	TS	Hajduk Split	U	56	60
+CRO-1L	TS	Lokomotiva Zagreb	U	56	64
+CRO-1L	TS	NK Istra 1961	U	56	65
+CRO-1L	TS	NK Osijek	U	54	59
+CRO-1L	TS	NK Rudeš	U	21	30
+CRO-1L	TS	NK Varaždin	U	61	65
+CRO-1L	TS	Slaven Belupo	U	47	62
+CZE-FL	LG			918	1072
+CZE-FL	SIDE		DNB1	14	17
+CZE-FL	SIDE		O	106	133
+CZE-FL	SIDE		U	797	921
+CZE-FL	TEAM	1. FC Slovácko		115	134
+CZE-FL	TEAM	1. FK Příbram		51	64
+CZE-FL	TEAM	AC Sparta Praha		109	132
+CZE-FL	TEAM	Baník Ostrava		110	132
+CZE-FL	TEAM	Bohemians Praha 1905		119	132
+CZE-FL	TEAM	Dynamo České Budějovice		83	98
+CZE-FL	TEAM	FC Fastav Zlín		57	62
+CZE-FL	TEAM	FC Hradec Králové		61	64
+CZE-FL	TEAM	FC Zlín		24	30
+CZE-FL	TEAM	FK Dukla Praha		54	65
+CZE-FL	TEAM	FK Jablonec		111	133
+CZE-FL	TEAM	FK Mladá Boleslav		119	134
+CZE-FL	TEAM	FK Pardubice		90	99
+CZE-FL	TEAM	FK Teplice		113	129
+CZE-FL	TEAM	MFK Karviná		114	130
+CZE-FL	TEAM	SFC Opava		53	63
+CZE-FL	TEAM	Sigma Olomouc		112	127
+CZE-FL	TEAM	Slavia Praha		105	130
+CZE-FL	TEAM	Slovan Liberec		103	125
+CZE-FL	TEAM	Viktoria Plzeň		108	132
+CZE-FL	TEAM	Zbrojovka Brno		25	29
+CZE-FL	TS	1. FC Slovácko	U	101	119
+CZE-FL	TS	1. FK Příbram	U	44	56
+CZE-FL	TS	AC Sparta Praha	O	40	46
+CZE-FL	TS	AC Sparta Praha	U	65	81
+CZE-FL	TS	Baník Ostrava	O	12	18
+CZE-FL	TS	Baník Ostrava	U	98	114
+CZE-FL	TS	Bohemians Praha 1905	U	113	124
+CZE-FL	TS	Dynamo České Budějovice	U	81	94
+CZE-FL	TS	FC Fastav Zlín	U	54	59
+CZE-FL	TS	FC Hradec Králové	U	60	63
+CZE-FL	TS	FC Zlín	U	22	28
+CZE-FL	TS	FK Dukla Praha	U	53	64
+CZE-FL	TS	FK Jablonec	O	14	19
+CZE-FL	TS	FK Jablonec	U	96	113
+CZE-FL	TS	FK Mladá Boleslav	O	15	18
+CZE-FL	TS	FK Mladá Boleslav	U	102	114
+CZE-FL	TS	FK Pardubice	U	87	95
+CZE-FL	TS	FK Teplice	U	106	121
+CZE-FL	TS	MFK Karviná	U	109	124
+CZE-FL	TS	SFC Opava	U	51	61
+CZE-FL	TS	Sigma Olomouc	U	105	118
+CZE-FL	TS	Slavia Praha	O	49	63
+CZE-FL	TS	Slavia Praha	U	47	58
+CZE-FL	TS	Slovan Liberec	U	96	112
+CZE-FL	TS	Viktoria Plzeň	O	25	30
+CZE-FL	TS	Viktoria Plzeň	U	81	98
+CZE-FL	TS	Zbrojovka Brno	U	23	26
+DEN-SL	LG			591	712
+DEN-SL	SIDE		DNB1	13	15
+DEN-SL	SIDE		O	275	326
+DEN-SL	SIDE		U	301	369
+DEN-SL	TEAM	Aalborg BK		20	27
+DEN-SL	TEAM	Aarhus		57	61
+DEN-SL	TEAM	Aarhus GF		47	58
+DEN-SL	TEAM	Brondby		48	61
+DEN-SL	TEAM	Brøndby IF		49	58
+DEN-SL	TEAM	FC Copenhagen		55	61
+DEN-SL	TEAM	FC København		52	59
+DEN-SL	TEAM	FC Midtjylland		49	58
+DEN-SL	TEAM	FC Nordsjælland		46	58
+DEN-SL	TEAM	Fredericia		46	58
+DEN-SL	TEAM	Hvidovre IF		20	27
+DEN-SL	TEAM	Lyngby		53	62
+DEN-SL	TEAM	Midtjylland		50	61
+DEN-SL	TEAM	Nordsjaelland		44	60
+DEN-SL	TEAM	Odense		53	61
+DEN-SL	TEAM	Odense BK		21	27
+DEN-SL	TEAM	Randers FC		104	121
+DEN-SL	TEAM	Silkeborg		55	63
+DEN-SL	TEAM	Silkeborg IF		49	57
+DEN-SL	TEAM	Sonderjyske		50	62
+DEN-SL	TEAM	SønderjyskE		21	27
+DEN-SL	TEAM	Vejle		52	58
+DEN-SL	TEAM	Vejle BK		47	59
+DEN-SL	TEAM	Viborg		48	62
+DEN-SL	TEAM	Viborg FF		46	58
+DEN-SL	TS	Aalborg BK	U	16	21
+DEN-SL	TS	Aarhus	O	37	39
+DEN-SL	TS	Aarhus	U	20	22
+DEN-SL	TS	Aarhus GF	O	30	36
+DEN-SL	TS	Aarhus GF	U	17	22
+DEN-SL	TS	Brondby	O	19	23
+DEN-SL	TS	Brondby	U	27	34
+DEN-SL	TS	Brøndby IF	O	39	48
+DEN-SL	TS	FC Copenhagen	O	32	32
+DEN-SL	TS	FC Copenhagen	U	20	26
+DEN-SL	TS	FC København	O	44	50
+DEN-SL	TS	FC Midtjylland	O	39	45
+DEN-SL	TS	FC Nordsjælland	O	34	42
+DEN-SL	TS	FC Nordsjælland	U	11	15
+DEN-SL	TS	Fredericia	O	14	16
+DEN-SL	TS	Fredericia	U	32	40
+DEN-SL	TS	Hvidovre IF	U	19	25
+DEN-SL	TS	Lyngby	U	42	48
+DEN-SL	TS	Midtjylland	O	24	30
 DEN-SL	TS	Midtjylland	U	16	21
-EGY-PL	LG			236	285
-EGY-PL	TEAM	ENPPI		27	33
-EGY-PL	TEAM	Future FC		27	33
-EGY-PL	TEAM	National Bank SC		21	31
-EGY-PL	TEAM	Al Masry Club		30	32
-EGY-PL	TEAM	Ismaily		26	30
-EGY-PL	TEAM	Pyramids FC		31	34
-EGY-PL	TEAM	ZED FC		25	32
-EGY-PL	TEAM	Ittihad El Iskandary		28	29
-EGY-PL	TEAM	Pharco FC		28	32
-EGY-PL	TEAM	El Gouna		29	32
-EGY-PL	TEAM	Tala'ea El Gaish SC		25	31
-EGY-PL	TEAM	Ceramica Cleopatra		24	31
-EGY-PL	TEAM	Zamalek		29	36
-EGY-PL	TEAM	Smouha Sporting Club		27	32
-EGY-PL	TEAM	Al Ahly SC		29	38
-EGY-PL	TEAM	Haras El Hodood		12	16
+DEN-SL	TS	Nordsjaelland	O	18	24
+DEN-SL	TS	Nordsjaelland	U	24	34
+DEN-SL	TS	Odense	O	24	28
+DEN-SL	TS	Odense	U	29	33
+DEN-SL	TS	Odense BK	U	17	20
+DEN-SL	TS	Randers FC	O	31	40
+DEN-SL	TS	Randers FC	U	71	79
+DEN-SL	TS	Silkeborg	O	25	25
+DEN-SL	TS	Silkeborg	U	28	36
+DEN-SL	TS	Silkeborg IF	O	28	33
+DEN-SL	TS	Silkeborg IF	U	20	23
+DEN-SL	TS	Sonderjyske	O	20	24
+DEN-SL	TS	Sonderjyske	U	30	38
+DEN-SL	TS	SønderjyskE	U	11	16
+DEN-SL	TS	Vejle	O	14	16
+DEN-SL	TS	Vejle	U	34	38
+DEN-SL	TS	Vejle BK	U	36	45
+DEN-SL	TS	Viborg	O	16	20
+DEN-SL	TS	Viborg	U	32	42
+DEN-SL	TS	Viborg FF	O	23	29
+DEN-SL	TS	Viborg FF	U	23	29
+EGY-PL	LG			351	424
+EGY-PL	SIDE		O	22	35
+EGY-PL	SIDE		U	326	386
+EGY-PL	TEAM	Al Ahly SC		36	48
+EGY-PL	TEAM	Al Masry Club		43	48
+EGY-PL	TEAM	Al Mokawloon		23	28
+EGY-PL	TEAM	Baladeyet Al Mahalla		22	29
+EGY-PL	TEAM	Ceramica Cleopatra		36	46
+EGY-PL	TEAM	ENPPI		41	49
+EGY-PL	TEAM	El Daklyeh		24	28
+EGY-PL	TEAM	El Gouna		43	48
+EGY-PL	TEAM	Future FC		41	48
 EGY-PL	TEAM	Ghazl Al Mehalla		14	16
+EGY-PL	TEAM	Haras El Hodood		12	16
+EGY-PL	TEAM	Ismaily		43	48
+EGY-PL	TEAM	Ittihad El Iskandary		41	47
+EGY-PL	TEAM	National Bank SC		31	48
 EGY-PL	TEAM	PetroJet FC		12	15
-EGY-PL	SIDE		U	222	266
-EGY-PL	SIDE		O	11	16
-EGY-PL	TS	ENPPI	U	27	33
-EGY-PL	TS	Future FC	U	26	32
-EGY-PL	TS	National Bank SC	U	20	28
-EGY-PL	TS	Al Masry Club	U	30	32
-EGY-PL	TS	Ismaily	U	26	30
-EGY-PL	TS	Pyramids FC	U	25	27
-EGY-PL	TS	ZED FC	U	23	28
-EGY-PL	TS	Ittihad El Iskandary	U	28	29
-EGY-PL	TS	Pharco FC	U	27	31
-EGY-PL	TS	El Gouna	U	29	32
-EGY-PL	TS	Tala'ea El Gaish SC	U	24	30
-EGY-PL	TS	Ceramica Cleopatra	U	22	29
-EGY-PL	TS	Zamalek	U	27	34
-EGY-PL	TS	Smouha Sporting Club	U	25	29
-EGY-PL	TS	Al Ahly SC	U	20	25
-EGY-PL	TS	Haras El Hodood	U	12	16
+EGY-PL	TEAM	Pharco FC		42	47
+EGY-PL	TEAM	Pyramids FC		43	48
+EGY-PL	TEAM	Smouha Sporting Club		41	49
+EGY-PL	TEAM	Tala'ea El Gaish SC		40	47
+EGY-PL	TEAM	ZED FC		38	49
+EGY-PL	TEAM	Zamalek		36	46
+EGY-PL	TS	Al Ahly SC	O	11	17
+EGY-PL	TS	Al Ahly SC	U	22	28
+EGY-PL	TS	Al Masry Club	U	42	46
+EGY-PL	TS	Al Mokawloon	U	21	26
+EGY-PL	TS	Baladeyet Al Mahalla	U	21	28
+EGY-PL	TS	Ceramica Cleopatra	U	31	41
+EGY-PL	TS	ENPPI	U	40	48
+EGY-PL	TS	El Daklyeh	U	24	28
+EGY-PL	TS	El Gouna	U	41	46
+EGY-PL	TS	Future FC	U	39	46
 EGY-PL	TS	Ghazl Al Mehalla	U	14	16
+EGY-PL	TS	Haras El Hodood	U	12	16
+EGY-PL	TS	Ismaily	U	43	48
+EGY-PL	TS	Ittihad El Iskandary	U	40	43
+EGY-PL	TS	National Bank SC	U	29	42
 EGY-PL	TS	PetroJet FC	U	12	15
-ENG-CH	LG			246	300
-ENG-CH	TEAM	Derby County FC		18	24
-ENG-CH	TEAM	Middlesbrough FC		22	27
-ENG-CH	TEAM	Hull City AFC		16	25
-ENG-CH	TEAM	Stoke City FC		20	24
-ENG-CH	TEAM	Charlton Athletic FC		21	25
-ENG-CH	TEAM	Coventry City FC		21	22
-ENG-CH	TEAM	Bristol City FC		19	24
-ENG-CH	TEAM	Portsmouth FC		17	25
-ENG-CH	TEAM	Blackburn Rovers FC		21	25
-ENG-CH	TEAM	Wrexham AFC		23	25
-ENG-CH	TEAM	Ipswich Town FC		19	22
-ENG-CH	TEAM	Oxford United FC		17	22
-ENG-CH	TEAM	Southampton FC		18	25
-ENG-CH	TEAM	Norwich City FC		19	23
-ENG-CH	TEAM	Millwall FC		21	25
-ENG-CH	TEAM	Swansea City AFC		20	23
-ENG-CH	TEAM	Queens Park Rangers FC		18	23
-ENG-CH	TEAM	Sheffield Wednesday FC		18	22
-ENG-CH	TEAM	Preston North End FC		19	23
-ENG-CH	TEAM	Birmingham City FC		21	23
-ENG-CH	TEAM	Leicester City FC		17	21
-ENG-CH	TEAM	West Bromwich Albion FC		18	22
-ENG-CH	TEAM	Sheffield United FC		18	23
-ENG-CH	TEAM	Watford FC		20	23
-ENG-CH	SIDE		U	167	203
-ENG-CH	SIDE		O	77	95
-ENG-CH	TS	Derby County FC	U	12	16
-ENG-CH	TS	Stoke City FC	U	18	22
-ENG-CH	TS	Charlton Athletic FC	U	20	23
-ENG-CH	TS	Bristol City FC	U	16	21
-ENG-CH	TS	Portsmouth FC	U	13	18
-ENG-CH	TS	Blackburn Rovers FC	U	20	24
-ENG-CH	TS	Oxford United FC	U	16	20
-ENG-CH	TS	Swansea City AFC	U	14	17
-ENG-CH	TS	Queens Park Rangers FC	U	15	20
-ENG-CH	TS	Sheffield Wednesday FC	U	17	21
-ENG-CH	TS	Birmingham City FC	U	18	19
-ENG-CH	TS	Preston North End FC	U	13	17
-ENG-CH	TS	Wrexham AFC	O	14	15
-ENG-CH	TS	Watford FC	U	19	22
-ENG-L1	LG			249	300
-ENG-L1	TEAM	Burton		25	26
-ENG-L1	TEAM	Wigan		20	26
-ENG-L1	TEAM	Bradford		25	26
-ENG-L1	TEAM	Port Vale		19	25
-ENG-L1	TEAM	Rotherham		19	23
-ENG-L1	TEAM	Peterboro		20	25
-ENG-L1	TEAM	Reading		21	25
-ENG-L1	TEAM	Wycombe		20	24
-ENG-L1	TEAM	Cardiff		20	24
-ENG-L1	TEAM	Barnsley		21	27
-ENG-L1	TEAM	Stevenage		21	26
-ENG-L1	TEAM	Plymouth		21	24
-ENG-L1	TEAM	Blackpool		20	24
-ENG-L1	TEAM	Lincoln		22	23
-ENG-L1	TEAM	Huddersfield		21	24
-ENG-L1	TEAM	Northampton		18	24
-ENG-L1	TEAM	Stockport		19	25
-ENG-L1	TEAM	Leyton Orient		22	24
-ENG-L1	TEAM	AFC Wimbledon		16	25
-ENG-L1	TEAM	Exeter		18	24
-ENG-L1	TEAM	Luton		21	24
-ENG-L1	TEAM	Doncaster		21	24
-ENG-L1	TEAM	Bolton		19	24
-ENG-L1	TEAM	Mansfield		21	25
-ENG-L1	SIDE		U	171	206
-ENG-L1	SIDE		O	72	88
-ENG-L1	TS	Burton	U	23	24
-ENG-L1	TS	Wigan	U	19	24
-ENG-L1	TS	Bradford	U	20	21
-ENG-L1	TS	Port Vale	U	15	19
-ENG-L1	TS	Rotherham	U	16	19
-ENG-L1	TS	Reading	U	17	20
-ENG-L1	TS	Cardiff	O	15	17
-ENG-L1	TS	Barnsley	U	16	21
-ENG-L1	TS	Stevenage	U	20	23
-ENG-L1	TS	Blackpool	U	17	20
-ENG-L1	TS	Lincoln	O	14	15
-ENG-L1	TS	Northampton	U	17	23
-ENG-L1	TS	Leyton Orient	U	19	21
-ENG-L1	TS	AFC Wimbledon	U	11	19
-ENG-L1	TS	Exeter	U	16	21
-ENG-L1	TS	Luton	U	15	17
-ENG-L1	TS	Doncaster	U	16	18
-ENG-L1	TS	Mansfield	U	17	19
-ENG-L1	TS	Plymouth	O	14	17
-ENG-L2	LG			266	300
-ENG-L2	TEAM	Gillingham		20	25
-ENG-L2	TEAM	Colchester		22	25
-ENG-L2	TEAM	Walsall		25	25
-ENG-L2	TEAM	Oldham		22	25
-ENG-L2	TEAM	Tranmere		22	25
-ENG-L2	TEAM	Barrow		20	24
-ENG-L2	TEAM	Salford		22	25
-ENG-L2	TEAM	Fleetwood Town		23	25
-ENG-L2	TEAM	Milton Keynes Dons		20	24
-ENG-L2	TEAM	Notts County		20	24
-ENG-L2	TEAM	Grimsby		22	25
-ENG-L2	TEAM	Shrewsbury		23	25
-ENG-L2	TEAM	Cheltenham		20	25
-ENG-L2	TEAM	Swindon		24	25
-ENG-L2	TEAM	Bristol Rvs		22	25
-ENG-L2	TEAM	Barnet		20	25
-ENG-L2	TEAM	Accrington		23	25
-ENG-L2	TEAM	Harrogate		22	24
-ENG-L2	TEAM	Newport County		21	25
-ENG-L2	TEAM	Crewe		23	25
-ENG-L2	TEAM	Crawley Town		24	25
-ENG-L2	TEAM	Bromley		23	24
-ENG-L2	TEAM	Chesterfield		22	25
-ENG-L2	TEAM	Cambridge		22	24
-ENG-L2	SIDE		U	255	287
-ENG-L2	TS	Gillingham	U	19	24
-ENG-L2	TS	Colchester	U	22	24
-ENG-L2	TS	Walsall	U	25	25
-ENG-L2	TS	Oldham	U	21	24
-ENG-L2	TS	Tranmere	U	22	25
-ENG-L2	TS	Barrow	U	20	24
-ENG-L2	TS	Salford	U	21	23
-ENG-L2	TS	Fleetwood Town	U	22	24
-ENG-L2	TS	Milton Keynes Dons	U	16	19
-ENG-L2	TS	Notts County	U	17	20
-ENG-L2	TS	Grimsby	U	21	24
-ENG-L2	TS	Shrewsbury	U	23	25
-ENG-L2	TS	Cheltenham	U	20	25
-ENG-L2	TS	Swindon	U	21	22
-ENG-L2	TS	Bristol Rvs	U	21	24
-ENG-L2	TS	Barnet	U	17	22
-ENG-L2	TS	Accrington	U	23	25
-ENG-L2	TS	Harrogate	U	21	23
-ENG-L2	TS	Newport County	U	21	25
-ENG-L2	TS	Crewe	U	22	24
-ENG-L2	TS	Crawley Town	U	24	25
-ENG-L2	TS	Bromley	U	22	23
-ENG-L2	TS	Chesterfield	U	22	25
-ENG-L2	TS	Cambridge	U	22	24
-ENG-NL	LG			241	296
-ENG-NL	TEAM	Halifax		19	25
-ENG-NL	TEAM	Altrincham		21	25
-ENG-NL	TEAM	Gateshead		23	26
-ENG-NL	TEAM	Carlisle		19	24
-ENG-NL	TEAM	Eastleigh		21	26
-ENG-NL	TEAM	Woking		20	25
-ENG-NL	TEAM	Braintree Town		18	23
-ENG-NL	TEAM	Southend		18	27
-ENG-NL	TEAM	Brackley Town		21	24
-ENG-NL	TEAM	Forest Green		22	24
-ENG-NL	TEAM	Hartlepool		23	25
-ENG-NL	TEAM	Scunthorpe		20	26
-ENG-NL	TEAM	Rochdale		21	25
-ENG-NL	TEAM	Yeovil		18	24
-ENG-NL	TEAM	Tamworth		17	24
-ENG-NL	TEAM	Sutton		23	25
-ENG-NL	TEAM	Boreham Wood		23	25
-ENG-NL	TEAM	Solihull		19	24
-ENG-NL	TEAM	Truro		16	22
-ENG-NL	TEAM	York		19	23
-ENG-NL	TEAM	Aldershot		21	24
-ENG-NL	TEAM	Wealdstone		20	24
-ENG-NL	TEAM	Boston Utd		19	24
-ENG-NL	TEAM	Morecambe		15	22
-ENG-NL	SIDE		U	97	119
-ENG-NL	SIDE		O	137	170
-ENG-NL	TS	Altrincham	U	15	16
-ENG-NL	TS	Gateshead	U	17	19
-ENG-NL	TS	Braintree Town	U	13	18
-ENG-NL	TS	Brackley Town	U	16	18
-ENG-NL	TS	Scunthorpe	O	16	21
-ENG-NL	TS	Rochdale	O	19	23
-ENG-NL	TS	Southend	O	14	19
-ENG-NL	TS	Boreham Wood	O	21	22
-ENG-NL	TS	Solihull	O	15	19
-ENG-NL	TS	Truro	U	14	16
-ENG-NL	TS	York	O	15	19
-ENG-NL	TS	Carlisle	O	16	21
-ENG-NL	TS	Forest Green	O	16	17
-ENG-NL	TS	Halifax	O	13	19
-ENG-NL	TS	Aldershot	O	14	15
-ENG-NL	TS	Woking	O	13	17
-ENG-PL	LG			254	300
-ENG-PL	TEAM	Brighton & Hove Albion		26	29
-ENG-PL	TEAM	Leeds United		22	29
-ENG-PL	TEAM	Liverpool		25	30
-ENG-PL	TEAM	Aston Villa		25	29
-ENG-PL	TEAM	Tottenham Hotspur		25	29
-ENG-PL	TEAM	Chelsea FC		23	29
-ENG-PL	TEAM	Burnley		24	29
-ENG-PL	TEAM	Arsenal		25	29
-ENG-PL	TEAM	Nottingham Forest		27	30
-ENG-PL	TEAM	Manchester United		24	29
-ENG-PL	TEAM	Fulham		25	29
-ENG-PL	TEAM	Wolverhampton Wanderers		28	29
-ENG-PL	TEAM	West Ham United		21	29
-ENG-PL	TEAM	Newcastle United		21	29
-ENG-PL	TEAM	Manchester City		27	29
-ENG-PL	TEAM	Bournemouth		25	30
-ENG-PL	TEAM	Sunderland		24	29
-ENG-PL	TEAM	Everton		25	30
-ENG-PL	TEAM	Crystal Palace		26	29
-ENG-PL	TEAM	Brentford		23	28
-ENG-PL	SIDE		U	169	192
-ENG-PL	SIDE		O	83	106
-ENG-PL	TS	Brighton & Hove Albion	U	17	17
-ENG-PL	TS	Leeds United	U	17	20
-ENG-PL	TS	Liverpool	U	12	15
-ENG-PL	TS	Aston Villa	U	15	18
-ENG-PL	TS	Chelsea FC	O	12	16
-ENG-PL	TS	Arsenal	O	16	20
-ENG-PL	TS	Nottingham Forest	U	21	24
-ENG-PL	TS	Fulham	U	18	19
-ENG-PL	TS	Wolverhampton Wanderers	U	28	29
-ENG-PL	TS	West Ham United	U	17	22
-ENG-PL	TS	Newcastle United	U	14	19
-ENG-PL	TS	Manchester City	O	21	23
-ENG-PL	TS	Sunderland	U	22	25
-ENG-PL	TS	Everton	U	18	21
-ENG-PL	TS	Tottenham Hotspur	U	21	22
-ENG-PL	TS	Burnley	U	20	25
-ENG-PL	TS	Liverpool	O	13	15
-ENG-PL	TS	Bournemouth	U	14	16
-ENG-PL	TS	Brentford	U	16	19
-ENG-PL	TS	Crystal Palace	U	20	22
-ENG-PL	TS	Manchester United	O	14	18
-ESP-L2	LG			233	279
-ESP-L2	TEAM	Racing Ferrol		15	16
-ESP-L2	TEAM	Córdoba CF		21	25
-ESP-L2	TEAM	Burgos CF		23	25
-ESP-L2	TEAM	Real Oviedo		15	15
-ESP-L2	TEAM	Deportivo La Coruña		22	26
-ESP-L2	TEAM	SD Huesca		21	24
-ESP-L2	TEAM	Albacete		19	28
-ESP-L2	TEAM	CD Mirandés		20	26
-ESP-L2	TEAM	Cádiz CF		24	25
-ESP-L2	TEAM	CD Castellón		19	26
-ESP-L2	TEAM	SD Eibar		20	24
-ESP-L2	TEAM	UD Almería		16	23
-ESP-L2	TEAM	Málaga CF		21	24
-ESP-L2	TEAM	Real Zaragoza		17	24
-ESP-L2	TEAM	Sporting Gijón		19	25
-ESP-L2	TEAM	Racing Santander		22	23
-ESP-L2	TEAM	Granada CF		20	25
-ESP-L2	SIDE		U	221	263
-ESP-L2	SIDE		O	11	15
-ESP-L2	TS	Racing Ferrol	U	15	16
-ESP-L2	TS	Córdoba CF	U	20	24
-ESP-L2	TS	Burgos CF	U	22	24
-ESP-L2	TS	Real Oviedo	U	15	15
-ESP-L2	TS	Deportivo La Coruña	U	21	25
-ESP-L2	TS	SD Huesca	U	21	24
-ESP-L2	TS	Albacete	U	18	25
-ESP-L2	TS	CD Mirandés	U	19	24
-ESP-L2	TS	Cádiz CF	U	24	25
-ESP-L2	TS	CD Castellón	U	17	22
-ESP-L2	TS	SD Eibar	U	20	24
-ESP-L2	TS	UD Almería	U	14	19
-ESP-L2	TS	Málaga CF	U	21	24
-ESP-L2	TS	Real Zaragoza	U	16	23
-ESP-L2	TS	Sporting Gijón	U	18	24
-ESP-L2	TS	Granada CF	U	19	24
-ESP-LL	LG			250	300
-ESP-LL	TEAM	Real Madrid C.F.		26	29
-ESP-LL	TEAM	Barcelona		26	29
-ESP-LL	TEAM	CA Osasuna		21	29
-ESP-LL	TEAM	RC Celta		23	29
-ESP-LL	TEAM	Rayo Vallecano		26	29
-ESP-LL	TEAM	Deportivo Alavés		25	31
-ESP-LL	TEAM	Real Betis		26	30
-ESP-LL	TEAM	Atlético de Madrid		24	30
-ESP-LL	TEAM	Getafe CF		26	29
-ESP-LL	TEAM	Girona FC		23	28
-ESP-LL	TEAM	Real Sociedad		24	29
-ESP-LL	TEAM	Athletic Club		23	29
-ESP-LL	TEAM	Valencia CF		25	29
-ESP-LL	TEAM	Villarreal		26	29
-ESP-LL	TEAM	Sevilla		23	29
-ESP-LL	TEAM	Elche CF		22	29
-ESP-LL	TEAM	Levante UD		24	29
-ESP-LL	TEAM	RCD Mallorca		23	28
-ESP-LL	TEAM	RCD Espanyol		26	29
-ESP-LL	TEAM	Real Oviedo		23	28
-ESP-LL	SIDE		O	91	111
-ESP-LL	SIDE		U	143	172
-ESP-LL	SIDE		DNB1	16	17
-ESP-LL	TS	Real Madrid C.F.	O	20	22
-ESP-LL	TS	Barcelona	O	18	21
-ESP-LL	TS	CA Osasuna	U	15	21
-ESP-LL	TS	RC Celta	U	13	16
-ESP-LL	TS	Rayo Vallecano	U	21	23
-ESP-LL	TS	Deportivo Alavés	U	19	23
-ESP-LL	TS	Real Betis	O	14	16
-ESP-LL	TS	Atlético de Madrid	O	13	17
-ESP-LL	TS	Getafe CF	U	23	24
-ESP-LL	TS	Girona FC	U	19	21
-ESP-LL	TS	Athletic Club	U	17	21
-ESP-LL	TS	Villarreal	O	19	21
-ESP-LL	TS	Levante UD	U	17	22
-ESP-LL	TS	RCD Mallorca	U	14	18
-ESP-LL	TS	RCD Espanyol	U	20	22
-ESP-LL	TS	Real Oviedo	U	19	23
-ESP-LL	TS	Elche CF	U	12	17
-ESP-LL	TS	Sevilla	U	17	20
-ESP-LL	TS	Valencia CF	U	16	19
+EGY-PL	TS	Pharco FC	U	41	46
+EGY-PL	TS	Pyramids FC	U	36	39
+EGY-PL	TS	Smouha Sporting Club	U	39	44
+EGY-PL	TS	Tala'ea El Gaish SC	U	39	46
+EGY-PL	TS	ZED FC	U	35	41
+EGY-PL	TS	Zamalek	U	31	39
+ENG-CH	LG			1238	1495
+ENG-CH	SIDE		DNB1	29	30
+ENG-CH	SIDE		O	263	328
+ENG-CH	SIDE		U	945	1136
+ENG-CH	TEAM	Birmingham		26	30
+ENG-CH	TEAM	Birmingham City FC		42	48
+ENG-CH	TEAM	Blackburn		22	31
+ENG-CH	TEAM	Blackburn Rovers FC		82	94
+ENG-CH	TEAM	Bristol City		28	30
+ENG-CH	TEAM	Bristol City FC		81	96
+ENG-CH	TEAM	Burnley FC		38	47
+ENG-CH	TEAM	Cardiff		26	30
+ENG-CH	TEAM	Cardiff City FC		38	48
+ENG-CH	TEAM	Charlton Athletic FC		42	48
+ENG-CH	TEAM	Coventry		28	29
+ENG-CH	TEAM	Coventry City FC		81	94
+ENG-CH	TEAM	Derby County FC		75	94
+ENG-CH	TEAM	Huddersfield		24	29
+ENG-CH	TEAM	Hull		24	30
+ENG-CH	TEAM	Hull City AFC		69	95
+ENG-CH	TEAM	Ipswich		23	29
+ENG-CH	TEAM	Ipswich Town FC		38	46
+ENG-CH	TEAM	Leeds		26	29
+ENG-CH	TEAM	Leeds United FC		36	45
+ENG-CH	TEAM	Leicester		25	29
+ENG-CH	TEAM	Leicester City FC		36	46
+ENG-CH	TEAM	Luton Town FC		36	46
+ENG-CH	TEAM	Middlesbrough		29	30
+ENG-CH	TEAM	Middlesbrough FC		79	97
+ENG-CH	TEAM	Millwall		25	30
+ENG-CH	TEAM	Millwall FC		82	95
+ENG-CH	TEAM	Norwich		24	31
+ENG-CH	TEAM	Norwich City FC		75	94
+ENG-CH	TEAM	Oxford United FC		75	92
+ENG-CH	TEAM	Plymouth		26	29
+ENG-CH	TEAM	Plymouth Argyle FC		34	45
+ENG-CH	TEAM	Portsmouth FC		67	94
+ENG-CH	TEAM	Preston		26	30
+ENG-CH	TEAM	Preston North End FC		77	94
+ENG-CH	TEAM	QPR		29	31
+ENG-CH	TEAM	Queens Park Rangers FC		76	93
+ENG-CH	TEAM	Rotherham		23	29
+ENG-CH	TEAM	Sheffield United FC		83	97
+ENG-CH	TEAM	Sheffield Wednesday FC		70	87
+ENG-CH	TEAM	Sheffield Weds		26	29
+ENG-CH	TEAM	Southampton		25	30
+ENG-CH	TEAM	Southampton FC		38	50
+ENG-CH	TEAM	Stoke		26	31
+ENG-CH	TEAM	Stoke City FC		73	94
+ENG-CH	TEAM	Sunderland		23	29
+ENG-CH	TEAM	Sunderland AFC		39	48
+ENG-CH	TEAM	Swansea		30	31
+ENG-CH	TEAM	Swansea City AFC		80	94
+ENG-CH	TEAM	Watford		24	30
+ENG-CH	TEAM	Watford FC		83	94
+ENG-CH	TEAM	West Brom		28	30
+ENG-CH	TEAM	West Bromwich Albion FC		76	93
+ENG-CH	TEAM	Wrexham AFC		42	49
+ENG-CH	TS	Birmingham	U	24	28
+ENG-CH	TS	Birmingham City FC	U	30	35
+ENG-CH	TS	Blackburn	U	17	24
+ENG-CH	TS	Blackburn Rovers FC	U	76	87
+ENG-CH	TS	Bristol City	U	22	24
+ENG-CH	TS	Bristol City FC	U	70	84
+ENG-CH	TS	Burnley FC	U	28	32
+ENG-CH	TS	Cardiff	U	21	25
+ENG-CH	TS	Cardiff City FC	U	37	47
+ENG-CH	TS	Charlton Athletic FC	U	39	43
+ENG-CH	TS	Coventry	U	15	16
+ENG-CH	TS	Coventry City FC	O	23	27
+ENG-CH	TS	Coventry City FC	U	53	62
+ENG-CH	TS	Derby County FC	O	12	16
+ENG-CH	TS	Derby County FC	U	62	77
+ENG-CH	TS	Huddersfield	U	20	25
+ENG-CH	TS	Hull	O	12	15
+ENG-CH	TS	Hull	U	12	15
+ENG-CH	TS	Hull City AFC	O	12	21
+ENG-CH	TS	Hull City AFC	U	57	74
+ENG-CH	TS	Ipswich	O	16	19
+ENG-CH	TS	Ipswich Town FC	O	22	27
+ENG-CH	TS	Ipswich Town FC	U	15	18
+ENG-CH	TS	Leeds	O	15	18
+ENG-CH	TS	Leeds United FC	O	17	23
+ENG-CH	TS	Leeds United FC	U	13	16
+ENG-CH	TS	Leicester	O	15	16
+ENG-CH	TS	Leicester City FC	O	14	16
+ENG-CH	TS	Leicester City FC	U	22	30
+ENG-CH	TS	Luton Town FC	U	31	39
+ENG-CH	TS	Middlesbrough	U	18	19
+ENG-CH	TS	Middlesbrough FC	O	20	29
+ENG-CH	TS	Middlesbrough FC	U	59	68
+ENG-CH	TS	Millwall	U	24	28
+ENG-CH	TS	Millwall FC	O	14	18
+ENG-CH	TS	Millwall FC	U	67	76
+ENG-CH	TS	Norwich	U	15	20
+ENG-CH	TS	Norwich City FC	O	25	30
+ENG-CH	TS	Norwich City FC	U	48	62
+ENG-CH	TS	Oxford United FC	U	69	84
+ENG-CH	TS	Plymouth	U	21	23
+ENG-CH	TS	Plymouth Argyle FC	U	28	39
+ENG-CH	TS	Portsmouth FC	U	59	79
+ENG-CH	TS	Preston	U	21	25
+ENG-CH	TS	Preston North End FC	U	65	79
+ENG-CH	TS	QPR	U	26	28
+ENG-CH	TS	Queens Park Rangers FC	U	66	82
+ENG-CH	TS	Rotherham	U	20	26
+ENG-CH	TS	Sheffield United FC	O	22	26
+ENG-CH	TS	Sheffield United FC	U	59	69
+ENG-CH	TS	Sheffield Wednesday FC	U	62	79
+ENG-CH	TS	Sheffield Weds	U	21	24
+ENG-CH	TS	Southampton	O	19	21
+ENG-CH	TS	Southampton FC	O	20	26
+ENG-CH	TS	Southampton FC	U	17	23
+ENG-CH	TS	Stoke	U	22	26
+ENG-CH	TS	Stoke City FC	U	65	82
+ENG-CH	TS	Sunderland	U	22	24
+ENG-CH	TS	Sunderland AFC	U	33	38
+ENG-CH	TS	Swansea	U	25	26
+ENG-CH	TS	Swansea City AFC	U	70	83
+ENG-CH	TS	Watford	U	15	19
+ENG-CH	TS	Watford FC	U	73	83
+ENG-CH	TS	West Brom	U	23	25
+ENG-CH	TS	West Bromwich Albion FC	O	22	33
+ENG-CH	TS	West Bromwich Albion FC	U	54	60
+ENG-CH	TS	Wrexham AFC	O	19	21
+ENG-CH	TS	Wrexham AFC	U	23	28
+ENG-L1	LG			1231	1500
+ENG-L1	SIDE		O	265	338
+ENG-L1	SIDE		U	953	1149
+ENG-L1	TEAM	AFC Wimbledon		34	47
+ENG-L1	TEAM	Barnsley		102	125
+ENG-L1	TEAM	Birmingham		35	46
+ENG-L1	TEAM	Blackpool		105	125
+ENG-L1	TEAM	Bolton		99	125
+ENG-L1	TEAM	Bradford		42	47
+ENG-L1	TEAM	Bristol Rvs		62	79
+ENG-L1	TEAM	Burton		109	124
+ENG-L1	TEAM	Cambridge		68	79
+ENG-L1	TEAM	Cardiff		35	46
+ENG-L1	TEAM	Carlisle		23	31
+ENG-L1	TEAM	Charlton		66	79
+ENG-L1	TEAM	Cheltenham		25	31
+ENG-L1	TEAM	Crawley Town		34	46
+ENG-L1	TEAM	Derby		25	32
+ENG-L1	TEAM	Doncaster		39	47
+ENG-L1	TEAM	Exeter		106	124
+ENG-L1	TEAM	Fleetwood Town		28	33
+ENG-L1	TEAM	Huddersfield		76	93
+ENG-L1	TEAM	Leyton Orient		98	125
+ENG-L1	TEAM	Lincoln		108	125
+ENG-L1	TEAM	Luton		40	47
+ENG-L1	TEAM	Mansfield		79	93
+ENG-L1	TEAM	Northampton		106	125
+ENG-L1	TEAM	Oxford		28	33
+ENG-L1	TEAM	Peterboro		97	125
+ENG-L1	TEAM	Plymouth		36	47
+ENG-L1	TEAM	Port Vale		61	77
+ENG-L1	TEAM	Portsmouth		25	31
+ENG-L1	TEAM	Reading		102	125
+ENG-L1	TEAM	Rotherham		75	92
+ENG-L1	TEAM	Shrewsbury		63	77
+ENG-L1	TEAM	Stevenage		102	123
+ENG-L1	TEAM	Stockport		80	93
+ENG-L1	TEAM	Wigan		103	125
+ENG-L1	TEAM	Wrexham		39	46
+ENG-L1	TEAM	Wycombe		100	125
+ENG-L1	TS	AFC Wimbledon	U	27	39
+ENG-L1	TS	Barnsley	O	37	45
+ENG-L1	TS	Barnsley	U	65	80
+ENG-L1	TS	Birmingham	O	12	18
+ENG-L1	TS	Birmingham	U	22	27
+ENG-L1	TS	Blackpool	O	29	35
+ENG-L1	TS	Blackpool	U	75	89
+ENG-L1	TS	Bolton	O	35	46
+ENG-L1	TS	Bolton	U	62	77
+ENG-L1	TS	Bradford	U	35	39
+ENG-L1	TS	Bristol Rvs	U	52	68
+ENG-L1	TS	Burton	U	101	116
+ENG-L1	TS	Cambridge	U	66	77
+ENG-L1	TS	Cardiff	O	18	23
+ENG-L1	TS	Cardiff	U	17	23
+ENG-L1	TS	Carlisle	U	21	29
+ENG-L1	TS	Charlton	O	14	19
+ENG-L1	TS	Charlton	U	51	59
+ENG-L1	TS	Cheltenham	U	22	27
+ENG-L1	TS	Crawley Town	U	31	42
+ENG-L1	TS	Derby	O	9	15
+ENG-L1	TS	Derby	U	16	17
+ENG-L1	TS	Doncaster	U	34	41
+ENG-L1	TS	Exeter	U	98	114
+ENG-L1	TS	Fleetwood Town	U	21	25
+ENG-L1	TS	Huddersfield	O	21	28
+ENG-L1	TS	Huddersfield	U	54	64
+ENG-L1	TS	Leyton Orient	O	18	28
+ENG-L1	TS	Leyton Orient	U	79	96
+ENG-L1	TS	Lincoln	O	35	42
+ENG-L1	TS	Lincoln	U	70	80
+ENG-L1	TS	Luton	U	28	33
+ENG-L1	TS	Mansfield	O	15	18
+ENG-L1	TS	Mansfield	U	64	75
+ENG-L1	TS	Northampton	U	93	112
+ENG-L1	TS	Oxford	O	18	22
+ENG-L1	TS	Peterboro	O	44	52
+ENG-L1	TS	Peterboro	U	52	72
+ENG-L1	TS	Plymouth	O	16	20
+ENG-L1	TS	Plymouth	U	19	26
+ENG-L1	TS	Port Vale	U	53	64
+ENG-L1	TS	Portsmouth	O	15	19
+ENG-L1	TS	Reading	O	28	31
+ENG-L1	TS	Reading	U	74	94
+ENG-L1	TS	Rotherham	U	68	82
+ENG-L1	TS	Shrewsbury	U	59	73
+ENG-L1	TS	Stevenage	O	10	16
+ENG-L1	TS	Stevenage	U	92	107
+ENG-L1	TS	Stockport	O	25	30
+ENG-L1	TS	Stockport	U	55	63
+ENG-L1	TS	Wigan	U	95	112
+ENG-L1	TS	Wrexham	U	34	38
+ENG-L1	TS	Wycombe	O	22	33
+ENG-L1	TS	Wycombe	U	77	91
+ENG-L2	LG			1314	1500
+ENG-L2	SIDE		O	54	61
+ENG-L2	SIDE		U	1258	1437
+ENG-L2	TEAM	AFC Wimbledon		69	78
+ENG-L2	TEAM	Accrington		111	125
+ENG-L2	TEAM	Barnet		42	47
+ENG-L2	TEAM	Barrow		115	125
+ENG-L2	TEAM	Bradford		71	77
+ENG-L2	TEAM	Bristol Rvs		40	47
+ENG-L2	TEAM	Bromley		80	92
+ENG-L2	TEAM	Cambridge		43	46
+ENG-L2	TEAM	Carlisle		37	46
+ENG-L2	TEAM	Cheltenham		76	93
+ENG-L2	TEAM	Chesterfield		81	93
+ENG-L2	TEAM	Colchester		107	126
+ENG-L2	TEAM	Crawley Town		74	79
+ENG-L2	TEAM	Crewe		110	125
+ENG-L2	TEAM	Doncaster		70	78
+ENG-L2	TEAM	Fleetwood Town		81	93
+ENG-L2	TEAM	Forest Green		29	33
+ENG-L2	TEAM	Gillingham		110	125
+ENG-L2	TEAM	Grimsby		106	125
+ENG-L2	TEAM	Harrogate		113	124
+ENG-L2	TEAM	Mansfield		31	33
+ENG-L2	TEAM	Milton Keynes Dons		105	123
+ENG-L2	TEAM	Morecambe		64	79
+ENG-L2	TEAM	Newport County		103	125
+ENG-L2	TEAM	Notts County		107	124
+ENG-L2	TEAM	Oldham		44	47
+ENG-L2	TEAM	Port Vale		39	47
+ENG-L2	TEAM	Salford		110	125
+ENG-L2	TEAM	Shrewsbury		43	47
+ENG-L2	TEAM	Stockport		28	32
+ENG-L2	TEAM	Sutton		29	31
+ENG-L2	TEAM	Swindon		109	126
+ENG-L2	TEAM	Tranmere		107	124
+ENG-L2	TEAM	Walsall		113	124
+ENG-L2	TEAM	Wrexham		27	31
+ENG-L2	TS	AFC Wimbledon	U	68	77
+ENG-L2	TS	Accrington	U	108	122
+ENG-L2	TS	Barnet	U	39	44
+ENG-L2	TS	Barrow	U	111	121
+ENG-L2	TS	Bradford	U	68	74
+ENG-L2	TS	Bristol Rvs	U	38	44
+ENG-L2	TS	Bromley	U	79	90
+ENG-L2	TS	Cambridge	U	42	44
+ENG-L2	TS	Carlisle	U	36	45
+ENG-L2	TS	Cheltenham	U	76	93
+ENG-L2	TS	Chesterfield	U	78	90
+ENG-L2	TS	Colchester	U	105	122
+ENG-L2	TS	Crawley Town	U	70	75
+ENG-L2	TS	Crewe	U	109	124
+ENG-L2	TS	Doncaster	U	65	72
+ENG-L2	TS	Fleetwood Town	U	80	92
+ENG-L2	TS	Forest Green	U	29	33
+ENG-L2	TS	Gillingham	U	106	120
+ENG-L2	TS	Grimsby	U	102	121
+ENG-L2	TS	Harrogate	U	109	120
+ENG-L2	TS	Mansfield	U	19	21
+ENG-L2	TS	Milton Keynes Dons	O	13	15
+ENG-L2	TS	Milton Keynes Dons	U	92	108
+ENG-L2	TS	Morecambe	U	63	78
+ENG-L2	TS	Newport County	U	103	125
+ENG-L2	TS	Notts County	U	98	113
+ENG-L2	TS	Oldham	U	43	46
+ENG-L2	TS	Port Vale	U	38	46
+ENG-L2	TS	Salford	U	103	117
+ENG-L2	TS	Shrewsbury	U	43	47
+ENG-L2	TS	Stockport	U	22	26
+ENG-L2	TS	Sutton	U	27	29
+ENG-L2	TS	Swindon	U	103	118
+ENG-L2	TS	Tranmere	U	105	122
+ENG-L2	TS	Walsall	U	111	122
+ENG-L2	TS	Wrexham	U	24	28
+ENG-NL	LG			1233	1486
+ENG-NL	SIDE		DNB1	30	32
+ENG-NL	SIDE		O	597	739
+ENG-NL	SIDE		U	606	715
+ENG-NL	TEAM	Aldershot		97	125
+ENG-NL	TEAM	Altrincham		100	125
+ENG-NL	TEAM	Barnet		64	77
+ENG-NL	TEAM	Boreham Wood		65	78
+ENG-NL	TEAM	Boston Utd		80	94
+ENG-NL	TEAM	Brackley Town		37	41
+ENG-NL	TEAM	Braintree Town		82	92
+ENG-NL	TEAM	Bromley		25	31
+ENG-NL	TEAM	Carlisle		38	47
+ENG-NL	TEAM	Chesterfield		29	31
+ENG-NL	TEAM	Dag and Red		66	77
+ENG-NL	TEAM	Dorking		22	31
+ENG-NL	TEAM	Eastleigh		104	124
+ENG-NL	TEAM	Ebbsfleet		56	77
+ENG-NL	TEAM	Forest Green		78	93
+ENG-NL	TEAM	Fylde		70	79
+ENG-NL	TEAM	Gateshead		105	125
+ENG-NL	TEAM	Halifax		107	125
+ENG-NL	TEAM	Hartlepool		106	125
+ENG-NL	TEAM	Kidderminster		28	32
+ENG-NL	TEAM	Maidenhead		64	77
+ENG-NL	TEAM	Morecambe		37	46
+ENG-NL	TEAM	Oldham		60	77
+ENG-NL	TEAM	Oxford City		27	31
+ENG-NL	TEAM	Rochdale		100	122
+ENG-NL	TEAM	Scunthorpe		38	47
+ENG-NL	TEAM	Solihull		102	125
+ENG-NL	TEAM	Southend		104	124
+ENG-NL	TEAM	Sutton		75	94
+ENG-NL	TEAM	Tamworth		75	92
+ENG-NL	TEAM	Truro		33	41
+ENG-NL	TEAM	Wealdstone		100	124
+ENG-NL	TEAM	Woking		105	125
+ENG-NL	TEAM	Yeovil		78	93
+ENG-NL	TEAM	York		106	122
+ENG-NL	TS	Aldershot	O	62	75
+ENG-NL	TS	Aldershot	U	32	47
+ENG-NL	TS	Altrincham	O	53	70
+ENG-NL	TS	Altrincham	U	46	54
+ENG-NL	TS	Barnet	O	54	64
+ENG-NL	TS	Boreham Wood	O	47	54
+ENG-NL	TS	Boreham Wood	U	17	23
+ENG-NL	TS	Boston Utd	O	22	29
+ENG-NL	TS	Boston Utd	U	57	64
+ENG-NL	TS	Brackley Town	U	30	32
+ENG-NL	TS	Braintree Town	O	17	19
+ENG-NL	TS	Braintree Town	U	63	71
+ENG-NL	TS	Bromley	O	18	24
+ENG-NL	TS	Carlisle	O	29	37
+ENG-NL	TS	Chesterfield	O	26	28
+ENG-NL	TS	Dag and Red	O	36	43
+ENG-NL	TS	Dag and Red	U	29	33
+ENG-NL	TS	Dorking	U	13	19
+ENG-NL	TS	Eastleigh	O	54	65
+ENG-NL	TS	Eastleigh	U	48	57
+ENG-NL	TS	Ebbsfleet	O	15	18
+ENG-NL	TS	Ebbsfleet	U	40	58
+ENG-NL	TS	Forest Green	O	47	57
+ENG-NL	TS	Forest Green	U	31	36
+ENG-NL	TS	Fylde	O	34	38
+ENG-NL	TS	Fylde	U	33	38
+ENG-NL	TS	Gateshead	O	62	74
+ENG-NL	TS	Gateshead	U	41	49
+ENG-NL	TS	Halifax	O	40	53
+ENG-NL	TS	Halifax	U	67	72
+ENG-NL	TS	Hartlepool	O	45	57
+ENG-NL	TS	Hartlepool	U	60	67
+ENG-NL	TS	Kidderminster	U	23	25
+ENG-NL	TS	Maidenhead	O	26	32
+ENG-NL	TS	Maidenhead	U	38	45
+ENG-NL	TS	Morecambe	O	20	23
+ENG-NL	TS	Morecambe	U	15	21
+ENG-NL	TS	Oldham	O	32	45
+ENG-NL	TS	Oldham	U	28	32
+ENG-NL	TS	Oxford City	U	17	21
+ENG-NL	TS	Rochdale	O	62	82
+ENG-NL	TS	Rochdale	U	35	37
+ENG-NL	TS	Scunthorpe	O	25	31
+ENG-NL	TS	Scunthorpe	U	12	15
+ENG-NL	TS	Solihull	O	56	70
+ENG-NL	TS	Solihull	U	45	52
+ENG-NL	TS	Southend	O	57	70
+ENG-NL	TS	Southend	U	46	53
+ENG-NL	TS	Sutton	O	31	40
+ENG-NL	TS	Sutton	U	42	52
+ENG-NL	TS	Tamworth	O	31	36
+ENG-NL	TS	Tamworth	U	43	54
+ENG-NL	TS	Truro	U	28	32
+ENG-NL	TS	Wealdstone	O	44	53
+ENG-NL	TS	Wealdstone	U	55	70
+ENG-NL	TS	Woking	O	30	42
+ENG-NL	TS	Woking	U	74	82
+ENG-NL	TS	Yeovil	O	18	24
+ENG-NL	TS	Yeovil	U	59	68
+ENG-NL	TS	York	O	71	84
+ENG-NL	TS	York	U	27	29
+ENG-PL	LG			1191	1437
+ENG-PL	SIDE		DNB1	30	33
+ENG-PL	SIDE		O	584	720
+ENG-PL	SIDE		U	576	683
+ENG-PL	TEAM	AFC Bournemouth		28	35
+ENG-PL	TEAM	Arsenal		85	108
+ENG-PL	TEAM	Arsenal FC		24	34
+ENG-PL	TEAM	Aston Villa		98	111
+ENG-PL	TEAM	Aston Villa FC		30	34
+ENG-PL	TEAM	Bournemouth		91	110
+ENG-PL	TEAM	Brentford		86	109
+ENG-PL	TEAM	Brentford FC		31	36
+ENG-PL	TEAM	Brighton		61	73
+ENG-PL	TEAM	Brighton & Hove Albion		32	36
+ENG-PL	TEAM	Brighton & Hove Albion FC		31	35
+ENG-PL	TEAM	Burnley		62	73
+ENG-PL	TEAM	Chelsea		62	73
+ENG-PL	TEAM	Chelsea FC		57	69
+ENG-PL	TEAM	Crystal Palace		90	110
+ENG-PL	TEAM	Crystal Palace FC		31	36
+ENG-PL	TEAM	Everton		91	110
+ENG-PL	TEAM	Everton FC		29	34
+ENG-PL	TEAM	Fulham		85	110
+ENG-PL	TEAM	Fulham FC		30	35
+ENG-PL	TEAM	Ipswich Town FC		26	34
+ENG-PL	TEAM	Leeds		26	35
+ENG-PL	TEAM	Leeds United		30	37
+ENG-PL	TEAM	Leicester		26	35
+ENG-PL	TEAM	Leicester City FC		31	33
+ENG-PL	TEAM	Liverpool		94	112
+ENG-PL	TEAM	Liverpool FC		30	33
+ENG-PL	TEAM	Luton		32	38
+ENG-PL	TEAM	Man City		61	74
+ENG-PL	TEAM	Man United		60	73
+ENG-PL	TEAM	Manchester City		29	33
+ENG-PL	TEAM	Manchester City FC		30	34
+ENG-PL	TEAM	Manchester United		27	33
+ENG-PL	TEAM	Manchester United FC		27	37
+ENG-PL	TEAM	Newcastle		59	74
+ENG-PL	TEAM	Newcastle United		29	37
+ENG-PL	TEAM	Newcastle United FC		32	36
+ENG-PL	TEAM	Nott'm Forest		56	73
+ENG-PL	TEAM	Nottingham Forest		31	34
+ENG-PL	TEAM	Nottingham Forest FC		30	37
+ENG-PL	TEAM	Sheffield United		27	38
+ENG-PL	TEAM	Southampton		33	35
+ENG-PL	TEAM	Southampton FC		26	33
+ENG-PL	TEAM	Sunderland		31	37
+ENG-PL	TEAM	Tottenham		66	74
+ENG-PL	TEAM	Tottenham Hotspur		29	33
+ENG-PL	TEAM	Tottenham Hotspur FC		24	34
+ENG-PL	TEAM	West Ham		62	73
+ENG-PL	TEAM	West Ham United		25	33
+ENG-PL	TEAM	West Ham United FC		28	33
+ENG-PL	TEAM	Wolverhampton Wanderers		31	33
+ENG-PL	TEAM	Wolverhampton Wanderers FC		30	36
+ENG-PL	TEAM	Wolves		64	73
+ENG-PL	TS	AFC Bournemouth	O	17	23
+ENG-PL	TS	Arsenal	O	65	85
+ENG-PL	TS	Arsenal	U	14	17
+ENG-PL	TS	Arsenal FC	O	15	21
+ENG-PL	TS	Aston Villa	O	47	54
+ENG-PL	TS	Aston Villa	U	49	55
+ENG-PL	TS	Aston Villa FC	O	15	18
+ENG-PL	TS	Aston Villa FC	U	15	16
+ENG-PL	TS	Bournemouth	O	38	47
+ENG-PL	TS	Bournemouth	U	51	61
+ENG-PL	TS	Brentford	O	44	57
+ENG-PL	TS	Brentford	U	42	51
+ENG-PL	TS	Brentford FC	O	19	20
+ENG-PL	TS	Brentford FC	U	12	16
+ENG-PL	TS	Brighton	O	52	61
+ENG-PL	TS	Brighton & Hove Albion	U	23	24
+ENG-PL	TS	Brighton & Hove Albion FC	O	18	19
+ENG-PL	TS	Brighton & Hove Albion FC	U	13	16
+ENG-PL	TS	Burnley	O	16	17
+ENG-PL	TS	Burnley	U	44	54
+ENG-PL	TS	Chelsea	O	34	41
+ENG-PL	TS	Chelsea	U	28	32
+ENG-PL	TS	Chelsea FC	O	31	40
+ENG-PL	TS	Chelsea FC	U	26	29
+ENG-PL	TS	Crystal Palace	O	33	44
+ENG-PL	TS	Crystal Palace	U	57	66
+ENG-PL	TS	Crystal Palace FC	U	22	24
+ENG-PL	TS	Everton	O	30	40
+ENG-PL	TS	Everton	U	60	69
+ENG-PL	TS	Everton FC	U	24	25
+ENG-PL	TS	Fulham	O	36	50
+ENG-PL	TS	Fulham	U	46	57
+ENG-PL	TS	Fulham FC	O	18	22
+ENG-PL	TS	Ipswich Town FC	U	22	27
+ENG-PL	TS	Leeds	O	12	15
+ENG-PL	TS	Leeds	U	12	18
+ENG-PL	TS	Leeds United	U	23	26
+ENG-PL	TS	Leicester	O	13	19
+ENG-PL	TS	Leicester	U	12	15
+ENG-PL	TS	Leicester City FC	U	23	25
+ENG-PL	TS	Liverpool	O	70	84
+ENG-PL	TS	Liverpool	U	21	25
+ENG-PL	TS	Liverpool FC	O	26	27
+ENG-PL	TS	Luton	O	15	16
+ENG-PL	TS	Luton	U	15	20
+ENG-PL	TS	Man City	O	50	62
+ENG-PL	TS	Man United	O	38	49
+ENG-PL	TS	Man United	U	21	23
+ENG-PL	TS	Manchester City	O	23	27
+ENG-PL	TS	Manchester City FC	O	26	30
+ENG-PL	TS	Manchester United	O	15	19
+ENG-PL	TS	Manchester United FC	O	20	29
+ENG-PL	TS	Newcastle	O	46	57
+ENG-PL	TS	Newcastle	U	11	15
+ENG-PL	TS	Newcastle United	U	21	26
+ENG-PL	TS	Newcastle United FC	O	18	21
+ENG-PL	TS	Newcastle United FC	U	14	15
+ENG-PL	TS	Nott'm Forest	O	20	24
+ENG-PL	TS	Nott'm Forest	U	35	48
+ENG-PL	TS	Nottingham Forest	U	25	28
+ENG-PL	TS	Nottingham Forest FC	O	15	19
+ENG-PL	TS	Nottingham Forest FC	U	15	18
+ENG-PL	TS	Sheffield United	U	17	27
+ENG-PL	TS	Southampton	U	23	25
+ENG-PL	TS	Southampton FC	U	23	30
+ENG-PL	TS	Sunderland	U	29	32
+ENG-PL	TS	Tottenham	O	58	63
+ENG-PL	TS	Tottenham Hotspur	U	23	24
+ENG-PL	TS	Tottenham Hotspur FC	O	19	24
+ENG-PL	TS	West Ham	O	28	33
+ENG-PL	TS	West Ham	U	33	39
+ENG-PL	TS	West Ham United	U	20	25
+ENG-PL	TS	West Ham United FC	U	17	21
+ENG-PL	TS	Wolverhampton Wanderers	U	31	33
+ENG-PL	TS	Wolverhampton Wanderers FC	O	17	21
+ENG-PL	TS	Wolverhampton Wanderers FC	U	13	15
+ENG-PL	TS	Wolves	O	23	25
+ENG-PL	TS	Wolves	U	40	47
+ESP-L2	LG			1232	1424
+ESP-L2	SIDE		O	16	20
+ESP-L2	SIDE		U	1213	1401
+ESP-L2	TEAM	Alaves		37	40
+ESP-L2	TEAM	Albacete		109	133
+ESP-L2	TEAM	Alcorcon		40	41
+ESP-L2	TEAM	Amorebieta		37	42
+ESP-L2	TEAM	Andorra		67	79
+ESP-L2	TEAM	Burgos		73	83
+ESP-L2	TEAM	Burgos CF		43	46
+ESP-L2	TEAM	CD Castellón		36	48
+ESP-L2	TEAM	CD Eldense		27	36
+ESP-L2	TEAM	CD Mirandés		37	48
+ESP-L2	TEAM	CD Tenerife		32	36
+ESP-L2	TEAM	Cartagena		72	80
+ESP-L2	TEAM	Cádiz CF		40	48
+ESP-L2	TEAM	Córdoba CF		40	48
+ESP-L2	TEAM	Deportivo La Coruña		43	51
+ESP-L2	TEAM	Eibar		74	82
+ESP-L2	TEAM	Elche		37	42
+ESP-L2	TEAM	Elche CF		36	36
+ESP-L2	TEAM	Eldense		32	39
+ESP-L2	TEAM	Espanol		35	42
+ESP-L2	TEAM	FC Cartagena		24	36
+ESP-L2	TEAM	Ferrol		39	42
+ESP-L2	TEAM	Granada		35	40
+ESP-L2	TEAM	Granada CF		42	51
+ESP-L2	TEAM	Huesca		78	81
+ESP-L2	TEAM	Ibiza		31	40
+ESP-L2	TEAM	Las Palmas		36	41
+ESP-L2	TEAM	Leganes		80	84
+ESP-L2	TEAM	Levante		69	82
+ESP-L2	TEAM	Levante UD		31	36
+ESP-L2	TEAM	Lugo		34	40
+ESP-L2	TEAM	Malaga		37	40
+ESP-L2	TEAM	Mirandes		71	81
+ESP-L2	TEAM	Málaga CF		40	47
+ESP-L2	TEAM	Oviedo		76	83
+ESP-L2	TEAM	Ponferradina		33	40
+ESP-L2	TEAM	Racing Ferrol		28	37
+ESP-L2	TEAM	Racing Santander		40	46
+ESP-L2	TEAM	Real Oviedo		31	37
+ESP-L2	TEAM	Real Zaragoza		35	48
+ESP-L2	TEAM	SD Eibar		43	48
+ESP-L2	TEAM	SD Huesca		42	48
+ESP-L2	TEAM	Santander		72	82
+ESP-L2	TEAM	Sp Gijon		73	83
+ESP-L2	TEAM	Sporting Gijón		40	49
+ESP-L2	TEAM	Tenerife		76	84
+ESP-L2	TEAM	UD Almería		37	47
+ESP-L2	TEAM	Valladolid		39	43
+ESP-L2	TEAM	Villarreal B		70	81
+ESP-L2	TEAM	Zaragoza		72	80
+ESP-L2	TS	Alaves	U	37	40
+ESP-L2	TS	Albacete	U	108	130
+ESP-L2	TS	Alcorcon	U	40	41
+ESP-L2	TS	Amorebieta	U	37	42
+ESP-L2	TS	Andorra	U	67	79
+ESP-L2	TS	Burgos	U	73	83
+ESP-L2	TS	Burgos CF	U	42	45
+ESP-L2	TS	CD Castellón	U	32	42
+ESP-L2	TS	CD Eldense	U	27	36
+ESP-L2	TS	CD Mirandés	U	36	46
+ESP-L2	TS	CD Tenerife	U	32	36
+ESP-L2	TS	Cartagena	U	72	80
+ESP-L2	TS	Cádiz CF	U	40	48
+ESP-L2	TS	Córdoba CF	U	38	46
+ESP-L2	TS	Deportivo La Coruña	U	42	50
+ESP-L2	TS	Eibar	U	74	82
+ESP-L2	TS	Elche	U	37	42
+ESP-L2	TS	Elche CF	U	36	36
+ESP-L2	TS	Eldense	U	32	39
+ESP-L2	TS	Espanol	U	35	42
+ESP-L2	TS	FC Cartagena	U	24	36
+ESP-L2	TS	Ferrol	U	39	42
+ESP-L2	TS	Granada	U	35	40
+ESP-L2	TS	Granada CF	U	39	48
+ESP-L2	TS	Huesca	U	78	81
+ESP-L2	TS	Ibiza	U	31	40
+ESP-L2	TS	Las Palmas	U	36	41
+ESP-L2	TS	Leganes	U	80	84
+ESP-L2	TS	Levante	U	69	82
+ESP-L2	TS	Levante UD	U	29	33
+ESP-L2	TS	Lugo	U	34	40
+ESP-L2	TS	Malaga	U	37	40
+ESP-L2	TS	Mirandes	U	71	81
+ESP-L2	TS	Málaga CF	U	40	47
+ESP-L2	TS	Oviedo	U	76	83
+ESP-L2	TS	Ponferradina	U	33	40
+ESP-L2	TS	Racing Ferrol	U	28	37
+ESP-L2	TS	Racing Santander	U	31	37
+ESP-L2	TS	Real Oviedo	U	29	35
+ESP-L2	TS	Real Zaragoza	U	32	45
+ESP-L2	TS	SD Eibar	U	43	48
+ESP-L2	TS	SD Huesca	U	41	47
+ESP-L2	TS	Santander	U	72	82
+ESP-L2	TS	Sp Gijon	U	73	83
+ESP-L2	TS	Sporting Gijón	U	39	48
+ESP-L2	TS	Tenerife	U	76	84
+ESP-L2	TS	UD Almería	U	32	40
+ESP-L2	TS	Valladolid	U	39	43
+ESP-L2	TS	Villarreal B	U	70	81
+ESP-L2	TS	Zaragoza	U	72	80
+ESP-LL	LG			1212	1474
+ESP-LL	SIDE		DNB1	50	56
+ESP-LL	SIDE		O	268	340
+ESP-LL	SIDE		U	892	1076
+ESP-LL	TEAM	Alaves		34	39
+ESP-LL	TEAM	Almeria		51	73
+ESP-LL	TEAM	Ath Bilbao		58	73
+ESP-LL	TEAM	Ath Madrid		57	72
+ESP-LL	TEAM	Athletic Club		61	75
+ESP-LL	TEAM	Atlético de Madrid		26	34
+ESP-LL	TEAM	Barcelona		88	110
+ESP-LL	TEAM	Betis		60	72
+ESP-LL	TEAM	CA Osasuna		60	75
+ESP-LL	TEAM	CD Leganés		25	33
+ESP-LL	TEAM	Cadiz		60	72
+ESP-LL	TEAM	Celta		60	72
+ESP-LL	TEAM	Club Atlético de Madrid		33	38
+ESP-LL	TEAM	Deportivo Alavés		62	76
+ESP-LL	TEAM	Elche		27	36
+ESP-LL	TEAM	Elche CF		29	38
+ESP-LL	TEAM	Espanol		26	35
+ESP-LL	TEAM	FC Barcelona		29	36
+ESP-LL	TEAM	Getafe		59	72
+ESP-LL	TEAM	Getafe CF		71	77
+ESP-LL	TEAM	Girona		53	72
+ESP-LL	TEAM	Girona FC		61	76
+ESP-LL	TEAM	Granada		29	38
+ESP-LL	TEAM	Las Palmas		33	38
+ESP-LL	TEAM	Levante UD		32	39
+ESP-LL	TEAM	Mallorca		62	72
+ESP-LL	TEAM	Osasuna		62	73
+ESP-LL	TEAM	RC Celta		32	38
+ESP-LL	TEAM	RC Celta de Vigo		28	37
+ESP-LL	TEAM	RCD Espanyol		33	37
+ESP-LL	TEAM	RCD Espanyol de Barcelona		32	39
+ESP-LL	TEAM	RCD Mallorca		65	74
+ESP-LL	TEAM	Rayo Vallecano		33	38
+ESP-LL	TEAM	Rayo Vallecano de Madrid		34	40
+ESP-LL	TEAM	Real Betis		33	39
+ESP-LL	TEAM	Real Betis Balompié		32	38
+ESP-LL	TEAM	Real Madrid		59	72
+ESP-LL	TEAM	Real Madrid C.F.		34	38
+ESP-LL	TEAM	Real Madrid CF		34	37
+ESP-LL	TEAM	Real Oviedo		30	37
+ESP-LL	TEAM	Real Sociedad		30	36
+ESP-LL	TEAM	Real Sociedad de Fútbol		34	39
+ESP-LL	TEAM	Real Valladolid CF		25	33
+ESP-LL	TEAM	Sevilla		89	111
+ESP-LL	TEAM	Sevilla FC		35	39
+ESP-LL	TEAM	Sociedad		56	72
+ESP-LL	TEAM	UD Las Palmas		23	33
+ESP-LL	TEAM	Valencia		64	72
+ESP-LL	TEAM	Valencia CF		60	71
+ESP-LL	TEAM	Valladolid		27	35
+ESP-LL	TEAM	Vallecano		67	73
+ESP-LL	TEAM	Villarreal		91	111
+ESP-LL	TEAM	Villarreal CF		32	38
+ESP-LL	TS	Alaves	U	30	33
+ESP-LL	TS	Almeria	U	43	62
+ESP-LL	TS	Ath Bilbao	O	13	18
+ESP-LL	TS	Ath Bilbao	U	45	55
+ESP-LL	TS	Ath Madrid	O	22	29
+ESP-LL	TS	Ath Madrid	U	33	40
+ESP-LL	TS	Athletic Club	O	10	15
+ESP-LL	TS	Athletic Club	U	51	60
+ESP-LL	TS	Atlético de Madrid	O	14	19
+ESP-LL	TS	Barcelona	O	49	64
+ESP-LL	TS	Barcelona	U	26	33
+ESP-LL	TS	Betis	U	56	66
+ESP-LL	TS	CA Osasuna	O	12	15
+ESP-LL	TS	CA Osasuna	U	45	57
+ESP-LL	TS	CD Leganés	U	22	29
+ESP-LL	TS	Cadiz	U	56	68
+ESP-LL	TS	Celta	U	49	58
+ESP-LL	TS	Club Atlético de Madrid	U	25	29
+ESP-LL	TS	Deportivo Alavés	U	53	64
+ESP-LL	TS	Elche	U	26	34
+ESP-LL	TS	Elche CF	U	19	26
+ESP-LL	TS	Espanol	U	22	31
+ESP-LL	TS	FC Barcelona	O	18	22
+ESP-LL	TS	Getafe	U	55	66
+ESP-LL	TS	Getafe CF	U	62	65
+ESP-LL	TS	Girona	O	16	23
+ESP-LL	TS	Girona	U	36	48
+ESP-LL	TS	Girona FC	U	48	60
+ESP-LL	TS	Granada	U	24	33
+ESP-LL	TS	Las Palmas	U	32	35
+ESP-LL	TS	Levante UD	U	23	30
+ESP-LL	TS	Mallorca	U	60	66
+ESP-LL	TS	Osasuna	U	56	65
+ESP-LL	TS	RC Celta	U	20	23
+ESP-LL	TS	RC Celta de Vigo	U	19	24
+ESP-LL	TS	RCD Espanyol	U	25	28
+ESP-LL	TS	RCD Espanyol de Barcelona	U	26	32
+ESP-LL	TS	RCD Mallorca	U	54	61
+ESP-LL	TS	Rayo Vallecano	U	27	31
+ESP-LL	TS	Rayo Vallecano de Madrid	U	31	36
+ESP-LL	TS	Real Betis	O	16	18
+ESP-LL	TS	Real Betis	U	16	20
+ESP-LL	TS	Real Betis Balompié	U	20	26
+ESP-LL	TS	Real Madrid	O	26	36
+ESP-LL	TS	Real Madrid	U	24	26
+ESP-LL	TS	Real Madrid C.F.	O	23	26
+ESP-LL	TS	Real Madrid CF	O	23	24
+ESP-LL	TS	Real Oviedo	U	26	32
 ESP-LL	TS	Real Sociedad	O	17	19
-FIN-VL	LG			249	300
-FIN-VL	TEAM	AC Oulu		37	47
-FIN-VL	TEAM	Mariehamn		40	47
-FIN-VL	TEAM	Lahti		19	22
-FIN-VL	TEAM	Haka		27	31
-FIN-VL	TEAM	Inter Turku		47	52
-FIN-VL	TEAM	VPS		38	47
-FIN-VL	TEAM	Gnistan		40	53
-FIN-VL	TEAM	Jaro		40	48
-FIN-VL	TEAM	SJK		45	53
-FIN-VL	TEAM	KuPS		43	51
-FIN-VL	TEAM	KTP		19	27
-FIN-VL	TEAM	Ilves		41	51
-FIN-VL	TEAM	HJK		43	51
-FIN-VL	TEAM	TPS		18	19
-FIN-VL	SIDE		U	183	222
-FIN-VL	SIDE		O	63	75
-FIN-VL	TS	AC Oulu	U	31	39
-FIN-VL	TS	Mariehamn	U	37	44
-FIN-VL	TS	Lahti	U	19	21
-FIN-VL	TS	Haka	U	24	28
-FIN-VL	TS	Inter Turku	U	30	33
-FIN-VL	TS	VPS	U	36	42
-FIN-VL	TS	Gnistan	U	30	40
-FIN-VL	TS	Jaro	U	37	45
-FIN-VL	TS	SJK	U	24	29
-FIN-VL	TS	KuPS	U	25	29
-FIN-VL	TS	KTP	U	17	25
-FIN-VL	TS	Ilves	O	23	27
-FIN-VL	TS	HJK	O	20	22
-FIN-VL	TS	HJK	U	23	29
-FIN-VL	TS	Ilves	U	16	22
-FIN-VL	TS	Inter Turku	O	16	18
-FIN-VL	TS	KuPS	O	18	22
-FIN-VL	TS	SJK	O	21	24
-FIN-VL	TS	TPS	U	16	17
-FRA-L1	LG			235	293
-FRA-L1	TEAM	FC Lorient		28	32
-FRA-L1	TEAM	Lille		25	32
-FRA-L1	TEAM	FC Nantes		23	32
-FRA-L1	TEAM	Auxerre		28	33
-FRA-L1	TEAM	Toulouse FC		25	33
-FRA-L1	TEAM	Paris Saint-Germain		25	31
-FRA-L1	TEAM	Le Havre		28	33
-FRA-L1	TEAM	OGC Nice		27	32
-FRA-L1	TEAM	Angers SCO		27	32
-FRA-L1	TEAM	Rennes		27	32
-FRA-L1	TEAM	AS Monaco		23	32
-FRA-L1	TEAM	RC Strasbourg Alsace		26	33
-FRA-L1	TEAM	Paris FC		25	32
-FRA-L1	TEAM	FC Metz		21	32
-FRA-L1	TEAM	Olympique Lyonnais		27	32
-FRA-L1	TEAM	Lens		28	32
+ESP-LL	TS	Real Sociedad	U	12	16
+ESP-LL	TS	Real Sociedad de Fútbol	U	31	34
+ESP-LL	TS	Real Valladolid CF	U	22	30
+ESP-LL	TS	Sevilla	O	15	20
+ESP-LL	TS	Sevilla	U	71	88
+ESP-LL	TS	Sevilla FC	U	28	32
+ESP-LL	TS	Sociedad	O	9	16
+ESP-LL	TS	Sociedad	U	47	56
+ESP-LL	TS	UD Las Palmas	U	18	26
+ESP-LL	TS	Valencia	U	59	64
+ESP-LL	TS	Valencia CF	U	45	53
+ESP-LL	TS	Valladolid	U	25	31
+ESP-LL	TS	Vallecano	U	56	61
+ESP-LL	TS	Villarreal	O	45	51
+ESP-LL	TS	Villarreal	U	42	55
+ESP-LL	TS	Villarreal CF	O	16	17
+ESP-LL	TS	Villarreal CF	U	13	18
+FIN-VL	LG			1263	1480
+FIN-VL	SIDE		O	93	110
+FIN-VL	SIDE		U	1162	1362
+FIN-VL	TEAM	AC Oulu		126	154
+FIN-VL	TEAM	Ekenas		19	22
+FIN-VL	TEAM	Gnistan		58	75
+FIN-VL	TEAM	HIFK		92	110
+FIN-VL	TEAM	HJK		217	247
+FIN-VL	TEAM	Haka		137	161
+FIN-VL	TEAM	Honka		152	171
+FIN-VL	TEAM	Ilves		202	244
+FIN-VL	TEAM	Inter Turku		215	248
+FIN-VL	TEAM	Jaro		41	49
+FIN-VL	TEAM	KPV Kokkola		20	26
+FIN-VL	TEAM	KTP		66	83
+FIN-VL	TEAM	KuPS		215	246
+FIN-VL	TEAM	Lahti		193	220
+FIN-VL	TEAM	Mariehamn		210	244
+FIN-VL	TEAM	PS Kemi		31	38
+FIN-VL	TEAM	Rovaniemi		82	89
+FIN-VL	TEAM	SJK		211	249
+FIN-VL	TEAM	TPS		68	81
+FIN-VL	TEAM	VPS		165	197
+FIN-VL	TS	AC Oulu	U	115	141
+FIN-VL	TS	Ekenas	U	17	20
+FIN-VL	TS	Gnistan	O	11	16
+FIN-VL	TS	Gnistan	U	47	59
+FIN-VL	TS	HIFK	U	91	109
+FIN-VL	TS	HJK	O	34	39
+FIN-VL	TS	HJK	U	182	207
+FIN-VL	TS	Haka	U	131	155
+FIN-VL	TS	Honka	U	145	164
+FIN-VL	TS	Ilves	O	31	36
+FIN-VL	TS	Ilves	U	168	205
+FIN-VL	TS	Inter Turku	O	20	23
+FIN-VL	TS	Inter Turku	U	193	223
+FIN-VL	TS	Jaro	U	38	46
+FIN-VL	TS	KPV Kokkola	U	20	26
+FIN-VL	TS	KTP	U	64	81
+FIN-VL	TS	KuPS	O	22	28
+FIN-VL	TS	KuPS	U	193	218
+FIN-VL	TS	Lahti	U	192	218
+FIN-VL	TS	Mariehamn	U	204	238
+FIN-VL	TS	PS Kemi	U	31	38
+FIN-VL	TS	Rovaniemi	U	81	88
+FIN-VL	TS	SJK	O	26	30
+FIN-VL	TS	SJK	U	185	219
+FIN-VL	TS	TPS	U	66	79
+FIN-VL	TS	VPS	U	155	184
+FRA-L1	LG			1216	1472
+FRA-L1	SIDE		DNB1	40	42
+FRA-L1	SIDE		O	586	729
+FRA-L1	SIDE		U	589	700
+FRA-L1	TEAM	AJ Auxerre		27	34
+FRA-L1	TEAM	AS Monaco		24	34
+FRA-L1	TEAM	AS Monaco FC		30	34
+FRA-L1	TEAM	AS Saint-Étienne		24	32
+FRA-L1	TEAM	Ajaccio		32	38
+FRA-L1	TEAM	Angers		46	58
+FRA-L1	TEAM	Angers SCO		57	67
+FRA-L1	TEAM	Auxerre		66	73
+FRA-L1	TEAM	Bordeaux		14	19
+FRA-L1	TEAM	Brest		70	92
+FRA-L1	TEAM	Clermont		73	92
+FRA-L1	TEAM	FC Lorient		30	34
+FRA-L1	TEAM	FC Metz		22	34
+FRA-L1	TEAM	FC Nantes		52	66
+FRA-L1	TEAM	Le Havre		59	69
+FRA-L1	TEAM	Le Havre AC		28	34
+FRA-L1	TEAM	Lens		104	125
+FRA-L1	TEAM	Lille		100	124
+FRA-L1	TEAM	Lille OSC		25	29
+FRA-L1	TEAM	Lorient		72	92
+FRA-L1	TEAM	Lyon		73	93
+FRA-L1	TEAM	Marseille		75	92
+FRA-L1	TEAM	Metz		45	53
+FRA-L1	TEAM	Monaco		75	91
+FRA-L1	TEAM	Montpellier		78	91
+FRA-L1	TEAM	Montpellier HSC		26	28
+FRA-L1	TEAM	Nantes		79	91
+FRA-L1	TEAM	Nice		73	91
+FRA-L1	TEAM	OGC Nice		56	67
+FRA-L1	TEAM	Olympique Lyonnais		59	67
 FRA-L1	TEAM	Olympique Marseille		25	29
+FRA-L1	TEAM	Olympique de Marseille		26	30
+FRA-L1	TEAM	Paris FC		26	33
+FRA-L1	TEAM	Paris SG		81	91
+FRA-L1	TEAM	Paris Saint-Germain		27	33
+FRA-L1	TEAM	Paris Saint-Germain FC		27	31
+FRA-L1	TEAM	RC Strasbourg Alsace		52	67
+FRA-L1	TEAM	Racing Club de Lens		28	35
+FRA-L1	TEAM	Reims		75	91
+FRA-L1	TEAM	Rennes		102	124
+FRA-L1	TEAM	St Etienne		16	19
 FRA-L1	TEAM	Stade Brestois		23	29
-FRA-L1	SIDE		O	104	134
-FRA-L1	SIDE		U	124	151
-FRA-L1	TS	Lille	O	13	18
-FRA-L1	TS	FC Nantes	U	20	24
-FRA-L1	TS	Auxerre	U	22	26
-FRA-L1	TS	Toulouse FC	U	15	18
-FRA-L1	TS	OGC Nice	O	13	15
-FRA-L1	TS	Angers SCO	U	23	27
-FRA-L1	TS	Paris FC	U	15	19
-FRA-L1	TS	FC Metz	U	16	25
-FRA-L1	TS	RC Strasbourg Alsace	O	17	19
-FRA-L1	TS	Toulouse FC	O	10	15
-FRA-L1	TS	Rennes	O	16	20
-FRA-L1	TS	Olympique Lyonnais	O	21	26
-FRA-L1	TS	Lens	O	19	22
-FRA-L1	TS	Le Havre	U	24	26
-FRA-L1	TS	FC Lorient	U	18	20
-FRA-L1	TS	Olympique Marseille	O	15	18
+FRA-L1	TEAM	Stade Brestois 29		29	34
+FRA-L1	TEAM	Stade Rennais FC 1901		28	32
+FRA-L1	TEAM	Stade de Reims		23	29
+FRA-L1	TEAM	Strasbourg		80	93
+FRA-L1	TEAM	Toulouse		63	73
+FRA-L1	TEAM	Toulouse FC		54	67
+FRA-L1	TEAM	Troyes		52	58
+FRA-L1	TS	AJ Auxerre	O	14	19
+FRA-L1	TS	AJ Auxerre	U	13	15
 FRA-L1	TS	AS Monaco	O	14	20
+FRA-L1	TS	AS Monaco FC	O	20	23
+FRA-L1	TS	AS Saint-Étienne	U	13	21
+FRA-L1	TS	Ajaccio	U	25	29
+FRA-L1	TS	Angers	U	35	43
+FRA-L1	TS	Angers SCO	U	47	55
+FRA-L1	TS	Auxerre	U	49	54
+FRA-L1	TS	Brest	O	30	44
+FRA-L1	TS	Brest	U	39	47
+FRA-L1	TS	Clermont	O	18	27
+FRA-L1	TS	Clermont	U	53	63
+FRA-L1	TS	FC Lorient	U	19	21
+FRA-L1	TS	FC Metz	U	16	25
+FRA-L1	TS	FC Nantes	O	13	18
+FRA-L1	TS	FC Nantes	U	37	45
+FRA-L1	TS	Le Havre	U	48	53
+FRA-L1	TS	Le Havre AC	U	19	25
+FRA-L1	TS	Lens	O	59	77
+FRA-L1	TS	Lens	U	42	45
+FRA-L1	TS	Lille	O	63	82
+FRA-L1	TS	Lille	U	36	41
+FRA-L1	TS	Lille OSC	O	15	18
+FRA-L1	TS	Lorient	O	32	39
+FRA-L1	TS	Lorient	U	39	52
+FRA-L1	TS	Lyon	O	48	62
+FRA-L1	TS	Lyon	U	25	31
+FRA-L1	TS	Marseille	O	45	55
+FRA-L1	TS	Marseille	U	30	36
+FRA-L1	TS	Metz	U	38	45
+FRA-L1	TS	Monaco	O	61	74
+FRA-L1	TS	Montpellier	O	44	51
+FRA-L1	TS	Montpellier	U	33	39
+FRA-L1	TS	Montpellier HSC	U	20	22
+FRA-L1	TS	Nantes	O	31	37
+FRA-L1	TS	Nantes	U	47	53
+FRA-L1	TS	Nice	O	27	41
+FRA-L1	TS	Nice	U	45	49
+FRA-L1	TS	OGC Nice	O	34	39
+FRA-L1	TS	OGC Nice	U	21	27
+FRA-L1	TS	Olympique Lyonnais	O	49	57
+FRA-L1	TS	Olympique Marseille	O	15	18
+FRA-L1	TS	Olympique de Marseille	O	23	25
+FRA-L1	TS	Paris FC	U	16	20
+FRA-L1	TS	Paris SG	O	68	77
 FRA-L1	TS	Paris Saint-Germain	O	23	28
+FRA-L1	TS	Paris Saint-Germain FC	O	22	25
+FRA-L1	TS	RC Strasbourg Alsace	O	34	44
+FRA-L1	TS	RC Strasbourg Alsace	U	17	22
+FRA-L1	TS	Racing Club de Lens	U	22	25
+FRA-L1	TS	Reims	O	35	45
+FRA-L1	TS	Reims	U	40	46
+FRA-L1	TS	Rennes	O	71	86
+FRA-L1	TS	Rennes	U	27	34
 FRA-L1	TS	Stade Brestois	U	14	16
-FRA-L1	TS	OGC Nice	U	14	17
-FRA-L2	LG			237	290
-FRA-L2	TEAM	Grenoble Foot 38		24	31
-FRA-L2	TEAM	SC Bastia		23	28
-FRA-L2	TEAM	Paris FC		13	18
-FRA-L2	TEAM	FC Martigues		15	18
-FRA-L2	TEAM	EA Guingamp		25	30
-FRA-L2	TEAM	USL Dunkerque		25	31
-FRA-L2	TEAM	FC Metz		13	18
-FRA-L2	TEAM	Pau FC		26	34
-FRA-L2	TEAM	Stade Lavallois		26	29
-FRA-L2	TEAM	FC Lorient		14	18
-FRA-L2	TEAM	Red Star FC		27	30
-FRA-L2	TEAM	Rodez AF		25	28
-FRA-L2	TEAM	ESTAC Troyes		28	30
-FRA-L2	TEAM	Clermont Foot 63		24	30
-FRA-L2	TEAM	FC Annecy		24	30
-FRA-L2	TEAM	Amiens SC		24	30
-FRA-L2	TEAM	AC Ajaccio		15	17
-FRA-L2	TEAM	SM Caen		15	17
-FRA-L2	SIDE		U	235	288
-FRA-L2	TS	Grenoble Foot 38	U	24	31
-FRA-L2	TS	SC Bastia	U	23	28
-FRA-L2	TS	Paris FC	U	13	18
-FRA-L2	TS	FC Martigues	U	15	18
-FRA-L2	TS	EA Guingamp	U	24	29
-FRA-L2	TS	USL Dunkerque	U	25	31
-FRA-L2	TS	FC Metz	U	12	17
-FRA-L2	TS	Pau FC	U	26	34
-FRA-L2	TS	Stade Lavallois	U	26	29
-FRA-L2	TS	FC Lorient	U	14	18
-FRA-L2	TS	Red Star FC	U	27	30
-FRA-L2	TS	Rodez AF	U	23	26
-FRA-L2	TS	ESTAC Troyes	U	28	30
-FRA-L2	TS	Clermont Foot 63	U	24	30
-FRA-L2	TS	FC Annecy	U	24	30
-FRA-L2	TS	Amiens SC	U	24	30
-FRA-L2	TS	AC Ajaccio	U	15	17
-FRA-L2	TS	SM Caen	U	15	17
-GER-B2	LG			246	295
-GER-B2	TEAM	Hamburger SV		18	20
-GER-B2	TEAM	SV Darmstadt 98		29	31
-GER-B2	TEAM	Jahn Regensburg		17	20
-GER-B2	TEAM	1. FC Köln		16	20
-GER-B2	TEAM	Fortuna Düsseldorf		25	31
-GER-B2	TEAM	Eintracht Braunschweig		25	31
-GER-B2	TEAM	Hertha BSC		25	30
-GER-B2	TEAM	Preußen Münster		27	30
-GER-B2	TEAM	Karlsruher SC		25	30
-GER-B2	TEAM	FC Schalke 04		27	29
-GER-B2	TEAM	1. FC Magdeburg		25	29
-GER-B2	TEAM	SC Paderborn 07		27	30
-GER-B2	TEAM	1. FC Kaiserslautern		24	30
-GER-B2	TEAM	SSV Ulm 1846		14	19
-GER-B2	TEAM	1. FC Nürnberg		25	30
-GER-B2	TEAM	SpVgg Greuther Fürth		26	29
-GER-B2	TEAM	Hannover 96		27	30
-GER-B2	TEAM	SV 07 Elversberg		21	29
-GER-B2	SIDE		O	101	124
-GER-B2	SIDE		U	144	170
-GER-B2	TS	Hamburger SV	O	16	18
-GER-B2	TS	SV Darmstadt 98	O	13	15
-GER-B2	TS	Jahn Regensburg	U	16	19
-GER-B2	TS	Eintracht Braunschweig	U	21	26
-GER-B2	TS	Hertha BSC	U	18	21
-GER-B2	TS	Preußen Münster	U	20	22
+FRA-L1	TS	Stade Brestois 29	O	17	19
+FRA-L1	TS	Stade Brestois 29	U	12	15
+FRA-L1	TS	Stade Rennais FC 1901	O	18	21
+FRA-L1	TS	Stade de Reims	U	17	20
+FRA-L1	TS	Strasbourg	O	39	49
+FRA-L1	TS	Strasbourg	U	39	42
+FRA-L1	TS	Toulouse	O	28	31
+FRA-L1	TS	Toulouse	U	35	42
+FRA-L1	TS	Toulouse FC	O	25	34
+FRA-L1	TS	Toulouse FC	U	29	33
+FRA-L1	TS	Troyes	O	17	18
+FRA-L1	TS	Troyes	U	35	40
+FRA-L2	LG			1206	1447
+FRA-L2	SIDE		U	1198	1438
+FRA-L2	TEAM	AC Ajaccio		28	31
+FRA-L2	TEAM	Ajaccio		63	67
+FRA-L2	TEAM	Amiens		94	104
+FRA-L2	TEAM	Amiens SC		36	44
+FRA-L2	TEAM	Angers		30	38
+FRA-L2	TEAM	Annecy		60	73
+FRA-L2	TEAM	Auxerre		54	67
+FRA-L2	TEAM	Bastia		85	104
+FRA-L2	TEAM	Bordeaux		66	75
+FRA-L2	TEAM	Caen		87	104
+FRA-L2	TEAM	Clermont Foot 63		39	46
+FRA-L2	TEAM	Concarneau		24	33
+FRA-L2	TEAM	Dijon		61	69
+FRA-L2	TEAM	Dunkerque		58	70
+FRA-L2	TEAM	EA Guingamp		33	42
+FRA-L2	TEAM	ESTAC Troyes		42	46
+FRA-L2	TEAM	FC Annecy		34	42
+FRA-L2	TEAM	FC Lorient		23	29
+FRA-L2	TEAM	FC Martigues		24	29
+FRA-L2	TEAM	FC Metz		22	29
+FRA-L2	TEAM	Grenoble		95	108
+FRA-L2	TEAM	Grenoble Foot 38		34	42
+FRA-L2	TEAM	Guingamp		87	109
+FRA-L2	TEAM	Laval		66	78
+FRA-L2	TEAM	Le Havre		61	68
+FRA-L2	TEAM	Metz		34	41
+FRA-L2	TEAM	Nancy		26	33
+FRA-L2	TEAM	Nimes		51	67
+FRA-L2	TEAM	Niort		55	66
+FRA-L2	TEAM	Paris FC		118	136
+FRA-L2	TEAM	Pau FC		124	152
+FRA-L2	TEAM	Quevilly Rouen		83	106
+FRA-L2	TEAM	Red Star FC		36	42
+FRA-L2	TEAM	Rodez		94	107
+FRA-L2	TEAM	Rodez AF		31	40
+FRA-L2	TEAM	SC Bastia		35	42
+FRA-L2	TEAM	SM Caen		28	32
+FRA-L2	TEAM	Sochaux		59	71
+FRA-L2	TEAM	St Etienne		62	78
+FRA-L2	TEAM	Stade Lavallois		35	40
+FRA-L2	TEAM	Toulouse		22	29
+FRA-L2	TEAM	Troyes		31	37
+FRA-L2	TEAM	USL Dunkerque		35	42
+FRA-L2	TEAM	Valenciennes		86	104
+FRA-L2	TS	AC Ajaccio	U	28	31
+FRA-L2	TS	Ajaccio	U	63	67
+FRA-L2	TS	Amiens	U	94	104
+FRA-L2	TS	Amiens SC	U	36	44
+FRA-L2	TS	Angers	U	30	38
+FRA-L2	TS	Annecy	U	60	73
+FRA-L2	TS	Auxerre	U	54	67
+FRA-L2	TS	Bastia	U	85	104
+FRA-L2	TS	Bordeaux	U	66	75
+FRA-L2	TS	Caen	U	87	104
+FRA-L2	TS	Clermont Foot 63	U	39	46
+FRA-L2	TS	Concarneau	U	24	33
+FRA-L2	TS	Dijon	U	61	69
+FRA-L2	TS	Dunkerque	U	58	70
+FRA-L2	TS	EA Guingamp	U	31	39
+FRA-L2	TS	ESTAC Troyes	U	41	45
+FRA-L2	TS	FC Annecy	U	33	41
+FRA-L2	TS	FC Lorient	U	21	27
+FRA-L2	TS	FC Martigues	U	24	29
+FRA-L2	TS	FC Metz	U	20	27
+FRA-L2	TS	Grenoble	U	95	108
+FRA-L2	TS	Grenoble Foot 38	U	33	41
+FRA-L2	TS	Guingamp	U	87	109
+FRA-L2	TS	Laval	U	66	78
+FRA-L2	TS	Le Havre	U	61	68
+FRA-L2	TS	Metz	U	34	41
+FRA-L2	TS	Nancy	U	26	33
+FRA-L2	TS	Nimes	U	51	67
+FRA-L2	TS	Niort	U	55	66
+FRA-L2	TS	Paris FC	U	116	134
+FRA-L2	TS	Pau FC	U	124	151
+FRA-L2	TS	Quevilly Rouen	U	83	106
+FRA-L2	TS	Red Star FC	U	36	42
+FRA-L2	TS	Rodez	U	94	107
+FRA-L2	TS	Rodez AF	U	29	38
+FRA-L2	TS	SC Bastia	U	35	42
+FRA-L2	TS	SM Caen	U	28	32
+FRA-L2	TS	Sochaux	U	59	71
+FRA-L2	TS	St Etienne	U	61	77
+FRA-L2	TS	Stade Lavallois	U	35	40
+FRA-L2	TS	Toulouse	U	22	29
+FRA-L2	TS	Troyes	U	31	37
+FRA-L2	TS	USL Dunkerque	U	34	41
+FRA-L2	TS	Valenciennes	U	85	103
+GER-B2	LG			1235	1463
+GER-B2	SIDE		O	630	761
+GER-B2	SIDE		U	603	700
+GER-B2	TEAM	1. FC Kaiserslautern		32	43
+GER-B2	TEAM	1. FC Köln		24	32
+GER-B2	TEAM	1. FC Magdeburg		35	39
+GER-B2	TEAM	1. FC Nürnberg		34	42
+GER-B2	TEAM	Bielefeld		34	37
+GER-B2	TEAM	Bochum		16	20
+GER-B2	TEAM	Braunschweig		67	87
+GER-B2	TEAM	Darmstadt		78	88
+GER-B2	TEAM	Dresden		32	37
+GER-B2	TEAM	Eintracht Braunschweig		34	43
+GER-B2	TEAM	Elversberg		24	29
+GER-B2	TEAM	Erzgebirge Aue		42	50
+GER-B2	TEAM	FC Schalke 04		37	42
+GER-B2	TEAM	Fortuna Dusseldorf		104	117
+GER-B2	TEAM	Fortuna Düsseldorf		35	43
+GER-B2	TEAM	Greuther Furth		71	88
+GER-B2	TEAM	Hamburg		101	118
+GER-B2	TEAM	Hamburger SV		30	32
+GER-B2	TEAM	Hannover		103	121
+GER-B2	TEAM	Hannover 96		38	43
+GER-B2	TEAM	Hansa Rostock		94	101
+GER-B2	TEAM	Heidenheim		65	87
+GER-B2	TEAM	Hertha		32	37
+GER-B2	TEAM	Hertha BSC		36	44
+GER-B2	TEAM	Holstein Kiel		113	133
+GER-B2	TEAM	Ingolstadt		29	34
+GER-B2	TEAM	Jahn Regensburg		25	29
+GER-B2	TEAM	Kaiserslautern		60	70
+GER-B2	TEAM	Karlsruhe		101	122
+GER-B2	TEAM	Karlsruher SC		34	40
+GER-B2	TEAM	Magdeburg		56	71
+GER-B2	TEAM	Nurnberg		102	122
+GER-B2	TEAM	Osnabruck		45	53
+GER-B2	TEAM	Paderborn		95	119
+GER-B2	TEAM	Preußen Münster		33	40
+GER-B2	TEAM	Regensburg		76	85
+GER-B2	TEAM	SC Paderborn 07		40	43
+GER-B2	TEAM	SSV Ulm 1846		22	29
+GER-B2	TEAM	SV 07 Elversberg		29	39
+GER-B2	TEAM	SV Darmstadt 98		40	44
+GER-B2	TEAM	Sandhausen		72	85
+GER-B2	TEAM	Schalke 04		60	68
+GER-B2	TEAM	SpVgg Greuther Fürth		37	41
+GER-B2	TEAM	St Pauli		102	122
+GER-B2	TEAM	Wehen		29	34
+GER-B2	TEAM	Werder Bremen		31	34
+GER-B2	TEAM	Wurzburger Kickers		15	16
+GER-B2	TS	1. FC Kaiserslautern	O	15	20
+GER-B2	TS	1. FC Kaiserslautern	U	17	23
+GER-B2	TS	1. FC Köln	O	9	16
+GER-B2	TS	1. FC Köln	U	15	16
+GER-B2	TS	1. FC Magdeburg	O	20	22
+GER-B2	TS	1. FC Magdeburg	U	15	17
+GER-B2	TS	1. FC Nürnberg	O	15	19
+GER-B2	TS	1. FC Nürnberg	U	19	23
+GER-B2	TS	Bielefeld	O	22	23
+GER-B2	TS	Bochum	O	13	16
+GER-B2	TS	Braunschweig	O	20	30
+GER-B2	TS	Braunschweig	U	47	57
+GER-B2	TS	Darmstadt	O	56	65
+GER-B2	TS	Darmstadt	U	22	23
+GER-B2	TS	Dresden	U	26	28
+GER-B2	TS	Eintracht Braunschweig	U	29	37
+GER-B2	TS	Elversberg	O	14	16
+GER-B2	TS	Erzgebirge Aue	O	13	15
+GER-B2	TS	Erzgebirge Aue	U	29	35
+GER-B2	TS	FC Schalke 04	O	16	18
+GER-B2	TS	FC Schalke 04	U	21	24
+GER-B2	TS	Fortuna Dusseldorf	O	61	71
+GER-B2	TS	Fortuna Dusseldorf	U	43	46
+GER-B2	TS	Fortuna Düsseldorf	O	21	23
+GER-B2	TS	Fortuna Düsseldorf	U	14	20
+GER-B2	TS	Greuther Furth	O	40	49
+GER-B2	TS	Greuther Furth	U	31	39
+GER-B2	TS	Hamburg	O	85	100
+GER-B2	TS	Hamburg	U	16	18
+GER-B2	TS	Hamburger SV	O	25	27
+GER-B2	TS	Hannover	O	50	64
+GER-B2	TS	Hannover	U	53	57
+GER-B2	TS	Hannover 96	O	11	15
+GER-B2	TS	Hannover 96	U	27	28
+GER-B2	TS	Hansa Rostock	O	23	27
+GER-B2	TS	Hansa Rostock	U	71	74
+GER-B2	TS	Heidenheim	O	32	47
+GER-B2	TS	Heidenheim	U	32	39
+GER-B2	TS	Hertha	O	28	32
+GER-B2	TS	Hertha BSC	O	12	15
+GER-B2	TS	Hertha BSC	U	24	29
+GER-B2	TS	Holstein Kiel	O	71	84
+GER-B2	TS	Holstein Kiel	U	42	49
+GER-B2	TS	Ingolstadt	U	23	27
+GER-B2	TS	Jahn Regensburg	U	24	28
+GER-B2	TS	Kaiserslautern	O	40	46
+GER-B2	TS	Kaiserslautern	U	20	24
+GER-B2	TS	Karlsruhe	O	66	78
+GER-B2	TS	Karlsruhe	U	35	44
+GER-B2	TS	Karlsruher SC	O	21	23
 GER-B2	TS	Karlsruher SC	U	13	17
-GER-B2	TS	Fortuna Düsseldorf	O	16	17
-GER-B2	TS	SC Paderborn 07	U	13	15
-GER-B2	TS	SpVgg Greuther Fürth	U	14	17
-GER-B2	TS	Hannover 96	U	20	20
-GER-B2	TS	1. FC Magdeburg	O	14	16
-GER-B2	TS	SV 07 Elversberg	O	16	22
-GER-B2	TS	SSV Ulm 1846	U	12	15
-GER-B2	TS	SC Paderborn 07	O	14	15
-GER-B2	TS	FC Schalke 04	U	16	17
-GER-B2	TS	1. FC Kaiserslautern	U	14	17
-GER-B2	TS	SV Darmstadt 98	U	16	16
-GER-B2	TS	1. FC Nürnberg	U	15	17
-GER-BL	LG			258	300
-GER-BL	TEAM	Werder Bremen		28	33
-GER-BL	TEAM	Leverkusen		28	33
-GER-BL	TEAM	Augsburg		30	33
-GER-BL	TEAM	Bayern Munich		33	34
-GER-BL	TEAM	Stuttgart		28	34
-GER-BL	TEAM	M'gladbach		27	33
-GER-BL	TEAM	RB Leipzig		29	33
-GER-BL	TEAM	Heidenheim		28	33
-GER-BL	TEAM	Wolfsburg		27	33
-GER-BL	TEAM	Mainz		33	34
-GER-BL	TEAM	Dortmund		28	34
-GER-BL	TEAM	Union Berlin		30	34
-GER-BL	TEAM	FC Koln		28	34
-GER-BL	TEAM	Freiburg		28	33
-GER-BL	TEAM	Ein Frankfurt		28	33
-GER-BL	TEAM	Hamburg		28	33
-GER-BL	TEAM	Hoffenheim		25	33
-GER-BL	TEAM	St Pauli		29	32
-GER-BL	SIDE		O	119	135
-GER-BL	SIDE		U	136	162
-GER-BL	TS	Leverkusen	O	22	24
-GER-BL	TS	Bayern Munich	O	30	31
-GER-BL	TS	Stuttgart	O	25	30
-GER-BL	TS	Heidenheim	U	19	23
-GER-BL	TS	Wolfsburg	U	19	23
-GER-BL	TS	Mainz	U	25	26
-GER-BL	TS	Dortmund	O	19	22
-GER-BL	TS	FC Koln	U	15	19
-GER-BL	TS	Freiburg	U	20	24
-GER-BL	TS	Hoffenheim	O	18	23
-GER-BL	TS	St Pauli	U	23	24
-GER-BL	TS	Augsburg	U	20	23
-GER-BL	TS	M'gladbach	U	21	24
-GER-BL	TS	Werder Bremen	U	22	25
-GER-BL	TS	Hamburg	U	19	24
-GER-BL	TS	RB Leipzig	O	23	26
-GER-BL	TS	FC Koln	O	13	15
-GER-BL	TS	Ein Frankfurt	U	16	21
-GER-BL	TS	Union Berlin	U	21	25
-GRE-SL	LG			246	300
-GRE-SL	TEAM	Asteras Tripolis		33	44
-GRE-SL	TEAM	Panserraikos		44	47
-GRE-SL	TEAM	Volos NFC		39	43
-GRE-SL	TEAM	Atromitos		35	43
-GRE-SL	TEAM	Panathinaikos		33	39
-GRE-SL	TEAM	Panetolikos		38	47
-GRE-SL	TEAM	Aris		28	32
-GRE-SL	TEAM	Olympiakos		24	32
-GRE-SL	TEAM	AEK		22	32
-GRE-SL	TEAM	PAOK		24	32
-GRE-SL	TEAM	Larisa		29	36
-GRE-SL	TEAM	Levadeiakos		28	32
-GRE-SL	TEAM	Kifisia		31	36
-GRE-SL	TEAM	OFI Crete		29	32
-GRE-SL	SIDE		U	84	103
-GRE-SL	SIDE		O	151	186
-GRE-SL	TS	Asteras Tripolis	O	18	23
-GRE-SL	TS	Asteras Tripolis	U	13	19
-GRE-SL	TS	Panserraikos	U	26	28
-GRE-SL	TS	Volos NFC	U	20	23
-GRE-SL	TS	Atromitos	U	16	21
-GRE-SL	TS	Panetolikos	U	23	29
-GRE-SL	TS	Panathinaikos	O	26	32
-GRE-SL	TS	Panserraikos	O	15	16
-GRE-SL	TS	Atromitos	O	19	22
-GRE-SL	TS	Volos NFC	O	18	19
-GRE-SL	TS	Panetolikos	O	14	17
-GRE-SL	TS	Aris	O	16	19
-GRE-SL	TS	AEK	O	20	27
-GRE-SL	TS	PAOK	O	22	29
-GRE-SL	TS	Larisa	O	15	18
-GRE-SL	TS	Levadeiakos	O	25	28
-GRE-SL	TS	Kifisia	O	25	30
-GRE-SL	TS	Olympiakos	O	20	28
-GRE-SL	TS	Larisa	U	13	17
-GRE-SL	TS	OFI Crete	O	16	16
-IRL-PD	LG			247	300
-IRL-PD	TEAM	Bohemians		50	60
-IRL-PD	TEAM	Drogheda		49	60
-IRL-PD	TEAM	Galway		50	59
-IRL-PD	TEAM	Shelbourne		49	59
-IRL-PD	TEAM	Sligo Rovers		49	60
-IRL-PD	TEAM	Shamrock Rovers		53	61
-IRL-PD	TEAM	St. Patricks		52	60
-IRL-PD	TEAM	Derry City		51	60
-IRL-PD	TEAM	Waterford		43	60
-IRL-PD	TEAM	Cork City		28	34
-IRL-PD	TEAM	Dundalk		20	27
-IRL-PD	SIDE		U	245	298
-IRL-PD	TS	Bohemians	U	49	59
-IRL-PD	TS	Drogheda	U	49	60
-IRL-PD	TS	Galway	U	50	59
-IRL-PD	TS	Shelbourne	U	48	58
-IRL-PD	TS	Sligo Rovers	U	49	60
-IRL-PD	TS	Shamrock Rovers	U	52	60
-IRL-PD	TS	St. Patricks	U	52	60
-IRL-PD	TS	Derry City	U	50	59
-IRL-PD	TS	Waterford	U	43	60
-IRL-PD	TS	Cork City	U	28	34
-IRL-PD	TS	Dundalk	U	20	27
-ITA-SA	LG			254	300
-ITA-SA	TEAM	Pisa		23	30
-ITA-SA	TEAM	Lazio		27	30
-ITA-SA	TEAM	Udinese		22	30
-ITA-SA	TEAM	Atalanta		25	29
-ITA-SA	TEAM	Napoli		25	29
-ITA-SA	TEAM	Como		24	29
-ITA-SA	TEAM	Cremonese		24	29
-ITA-SA	TEAM	Juventus FC		26	29
-ITA-SA	TEAM	Milan		26	30
-ITA-SA	TEAM	AS Roma		27	29
-ITA-SA	TEAM	Hellas Verona		25	29
-ITA-SA	TEAM	FC Internazionale Milano		24	30
-ITA-SA	TEAM	Parma		25	30
-ITA-SA	TEAM	Bologna		24	29
-ITA-SA	TEAM	Fiorentina		26	30
-ITA-SA	TEAM	Lecce		28	29
-ITA-SA	TEAM	Torino		24	30
-ITA-SA	TEAM	Sassuolo		27	30
-ITA-SA	TEAM	Genoa		24	29
-ITA-SA	TEAM	Cagliari		23	29
-ITA-SA	SIDE		U	244	286
-ITA-SA	TS	Pisa	U	23	30
-ITA-SA	TS	Lazio	U	25	28
-ITA-SA	TS	Udinese	U	22	27
-ITA-SA	TS	Atalanta	U	25	29
-ITA-SA	TS	Napoli	U	25	28
-ITA-SA	TS	Como	U	20	24
-ITA-SA	TS	Cremonese	U	24	29
-ITA-SA	TS	Juventus FC	U	22	24
-ITA-SA	TS	Milan	U	25	28
-ITA-SA	TS	AS Roma	U	24	26
-ITA-SA	TS	Hellas Verona	U	25	29
-ITA-SA	TS	FC Internazionale Milano	U	20	25
-ITA-SA	TS	Parma	U	25	30
-ITA-SA	TS	Bologna	U	24	29
-ITA-SA	TS	Fiorentina	U	26	30
-ITA-SA	TS	Lecce	U	28	29
-ITA-SA	TS	Torino	U	23	29
-ITA-SA	TS	Sassuolo	U	26	29
-ITA-SA	TS	Genoa	U	24	29
-ITA-SA	TS	Cagliari	U	23	29
-ITA-SB	LG			242	300
-ITA-SB	TEAM	Catanzaro		21	30
-ITA-SB	TEAM	Palermo		20	30
-ITA-SB	TEAM	Sudtirol		26	30
-ITA-SB	TEAM	Cesena		26	31
-ITA-SB	TEAM	Bari		24	30
-ITA-SB	TEAM	Mantova		24	30
-ITA-SB	TEAM	Padova		26	31
-ITA-SB	TEAM	Juve Stabia		24	31
-ITA-SB	TEAM	Empoli		23	29
-ITA-SB	TEAM	Sampdoria		26	30
-ITA-SB	TEAM	Frosinone		22	29
-ITA-SB	TEAM	Virtus Entella		25	30
-ITA-SB	TEAM	Monza		23	29
-ITA-SB	TEAM	Carrarese		22	30
-ITA-SB	TEAM	Reggiana		24	29
-ITA-SB	TEAM	Modena		27	30
-ITA-SB	TEAM	Pescara		23	29
-ITA-SB	TEAM	Avellino		25	30
-ITA-SB	TEAM	Venezia		27	29
-ITA-SB	TEAM	Spezia		22	29
-ITA-SB	SIDE		U	185	236
-ITA-SB	SIDE		O	46	53
-ITA-SB	TS	Catanzaro	U	13	22
-ITA-SB	TS	Palermo	U	16	24
-ITA-SB	TS	Sudtirol	U	26	30
-ITA-SB	TS	Cesena	U	21	26
-ITA-SB	TS	Bari	U	22	28
-ITA-SB	TS	Mantova	U	21	27
-ITA-SB	TS	Padova	U	24	29
-ITA-SB	TS	Juve Stabia	U	19	25
-ITA-SB	TS	Empoli	U	19	25
-ITA-SB	TS	Sampdoria	U	25	28
-ITA-SB	TS	Virtus Entella	U	23	28
-ITA-SB	TS	Monza	U	15	19
-ITA-SB	TS	Carrarese	U	18	24
-ITA-SB	TS	Reggiana	U	21	25
-ITA-SB	TS	Modena	U	19	20
-ITA-SB	TS	Pescara	U	15	21
-ITA-SB	TS	Avellino	U	24	29
-ITA-SB	TS	Spezia	U	18	25
-ITA-SB	TS	Frosinone	O	17	19
-ITA-SB	TS	Venezia	O	15	16
-JPN-J1	LG			256	295
-JPN-J1	TEAM	FC Tokyo		29	32
-JPN-J1	TEAM	Yokohama F. Marinos		22	30
-JPN-J1	TEAM	Tokyo Verdy 1969		23	28
-JPN-J1	TEAM	Kyoto Sanga		28	30
-JPN-J1	TEAM	Kawasaki Frontale		24	29
-JPN-J1	TEAM	Shimizu S-Pulse		28	30
-JPN-J1	TEAM	Nagoya Grampus		25	29
-JPN-J1	TEAM	Cerezo Osaka		26	30
-JPN-J1	TEAM	Fagiano Okayama		27	30
-JPN-J1	TEAM	Avispa Fukuoka		28	30
-JPN-J1	TEAM	Sanfrecce Hiroshima		28	30
-JPN-J1	TEAM	Machida Zelvia		26	28
-JPN-J1	TEAM	Urawa Red Diamonds		22	28
-JPN-J1	TEAM	Vissel Kobe		26	30
-JPN-J1	TEAM	Kashiwa Reysol		25	30
-JPN-J1	TEAM	Kashima Antlers		26	30
-JPN-J1	TEAM	Gamba Osaka		24	30
-JPN-J1	TEAM	V-Varen Nagasaki		21	24
+GER-B2	TS	Magdeburg	O	22	32
+GER-B2	TS	Magdeburg	U	34	39
+GER-B2	TS	Nurnberg	O	48	60
+GER-B2	TS	Nurnberg	U	54	62
+GER-B2	TS	Osnabruck	U	38	44
+GER-B2	TS	Paderborn	O	66	82
+GER-B2	TS	Paderborn	U	29	37
+GER-B2	TS	Preußen Münster	U	25	28
+GER-B2	TS	Regensburg	O	25	27
+GER-B2	TS	Regensburg	U	51	58
+GER-B2	TS	SC Paderborn 07	O	20	21
+GER-B2	TS	SC Paderborn 07	U	20	22
+GER-B2	TS	SSV Ulm 1846	U	19	23
+GER-B2	TS	SV 07 Elversberg	O	21	28
+GER-B2	TS	SV Darmstadt 98	O	19	22
+GER-B2	TS	SV Darmstadt 98	U	21	22
+GER-B2	TS	Sandhausen	O	21	28
+GER-B2	TS	Sandhausen	U	50	56
+GER-B2	TS	Schalke 04	O	45	52
+GER-B2	TS	Schalke 04	U	14	15
+GER-B2	TS	SpVgg Greuther Fürth	O	17	18
+GER-B2	TS	SpVgg Greuther Fürth	U	20	23
+GER-B2	TS	St Pauli	O	69	82
+GER-B2	TS	St Pauli	U	33	40
+GER-B2	TS	Wehen	O	11	15
+GER-B2	TS	Wehen	U	18	19
+GER-B2	TS	Werder Bremen	O	25	26
+GER-BL	LG			1259	1483
+GER-BL	SIDE		O	577	668
+GER-BL	SIDE		U	671	804
+GER-BL	TEAM	1. FC Heidenheim 1846		30	33
+GER-BL	TEAM	1. FC Union Berlin		28	33
+GER-BL	TEAM	1. FSV Mainz 05		28	34
+GER-BL	TEAM	Augsburg		109	132
+GER-BL	TEAM	Bayer 04 Leverkusen		24	29
+GER-BL	TEAM	Bayern Munich		124	133
+GER-BL	TEAM	Bielefeld		28	30
+GER-BL	TEAM	Bochum		81	99
+GER-BL	TEAM	Borussia Dortmund		23	29
+GER-BL	TEAM	Borussia Mönchengladbach		27	33
+GER-BL	TEAM	Darmstadt		26	34
+GER-BL	TEAM	Dortmund		116	133
+GER-BL	TEAM	Ein Frankfurt		119	134
+GER-BL	TEAM	Eintracht Frankfurt		28	32
+GER-BL	TEAM	FC Augsburg		31	34
+GER-BL	TEAM	FC Bayern München		25	29
+GER-BL	TEAM	FC Koln		108	133
+GER-BL	TEAM	FC St. Pauli 1910		32	34
+GER-BL	TEAM	Freiburg		111	132
+GER-BL	TEAM	Greuther Furth		25	30
+GER-BL	TEAM	Hamburg		30	35
+GER-BL	TEAM	Heidenheim		55	68
+GER-BL	TEAM	Hertha		54	65
+GER-BL	TEAM	Hoffenheim		107	133
+GER-BL	TEAM	Holstein Kiel		25	32
+GER-BL	TEAM	Leverkusen		114	132
+GER-BL	TEAM	M'gladbach		110	132
+GER-BL	TEAM	Mainz		118	133
+GER-BL	TEAM	RB Leipzig		135	165
+GER-BL	TEAM	SC Freiburg		26	33
+GER-BL	TEAM	SV Werder Bremen		23	32
+GER-BL	TEAM	Schalke 04		30	34
+GER-BL	TEAM	St Pauli		30	34
+GER-BL	TEAM	Stuttgart		113	134
+GER-BL	TEAM	TSG 1899 Hoffenheim		27	33
+GER-BL	TEAM	Union Berlin		113	133
+GER-BL	TEAM	VfB Stuttgart		28	32
+GER-BL	TEAM	VfL Bochum 1848		28	32
+GER-BL	TEAM	VfL Wolfsburg		26	29
+GER-BL	TEAM	Werder Bremen		87	102
+GER-BL	TEAM	Wolfsburg		115	132
+GER-BL	TS	1. FC Heidenheim 1846	U	27	29
+GER-BL	TS	1. FC Union Berlin	U	25	29
+GER-BL	TS	1. FSV Mainz 05	U	19	22
+GER-BL	TS	Augsburg	O	36	41
+GER-BL	TS	Augsburg	U	73	91
+GER-BL	TS	Bayer 04 Leverkusen	O	20	24
+GER-BL	TS	Bayern Munich	O	120	129
+GER-BL	TS	Bielefeld	U	25	25
+GER-BL	TS	Bochum	O	20	26
+GER-BL	TS	Bochum	U	60	72
+GER-BL	TS	Borussia Dortmund	O	15	17
+GER-BL	TS	Borussia Mönchengladbach	U	18	22
+GER-BL	TS	Darmstadt	U	21	29
+GER-BL	TS	Dortmund	O	92	105
+GER-BL	TS	Dortmund	U	22	26
+GER-BL	TS	Ein Frankfurt	O	49	53
+GER-BL	TS	Ein Frankfurt	U	69	80
+GER-BL	TS	Eintracht Frankfurt	U	19	22
+GER-BL	TS	FC Augsburg	U	26	28
+GER-BL	TS	FC Bayern München	O	21	25
+GER-BL	TS	FC Koln	O	47	58
+GER-BL	TS	FC Koln	U	61	75
+GER-BL	TS	FC St. Pauli 1910	U	29	29
+GER-BL	TS	Freiburg	O	48	59
+GER-BL	TS	Freiburg	U	63	73
+GER-BL	TS	Greuther Furth	U	21	26
+GER-BL	TS	Hamburg	U	21	26
+GER-BL	TS	Heidenheim	O	16	18
+GER-BL	TS	Heidenheim	U	38	49
+GER-BL	TS	Hertha	U	45	54
+GER-BL	TS	Hoffenheim	O	62	71
+GER-BL	TS	Hoffenheim	U	45	62
+GER-BL	TS	Holstein Kiel	U	16	23
+GER-BL	TS	Leverkusen	O	89	99
+GER-BL	TS	Leverkusen	U	24	32
+GER-BL	TS	M'gladbach	O	53	64
+GER-BL	TS	M'gladbach	U	57	68
+GER-BL	TS	Mainz	O	42	49
+GER-BL	TS	Mainz	U	75	83
+GER-BL	TS	RB Leipzig	O	106	125
+GER-BL	TS	RB Leipzig	U	27	38
+GER-BL	TS	SC Freiburg	U	18	23
+GER-BL	TS	SV Werder Bremen	U	14	19
+GER-BL	TS	Schalke 04	U	24	28
+GER-BL	TS	St Pauli	U	24	26
+GER-BL	TS	Stuttgart	O	71	82
+GER-BL	TS	Stuttgart	U	42	52
+GER-BL	TS	TSG 1899 Hoffenheim	U	22	27
+GER-BL	TS	Union Berlin	O	36	42
+GER-BL	TS	Union Berlin	U	77	91
+GER-BL	TS	VfB Stuttgart	O	16	17
+GER-BL	TS	VfB Stuttgart	U	12	15
+GER-BL	TS	VfL Bochum 1848	U	23	26
+GER-BL	TS	VfL Wolfsburg	U	14	15
+GER-BL	TS	Werder Bremen	O	27	31
+GER-BL	TS	Werder Bremen	U	60	71
+GER-BL	TS	Wolfsburg	O	44	50
+GER-BL	TS	Wolfsburg	U	71	82
+GRE-SL	LG			1240	1468
+GRE-SL	SIDE		DNB1	26	27
+GRE-SL	SIDE		O	643	727
+GRE-SL	SIDE		U	570	713
+GRE-SL	TEAM	AEK		163	188
+GRE-SL	TEAM	AEK Athen		20	27
+GRE-SL	TEAM	Apollon		54	66
+GRE-SL	TEAM	Aris		159	187
+GRE-SL	TEAM	Aris Saloniki		22	27
+GRE-SL	TEAM	Asteras Tripolis		176	210
+GRE-SL	TEAM	Atromitos		171	204
+GRE-SL	TEAM	GS Kallithea		26	31
+GRE-SL	TEAM	Giannina		116	134
+GRE-SL	TEAM	Ionikos		57	66
+GRE-SL	TEAM	Kifisia		50	64
+GRE-SL	TEAM	Lamia		145	176
+GRE-SL	TEAM	Larisa		65	78
+GRE-SL	TEAM	Levadeiakos		58	65
+GRE-SL	TEAM	Levadiakos		21	31
+GRE-SL	TEAM	OFI Crete		150	176
+GRE-SL	TEAM	OFI Heraklion		18	27
+GRE-SL	TEAM	Olympiakos		165	187
+GRE-SL	TEAM	Olympiakos Piraeus		20	27
+GRE-SL	TEAM	PAOK		164	187
+GRE-SL	TEAM	PAOK Saloniki		20	27
+GRE-SL	TEAM	Panathinaikos		179	216
+GRE-SL	TEAM	Panetolikos		171	210
+GRE-SL	TEAM	Panserraikos		91	101
+GRE-SL	TEAM	Volos NFC		183	208
+GRE-SL	TS	AEK	O	133	149
+GRE-SL	TS	AEK	U	25	34
+GRE-SL	TS	AEK Athen	O	16	22
+GRE-SL	TS	Apollon	U	43	54
+GRE-SL	TS	Aris	O	99	109
+GRE-SL	TS	Aris	U	60	78
+GRE-SL	TS	Asteras Tripolis	O	69	79
+GRE-SL	TS	Asteras Tripolis	U	105	129
+GRE-SL	TS	Atromitos	O	66	73
+GRE-SL	TS	Atromitos	U	104	130
+GRE-SL	TS	GS Kallithea	U	18	23
+GRE-SL	TS	Giannina	O	37	38
+GRE-SL	TS	Giannina	U	76	93
+GRE-SL	TS	Ionikos	O	28	30
+GRE-SL	TS	Ionikos	U	29	36
+GRE-SL	TS	Kifisia	O	33	40
+GRE-SL	TS	Kifisia	U	14	21
+GRE-SL	TS	Lamia	O	32	35
+GRE-SL	TS	Lamia	U	109	136
+GRE-SL	TS	Larisa	O	21	25
+GRE-SL	TS	Larisa	U	43	52
+GRE-SL	TS	Levadeiakos	O	32	35
+GRE-SL	TS	Levadeiakos	U	25	29
+GRE-SL	TS	Levadiakos	U	12	17
+GRE-SL	TS	OFI Crete	O	72	77
+GRE-SL	TS	OFI Crete	U	75	96
+GRE-SL	TS	OFI Heraklion	O	12	16
+GRE-SL	TS	Olympiakos	O	148	167
+GRE-SL	TS	Olympiakos Piraeus	O	19	25
+GRE-SL	TS	PAOK	O	127	142
+GRE-SL	TS	PAOK	U	32	40
+GRE-SL	TS	PAOK Saloniki	O	18	23
+GRE-SL	TS	Panathinaikos	O	115	137
+GRE-SL	TS	Panathinaikos	U	57	72
+GRE-SL	TS	Panetolikos	O	55	65
+GRE-SL	TS	Panetolikos	U	113	141
+GRE-SL	TS	Panserraikos	O	38	39
+GRE-SL	TS	Panserraikos	U	50	59
+GRE-SL	TS	Volos NFC	O	78	81
+GRE-SL	TS	Volos NFC	U	104	126
+IRL-PD	LG			1242	1494
+IRL-PD	SIDE		DNB1	48	52
+IRL-PD	SIDE		O	101	161
+IRL-PD	SIDE		U	1087	1275
+IRL-PD	TEAM	Bohemians		246	296
+IRL-PD	TEAM	Bray		33	39
+IRL-PD	TEAM	Cork City		130	161
+IRL-PD	TEAM	Derry City		253	295
+IRL-PD	TEAM	Drogheda		169	213
+IRL-PD	TEAM	Dundalk		216	260
+IRL-PD	TEAM	Finn Harps		107	131
+IRL-PD	TEAM	Galway		90	102
+IRL-PD	TEAM	Limerick		34	37
+IRL-PD	TEAM	Longford		29	39
+IRL-PD	TEAM	Shamrock Rovers		250	296
+IRL-PD	TEAM	Shelbourne		164	191
+IRL-PD	TEAM	Sligo Rovers		250	295
+IRL-PD	TEAM	St. Patricks		248	295
+IRL-PD	TEAM	UC Dublin		87	112
+IRL-PD	TEAM	Waterford		178	226
+IRL-PD	TS	Bohemians	O	19	33
+IRL-PD	TS	Bohemians	U	217	251
+IRL-PD	TS	Bray	U	21	26
+IRL-PD	TS	Cork City	O	16	29
+IRL-PD	TS	Cork City	U	104	122
+IRL-PD	TS	Derry City	O	22	36
+IRL-PD	TS	Derry City	U	220	248
+IRL-PD	TS	Drogheda	U	164	207
+IRL-PD	TS	Dundalk	DNB1	16	17
+IRL-PD	TS	Dundalk	O	35	50
+IRL-PD	TS	Dundalk	U	161	189
+IRL-PD	TS	Finn Harps	U	100	119
+IRL-PD	TS	Galway	U	90	101
+IRL-PD	TS	Limerick	U	23	25
+IRL-PD	TS	Longford	U	29	39
+IRL-PD	TS	Shamrock Rovers	O	23	47
+IRL-PD	TS	Shamrock Rovers	U	216	236
+IRL-PD	TS	Shelbourne	U	161	185
+IRL-PD	TS	Sligo Rovers	O	18	24
+IRL-PD	TS	Sligo Rovers	U	228	267
+IRL-PD	TS	St. Patricks	O	23	36
+IRL-PD	TS	St. Patricks	U	215	249
+IRL-PD	TS	UC Dublin	U	79	103
+IRL-PD	TS	Waterford	O	22	32
+IRL-PD	TS	Waterford	U	146	183
+ITA-SA	LG			1280	1483
+ITA-SA	SIDE		DNB1	14	16
+ITA-SA	SIDE		O	132	172
+ITA-SA	SIDE		U	1134	1295
+ITA-SA	TEAM	AC Milan		27	33
+ITA-SA	TEAM	AC Monza		32	39
+ITA-SA	TEAM	ACF Fiorentina		28	37
+ITA-SA	TEAM	AS Roma		63	71
+ITA-SA	TEAM	Atalanta		95	111
+ITA-SA	TEAM	Atalanta BC		27	38
+ITA-SA	TEAM	Bologna		97	111
+ITA-SA	TEAM	Bologna FC 1909		29	37
+ITA-SA	TEAM	Cagliari		65	76
+ITA-SA	TEAM	Cagliari Calcio		32	38
+ITA-SA	TEAM	Como		32	38
+ITA-SA	TEAM	Como 1907		32	38
+ITA-SA	TEAM	Cremonese		60	73
+ITA-SA	TEAM	Empoli		68	74
+ITA-SA	TEAM	Empoli FC		31	37
+ITA-SA	TEAM	FC Internazionale Milano		64	76
+ITA-SA	TEAM	Fiorentina		96	112
+ITA-SA	TEAM	Frosinone		32	39
+ITA-SA	TEAM	Genoa		66	76
+ITA-SA	TEAM	Genoa CFC		34	38
+ITA-SA	TEAM	Hellas Verona		32	38
+ITA-SA	TEAM	Hellas Verona FC		30	37
+ITA-SA	TEAM	Inter		59	73
+ITA-SA	TEAM	Juventus		63	74
+ITA-SA	TEAM	Juventus FC		67	75
+ITA-SA	TEAM	Lazio		99	111
+ITA-SA	TEAM	Lecce		107	112
+ITA-SA	TEAM	Milan		94	112
+ITA-SA	TEAM	Monza		64	74
+ITA-SA	TEAM	Napoli		96	111
+ITA-SA	TEAM	Parma		34	39
+ITA-SA	TEAM	Parma Calcio 1913		32	37
+ITA-SA	TEAM	Pisa		29	38
+ITA-SA	TEAM	Roma		64	73
+ITA-SA	TEAM	SS Lazio		30	33
+ITA-SA	TEAM	SSC Napoli		38	39
+ITA-SA	TEAM	Salernitana		66	73
+ITA-SA	TEAM	Sampdoria		31	35
+ITA-SA	TEAM	Sassuolo		93	112
+ITA-SA	TEAM	Spezia		34	35
+ITA-SA	TEAM	Torino		98	112
+ITA-SA	TEAM	Torino FC		32	37
+ITA-SA	TEAM	US Lecce		33	38
+ITA-SA	TEAM	Udinese		95	112
+ITA-SA	TEAM	Udinese Calcio		27	34
+ITA-SA	TEAM	Venezia FC		31	36
+ITA-SA	TEAM	Verona		71	73
+ITA-SA	TS	AC Milan	U	24	27
+ITA-SA	TS	AC Monza	U	31	38
+ITA-SA	TS	ACF Fiorentina	U	21	27
+ITA-SA	TS	AS Roma	U	56	63
+ITA-SA	TS	Atalanta	O	21	24
+ITA-SA	TS	Atalanta	U	73	86
+ITA-SA	TS	Atalanta BC	U	14	21
+ITA-SA	TS	Bologna	U	93	105
+ITA-SA	TS	Bologna FC 1909	U	26	32
+ITA-SA	TS	Cagliari	U	62	73
+ITA-SA	TS	Cagliari Calcio	U	31	35
+ITA-SA	TS	Como	U	28	33
+ITA-SA	TS	Como 1907	U	27	33
+ITA-SA	TS	Cremonese	U	58	71
+ITA-SA	TS	Empoli	U	64	69
+ITA-SA	TS	Empoli FC	U	30	36
+ITA-SA	TS	FC Internazionale Milano	O	18	22
+ITA-SA	TS	FC Internazionale Milano	U	46	54
+ITA-SA	TS	Fiorentina	O	12	15
+ITA-SA	TS	Fiorentina	U	84	97
+ITA-SA	TS	Frosinone	U	29	36
+ITA-SA	TS	Genoa	U	65	75
+ITA-SA	TS	Genoa CFC	U	34	38
+ITA-SA	TS	Hellas Verona	U	32	38
+ITA-SA	TS	Hellas Verona FC	U	27	34
+ITA-SA	TS	Inter	O	27	36
+ITA-SA	TS	Inter	U	29	34
+ITA-SA	TS	Juventus	U	59	65
+ITA-SA	TS	Juventus FC	U	56	60
+ITA-SA	TS	Lazio	U	92	100
+ITA-SA	TS	Lecce	U	101	106
+ITA-SA	TS	Milan	O	17	23
+ITA-SA	TS	Milan	U	76	87
+ITA-SA	TS	Monza	U	58	68
+ITA-SA	TS	Napoli	O	29	34
+ITA-SA	TS	Napoli	U	67	76
+ITA-SA	TS	Parma	U	34	39
+ITA-SA	TS	Parma Calcio 1913	U	30	34
+ITA-SA	TS	Pisa	U	29	38
+ITA-SA	TS	Roma	U	56	62
+ITA-SA	TS	SS Lazio	U	21	23
+ITA-SA	TS	SSC Napoli	U	28	28
+ITA-SA	TS	Salernitana	U	63	70
+ITA-SA	TS	Sampdoria	U	31	35
+ITA-SA	TS	Sassuolo	U	83	100
+ITA-SA	TS	Spezia	U	33	34
+ITA-SA	TS	Torino	U	92	104
+ITA-SA	TS	Torino FC	U	29	33
+ITA-SA	TS	US Lecce	U	32	37
+ITA-SA	TS	Udinese	U	89	99
+ITA-SA	TS	Udinese Calcio	U	23	28
+ITA-SA	TS	Venezia FC	U	31	36
+ITA-SA	TS	Verona	U	70	72
+ITA-SB	LG			1118	1444
+ITA-SB	SIDE		DNB1	21	22
+ITA-SB	SIDE		O	126	160
+ITA-SB	SIDE		U	971	1262
+ITA-SB	TEAM	AC Reggiana 1919		26	33
+ITA-SB	TEAM	AS Cittadella		25	32
+ITA-SB	TEAM	Ascoli		59	73
+ITA-SB	TEAM	Avellino		31	38
+ITA-SB	TEAM	Bari		85	111
+ITA-SB	TEAM	Benevento		28	35
+ITA-SB	TEAM	Brescia		58	72
+ITA-SB	TEAM	Brescia Calcio		28	34
+ITA-SB	TEAM	Cagliari		26	34
+ITA-SB	TEAM	Carrarese		24	34
+ITA-SB	TEAM	Carrarese Calcio		26	33
+ITA-SB	TEAM	Catanzaro		53	74
+ITA-SB	TEAM	Cesena		33	39
+ITA-SB	TEAM	Cesena FC		31	36
+ITA-SB	TEAM	Cittadella		63	72
+ITA-SB	TEAM	Como		51	71
+ITA-SB	TEAM	Cosenza		58	73
+ITA-SB	TEAM	Cosenza Calcio		25	33
+ITA-SB	TEAM	Cremonese		34	39
+ITA-SB	TEAM	Empoli		29	37
+ITA-SB	TEAM	FC Südtirol		24	33
+ITA-SB	TEAM	FeralpiSalo		22	32
+ITA-SB	TEAM	Frosinone		52	72
+ITA-SB	TEAM	Frosinone Calcio		29	37
+ITA-SB	TEAM	Genoa		29	35
+ITA-SB	TEAM	Juve Stabia		63	77
+ITA-SB	TEAM	Lecco		20	33
+ITA-SB	TEAM	Mantova		30	38
+ITA-SB	TEAM	Mantova 1911 SSD		20	32
+ITA-SB	TEAM	Modena		87	109
+ITA-SB	TEAM	Modena FC		24	33
+ITA-SB	TEAM	Monza		30	38
+ITA-SB	TEAM	Padova		32	38
+ITA-SB	TEAM	Palermo		79	110
+ITA-SB	TEAM	Palermo FC		31	37
+ITA-SB	TEAM	Parma		56	72
+ITA-SB	TEAM	Perugia		25	35
+ITA-SB	TEAM	Pescara		27	38
+ITA-SB	TEAM	Pisa		55	72
+ITA-SB	TEAM	Pisa SC		22	32
+ITA-SB	TEAM	Reggiana		58	76
+ITA-SB	TEAM	Reggina		29	35
+ITA-SB	TEAM	SSC Bari		26	33
+ITA-SB	TEAM	Sampdoria		89	112
+ITA-SB	TEAM	Sassuolo Calcio		29	35
+ITA-SB	TEAM	Spal		28	35
+ITA-SB	TEAM	Spezia		57	75
+ITA-SB	TEAM	Spezia Calcio		27	39
+ITA-SB	TEAM	Sudtirol		89	108
+ITA-SB	TEAM	Ternana		53	73
+ITA-SB	TEAM	US Catanzaro		24	36
+ITA-SB	TEAM	US Cremonese		30	39
+ITA-SB	TEAM	US Salernitana 1919		29	34
+ITA-SB	TEAM	Venezia		84	111
+ITA-SB	TEAM	Virtus Entella		32	39
+ITA-SB	TS	AC Reggiana 1919	U	23	29
+ITA-SB	TS	AS Cittadella	U	24	31
+ITA-SB	TS	Ascoli	U	59	73
+ITA-SB	TS	Avellino	U	30	37
+ITA-SB	TS	Bari	U	81	104
+ITA-SB	TS	Benevento	U	28	35
+ITA-SB	TS	Brescia	U	56	70
+ITA-SB	TS	Brescia Calcio	U	23	29
+ITA-SB	TS	Cagliari	U	26	33
+ITA-SB	TS	Carrarese	U	20	28
+ITA-SB	TS	Carrarese Calcio	U	23	30
+ITA-SB	TS	Catanzaro	U	44	65
+ITA-SB	TS	Cesena	U	27	33
+ITA-SB	TS	Cesena FC	U	26	29
+ITA-SB	TS	Cittadella	U	61	70
+ITA-SB	TS	Como	U	48	65
+ITA-SB	TS	Cosenza	U	57	72
+ITA-SB	TS	Cosenza Calcio	U	23	31
+ITA-SB	TS	Cremonese	U	33	38
+ITA-SB	TS	Empoli	U	22	30
+ITA-SB	TS	FC Südtirol	U	21	28
+ITA-SB	TS	FeralpiSalo	U	19	29
+ITA-SB	TS	Frosinone	O	21	26
+ITA-SB	TS	Frosinone	U	28	43
+ITA-SB	TS	Frosinone Calcio	U	27	33
+ITA-SB	TS	Genoa	U	25	30
+ITA-SB	TS	Juve Stabia	U	52	64
+ITA-SB	TS	Lecco	U	20	32
+ITA-SB	TS	Mantova	U	26	34
+ITA-SB	TS	Mantova 1911 SSD	U	17	28
+ITA-SB	TS	Modena	U	78	97
+ITA-SB	TS	Modena FC	U	20	28
+ITA-SB	TS	Monza	U	22	27
+ITA-SB	TS	Padova	U	29	35
+ITA-SB	TS	Palermo	O	12	17
+ITA-SB	TS	Palermo	U	66	91
+ITA-SB	TS	Palermo FC	U	23	28
+ITA-SB	TS	Parma	U	50	65
+ITA-SB	TS	Perugia	U	24	33
+ITA-SB	TS	Pescara	U	19	30
+ITA-SB	TS	Pisa	U	52	69
+ITA-SB	TS	Pisa SC	U	15	21
+ITA-SB	TS	Reggiana	U	55	72
+ITA-SB	TS	Reggina	U	28	34
+ITA-SB	TS	SSC Bari	U	23	29
+ITA-SB	TS	Sampdoria	U	82	103
+ITA-SB	TS	Sassuolo Calcio	O	16	20
+ITA-SB	TS	Spal	U	26	33
+ITA-SB	TS	Spezia	U	51	68
+ITA-SB	TS	Spezia Calcio	U	24	33
+ITA-SB	TS	Sudtirol	U	88	107
+ITA-SB	TS	Ternana	U	51	68
+ITA-SB	TS	US Catanzaro	U	18	27
+ITA-SB	TS	US Cremonese	U	18	25
+ITA-SB	TS	US Salernitana 1919	U	27	31
+ITA-SB	TS	Venezia	O	29	32
+ITA-SB	TS	Venezia	U	48	72
+ITA-SB	TS	Virtus Entella	U	30	37
+JPN-J1	LG			1306	1485
+JPN-J1	SIDE		O	14	17
+JPN-J1	SIDE		U	1291	1467
+JPN-J1	TEAM	Albirex Niigata		98	110
+JPN-J1	TEAM	Avispa Fukuoka		143	155
+JPN-J1	TEAM	Cerezo Osaka		141	156
+JPN-J1	TEAM	Consadole Sapporo		70	93
+JPN-J1	TEAM	FC Tokyo		139	156
+JPN-J1	TEAM	Fagiano Okayama		52	57
+JPN-J1	TEAM	Gamba Osaka		137	154
 JPN-J1	TEAM	JEF United Ichihara-Chiba		19	23
+JPN-J1	TEAM	Jubilo Iwata		50	59
+JPN-J1	TEAM	Kashima Antlers		139	155
+JPN-J1	TEAM	Kashiwa Reysol		136	156
+JPN-J1	TEAM	Kawasaki Frontale		126	155
+JPN-J1	TEAM	Kyoto Sanga		138	155
+JPN-J1	TEAM	Machida Zelvia		88	93
 JPN-J1	TEAM	Mito Hollyhock		17	19
-JPN-J1	SIDE		U	254	293
-JPN-J1	TS	FC Tokyo	U	29	32
-JPN-J1	TS	Yokohama F. Marinos	U	22	30
-JPN-J1	TS	Tokyo Verdy 1969	U	23	28
-JPN-J1	TS	Shimizu S-Pulse	U	28	30
-JPN-J1	TS	Nagoya Grampus	U	25	29
-JPN-J1	TS	Cerezo Osaka	U	25	29
-JPN-J1	TS	Fagiano Okayama	U	27	30
-JPN-J1	TS	Avispa Fukuoka	U	28	30
-JPN-J1	TS	Sanfrecce Hiroshima	U	28	30
-JPN-J1	TS	Machida Zelvia	U	26	28
-JPN-J1	TS	Urawa Red Diamonds	U	22	28
-JPN-J1	TS	Vissel Kobe	U	26	30
-JPN-J1	TS	Kashiwa Reysol	U	25	30
-JPN-J1	TS	Kashima Antlers	U	26	30
-JPN-J1	TS	Gamba Osaka	U	24	30
-JPN-J1	TS	Kawasaki Frontale	U	22	27
-JPN-J1	TS	Kyoto Sanga	U	27	29
-JPN-J1	TS	V-Varen Nagasaki	U	21	24
+JPN-J1	TEAM	Nagoya Grampus		143	154
+JPN-J1	TEAM	Sagan Tosu		78	93
+JPN-J1	TEAM	Sanfrecce Hiroshima		141	155
+JPN-J1	TEAM	Shimizu S-Pulse		73	83
+JPN-J1	TEAM	Shonan Bellmare		114	131
+JPN-J1	TEAM	Tokyo Verdy 1969		85	98
+JPN-J1	TEAM	Urawa Red Diamonds		130	153
+JPN-J1	TEAM	V-Varen Nagasaki		21	24
+JPN-J1	TEAM	Vissel Kobe		142	157
+JPN-J1	TEAM	Yokohama F. Marinos		126	155
+JPN-J1	TEAM	Yokohama FC		66	71
+JPN-J1	TS	Albirex Niigata	U	98	110
+JPN-J1	TS	Avispa Fukuoka	U	143	155
+JPN-J1	TS	Cerezo Osaka	U	140	154
+JPN-J1	TS	Consadole Sapporo	U	66	89
+JPN-J1	TS	FC Tokyo	U	138	155
+JPN-J1	TS	Fagiano Okayama	U	52	57
+JPN-J1	TS	Gamba Osaka	U	137	154
 JPN-J1	TS	JEF United Ichihara-Chiba	U	19	23
+JPN-J1	TS	Jubilo Iwata	U	50	59
+JPN-J1	TS	Kashima Antlers	U	138	154
+JPN-J1	TS	Kashiwa Reysol	U	136	156
+JPN-J1	TS	Kawasaki Frontale	U	120	148
+JPN-J1	TS	Kyoto Sanga	U	135	151
+JPN-J1	TS	Machida Zelvia	U	88	93
 JPN-J1	TS	Mito Hollyhock	U	17	19
-MAR-BP	LG			252	290
-MAR-BP	TEAM	Raja Casablanca		36	38
-MAR-BP	TEAM	Maghrib de Fès		33	37
-MAR-BP	TEAM	JS Soualem		32	36
-MAR-BP	TEAM	Wydad AC		32	37
-MAR-BP	TEAM	Chabab Mohammédia		30	38
-MAR-BP	TEAM	Ittihad Tanger		34	38
-MAR-BP	TEAM	Hassania US Agadir		30	37
-MAR-BP	TEAM	FUS de Rabat		31	37
-MAR-BP	TEAM	RS Berkane		34	37
-MAR-BP	TEAM	Union de Touarga		33	37
-MAR-BP	TEAM	Olympique de Safi		31	36
-MAR-BP	TEAM	CR Khemis Zemamra		32	35
-MAR-BP	TEAM	FAR de Rabat		31	35
-MAR-BP	TEAM	Moghreb de Tétouan		33	36
-MAR-BP	TEAM	Difaâ d'el Jadida		17	20
+JPN-J1	TS	Nagoya Grampus	U	143	154
+JPN-J1	TS	Sagan Tosu	U	77	92
+JPN-J1	TS	Sanfrecce Hiroshima	U	138	151
+JPN-J1	TS	Shimizu S-Pulse	U	73	83
+JPN-J1	TS	Shonan Bellmare	U	112	129
+JPN-J1	TS	Tokyo Verdy 1969	U	85	98
+JPN-J1	TS	Urawa Red Diamonds	U	130	152
+JPN-J1	TS	V-Varen Nagasaki	U	21	24
+JPN-J1	TS	Vissel Kobe	U	139	154
+JPN-J1	TS	Yokohama F. Marinos	U	121	149
+JPN-J1	TS	Yokohama FC	U	66	71
+MAR-BP	LG			330	390
+MAR-BP	SIDE		U	325	383
 MAR-BP	TEAM	COD Meknés		17	20
-MAR-BP	SIDE		U	248	285
-MAR-BP	TS	Raja Casablanca	U	36	38
-MAR-BP	TS	Maghrib de Fès	U	33	37
-MAR-BP	TS	JS Soualem	U	32	36
-MAR-BP	TS	Wydad AC	U	32	37
-MAR-BP	TS	Chabab Mohammédia	U	30	38
-MAR-BP	TS	Ittihad Tanger	U	34	38
-MAR-BP	TS	Hassania US Agadir	U	30	37
-MAR-BP	TS	FUS de Rabat	U	29	34
-MAR-BP	TS	RS Berkane	U	33	35
-MAR-BP	TS	Union de Touarga	U	32	36
-MAR-BP	TS	Olympique de Safi	U	31	36
-MAR-BP	TS	CR Khemis Zemamra	U	32	35
-MAR-BP	TS	FAR de Rabat	U	27	31
-MAR-BP	TS	Moghreb de Tétouan	U	33	36
-MAR-BP	TS	Difaâ d'el Jadida	U	17	20
+MAR-BP	TEAM	CR Khemis Zemamra		42	48
+MAR-BP	TEAM	Chabab Mohammédia		39	50
+MAR-BP	TEAM	Difaâ d'el Jadida		17	20
+MAR-BP	TEAM	FAR de Rabat		41	48
+MAR-BP	TEAM	FUS de Rabat		42	50
+MAR-BP	TEAM	Hassania US Agadir		40	50
+MAR-BP	TEAM	Ittihad Tanger		43	50
+MAR-BP	TEAM	JS Soualem		37	48
+MAR-BP	TEAM	Maghrib de Fès		43	49
+MAR-BP	TEAM	Moghreb de Tétouan		45	49
+MAR-BP	TEAM	Mouloudia Oujda		19	25
+MAR-BP	TEAM	Olympique de Safi		41	49
+MAR-BP	TEAM	RS Berkane		45	50
+MAR-BP	TEAM	Raja Casablanca		46	50
+MAR-BP	TEAM	Union de Touarga		45	50
+MAR-BP	TEAM	Wydad AC		42	49
+MAR-BP	TEAM	Youssoufia Berrechid		16	25
 MAR-BP	TS	COD Meknés	U	17	20
-MEX-LMX	LG			245	300
-MEX-LMX	TEAM	Necaxa		24	30
-MEX-LMX	TEAM	Puebla		25	30
-MEX-LMX	TEAM	Cruz Azul		30	40
-MEX-LMX	TEAM	Juarez		27	33
-MEX-LMX	TEAM	Mazatlan FC		21	26
-MEX-LMX	TEAM	Atlas		26	32
-MEX-LMX	TEAM	Club Tijuana		27	33
-MEX-LMX	TEAM	Club Leon		25	30
-MEX-LMX	TEAM	Pachuca		31	35
-MEX-LMX	TEAM	Queretaro		29	30
-MEX-LMX	TEAM	UNAM Pumas		27	37
-MEX-LMX	TEAM	Tigres UANL		31	38
-MEX-LMX	TEAM	Monterrey		27	34
-MEX-LMX	TEAM	Club America		30	34
-MEX-LMX	TEAM	Guadalajara Chivas		28	36
-MEX-LMX	TEAM	Toluca		32	38
-MEX-LMX	TEAM	Santos Laguna		24	30
-MEX-LMX	TEAM	Atl. San Luis		23	30
-MEX-LMX	SIDE		U	203	246
-MEX-LMX	SIDE		O	37	49
-MEX-LMX	TS	Necaxa	U	24	30
-MEX-LMX	TS	Puebla	U	24	29
-MEX-LMX	TS	Cruz Azul	U	22	30
-MEX-LMX	TS	Juarez	U	23	29
-MEX-LMX	TS	Mazatlan FC	U	19	24
-MEX-LMX	TS	Atlas	U	25	30
-MEX-LMX	TS	Club Tijuana	U	21	24
-MEX-LMX	TS	Club Leon	U	23	28
-MEX-LMX	TS	Pachuca	U	30	32
-MEX-LMX	TS	Queretaro	U	28	29
-MEX-LMX	TS	UNAM Pumas	U	21	28
+MAR-BP	TS	CR Khemis Zemamra	U	42	47
+MAR-BP	TS	Chabab Mohammédia	U	39	50
+MAR-BP	TS	Difaâ d'el Jadida	U	17	20
+MAR-BP	TS	FAR de Rabat	U	36	42
+MAR-BP	TS	FUS de Rabat	U	40	47
+MAR-BP	TS	Hassania US Agadir	U	40	50
+MAR-BP	TS	Ittihad Tanger	U	43	50
+MAR-BP	TS	JS Soualem	U	37	48
+MAR-BP	TS	Maghrib de Fès	U	43	49
+MAR-BP	TS	Moghreb de Tétouan	U	45	49
+MAR-BP	TS	Mouloudia Oujda	U	19	25
+MAR-BP	TS	Olympique de Safi	U	41	49
+MAR-BP	TS	RS Berkane	U	44	48
+MAR-BP	TS	Raja Casablanca	U	45	49
+MAR-BP	TS	Union de Touarga	U	44	49
+MAR-BP	TS	Wydad AC	U	42	49
+MAR-BP	TS	Youssoufia Berrechid	U	16	25
+MEX-LMX	LG			1211	1455
+MEX-LMX	SIDE		DNB1	14	16
+MEX-LMX	SIDE		O	81	109
+MEX-LMX	SIDE		U	1116	1330
+MEX-LMX	TEAM	Atl. San Luis		25	33
+MEX-LMX	TEAM	Atlas		29	35
+MEX-LMX	TEAM	Atlas Guadalajara		103	123
+MEX-LMX	TEAM	Atlético San Luis		106	127
+MEX-LMX	TEAM	CF América		122	149
+MEX-LMX	TEAM	CF Monterrey		120	139
+MEX-LMX	TEAM	CF Pachuca		101	130
+MEX-LMX	TEAM	Club America		33	37
+MEX-LMX	TEAM	Club Leon		28	33
+MEX-LMX	TEAM	Club León		100	120
+MEX-LMX	TEAM	Club Necaxa		100	117
+MEX-LMX	TEAM	Club Tijuana		127	151
+MEX-LMX	TEAM	Cruz Azul		149	178
+MEX-LMX	TEAM	Deportivo Guadalajara		114	129
+MEX-LMX	TEAM	Deportivo Toluca		101	132
+MEX-LMX	TEAM	FC Juárez		97	114
+MEX-LMX	TEAM	Gallos Blancos		98	111
+MEX-LMX	TEAM	Guadalajara Chivas		30	39
+MEX-LMX	TEAM	Juarez		30	36
+MEX-LMX	TEAM	Mazatlan FC		22	28
+MEX-LMX	TEAM	Mazatlán FC		99	113
+MEX-LMX	TEAM	Monterrey		28	37
+MEX-LMX	TEAM	Necaxa		27	33
+MEX-LMX	TEAM	Pachuca		34	38
+MEX-LMX	TEAM	Puebla		27	33
+MEX-LMX	TEAM	Puebla FC		100	120
+MEX-LMX	TEAM	Pumas UNAM		102	123
+MEX-LMX	TEAM	Queretaro		30	33
+MEX-LMX	TEAM	Santos Laguna		120	153
+MEX-LMX	TEAM	Tigres UANL		32	41
+MEX-LMX	TEAM	Toluca		34	41
+MEX-LMX	TEAM	UANL Tigres		122	140
+MEX-LMX	TEAM	UNAM Pumas		29	40
+MEX-LMX	TS	Atl. San Luis	U	22	30
+MEX-LMX	TS	Atlas	U	27	32
+MEX-LMX	TS	Atlas Guadalajara	U	101	121
+MEX-LMX	TS	Atlético San Luis	U	103	121
+MEX-LMX	TS	CF América	O	15	23
+MEX-LMX	TS	CF América	U	104	122
+MEX-LMX	TS	CF Monterrey	U	108	126
+MEX-LMX	TS	CF Pachuca	U	93	118
+MEX-LMX	TS	Club America	U	22	25
+MEX-LMX	TS	Club Leon	U	25	30
+MEX-LMX	TS	Club León	U	97	116
+MEX-LMX	TS	Club Necaxa	U	95	111
+MEX-LMX	TS	Club Tijuana	U	118	139
+MEX-LMX	TS	Cruz Azul	U	139	164
+MEX-LMX	TS	Deportivo Guadalajara	U	113	127
+MEX-LMX	TS	Deportivo Toluca	O	18	21
+MEX-LMX	TS	Deportivo Toluca	U	82	109
+MEX-LMX	TS	FC Juárez	U	97	114
+MEX-LMX	TS	Gallos Blancos	U	97	110
+MEX-LMX	TS	Guadalajara Chivas	U	22	28
+MEX-LMX	TS	Juarez	U	26	32
+MEX-LMX	TS	Mazatlan FC	U	20	26
+MEX-LMX	TS	Mazatlán FC	U	99	113
+MEX-LMX	TS	Monterrey	O	12	16
+MEX-LMX	TS	Monterrey	U	16	21
+MEX-LMX	TS	Necaxa	U	27	33
+MEX-LMX	TS	Pachuca	U	32	34
+MEX-LMX	TS	Puebla	U	25	31
+MEX-LMX	TS	Puebla FC	U	96	116
+MEX-LMX	TS	Pumas UNAM	U	99	120
+MEX-LMX	TS	Queretaro	U	29	31
+MEX-LMX	TS	Santos Laguna	U	114	145
 MEX-LMX	TS	Tigres UANL	U	21	26
-MEX-LMX	TS	Monterrey	O	12	15
-MEX-LMX	TS	Santos Laguna	U	24	29
-MEX-LMX	TS	Atl. San Luis	U	21	28
-MEX-LMX	TS	Guadalajara Chivas	U	20	26
-MEX-LMX	TS	Club America	U	21	24
 MEX-LMX	TS	Toluca	U	21	23
-MEX-LMX	TS	Monterrey	U	15	19
-MLS	LG			208	266
-MLS	TEAM	Houston Dynamo		16	21
-MLS	TEAM	Chicago Fire		15	18
-MLS	TEAM	Seattle Sounders		16	18
-MLS	TEAM	Colorado Rapids		13	20
-MLS	TEAM	Portland Timbers		18	20
-MLS	TEAM	Real Salt Lake		18	18
-MLS	TEAM	Sporting Kansas City		14	19
-MLS	TEAM	Columbus Crew		15	19
-MLS	TEAM	FC Dallas		14	19
-MLS	TEAM	Nashville SC		13	19
-MLS	TEAM	Los Angeles FC		13	19
-MLS	TEAM	Vancouver Whitecaps		15	18
-MLS	TEAM	Toronto FC		14	19
-MLS	TEAM	San Diego FC		13	18
-MLS	TEAM	Philadelphia Union		13	17
-MLS	TEAM	San Jose Earthquakes		14	19
-MLS	TEAM	FC Cincinnati		16	18
-MLS	TEAM	Los Angeles Galaxy		18	19
-MLS	TEAM	New England Revolution		13	17
-MLS	TEAM	Austin FC		16	18
-MLS	TEAM	Orlando City		9	17
-MLS	TEAM	CF Montreal		10	16
-MLS	TEAM	New York Red Bulls		10	15
-MLS	TEAM	DC United		12	15
-MLS	TEAM	Inter Miami		14	16
-MLS	TEAM	New York City		14	16
-MLS	TEAM	St. Louis City		12	15
+MEX-LMX	TS	UANL Tigres	U	116	131
+MEX-LMX	TS	UNAM Pumas	U	23	31
+MLS	LG			1168	1453
+MLS	SIDE		DNB1	33	42
+MLS	SIDE		O	575	738
+MLS	SIDE		U	560	673
+MLS	TEAM	Atlanta United FC		75	87
 MLS	TEAM	Atlanta Utd		13	15
-MLS	TEAM	Minnesota United		12	16
+MLS	TEAM	Austin FC		82	95
+MLS	TEAM	CF Montreal		10	16
+MLS	TEAM	CF Montréal		61	79
 MLS	TEAM	Charlotte		11	16
-MLS	SIDE		U	95	122
-MLS	SIDE		O	105	132
-MLS	TS	Portland Timbers	O	16	16
-MLS	TS	San Diego FC	O	12	17
-MLS	TS	Austin FC	U	14	15
-NED-D2	LG			249	300
-NED-D2	TEAM	FC Den Bosch		25	31
-NED-D2	TEAM	Helmond Sport		24	31
-NED-D2	TEAM	Almere City		25	30
-NED-D2	TEAM	Jong AZ		29	30
-NED-D2	TEAM	De Graafschap		28	31
-NED-D2	TEAM	Jong PSV		24	29
-NED-D2	TEAM	FC Eindhoven		23	30
-NED-D2	TEAM	VVV-Venlo		26	29
-NED-D2	TEAM	FC Dordrecht		25	30
-NED-D2	TEAM	Jong Ajax		20	30
-NED-D2	TEAM	FC Emmen		20	29
-NED-D2	TEAM	Jong FC Utrecht		23	29
-NED-D2	TEAM	TOP Oss		27	29
-NED-D2	TEAM	RKC Waalwijk		28	30
-NED-D2	TEAM	SC Cambuur		22	26
-NED-D2	TEAM	Vitesse		28	32
-NED-D2	TEAM	Roda JC Kerkrade		27	30
-NED-D2	TEAM	ADO Den Haag		19	27
-NED-D2	TEAM	Willem II		22	26
-NED-D2	TEAM	MVV Maastricht		24	30
-NED-D2	SIDE		U	88	107
-NED-D2	SIDE		O	160	192
-NED-D2	TS	Helmond Sport	U	18	21
-NED-D2	TS	Almere City	O	22	25
-NED-D2	TS	Jong AZ	O	21	22
-NED-D2	TS	De Graafschap	O	27	30
-NED-D2	TS	Jong PSV	O	22	25
-NED-D2	TS	FC Dordrecht	U	16	18
-NED-D2	TS	FC Emmen	O	14	21
-NED-D2	TS	TOP Oss	U	19	20
-NED-D2	TS	RKC Waalwijk	O	21	23
-NED-D2	TS	SC Cambuur	O	21	25
-NED-D2	TS	Vitesse	O	19	21
-NED-D2	TS	Roda JC Kerkrade	O	14	17
-NED-D2	TS	MVV Maastricht	U	14	17
-NED-D2	TS	VVV-Venlo	O	12	15
-NED-D2	TS	FC Den Bosch	O	21	23
-NED-D2	TS	ADO Den Haag	O	18	25
-NED-D2	TS	Willem II	O	13	17
-NED-D2	TS	Jong Ajax	U	13	21
-NED-D2	TS	FC Eindhoven	O	17	20
-NED-D2	TS	Jong FC Utrecht	O	13	17
-NED-ED	LG			258	300
-NED-ED	TEAM	NAC Breda		24	30
-NED-ED	TEAM	AZ		31	35
-NED-ED	TEAM	Sparta Rotterdam		28	35
-NED-ED	TEAM	Feyenoord Rotterdam		28	34
-NED-ED	TEAM	PEC Zwolle		31	35
-NED-ED	TEAM	FC Utrecht		26	34
-NED-ED	TEAM	Fortuna Sittard		31	36
-NED-ED	TEAM	NEC		31	34
-NED-ED	TEAM	FC Twente '65		27	32
-NED-ED	TEAM	SC Heerenveen		25	32
-NED-ED	TEAM	Go Ahead Eagles		27	32
-NED-ED	TEAM	FC Volendam		29	30
-NED-ED	TEAM	PSV		32	33
-NED-ED	TEAM	AFC Ajax		29	32
-NED-ED	TEAM	Telstar 1963		26	32
-NED-ED	TEAM	Heracles Almelo		28	30
-NED-ED	TEAM	SBV Excelsior		28	32
-NED-ED	TEAM	FC Groningen		28	32
-NED-ED	SIDE		U	133	160
-NED-ED	SIDE		O	125	140
-NED-ED	TS	NAC Breda	U	23	28
-NED-ED	TS	Feyenoord Rotterdam	O	23	27
-NED-ED	TS	FC Utrecht	O	11	15
-NED-ED	TS	Fortuna Sittard	O	15	16
-NED-ED	TS	NEC	O	26	27
-NED-ED	TS	SC Heerenveen	O	15	18
-NED-ED	TS	Go Ahead Eagles	U	15	18
-NED-ED	TS	FC Volendam	U	23	24
-NED-ED	TS	PSV	O	32	33
-NED-ED	TS	AFC Ajax	O	20	22
-NED-ED	TS	Heracles Almelo	U	19	21
-NED-ED	TS	Sparta Rotterdam	U	20	25
-NED-ED	TS	SBV Excelsior	U	24	27
-NED-ED	TS	PEC Zwolle	U	22	25
-NED-ED	TS	AZ	O	19	22
-NED-ED	TS	Fortuna Sittard	U	16	20
-NED-ED	TS	FC Utrecht	U	15	19
+MLS	TEAM	Charlotte FC		67	80
+MLS	TEAM	Chicago Fire		76	97
+MLS	TEAM	Colorado Rapids		82	101
+MLS	TEAM	Columbus Crew		84	104
+MLS	TEAM	D.C. United		67	79
+MLS	TEAM	DC United		12	15
+MLS	TEAM	FC Cincinnati		80	102
+MLS	TEAM	FC Dallas		82	102
+MLS	TEAM	Houston Dynamo		85	103
+MLS	TEAM	Inter Miami		14	16
+MLS	TEAM	Inter Miami CF		66	81
+MLS	TEAM	Los Angeles FC		80	107
+MLS	TEAM	Los Angeles Galaxy		89	102
+MLS	TEAM	Minnesota United		12	16
+MLS	TEAM	Minnesota United FC		65	80
+MLS	TEAM	Nashville SC		81	101
+MLS	TEAM	New England Revolution		78	98
+MLS	TEAM	New York City		14	16
+MLS	TEAM	New York City FC		68	82
+MLS	TEAM	New York RB		65	85
+MLS	TEAM	New York Red Bulls		10	15
+MLS	TEAM	Orlando City		74	102
+MLS	TEAM	Philadelphia Union		76	98
+MLS	TEAM	Portland Timbers		77	100
+MLS	TEAM	Real Salt Lake		83	96
+MLS	TEAM	San Diego FC		18	24
+MLS	TEAM	San Jose Earthquakes		84	98
+MLS	TEAM	Seattle Sounders		79	103
+MLS	TEAM	Sporting Kansas City		81	102
+MLS	TEAM	St. Louis City		12	15
+MLS	TEAM	St. Louis City SC		60	75
+MLS	TEAM	Toronto FC		83	99
+MLS	TEAM	Vancouver Whitecaps		79	103
+MLS	TS	Atlanta United FC	O	47	56
+MLS	TS	Atlanta United FC	U	26	28
+MLS	TS	Austin FC	O	21	28
+MLS	TS	Austin FC	U	59	64
+MLS	TS	CF Montréal	O	16	25
+MLS	TS	CF Montréal	U	41	50
+MLS	TS	Charlotte FC	O	29	36
+MLS	TS	Charlotte FC	U	38	44
+MLS	TS	Chicago Fire	O	31	44
+MLS	TS	Chicago Fire	U	44	52
+MLS	TS	Colorado Rapids	O	34	44
+MLS	TS	Colorado Rapids	U	47	55
+MLS	TS	Columbus Crew	O	56	69
+MLS	TS	Columbus Crew	U	22	29
+MLS	TS	D.C. United	O	34	38
+MLS	TS	D.C. United	U	33	41
+MLS	TS	FC Cincinnati	O	51	66
+MLS	TS	FC Cincinnati	U	28	34
+MLS	TS	FC Dallas	O	39	55
+MLS	TS	FC Dallas	U	43	47
+MLS	TS	Houston Dynamo	O	31	42
+MLS	TS	Houston Dynamo	U	53	60
+MLS	TS	Inter Miami CF	O	39	48
+MLS	TS	Inter Miami CF	U	23	28
+MLS	TS	Los Angeles FC	O	48	66
+MLS	TS	Los Angeles FC	U	30	39
+MLS	TS	Los Angeles Galaxy	O	53	61
+MLS	TS	Los Angeles Galaxy	U	34	39
+MLS	TS	Minnesota United FC	O	37	45
+MLS	TS	Minnesota United FC	U	28	34
+MLS	TS	Nashville SC	O	24	39
+MLS	TS	Nashville SC	U	52	57
+MLS	TS	New England Revolution	O	29	38
+MLS	TS	New England Revolution	U	47	58
+MLS	TS	New York City FC	O	27	36
+MLS	TS	New York City FC	U	38	43
+MLS	TS	New York RB	O	29	43
+MLS	TS	New York RB	U	36	41
+MLS	TS	Orlando City	O	39	53
+MLS	TS	Orlando City	U	32	44
+MLS	TS	Philadelphia Union	O	54	70
+MLS	TS	Philadelphia Union	U	21	27
+MLS	TS	Portland Timbers	O	54	62
+MLS	TS	Portland Timbers	U	21	34
+MLS	TS	Real Salt Lake	O	51	61
+MLS	TS	Real Salt Lake	U	32	34
+MLS	TS	San Diego FC	O	15	20
+MLS	TS	San Jose Earthquakes	O	37	42
+MLS	TS	San Jose Earthquakes	U	46	53
+MLS	TS	Seattle Sounders	O	32	45
+MLS	TS	Seattle Sounders	U	47	58
+MLS	TS	Sporting Kansas City	O	43	54
+MLS	TS	Sporting Kansas City	U	34	44
+MLS	TS	St. Louis City SC	O	32	41
+MLS	TS	St. Louis City SC	U	24	28
+MLS	TS	Toronto FC	O	17	20
+MLS	TS	Toronto FC	U	60	73
+MLS	TS	Vancouver Whitecaps	O	50	65
+MLS	TS	Vancouver Whitecaps	U	26	35
+NED-D2	LG			1230	1495
+NED-D2	SIDE		O	702	840
+NED-D2	SIDE		U	524	650
+NED-D2	TEAM	ADO Den Haag		122	146
+NED-D2	TEAM	Almere City		59	75
+NED-D2	TEAM	De Graafschap		132	150
+NED-D2	TEAM	Excelsior		30	38
+NED-D2	TEAM	FC Den Bosch		117	150
+NED-D2	TEAM	FC Dordrecht		128	150
+NED-D2	TEAM	FC Eindhoven		124	151
+NED-D2	TEAM	FC Emmen		87	117
+NED-D2	TEAM	FC Groningen		26	33
+NED-D2	TEAM	FC Volendam		38	42
+NED-D2	TEAM	Helmond Sport		127	150
+NED-D2	TEAM	Heracles Almelo		32	35
+NED-D2	TEAM	Jong AZ		125	151
+NED-D2	TEAM	Jong Ajax		113	149
+NED-D2	TEAM	Jong FC Utrecht		120	148
+NED-D2	TEAM	Jong PSV		119	149
+NED-D2	TEAM	MVV Maastricht		117	151
+NED-D2	TEAM	NAC Breda		62	74
+NED-D2	TEAM	PEC Zwolle		27	32
+NED-D2	TEAM	RKC Waalwijk		38	42
+NED-D2	TEAM	Roda JC Kerkrade		119	150
+NED-D2	TEAM	SC Cambuur		97	114
+NED-D2	TEAM	TOP Oss		132	148
+NED-D2	TEAM	Telstar		89	109
+NED-D2	TEAM	VVV-Venlo		128	149
+NED-D2	TEAM	Vitesse		67	80
+NED-D2	TEAM	Willem II		85	107
+NED-D2	TS	ADO Den Haag	O	87	105
+NED-D2	TS	ADO Den Haag	U	34	40
+NED-D2	TS	Almere City	O	48	58
+NED-D2	TS	Almere City	U	11	17
+NED-D2	TS	De Graafschap	O	101	115
+NED-D2	TS	De Graafschap	U	30	34
+NED-D2	TS	Excelsior	O	22	29
+NED-D2	TS	FC Den Bosch	O	54	65
+NED-D2	TS	FC Den Bosch	U	61	83
+NED-D2	TS	FC Dordrecht	O	67	80
+NED-D2	TS	FC Dordrecht	U	61	70
+NED-D2	TS	FC Eindhoven	O	63	75
+NED-D2	TS	FC Eindhoven	U	61	76
+NED-D2	TS	FC Emmen	O	56	73
+NED-D2	TS	FC Emmen	U	31	44
+NED-D2	TS	FC Groningen	O	22	28
+NED-D2	TS	FC Volendam	O	33	36
+NED-D2	TS	Helmond Sport	O	42	55
+NED-D2	TS	Helmond Sport	U	85	95
+NED-D2	TS	Heracles Almelo	O	31	34
+NED-D2	TS	Jong AZ	O	83	97
+NED-D2	TS	Jong AZ	U	42	54
+NED-D2	TS	Jong Ajax	O	55	67
+NED-D2	TS	Jong Ajax	U	58	82
+NED-D2	TS	Jong FC Utrecht	O	32	42
+NED-D2	TS	Jong FC Utrecht	U	88	106
+NED-D2	TS	Jong PSV	O	86	99
+NED-D2	TS	Jong PSV	U	33	50
+NED-D2	TS	MVV Maastricht	O	55	70
+NED-D2	TS	MVV Maastricht	U	62	81
+NED-D2	TS	NAC Breda	O	39	42
+NED-D2	TS	NAC Breda	U	23	32
+NED-D2	TS	PEC Zwolle	O	26	31
+NED-D2	TS	RKC Waalwijk	O	26	28
+NED-D2	TS	Roda JC Kerkrade	O	69	88
+NED-D2	TS	Roda JC Kerkrade	U	50	62
+NED-D2	TS	SC Cambuur	O	80	93
+NED-D2	TS	SC Cambuur	U	17	20
+NED-D2	TS	TOP Oss	O	28	31
+NED-D2	TS	TOP Oss	U	102	114
+NED-D2	TS	Telstar	O	41	51
+NED-D2	TS	Telstar	U	48	58
+NED-D2	TS	VVV-Venlo	O	65	76
+NED-D2	TS	VVV-Venlo	U	63	73
+NED-D2	TS	Vitesse	O	35	40
+NED-D2	TS	Vitesse	U	32	40
+NED-D2	TS	Willem II	O	58	72
+NED-D2	TS	Willem II	U	27	35
+NED-ED	LG			1257	1490
+NED-ED	SIDE		DNB1	37	37
+NED-ED	SIDE		O	564	667
+NED-ED	SIDE		U	655	785
+NED-ED	TEAM	AFC Ajax		62	69
+NED-ED	TEAM	AZ		58	70
+NED-ED	TEAM	AZ Alkmaar		78	97
+NED-ED	TEAM	Ajax		78	95
+NED-ED	TEAM	Almere City		30	34
+NED-ED	TEAM	Almere City FC		30	34
+NED-ED	TEAM	Cambuur		50	62
+NED-ED	TEAM	Excelsior		59	69
+NED-ED	TEAM	FC Emmen		30	34
+NED-ED	TEAM	FC Groningen		59	69
+NED-ED	TEAM	FC Twente '65		59	69
+NED-ED	TEAM	FC Utrecht		54	70
+NED-ED	TEAM	FC Volendam		33	34
+NED-ED	TEAM	Feyenoord		81	97
+NED-ED	TEAM	Feyenoord Rotterdam		54	65
+NED-ED	TEAM	For Sittard		82	97
+NED-ED	TEAM	Fortuna Sittard		61	72
+NED-ED	TEAM	Go Ahead Eagles		139	166
+NED-ED	TEAM	Groningen		48	62
+NED-ED	TEAM	Heerenveen		85	96
+NED-ED	TEAM	Heracles		51	63
+NED-ED	TEAM	Heracles Almelo		59	68
+NED-ED	TEAM	NAC Breda		54	65
+NED-ED	TEAM	NEC		61	71
+NED-ED	TEAM	Nijmegen		78	96
+NED-ED	TEAM	PEC Zwolle		61	70
+NED-ED	TEAM	PSV		69	71
+NED-ED	TEAM	PSV Eindhoven		81	95
+NED-ED	TEAM	RKC Waalwijk		27	34
+NED-ED	TEAM	SBV Excelsior		32	36
+NED-ED	TEAM	SC Heerenveen		54	65
+NED-ED	TEAM	Sparta Rotterdam		139	167
+NED-ED	TEAM	Telstar 1963		30	36
+NED-ED	TEAM	Twente		82	96
+NED-ED	TEAM	Utrecht		79	97
+NED-ED	TEAM	Vitesse		82	96
+NED-ED	TEAM	Volendam		55	68
+NED-ED	TEAM	Waalwijk		78	96
+NED-ED	TEAM	Willem II		23	27
+NED-ED	TEAM	Willem II Tilburg		26	35
+NED-ED	TEAM	Zwolle		59	63
+NED-ED	TS	AFC Ajax	O	43	47
+NED-ED	TS	AFC Ajax	U	18	21
+NED-ED	TS	AZ	O	32	42
+NED-ED	TS	AZ	U	25	27
+NED-ED	TS	AZ Alkmaar	O	52	62
+NED-ED	TS	AZ Alkmaar	U	23	32
+NED-ED	TS	Ajax	O	72	85
+NED-ED	TS	Almere City	U	24	28
+NED-ED	TS	Almere City FC	U	25	29
+NED-ED	TS	Cambuur	U	37	46
+NED-ED	TS	Excelsior	O	19	20
+NED-ED	TS	Excelsior	U	37	46
+NED-ED	TS	FC Emmen	U	21	24
+NED-ED	TS	FC Groningen	O	14	17
+NED-ED	TS	FC Groningen	U	43	50
+NED-ED	TS	FC Twente '65	O	35	39
+NED-ED	TS	FC Twente '65	U	22	28
+NED-ED	TS	FC Utrecht	O	29	37
+NED-ED	TS	FC Utrecht	U	25	33
+NED-ED	TS	FC Volendam	U	24	25
+NED-ED	TS	Feyenoord	O	68	82
+NED-ED	TS	Feyenoord Rotterdam	O	44	51
+NED-ED	TS	For Sittard	O	19	24
+NED-ED	TS	For Sittard	U	58	68
+NED-ED	TS	Fortuna Sittard	O	28	32
+NED-ED	TS	Fortuna Sittard	U	33	40
+NED-ED	TS	Go Ahead Eagles	O	62	74
+NED-ED	TS	Go Ahead Eagles	U	76	91
+NED-ED	TS	Groningen	U	38	50
+NED-ED	TS	Heerenveen	O	33	38
+NED-ED	TS	Heerenveen	U	51	57
+NED-ED	TS	Heracles	U	38	47
+NED-ED	TS	Heracles Almelo	O	20	22
+NED-ED	TS	Heracles Almelo	U	37	44
+NED-ED	TS	NAC Breda	U	46	55
+NED-ED	TS	NEC	O	45	52
+NED-ED	TS	NEC	U	16	19
+NED-ED	TS	Nijmegen	O	37	44
+NED-ED	TS	Nijmegen	U	41	52
+NED-ED	TS	PEC Zwolle	O	18	22
+NED-ED	TS	PEC Zwolle	U	41	46
+NED-ED	TS	PSV	O	65	67
+NED-ED	TS	PSV Eindhoven	O	69	82
+NED-ED	TS	RKC Waalwijk	U	18	25
+NED-ED	TS	SBV Excelsior	U	25	28
+NED-ED	TS	SC Heerenveen	O	19	25
+NED-ED	TS	SC Heerenveen	U	35	40
+NED-ED	TS	Sparta Rotterdam	O	45	59
+NED-ED	TS	Sparta Rotterdam	U	93	107
+NED-ED	TS	Telstar 1963	O	16	16
 NED-ED	TS	Telstar 1963	U	14	20
-NED-ED	TS	FC Groningen	U	20	22
-NED-ED	TS	FC Twente '65	O	16	18
-NGA-PL	LG			269	300
-NGA-PL	TEAM	Ikorodu City FC		26	30
-NGA-PL	TEAM	Nasarawa United FC		28	30
-NGA-PL	TEAM	El-Kanemi Warriors FC		27	29
-NGA-PL	TEAM	Wikki Tourists FC		25	30
-NGA-PL	TEAM	Niger Tornadoes FC		29	30
-NGA-PL	TEAM	Plateau United FC		27	30
-NGA-PL	TEAM	Shooting Stars SC		26	30
-NGA-PL	TEAM	Abia Warriors FC		30	30
-NGA-PL	TEAM	Barau FC		29	31
-NGA-PL	TEAM	Kano Pillars FC		28	31
-NGA-PL	TEAM	Bayelsa United FC		27	30
-NGA-PL	TEAM	Kun Khalifat FC		27	29
-NGA-PL	TEAM	Kwara United FC		26	30
-NGA-PL	TEAM	Katsina United FC		26	30
-NGA-PL	TEAM	Rangers International FC		27	30
-NGA-PL	TEAM	Enyimba FC		25	29
-NGA-PL	TEAM	Bendel FC		26	30
-NGA-PL	TEAM	Warri Wolves FC		25	29
-NGA-PL	TEAM	Rivers United FC		27	31
-NGA-PL	TEAM	Remo Stars FC		27	31
-NGA-PL	SIDE		U	269	300
-NGA-PL	TS	Ikorodu City FC	U	26	30
-NGA-PL	TS	Nasarawa United FC	U	28	30
-NGA-PL	TS	El-Kanemi Warriors FC	U	27	29
-NGA-PL	TS	Wikki Tourists FC	U	25	30
-NGA-PL	TS	Niger Tornadoes FC	U	29	30
-NGA-PL	TS	Plateau United FC	U	27	30
-NGA-PL	TS	Shooting Stars SC	U	26	30
-NGA-PL	TS	Abia Warriors FC	U	30	30
-NGA-PL	TS	Barau FC	U	29	31
-NGA-PL	TS	Kano Pillars FC	U	28	31
-NGA-PL	TS	Bayelsa United FC	U	27	30
-NGA-PL	TS	Kun Khalifat FC	U	27	29
-NGA-PL	TS	Kwara United FC	U	26	30
-NGA-PL	TS	Katsina United FC	U	26	30
-NGA-PL	TS	Rangers International FC	U	27	30
-NGA-PL	TS	Enyimba FC	U	25	29
-NGA-PL	TS	Bendel FC	U	26	30
-NGA-PL	TS	Warri Wolves FC	U	25	29
-NGA-PL	TS	Rivers United FC	U	27	31
-NGA-PL	TS	Remo Stars FC	U	27	31
-NOR-EL	LG			214	254
-NOR-EL	TEAM	FK Haugesund		19	22
-NOR-EL	TEAM	Viking FK		15	23
-NOR-EL	TEAM	Strømsgodset IF		15	22
-NOR-EL	TEAM	Tromsø IL		17	20
-NOR-EL	TEAM	KFUM Oslo		28	32
-NOR-EL	TEAM	FK Bodø/Glimt		15	17
-NOR-EL	TEAM	Fredrikstad FK		16	20
-NOR-EL	TEAM	Rosenborg BK		16	21
-NOR-EL	TEAM	Lillestrøm SK		13	16
-NOR-EL	TEAM	Sarpsborg 08		28	33
-NOR-EL	TEAM	Molde FK		14	19
-NOR-EL	TEAM	Kristiansund BK		19	21
-NOR-EL	TEAM	Sandefjord Fotball		16	20
-NOR-EL	TEAM	SK Brann		17	18
-NOR-EL	TEAM	Hamarkameratene		17	19
-NOR-EL	SIDE		O	87	106
-NOR-EL	SIDE		U	120	141
-NOR-EL	TS	Viking FK	O	12	17
-NOR-EL	TS	Strømsgodset IF	U	11	15
-NOR-EL	TS	Tromsø IL	U	13	15
-NOR-EL	TS	FK Bodø/Glimt	O	14	16
-NOR-EL	TS	Rosenborg BK	O	11	16
-NOR-EL	TS	Molde FK	O	12	16
-NOR-EL	TS	Kristiansund BK	U	15	16
-NOR-EL	TS	FK Haugesund	U	15	17
-NOR-EL	TS	Fredrikstad FK	U	13	15
-NOR-EL	TS	KFUM Oslo	U	22	24
-NOR-EL	TS	Sarpsborg 08	U	17	19
-PER-L1	LG			232	290
-PER-L1	TEAM	Comerciantes Unidos		23	32
-PER-L1	TEAM	Sport Huancayo		27	31
-PER-L1	TEAM	Cienciano del Cusco		25	33
-PER-L1	TEAM	Sport Boys		23	31
-PER-L1	TEAM	Atlético Grau		28	33
-PER-L1	TEAM	Cusco FC		31	36
-PER-L1	TEAM	Deportivo Garcilaso		24	31
-PER-L1	TEAM	Melgar		26	30
-PER-L1	TEAM	Juan Pablo II		24	33
-PER-L1	TEAM	Sporting Cristal		30	36
-PER-L1	TEAM	UTC		24	33
-PER-L1	TEAM	Universitario		26	32
-PER-L1	TEAM	Los Chankas		26	34
-PER-L1	TEAM	Alianza Lima		31	35
-PER-L1	TEAM	Alianza Atlético		27	33
-PER-L1	TEAM	ADT		26	32
-PER-L1	TEAM	FC Cajamarca		14	19
+NED-ED	TS	Twente	O	44	55
+NED-ED	TS	Twente	U	38	41
+NED-ED	TS	Utrecht	O	34	44
+NED-ED	TS	Utrecht	U	45	53
+NED-ED	TS	Vitesse	O	25	31
+NED-ED	TS	Vitesse	U	57	65
+NED-ED	TS	Volendam	O	17	17
+NED-ED	TS	Volendam	U	35	48
+NED-ED	TS	Waalwijk	O	20	28
+NED-ED	TS	Waalwijk	U	58	68
+NED-ED	TS	Willem II	U	21	24
+NED-ED	TS	Willem II Tilburg	U	21	27
+NED-ED	TS	Zwolle	O	22	22
+NED-ED	TS	Zwolle	U	34	38
+NGA-PL	LG			1311	1480
+NGA-PL	SIDE		U	1311	1480
+NGA-PL	TEAM	Abia Warriors FC		134	150
+NGA-PL	TEAM	Akwa United FC		104	110
+NGA-PL	TEAM	Barau FC		31	33
+NGA-PL	TEAM	Bayelsa United FC		118	130
+NGA-PL	TEAM	Bendel FC		122	134
+NGA-PL	TEAM	Dakkada FC		31	34
+NGA-PL	TEAM	Doma United FC		46	51
+NGA-PL	TEAM	El-Kanemi Warriors FC		84	92
+NGA-PL	TEAM	Enyimba FC		138	152
+NGA-PL	TEAM	Gombe United FC		56	72
+NGA-PL	TEAM	Heartland FC		78	92
+NGA-PL	TEAM	Ikorodu City FC		61	75
+NGA-PL	TEAM	Kano Pillars FC		113	132
+NGA-PL	TEAM	Katsina United FC		119	132
+NGA-PL	TEAM	Kun Khalifat FC		29	31
+NGA-PL	TEAM	Kwara United FC		130	147
+NGA-PL	TEAM	Lobi Stars FC		97	115
+NGA-PL	TEAM	MFM FC		15	17
+NGA-PL	TEAM	Nasarawa United FC		102	111
+NGA-PL	TEAM	Niger Tornadoes FC		130	147
+NGA-PL	TEAM	Plateau United FC		127	149
+NGA-PL	TEAM	Rangers International FC		130	147
+NGA-PL	TEAM	Remo Stars FC		136	153
+NGA-PL	TEAM	Rivers United FC		134	152
+NGA-PL	TEAM	Shooting Stars SC		129	147
+NGA-PL	TEAM	Sporting Lagos FC		28	33
+NGA-PL	TEAM	Sunshine Stars FC		106	114
+NGA-PL	TEAM	Warri Wolves FC		34	38
+NGA-PL	TEAM	Wikki Tourists FC		60	70
+NGA-PL	TS	Abia Warriors FC	U	134	150
+NGA-PL	TS	Akwa United FC	U	104	110
+NGA-PL	TS	Barau FC	U	31	33
+NGA-PL	TS	Bayelsa United FC	U	118	130
+NGA-PL	TS	Bendel FC	U	122	134
+NGA-PL	TS	Dakkada FC	U	31	34
+NGA-PL	TS	Doma United FC	U	46	51
+NGA-PL	TS	El-Kanemi Warriors FC	U	84	92
+NGA-PL	TS	Enyimba FC	U	138	152
+NGA-PL	TS	Gombe United FC	U	56	72
+NGA-PL	TS	Heartland FC	U	78	92
+NGA-PL	TS	Ikorodu City FC	U	61	75
+NGA-PL	TS	Kano Pillars FC	U	113	132
+NGA-PL	TS	Katsina United FC	U	119	132
+NGA-PL	TS	Kun Khalifat FC	U	29	31
+NGA-PL	TS	Kwara United FC	U	130	147
+NGA-PL	TS	Lobi Stars FC	U	97	115
+NGA-PL	TS	MFM FC	U	15	17
+NGA-PL	TS	Nasarawa United FC	U	102	111
+NGA-PL	TS	Niger Tornadoes FC	U	130	147
+NGA-PL	TS	Plateau United FC	U	127	149
+NGA-PL	TS	Rangers International FC	U	130	147
+NGA-PL	TS	Remo Stars FC	U	136	153
+NGA-PL	TS	Rivers United FC	U	134	152
+NGA-PL	TS	Shooting Stars SC	U	129	147
+NGA-PL	TS	Sporting Lagos FC	U	28	33
+NGA-PL	TS	Sunshine Stars FC	U	106	114
+NGA-PL	TS	Warri Wolves FC	U	34	38
+NGA-PL	TS	Wikki Tourists FC	U	60	70
+NOR-EL	LG			456	557
+NOR-EL	SIDE		O	210	257
+NOR-EL	SIDE		U	237	290
+NOR-EL	TEAM	Aalesunds FK		16	24
+NOR-EL	TEAM	FK Bodø/Glimt		49	56
+NOR-EL	TEAM	FK Haugesund		50	60
+NOR-EL	TEAM	Fredrikstad FK		21	30
+NOR-EL	TEAM	Hamarkameratene		48	59
+NOR-EL	TEAM	KFUM Oslo		36	42
+NOR-EL	TEAM	Kristiansund BK		29	31
+NOR-EL	TEAM	Lillestrøm SK		44	54
+NOR-EL	TEAM	Molde FK		43	58
+NOR-EL	TEAM	Odds BK		46	54
+NOR-EL	TEAM	Rosenborg BK		50	59
+NOR-EL	TEAM	SK Brann		52	57
+NOR-EL	TEAM	Sandefjord Fotball		41	59
+NOR-EL	TEAM	Sarpsborg 08		55	71
+NOR-EL	TEAM	Stabæk IF		18	25
+NOR-EL	TEAM	Strømsgodset IF		45	59
+NOR-EL	TEAM	Tromsø IL		49	59
+NOR-EL	TEAM	Viking FK		47	61
+NOR-EL	TEAM	Vålerenga IF		29	31
+NOR-EL	TS	Aalesunds FK	U	14	22
+NOR-EL	TS	FK Bodø/Glimt	O	46	52
+NOR-EL	TS	FK Haugesund	O	12	18
+NOR-EL	TS	FK Haugesund	U	37	41
+NOR-EL	TS	Fredrikstad FK	U	13	17
+NOR-EL	TS	Hamarkameratene	O	14	19
+NOR-EL	TS	Hamarkameratene	U	34	40
+NOR-EL	TS	KFUM Oslo	U	27	31
+NOR-EL	TS	Kristiansund BK	U	22	23
+NOR-EL	TS	Lillestrøm SK	O	16	19
+NOR-EL	TS	Lillestrøm SK	U	26	33
+NOR-EL	TS	Molde FK	O	39	49
+NOR-EL	TS	Odds BK	O	17	19
+NOR-EL	TS	Odds BK	U	28	34
+NOR-EL	TS	Rosenborg BK	O	26	32
+NOR-EL	TS	Rosenborg BK	U	24	27
+NOR-EL	TS	SK Brann	O	34	36
+NOR-EL	TS	SK Brann	U	17	20
+NOR-EL	TS	Sandefjord Fotball	O	19	26
+NOR-EL	TS	Sandefjord Fotball	U	22	33
+NOR-EL	TS	Sarpsborg 08	O	30	36
+NOR-EL	TS	Sarpsborg 08	U	25	34
+NOR-EL	TS	Stabæk IF	U	14	17
+NOR-EL	TS	Strømsgodset IF	O	11	18
+NOR-EL	TS	Strømsgodset IF	U	34	41
+NOR-EL	TS	Tromsø IL	O	16	21
+NOR-EL	TS	Tromsø IL	U	33	38
+NOR-EL	TS	Viking FK	O	36	46
+NOR-EL	TS	Vålerenga IF	O	15	16
+NOR-EL	TS	Vålerenga IF	U	14	15
+PER-L1	LG			1177	1474
+PER-L1	SIDE		DNB1	57	61
+PER-L1	SIDE		O	329	437
+PER-L1	SIDE		U	791	976
+PER-L1	TEAM	ADT		130	157
+PER-L1	TEAM	Academia Cantolao		56	67
+PER-L1	TEAM	Alianza Atlético		134	162
+PER-L1	TEAM	Alianza Lima		132	166
+PER-L1	TEAM	Alianza Universidad		27	35
+PER-L1	TEAM	Atlético Grau		132	159
+PER-L1	TEAM	Ayacucho FC		51	65
+PER-L1	TEAM	Carlos A. Mannucci		87	102
+PER-L1	TEAM	Carlos Stein		21	32
+PER-L1	TEAM	Cienciano del Cusco		126	158
+PER-L1	TEAM	Comerciantes Unidos		65	90
+PER-L1	TEAM	Cusco FC		103	131
+PER-L1	TEAM	César Vallejo		82	102
+PER-L1	TEAM	Deportivo Binacional		70	89
+PER-L1	TEAM	Deportivo Garcilaso		100	122
 PER-L1	TEAM	Deportivo Moquegua		15	18
-PER-L1	SIDE		U	179	229
-PER-L1	SIDE		O	48	56
-PER-L1	TS	Comerciantes Unidos	U	21	29
-PER-L1	TS	Sport Huancayo	U	17	21
-PER-L1	TS	Cienciano del Cusco	U	13	18
-PER-L1	TS	Sport Boys	U	22	30
-PER-L1	TS	Atlético Grau	U	27	32
-PER-L1	TS	Cusco FC	U	23	28
-PER-L1	TS	Deportivo Garcilaso	U	22	29
-PER-L1	TS	Melgar	U	17	20
-PER-L1	TS	Juan Pablo II	U	23	32
-PER-L1	TS	Sporting Cristal	U	16	20
-PER-L1	TS	UTC	U	22	30
-PER-L1	TS	Universitario	U	19	24
-PER-L1	TS	Los Chankas	U	23	29
-PER-L1	TS	Alianza Lima	U	17	19
-PER-L1	TS	Alianza Atlético	U	23	28
-PER-L1	TS	ADT	U	17	23
-PER-L1	TS	Sporting Cristal	O	13	15
+PER-L1	TEAM	Deportivo Municipal		51	66
+PER-L1	TEAM	FC Cajamarca		14	19
+PER-L1	TEAM	Juan Pablo II		41	54
+PER-L1	TEAM	Los Chankas		73	88
+PER-L1	TEAM	Melgar		131	162
+PER-L1	TEAM	San Martin		23	33
+PER-L1	TEAM	Sport Boys		127	158
+PER-L1	TEAM	Sport Huancayo		128	158
+PER-L1	TEAM	Sporting Cristal		125	166
+PER-L1	TEAM	UTC		128	159
+PER-L1	TEAM	Universitario		130	161
+PER-L1	TEAM	Unión Comercio		52	69
+PER-L1	TS	ADT	O	45	50
+PER-L1	TS	ADT	U	85	107
+PER-L1	TS	Academia Cantolao	U	51	61
+PER-L1	TS	Alianza Atlético	O	34	44
+PER-L1	TS	Alianza Atlético	U	97	114
+PER-L1	TS	Alianza Lima	O	50	73
+PER-L1	TS	Alianza Lima	U	75	86
+PER-L1	TS	Alianza Universidad	U	24	31
+PER-L1	TS	Atlético Grau	O	36	46
+PER-L1	TS	Atlético Grau	U	92	109
+PER-L1	TS	Ayacucho FC	U	40	49
+PER-L1	TS	Carlos A. Mannucci	O	14	16
+PER-L1	TS	Carlos A. Mannucci	U	68	80
+PER-L1	TS	Carlos Stein	U	18	27
+PER-L1	TS	Cienciano del Cusco	O	46	63
+PER-L1	TS	Cienciano del Cusco	U	74	88
+PER-L1	TS	Comerciantes Unidos	U	58	80
+PER-L1	TS	Cusco FC	O	29	38
+PER-L1	TS	Cusco FC	U	71	90
+PER-L1	TS	César Vallejo	O	24	33
+PER-L1	TS	César Vallejo	U	55	66
+PER-L1	TS	Deportivo Binacional	O	32	39
+PER-L1	TS	Deportivo Binacional	U	35	47
+PER-L1	TS	Deportivo Garcilaso	O	22	29
+PER-L1	TS	Deportivo Garcilaso	U	76	90
+PER-L1	TS	Deportivo Municipal	O	16	22
+PER-L1	TS	Deportivo Municipal	U	32	40
 PER-L1	TS	FC Cajamarca	U	10	15
-POL-EK	LG			242	282
-POL-EK	TEAM	Gornik Zabrze		26	30
-POL-EK	TEAM	GKS Katowice		23	31
-POL-EK	TEAM	Korona Kielce		32	33
-POL-EK	TEAM	Motor Lublin		31	35
-POL-EK	TEAM	Piast Gliwice		29	34
-POL-EK	TEAM	Cracovia		27	32
-POL-EK	TEAM	Lechia Gdansk		26	28
+PER-L1	TS	Juan Pablo II	U	37	50
+PER-L1	TS	Los Chankas	O	13	16
+PER-L1	TS	Los Chankas	U	59	71
+PER-L1	TS	Melgar	O	57	75
+PER-L1	TS	Melgar	U	69	80
+PER-L1	TS	San Martin	U	16	26
+PER-L1	TS	Sport Boys	O	15	20
+PER-L1	TS	Sport Boys	U	106	131
+PER-L1	TS	Sport Huancayo	O	43	57
+PER-L1	TS	Sport Huancayo	U	78	94
+PER-L1	TS	Sporting Cristal	DNB1	15	15
+PER-L1	TS	Sporting Cristal	O	72	99
+PER-L1	TS	Sporting Cristal	U	38	52
+PER-L1	TS	UTC	O	26	35
+PER-L1	TS	UTC	U	95	117
+PER-L1	TS	Universitario	O	53	74
+PER-L1	TS	Universitario	U	66	76
+PER-L1	TS	Unión Comercio	U	44	61
+POL-EK	LG			705	836
+POL-EK	SIDE		O	123	161
+POL-EK	SIDE		U	578	670
 POL-EK	TEAM	Arka Gdynia		25	29
-POL-EK	TEAM	Wisla Plock		30	31
-POL-EK	TEAM	Radomiak Radom		25	32
-POL-EK	TEAM	Termalica B-B.		20	28
-POL-EK	TEAM	Zaglebie		29	32
-POL-EK	TEAM	Lech Poznan		24	31
-POL-EK	TEAM	Pogon Szczecin		29	31
+POL-EK	TEAM	Cracovia		27	32
+POL-EK	TEAM	FKS Stal Mielec		51	62
+POL-EK	TEAM	GKS Katowice		49	60
+POL-EK	TEAM	Gornik Zabrze		26	30
+POL-EK	TEAM	Górnik Zabrze		51	61
 POL-EK	TEAM	Jagiellonia		27	32
+POL-EK	TEAM	Jagiellonia Białystok		52	63
+POL-EK	TEAM	KS Cracovia		49	63
+POL-EK	TEAM	Korona Kielce		86	96
+POL-EK	TEAM	Lech Poznan		24	31
+POL-EK	TEAM	Lech Poznań		52	62
+POL-EK	TEAM	Lechia Gdansk		26	28
+POL-EK	TEAM	Lechia Gdańsk		25	29
 POL-EK	TEAM	Legia		28	33
-POL-EK	TEAM	Widzew Lodz		28	31
+POL-EK	TEAM	Legia Warszawa		56	63
+POL-EK	TEAM	Motor Lublin		51	65
+POL-EK	TEAM	Piast Gliwice		80	97
+POL-EK	TEAM	Pogon Szczecin		30	32
+POL-EK	TEAM	Pogoń Szczecin		46	63
+POL-EK	TEAM	Puszcza Niepołomice		53	60
+POL-EK	TEAM	Radomiak Radom		79	96
 POL-EK	TEAM	Rakow		25	31
-POL-EK	SIDE		U	185	210
-POL-EK	SIDE		O	54	69
-POL-EK	TS	Gornik Zabrze	U	18	21
-POL-EK	TS	GKS Katowice	U	17	22
-POL-EK	TS	Korona Kielce	U	27	28
-POL-EK	TS	Motor Lublin	U	28	31
+POL-EK	TEAM	Raków Częstochowa		51	61
+POL-EK	TEAM	Ruch Chorzów		24	29
+POL-EK	TEAM	Termalica B-B.		21	29
+POL-EK	TEAM	Warta Poznań		26	28
+POL-EK	TEAM	Widzew Lodz		29	32
+POL-EK	TEAM	Widzew Łódź		55	61
+POL-EK	TEAM	Wisla Plock		30	31
+POL-EK	TEAM	Zaglebie		29	32
+POL-EK	TEAM	Zagłębie Lubin		54	61
+POL-EK	TEAM	ŁKS Łódź		19	29
+POL-EK	TEAM	Śląsk Wrocław		54	61
 POL-EK	TS	Arka Gdynia	U	23	27
-POL-EK	TS	Wisla Plock	U	28	28
-POL-EK	TS	Radomiak Radom	U	16	21
-POL-EK	TS	Termalica B-B.	U	17	25
-POL-EK	TS	Zaglebie	U	19	19
-POL-EK	TS	Piast Gliwice	U	24	28
-POL-EK	TS	Lechia Gdansk	O	17	17
-POL-EK	TS	Pogon Szczecin	U	22	23
-POL-EK	TS	Jagiellonia	O	11	15
-POL-EK	TS	Legia	U	25	27
-POL-EK	TS	Widzew Lodz	U	27	30
-POL-EK	TS	Rakow	U	21	24
 POL-EK	TS	Cracovia	U	21	24
+POL-EK	TS	FKS Stal Mielec	U	47	57
+POL-EK	TS	GKS Katowice	O	11	15
+POL-EK	TS	GKS Katowice	U	38	45
+POL-EK	TS	Gornik Zabrze	U	18	21
+POL-EK	TS	Górnik Zabrze	U	49	56
+POL-EK	TS	Jagiellonia	O	11	15
 POL-EK	TS	Jagiellonia	U	16	17
-POR-PL	LG			236	291
-POR-PL	TEAM	CD Santa Clara		26	33
-POR-PL	TEAM	CF Estrela da Amadora		25	33
-POR-PL	TEAM	Rio Ave FC		32	35
-POR-PL	TEAM	Sporting Clube de Braga		28	33
-POR-PL	TEAM	GD Estoril Praia		25	34
-POR-PL	TEAM	Sport Lisboa e Benfica		29	32
-POR-PL	TEAM	FC Famalicão		24	31
-POR-PL	TEAM	Sporting Clube de Portugal		31	33
-POR-PL	TEAM	FC Porto		24	32
-POR-PL	TEAM	CD Nacional		24	32
-POR-PL	TEAM	Moreirense FC		29	32
-POR-PL	TEAM	AVS		23	30
-POR-PL	TEAM	Vitória Guimarães		26	32
-POR-PL	TEAM	FC Arouca		24	32
-POR-PL	TEAM	Casa Pia AC		22	31
-POR-PL	TEAM	Gil Vicente FC		25	31
-POR-PL	TEAM	FC Alverca		27	32
+POL-EK	TS	Jagiellonia Białystok	O	25	29
+POL-EK	TS	Jagiellonia Białystok	U	26	33
+POL-EK	TS	KS Cracovia	O	11	15
+POL-EK	TS	KS Cracovia	U	38	48
+POL-EK	TS	Korona Kielce	U	79	87
+POL-EK	TS	Lech Poznań	O	15	21
+POL-EK	TS	Lech Poznań	U	37	41
+POL-EK	TS	Lechia Gdansk	O	17	17
+POL-EK	TS	Lechia Gdańsk	U	21	25
+POL-EK	TS	Legia	U	25	27
+POL-EK	TS	Legia Warszawa	O	13	16
+POL-EK	TS	Legia Warszawa	U	43	47
+POL-EK	TS	Motor Lublin	U	42	53
+POL-EK	TS	Piast Gliwice	U	74	85
+POL-EK	TS	Pogon Szczecin	U	23	24
+POL-EK	TS	Pogoń Szczecin	O	12	18
+POL-EK	TS	Pogoń Szczecin	U	34	44
+POL-EK	TS	Puszcza Niepołomice	U	48	54
+POL-EK	TS	Radomiak Radom	O	14	16
+POL-EK	TS	Radomiak Radom	U	65	80
+POL-EK	TS	Rakow	U	21	24
+POL-EK	TS	Raków Częstochowa	O	13	19
+POL-EK	TS	Raków Częstochowa	U	38	42
+POL-EK	TS	Ruch Chorzów	U	22	27
+POL-EK	TS	Termalica B-B.	U	17	25
+POL-EK	TS	Warta Poznań	U	25	27
+POL-EK	TS	Widzew Lodz	U	28	31
+POL-EK	TS	Widzew Łódź	U	49	54
+POL-EK	TS	Wisla Plock	U	28	28
+POL-EK	TS	Zaglebie	U	19	19
+POL-EK	TS	Zagłębie Lubin	U	52	58
+POL-EK	TS	ŁKS Łódź	U	19	29
+POL-EK	TS	Śląsk Wrocław	U	50	56
+POR-PL	LG			1155	1430
+POR-PL	SIDE		DNB1	86	88
+POR-PL	SIDE		O	333	427
+POR-PL	SIDE		U	733	911
+POR-PL	TEAM	AVS		51	63
+POR-PL	TEAM	Arouca		77	96
+POR-PL	TEAM	Belenenses		24	28
+POR-PL	TEAM	Benfica		74	94
+POR-PL	TEAM	Boavista		74	95
+POR-PL	TEAM	Boavista FC		24	29
+POR-PL	TEAM	CD Nacional		53	65
+POR-PL	TEAM	CD Santa Clara		52	64
 POR-PL	TEAM	CD Tondela		23	29
-POR-PL	SIDE		U	125	151
-POR-PL	SIDE		O	87	114
-POR-PL	SIDE		DNB1	23	24
-POR-PL	TS	CD Santa Clara	U	20	23
-POR-PL	TS	CF Estrela da Amadora	U	17	22
-POR-PL	TS	Sporting Clube de Braga	O	24	29
-POR-PL	TS	Sport Lisboa e Benfica	O	19	22
-POR-PL	TS	Sporting Clube de Portugal	O	22	24
-POR-PL	TS	Vitória Guimarães	U	19	22
-POR-PL	TS	FC Arouca	U	14	20
-POR-PL	TS	Casa Pia AC	U	16	22
-POR-PL	TS	FC Porto	O	18	26
-POR-PL	TS	FC Alverca	U	19	22
-POR-PL	TS	CD Nacional	U	19	24
-POR-PL	TS	FC Famalicão	U	17	19
+POR-PL	TEAM	CF Estrela da Amadora		50	64
+POR-PL	TEAM	Casa Pia		46	63
+POR-PL	TEAM	Casa Pia AC		50	64
+POR-PL	TEAM	Chaves		51	68
+POR-PL	TEAM	Estoril		71	95
+POR-PL	TEAM	Estrela		20	29
+POR-PL	TEAM	FC Alverca		27	32
+POR-PL	TEAM	FC Arouca		50	65
+POR-PL	TEAM	FC Famalicão		52	63
+POR-PL	TEAM	FC Porto		56	65
+POR-PL	TEAM	Famalicao		74	96
+POR-PL	TEAM	Farense		30	34
+POR-PL	TEAM	GD Estoril Praia		49	65
+POR-PL	TEAM	Gil Vicente		79	96
+POR-PL	TEAM	Gil Vicente FC		54	64
+POR-PL	TEAM	Guimaraes		79	94
+POR-PL	TEAM	Maritimo		50	63
+POR-PL	TEAM	Moreirense		51	62
+POR-PL	TEAM	Moreirense FC		55	64
+POR-PL	TEAM	Pacos Ferreira		55	62
+POR-PL	TEAM	Portimonense		78	95
+POR-PL	TEAM	Porto		75	95
+POR-PL	TEAM	Rio Ave		56	69
+POR-PL	TEAM	Rio Ave FC		58	66
+POR-PL	TEAM	SC Farense		27	29
+POR-PL	TEAM	Santa Clara		51	62
+POR-PL	TEAM	Sp Braga		64	96
+POR-PL	TEAM	Sp Lisbon		85	96
+POR-PL	TEAM	Sport Lisboa e Benfica		54	62
+POR-PL	TEAM	Sporting Clube de Braga		53	63
+POR-PL	TEAM	Sporting Clube de Portugal		60	66
+POR-PL	TEAM	Tondela		20	28
+POR-PL	TEAM	Vitória Guimarães		51	65
+POR-PL	TEAM	Vizela		76	96
+POR-PL	TS	AVS	U	37	48
+POR-PL	TS	Arouca	O	17	21
+POR-PL	TS	Arouca	U	58	73
+POR-PL	TS	Belenenses	U	21	25
+POR-PL	TS	Benfica	O	50	66
+POR-PL	TS	Boavista	U	59	79
+POR-PL	TS	Boavista FC	U	20	25
+POR-PL	TS	CD Nacional	O	11	15
+POR-PL	TS	CD Nacional	U	41	49
+POR-PL	TS	CD Santa Clara	O	8	16
+POR-PL	TS	CD Santa Clara	U	44	48
 POR-PL	TS	CD Tondela	U	18	23
-POR-PL	TS	Gil Vicente FC	U	16	18
-POR-PL	TS	GD Estoril Praia	O	13	18
-POR-PL	TS	Moreirense FC	U	19	21
-POR-PL	TS	AVS	U	14	20
-POR-PL	TS	Rio Ave FC	U	22	24
-ROU-L1	LG			238	284
-ROU-L1	TEAM	FC Arges		33	36
-ROU-L1	TEAM	Metaloglobus Bucharest		22	32
-ROU-L1	TEAM	Csikszereda M. Ciuc		29	36
-ROU-L1	TEAM	Otelul		31	37
-ROU-L1	TEAM	Farul Constanta		31	36
-ROU-L1	TEAM	Petrolul		35	37
-ROU-L1	TEAM	U. Cluj		31	35
-ROU-L1	TEAM	FC Rapid Bucuresti		30	35
-ROU-L1	TEAM	UTA Arad		29	36
-ROU-L1	TEAM	CFR Cluj		30	35
-ROU-L1	TEAM	FC Botosani		30	36
-ROU-L1	TEAM	Univ. Craiova		32	36
-ROU-L1	TEAM	FCSB		27	37
-ROU-L1	TEAM	FC Hermannstadt		26	33
-ROU-L1	TEAM	Unirea Slobozia		25	31
-ROU-L1	TEAM	Din. Bucuresti		19	20
-ROU-L1	SIDE		U	233	279
-ROU-L1	TS	FC Arges	U	33	36
-ROU-L1	TS	Metaloglobus Bucharest	U	22	32
+POR-PL	TS	CF Estrela da Amadora	U	39	48
+POR-PL	TS	Casa Pia	U	37	51
+POR-PL	TS	Casa Pia AC	O	11	15
+POR-PL	TS	Casa Pia AC	U	35	45
+POR-PL	TS	Chaves	U	39	54
+POR-PL	TS	Estoril	O	15	20
+POR-PL	TS	Estoril	U	54	73
+POR-PL	TS	Estrela	U	18	26
+POR-PL	TS	FC Alverca	U	19	22
+POR-PL	TS	FC Arouca	O	17	19
+POR-PL	TS	FC Arouca	U	32	45
+POR-PL	TS	FC Famalicão	O	13	20
+POR-PL	TS	FC Famalicão	U	36	40
+POR-PL	TS	FC Porto	O	38	47
+POR-PL	TS	Famalicao	U	60	77
+POR-PL	TS	Farense	U	20	24
+POR-PL	TS	GD Estoril Praia	O	21	27
+POR-PL	TS	GD Estoril Praia	U	24	32
+POR-PL	TS	Gil Vicente	O	19	25
+POR-PL	TS	Gil Vicente	U	57	68
+POR-PL	TS	Gil Vicente FC	O	11	17
+POR-PL	TS	Gil Vicente FC	U	41	45
+POR-PL	TS	Guimaraes	O	17	22
+POR-PL	TS	Guimaraes	U	62	72
+POR-PL	TS	Maritimo	U	44	55
+POR-PL	TS	Moreirense	U	44	52
+POR-PL	TS	Moreirense FC	O	13	16
+POR-PL	TS	Moreirense FC	U	39	45
+POR-PL	TS	Pacos Ferreira	U	47	54
+POR-PL	TS	Portimonense	U	63	78
+POR-PL	TS	Porto	O	40	56
+POR-PL	TS	Porto	U	23	27
+POR-PL	TS	Rio Ave	U	43	53
+POR-PL	TS	Rio Ave FC	U	43	50
+POR-PL	TS	SC Farense	U	23	25
+POR-PL	TS	Santa Clara	U	41	51
+POR-PL	TS	Sp Braga	O	34	53
+POR-PL	TS	Sp Braga	U	22	34
+POR-PL	TS	Sp Lisbon	O	56	62
+POR-PL	TS	Sp Lisbon	U	16	21
+POR-PL	TS	Sport Lisboa e Benfica	DNB1	16	16
+POR-PL	TS	Sport Lisboa e Benfica	O	34	41
+POR-PL	TS	Sporting Clube de Braga	O	37	46
+POR-PL	TS	Sporting Clube de Braga	U	15	16
+POR-PL	TS	Sporting Clube de Portugal	O	46	52
+POR-PL	TS	Tondela	U	15	23
+POR-PL	TS	Vitória Guimarães	O	15	22
+POR-PL	TS	Vitória Guimarães	U	34	41
+POR-PL	TS	Vizela	O	13	16
+POR-PL	TS	Vizela	U	58	75
+ROU-L1	LG			754	888
+ROU-L1	SIDE		O	38	48
+ROU-L1	SIDE		U	713	837
+ROU-L1	TEAM	CFR Cluj		88	113
+ROU-L1	TEAM	CS Universitatea Craiova		65	75
+ROU-L1	TEAM	Csikszereda M. Ciuc		30	37
+ROU-L1	TEAM	Din. Bucuresti		22	23
+ROU-L1	TEAM	Dinamo Bucureşti		66	73
+ROU-L1	TEAM	FC Arges		35	38
+ROU-L1	TEAM	FC Botosani		32	39
+ROU-L1	TEAM	FC Botoşani		61	73
+ROU-L1	TEAM	FC Hermannstadt		96	110
+ROU-L1	TEAM	FC Politehnica Iași		61	71
+ROU-L1	TEAM	FC Rapid Bucuresti		33	38
+ROU-L1	TEAM	FC Universitatea Craiova		28	34
+ROU-L1	TEAM	FC Voluntari		31	41
+ROU-L1	TEAM	FCSB		97	116
+ROU-L1	TEAM	Farul Constanta		32	38
+ROU-L1	TEAM	Farul Constanța		58	73
+ROU-L1	TEAM	Gloria Buzău		29	34
+ROU-L1	TEAM	Metaloglobus Bucharest		24	34
+ROU-L1	TEAM	Otelul		32	39
+ROU-L1	TEAM	Oţelul Galaţi		65	74
+ROU-L1	TEAM	Petrolul		37	39
+ROU-L1	TEAM	Petrolul Ploieşti		62	72
+ROU-L1	TEAM	Rapid Bucureşti		62	73
+ROU-L1	TEAM	Sepsi OSK		62	73
+ROU-L1	TEAM	U. Cluj		33	38
+ROU-L1	TEAM	UTA Arad		95	112
+ROU-L1	TEAM	Unirea Slobozia		61	70
+ROU-L1	TEAM	Univ. Craiova		34	38
+ROU-L1	TEAM	Universitatea Cluj		66	75
+ROU-L1	TS	CFR Cluj	U	78	100
+ROU-L1	TS	CS Universitatea Craiova	U	57	66
 ROU-L1	TS	Csikszereda M. Ciuc	U	29	36
-ROU-L1	TS	Otelul	U	30	36
-ROU-L1	TS	Farul Constanta	U	31	36
-ROU-L1	TS	Petrolul	U	35	37
-ROU-L1	TS	U. Cluj	U	29	33
-ROU-L1	TS	FC Rapid Bucuresti	U	28	33
-ROU-L1	TS	UTA Arad	U	29	36
-ROU-L1	TS	CFR Cluj	U	30	35
-ROU-L1	TS	FC Botosani	U	30	36
-ROU-L1	TS	Univ. Craiova	U	32	36
-ROU-L1	TS	FCSB	U	24	34
-ROU-L1	TS	FC Hermannstadt	U	25	32
-ROU-L1	TS	Unirea Slobozia	U	24	30
-ROU-L1	TS	Din. Bucuresti	U	19	20
-RUS-PL	LG			243	283
-RUS-PL	TEAM	Rubin Kazan		34	38
-RUS-PL	TEAM	FK Rostov		34	37
-RUS-PL	TEAM	Akhmat Grozny		32	36
-RUS-PL	TEAM	Lokomotiv Moscow		24	31
-RUS-PL	TEAM	Sochi		23	29
-RUS-PL	TEAM	Zenit		29	32
-RUS-PL	TEAM	Pari NN		27	29
-RUS-PL	TEAM	Krasnodar		26	32
-RUS-PL	TEAM	Krylya Sovetov		24	30
-RUS-PL	TEAM	Dynamo Moscow		28	31
-RUS-PL	TEAM	CSKA Moscow		26	31
-RUS-PL	TEAM	Spartak Moscow		25	28
-RUS-PL	TEAM	Orenburg		25	28
-RUS-PL	TEAM	Dynamo Makhachkala		26	27
+ROU-L1	TS	Din. Bucuresti	U	22	23
+ROU-L1	TS	Dinamo Bucureşti	U	64	71
+ROU-L1	TS	FC Arges	U	35	38
+ROU-L1	TS	FC Botosani	U	30	37
+ROU-L1	TS	FC Botoşani	U	61	72
+ROU-L1	TS	FC Hermannstadt	U	90	102
+ROU-L1	TS	FC Politehnica Iași	U	60	70
+ROU-L1	TS	FC Rapid Bucuresti	U	31	36
+ROU-L1	TS	FC Universitatea Craiova	U	22	28
+ROU-L1	TS	FC Voluntari	U	29	37
+ROU-L1	TS	FCSB	U	86	102
+ROU-L1	TS	Farul Constanta	U	32	37
+ROU-L1	TS	Farul Constanța	U	53	67
+ROU-L1	TS	Gloria Buzău	U	29	34
+ROU-L1	TS	Metaloglobus Bucharest	U	24	34
+ROU-L1	TS	Otelul	U	31	38
+ROU-L1	TS	Oţelul Galaţi	U	64	72
+ROU-L1	TS	Petrolul	U	37	39
+ROU-L1	TS	Petrolul Ploieşti	U	61	70
+ROU-L1	TS	Rapid Bucureşti	U	51	60
+ROU-L1	TS	Sepsi OSK	U	58	68
+ROU-L1	TS	U. Cluj	U	31	35
+ROU-L1	TS	UTA Arad	U	95	112
+ROU-L1	TS	Unirea Slobozia	U	60	69
+ROU-L1	TS	Univ. Craiova	U	33	37
+ROU-L1	TS	Universitatea Cluj	U	62	71
+RUS-PL	LG			1159	1398
+RUS-PL	SIDE		O	131	166
+RUS-PL	SIDE		U	1019	1222
+RUS-PL	TEAM	Akhmat Grozny		153	179
 RUS-PL	TEAM	Akron Togliatti		21	27
+RUS-PL	TEAM	Akron Tolyatti		21	25
+RUS-PL	TEAM	Arsenal Tula		72	90
 RUS-PL	TEAM	Baltika		24	27
-RUS-PL	SIDE		O	40	49
-RUS-PL	SIDE		U	203	234
-RUS-PL	TS	FK Rostov	U	33	35
-RUS-PL	TS	Akhmat Grozny	U	31	34
-RUS-PL	TS	Rubin Kazan	U	31	34
-RUS-PL	TS	Pari NN	U	27	29
-RUS-PL	TS	Krasnodar	U	17	22
-RUS-PL	TS	Krylya Sovetov	U	22	27
-RUS-PL	TS	Dynamo Moscow	U	20	23
-RUS-PL	TS	Lokomotiv Moscow	U	17	22
-RUS-PL	TS	Zenit	U	20	21
-RUS-PL	TS	CSKA Moscow	U	21	24
-RUS-PL	TS	Spartak Moscow	U	18	21
-RUS-PL	TS	Orenburg	U	24	26
-RUS-PL	TS	Sochi	U	19	25
-RUS-PL	TS	Dynamo Makhachkala	U	26	27
+RUS-PL	TEAM	Baltika Kaliningrad		21	25
+RUS-PL	TEAM	CSKA Moscow		47	56
+RUS-PL	TEAM	CSKA Moskva		103	123
+RUS-PL	TEAM	Dinamo Moskva		98	123
+RUS-PL	TEAM	Dynamo Makhachkala		26	27
+RUS-PL	TEAM	Dynamo Moscow		44	56
+RUS-PL	TEAM	FK Dinamo Makhachkala		19	25
+RUS-PL	TEAM	FK Khimki		43	54
+RUS-PL	TEAM	FK Krasnodar		98	121
+RUS-PL	TEAM	FK Nizhny Novgorod		44	54
+RUS-PL	TEAM	FK Orenburg		81	92
+RUS-PL	TEAM	FK Rostov		145	180
+RUS-PL	TEAM	FK Sochi		61	80
+RUS-PL	TEAM	FK Tambov		40	53
+RUS-PL	TEAM	FK Ufa		55	64
+RUS-PL	TEAM	FK Ural		79	93
+RUS-PL	TEAM	Fakel Voronezh		51	56
+RUS-PL	TEAM	Khimki		15	25
+RUS-PL	TEAM	Krasnodar		48	57
+RUS-PL	TEAM	Krylia Sovetov		79	95
+RUS-PL	TEAM	Krylya Sovetov		44	55
+RUS-PL	TEAM	Lokomotiv Moscow		45	56
+RUS-PL	TEAM	Lokomotiv Moskva		100	122
+RUS-PL	TEAM	Orenburg		25	28
+RUS-PL	TEAM	Pari NN		48	54
+RUS-PL	TEAM	Rotor Volgograd		19	23
+RUS-PL	TEAM	Rubin Kazan		163	183
+RUS-PL	TEAM	Sochi		39	54
+RUS-PL	TEAM	Spartak Moscow		47	53
+RUS-PL	TEAM	Spartak Moskva		99	122
+RUS-PL	TEAM	Ufa		24	25
+RUS-PL	TEAM	Ural		22	25
+RUS-PL	TEAM	Zenit		50	57
+RUS-PL	TEAM	Zenit St. Petersburg		98	121
+RUS-PL	TS	Akhmat Grozny	U	147	171
 RUS-PL	TS	Akron Togliatti	U	18	24
+RUS-PL	TS	Akron Tolyatti	U	17	21
+RUS-PL	TS	Arsenal Tula	U	70	88
 RUS-PL	TS	Baltika	U	21	21
-SAU-PL	LG			241	291
-SAU-PL	TEAM	Al Hazem		30	32
-SAU-PL	TEAM	Al Ahli		28	33
-SAU-PL	TEAM	Damac		28	31
-SAU-PL	TEAM	Al Ettifaq		24	33
-SAU-PL	TEAM	Al Fateh		27	34
-SAU-PL	TEAM	Al Qadsiah		24	32
-SAU-PL	TEAM	Al Shabab		27	32
-SAU-PL	TEAM	Al Fayha		25	33
-SAU-PL	TEAM	Al Ittihad		28	33
-SAU-PL	TEAM	Al Hilal		27	32
-SAU-PL	TEAM	Al Okhdood		27	30
-SAU-PL	TEAM	Al Nassr		30	33
-SAU-PL	TEAM	Al Khaleej		24	33
-SAU-PL	TEAM	Al Riyadh		27	33
-SAU-PL	TEAM	Al Taawoun		27	33
+RUS-PL	TS	Baltika Kaliningrad	U	19	23
+RUS-PL	TS	CSKA Moscow	U	42	48
+RUS-PL	TS	CSKA Moskva	O	18	25
+RUS-PL	TS	CSKA Moskva	U	85	98
+RUS-PL	TS	Dinamo Moskva	O	17	21
+RUS-PL	TS	Dinamo Moskva	U	81	102
+RUS-PL	TS	Dynamo Makhachkala	U	26	27
+RUS-PL	TS	Dynamo Moscow	O	13	15
+RUS-PL	TS	Dynamo Moscow	U	31	41
+RUS-PL	TS	FK Dinamo Makhachkala	U	19	23
+RUS-PL	TS	FK Khimki	U	38	49
+RUS-PL	TS	FK Krasnodar	O	16	21
+RUS-PL	TS	FK Krasnodar	U	81	99
+RUS-PL	TS	FK Nizhny Novgorod	U	38	48
+RUS-PL	TS	FK Orenburg	U	77	88
+RUS-PL	TS	FK Rostov	O	11	16
+RUS-PL	TS	FK Rostov	U	134	164
+RUS-PL	TS	FK Sochi	U	54	71
+RUS-PL	TS	FK Tambov	U	40	53
+RUS-PL	TS	FK Ufa	U	55	63
+RUS-PL	TS	FK Ural	U	77	91
+RUS-PL	TS	Fakel Voronezh	U	51	56
+RUS-PL	TS	Khimki	U	13	22
+RUS-PL	TS	Krasnodar	U	38	45
+RUS-PL	TS	Krylia Sovetov	U	70	86
+RUS-PL	TS	Krylya Sovetov	U	41	50
+RUS-PL	TS	Lokomotiv Moscow	U	35	43
+RUS-PL	TS	Lokomotiv Moskva	O	17	22
+RUS-PL	TS	Lokomotiv Moskva	U	82	99
+RUS-PL	TS	Orenburg	U	24	26
+RUS-PL	TS	Pari NN	U	47	53
+RUS-PL	TS	Rotor Volgograd	U	18	22
+RUS-PL	TS	Rubin Kazan	U	153	172
+RUS-PL	TS	Sochi	U	34	46
+RUS-PL	TS	Spartak Moscow	U	38	44
+RUS-PL	TS	Spartak Moskva	O	17	22
+RUS-PL	TS	Spartak Moskva	U	81	98
+RUS-PL	TS	Ufa	U	23	24
+RUS-PL	TS	Ural	U	21	24
+RUS-PL	TS	Zenit	O	18	23
+RUS-PL	TS	Zenit	U	28	30
+RUS-PL	TS	Zenit St. Petersburg	O	32	39
+RUS-PL	TS	Zenit St. Petersburg	U	64	80
+SAU-PL	LG			887	1097
+SAU-PL	SIDE		DNB1	33	33
+SAU-PL	SIDE		O	532	682
+SAU-PL	SIDE		U	317	377
+SAU-PL	TEAM	Abha		51	62
+SAU-PL	TEAM	Al Adalah		19	25
+SAU-PL	TEAM	Al Ahli		73	96
+SAU-PL	TEAM	Al Batin		13	25
+SAU-PL	TEAM	Al Ettifaq		97	128
+SAU-PL	TEAM	Al Fateh		107	126
+SAU-PL	TEAM	Al Fayha		98	128
+SAU-PL	TEAM	Al Hazem		57	64
+SAU-PL	TEAM	Al Hilal		109	128
+SAU-PL	TEAM	Al Ittihad		104	127
+SAU-PL	TEAM	Al Khaleej		105	128
+SAU-PL	TEAM	Al Kholood		54	65
 SAU-PL	TEAM	Al Najma		26	29
-SAU-PL	TEAM	Al Kholood		26	32
+SAU-PL	TEAM	Al Nassr		111	129
+SAU-PL	TEAM	Al Okhdood		78	95
+SAU-PL	TEAM	Al Orobah		24	29
+SAU-PL	TEAM	Al Qadsiah		51	63
+SAU-PL	TEAM	Al Raed		73	91
+SAU-PL	TEAM	Al Riyadh		77	97
+SAU-PL	TEAM	Al Shabab		103	127
+SAU-PL	TEAM	Al Taawoun		95	129
+SAU-PL	TEAM	Al Tai		48	58
+SAU-PL	TEAM	Al Wehda		72	90
+SAU-PL	TEAM	Damac		104	124
 SAU-PL	TEAM	Neom SC		25	31
-SAU-PL	SIDE		O	111	136
-SAU-PL	SIDE		U	121	146
-SAU-PL	TS	Al Ahli	O	22	27
-SAU-PL	TS	Damac	U	24	25
-SAU-PL	TS	Al Ettifaq	U	12	18
-SAU-PL	TS	Al Fateh	O	12	16
-SAU-PL	TS	Al Qadsiah	O	20	24
-SAU-PL	TS	Al Shabab	O	13	16
-SAU-PL	TS	Al Ittihad	O	14	18
-SAU-PL	TS	Al Hilal	O	25	30
-SAU-PL	TS	Al Okhdood	U	23	26
-SAU-PL	TS	Al Hazem	U	20	22
-SAU-PL	TS	Al Nassr	O	24	27
-SAU-PL	TS	Al Khaleej	U	13	18
-SAU-PL	TS	Al Riyadh	U	19	22
-SAU-PL	TS	Al Taawoun	U	11	15
+SAU-PL	TS	Abha	O	31	38
+SAU-PL	TS	Abha	U	15	19
+SAU-PL	TS	Al Adalah	O	13	15
+SAU-PL	TS	Al Ahli	O	63	84
+SAU-PL	TS	Al Batin	O	9	16
+SAU-PL	TS	Al Ettifaq	O	54	75
+SAU-PL	TS	Al Ettifaq	U	41	51
+SAU-PL	TS	Al Fateh	O	68	82
+SAU-PL	TS	Al Fateh	U	38	43
+SAU-PL	TS	Al Fayha	O	43	58
+SAU-PL	TS	Al Fayha	U	52	67
+SAU-PL	TS	Al Hazem	O	26	31
+SAU-PL	TS	Al Hazem	U	30	32
+SAU-PL	TS	Al Hilal	O	94	111
+SAU-PL	TS	Al Ittihad	O	75	95
+SAU-PL	TS	Al Ittihad	U	21	24
+SAU-PL	TS	Al Khaleej	O	53	68
+SAU-PL	TS	Al Khaleej	U	50	58
+SAU-PL	TS	Al Kholood	O	27	32
+SAU-PL	TS	Al Kholood	U	27	33
 SAU-PL	TS	Al Najma	U	20	22
-SAU-PL	TS	Al Fayha	U	18	25
+SAU-PL	TS	Al Nassr	O	97	113
+SAU-PL	TS	Al Okhdood	O	28	39
+SAU-PL	TS	Al Okhdood	U	46	52
+SAU-PL	TS	Al Orobah	U	14	18
+SAU-PL	TS	Al Qadsiah	O	41	49
+SAU-PL	TS	Al Raed	O	37	50
+SAU-PL	TS	Al Raed	U	33	38
+SAU-PL	TS	Al Riyadh	O	32	46
+SAU-PL	TS	Al Riyadh	U	43	49
+SAU-PL	TS	Al Shabab	O	70	91
+SAU-PL	TS	Al Shabab	U	32	35
+SAU-PL	TS	Al Taawoun	O	59	82
+SAU-PL	TS	Al Taawoun	U	33	44
+SAU-PL	TS	Al Tai	O	32	40
+SAU-PL	TS	Al Wehda	O	41	54
+SAU-PL	TS	Al Wehda	U	27	32
+SAU-PL	TS	Damac	O	48	66
+SAU-PL	TS	Damac	U	54	56
 SAU-PL	TS	Neom SC	O	11	15
-SAU-PL	TS	Al Khaleej	O	11	15
-SAU-PL	TS	Al Shabab	U	14	16
-SAU-PL	TS	Al Fateh	U	15	18
-SAU-PL	TS	Al Taawoun	O	16	18
-SAU-PL	TS	Al Kholood	U	15	19
 SAU-PL	TS	Neom SC	U	14	16
-SAU-PL	TS	Al Ittihad	U	14	15
-SCO-CH	LG			264	300
-SCO-CH	TEAM	Queens Park		52	60
-SCO-CH	TEAM	Falkirk		18	22
-SCO-CH	TEAM	Ayr		52	60
-SCO-CH	TEAM	Dunfermline		53	60
-SCO-CH	TEAM	Morton		53	60
-SCO-CH	TEAM	Livingston		21	24
-SCO-CH	TEAM	Partick		54	60
-SCO-CH	TEAM	Hamilton		20	22
-SCO-CH	TEAM	Raith Rvs		52	60
-SCO-CH	TEAM	Airdrie Utd		53	58
-SCO-CH	TEAM	Arbroath		33	38
-SCO-CH	TEAM	Ross County		32	36
+SCO-CH	LG			1288	1500
+SCO-CH	SIDE		O	13	17
+SCO-CH	SIDE		U	1275	1482
+SCO-CH	TEAM	Airdrie Utd		99	108
+SCO-CH	TEAM	Alloa		78	91
+SCO-CH	TEAM	Arbroath		176	199
+SCO-CH	TEAM	Ayr		230	272
+SCO-CH	TEAM	Brechin		21	27
+SCO-CH	TEAM	Cove Rangers		29	36
+SCO-CH	TEAM	Dumbarton		21	27
+SCO-CH	TEAM	Dundee		75	90
+SCO-CH	TEAM	Dundee United		108	128
+SCO-CH	TEAM	Dunfermline		235	265
+SCO-CH	TEAM	Falkirk		84	100
+SCO-CH	TEAM	Hamilton		94	108
+SCO-CH	TEAM	Hearts		21	27
+SCO-CH	TEAM	Inverness C		202	228
+SCO-CH	TEAM	Kilmarnock		35	36
+SCO-CH	TEAM	Livingston		58	66
+SCO-CH	TEAM	Morton		259	300
+SCO-CH	TEAM	Partick		208	245
+SCO-CH	TEAM	Queen of Sth		128	155
+SCO-CH	TEAM	Queens Park		119	146
+SCO-CH	TEAM	Raith Rvs		178	209
+SCO-CH	TEAM	Ross County		61	72
 SCO-CH	TEAM	St Johnstone		31	36
-SCO-CH	SIDE		U	263	299
-SCO-CH	TS	Queens Park	U	52	60
-SCO-CH	TS	Falkirk	U	18	22
-SCO-CH	TS	Ayr	U	52	60
-SCO-CH	TS	Dunfermline	U	53	60
-SCO-CH	TS	Morton	U	53	60
-SCO-CH	TS	Livingston	U	21	24
-SCO-CH	TS	Partick	U	53	59
-SCO-CH	TS	Hamilton	U	20	22
-SCO-CH	TS	Raith Rvs	U	52	60
-SCO-CH	TS	Airdrie Utd	U	53	58
-SCO-CH	TS	Arbroath	U	33	38
-SCO-CH	TS	Ross County	U	32	36
+SCO-CH	TEAM	St Mirren		24	27
+SCO-CH	TS	Airdrie Utd	U	99	107
+SCO-CH	TS	Alloa	U	78	91
+SCO-CH	TS	Arbroath	U	176	199
+SCO-CH	TS	Ayr	U	229	271
+SCO-CH	TS	Brechin	U	21	27
+SCO-CH	TS	Cove Rangers	U	29	36
+SCO-CH	TS	Dumbarton	U	21	27
+SCO-CH	TS	Dundee	U	73	88
+SCO-CH	TS	Dundee United	U	107	126
+SCO-CH	TS	Dunfermline	U	232	261
+SCO-CH	TS	Falkirk	U	84	99
+SCO-CH	TS	Hamilton	U	93	106
+SCO-CH	TS	Hearts	U	16	21
+SCO-CH	TS	Inverness C	U	200	225
+SCO-CH	TS	Kilmarnock	U	34	35
+SCO-CH	TS	Livingston	U	56	64
+SCO-CH	TS	Morton	U	259	299
+SCO-CH	TS	Partick	U	207	244
+SCO-CH	TS	Queen of Sth	U	128	154
+SCO-CH	TS	Queens Park	U	117	144
+SCO-CH	TS	Raith Rvs	U	176	207
+SCO-CH	TS	Ross County	U	60	70
 SCO-CH	TS	St Johnstone	U	30	35
-SCO-L1	LG			256	300
-SCO-L1	TEAM	Kelty Hearts		53	58
-SCO-L1	TEAM	Alloa		50	60
-SCO-L1	TEAM	Montrose		52	60
-SCO-L1	TEAM	Inverness C		47	58
-SCO-L1	TEAM	Stenhousemuir		48	57
-SCO-L1	TEAM	Dumbarton		17	21
-SCO-L1	TEAM	Arbroath		18	22
-SCO-L1	TEAM	Queen of Sth		57	60
-SCO-L1	TEAM	Annan Athletic		16	20
-SCO-L1	TEAM	Cove Rangers		49	59
-SCO-L1	TEAM	Peterhead		32	39
-SCO-L1	TEAM	East Fife		34	39
-SCO-L1	TEAM	Hamilton		33	39
-SCO-L1	SIDE		U	163	184
-SCO-L1	SIDE		O	92	115
-SCO-L1	TS	Kelty Hearts	U	48	52
-SCO-L1	TS	Alloa	U	29	32
-SCO-L1	TS	Montrose	U	35	41
-SCO-L1	TS	Inverness C	U	18	21
-SCO-L1	TS	Stenhousemuir	U	34	37
-SCO-L1	TS	Dumbarton	U	15	19
-SCO-L1	TS	Queen of Sth	U	30	32
-SCO-L1	TS	Annan Athletic	U	14	17
-SCO-L1	TS	Inverness C	O	28	36
-SCO-L1	TS	Cove Rangers	U	32	35
-SCO-L1	TS	Stenhousemuir	O	14	20
-SCO-L1	TS	Alloa	O	21	28
-SCO-L1	TS	Queen of Sth	O	27	28
-SCO-L1	TS	Cove Rangers	O	17	24
-SCO-L1	TS	Montrose	O	17	19
-SCO-L1	TS	Peterhead	U	22	26
-SCO-L1	TS	East Fife	U	29	33
-SCO-L1	TS	Hamilton	O	19	24
+SCO-CH	TS	St Mirren	U	23	26
+SCO-L1	LG			1252	1500
+SCO-L1	SIDE		DNB1	13	16
+SCO-L1	SIDE		O	559	689
+SCO-L1	SIDE		U	679	794
+SCO-L1	TEAM	Airdrie Utd		160	192
+SCO-L1	TEAM	Albion Rvs		25	31
+SCO-L1	TEAM	Alloa		177	215
+SCO-L1	TEAM	Annan Athletic		57	72
+SCO-L1	TEAM	Arbroath		88	103
+SCO-L1	TEAM	Ayr		31	32
+SCO-L1	TEAM	Brechin		33	36
+SCO-L1	TEAM	Clyde		105	122
+SCO-L1	TEAM	Cove Rangers		132	169
+SCO-L1	TEAM	Dumbarton		134	158
+SCO-L1	TEAM	Dunfermline		27	36
+SCO-L1	TEAM	East Fife		157	192
+SCO-L1	TEAM	Edinburgh City		28	36
+SCO-L1	TEAM	FC Edinburgh		30	36
+SCO-L1	TEAM	Falkirk		132	158
+SCO-L1	TEAM	Forfar		95	118
+SCO-L1	TEAM	Hamilton		62	75
+SCO-L1	TEAM	Inverness C		60	72
+SCO-L1	TEAM	Kelty Hearts		122	144
+SCO-L1	TEAM	Montrose		223	269
+SCO-L1	TEAM	Partick		15	22
+SCO-L1	TEAM	Peterhead		137	160
+SCO-L1	TEAM	Queen of Sth		125	146
+SCO-L1	TEAM	Queens Park		59	67
+SCO-L1	TEAM	Raith Rvs		82	96
+SCO-L1	TEAM	Stenhousemuir		96	108
+SCO-L1	TEAM	Stirling		32	36
+SCO-L1	TEAM	Stranraer		76	94
+SCO-L1	TS	Airdrie Utd	O	95	117
+SCO-L1	TS	Airdrie Utd	U	62	72
+SCO-L1	TS	Albion Rvs	O	16	17
+SCO-L1	TS	Alloa	O	91	115
+SCO-L1	TS	Alloa	U	86	100
+SCO-L1	TS	Annan Athletic	O	21	25
+SCO-L1	TS	Annan Athletic	U	36	47
+SCO-L1	TS	Arbroath	O	57	68
+SCO-L1	TS	Arbroath	U	31	35
+SCO-L1	TS	Ayr	O	30	30
+SCO-L1	TS	Brechin	U	24	26
+SCO-L1	TS	Clyde	O	29	36
+SCO-L1	TS	Clyde	U	75	84
+SCO-L1	TS	Cove Rangers	O	66	90
+SCO-L1	TS	Cove Rangers	U	65	78
+SCO-L1	TS	Dumbarton	O	46	52
+SCO-L1	TS	Dumbarton	U	88	106
+SCO-L1	TS	Dunfermline	O	20	28
+SCO-L1	TS	East Fife	O	51	63
+SCO-L1	TS	East Fife	U	106	129
+SCO-L1	TS	Edinburgh City	U	19	27
+SCO-L1	TS	FC Edinburgh	O	15	19
+SCO-L1	TS	FC Edinburgh	U	15	17
+SCO-L1	TS	Falkirk	O	91	110
+SCO-L1	TS	Falkirk	U	36	42
+SCO-L1	TS	Forfar	O	25	32
+SCO-L1	TS	Forfar	U	67	82
+SCO-L1	TS	Hamilton	O	45	57
 SCO-L1	TS	Hamilton	U	14	15
-SCO-L2	LG			238	295
-SCO-L2	TEAM	Forfar		44	61
-SCO-L2	TEAM	Bonnyrigg Rose		14	21
-SCO-L2	TEAM	Elgin		52	59
-SCO-L2	TEAM	Clyde		52	60
-SCO-L2	TEAM	Peterhead		14	21
-SCO-L2	TEAM	Stirling		48	58
-SCO-L2	TEAM	Stranraer		49	59
-SCO-L2	TEAM	East Fife		12	20
-SCO-L2	TEAM	Spartans		45	59
-SCO-L2	TEAM	Edinburgh City		48	60
-SCO-L2	TEAM	Annan Athletic		34	39
-SCO-L2	TEAM	Dumbarton		33	39
+SCO-L1	TS	Inverness C	O	28	37
+SCO-L1	TS	Inverness C	U	31	34
+SCO-L1	TS	Kelty Hearts	O	26	36
+SCO-L1	TS	Kelty Hearts	U	94	105
+SCO-L1	TS	Montrose	O	89	111
+SCO-L1	TS	Montrose	U	133	157
+SCO-L1	TS	Peterhead	O	41	50
+SCO-L1	TS	Peterhead	U	95	109
+SCO-L1	TS	Queen of Sth	O	65	77
+SCO-L1	TS	Queen of Sth	U	60	68
+SCO-L1	TS	Queens Park	O	33	38
+SCO-L1	TS	Queens Park	U	25	28
+SCO-L1	TS	Raith Rvs	O	55	65
+SCO-L1	TS	Raith Rvs	U	26	30
+SCO-L1	TS	Stenhousemuir	O	22	28
+SCO-L1	TS	Stenhousemuir	U	74	80
+SCO-L1	TS	Stirling	U	22	24
+SCO-L1	TS	Stranraer	O	28	35
+SCO-L1	TS	Stranraer	U	48	59
+SCO-L2	LG			1221	1475
+SCO-L2	SIDE		DNB1	17	17
+SCO-L2	SIDE		O	453	575
+SCO-L2	SIDE		U	750	882
+SCO-L2	TEAM	Albion Rvs		135	154
+SCO-L2	TEAM	Annan Athletic		194	227
+SCO-L2	TEAM	Berwick		57	68
+SCO-L2	TEAM	Bonnyrigg Rose		80	103
+SCO-L2	TEAM	Brechin		39	49
+SCO-L2	TEAM	Clyde		145	178
+SCO-L2	TEAM	Cove Rangers		22	23
+SCO-L2	TEAM	Cowdenbeath		131	151
+SCO-L2	TEAM	Dumbarton		85	110
+SCO-L2	TEAM	East Fife		82	107
 SCO-L2	TEAM	East Kilbride		29	31
-SCO-L2	SIDE		U	103	125
-SCO-L2	SIDE		O	132	167
-SCO-L2	TS	Forfar	U	30	38
-SCO-L2	TS	Bonnyrigg Rose	U	11	17
-SCO-L2	TS	Elgin	U	22	24
-SCO-L2	TS	Clyde	U	17	20
-SCO-L2	TS	Forfar	O	14	23
-SCO-L2	TS	Stirling	U	22	27
-SCO-L2	TS	Stranraer	U	26	29
-SCO-L2	TS	Spartans	U	20	24
-SCO-L2	TS	Edinburgh City	O	31	39
-SCO-L2	TS	Elgin	O	30	35
-SCO-L2	TS	Spartans	O	24	34
-SCO-L2	TS	Edinburgh City	U	15	19
-SCO-L2	TS	Clyde	O	35	40
-SCO-L2	TS	Stirling	O	26	31
-SCO-L2	TS	Stranraer	O	23	30
-SCO-L2	TS	Annan Athletic	O	20	24
-SCO-L2	TS	Dumbarton	O	17	19
+SCO-L2	TEAM	Edinburgh City		184	226
+SCO-L2	TEAM	Elgin		250	298
+SCO-L2	TEAM	Forfar		144	180
+SCO-L2	TEAM	Kelty Hearts		26	34
+SCO-L2	TEAM	Montrose		24	31
+SCO-L2	TEAM	Peterhead		105	138
+SCO-L2	TEAM	Queens Park		76	85
+SCO-L2	TEAM	Spartans		80	105
+SCO-L2	TEAM	Stenhousemuir		164	188
+SCO-L2	TEAM	Stirling		220	261
+SCO-L2	TEAM	Stranraer		170	203
+SCO-L2	TS	Albion Rvs	O	34	37
+SCO-L2	TS	Albion Rvs	U	99	115
+SCO-L2	TS	Annan Athletic	O	94	110
+SCO-L2	TS	Annan Athletic	U	97	114
+SCO-L2	TS	Berwick	U	49	59
+SCO-L2	TS	Bonnyrigg Rose	O	10	15
+SCO-L2	TS	Bonnyrigg Rose	U	69	87
+SCO-L2	TS	Brechin	U	27	35
+SCO-L2	TS	Clyde	O	73	88
+SCO-L2	TS	Clyde	U	71	89
+SCO-L2	TS	Cove Rangers	O	20	21
+SCO-L2	TS	Cowdenbeath	O	14	22
+SCO-L2	TS	Cowdenbeath	U	117	129
+SCO-L2	TS	Dumbarton	O	36	48
+SCO-L2	TS	Dumbarton	U	47	60
+SCO-L2	TS	East Fife	O	27	40
+SCO-L2	TS	East Fife	U	54	66
 SCO-L2	TS	East Kilbride	O	27	29
-SCO-L2	TS	Dumbarton	U	16	20
-SCO-L2	TS	Annan Athletic	U	14	15
-SCO-PL	LG			250	300
-SCO-PL	TEAM	St Mirren		39	50
-SCO-PL	TEAM	Celtic		42	50
-SCO-PL	TEAM	Kilmarnock		44	50
-SCO-PL	TEAM	Dundee		42	50
-SCO-PL	TEAM	Rangers		42	50
-SCO-PL	TEAM	Motherwell		42	50
-SCO-PL	TEAM	Hibernian		41	50
-SCO-PL	TEAM	Hearts		39	50
-SCO-PL	TEAM	Aberdeen		41	50
-SCO-PL	TEAM	Dundee United		44	50
-SCO-PL	TEAM	Livingston		30	38
+SCO-L2	TS	Edinburgh City	O	78	101
+SCO-L2	TS	Edinburgh City	U	102	121
+SCO-L2	TS	Elgin	O	98	116
+SCO-L2	TS	Elgin	U	150	180
+SCO-L2	TS	Forfar	O	40	60
+SCO-L2	TS	Forfar	U	104	120
+SCO-L2	TS	Kelty Hearts	O	19	27
+SCO-L2	TS	Montrose	U	20	24
+SCO-L2	TS	Peterhead	O	57	81
+SCO-L2	TS	Peterhead	U	43	52
+SCO-L2	TS	Queens Park	O	28	35
+SCO-L2	TS	Queens Park	U	47	49
+SCO-L2	TS	Spartans	O	30	42
+SCO-L2	TS	Spartans	U	49	62
+SCO-L2	TS	Stenhousemuir	O	61	74
+SCO-L2	TS	Stenhousemuir	U	102	113
+SCO-L2	TS	Stirling	O	87	109
+SCO-L2	TS	Stirling	U	133	152
+SCO-L2	TS	Stranraer	O	56	72
+SCO-L2	TS	Stranraer	U	112	129
+SCO-PL	LG			1241	1500
+SCO-PL	SIDE		DNB1	77	80
+SCO-PL	SIDE		O	358	433
+SCO-PL	SIDE		U	800	980
+SCO-PL	TEAM	Aberdeen		203	250
+SCO-PL	TEAM	Celtic		220	250
+SCO-PL	TEAM	Dundee		121	154
+SCO-PL	TEAM	Dundee United		160	192
 SCO-PL	TEAM	Falkirk		36	40
-SCO-PL	SIDE		O	114	138
-SCO-PL	SIDE		U	133	158
-SCO-PL	TS	St Mirren	O	11	17
-SCO-PL	TS	Celtic	O	38	45
-SCO-PL	TS	Kilmarnock	U	31	36
-SCO-PL	TS	Dundee	U	26	32
-SCO-PL	TS	Hibernian	O	22	29
-SCO-PL	TS	Hearts	O	23	31
-SCO-PL	TS	Aberdeen	U	29	36
-SCO-PL	TS	Dundee United	U	25	29
-SCO-PL	TS	Hearts	U	15	18
-SCO-PL	TS	Hibernian	U	19	21
-SCO-PL	TS	Motherwell	U	25	29
-SCO-PL	TS	St Mirren	U	28	33
-SCO-PL	TS	Rangers	O	37	44
-SCO-PL	TS	Dundee	O	16	18
-SCO-PL	TS	Dundee United	O	19	21
-SCO-PL	TS	Motherwell	O	17	20
-SCO-PL	TS	Livingston	U	21	28
+SCO-PL	TEAM	Hamilton		49	58
+SCO-PL	TEAM	Hearts		171	212
+SCO-PL	TEAM	Hibernian		203	250
+SCO-PL	TEAM	Kilmarnock		170	212
+SCO-PL	TEAM	Livingston		169	210
+SCO-PL	TEAM	Motherwell		206	251
+SCO-PL	TEAM	Rangers		212	250
+SCO-PL	TEAM	Ross County		167	210
+SCO-PL	TEAM	St Johnstone		186	211
+SCO-PL	TEAM	St Mirren		209	250
+SCO-PL	TS	Aberdeen	O	44	57
+SCO-PL	TS	Aberdeen	U	151	185
+SCO-PL	TS	Celtic	DNB1	42	43
+SCO-PL	TS	Celtic	O	155	178
+SCO-PL	TS	Celtic	U	19	24
+SCO-PL	TS	Dundee	O	30	35
+SCO-PL	TS	Dundee	U	84	112
+SCO-PL	TS	Dundee United	O	31	42
+SCO-PL	TS	Dundee United	U	122	143
 SCO-PL	TS	Falkirk	U	25	28
-SUI-SL	LG			237	294
-SUI-SL	TEAM	Young Boys		41	50
-SUI-SL	TEAM	Grasshoppers		45	50
-SUI-SL	TEAM	Lausanne		40	51
-SUI-SL	TEAM	St. Gallen		40	49
-SUI-SL	TEAM	FC Winterthur		33	46
-SUI-SL	TEAM	Lugano		38	49
-SUI-SL	TEAM	Servette		38	50
-SUI-SL	TEAM	Zurich		42	50
-SUI-SL	TEAM	Basel		40	49
-SUI-SL	TEAM	Luzern		39	49
-SUI-SL	TEAM	Yverdon Sport FC		36	46
-SUI-SL	TEAM	Sion		35	41
-SUI-SL	SIDE		U	139	172
-SUI-SL	SIDE		O	97	121
-SUI-SL	TS	Young Boys	U	21	26
-SUI-SL	TS	Grasshoppers	U	38	42
-SUI-SL	TS	Lausanne	U	21	26
-SUI-SL	TS	St. Gallen	U	19	24
-SUI-SL	TS	FC Winterthur	U	28	38
-SUI-SL	TS	Lugano	U	19	25
-SUI-SL	TS	Servette	O	17	24
-SUI-SL	TS	Zurich	O	17	21
-SUI-SL	TS	Basel	U	16	20
-SUI-SL	TS	Luzern	U	17	23
-SUI-SL	TS	Yverdon Sport FC	U	29	37
-SUI-SL	TS	Zurich	U	25	29
-SUI-SL	TS	Lugano	O	19	24
-SUI-SL	TS	Servette	U	21	26
-SUI-SL	TS	St. Gallen	O	20	24
-SUI-SL	TS	Lausanne	O	19	25
-SUI-SL	TS	Basel	O	24	29
-SUI-SL	TS	Young Boys	O	19	23
-SUI-SL	TS	Luzern	O	22	26
-SUI-SL	TS	Sion	O	18	21
-SUI-SL	TS	Sion	U	17	20
-SWE-AL	LG			208	255
-SWE-AL	TEAM	Västerås SK		13	15
-SWE-AL	TEAM	AIK Solna		14	20
-SWE-AL	TEAM	IFK Värnamo		18	21
-SWE-AL	TEAM	IK Sirius		18	21
-SWE-AL	TEAM	Hammarby IF		17	21
-SWE-AL	TEAM	Djurgårdens IF		17	19
-SWE-AL	TEAM	IFK Göteborg		16	21
-SWE-AL	TEAM	Halmstads BK		14	19
-SWE-AL	TEAM	Malmö FF		14	19
-SWE-AL	TEAM	IFK Norrköping		17	19
-SWE-AL	TEAM	Mjällby AIF		16	20
-SWE-AL	TEAM	IF Elfsborg		14	19
-SWE-AL	TEAM	GAIS Göteborg		16	19
-SWE-AL	TEAM	IF Brommapojkarna		16	18
-SWE-AL	TEAM	BK Häcken		16	19
-SWE-AL	SIDE		U	109	129
-SWE-AL	SIDE		O	94	120
-SWE-AL	TS	IFK Värnamo	U	14	16
-SWE-AL	TS	Malmö FF	O	10	15
-SWE-AL	TS	IF Elfsborg	O	11	15
-SWE-AL	TS	Halmstads BK	U	14	17
-SWE-AL	TS	BK Häcken	O	14	15
-TUR-SL	LG			237	287
-TUR-SL	TEAM	Göztepe		27	32
-TUR-SL	TEAM	Çaykur Rizespor		26	31
-TUR-SL	TEAM	Trabzonspor		28	33
-TUR-SL	TEAM	Bodrum FK		19	20
-TUR-SL	TEAM	Hatayspor		13	21
-TUR-SL	TEAM	Adana Demirspor		10	19
-TUR-SL	TEAM	İstanbul Başakşehir		27	31
-TUR-SL	TEAM	Kasımpaşa SK		24	31
-TUR-SL	TEAM	Alanyaspor		26	31
-TUR-SL	TEAM	Konyaspor		27	33
-TUR-SL	TEAM	Beşiktaş		27	30
-TUR-SL	TEAM	Antalyaspor		24	29
-TUR-SL	TEAM	Eyüpspor		25	30
-TUR-SL	TEAM	Galatasaray		23	30
-TUR-SL	TEAM	Samsunspor		25	30
-TUR-SL	TEAM	Kayserispor		25	30
-TUR-SL	TEAM	Gaziantep FK		26	29
-TUR-SL	TEAM	Fenerbahçe		25	30
-TUR-SL	TEAM	Sivasspor		15	18
-TUR-SL	SIDE		U	173	212
-TUR-SL	SIDE		O	61	72
-TUR-SL	TS	Göztepe	U	18	21
-TUR-SL	TS	Çaykur Rizespor	U	18	23
-TUR-SL	TS	Trabzonspor	U	18	21
-TUR-SL	TS	Bodrum FK	U	19	20
-TUR-SL	TS	Hatayspor	U	8	16
-TUR-SL	TS	Adana Demirspor	U	9	18
-TUR-SL	TS	Alanyaspor	U	22	25
-TUR-SL	TS	Konyaspor	U	24	29
-TUR-SL	TS	Beşiktaş	U	21	23
-TUR-SL	TS	Antalyaspor	U	21	26
-TUR-SL	TS	Eyüpspor	U	22	26
-TUR-SL	TS	İstanbul Başakşehir	U	19	23
-TUR-SL	TS	Galatasaray	O	19	24
-TUR-SL	TS	Kayserispor	U	22	26
-TUR-SL	TS	Kasımpaşa SK	U	12	18
-TUR-SL	TS	Gaziantep FK	U	22	24
-TUR-SL	TS	Samsunspor	U	22	26
-TUR-SL	TS	Sivasspor	U	12	15
-TUR-SL	TS	Fenerbahçe	O	19	23
-UCL	LG			247	300
-UCL	TEAM	Club Atlético de Madrid		19	22
-UCL	TEAM	Manchester City FC		15	16
-UCL	TEAM	Juventus FC		14	16
-UCL	TEAM	PSV		15	16
-UCL	TEAM	Borussia Dortmund		18	20
-UCL	TEAM	Club Brugge KV		18	18
-UCL	TEAM	Liverpool FC		11	18
-UCL	TEAM	Real Madrid CF		19	24
-UCL	TEAM	AS Monaco FC		11	16
-UCL	TEAM	Sport Lisboa e Benfica		11	18
-UCL	TEAM	Atalanta BC		13	17
-UCL	TEAM	Sporting Clube de Portugal		14	17
-UCL	TEAM	FC Bayern München		23	23
-UCL	TEAM	Bayer 04 Leverkusen		15	17
-UCL	TEAM	FC Internazionale Milano		18	20
-UCL	TEAM	Paris Saint-Germain FC		24	29
-UCL	TEAM	Arsenal FC		20	24
-UCL	TEAM	FC Barcelona		18	21
-UCL	SIDE		U	29	42
-UCL	SIDE		O	218	258
-UCL	TS	FC Bayern München	O	23	23
-UCL	TS	Liverpool FC	O	10	17
-UCL	TS	Paris Saint-Germain FC	O	24	28
-UCL	TS	Arsenal FC	O	20	24
-UCL	TS	Club Atlético de Madrid	O	18	20
-UCL	TS	Real Madrid CF	O	18	22
-UCL	TS	FC Internazionale Milano	O	17	19
-UCL	TS	Bayer 04 Leverkusen	O	13	15
-UCL	TS	Borussia Dortmund	O	15	16
-UCL	TS	FC Barcelona	O	17	18
-UECL	LG			256	300
-UECL	TEAM	NK Celje		17	22
-UECL	TEAM	Fiorentina		20	22
+SCO-PL	TS	Hamilton	U	42	51
+SCO-PL	TS	Hearts	O	59	73
+SCO-PL	TS	Hearts	U	106	132
+SCO-PL	TS	Hibernian	O	58	74
+SCO-PL	TS	Hibernian	U	141	172
+SCO-PL	TS	Kilmarnock	O	32	39
+SCO-PL	TS	Kilmarnock	U	132	167
+SCO-PL	TS	Livingston	O	27	32
+SCO-PL	TS	Livingston	U	135	170
+SCO-PL	TS	Motherwell	O	52	62
+SCO-PL	TS	Motherwell	U	147	180
+SCO-PL	TS	Rangers	DNB1	32	34
+SCO-PL	TS	Rangers	O	138	167
+SCO-PL	TS	Rangers	U	40	47
+SCO-PL	TS	Ross County	O	20	25
+SCO-PL	TS	Ross County	U	134	172
+SCO-PL	TS	St Johnstone	O	18	20
+SCO-PL	TS	St Johnstone	U	159	182
+SCO-PL	TS	St Mirren	O	38	47
+SCO-PL	TS	St Mirren	U	163	195
+SUI-SL	LG			927	1130
+SUI-SL	SIDE		O	411	513
+SUI-SL	SIDE		U	505	604
+SUI-SL	TEAM	Basel		182	215
+SUI-SL	TEAM	FC Aarau		19	31
+SUI-SL	TEAM	FC Thun		84	100
+SUI-SL	TEAM	FC Vaduz		59	67
+SUI-SL	TEAM	FC Winterthur		55	71
+SUI-SL	TEAM	Grasshoppers		118	141
+SUI-SL	TEAM	Lausanne		87	109
+SUI-SL	TEAM	Lugano		152	179
+SUI-SL	TEAM	Luzern		169	211
+SUI-SL	TEAM	Neuchâtel Xamax FCS		58	67
+SUI-SL	TEAM	Servette		115	144
+SUI-SL	TEAM	Sion		149	175
+SUI-SL	TEAM	St. Gallen		178	217
+SUI-SL	TEAM	Stade Lausanne-Ouchy		26	33
+SUI-SL	TEAM	Young Boys		166	213
+SUI-SL	TEAM	Yverdon Sport FC		59	71
+SUI-SL	TEAM	Zurich		178	216
+SUI-SL	TS	Basel	O	124	144
+SUI-SL	TS	Basel	U	56	68
+SUI-SL	TS	FC Aarau	U	16	24
+SUI-SL	TS	FC Thun	O	37	44
+SUI-SL	TS	FC Thun	U	45	54
+SUI-SL	TS	FC Vaduz	U	51	57
+SUI-SL	TS	FC Winterthur	O	18	24
+SUI-SL	TS	FC Winterthur	U	37	47
+SUI-SL	TS	Grasshoppers	O	35	45
+SUI-SL	TS	Grasshoppers	U	83	96
+SUI-SL	TS	Lausanne	O	36	49
+SUI-SL	TS	Lausanne	U	51	60
+SUI-SL	TS	Lugano	O	61	76
+SUI-SL	TS	Lugano	U	91	103
+SUI-SL	TS	Luzern	O	75	94
+SUI-SL	TS	Luzern	U	93	115
+SUI-SL	TS	Neuchâtel Xamax FCS	O	14	17
+SUI-SL	TS	Neuchâtel Xamax FCS	U	43	49
+SUI-SL	TS	Servette	O	52	67
+SUI-SL	TS	Servette	U	62	76
+SUI-SL	TS	Sion	O	58	70
+SUI-SL	TS	Sion	U	91	105
+SUI-SL	TS	St. Gallen	O	95	116
+SUI-SL	TS	St. Gallen	U	81	99
+SUI-SL	TS	Stade Lausanne-Ouchy	U	21	25
+SUI-SL	TS	Young Boys	O	111	146
+SUI-SL	TS	Young Boys	U	48	59
+SUI-SL	TS	Yverdon Sport FC	O	15	18
+SUI-SL	TS	Yverdon Sport FC	U	42	51
+SUI-SL	TS	Zurich	O	77	94
+SUI-SL	TS	Zurich	U	99	120
+SWE-AL	LG			469	577
+SWE-AL	SIDE		O	221	275
+SWE-AL	SIDE		U	240	292
+SWE-AL	TEAM	AIK Solna		49	60
+SWE-AL	TEAM	BK Häcken		51	61
+SWE-AL	TEAM	Degerfors IF		26	32
+SWE-AL	TEAM	Djurgårdens IF		49	60
+SWE-AL	TEAM	GAIS Göteborg		25	31
+SWE-AL	TEAM	Halmstads BK		45	60
+SWE-AL	TEAM	Hammarby IF		56	62
+SWE-AL	TEAM	IF Brommapojkarna		50	59
+SWE-AL	TEAM	IF Elfsborg		47	60
+SWE-AL	TEAM	IFK Göteborg		50	62
+SWE-AL	TEAM	IFK Norrköping		52	60
+SWE-AL	TEAM	IFK Värnamo		48	61
+SWE-AL	TEAM	IK Sirius		49	62
+SWE-AL	TEAM	Kalmar FF		42	54
+SWE-AL	TEAM	Malmö FF		44	60
+SWE-AL	TEAM	Mjällby AIF		51	60
+SWE-AL	TEAM	Varbergs BoIS		18	25
+SWE-AL	TEAM	Västerås SK		23	26
+SWE-AL	TS	AIK Solna	O	24	30
+SWE-AL	TS	AIK Solna	U	25	30
+SWE-AL	TS	BK Häcken	O	46	54
+SWE-AL	TS	Degerfors IF	U	21	26
+SWE-AL	TS	Djurgårdens IF	O	23	30
+SWE-AL	TS	Djurgårdens IF	U	26	30
+SWE-AL	TS	GAIS Göteborg	U	19	20
+SWE-AL	TS	Halmstads BK	U	36	46
+SWE-AL	TS	Hammarby IF	O	25	29
+SWE-AL	TS	Hammarby IF	U	31	33
+SWE-AL	TS	IF Brommapojkarna	O	25	27
+SWE-AL	TS	IF Brommapojkarna	U	25	32
+SWE-AL	TS	IF Elfsborg	O	38	46
+SWE-AL	TS	IFK Göteborg	O	15	21
+SWE-AL	TS	IFK Göteborg	U	35	41
+SWE-AL	TS	IFK Norrköping	O	25	26
+SWE-AL	TS	IFK Norrköping	U	27	34
+SWE-AL	TS	IFK Värnamo	O	16	23
+SWE-AL	TS	IFK Värnamo	U	31	37
+SWE-AL	TS	IK Sirius	O	31	38
+SWE-AL	TS	IK Sirius	U	17	23
+SWE-AL	TS	Kalmar FF	O	14	17
+SWE-AL	TS	Kalmar FF	U	28	36
+SWE-AL	TS	Malmö FF	O	38	53
+SWE-AL	TS	Mjällby AIF	O	16	22
+SWE-AL	TS	Mjällby AIF	U	35	38
+SWE-AL	TS	Varbergs BoIS	U	15	22
+SWE-AL	TS	Västerås SK	U	21	23
+TUR-SL	LG			1216	1439
+TUR-SL	SIDE		DNB1	16	16
+TUR-SL	SIDE		O	197	240
+TUR-SL	SIDE		U	1003	1183
+TUR-SL	TEAM	Ad. Demirspor		87	105
+TUR-SL	TEAM	Adana Demirspor		18	29
+TUR-SL	TEAM	Alanyaspor		127	149
+TUR-SL	TEAM	Altay		30	33
+TUR-SL	TEAM	Ankaragucu		67	74
+TUR-SL	TEAM	Antalyaspor		126	146
+TUR-SL	TEAM	Besiktas		87	106
+TUR-SL	TEAM	Beşiktaş		36	41
+TUR-SL	TEAM	Bodrum FK		27	30
+TUR-SL	TEAM	Buyuksehyr		90	108
+TUR-SL	TEAM	Eyüpspor		34	41
+TUR-SL	TEAM	Fenerbahce		87	107
+TUR-SL	TEAM	Fenerbahçe		35	41
+TUR-SL	TEAM	Galatasaray		123	149
+TUR-SL	TEAM	Gaziantep		95	109
+TUR-SL	TEAM	Gaziantep FK		36	40
+TUR-SL	TEAM	Giresunspor		61	69
+TUR-SL	TEAM	Goztep		28	34
+TUR-SL	TEAM	Göztepe		34	42
+TUR-SL	TEAM	Hatayspor		118	141
+TUR-SL	TEAM	Istanbulspor		65	74
+TUR-SL	TEAM	Karagumruk		85	106
+TUR-SL	TEAM	Kasimpasa		86	107
+TUR-SL	TEAM	Kasımpaşa SK		33	41
+TUR-SL	TEAM	Kayserispor		129	151
+TUR-SL	TEAM	Konyaspor		135	154
+TUR-SL	TEAM	Pendikspor		25	33
+TUR-SL	TEAM	Rizespor		64	73
+TUR-SL	TEAM	Samsunspor		71	81
+TUR-SL	TEAM	Sivasspor		119	139
+TUR-SL	TEAM	Trabzonspor		122	151
+TUR-SL	TEAM	Umraniyespor		27	31
+TUR-SL	TEAM	Yeni Malatyaspor		30	33
+TUR-SL	TEAM	Çaykur Rizespor		36	41
+TUR-SL	TEAM	İstanbul Başakşehir		34	41
+TUR-SL	TS	Ad. Demirspor	O	25	28
+TUR-SL	TS	Ad. Demirspor	U	62	77
+TUR-SL	TS	Adana Demirspor	U	16	27
+TUR-SL	TS	Alanyaspor	O	16	20
+TUR-SL	TS	Alanyaspor	U	111	129
+TUR-SL	TS	Altay	U	29	32
+TUR-SL	TS	Ankaragucu	U	60	67
+TUR-SL	TS	Antalyaspor	U	113	132
+TUR-SL	TS	Besiktas	O	17	23
+TUR-SL	TS	Besiktas	U	69	82
+TUR-SL	TS	Beşiktaş	U	25	27
+TUR-SL	TS	Bodrum FK	U	27	29
+TUR-SL	TS	Buyuksehyr	O	9	15
+TUR-SL	TS	Buyuksehyr	U	81	93
+TUR-SL	TS	Eyüpspor	U	27	32
+TUR-SL	TS	Fenerbahce	O	33	42
+TUR-SL	TS	Fenerbahce	U	51	62
+TUR-SL	TS	Fenerbahçe	O	28	33
+TUR-SL	TS	Galatasaray	O	61	76
+TUR-SL	TS	Galatasaray	U	55	66
+TUR-SL	TS	Gaziantep	U	88	100
+TUR-SL	TS	Gaziantep FK	U	31	34
+TUR-SL	TS	Giresunspor	U	60	67
+TUR-SL	TS	Goztep	U	28	34
+TUR-SL	TS	Göztepe	U	22	27
+TUR-SL	TS	Hatayspor	U	111	134
+TUR-SL	TS	Istanbulspor	U	59	68
+TUR-SL	TS	Karagumruk	U	76	94
+TUR-SL	TS	Kasimpasa	U	72	92
+TUR-SL	TS	Kasımpaşa SK	U	19	26
+TUR-SL	TS	Kayserispor	U	118	138
+TUR-SL	TS	Konyaspor	O	14	17
+TUR-SL	TS	Konyaspor	U	121	137
+TUR-SL	TS	Pendikspor	U	21	28
+TUR-SL	TS	Rizespor	U	58	66
+TUR-SL	TS	Samsunspor	U	63	72
+TUR-SL	TS	Sivasspor	U	107	125
+TUR-SL	TS	Trabzonspor	O	29	36
+TUR-SL	TS	Trabzonspor	U	93	115
+TUR-SL	TS	Umraniyespor	U	26	30
+TUR-SL	TS	Yeni Malatyaspor	U	29	32
+TUR-SL	TS	Çaykur Rizespor	U	28	33
+TUR-SL	TS	İstanbul Başakşehir	U	22	27
+UCL	LG			383	474
+UCL	SIDE		O	302	370
+UCL	SIDE		U	81	104
+UCL	TEAM	AC Milan		15	20
+UCL	TEAM	AS Monaco FC		15	20
+UCL	TEAM	Arsenal FC		26	35
+UCL	TEAM	Atalanta BC		17	22
+UCL	TEAM	Bayer 04 Leverkusen		19	22
+UCL	TEAM	Borussia Dortmund		32	37
+UCL	TEAM	Club Atlético de Madrid		30	34
+UCL	TEAM	Club Brugge KV		22	22
+UCL	TEAM	FC Barcelona		29	34
+UCL	TEAM	FC Bayern München		32	38
+UCL	TEAM	FC Internazionale Milano		23	31
+UCL	TEAM	FC København		13	16
+UCL	TEAM	Feyenoord Rotterdam		14	16
+UCL	TEAM	Galatasaray SK		14	18
+UCL	TEAM	Juventus FC		16	20
+UCL	TEAM	Liverpool FC		15	22
+UCL	TEAM	Manchester City FC		27	30
+UCL	TEAM	Newcastle United FC		17	18
+UCL	TEAM	PSV		23	24
+UCL	TEAM	Paris Saint-Germain FC		35	44
+UCL	TEAM	RB Leipzig		12	16
+UCL	TEAM	Real Madrid CF		29	37
+UCL	TEAM	Sport Lisboa e Benfica		16	26
+UCL	TEAM	Sporting Clube de Portugal		17	22
+UCL	TS	AS Monaco FC	O	11	15
+UCL	TS	Arsenal FC	O	24	32
+UCL	TS	Atalanta BC	O	13	17
+UCL	TS	Bayer 04 Leverkusen	O	16	19
+UCL	TS	Borussia Dortmund	O	23	27
+UCL	TS	Club Atlético de Madrid	O	24	27
+UCL	TS	Club Brugge KV	O	16	16
+UCL	TS	FC Barcelona	O	26	28
+UCL	TS	FC Bayern München	O	29	34
+UCL	TS	FC Internazionale Milano	O	20	27
+UCL	TS	Liverpool FC	O	11	18
+UCL	TS	Manchester City FC	O	25	26
+UCL	TS	PSV	O	20	20
+UCL	TS	Paris Saint-Germain FC	O	29	36
+UCL	TS	Real Madrid CF	O	28	34
+UCL	TS	Sport Lisboa e Benfica	O	9	16
+UCL	TS	Sporting Clube de Portugal	O	13	16
+UECL	LG			363	430
+UECL	SIDE		O	92	119
+UECL	SIDE		U	271	311
+UECL	TEAM	AZ Alkmaar		16	20
+UECL	TEAM	Fiorentina		29	34
 UECL	TEAM	Jagiellonia Bialystok		16	19
-UECL	TEAM	Legia Warsaw		14	15
+UECL	TEAM	Legia Warsaw		20	23
+UECL	TEAM	NK Celje		17	22
 UECL	TEAM	Omonia Nicosia		16	16
-UECL	SIDE		U	197	220
-UECL	SIDE		O	59	80
-UECL	TS	Omonia Nicosia	U	15	15
+UECL	TEAM	Real Betis		12	16
+UECL	TS	Fiorentina	U	16	21
+UECL	TS	Legia Warsaw	U	14	17
 UECL	TS	NK Celje	U	12	17
-UECL-Q	LG			252	294
-UECL-Q	SIDE		U	210	242
-UECL-Q	SIDE		O	42	52
-UEL	LG			258	300
-UEL	TEAM	FC Midtjylland		15	16
-UEL	TEAM	Fenerbahce		18	18
-UEL	TEAM	FCSB		12	16
-UEL	TEAM	Ferencvaros		13	18
-UEL	TEAM	Rangers		15	16
-UEL	TEAM	AS Roma		16	17
-UEL	TEAM	PAOK		14	16
-UEL	TEAM	FC Porto		16	18
-UEL	TEAM	Braga		16	18
-UEL	TEAM	Viktoria Plzen		18	18
-UEL	TEAM	Lyon		14	17
-UEL	TEAM	Nottingham Forest		16	16
-UEL	TEAM	SC Freiburg		12	15
+UECL	TS	Omonia Nicosia	U	15	15
+UECL-Q	LG			422	490
+UECL-Q	SIDE		O	60	73
+UECL-Q	SIDE		U	362	417
+UEL	LG			402	469
+UEL	SIDE		O	106	128
+UEL	SIDE		U	296	341
+UEL	TEAM	AS Roma		29	32
+UEL	TEAM	Ajax Amsterdam		11	15
 UEL	TEAM	Aston Villa		14	15
-UEL	SIDE		U	187	215
-UEL	SIDE		O	71	85
-UEL	TS	Fenerbahce	U	16	16
-UEL	TS	Braga	U	14	16
-UKR-PL	LG			237	285
-UKR-PL	TEAM	Rukh Lviv		29	36
-UKR-PL	TEAM	Kryvbas Kryvyi Rih		30	35
-UKR-PL	TEAM	Zorya Lugansk		37	38
-UKR-PL	TEAM	Chernomorets Odessa		33	37
-UKR-PL	TEAM	Polissya Zhytomyr		28	36
-UKR-PL	TEAM	Kolos Kovalivka		32	37
-UKR-PL	TEAM	Vorskla Poltava		28	35
-UKR-PL	TEAM	Shakhtar Donetsk		29	38
-UKR-PL	TEAM	FC LNZ Cherkasy		29	35
-UKR-PL	TEAM	NK Veres		30	36
-UKR-PL	TEAM	FK Oleksandriya		33	37
-UKR-PL	TEAM	FK Obolon		28	37
-UKR-PL	TEAM	Dinamo Kiev		30	37
-UKR-PL	TEAM	Karpaty Lviv		19	25
+UEL	TEAM	Bodo/Glimt		14	15
+UEL	TEAM	Braga		20	23
+UEL	TEAM	FC Midtjylland		19	20
+UEL	TEAM	FC Porto		18	22
+UEL	TEAM	FCSB		15	20
+UEL	TEAM	Fenerbahce		22	22
+UEL	TEAM	Ferencvaros		17	22
+UEL	TEAM	Ludogorets Razgrad		14	18
+UEL	TEAM	Lyon		16	21
+UEL	TEAM	Maccabi Tel-Aviv		14	16
+UEL	TEAM	Malmö FF		14	16
+UEL	TEAM	Nice		14	16
+UEL	TEAM	Nottingham Forest		16	16
+UEL	TEAM	PAOK		17	20
+UEL	TEAM	Panathinaikos		15	16
+UEL	TEAM	Rangers		26	28
+UEL	TEAM	Real Betis		17	18
+UEL	TEAM	SC Freiburg		15	20
+UEL	TEAM	Slavia Prague		14	16
+UEL	TEAM	Tottenham Hotspur		12	15
+UEL	TEAM	Viktoria Plzen		21	22
+UEL	TS	AS Roma	U	23	24
+UEL	TS	Braga	U	18	21
+UEL	TS	FC Porto	U	13	16
+UEL	TS	FCSB	U	13	16
+UEL	TS	Fenerbahce	U	20	20
+UEL	TS	Ferencvaros	U	13	17
+UEL	TS	Ludogorets Razgrad	U	13	16
+UEL	TS	PAOK	U	13	15
+UEL	TS	Rangers	U	19	21
+UEL	TS	SC Freiburg	U	12	15
+UEL	TS	Viktoria Plzen	U	17	18
+UKR-PL	LG			349	421
+UKR-PL	SIDE		O	40	56
+UKR-PL	SIDE		U	299	355
+UKR-PL	TEAM	Chernomorets Odessa		43	53
+UKR-PL	TEAM	Dinamo Kiev		41	54
+UKR-PL	TEAM	FC LNZ Cherkasy		45	51
+UKR-PL	TEAM	FC Mynai		19	25
+UKR-PL	TEAM	FK Obolon		44	55
+UKR-PL	TEAM	FK Oleksandriya		45	53
 UKR-PL	TEAM	Inhulets Petrove		22	25
+UKR-PL	TEAM	Karpaty Lviv		19	25
+UKR-PL	TEAM	Kolos Kovalivka		47	53
+UKR-PL	TEAM	Kryvbas Kryvyi Rih		46	53
 UKR-PL	TEAM	Livyi Bereh		22	25
-UKR-PL	SIDE		U	203	240
-UKR-PL	SIDE		O	25	36
-UKR-PL	TS	Rukh Lviv	U	27	32
-UKR-PL	TS	Kryvbas Kryvyi Rih	U	28	32
-UKR-PL	TS	Zorya Lugansk	U	34	34
-UKR-PL	TS	Chernomorets Odessa	U	30	34
-UKR-PL	TS	Polissya Zhytomyr	U	24	30
-UKR-PL	TS	Kolos Kovalivka	U	31	36
-UKR-PL	TS	Shakhtar Donetsk	O	13	19
-UKR-PL	TS	FC LNZ Cherkasy	U	28	33
-UKR-PL	TS	NK Veres	U	26	32
-UKR-PL	TS	FK Oleksandriya	U	30	33
-UKR-PL	TS	FK Obolon	U	28	37
-UKR-PL	TS	Dinamo Kiev	O	13	17
-UKR-PL	TS	Vorskla Poltava	U	25	30
-UKR-PL	TS	Dinamo Kiev	U	14	17
+UKR-PL	TEAM	Metalist 1925 Kharkiv		19	25
+UKR-PL	TEAM	NK Veres		44	53
+UKR-PL	TEAM	Polissya Zhytomyr		44	54
+UKR-PL	TEAM	Rukh Lviv		44	54
+UKR-PL	TEAM	SK Dnipro-1		21	25
+UKR-PL	TEAM	Shakhtar Donetsk		41	53
+UKR-PL	TEAM	Vorskla Poltava		41	52
+UKR-PL	TEAM	Zorya Lugansk		51	54
+UKR-PL	TS	Chernomorets Odessa	U	39	47
+UKR-PL	TS	Dinamo Kiev	O	21	29
+UKR-PL	TS	Dinamo Kiev	U	16	21
+UKR-PL	TS	FC LNZ Cherkasy	U	43	48
+UKR-PL	TS	FC Mynai	U	18	24
+UKR-PL	TS	FK Obolon	U	44	55
+UKR-PL	TS	FK Oleksandriya	U	41	47
 UKR-PL	TS	Inhulets Petrove	U	21	24
-UKR-PL	TS	Livyi Bereh	U	22	25
 UKR-PL	TS	Karpaty Lviv	U	16	21
+UKR-PL	TS	Kolos Kovalivka	U	45	51
+UKR-PL	TS	Kryvbas Kryvyi Rih	U	40	45
+UKR-PL	TS	Livyi Bereh	U	22	25
+UKR-PL	TS	Metalist 1925 Kharkiv	U	18	24
+UKR-PL	TS	NK Veres	U	39	48
+UKR-PL	TS	Polissya Zhytomyr	U	38	46
+UKR-PL	TS	Rukh Lviv	U	37	45
+UKR-PL	TS	SK Dnipro-1	U	19	21
+UKR-PL	TS	Shakhtar Donetsk	O	17	24
+UKR-PL	TS	Shakhtar Donetsk	U	18	23
+UKR-PL	TS	Vorskla Poltava	U	37	46
+UKR-PL	TS	Zorya Lugansk	U	47	49
