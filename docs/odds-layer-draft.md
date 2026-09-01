@@ -457,3 +457,75 @@ Volume will be low — the DNB rule fires on roughly 1.5% of cards. The
 bettor has accepted that trade. What must not be oversold is the size:
 +2.14% at an average 1.18 is about two cents per euro staked, and it needs
 hundreds of bets before it can be distinguished from nothing.
+
+
+---
+
+# Tip 2 and straight 1X2, tested (1 Sep)
+
+**Tip 2 is closed, permanently.** Queried the feed's full market list for a
+fixture: `alternate_totals`, `btts`, `double_chance`, `h2h_3_way`,
+`spreads` and `totals` are quoted — **`team_totals` is not**. No source
+prices a team over/under in these leagues, so tip 2 can never receive a
+verdict. Worth noting what IS there: `alternate_totals` would let the
+ladder be priced exactly instead of derived, and `double_chance` is quoted
+directly rather than derived from 1X2.
+
+**Straight 1X2 was worth testing** because the prices are long — 2.2 for a
+home side against 1.15 on the ladder — and the arithmetic that kills the
+ladder is mostly the price. The engine never prints a 1X2 lane but it
+computes one: tip 1's claim fixes the goal expectation, tip 3's claim
+fixes how it splits between the sides, so (home, draw, away) is
+recoverable without an engine replay. 2,876 fixtures, exact closing prices.
+
+| | n | odds | hit | ROI |
+|---|---|---|---|---|
+| back the home side always | 2,876 | 2.19 | 53.8% | **−5.78% ± 1.89** |
+| back the draw always | 2,876 | 4.56 | 24.5% | +0.08% ± 3.47 |
+| back the away side always | 2,876 | 6.69 | 21.7% | −4.36% ± 4.24 |
+
+And bucketed by the engine's claimed edge over the market:
+
+| claimed edge | n | odds | ROI |
+|---|---|---|---|
+| +0 to +2 pts | 831 | 4.11 | −15.93% |
+| +2 to +5 pts | 1,113 | 5.01 | +4.47% ± 6.18 |
+| +5 to +10 pts | 1,485 | 7.01 | −8.72% |
+| **+10 pts and up** | 923 | 7.60 | **−23.47%** |
+
+Rejected. The back-the-favourite line needs no recovery step at all and is
+cleanly negative on its own.
+
+## The pattern is now confirmed three times over
+
+| lane family | biggest claimed edges |
+|---|---|
+| match totals ladder | no gradient at all |
+| DNB | −7.46% at +10 pts, **+2.14% where the engine claims LESS** |
+| straight 1X2 | −23.47% at +10 pts |
+
+**Wherever Athena disagrees most with the market, Athena is most wrong.**
+That is not a fault in one lane; it is a property of this model against
+this market, and it holds across three independent families on real money.
+
+The single exception is the one place the engine is *conservative*: DNB
+lanes where it underclaims the market by 5+ points. That fits the same
+story rather than contradicting it — `result_market.py` already recorded
+that the lane's failure mode is modesty, and the market's
+favourite-longshot bias pays for it.
+
+## Where this leaves the project
+
+Athena is a well-calibrated football predictor. That is a real
+achievement, and it is measurably NOT the same thing as an edge over a
+bookmaker — the two probabilities agree to within two tenths of a point,
+and the margin sits between them.
+
+Three honest conclusions:
+
+1. **The hitrate is real and should keep being published.** It is not a
+   betting instruction.
+2. **One narrow money lane survives**, worth about two cents per euro, on
+   1.5% of cards.
+3. **Line shopping is worth more than the model** — +3.58 points against
+   +2.14 — and needs no engine change at all.
