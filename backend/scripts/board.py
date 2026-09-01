@@ -528,10 +528,19 @@ def verify(quiet: bool = False) -> None:
                                 app.find("</section>", i + 1)) if x > 0]
             panes[pid] = app[i:min(ends)] if ends else app[i:]
 
-        # 5. Each fixture appears in the tab its state puts it in — and a
-        #    playable one appears in BOTH, since Playable filters the
-        #    Athena lanes rather than removing from them.
-        for pid, want in (("t-playable", playable), ("t-lanes", pending),
+        # 5. Each fixture appears in exactly ONE pending tab. Playable no
+        #    longer filters the Athena lanes, it PARTITIONS them: it holds
+        #    what the guard would stake and the lanes tab holds the rest,
+        #    so a card in both would be the board contradicting itself.
+        #    The check therefore asks the app which is which rather than
+        #    re-deriving it — two definitions of playable is exactly the
+        #    drift this verify exists to catch.
+        from scripts.webapp import verdict, _star
+        play, rest = [], []
+        for f in pending:
+            v = verdict(f, _star(f))
+            (play if (v and v["play"]) else rest).append(f)
+        for pid, want in (("t-playable", play), ("t-lanes", rest),
                           ("t-done", done)):
             body = panes.get(pid, "")
             for f in want:
@@ -541,6 +550,11 @@ def verify(quiet: bool = False) -> None:
             if got != len(want):
                 bad.append(f"app tab {pid} shows {got} cards, "
                            f"expected {len(want)}")
+        # and nothing may sit in both pending tabs
+        for f in pending:
+            if (in_app(f.teams, panes.get("t-playable", ""))
+                    and in_app(f.teams, panes.get("t-lanes", ""))):
+                bad.append(f"{f.teams!r} is in BOTH pending tabs")
 
         # 6. The ledger reaches the app too.
         for name in set(bets):
