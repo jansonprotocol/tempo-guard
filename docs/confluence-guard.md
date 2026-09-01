@@ -492,3 +492,166 @@ on the deep bank splits 86.40/87.85.
 **The blend's best `w` is read off the table**, which is a free parameter
 chosen after seeing the answer. Live expectation should be quoted at the
 pre-registered **w = 0.2**, not at whichever row happens to top its column.
+
+---
+
+# The frozen spec: two layers, five labels
+
+Everything above is measurement. This is the design it licenses, written
+down before anything is built so the live period has something to be
+graded against.
+
+## Architecture: the chooser flips, the guard only demotes
+
+Two layers, each one-directional.
+
+**Layer 1 — the chooser (unchanged).** Star tip 1 unless a DNB out-claims
+it by more than `DNB_GATE` = 2.0 points, in which case star tip 3. This is
+the only validated flip in the project and it stays where it is.
+
+**Layer 2 — the guard.** Takes the starred lane and labels it. Its action
+space is **PLAY or NO PLAY**. It never re-picks a lane.
+
+Putting the flip in layer 1 and keeping it out of layer 2 is not tidiness,
+it is what the pivot table forces: on cards the score condemns, standing
+grades 82.22% against tip 3's 78.17% *even where a tip 3 exists*, both
+windows, and tip 2's 68.29%. **There is no lane to flip to.** A guard that
+offered one would be offering a measured loss.
+
+## Why promotion is impossible, and now verified
+
+The five labels only make sense if the score stratifies *within* a tier
+and never lifts a card past a tier boundary. Red's ordering was checked
+earlier; green's and orange's were not. Both windows, by score quartile:
+
+| window | tier | Q1 (worst) | Q4 (best) |
+|---|---|---|---|
+| both | green | 86.84 | 89.00 |
+| both | orange | 81.75 | 85.30 |
+| both | red | 77.51 | 79.52 |
+| older | green | 86.93 | 88.80 |
+| older | orange | 81.55 | 84.81 |
+| older | red | 77.03 | 80.82 |
+| newer | green | 86.94 | 89.31 |
+| newer | orange | 81.49 | 85.63 |
+| newer | red | 77.74 | 78.07 |
+
+**orange's best < green's worst, and red's best < orange's worst, in
+every window.** The tightest margin is the older window's red best (80.82)
+against orange worst (81.55) — 0.73 points, holding but not comfortably.
+
+So a card cannot score its way up a tier. Promotion is ruled out by the
+structure of the data, not by a rule someone imposed.
+
+## The labels, and their frozen thresholds
+
+The score speaks **only in Europe** (+3.57 there, −0.06 in the Americas,
+unreadable in RoW), so outside Europe the label is the tier and no card
+receives a super-label. Thresholds are set on the European population and
+then **frozen** — recomputing percentiles nightly would make the labels
+drift and nothing falsifiable.
+
+```
+score      walk_best: continuous, de-duplicated, club memory 40,
+           MIN_SLICE 15, prior 25, league and side reads cumulative
+blend w    0.20   (the pre-registered row, not the table's best)
+
+super green   green tier AND (gated DNB OR score >= +6.34)
+green         green tier, otherwise
+orange        orange tier
+red           red tier, otherwise
+super red     red tier AND score <= -12.99
+```
+
+Gated DNBs are assigned to super green **by the gate, not by rank**. They
+grade **92.27%** on 1,125 cards, and their printed claim understates them
+by 4 to 8 points, so any rank built on `says` would file them mid-orange.
+That would be the scoring machinery contradicting a validated result.
+
+## What each label is predicting
+
+This table is the guard's own `says`. It is what the live period grades
+against.
+
+| label | n | share | hit | older | newer |
+|---|---|---|---|---|---|
+| **super green** | 3,083 | 4.9% | **89.56%** | 89.14 | 90.10 |
+| green | 13,213 | 21.1% | 87.40% | 86.63 | 88.25 |
+| orange | 36,607 | 58.5% | 83.42% | 83.28 | 83.55 |
+| red | 7,873 | 12.6% | 77.96% | 78.43 | 77.49 |
+| **super red** | 1,752 | 2.8% | **77.05%** | 76.08 | 77.93 |
+
+Monotone in both windows across all five.
+
+## One thing the design got wrong, and the fix
+
+**Super red does not earn its own action.** It grades 77.05% against
+plain red's 77.96% — nine tenths of a point. Dropping super red alone
+lifts the book from 83.70% to 83.89%, forfeiting 2.8% of cards that still
+win three times in four. The score simply has little left to say inside
+red: the tier already identified the bad population, and its internal
+spread (+2.29) is the smallest of the three.
+
+So **NO PLAY attaches to the RED TIER, not to super red.** That is 15.4%
+of cards at about 77.8%, and it is the cut that was already measured as
+the guard's best move. Super red stays as *emphasis within* red — "the
+tier says avoid and the searches agree" — not as a separate decision.
+
+The action table:
+
+| label | action |
+|---|---|
+| super green | play, largest stake band |
+| green | play |
+| orange | play |
+| red | **no play** |
+| super red | **no play**, and do not be tempted |
+
+## Tip 2 is the stronger signal, and it is still unpriceable
+
+The region split was run on tip 2 as well, and it is the largest
+confluence effect in the project:
+
+| region | n | spread | older | newer |
+|---|---|---|---|---|
+| ALL | 46,301 | +5.27 | +3.93 | +6.26 |
+| **Europe** | 34,008 | **+6.07** | +5.30 | +7.25 |
+| **Americas** | 7,829 | **+3.92** | +6.19 | +3.95 |
+| RoW | 4,464 | +0.28 | −9.42 | +10.76 |
+
+**+6.07 in Europe against tip 1's +3.57, and it survives in the Americas
+too** — where tip 1's effect is exactly zero. Only RoW is noise, and
+violently so.
+
+This is the one place a paid experiment is now clearly justified. Tip 2 is
+a team total, football-data carries no team-total columns, and the signal
+is strongest in the most liquid region rather than the thinnest — so the
+"soft market" framing does not apply and the question is simply whether
+the price allows it. A coverage probe of team-total markets on the odds
+API is the next spend, ahead of any further ladder work.
+
+Note what tip 2 is *not*: a lane to flip to. Its base rate is 69% against
+the final pick's 83.7%, and the pivot table already refused it. A tip-2
+confluence signal would be a **separate ticket**, priced on its own, not a
+replacement for a condemned pick.
+
+## Registered, and what would falsify it
+
+Frozen: the thresholds above, `w` = 0.20, club window 40, the tier rules
+as shipped, Europe-only scoring, DNBs hard-assigned.
+
+Predicted: the five hit rates in the table above, ±1 point, on forward
+cards.
+
+Falsified if: the label ordering breaks on live cards, or super green
+fails to clear green, or red fails to underperform orange. The retro
+record says all three hold in both halves of 62,528 cards; the live month
+is what turns that into a shipped claim rather than a replayed one.
+
+**And none of this is an ROI claim.** Every retro cut converts hit rate
+into almost nothing after price — the best claim-based selection moved
+ROI ten basis points while the average quote fell from 1.16 to 1.13. The
+guard ships as *information with a registered prediction*, and NO PLAY
+ships as protocol. Whether skipping red pays is a question only real
+forward quotes can answer, because even super red wins three in four and
+declining it forfeits those wins.

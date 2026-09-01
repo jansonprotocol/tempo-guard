@@ -578,6 +578,82 @@ def _is_dnb(cell: str) -> bool:
     return bool(re.search(r"(?:^|[^A-Za-z])DNB[12]", cell or ""))
 
 
+def _edge(cell: str) -> float | None:
+    """A lane's printed EDGE — the signed percentage after the claim."""
+    m = re.search(r"%\s*\*{0,2}([+−-]\d+(?:\.\d+)?)%", cell or "")
+    return float(m.group(1).replace("−", "-")) if m else None
+
+
+def _rung(cell: str) -> str:
+    m = re.search(r"(?:^|[^A-Za-z])((?:[OU]\d+(?:\.\d+)?)|1X|X2|12|DNB[12])",
+                  cell or "")
+    return m.group(1) if m else ""
+
+
+_SLICES = None
+
+
+def _guard(f, best: int) -> str:
+    """The card's risk label: five bands, registered in docs/.
+
+    Two layers, and this is the second. The chooser upstream may flip
+    tip 1 to a gated DNB; this one only labels what it starred, and its
+    action space is play or no play. There is no lane to flip to — on
+    condemned cards, standing grades 82.22% against tip 3's 78.17% even
+    where a tip 3 exists.
+
+    The score is silent outside Europe, where it measured -0.06.
+    """
+    global _SLICES
+    if f.settled:
+        return ""
+    cell = f.tip3 if best == 3 else f.tip1
+    p = _claim(cell)
+    if p is None:
+        return ""
+    e = _edge(cell)
+    dnb = best == 3 and _is_dnb(f.tip3)
+    # The shipped tier, unchanged: a gated DNB or a high, modest-edge tip
+    # 1 is green; a low claim, or a middling claim on an OVER, is red.
+    side = _rung(cell)[:1] if _rung(cell)[:1] in ("O", "U") else ""
+    if dnb:
+        tier = "green"
+    elif p >= 84 and (e is None or e < 1.0):
+        tier = "green"
+    elif p < 76 or (p < 80 and side == "O"):
+        tier = "red"
+    else:
+        tier = "orange"
+    if _SLICES is None:
+        from scripts import guard_slices
+        _SLICES = guard_slices.read_table()
+    from scripts import guard_slices
+    sc = None
+    if _SLICES:
+        h, a = [t.strip() for t in f.teams.split(" v ")] \
+            if " v " in f.teams else (None, None)
+        if h:
+            sc = guard_slices.score(f.code, h, a, _rung(cell), p / 100.0,
+                                    _SLICES)
+    lab = guard_slices.label(f.code, tier, sc, dnb)
+    says = {"super green": "89.6", "green": "87.4", "orange": "83.4",
+            "red": "78.0", "super red": "77.1"}[lab]
+    note = ("no play" if lab.endswith("red") else "")
+    tip = (f"Guard: {lab}. Cards labelled this way graded {says}% over "
+           f"62,528 replayed picks, in both time windows. "
+           + ("The tier says avoid. " if lab.endswith("red") else "")
+           + ("Score silent outside Europe." if region_silent(f.code)
+              else f"Confluence score {sc:+.1f}." if sc is not None else ""))
+    return (f'<div class="guard g-{lab.replace(" ", "-")}" '
+            f'title="{html.escape(tip)}">{lab}'
+            f'{f" · {note}" if note else ""}</div>')
+
+
+def region_silent(code: str) -> bool:
+    from scripts.confluence import region
+    return region(code) != "Europe"
+
+
 def _goals(f) -> int | None:
     """Total goals in the FINAL result, or None while it can still move.
 
@@ -694,7 +770,7 @@ def _card(f, kind: str, reads: dict) -> str:
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{face}")
+           f"{_guard(f, best)}{face}")
     body = lane(*rest) + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
@@ -1473,6 +1549,16 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   letter-spacing:.12em; margin-left:8px; white-space:nowrap; }}
 .lane .which {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-right:6px; }}
+.guard {{ display:inline-block; margin:6px 0 2px; padding:2px 8px;
+  border-radius:999px; font-size:10px; text-transform:uppercase;
+  letter-spacing:.11em; border:1px solid transparent; cursor:help; }}
+.g-super-green {{ color:#8fe3a8; border-color:#2f6b45;
+  background:rgba(47,107,69,.16); }}
+.g-green {{ color:#7fc79a; border-color:#27523a; }}
+.g-orange {{ color:#d9b46a; border-color:#5b4a24; }}
+.g-red {{ color:#e08b7a; border-color:#6b3129; }}
+.g-super-red {{ color:#f0a08e; border-color:#8a3a2e;
+  background:rgba(138,58,46,.18); font-weight:600; }}
 .prog {{ margin-top:5px; font-size:11px; letter-spacing:.04em;
   color:var(--gold); }}
 .prog.won {{ color:var(--green); }}
