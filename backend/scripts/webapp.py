@@ -418,6 +418,8 @@ def _haystack(f) -> str:
             bits += [f"{pre} {side}", f"{pre} {kind} {side}",
                      f"{pre} {rung_l}"]
         bits += [side, f"{kind} {side}"]
+        if kind == "match":          # "ft over" reads the same to a bettor
+            bits += [f"ft {side}", f"fulltime {side}"]
     if f.settled:
         mark = f.status.lstrip()[:1]
         bits.append({"✅": "hit won", "❌": "miss lost",
@@ -444,6 +446,9 @@ def _probkeys(f) -> str:
         m = re.search(r"(\d+(?:\.\d+)?)%", c)
         if m:
             out.append(f'data-p{which}="{m.group(1)}"')
+    g = _goals(f)
+    if g is not None:
+        out.append(f'data-goals="{g}"')
     return (" " + " ".join(out) + " ") if out else " "
 
 
@@ -523,6 +528,20 @@ def _claim(cell: str) -> float | None:
 
 def _is_dnb(cell: str) -> bool:
     return bool(re.search(r"(?:^|[^A-Za-z])DNB[12]", cell or ""))
+
+
+def _goals(f) -> int | None:
+    """Total goals in the FINAL result, or None while it can still move.
+
+    A live score is deliberately not offered to the goal filter: "goal >3"
+    is a question about how a match ended, and answering it from a score
+    that is still climbing would give a different answer on every reload.
+    """
+    st = (f.status or "").strip()
+    if not (f.settled or st.startswith("FT")):
+        return None
+    m = re.search(r"(\d+)\s*-\s*(\d+)", st)
+    return int(m.group(1)) + int(m.group(2)) if m else None
 
 
 def _card(f, kind: str, reads: dict) -> str:
@@ -984,6 +1003,8 @@ def main() -> None:
             side = "over" if rung.startswith("O") else "under"
             kind = "team" if "(" in b["lane"] else "match"
             bits += [side, f"{kind} {side}"]
+            if kind == "match":
+                bits += [f"ft {side}", f"fulltime {side}"]
         bits.append({"✅": "hit won", "❌": "miss lost", "◦": "push",
                      "open": "open pending"}.get(b["mark"], ""))
         raw = " ".join(x for x in bits if x).lower()
@@ -997,6 +1018,8 @@ def main() -> None:
         # probability — a bare "<80" reaches it, a lane-prefixed
         # "tip 2 <80" does not, because the row has no such lane.
         p = f' data-p="{b["prob"]*100:.1f}"' if b["prob"] else ""
+        if f is not None and _goals(f) is not None:
+            p += f' data-goals="{_goals(f)}"'
         # Kickoff, shown compact but sorted on the full stamp: "31-08"
         # ahead of "01-09" is right by the calendar and wrong by string
         # order, so the cell carries the ISO value for the sorter.
@@ -1565,17 +1588,19 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div><b>anything on the card</b> — a team, a league, a country, a code,
   a rung (<code>o2.5</code>), a mark (<code>hit</code>, <code>miss</code>,
   <code>push</code>, <code>open</code>).<br>
-  <b>lane kinds</b> — <code>team over</code>, <code>match under</code>,
+  <b>lane kinds</b> — <code>team over</code>, <code>match under</code>
+  (also <code>ft under</code>),
   <code>double chance</code>, <code>draw no bet</code>,
   <code>result lane</code>, <code>playable</code>. Tie one to a lane with
   <code>tip 1 under</code>, <code>tip 2 over</code>.<br>
   <b>an absent lane</b> — <code>tip 2 none</code> (also
   <code>no tip 3</code>): the cards where that lane never printed.<br>
   <b>a probability threshold</b> — <code>tip 2 &lt;80</code>,
-  <code>tip 1 80&gt;</code>, <code>tip 3 &lt;=70</code>. The arrow points
-  at the side it keeps and can sit either way round; the % is optional. On
-  its own (<code>&lt;80</code>) it reads the headline number — tip 1 on a
-  card, the ticket's own probability on a taken bet.<br>
+  <code>tip 1 80&gt;</code>, <code>tip 3 &lt;=70</code>, or
+  <code>prob &lt;60</code> for the card's headline number. The arrow points
+  at the side it keeps and can sit either way round; the % is optional.<br>
+  <b>a goal threshold</b> — <code>goal &gt;3</code>, <code>goal &lt;3</code>:
+  how the match actually finished, on settled cards only.<br>
   <b>commas narrow</b> — <code>brazil, serie b, tip 1 under, 80&gt;</code>
   is all four at once.</div></details>
  <div class="fxmodal" id="fxmodal" onclick="hideCard(event)">
@@ -1865,16 +1890,25 @@ const NONEQ = /^(?:no[ -]?tip ?([123])|tip ?([123]) ?(?:none|empty|missing|absen
 // "80<" both mean below 80 — because either reads naturally when you are
 // typing fast. The % is optional.
 const CMPQ = /^(?:tip ?([123])|prob|p)? *(?:(<=|>=|<|>) *(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?) *(<=|>=|<|>))$/;
+// "goal >3" — how the match FINISHED, a different number space from the
+// probabilities, so it carries its own keyword. Without one, "3" would
+// have to be read as either three goals or three percent.
+const GOALQ = /^(?:goals?|g) *(?:(<=|>=|<|>) *(\d+)|(\d+) *(<=|>=|<|>))$/;
 function parseCmp(s) {{
-  const m = CMPQ.exec(s.replace(/[%≤≥]/g, x => x === "≤" ? "<=" : x === "≥" ? ">=" : "")
-                      .replace(/\\s+/g, " ").trim());
+  const t = s.replace(/[%≤≥]/g, x => x === "≤" ? "<=" : x === "≥" ? ">=" : "")
+             .replace(/\\s+/g, " ").trim();
+  const g = GOALQ.exec(t);
+  if (g) return {{what: "goals", op: g[1] || g[4],
+                 val: parseFloat(g[2] !== undefined ? g[2] : g[3])}};
+  const m = CMPQ.exec(t);
   if (!m) return null;
-  return {{lane: m[1] || null, op: m[2] || m[5],
+  return {{what: "prob", lane: m[1] || null, op: m[2] || m[5],
           val: parseFloat(m[3] !== undefined ? m[3] : m[4])}};
 }}
 function cmpOk(el, c) {{
   const d = el.dataset;
-  const raw = c.lane ? d["p" + c.lane]
+  const raw = c.what === "goals" ? d.goals
+            : c.lane ? d["p" + c.lane]
             : (d.p1 !== undefined ? d.p1 : d.p);
   const v = parseFloat(raw);
   // No such lane, no number, no match — an absent lane is not "below 80".
@@ -2230,7 +2264,8 @@ function askHay(m, comp) {{
   const rung = /(?:^|[^A-Za-z])([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
   if (rung) {{
     const side = rung[1] === "O" ? "over" : "under";
-    bits.push(side, "match " + side, "tip1 " + side, "tip 1 " + side,
+    bits.push(side, "match " + side, "ft " + side, "fulltime " + side,
+              "tip1 " + side, "tip 1 " + side,
               "tip1 " + rung[0].toLowerCase(), "tip 1 " + rung[0].toLowerCase());
   }}
   if (m.t2) {{
@@ -2239,6 +2274,7 @@ function askHay(m, comp) {{
       const s2 = r2[1] === "O" ? "over" : "under";
       const k2 = m.t2.includes("(team)") ? "team" : "match";
       bits.push(k2 + " " + s2, "tip2 " + s2, "tip 2 " + s2);
+      if (k2 === "match") bits.push("ft " + s2, "fulltime " + s2);
     }}
   }} else bits.push("~none2");    // see NONEQ: "tip 2 none"
   if (!m.tip) bits.push("~none1");
@@ -2250,6 +2286,10 @@ function askHay(m, comp) {{
                       "tip3 " + l3[1].toLowerCase(),
                       "tip 3 " + l3[1].toLowerCase());
   }} else bits.push("~none3");
+  // "playable" is a board word; the bank rows carry the same edge in
+  // their tip text, so the word means the same thing on both bars.
+  const pe = /([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)/.exec(m.tip || "");
+  if (pe && parseFloat(pe[1].replace("−", "-")) > 1.0) bits.push("playable");
   bits.push(m.mark === "✅" ? "hit won" : m.mark === "❌" ? "miss lost"
             : m.mark === "◦" ? "push" : "pending");
   const raw = bits.join(" ").toLowerCase();
@@ -2280,6 +2320,9 @@ function askCard(m, comp, note, open) {{
     const pm = /(\d+(?:\.\d+)?)%/.exec(m[k] || "");
     if (pm) g += " data-" + key + '="' + pm[1] + '"';
   }}
+  // Total goals in the final result, for "goal >3".
+  const sc = /^(\d+)\s*-\s*(\d+)$/.exec((m.score || "").trim());
+  if (sc) g += ' data-goals="' + (+sc[1] + +sc[2]) + '"';
   // The lane marks on the summary line, so a long league list reads as a
   // scoreboard and only the card you open costs any space.
   const chips = [["1", m.mark], ["2", m.m2], ["3", m.m3]]
