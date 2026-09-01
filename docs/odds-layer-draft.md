@@ -256,3 +256,62 @@ feature.
 - How stale is a closing price as a proxy for what Unibet shows this
   afternoon? Measurable against `bets.tsv`'s 151 real paid prices.
 - Do we want a verdict on unplayable lanes too, or only on what is offered?
+
+
+---
+
+# First cross-check against real odds (1 Sep)
+
+Run over the board's own fixtures, **28–31 Aug**, taking the final picker's
+lane and ignoring the bettor's own plays. 266 settled fixtures, 134 in
+odds-covered leagues, **119 matched to a real Bet365 closing price**.
+Result lanes derive exactly from 1X2; ladder rungs derive through a market
+`mu` recovered from the 2.5 line, which remains the unvalidated step.
+
+| gate | plays | avg odds | hit | ROI |
+|---|---|---|---|---|
+| take all | 119 | 1.17 | 82.4% | **−3.8% ± 4.2** |
+| accept 10% under `buy≥` | 60 | 1.24 | 78.3% | −3.1% |
+| accept 8% under `buy≥` | 43 | 1.26 | 76.7% | −3.5% |
+| strict, at or above `buy≥` | 7 | 1.40 | 71.4% | +1.3% |
+
+At the **market maximum** rather than Bet365: take-all −2.0%, and the
+strict gate keeps 14 plays at +6.9%. Shopping the line is worth about
+1.8 points and still does not clear.
+
+**The hitrate is real and the price is not enough.** 82.4% is exactly what
+the picker advertises. At an average 1.17 it needs 1.214. The overround on
+that market averaged **5.60%**, so an edge-free bet returns −5.30%; the
+picker returned −3.8%. That difference is the engine's whole edge: about
+**1.5 points, swamped by a 5.6-point margin.**
+
+**Athena and the closing line agree almost exactly.**
+
+| | market implied | Athena said | actually landed |
+|---|---|---|---|
+| under lanes (78) | 81.7% | **81.8%** | 76.9% |
+| over lanes (40) | 80.0% | **80.2%** | 92.5% |
+
+Two tenths of a point apart on both sides. On match totals the engine is
+not seeing anything the market has missed — which is the honest reason the
+ladder cannot pay after margin.
+
+**The over/under split is a hot window, not a finding.** Market `mu`
+averaged 2.82 across the window; the fixtures actually produced 3.34 goals.
+Overs beat their claim and unders missed theirs by the same cause with
+opposite signs. "Skip the unders" would be fitting to four goal-heavy days.
+
+**The pivot is rejected.** Playing U3.5 where the picker says U4.5 returns
+**−23.9%** on those 78 lanes (52.6% at an average 1.50); two lines down is
+worse. The longer price is longer for a reason — the market prices the
+lower rungs efficiently, and the engine has no edge there to spend.
+
+**What this does not yet test: the result lanes.** The DNB gate fired
+**once** in this window. That is where the engine claims +12% to +30%, and
+where prices derive exactly from 1X2 with no Poisson step. It is the one
+live hypothesis left and needs a window wide enough to hold a few hundred
+of them.
+
+**Caveats.** n=119 over four days, ±4.2 points — this does not establish a
+negative any more than 66 bets established a positive. Ladder prices are
+modelled, not observed. Treat it as the first honest look, not a verdict.
