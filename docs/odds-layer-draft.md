@@ -315,3 +315,76 @@ of them.
 **Caveats.** n=119 over four days, ±4.2 points — this does not establish a
 negative any more than 66 bets established a positive. Ladder prices are
 modelled, not observed. Treat it as the first honest look, not a verdict.
+
+
+---
+
+# Second run: what the 119-row check missed (1 Sep)
+
+Two things. The sample was tiny, and the lane the engine actually claims an
+edge on was never tested. Joined the retrosim bank to **two full seasons**
+of closing odds across 16 leagues: **8,069 ladder lanes and 4,355 result
+lanes**, 2024-08 to 2026-05, Pinnacle closing where present.
+
+## The ladder is settled, and not in our favour
+
+| | n | odds | hit | ROI |
+|---|---|---|---|---|
+| every tip 1 lane | 8,069 | 1.12 | 82.6% | **−3.49% ± 0.43** |
+
+Eight standard errors below zero. And bucketing by how far Athena
+out-claims the market shows **no gradient at all** — −3.4, −3.3, −4.3,
+−2.3, −4.5 across the five bands. The claimed edge carries no information
+about the return. Match totals are finished as a money lane.
+
+## The result lane is close, and splits hard by kind
+
+| | n | odds | hit | ROI |
+|---|---|---|---|---|
+| DNB | 2,551 | 1.38 | 58.0% | **−0.71% ± 1.02** |
+| double chance | 1,804 | 1.30 | 73.6% | −4.73% ± 1.36 |
+
+DNB is indistinguishable from break-even before any selection. Double
+chance loses, consistent with the chooser already refusing it.
+
+## The finding: the claimed edge is ANTI-predictive
+
+| DNB, claim vs market | n | odds | ROI |
+|---|---|---|---|
+| Athena claims **5+ points less** | 1,113 | 1.18 | **+2.14% ± 1.06** |
+| Athena claims 5 less to level | 457 | 1.31 | −2.3% |
+| Athena claims 0–5 more | 364 | 1.42 | −1.9% |
+| Athena claims **10+ more** | 363 | 1.95 | **−7.46% ± 4.13** |
+
+Split by side: where the market claims more than Athena, **+0.84%** on
+1,570 lanes; where Athena claims more, **−3.20%** on 981.
+
+And the top bucket survives the two-window test as cleanly as anything in
+this project:
+
+| | n | window | ROI |
+|---|---|---|---|
+| older half | 556 | 2024-08 → 2025-05 | **+2.10% ± 1.48** |
+| newer half | 557 | 2025-05 → 2026-05 | **+2.17% ± 1.53** |
+
+Settlement: 73.0% win, 17.0% push, 10.1% lose.
+
+**Why this is not absurd.** `result_market.py` already records it: *"DNB
+underclaims at every band (+1.3 to +8.5)… the lane never overclaims
+anywhere measured — its failure mode is modesty."* Where the engine
+underclaims hardest it is most wrong in the safe direction, and those are
+heavy favourites, where the market's own favourite-longshot bias leaves
+something on the table. Two independent errors pointing the same way.
+
+**What it means for the layer.** It is not a veto sitting after the
+chooser. On this evidence it is a *different selector*: the picker stars
+the highest claim, and the money is on the lanes with the **lowest** claim
+relative to the market. That inverts the design in section 4 and has to be
+settled before anything is built.
+
+**Caveats.** DNB prices are derived from 1X2 carrying the full 1X2
+overround; a real DNB market may price tighter or wider, and that alone
+could move +2.14% either side of zero. Seven buckets were searched to find
+this one. The rule would play roughly 13% of cards. Nothing here is
+established enough to bet differently tomorrow — it is established enough
+to be the thing the next run tests properly.
