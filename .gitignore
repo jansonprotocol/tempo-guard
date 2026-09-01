@@ -15,3 +15,4 @@ venv/
 
 # Replay caches (regenerable)
 backend/.cache/
+config/odds_cache.json

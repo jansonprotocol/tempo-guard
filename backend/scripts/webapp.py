@@ -15,6 +15,7 @@ Usage:  python scripts/webapp.py          (also runs inside board.py main)
 """
 from __future__ import annotations
 
+import datetime as dt
 import html
 import re
 import sys
@@ -63,9 +64,57 @@ SESSIONS = [
 ]
 
 
-def _fmt(cell: str) -> str:
+_QUOTES = None
+
+
+def quotes() -> dict:
+    """(fixture, lane) -> what the market is actually offering.
+
+    Written by scripts/odds_api.py --quotes. Missing file means no quotes
+    and every card falls back to the engine's own bar — silence over a
+    guess, and the render never calls the API itself.
+    """
+    global _QUOTES
+    if _QUOTES is None:
+        _QUOTES = {}
+        path = ROOT / "config" / "odds_quotes.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                f = ln.split("\t")
+                if len(f) < 8:
+                    continue
+                _QUOTES[(f[0], f[2])] = dict(
+                    consensus=f[3], best=f[4], book=f[5],
+                    unibet=f[6], books=f[7])
+    return _QUOTES
+
+
+def _fmt(cell: str, fixture: str = "") -> str:
     s = html.escape(cell)
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
+    # The engine's buy>= is its own opinion of what a lane is worth, and
+    # measured against two seasons of closing prices it is unreachable —
+    # 77% of a real book was struck under it and the ladder returns -5.5%
+    # at market average. Where the market has actually quoted the lane,
+    # the card shows THAT instead: what is on offer, what the best book
+    # pays, and where. Line shopping measured +3.58 points, which is more
+    # than any model change this project has found.
+    # "(team)" marks a team total, which no book in the feed quotes; the
+    # match ladder must never stand in for it.
+    m = (None if "(team)" in cell else
+         re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell))
+    q = quotes().get((fixture, m.group(1))) if (m and fixture) else None
+    if q:
+        best = (f' · best <b>{html.escape(q["best"])}</b> '
+                f'<span class="dim">{html.escape(q["book"])}</span>'
+                if q["best"] != q["consensus"] else "")
+        uni = (f' <span class="dim">· Unibet {html.escape(q["unibet"])}</span>'
+               if q["unibet"] else "")
+        s = re.sub(r"buy≥\s*[\d.]+(\s*\([^)]*\))?",
+                   f'<span class="buyat">buy at min <b>{html.escape(q["consensus"])}'
+                   f'</b>{best}{uni}</span>', s)
     return s.replace(" · ", "<br>")
 
 
@@ -530,6 +579,177 @@ def _is_dnb(cell: str) -> bool:
     return bool(re.search(r"(?:^|[^A-Za-z])DNB[12]", cell or ""))
 
 
+def _edge(cell: str) -> float | None:
+    """A lane's printed EDGE — the signed percentage after the claim."""
+    m = re.search(r"%\s*\*{0,2}([+−-]\d+(?:\.\d+)?)%", cell or "")
+    return float(m.group(1).replace("−", "-")) if m else None
+
+
+def _rung(cell: str) -> str:
+    m = re.search(r"(?:^|[^A-Za-z])((?:[OU]\d+(?:\.\d+)?)|1X|X2|12|DNB[12])",
+                  cell or "")
+    return m.group(1) if m else ""
+
+
+_SLICES = None
+
+# What each label graded over 62,528 replayed picks, in both time
+# windows. Registered in docs/confluence-guard.md — these are the numbers
+# the live period is being graded against, so they are not tuned.
+SAYS = {"super green": 0.8956, "green": 0.8740, "orange": 0.8342,
+        "red": 0.7796, "super red": 0.7705}
+
+# How far above break-even a quote must sit before the card says PLAY.
+# Swept on 8,121 priced picks: taking everything returned -1.67%, and the
+# gradient crossed zero at about +5% — +0.83% at this bar and +1.49% at
+# +8%, on a hit rate FALLING from 81.8% to 72.7%. Six is the registered
+# choice, not the best cell in the table.
+DECLINE_MARGIN = 0.06
+
+FORWARD = ROOT / "config" / "forward_log.tsv"
+_LOGGED: set | None = None
+
+
+def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
+           need: float, q: dict) -> None:
+    """Record what the card said, at the moment it said it.
+
+    The retro record is what it is; the only way this stops being a
+    replay is a forward one. Every labelled card with a live quote is
+    written once, on FIRST sight, because that is the honest stand-in for
+    "what the board offered when you looked at it" — a later re-render
+    catches a moved price and would flatter or damn the rule by accident.
+    Append-only: scripts/forward_settle.py grades it once results land.
+    """
+    global _LOGGED
+    key = (f.kickoff.split(" ")[0], f.teams, lane)
+    if _LOGGED is None:
+        # Read the existing log ONCE per run, not once per card: the board
+        # re-renders many times a day and the log only grows, so a scan
+        # per stamp is quadratic in a file that never shrinks.
+        _LOGGED = set()
+        if FORWARD.exists():
+            for ln in FORWARD.read_text().splitlines():
+                if ln.startswith("#"):
+                    continue
+                p = ln.split("\t")
+                if len(p) > 5:
+                    _LOGGED.add((p[1], p[3], p[5]))
+    if key in _LOGGED:
+        return
+    if not FORWARD.exists():
+        FORWARD.write_text(
+            "# What the card said, stamped when it said it. Append-only,\n"
+            "# written by scripts/webapp.py at render and graded by\n"
+            "# scripts/forward_settle.py. One row per fixture-lane, kept\n"
+            "# from FIRST sight so a later re-render cannot re-price it.\n"
+            "# stamped\tdate\tleague\tfixture\ttip\tlane\tclaim\tlabel"
+            "\tscore\tneeds\tconsensus\tbest\tbook\n")
+    _LOGGED.add(key)
+    with FORWARD.open("a") as fh:
+        fh.write("\t".join([
+            dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M"),
+            key[0], f.code, f.teams, str(best), lane, f"{claim:.1f}",
+            lab, ("" if sc is None else f"{sc:+.2f}"), f"{need:.3f}",
+            q.get("consensus") or "", q.get("best") or "",
+            q.get("book") or ""]) + "\n")
+
+
+def _guard(f, best: int) -> str:
+    """The card's risk label: five bands, registered in docs/.
+
+    Two layers, and this is the second. The chooser upstream may flip
+    tip 1 to a gated DNB; this one only labels what it starred, and its
+    action space is play or no play. There is no lane to flip to — on
+    condemned cards, standing grades 82.22% against tip 3's 78.17% even
+    where a tip 3 exists.
+
+    The score is silent outside Europe, where it measured -0.06.
+    """
+    global _SLICES
+    if f.settled:
+        return ""
+    cell = f.tip3 if best == 3 else f.tip1
+    p = _claim(cell)
+    if p is None:
+        return ""
+    e = _edge(cell)
+    dnb = best == 3 and _is_dnb(f.tip3)
+    # The shipped tier, unchanged: a gated DNB or a high, modest-edge tip
+    # 1 is green; a low claim, or a middling claim on an OVER, is red.
+    side = _rung(cell)[:1] if _rung(cell)[:1] in ("O", "U") else ""
+    if dnb:
+        tier = "green"
+    elif p >= 84 and (e is None or e < 1.0):
+        tier = "green"
+    elif p < 76 or (p < 80 and side == "O"):
+        tier = "red"
+    else:
+        tier = "orange"
+    if _SLICES is None:
+        from scripts import guard_slices
+        _SLICES = guard_slices.read_table()
+    from scripts import guard_slices
+    sc = None
+    if _SLICES:
+        h, a = [t.strip() for t in f.teams.split(" v ")] \
+            if " v " in f.teams else (None, None)
+        if h:
+            sc = guard_slices.score(f.code, h, a, _rung(cell), p / 100.0,
+                                    _SLICES)
+    lab = guard_slices.label(f.code, tier, sc, dnb)
+    hit = SAYS[lab]
+    tip = (f"Guard: {lab}. Cards labelled this way graded {hit*100:.1f}% "
+           f"over 62,528 replayed picks, in both time windows. "
+           + ("The tier says avoid. " if lab.endswith("red") else "")
+           + ("Score silent outside Europe." if region_silent(f.code)
+              else f"Confluence score {sc:+.1f}." if sc is not None else ""))
+    badge = (f'<div class="guard g-{lab.replace(" ", "-")}" '
+             f'title="{html.escape(tip)}">{lab}</div>')
+
+    # The DECISION. A label on its own is only a hit rate; what decides a
+    # play is whether the market pays MORE than that hit rate needs. On
+    # 8,121 priced picks, taking everything returned -1.67% while taking
+    # only what cleared break-even by 6% returned +0.83%, and the hit rate
+    # FELL from 81.8% to 73.7% along the way. The bar is not looking for
+    # good cards, it is looking for cards the market has underpriced.
+    lane = _rung(cell)
+    q = quotes().get((f.teams, lane))
+    need = (1 / hit) * (1 + DECLINE_MARGIN)
+    if lab.endswith("red"):
+        # The tier already condemned it, and a good score cannot rescue a
+        # red: red's BEST score quartile grades 79.27% against orange's
+        # WORST at 81.64%. Its ceiling sits under orange's floor.
+        line = (f'<div class="verdict no">no play '
+                f'<span class="dim">· the tier says avoid</span></div>')
+    elif not q:
+        line = (f'<div class="verdict dimv">needs <b>{need:.2f}</b> '
+                f'<span class="dim">· no quote yet</span></div>')
+    else:
+        try:
+            got = float(q["best"] or q["consensus"])
+        except (TypeError, ValueError):
+            got = None
+        if got is None:
+            line = ""
+        elif got >= need:
+            line = (f'<div class="verdict yes">PLAY '
+                    f'<span class="dim">· needs {need:.2f}, '
+                    f'{html.escape(q["book"] or "market")} pays</span> '
+                    f'<b>{got:.2f}</b></div>')
+        else:
+            line = (f'<div class="verdict no">DECLINE '
+                    f'<span class="dim">· needs {need:.2f}, best is</span> '
+                    f'<b>{got:.2f}</b></div>')
+        _stamp(f, best, lane, lab, sc, p, need, q)
+    return badge + line
+
+
+def region_silent(code: str) -> bool:
+    from scripts.confluence import region
+    return region(code) != "Europe"
+
+
 def _goals(f) -> int | None:
     """Total goals in the FINAL result, or None while it can still move.
 
@@ -606,7 +826,7 @@ def _card(f, kind: str, reads: dict) -> str:
                        else "won" if s.startswith("✓") else "")
                 live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell)}"
+                f"</span> {_fmt(cell, f.teams)}"
                 f"{star if which == best else ''}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
@@ -630,7 +850,7 @@ def _card(f, kind: str, reads: dict) -> str:
     # lane that can never earn its way off probation.
     t3 = (f'<div class="lane{" best" if best == 3 else ""}">'
           f'<span class="which">Tip 3</span> '
-          f'{_fmt(f.tip3)} <span class="dim">· result lane</span>'
+          f'{_fmt(f.tip3, f.teams)} <span class="dim">· result lane</span>'
           f'{star if best == 3 else ""}</div>'
           if f.tip3.strip() else "")
     # A card leads with the lane worth reading first — which is the
@@ -646,7 +866,7 @@ def _card(f, kind: str, reads: dict) -> str:
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{face}")
+           f"{_guard(f, best)}{face}")
     body = lane(*rest) + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
@@ -1355,6 +1575,8 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border:1px solid #2b3242; color:#c8d0e0; border-radius:6px;
   padding:7px 16px; font:inherit; cursor:pointer; }}
 .fxshut:hover {{ border-color:var(--gold); color:var(--gold); }}
+.buyat {{ color:#cfd6e4; }}
+.buyat b {{ color:var(--gold); }}
 .fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
 .fhelp summary {{ cursor:pointer; }}
 .fhelp div {{ padding:8px 0 0 2px; line-height:1.7; }}
@@ -1423,6 +1645,21 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   letter-spacing:.12em; margin-left:8px; white-space:nowrap; }}
 .lane .which {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-right:6px; }}
+.guard {{ display:inline-block; margin:6px 0 2px; padding:2px 8px;
+  border-radius:999px; font-size:10px; text-transform:uppercase;
+  letter-spacing:.11em; border:1px solid transparent; cursor:help; }}
+.g-super-green {{ color:#8fe3a8; border-color:#2f6b45;
+  background:rgba(47,107,69,.16); }}
+.g-green {{ color:#7fc79a; border-color:#27523a; }}
+.g-orange {{ color:#d9b46a; border-color:#5b4a24; }}
+.g-red {{ color:#e08b7a; border-color:#6b3129; }}
+.g-super-red {{ color:#f0a08e; border-color:#8a3a2e;
+  background:rgba(138,58,46,.18); font-weight:600; }}
+.verdict {{ font-size:12px; margin:0 0 4px; letter-spacing:.03em; }}
+.verdict.yes {{ color:#8fe3a8; }}
+.verdict.yes b {{ color:#b8f0c8; }}
+.verdict.no {{ color:#e08b7a; }}
+.verdict.dimv {{ color:var(--dim); }}
 .prog {{ margin-top:5px; font-size:11px; letter-spacing:.04em;
   color:var(--gold); }}
 .prog.won {{ color:var(--green); }}
