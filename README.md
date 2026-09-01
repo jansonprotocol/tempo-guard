@@ -1040,6 +1040,13 @@ that premium the book is keeping the insurance money.
 | — open | Las Palmas v Leganés | U3.5 | 1.28 | — | TOTO — clears the bar; BetAnything had 1.41, 9.2% better |
 | — open | Ipswich v Liverpool | U4.5 | 1.27 | — | TOTO — misses the 1.2707 bar by 0.0007; Pinnacle had 1.38 |
 | — open | Sandefjord v Viking | U4.5 | 1.26 | — | TOTO — under the 1.2707 bar; Pinnacle had 1.35 |
+| — open | New York City v Nashville | O1.5 | 1.23 | — | TOTO — under the 1.2707 bar; Pinnacle 1.31, Unibet NL 1.22 |
+| — open | Wolfsburg v Cottbus | U4.5 | 1.27 | — | TOTO — the STRONG card, missing the 1.2707 bar by 0.0007; Pinnacle 1.39 |
+| — open | Preston v Blackburn | U3.5 | 1.27 | — | TOTO — misses the bar by 0.0007; Pinnacle 1.38, Unibet NL 1.22 |
+| — open | Taishan v Shenzhen | DNB (home) | 1.26 | — | TOTO — the GREEN gated DNB, bar 1.2128, clears well; best 1.37 |
+| — open | Hoffenheim v Dortmund | U4.5 | 1.29 | — | TOTO — clears the 1.2707 bar; Pinnacle 1.40, so 7.9% left behind |
+| — open | West Ham v Derby | O1.5 | 1.22 | — | TOTO — under the bar; Pinnacle 1.29, Unibet NL 1.18 |
+| — open | NEC v Feyenoord | U4.5 | 1.38 | — | TOTO — clears comfortably, and the best price taken tonight: 1.38 against a board best of 1.40 |
 
 <!-- HYPOTHESES:START -->
 
