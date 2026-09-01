@@ -128,7 +128,7 @@ def replay(code: str, window: int) -> list:
                 mu_goals = mh * gh[0] * ga[1] + ma * ga[0] * gh[1]
                 exp_sot = sh * sh_[0] * sa_[1] + sa * sa_[0] * sh_[1]
                 mu_shots = exp_sot * conv
-                out.append((r["date"], hg + ag, mu_goals, mu_shots))
+                out.append((r["date"], hg + ag, mu_goals, mu_shots, h, a))
 
         lg["hg"].append(hg); lg["ag"].append(ag)
         lg["hst"].append(hs); lg["ast"].append(as_)
@@ -142,7 +142,7 @@ def score(rows: list) -> dict:
     """Brier and log loss for both models over the four lines."""
     acc = {"goals": [0.0, 0.0], "shots": [0.0, 0.0]}
     n = 0
-    for _d, total, mg, ms in rows:
+    for _d, total, mg, ms, *_ in rows:
         for L in LINES:
             y = 1.0 if total <= L else 0.0
             for tag, mu in (("goals", mg), ("shots", ms)):
@@ -201,7 +201,7 @@ def main() -> None:
     def bscore(rows, w):
         t = 0.0
         n = 0
-        for _d, total, mg, ms in rows:
+        for _d, total, mg, ms, *_ in rows:
             mu = w * ms + (1 - w) * mg
             for L in LINES:
                 y = 1.0 if total <= L else 0.0
