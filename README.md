@@ -895,6 +895,9 @@ that premium the book is keeping the insurance money.
 | — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
 | — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy>=1.32 |
 | — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy>=1.37 |
+| — open | Grasshoppers v St. Gallen | U4.5 | 1.21 | — | own read — orange needs 1.2707 and this is 4.7% under; score +6.11, a quarter point off the super-green bar that would have made it clear |
+| — open | Anderlecht v Kortrijk | U4.5 | 1.21 | — | the STRONG green card, taken 0.0028 under its 1.2128 bar — 1xBet had the 1.22 that clears |
+| — open | Náutico v Botafogo-SP | U3.0 | 1.36 | — | the Asian PUSH line, not the card's struck U3.5 at 1.33; U3.0 needs 1.43 to match, so this costs 4.6% of stake — P(push) is 19.6% here |
 
 <!-- HYPOTHESES:START -->
 
