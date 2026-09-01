@@ -32,15 +32,13 @@ therefore exact.
 from __future__ import annotations
 
 import math
-import re
-import unicodedata
 from datetime import date, datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 from rapidfuzz import fuzz, process
 
-from app.data import aliases, store
+from app.data import aliases, names, store
 
 # ── Constants (unchanged from the tuned FBref implementation) ─────────────────
 ROLLING_MATCHES = 10
@@ -62,12 +60,7 @@ FUZZY_CUTOFF    = 88
 # Club-name decoration that carries no identity: legal forms, sponsor prefixes
 # and the like. Stripped before comparison so "AFC Bournemouth", "Bournemouth"
 # and "Bournemouth FC" collapse to the same key.
-_CLUB_TOKENS = {
-    "fc", "afc", "cf", "sc", "ac", "bc", "sk", "fk", "sv", "vfb", "vfl", "tsg",
-    "rc", "as", "ss", "ssc", "us", "aj", "ogc", "rcd", "cd", "ud", "sd", "cfc",
-    "club", "calcio", "nk", "if", "bk", "de", "cp", "sl", "psv", "bv", "ssv",
-    "fsv", "msv", "spvgg", "kv", "rsc", "kaa", "aa", "asd", "acf", "aca",
-}
+_CLUB_TOKENS = names.CLUB_TOKENS
 
 VENUE_BLEND = 0.35      # weight of venue-specific scoring rate in gfh/gfa
 VENUE_MIN   = 3         # minimum venue-specific games before blending
@@ -487,58 +480,16 @@ def _domestic_fallback() -> List[str]:
 
 
 # ── Name normalisation ────────────────────────────────────────────────────────
-
-# Latin letters that are NOT an accented base plus a combining mark, so NFD
-# leaves them untouched and the Mn filter below never sees them. Without these
-# the accent-insensitive match silently fails on whole leagues: `Sønderjyske`
-# would not match `Sonderjyske`, `Widzew Łódź` not `Widzew Lodz`. The `å`, `é`,
-# `ş` family DO decompose and need no entry here.
-_UNDECOMPOSED = str.maketrans({
-    "ø": "o", "æ": "ae", "œ": "oe", "ł": "l", "đ": "d", "ð": "d",
-    "þ": "th", "ß": "ss", "ħ": "h", "ŧ": "t", "ı": "i", "ĸ": "k",
-})
-
-
-def _strip_accents(s: str) -> str:
-    """
-    Fold a name to plain ASCII letters for matching.
-
-    Two passes are needed. NFD splits an accented letter into base plus
-    combining mark and the mark is dropped; but a letter whose glyph carries the
-    modification INSIDE the codepoint — Scandinavian `ø`, Polish `ł`, Croatian
-    `đ` — has no decomposition at all and survives NFD unchanged. Those are
-    translated explicitly first.
-    """
-    return "".join(
-        c for c in unicodedata.normalize("NFD", s.translate(_UNDECOMPOSED))
-        if unicodedata.category(c) != "Mn"
-    )
-
-
-def _norm(s: Optional[str]) -> str:
-    return (s or "").strip().lower()
-
-
-def _norm_accent(s: Optional[str]) -> str:
-    return _strip_accents(_norm(s or ""))
-
-
-def _canonical(name: str) -> str:
-    """
-    Reduce a club name to its identifying core: lowercased, accent-free,
-    punctuation-free, with generic club tokens removed.
-
-        "AFC Bournemouth"          -> "bournemouth"
-        "Brighton & Hove Albion FC"-> "brighton hove albion"
-        "Atlético Madrid"          -> "atletico madrid"
-
-    Falls back to the undecorated name if stripping would empty the string
-    (e.g. a club literally named "PSV").
-    """
-    s = _strip_accents(name.lower())
-    s = re.sub(r"[^a-z0-9]+", " ", s)
-    tokens = [t for t in s.split() if t not in _CLUB_TOKENS]
-    return " ".join(tokens) if tokens else " ".join(s.split())
+#
+# The definitions moved to app.data.names so the STORE can apply the same
+# reduction when it folds split spellings, without importing this module (it
+# imports the store, so the dependency only runs one way). These aliases keep
+# the private names this file has always used.
+_norm = names.norm
+_norm_accent = names.norm_accent
+_canonical = names.canonical
+_strip_accents = names.strip_accents
+_CLUB_TOKENS = names.CLUB_TOKENS
 
 
 def _match_team(target: str, candidates: List[str]) -> Optional[str]:
@@ -767,8 +718,41 @@ def _aliased(league_code: str, df: pd.DataFrame, team: str) -> str:
     own name list, so exact is the test that was always meant.
     """
     mapped = aliases.get(league_code, team)
-    if mapped and mapped != team and mapped in _frame_index(df)["names"]:
-        return mapped
+    if mapped and mapped != team:
+        if mapped in _frame_index(df)["names"]:
+            return mapped
+        # The alias still points at a real club, but the fold moved its rows to
+        # another spelling — `PSG` -> `Paris SG` -> `Paris Saint-Germain`. The
+        # membership guard would drop the alias here and leave the resolver to
+        # fail on `PSG`, so follow the fold one step rather than discarding a
+        # statement that is still true.
+        moved = store.folded_name(league_code, mapped)
+        if moved and moved in _frame_index(df)["names"]:
+            return moved
+
+    # A spelling the store's fold consumed is still a name people type. The
+    # fold reports what it swallowed so the board can go on typing
+    # `Grasshoppers` after its rows moved to `Grasshopper Club Zürich` — the
+    # same statement an alias makes, derived from the fold rather than typed
+    # beside it, so the two cannot drift apart. Guarded the same way: the
+    # target must actually be in the frame.
+    folded = store.folded_name(league_code, team)
+    if folded and folded != team and folded in _frame_index(df)["names"]:
+        return folded
+
+    # And the fold must not SHRINK what resolves. `PSG` never matched a stored
+    # name exactly; it reached `Paris SG` through the fuzzy pass, and once the
+    # fold moved those rows to `Paris Saint-Germain` that spelling was gone
+    # from the frame and the fixture abstained — the repair causing the
+    # failure it was written to remove. So when the raw name resolves to
+    # NOTHING, the consumed spellings are offered as candidates too. Only
+    # then: this can add a resolution and never change one.
+    if _resolve_in_frame(df, team) is None:
+        eaten = store.folded_variants(league_code)
+        hit = _match_team(team, list(eaten)) if eaten else None
+        cand = eaten.get(hit) if hit else None
+        if cand and cand in _frame_index(df)["names"]:
+            return cand
     return team
 
 

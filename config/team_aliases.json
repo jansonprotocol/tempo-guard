@@ -11,9 +11,12 @@
   "because there is no shared text to score — 'qpr' and 'queens park rangers'",
   "have nothing in common as strings.",
   "",
-  "An alias is only consulted when the raw name resolves to NOTHING, so",
-  "adding one can never displace a match the resolver already makes. That is",
-  "enforced in features._aliased, not by convention.",
+  "An alias WINS over the resolver — see features._aliased for why that",
+  "reversal happened and what it protects. It is guarded instead by an",
+  "exact membership test: an alias pointing at a name the store does not",
+  "carry is ignored, so a stale line degrades to the old behaviour rather",
+  "than misfiring. Where the store's name FOLD has since moved that",
+  "target to another spelling, the alias follows the fold one step.",
   "",
   "Deliberately NOT listed: 'Le Mans FC' (FRA-L1) and 'SV 07 Elversberg'",
   "(GER-BL) have no rows in the store under any spelling — newly promoted,",
@@ -82,7 +85,8 @@
  },
  "JPN-J1": {
   "Machida Z": "Machida Zelvia",
-  "Urawa Reds": "Urawa Red Diamonds"
+  "Urawa Reds": "Urawa Red Diamonds",
+  "Yokohama FM": "Yokohama F. Marinos"
  },
  "CHN-SL": {
   "Tongliang Long": "Chongqing Tonglianglong"

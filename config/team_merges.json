@@ -3,148 +3,925 @@
     "Clubs whose history is split across two spellings in the stored results,",
     "with the variants that should be read as one team.",
     "",
-    "Cause: the 2026 seasons arrive from a different provider than the",
-    "historical ones, under a different name convention — usually stripped",
-    "accents or a dropped legal prefix. The resolver picks ONE spelling, so a",
-    "club with 68 matches of history is served the 4 rows of the current",
-    "season and falls under the five-match gate. Two fixtures were withheld",
-    "for this on 22 Aug alone (Slask v Widzew, Zurich v Basel), plus Piast v",
-    "Legia and Luzern v Lausanne earlier the same day.",
+    "TYPED PAIRS ONLY. Everything a normaliser can settle on its own is",
+    "settled in store.name_groups by the canonical key — `Chelsea FC` onto",
+    "`Chelsea`, `AFC Ajax` onto `Ajax`, every accent variant. 288 folds come",
+    "from there and need no line here. What lands in this file is the case no",
+    "algorithm should attempt: one spelling ABBREVIATES a word the other",
+    "spells out. `Man United` and `Manchester United` share no key, and",
+    "loosening the key far enough to join them would also join Sunderland to",
+    "Sheffield United. So the mapping is data rather than an algorithm, and",
+    "every entry below was read off the store's own name list.",
     "",
-    "Every entry below was read off the store's own name list and checked",
-    "pairwise. Deliberately NOT merged:",
+    "Cause of the split: the results provider changed convention on",
+    "2024-08-10, from terse trading names to full legal ones, and the store",
+    "kept both. Before this file and the canonical fold, 22.2% of every row",
+    "stored since that date was invisible to the spelling a hand-typed fixture",
+    "resolves to — over 60% in ESP-L2 and POR-PL, 47% in ENG-PL. Chelsea,",
+    "Ajax, Porto, Roma, Juventus and Valencia each lost their entire modern",
+    "record, and the engine priced them on spring-2024 form.",
     "",
-    "  Stade Lausanne-Ouchy   a DIFFERENT club from FC Lausanne-Sport",
-    "  Wisla / Wisla Plock    two different clubs (Krakow and Plock), and",
-    "                         neither has a historical variant stored",
-    "  Wieczysta Krakow       newly promoted, no counterpart to merge with",
+    "THE SAFETY TEST, applied to every pair here and to every automatic fold:",
+    "a club plays at most one match a day, so two spellings that ever appear",
+    "on the same date are different clubs and the fold is REFUSED. A wrong",
+    "line in this file therefore fails closed rather than quietly joining two",
+    "clubs' records. It is what keeps Paraguay's `Club Nacional` apart from",
+    "Uruguay's `Nacional`, and Finland's `FC Inter` from Inter Milan, in the",
+    "continental cups where both play.",
     "",
-    "FC Thun and FC Vaduz were left split on the same list until 1 Sep, on the",
-    "argument that folding them builds a tip on six-year-old form. That was an",
-    "assertion, so it was measured: across 68,341 replayed cards, bucketed by",
-    "how far back the rolling ten reaches, tip 1 grades 83.56% on a normal",
-    "window and 81.10% once the window reaches four years or more. Controlled",
-    "within each league — the deep windows cluster in the cups and the Scottish",
-    "lower divisions, which grade badly anyway — the drag is 1.47 points on an",
-    "equal-league average over 35 leagues. Real, one-directional, and small.",
-    "",
-    "Against that: the alternative is not a fresher tip, it is NO tip. And the",
-    "gate makes the stale rows temporary — it deactivates the moment the club",
-    "has five current-season rows of its own, so the old form bridges the first",
-    "few weeks of a season and then stops being read at all.",
-    "",
-    "Checked first: neither club has a cross-division rescue. SUI-CL holds two",
-    "rows in total, both from a 2021 playoff, so the store simply does not have",
-    "the Swiss second tier. Where an adjacent division IS stored, a merge is the",
-    "WRONG tool and must not be used — store._apply_merges runs inside",
-    "load_results, so a merged club clears min_matches and the cross-division",
-    "fallback never fires. Merging Coventry's 2000-01 Premier League rows onto",
-    "its 2026 promotion would suppress a fallback that reads last season.",
-    "",
-    "A merge applies only where the served variant is BELOW the match gate, so",
-    "it can add a fixture the engine withheld and can never change one it",
-    "already prices. See store._apply_merges."
+    "DELIBERATELY NOT MERGED — read once, so the next scan does not re-raise",
+    "them:",
+    "  reserve sides, a different team playing a different league — Malaga / Malaga B, Celta / Celta B, Sevilla / Sevilla B, Villarreal / Villarreal B, Sociedad / Sociedad B, Jong FC Twente / FC Twente",
+    "  different clubs that share a word — Cove Rangers / Rangers, Club Brugge / Cercle Brugge, Sporting CP / Sporting Braga, Paris FC / Paris SG, Bastia / CA Bastia, FC Santa Coloma / UE Santa Coloma, FK Sarajevo / Željezničar Sarajevo, Hibernian / Hibernians, Partizan / FK Partizani, AC Milan / FK Milano, Athletic Club / Wigan Athletic, Arsenal / Arsenal Kyiv, Spartak / Spartak Moscow, Aris / Aris Limassol",
+    "  same name, different city — the trap South America is full of — Estudiantes / Estudiantes Rio Cuarto, Independiente / Independiente del Valle, Independiente / Independiente Santa Fe, Nacional / Club Nacional, Botafogo / Botafogo-SP, Guarani / Guarani SP, Atlético San Luis / Club San Luis, Granada / Granada 74",
+    "  a dissolved club and its successor, which share a city and a fanbase but not a record — Liaoning / Liaoning Tieren, Qingdao FC / Qingdao Hainiu, Shenzhen / Shenzhen Xinpengcheng, WSG Tirol / FC Wacker Tirol, AVS / Aves, Beveren / Waasland-Beveren"
   ],
-  "POL-EK": {
-    "Cracovia": [
-      "KS Cracovia"
+  "ARG-PD": {
+    "Argentinos Juniors": [
+      "Argentinos Jrs"
     ],
-    "Gornik Zabrze": [
-      "Górnik Zabrze"
+    "Atlético Tucumán": [
+      "Atl. Tucuman"
     ],
-    "Jagiellonia": [
-      "Jagiellonia Białystok"
+    "Belgrano de Córdoba": [
+      "Belgrano"
     ],
-    "Lech Poznan": [
-      "Lech Poznań"
+    "Central Córdoba SdE": [
+      "Central Cordoba"
     ],
-    "Legia": [
-      "Legia Warszawa"
+    "Deportivo Riestra": [
+      "Dep. Riestra"
     ],
-    "Pogon Szczecin": [
-      "Pogoń Szczecin"
+    "Estudiantes": [
+      "Estudiantes L.P."
     ],
-    "Rakow": [
-      "Raków Częstochowa"
+    "Gimnasia de La Plata": [
+      "Gimnasia L.P."
     ],
-    "Slask Wroclaw": [
-      "Śląsk Wrocław"
+    "Independiente Rivadavia": [
+      "Ind. Rivadavia"
     ],
-    "Widzew Lodz": [
-      "Widzew Łódź"
+    "Instituto de Córdoba": [
+      "Instituto"
     ],
-    "Zaglebie": [
-      "Zagłębie Lubin"
+    "Newell's Old Boys": [
+      "Newells Old Boys"
     ]
   },
-  "SUI-SL": {
-    "Basel": [
-      "FC Basel 1893"
+  "AUT-BL": {
+    "Grazer AK": [
+      "Liebherr Grazer AK"
+    ]
+  },
+  "BRA-SA": {
+    "Athletico Paranaense": [
+      "CA Paranaense"
     ],
-    "Grasshoppers": [
-      "Grasshopper Club Zürich"
+    "Atlético Goianiense": [
+      "AC Goianiense"
     ],
-    "Lausanne": [
-      "FC Lausanne-Sport"
+    "Atlético Mineiro": [
+      "CA Mineiro"
     ],
-    "Lugano": [
-      "FC Lugano"
+    "Bahia BA": [
+      "EC Bahia"
     ],
-    "Luzern": [
-      "FC Luzern"
+    "Botafogo RJ": [
+      "Botafogo FR"
     ],
-    "Servette": [
-      "Servette FC"
+    "CR Vasco da Gama": [
+      "Vasco da Gama RJ"
     ],
-    "Sion": [
-      "FC Sion"
+    "Ceará CE": [
+      "Ceará SC"
     ],
-    "St. Gallen": [
-      "FC St. Gallen"
+    "Chapecoense": [
+      "Chapecoense AF"
     ],
-    "Thun": [
-      "FC Thun"
+    "Corinthians SP": [
+      "SC Corinthians Paulista"
     ],
-    "Vaduz": [
-      "FC Vaduz"
+    "Coritiba PR": [
+      "Coritiba FBC"
     ],
-    "Young Boys": [
-      "BSC Young Boys"
+    "Cruzeiro EC": [
+      "Cruzeiro"
     ],
-    "Zurich": [
-      "FC Zürich"
+    "Cuiabá MT": [
+      "Cuiabá EC"
+    ],
+    "EC Vitória": [
+      "Vitória BA"
+    ],
+    "Flamengo RJ": [
+      "CR Flamengo"
+    ],
+    "Fluminense RJ": [
+      "Fluminense FC"
+    ],
+    "Fortaleza CE": [
+      "Fortaleza EC"
+    ],
+    "Grêmio Porto Alegre": [
+      "Grêmio FBPA"
+    ],
+    "Juventude RS": [
+      "EC Juventude"
+    ],
+    "Palmeiras": [
+      "SE Palmeiras"
+    ],
+    "RB Bragantino": [
+      "Red Bull Bragantino"
+    ],
+    "Sport Recife PE": [
+      "SC Recife"
+    ]
+  },
+  "BRA-SB": {
+    "América Mineiro": [
+      "América (MG)"
+    ]
+  },
+  "CHN-SL": {
+    "Shandong Luneng": [
+      "Shandong Taishan"
+    ],
+    "Shanghai SIPG": [
+      "Shanghai Port"
+    ]
+  },
+  "COPA-L": {
+    "Atlético Mineiro": [
+      "CA Mineiro"
+    ],
+    "Atlético Nacional": [
+      "CDC Atlético Nacional"
+    ],
+    "Boca Juniors": [
+      "CA Boca Juniors"
+    ],
+    "Botafogo FR": [
+      "Botafogo RJ"
+    ],
+    "CSCyD El Nacional": [
+      "El Nacional"
+    ],
+    "Club Olimpia": [
+      "Olimpia Asuncion"
+    ],
+    "Colo-Colo": [
+      "CSD Colo-Colo"
+    ],
+    "Corinthians SP": [
+      "SC Corinthians Paulista"
+    ],
+    "Cruzeiro": [
+      "Cruzeiro EC"
+    ],
+    "Defensor Sporting": [
+      "Defensor SC"
+    ],
+    "Deportes Iquique": [
+      "CD Iquique"
+    ],
+    "Deportes Tolima": [
+      "CD Tolima"
+    ],
+    "Estudiantes": [
+      "Estudiantes de La Plata"
+    ],
+    "Flamengo RJ": [
+      "CR Flamengo"
+    ],
+    "Fluminense RJ": [
+      "Fluminense FC"
+    ],
+    "Fortaleza EC": [
+      "Fortaleza CE"
+    ],
+    "Independiente del Valle": [
+      "CAR Independiente del Valle"
+    ],
+    "Lanús": [
+      "CA Lanús"
+    ],
+    "Libertad": [
+      "Club Libertad Asuncion"
+    ],
+    "Nacional": [
+      "Club Nacional de Football"
+    ],
+    "Palmeiras": [
+      "SE Palmeiras"
+    ],
+    "Peñarol": [
+      "CA Peñarol"
+    ],
+    "River Plate": [
+      "CA River Plate"
+    ],
+    "Rosario Central": [
+      "CA Rosario Central"
+    ],
+    "San Lorenzo": [
+      "CA San Lorenzo de Almagro"
+    ],
+    "Sporting Cristal": [
+      "CS Cristal"
+    ],
+    "Talleres de Córdoba": [
+      "CA Talleres"
+    ],
+    "Vélez Sarsfield": [
+      "CA Vélez Sarsfield"
     ]
   },
   "DEN-SL": {
     "Aarhus": [
       "Aarhus GF"
     ],
-    "Brondby": [
-      "Brøndby IF"
-    ],
     "FC Copenhagen": [
       "FC København"
     ],
-    "Lyngby": [
-      "Lyngby BK"
-    ],
-    "Midtjylland": [
-      "FC Midtjylland"
-    ],
-    "Nordsjaelland": [
-      "FC Nordsjælland"
-    ],
-    "Odense": [
-      "Odense BK"
-    ],
-    "Silkeborg": [
-      "Silkeborg IF"
-    ],
-    "Sonderjyske": [
-      "SønderjyskE"
-    ],
     "Viborg": [
       "Viborg FF"
+    ]
+  },
+  "ENG-CH": {
+    "Birmingham": [
+      "Birmingham City FC"
+    ],
+    "Blackburn": [
+      "Blackburn Rovers FC"
+    ],
+    "Bolton": [
+      "Bolton Wanderers FC"
+    ],
+    "Cardiff": [
+      "Cardiff City FC"
+    ],
+    "Charlton": [
+      "Charlton Athletic FC"
+    ],
+    "Coventry": [
+      "Coventry City FC"
+    ],
+    "Derby": [
+      "Derby County FC"
+    ],
+    "Hull": [
+      "Hull City AFC"
+    ],
+    "Ipswich": [
+      "Ipswich Town FC"
+    ],
+    "Leeds": [
+      "Leeds United FC"
+    ],
+    "Leicester": [
+      "Leicester City FC"
+    ],
+    "Luton": [
+      "Luton Town FC"
+    ],
+    "Norwich": [
+      "Norwich City FC"
+    ],
+    "Plymouth": [
+      "Plymouth Argyle FC"
+    ],
+    "Preston": [
+      "Preston North End FC"
+    ],
+    "QPR": [
+      "Queens Park Rangers FC"
+    ],
+    "Sheffield Weds": [
+      "Sheffield Wednesday FC"
+    ],
+    "Stoke": [
+      "Stoke City FC"
+    ],
+    "Swansea": [
+      "Swansea City AFC"
+    ],
+    "West Brom": [
+      "West Bromwich Albion FC"
+    ],
+    "West Ham": [
+      "West Ham United FC"
+    ],
+    "Wolves": [
+      "Wolverhampton Wanderers FC"
+    ]
+  },
+  "ENG-L1": {
+    "Bradford": [
+      "Bradford City"
+    ],
+    "Sheffield Weds": [
+      "Sheffield Wed"
+    ]
+  },
+  "ENG-PL": {
+    "Brighton": [
+      "Brighton & Hove Albion"
+    ],
+    "Coventry": [
+      "Coventry City FC"
+    ],
+    "Hull": [
+      "Hull City AFC"
+    ],
+    "Ipswich": [
+      "Ipswich Town FC"
+    ],
+    "Leeds": [
+      "Leeds United"
+    ],
+    "Leicester": [
+      "Leicester City FC"
+    ],
+    "Man City": [
+      "Manchester City"
+    ],
+    "Man United": [
+      "Manchester United FC"
+    ],
+    "Newcastle": [
+      "Newcastle United"
+    ],
+    "Nott'm Forest": [
+      "Nottingham Forest"
+    ],
+    "Tottenham": [
+      "Tottenham Hotspur FC"
+    ],
+    "West Ham": [
+      "West Ham United"
+    ],
+    "Wolves": [
+      "Wolverhampton Wanderers"
+    ]
+  },
+  "ESP-L2": {
+    "AD Ceuta FC": [
+      "Ceuta"
+    ],
+    "Ferrol": [
+      "Racing Ferrol"
+    ],
+    "La Coruna": [
+      "Deportivo La Coruña"
+    ],
+    "Las Palmas": [
+      "U.Las Palmas"
+    ],
+    "Leonesa": [
+      "Cultural Leonesa"
+    ],
+    "Oviedo": [
+      "Real Oviedo"
+    ],
+    "Santander": [
+      "Racing Santander"
+    ],
+    "Sociedad B": [
+      "Real Sociedad B"
+    ],
+    "Sp Gijon": [
+      "Sporting Gijón"
+    ],
+    "Valladolid": [
+      "Real Valladolid"
+    ],
+    "Zaragoza": [
+      "Real Zaragoza"
+    ]
+  },
+  "ESP-LL": {
+    "Alaves": [
+      "Deportivo Alavés"
+    ],
+    "Ath Bilbao": [
+      "Athletic Club"
+    ],
+    "Ath Madrid": [
+      "Atlético de Madrid"
+    ],
+    "Betis": [
+      "Real Betis",
+      "Real Betis Balompié"
+    ],
+    "Celta": [
+      "RC Celta de Vigo"
+    ],
+    "Espanol": [
+      "RCD Espanyol",
+      "RCD Espanyol de Barcelona"
+    ],
+    "La Coruna": [
+      "RC Deportivo La Coruña"
+    ],
+    "Osasuna": [
+      "CA Osasuna"
+    ],
+    "Real Madrid": [
+      "Real Madrid C.F."
+    ],
+    "Sociedad": [
+      "Real Sociedad",
+      "Real Sociedad de Fútbol"
+    ],
+    "Valladolid": [
+      "Real Valladolid CF"
+    ],
+    "Vallecano": [
+      "Rayo Vallecano",
+      "Rayo Vallecano de Madrid"
+    ]
+  },
+  "FRA-L1": {
+    "Angers": [
+      "Angers SCO"
+    ],
+    "Brest": [
+      "Stade Brestois"
+    ],
+    "Lens": [
+      "Racing Club de Lens"
+    ],
+    "Lille": [
+      "Lille OSC"
+    ],
+    "Lyon": [
+      "Olympique Lyonnais"
+    ],
+    "Marseille": [
+      "Olympique de Marseille"
+    ],
+    "Montpellier": [
+      "Montpellier HSC"
+    ],
+    "Paris SG": [
+      "Paris Saint-Germain"
+    ],
+    "Reims": [
+      "Stade de Reims"
+    ],
+    "Rennes": [
+      "Stade Rennais FC 1901"
+    ],
+    "St Etienne": [
+      "AS Saint-Étienne"
+    ],
+    "Stade Brestois 29": [
+      "Stade Brestois"
+    ],
+    "Strasbourg": [
+      "RC Strasbourg Alsace"
+    ],
+    "Troyes": [
+      "ES Troyes AC"
+    ]
+  },
+  "FRA-L2": {
+    "Caen": [
+      "SM Caen"
+    ],
+    "Clermont": [
+      "Clermont Foot 63"
+    ],
+    "Dunkerque": [
+      "USL Dunkerque"
+    ],
+    "Grenoble": [
+      "Grenoble Foot 38"
+    ],
+    "Guingamp": [
+      "EA Guingamp"
+    ],
+    "Montpellier": [
+      "Montpellier HSC"
+    ],
+    "Nancy": [
+      "AS Nancy Lorraine"
+    ],
+    "Reims": [
+      "Stade de Reims"
+    ],
+    "Rodez": [
+      "Rodez AF"
+    ],
+    "St Etienne": [
+      "AS Saint-Étienne"
+    ],
+    "Troyes": [
+      "ESTAC Troyes"
+    ]
+  },
+  "GER-B2": {
+    "Bielefeld": [
+      "Arminia Bielefeld"
+    ],
+    "Braunschweig": [
+      "Eintracht Braunschweig"
+    ],
+    "Darmstadt": [
+      "SV Darmstadt 98"
+    ],
+    "Dresden": [
+      "Dynamo Dresden"
+    ],
+    "FC Koln": [
+      "1. FC Köln"
+    ],
+    "Hamburg": [
+      "Hamburger SV"
+    ],
+    "Hannover": [
+      "Hannover 96"
+    ],
+    "Hertha": [
+      "Hertha BSC"
+    ],
+    "Kaiserslautern": [
+      "1. FC Kaiserslautern"
+    ],
+    "Karlsruhe": [
+      "Karlsruher SC"
+    ],
+    "Magdeburg": [
+      "1. FC Magdeburg"
+    ],
+    "Nurnberg": [
+      "1. FC Nürnberg"
+    ],
+    "Paderborn": [
+      "SC Paderborn 07"
+    ],
+    "Regensburg": [
+      "Jahn Regensburg"
+    ],
+    "SV 07 Elversberg": [
+      "Elversberg"
+    ],
+    "Ulm": [
+      "SSV Ulm 1846"
+    ]
+  },
+  "GER-BL": {
+    "Bayern Munich": [
+      "FC Bayern München"
+    ],
+    "Bochum": [
+      "VfL Bochum 1848"
+    ],
+    "Dortmund": [
+      "Borussia Dortmund"
+    ],
+    "Ein Frankfurt": [
+      "Eintracht Frankfurt"
+    ],
+    "Heidenheim": [
+      "1. FC Heidenheim 1846"
+    ],
+    "Hoffenheim": [
+      "TSG 1899 Hoffenheim"
+    ],
+    "Leverkusen": [
+      "Bayer 04 Leverkusen"
+    ],
+    "M'gladbach": [
+      "Borussia Mönchengladbach"
+    ],
+    "Mainz": [
+      "1. FSV Mainz 05"
+    ],
+    "St Pauli": [
+      "FC St. Pauli 1910"
+    ],
+    "Union Berlin": [
+      "1. FC Union Berlin"
+    ]
+  },
+  "GRE-SL": {
+    "AEK": [
+      "AEK Athen"
+    ],
+    "Aris": [
+      "Aris Saloniki"
+    ],
+    "GS Kallithea": [
+      "Kallithea"
+    ],
+    "Levadeiakos": [
+      "Levadiakos"
+    ],
+    "OFI": [
+      "OFI Crete",
+      "OFI Heraklion"
+    ],
+    "Olympiakos": [
+      "Olympiakos Piraeus"
+    ],
+    "PAOK": [
+      "PAOK Saloniki"
+    ]
+  },
+  "ITA-SA": {
+    "Bologna": [
+      "Bologna FC 1909"
+    ],
+    "Como 1907": [
+      "Como"
+    ],
+    "Inter": [
+      "FC Internazionale Milano"
+    ],
+    "Parma": [
+      "Parma Calcio 1913"
+    ],
+    "Verona": [
+      "Hellas Verona"
+    ]
+  },
+  "ITA-SB": {
+    "Mantova": [
+      "Mantova 1911 SSD"
+    ],
+    "Reggiana": [
+      "AC Reggiana 1919"
+    ],
+    "Salernitana": [
+      "US Salernitana 1919"
+    ]
+  },
+  "JPN-J1": {
+    "Kyoto Sanga": [
+      "Kyoto Purple Sanga"
+    ]
+  },
+  "MEX-LMX": {
+    "Atlas Guadalajara": [
+      "Atlas"
+    ],
+    "Atlético San Luis": [
+      "Atl. San Luis"
+    ],
+    "Deportivo Toluca": [
+      "Toluca"
+    ],
+    "Pumas UNAM": [
+      "UNAM Pumas"
+    ],
+    "UANL Tigres": [
+      "Tigres UANL"
+    ]
+  },
+  "MLS": {
+    "Atlanta United FC": [
+      "Atlanta Utd"
+    ],
+    "D.C. United": [
+      "DC United"
+    ],
+    "Impact de Montréal": [
+      "CF Montréal"
+    ],
+    "New York RB": [
+      "New York Red Bulls"
+    ],
+    "Sporting Kansas City": [
+      "Kansas City Wizards"
+    ]
+  },
+  "NED-ED": {
+    "AZ Alkmaar": [
+      "AZ"
+    ],
+    "Cambuur": [
+      "SC Cambuur-Leeuwarden"
+    ],
+    "Den Haag": [
+      "ADO Den Haag"
+    ],
+    "Excelsior": [
+      "SBV Excelsior"
+    ],
+    "Feyenoord": [
+      "Feyenoord Rotterdam"
+    ],
+    "For Sittard": [
+      "Fortuna Sittard"
+    ],
+    "Heracles": [
+      "Heracles Almelo"
+    ],
+    "Nijmegen": [
+      "NEC"
+    ],
+    "PSV Eindhoven": [
+      "PSV"
+    ],
+    "Sparta Rotterdam": [
+      "Sparta"
+    ],
+    "Twente": [
+      "FC Twente '65"
+    ],
+    "Waalwijk": [
+      "RKC Waalwijk"
+    ],
+    "Willem II": [
+      "Willem II Tilburg"
+    ],
+    "Zwolle": [
+      "PEC Zwolle"
+    ]
+  },
+  "NOR-EL": {
+    "Aalesunds FK": [
+      "Aalesund"
+    ],
+    "Sandefjord Fotball": [
+      "Sandefjord"
+    ],
+    "Tromsø IL": [
+      "Tromso"
+    ]
+  },
+  "PER-L1": {
+    "Melgar": [
+      "Melgar FBC"
+    ]
+  },
+  "POL-EK": {
+    "Jagiellonia Białystok": [
+      "Jagiellonia"
+    ],
+    "KS Cracovia": [
+      "Cracovia"
+    ],
+    "Legia Warszawa": [
+      "Legia"
+    ],
+    "Raków Częstochowa": [
+      "Rakow"
+    ],
+    "Zagłębie Lubin": [
+      "Zaglebie"
+    ]
+  },
+  "POR-PL": {
+    "Benfica": [
+      "Sport Lisboa e Benfica"
+    ],
+    "CF Estrela da Amadora": [
+      "Estrela"
+    ],
+    "Estoril": [
+      "GD Estoril Praia"
+    ],
+    "Guimaraes": [
+      "Vitória Guimarães"
+    ],
+    "Maritimo": [
+      "CS Marítimo"
+    ],
+    "Sp Lisbon": [
+      "Sporting Clube de Portugal"
+    ]
+  },
+  "ROU-L1": {
+    "Dinamo Bucureşti": [
+      "Din. Bucuresti"
+    ],
+    "Oţelul Galaţi": [
+      "Otelul"
+    ],
+    "Petrolul Ploieşti": [
+      "Petrolul"
+    ],
+    "Universitatea Cluj": [
+      "U. Cluj"
+    ]
+  },
+  "RUS-PL": {
+    "Akron Togliatti": [
+      "Akron Tolyatti"
+    ],
+    "Baltika": [
+      "Baltika Kaliningrad"
+    ],
+    "Dynamo Makhachkala": [
+      "FK Dinamo Makhachkala"
+    ],
+    "Krylia Sovetov": [
+      "Krylya Sovetov"
+    ],
+    "Lokomotiv Moskva": [
+      "Lokomotiv Moscow"
+    ],
+    "Spartak Moskva": [
+      "Spartak Moscow"
+    ],
+    "Zenit St. Petersburg": [
+      "Zenit"
+    ]
+  },
+  "SCO-CH": {
+    "Airdrie Utd": [
+      "Airdrie"
+    ],
+    "Raith Rvs": [
+      "Raith"
+    ]
+  },
+  "SUI-SL": {
+    "BSC Young Boys": [
+      "Young Boys"
+    ],
+    "FC Basel 1893": [
+      "Basel"
+    ],
+    "FC Lausanne-Sport": [
+      "Lausanne"
+    ],
+    "Grasshopper Club Zürich": [
+      "Grasshoppers"
+    ]
+  },
+  "SWE-AL": {
+    "AIK Solna": [
+      "AIK"
+    ],
+    "Djurgårdens IF": [
+      "Djurgarden"
+    ],
+    "GAIS Göteborg": [
+      "GAIS"
+    ],
+    "Halmstads BK": [
+      "Halmstad"
+    ],
+    "IFK Göteborg": [
+      "Goteborg"
+    ],
+    "IK Sirius": [
+      "Sirius"
+    ],
+    "Kalmar FF": [
+      "Kalmar"
+    ],
+    "Mjällby AIF": [
+      "Mjallby"
+    ]
+  },
+  "TUR-SL": {
+    "Ad. Demirspor": [
+      "Adana Demirspor"
+    ],
+    "Goztep": [
+      "Göztepe"
+    ],
+    "Karagumruk": [
+      "Fatih Karagümrük"
+    ],
+    "Rizespor": [
+      "Çaykur Rizespor"
+    ]
+  },
+  "UCL": {
+    "Bayer Leverkusen": [
+      "Bayer 04 Leverkusen"
+    ],
+    "Dinamo Zagreb": [
+      "GNK Dinamo Zagreb"
+    ],
+    "Feyenoord Rotterdam": [
+      "Feyenoord"
+    ],
+    "Olympiakos Piraeus": [
+      "PAE Olympiakos SFP"
+    ],
+    "Qarabağ Ağdam FK": [
+      "Qarabağ FK"
+    ],
+    "RB Salzburg": [
+      "FC Red Bull Salzburg"
+    ],
+    "SL Benfica": [
+      "Sport Lisboa e Benfica"
+    ],
+    "Sporting CP": [
+      "Sporting Clube de Portugal"
+    ]
+  },
+  "UCL-Q": {
+    "Víkingur Reykjavík": [
+      "Víkingur"
     ]
   }
 }
