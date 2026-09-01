@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            207 / 255  81.2%    129 / 188  68.6%
     played lanes  >+1%      99 / 126  78.6%    129 / 188  68.6%
-    placed bets            108 / 136  79.4%    ROI +0.1%
+    placed bets            109 / 137  79.6%    ROI +0.1%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -649,7 +649,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 108 / 136  ·  ROI +0.1%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 109 / 137  ·  ROI +0.1%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -785,25 +785,22 @@ that premium the book is keeping the insurance money.
 | ❌ | Mirassol v Palmeiras | 12 | 1.32 | 0.00x | = tip 3's 12 print (76.2%), under buy≥1.38 |
 | ❌ | Aston Villa v Arsenal | O1.5 | 1.23 | 0.00x | = tip 1 rung, under buy≥1.26 |
 | ❌ | Braga v Vitória | O1.5 | 1.27 | 0.00x | = tip 1 rung, under buy≥1.32 |
-| — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy≥1.37 |
-| — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip |
-| — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip — swapped to a DNB and back; the under was the better price |
-| — open | Swansea v Watford | DNB (home) | 1.35 | — | Swansea DNB — swapped out of the 1X at 1.22; = tip 3's DNB1 lane |
-| — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy≥1.32 |
-| — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
-| — open | Cerezo Osaka v Kashiwa | O1.5 | 1.19 | — | match over — swapped out of the 12 at 1.24 |
-| — open | JEF United Chiba v Okayama | O0.5 (away) | 1.17 | — | Okayama team over — held alongside the 12 |
-| — open | Machida Zelvia v Kawasaki | 12 | 1.25 | — | own read DC — card's tip 3 is DNB1 |
-| — open | Mito Hollyhock v Kashima | O0.5 (away) | 1.21 | — | Kashima team over — swapped out of the 12 at 1.29 before kickoff |
-| — open | Nagasaki v Gamba Osaka | O0.5 (away) | 1.20 | — | Gamba team over — held alongside the 12 |
-| — open | Sanfrecce v Nagoya | O1.5 (home) | 1.60 | — | Sanfrecce team over at a fair price — 1.60 against a fair 1.60 |
-| — open | JEF United Chiba v Okayama | 12 | 1.26 | — | = tip 3's 12 print (75.7%), under buy≥1.39 |
-| — open | Nagasaki v Gamba Osaka | 12 | 1.27 | — | own read DC — no tip 3 on this card |
-| — open | Al-Hilal v Al-Ahli | O2.5 | 1.52 | — | harder line off tip 2's O2.25 (65.3%) — 1.52 against a fair 1.53 |
 | ✅ | Braga v Vitória | DNB (home) | 1.29 | 1.29x | DNB1 print (69.1%) — under buy≥1.52 and under the 1.35 floor; Rule 7 |
 | ✅ | FC Copenhagen v Sonderjyske | O1.5 (home) | 1.30 | 1.30x | = tip 2 team lane (74.4%), taken under buy≥1.40 |
 | ✅ | CA Osasuna v Getafe CF | DNB (home) | 1.42 | 1.42x | DNB1 print (66.0%) — under buy≥1.59; Rule 7 |
 | ✅ | Jong PSV v Jong Ajax | U4.5 | 1.44 | 1.44x | softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21 |
+| — open | Luzern v Vaduz | U4.5 | 1.34 | — | = the card's struck lane (U4.25 rung), STRONG at +5.63 — board best 1.42, took 1.34 |
+| — open | Millwall v Wrexham | U3.5 | 1.29 | — | own read — the card moved to U4.25/U4.5 on the name fold and declines at 1.11 |
+| — open | West Brom v Charlton | U3.5 | 1.26 | — | own read — card is RED at 75.8%, 0.2 under the 76% line, and never plays |
+| — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip — struck pre-match, now live |
+| — open | Al-Hilal v Al-Ahli | O2.5 | 1.52 | — | harder line off tip 2's O2.25 (65.3%) — 1.52 against a fair 1.53 |
+| — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip — struck pre-match, now live |
+| ◦ | Sheffield United v Bolton | DNB (home) | 1.26 | 1.00x | second position on the same fixture, taken in play and CASHED OUT |
+| — open | Cerezo Osaka v Kashiwa | O1.5 | 1.19 | — | swapped out of the 12 at 1.24 |
+| — open | Swansea v Watford | DNB (home) | 1.35 | — | Swansea DNB — swapped out of the 1X at 1.22; = tip 3's DNB1 lane |
+| — open | Londrina v Juventude | U3.5 | 1.17 | — | R6 softer off the U3.0 tip |
+| — open | West Ham v Wolves | O1.5 | 1.24 | — | = tip 1 rung (82.6%, +9.8% edge), under buy>=1.32 |
+| — open | Portsmouth v Derby | 12 | 1.30 | — | own read DC — card's tip 3 is the 12 at 76.4%, buy>=1.37 |
 
 <!-- HYPOTHESES:START -->
 
