@@ -70,18 +70,32 @@ class Counter:
         c[1] += 1
 
 
-# Which field carries the grade, the claim and the market, per lane. Tip
-# 1 is a MATCH total so both clubs are in it; tip 2 is a TEAM total, so
-# only the club it names is — TA is the home side, TB the away one.
-LANE = {1: ("hit_t1", "p1", "mk1"), 2: ("hit_t2", "p2", "mk2")}
+# Which field carries the grade, the claim and the market, per lane.
+# Lane 0 is THE FINAL PICK — the lane the card actually stars, which is
+# tip 1 on most cards and a gated DNB on the rest. That is the one the
+# bettor would really be staking, so it gets scored in its own right
+# rather than inferred from tip 1's row. Tip 1 is a MATCH total so both
+# clubs are in it; tip 2 is a TEAM total, so only the club it names is —
+# TA is the home side, TB the away one.
+LANE = {0: ("hit_pick", "says_pick", "mk"),
+        1: ("hit_t1", "p1", "mk1"),
+        2: ("hit_t2", "p2", "mk2")}
+RESULT = ("1X", "X2", "12", "DNB1", "DNB2")
 
 
 def teams(r: dict, lane: int) -> list:
-    if lane == 1:
+    if lane in (0, 1):
         return [r["h"], r["a"]]
     mk = r.get("mk2") or ""
     return [r["h"]] if mk.startswith("TA") else [r["a"]] if mk.startswith("TB") \
         else [r["h"], r["a"]]
+
+
+def _token(mk: str) -> str | None:
+    """What the third search filters on: O/U for a ladder rung, and the
+    lane's own name for a result lane, since "league + DNB1" is a search
+    the board can run and "league + O" is not meaningful for one."""
+    return mk if mk in RESULT else _side(mk)
 
 
 def slices(r: dict, lane: int = 1) -> list:
@@ -92,7 +106,7 @@ def slices(r: dict, lane: int = 1) -> list:
     """
     L = r["code"]
     mk = (r.get(LANE[lane][2]) or "").replace("TA ", "").replace("TB ", "")
-    s = _side(mk)
+    s = _token(mk)
     out = [("team", (L, t)) for t in teams(r, lane)]
     if s:
         out += [("side", (L, s))]
@@ -155,7 +169,14 @@ def walk(rows: list, mode: str, dead: float, k: float, lane: int = 1) -> list:
             sc, votes = score_card(r, C, mode, dead, k, lane)
             if sc is None:
                 continue
-            out.append(dict(r, score=int(sc), votes=votes))
+            # How much history stood behind this score, so the bettor's
+            # question — does a card scored early in the bank, with only
+            # half a season to look back on, score worse than a recent
+            # one — can be answered from the same pass.
+            out.append(dict(r, score=int(sc), votes=votes,
+                            seen=C["lg"].d[(r["code"],)][1],
+                            tseen=min(C[kind].d[key][1]
+                                      for kind, key in slices(r, lane))))
         for r in day:
             if r.get(hitf) is None:
                 continue
