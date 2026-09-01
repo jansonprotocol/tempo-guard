@@ -655,6 +655,43 @@ def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
             q.get("book") or ""]) + "\n")
 
 
+def _label_of(f, best: int, full: bool = False):
+    """The guard label for the starred lane, computed once.
+
+    Split out of _guard because the card now needs the label BEFORE it
+    renders any lane: only the starred lane's price bar is backed by a
+    validated hit rate, and every other lane has to say that it is not.
+    """
+    global _SLICES
+    if f.settled or not best:
+        return None
+    cell = f.tip3 if best == 3 else f.tip1
+    p = _claim(cell)
+    if p is None:
+        return None
+    e = _edge(cell)
+    dnb = best == 3 and _is_dnb(f.tip3)
+    # The shipped tier, unchanged: a gated DNB or a high, modest-edge tip
+    # 1 is green; a low claim, or a middling claim on an OVER, is red.
+    side = _rung(cell)[:1] if _rung(cell)[:1] in ("O", "U") else ""
+    if dnb or (p >= 84 and (e is None or e < 1.0)):
+        tier = "green"
+    elif p < 76 or (p < 80 and side == "O"):
+        tier = "red"
+    else:
+        tier = "orange"
+    if _SLICES is None:
+        from scripts import guard_slices
+        _SLICES = guard_slices.read_table()
+    from scripts import guard_slices
+    sc = None
+    if _SLICES and " v " in f.teams:
+        h, a = [t.strip() for t in f.teams.split(" v ")]
+        sc = guard_slices.score(f.code, h, a, _rung(cell), p / 100.0, _SLICES)
+    lab = guard_slices.label(f.code, tier, sc, dnb)
+    return (lab, sc, cell, p) if full else lab
+
+
 def _guard(f, best: int) -> str:
     """The card's risk label: five bands, registered in docs/.
 
@@ -666,38 +703,10 @@ def _guard(f, best: int) -> str:
 
     The score is silent outside Europe, where it measured -0.06.
     """
-    global _SLICES
-    if f.settled:
+    got = _label_of(f, best, full=True)
+    if not got:
         return ""
-    cell = f.tip3 if best == 3 else f.tip1
-    p = _claim(cell)
-    if p is None:
-        return ""
-    e = _edge(cell)
-    dnb = best == 3 and _is_dnb(f.tip3)
-    # The shipped tier, unchanged: a gated DNB or a high, modest-edge tip
-    # 1 is green; a low claim, or a middling claim on an OVER, is red.
-    side = _rung(cell)[:1] if _rung(cell)[:1] in ("O", "U") else ""
-    if dnb:
-        tier = "green"
-    elif p >= 84 and (e is None or e < 1.0):
-        tier = "green"
-    elif p < 76 or (p < 80 and side == "O"):
-        tier = "red"
-    else:
-        tier = "orange"
-    if _SLICES is None:
-        from scripts import guard_slices
-        _SLICES = guard_slices.read_table()
-    from scripts import guard_slices
-    sc = None
-    if _SLICES:
-        h, a = [t.strip() for t in f.teams.split(" v ")] \
-            if " v " in f.teams else (None, None)
-        if h:
-            sc = guard_slices.score(f.code, h, a, _rung(cell), p / 100.0,
-                                    _SLICES)
-    lab = guard_slices.label(f.code, tier, sc, dnb)
+    lab, sc, cell, p = got
     hit = SAYS[lab]
     tip = (f"Guard: {lab}. Cards labelled this way graded {hit*100:.1f}% "
            f"over 62,528 replayed picks, in both time windows. "
@@ -754,6 +763,55 @@ def _guard(f, best: int) -> str:
 def region_silent(code: str) -> bool:
     from scripts.confluence import region
     return region(code) != "Europe"
+
+
+def _needs(cell: str, starred_label: str | None) -> tuple:
+    """(required price, hit rate used, whether that rate is VALIDATED).
+
+    The starred lane gets its bar from the guard label, whose hit rate
+    survived two windows over 62,528 replayed picks. Every other lane has
+    only its own printed claim, which has never been tested as a price
+    input — so the card says so rather than dressing the two up alike.
+    """
+    if starred_label:
+        return (1 / SAYS[starred_label]) * (1 + DECLINE_MARGIN), \
+            SAYS[starred_label], True
+    c = _claim(cell)
+    if c is None:
+        return None, None, False
+    return (1 / (c / 100.0)) * (1 + DECLINE_MARGIN), c / 100.0, False
+
+
+def _lanebar(f, cell: str, starred_label: str | None) -> str:
+    """PASS or DECLINE for ONE lane, whether or not it is the star.
+
+    The bettor's point: a card whose starred lane fails on price is not
+    the same as a card with nothing on it, and the reader should be able
+    to see which lanes cleared without doing the arithmetic per lane.
+    """
+    need, _hit, solid = _needs(cell, starred_label)
+    if need is None or f.settled:
+        return ""
+    lane = _rung(cell)
+    q = quotes().get((f.teams, lane)) if lane else None
+    soft = "" if solid else (' <span class="dim" title="This bar comes from '
+                             'the lane&#39;s own printed claim, not from a '
+                             'validated label — only the starred lane has '
+                             'one">·&nbsp;claim-based</span>')
+    if not q:
+        return (f'<div class="lanebar dimv">needs {need:.2f}'
+                f'<span class="dim"> · not quoted</span>{soft}</div>')
+    try:
+        got = float(q["best"] or q["consensus"])
+    except (TypeError, ValueError):
+        return ""
+    if got >= need:
+        return (f'<div class="lanebar yes">PASS <b>{got:.2f}</b>'
+                f'<span class="dim"> · needs {need:.2f}</span>{soft}</div>')
+    gap = 100 * (got / need - 1)
+    return (f'<div class="lanebar no">DECLINE <b>{got:.2f}</b>'
+            f'<span class="dim"> · needs {need:.2f}, {gap:+.1f}%</span>'
+            f'{soft}</div>')
 
 
 def _goals(f) -> int | None:
@@ -816,7 +874,7 @@ def _card(f, kind: str, reads: dict) -> str:
             'card — not a claim that it is the better bet; the buy≥ '
             'bracket decides that">★ read first</span>')
 
-    def lane(which, cell):
+    def lane(which, cell, lab=None):
         if cell.strip() in ("", "—", "— none"):
             return ""
         pl = " pl" if (not f.settled and f.lane(which)) else ""
@@ -831,9 +889,11 @@ def _card(f, kind: str, reads: dict) -> str:
                 cls = ("gone" if s.startswith("✗") or "gone" in s
                        else "won" if s.startswith("✓") else "")
                 live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
+        tail = " <span class=\"dim\">· result lane</span>" if which == 3 else ""
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell, f.teams)}"
-                f"{star if which == best else ''}{live}</div>")
+                f"</span> {_fmt(cell, f.teams)}{tail}"
+                f"{star if which == best else ''}"
+                f"{_lanebar(f, cell, lab)}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -849,31 +909,28 @@ def _card(f, kind: str, reads: dict) -> str:
     # on the playable tab, which read as a mistake and effectively was
     # one. Everywhere else Tip 1 leads as before; the expanded body
     # always carries the other lane.
-    lead, rest = (1, f.tip1), (2, f.tip2)
-    if kind == "play" and not f.settled and not f.lane(1) and f.lane(2):
-        lead, rest = (2, f.tip2), (1, f.tip1)
-    # Tip 3 rides the card FACE, not the fold — a lane nobody sees is a
-    # lane that can never earn its way off probation.
-    t3 = (f'<div class="lane{" best" if best == 3 else ""}">'
-          f'<span class="which">Tip 3</span> '
-          f'{_fmt(f.tip3, f.teams)} <span class="dim">· result lane</span>'
-          f'{star if best == 3 else ""}</div>'
-          if f.tip3.strip() else "")
-    # A card leads with the lane worth reading first — which is the
-    # STARRED lane, and nothing else. This used to run its own weak-tier
-    # rule (lead with tip 3 in a sub-80% or consensus-capped league when
-    # tip 1 missed the playable bar), which agreed with the old chooser
-    # by construction. Since the star became the DNB claim gate the two
-    # can disagree, and a card that prints tip 3 at the top while the ★
-    # sits on tip 1 below it is telling the reader two things at once.
-    # One rule, one lane. Settled cards keep the tip 1 order so grading
-    # reads consistently.
-    face = f"{t3}{lane(*lead)}" if (t3 and best == 3) else f"{lane(*lead)}{t3}"
+    # ORDER: the starred lane, then the lane that would inherit the card
+    # if the star fails on price, then the last one. Tip 2 is always last
+    # — it is never starred and grades about fourteen points under the
+    # final pick — so the fallback is whichever of tip 1 and tip 3 the
+    # star is not. Settled cards keep the tip 1 order so the grading
+    # column reads consistently down the page.
+    cells = {1: f.tip1, 2: f.tip2, 3: f.tip3}
+    if f.settled or not best:
+        seq = [1, 3, 2]
+    else:
+        seq = [best, 3 if best != 3 else 1, 2]
+        seq = [w for i, w in enumerate(seq) if w not in seq[:i]]
+    # Only the STARRED lane carries a validated bar; the others are
+    # priced off their own claim and say so.
+    lab = _label_of(f, best) if not f.settled else None
+    face = "".join(lane(w, cells[w], lab if w == best else None)
+                   for w in seq)
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
            f"{_guard(f, best)}{face}")
-    body = lane(*rest) + tie_html
+    body = tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
     if not body:
@@ -1662,6 +1719,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .g-super-red {{ color:#f0a08e; border-color:#8a3a2e;
   background:rgba(138,58,46,.18); font-weight:600; }}
 .verdict {{ font-size:12px; margin:0 0 4px; letter-spacing:.03em; }}
+.lanebar {{ font-size:11px; margin-top:5px; letter-spacing:.04em; }}
+.lanebar.yes {{ color:#8fe3a8; }}
+.lanebar.no {{ color:#e08b7a; }}
+.lanebar.dimv {{ color:var(--dim); }}
 .verdict.yes {{ color:#8fe3a8; }}
 .verdict.yes b {{ color:#b8f0c8; }}
 .verdict.no {{ color:#e08b7a; }}
