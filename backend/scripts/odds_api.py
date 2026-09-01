@@ -29,7 +29,6 @@ Writes config/odds_cache.json — derived, delete it and the next sweep rebuilds
 from __future__ import annotations
 
 import json
-import math
 import os
 import re
 import sys
@@ -209,19 +208,35 @@ def _book_h2h(bk: dict, home: str, away: str) -> tuple | None:
     return None
 
 
+# The ONLY two substitutions, and the only two ever measured. A table
+# rather than arithmetic, deliberately — see bought().
+STRUCK = {"U3.0": "U3.5", "U4.25": "U4.5"}
+
+
 def bought(rung: str) -> str:
     """The line a printed rung is actually STRUCK at.
 
-    Athena publishes Asian rungs; a real slip is a whole or half line.
-    U4.25 is bought as U4.5, U3.0 as U3.5, O1.5 as O1.0 — the same
-    mapping every ROI table in docs/ settles at. The card must quote what
-    the bettor will click, not the notation the engine prints: the two
-    are different bets and, on 1 Sep, differed by about 1.5% of price.
+    Two rungs are bought one notch away from what the card prints, and
+    both are UNDERS: U3.0 as U3.5, U4.25 as U4.5. Those are the two the
+    ROI tables in docs/ measured — U3.0->U3.5 returns +2.86% against the
+    rung's +2.32%, U4.25->U4.5 -4.53% against -5.34% — and the mechanism
+    is specific: both moves land on the NO-PUSH line, so the whole stake
+    stays at risk and the edge earns on all of it. Everything else is
+    bought exactly as printed.
+
+    This used to be arithmetic — shift unders up a half, overs down a
+    half — which generalised a two-case finding into a rule nobody had
+    tested, and got the over side BACKWARDS. O1.5 became O1.0, and O1.0
+    is the push line for a one-goal game: the shift moved TOWARD the
+    push, the opposite of the direction that was validated. It also
+    quoted 159 O1.5 cards at a price no one would take (1.01, because a
+    book prices near-certainty accordingly) and turned the 50 cards
+    printing O0.5 into `O0.0`, which is not a bet.
+
+    So the substitutions are enumerated. A rule measured on two lines
+    applies to two lines.
     """
-    side, v = rung[0], float(rung[1:])
-    if v * 2 % 1:                      # quarter line: round to the safer half
-        return f"{side}{(math.ceil(v*2)/2 if side == 'U' else math.floor(v*2)/2):.1f}"
-    return f"{side}{v+0.5:.1f}" if side == "U" else f"{side}{v-0.5:.1f}"
+    return STRUCK.get(rung, rung)
 
 
 def lane_price(ev: dict, lane: str) -> dict | None:

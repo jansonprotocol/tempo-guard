@@ -614,9 +614,11 @@ def _edge(cell: str) -> float | None:
 
 def _struck(rung: str) -> str:
     """The line a printed rung is actually bought at — Rule 6's safer
-    neighbour. U3.0 is struck as U3.5, U4.25 as U4.5, O1.5 as O1.0.
-    The quote and the verdict must both speak about the line that will
-    appear on the slip, not the notation Athena prints."""
+    neighbour, which is exactly two rungs: U3.0 struck as U3.5 and U4.25
+    as U4.5. Every other rung is bought as printed. The quote and the
+    verdict must both speak about the line that will appear on the slip,
+    not the notation Athena prints. See odds_api.bought for why the
+    substitutions are enumerated rather than derived."""
     if not rung or rung[0] not in ("O", "U"):
         return rung
     from scripts.odds_api import bought
