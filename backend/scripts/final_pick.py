@@ -8,13 +8,20 @@ own completed matches via ingest_board — and grades it against the
 baseline of always following tip 1. Same as-of discipline as every
 other replay.
 
-The chooser, exactly as the card applies it:
-  1. weak-tier (tip 1 baseline < 80%) or consensus-capped league, and a
-     result lane printed             -> tip 3
-  2. tip 1 playable (edge > +1%)    -> tip 1
-  3. tip 2 playable                 -> tip 2
-  4. a result lane printed          -> tip 3
-  5. otherwise                      -> tip 1
+The chooser, exactly as the card applies it (1 Sep):
+  1. a DNB claiming more than DNB_GATE points above tip 1  -> tip 3
+  2. otherwise                                             -> tip 1
+  3. tip 1 absent and a result lane printed                -> tip 3
+
+Tip 2 is never chosen. The rule this replaced dropped to tip 3 whenever
+tip 1 was not playable, and measured 82.08% against always-tip-1's
+83.49% across 57 leagues — worse in 36 of them — because tip 3's
+baseline sits about five points under tip 1's, so the switch traded
+down by construction. The gate keeps only the switches that pay: on the
+426 bank cards where a DNB out-claims tip 1 by more than two points, the
+DNB grades 94.13% against tip 1's 82.16%, and that holds in both time
+windows and with every DNB push stripped out. Double chance is excluded
+deliberately — at the same gate a DC switch loses 3.53 points.
 
 Usage:  python scripts/final_pick.py [--n 300] [--leagues A,B]
                                      [--dump path.pkl]
@@ -85,15 +92,14 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
         t2, t3 = out["t2"], out["t3"]
         t1_play = e1 > 0.01
         t2_play = t2 is not None and t2[2] > 0.01
-        # The SHIPPED chooser (see chosen() below): a playable tip 1,
-        # else a printed result lane, else tip 1. This used to run the
-        # older variant that could pick tip 2, so the console line
-        # disagreed with the table the same run wrote — the file was
-        # right and the print was stale. One chooser now, both places.
-        if t1_play or t3 is None:
-            pick, mk = 1, t1mk
-        else:
-            pick, mk = 3, t3[0]
+        # The SHIPPED chooser, called rather than re-implemented: the
+        # console line and the table this run writes must never be able
+        # to disagree, which they did once when the pick was inlined.
+        row = dict(p1=p1, has_t3=t3 is not None,
+                   p3=t3[1] if t3 else None,
+                   t3_dnb=bool(t3) and t3[0].startswith("DNB"))
+        pick = chosen(row)
+        mk = t3[0] if pick == 3 and t3 else t1mk
         g_t1 = grade(1, t1mk, hg, ag)
         if g_t1 is None:
             continue
@@ -109,6 +115,10 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
             t1_play=t1_play, t2_play=t2_play,
             hit_t2=grade(2, t2[0], hg, ag) if t2 else None,
             hit_t3=grade(3, t3[0], hg, ag) if t3 else None,
+            # What chosen() reads: tip 1's claim, and whether tip 3 is a
+            # DNB and what it claims. Stored so a dump can be re-scored
+            # under a different gate without another full replay.
+            p1=p1, p3=row["p3"], t3_dnb=row["t3_dnb"],
             has_t3=t3 is not None,
             # Tip 2's market, so the "what does tip 2's KIND say about the
             # other lanes" question can be scored offline (the bettor's
@@ -120,13 +130,19 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
 OUT = Path(__file__).resolve().parents[2] / "config" / "final_pick.tsv"
 
 
+DNB_GATE = 2.0          # keep in step with webapp.DNB_GATE
+
+
 def chosen(r: dict) -> int:
-    """The shipped chooser: a playable tip 1, else a printed result
-    lane, else tip 1. Tip 2 is never picked — it graded 12.7 points
+    """The shipped chooser: tip 1, unless a DNB out-claims it by more
+    than DNB_GATE points. Tip 2 is never picked — it graded 12.7 points
     below tip 1 on the same fixtures (30 Aug)."""
-    if r["t1_play"]:
-        return 1
-    return 3 if r["has_t3"] else 1
+    if r.get("p1") is None:
+        return 3 if r["has_t3"] else 1
+    if (r.get("t3_dnb") and r.get("p3") is not None
+            and (r["p3"] - r["p1"]) * 100 > DNB_GATE):
+        return 3
+    return 1
 
 
 def write_table(rows: list[dict]) -> None:

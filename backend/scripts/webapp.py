@@ -502,9 +502,27 @@ def _t1_rates() -> dict:
     return _T1RATES
 
 
-def _weak_leagues() -> set:
-    """The protocol's 'read tip 3 first' tier: tip 1 baseline under 80%."""
-    return {c for c, r in _t1_rates().items() if r < 0.80}
+# How far a DNB must out-claim tip 1 before it takes the star. Fitted and
+# validated 1 Sep over 29,953 graded bank cards: on the 426 where a DNB
+# clears tip 1 by more than this, the DNB grades 94.13% against tip 1's
+# 82.16%. It survives both time windows independently (+7.44 older,
+# +16.59 newer) and survives stripping every DNB push out of the sample
+# (+9.58 on 355 cards), so it is not a settlement artefact.
+DNB_GATE = 2.0
+
+
+def _claim(cell: str) -> float | None:
+    """A lane's own probability — the FIRST percentage in its cell, which
+    is the claim; what follows is the edge and the margin."""
+    c = (cell or "").strip()
+    if not c or c.startswith("—"):
+        return None
+    m = re.search(r"(\d+(?:\.\d+)?)%", c)
+    return float(m.group(1)) if m else None
+
+
+def _is_dnb(cell: str) -> bool:
+    return bool(re.search(r"(?:^|[^A-Za-z])DNB[12]", cell or ""))
 
 
 def _card(f, kind: str, reads: dict) -> str:
@@ -526,22 +544,29 @@ def _card(f, kind: str, reads: dict) -> str:
     if not f.settled:
         # Athena marks exactly ONE preferred lane per card (the bettor's
         # rule, 30 Aug), and the order is what the measurement supports.
-        # final_pick.py replayed the chooser over 16,554 fixtures: tip 2
-        # picks graded 12.7 points BELOW what tip 1 would have done on
-        # those same fixtures, tip 3 picks 5.9 below, and a sub-bar tip 1
-        # still landed 84.5% — a thin edge means the league baseline is
-        # already high, not that the tip is weak. So the star can only
-        # ever be tip 1 or tip 3 (the bettor's rule after reading that
-        # table): a playable tip 1 first, then a printed result lane,
-        # then tip 1 as the engine's own pick. Tip 2 is never starred,
-        # whatever its badge. The star means "read this first", never
-        # "this is the better bet" — the buy≥ bracket decides that.
-        if f.lane(1):
+        # Tip 2 is never starred: it graded 12.7 points BELOW what tip 1
+        # would have done on the same fixtures.
+        #
+        # The star is TIP 1 by default, and moves only for a DNB that
+        # out-claims it by DNB_GATE. The rule this replaced dropped to
+        # tip 3 whenever tip 1 was not playable, which traded down by
+        # construction — tip 3's baseline sits about five points under
+        # tip 1's — and measured 82.08% against always-tip-1's 83.49%
+        # across 57 leagues, worse in 36 of them. A thin edge on tip 1
+        # means the league baseline is already high, not that the tip is
+        # weak, so an unplayable tip 1 is no reason to leave it.
+        #
+        # Double chance is deliberately NOT gated in: on the same test a
+        # DC switch LOST 3.53 points where the DNB gained 9.08. The star
+        # means "read this first", never "this is the better bet" — the
+        # buy≥ bracket decides that.
+        p1, p3 = _claim(f.tip1), _claim(f.tip3)
+        if p1 is not None:
             best = 1
+            if _is_dnb(f.tip3) and p3 is not None and p3 - p1 > DNB_GATE:
+                best = 3
         elif f.tip3.strip():
             best = 3
-        elif f.tip1.strip() and not f.tip1.startswith("—"):
-            best = 1
     star = ('<span class="best-tag" title="The lane to read first on this '
             'card — not a claim that it is the better bet; the buy≥ '
             'bracket decides that">★ read first</span>')
@@ -589,17 +614,16 @@ def _card(f, kind: str, reads: dict) -> str:
           f'{_fmt(f.tip3)} <span class="dim">· result lane</span>'
           f'{star if best == 3 else ""}</div>'
           if f.tip3.strip() else "")
-    # Protocol step 2, applied to the layout itself: in a league whose
-    # tip 1 baseline runs under 80% — or a consensus-capped one — a card
-    # whose tip 1 did not clear the playable bar leads with tip 3
-    # instead. Same principle as the playable tab's lead swap: a card
-    # leads with the lane worth reading first. Settled cards keep the
-    # tip 1 order so grading reads consistently.
-    face = f"{lane(*lead)}{t3}"
-    if (t3 and not f.settled and not f.lane(1)
-            and (f.code in _weak_leagues()
-                 or "capped" in (rates().get(f.code) or ""))):
-        face = f"{t3}{lane(*lead)}"
+    # A card leads with the lane worth reading first — which is the
+    # STARRED lane, and nothing else. This used to run its own weak-tier
+    # rule (lead with tip 3 in a sub-80% or consensus-capped league when
+    # tip 1 missed the playable bar), which agreed with the old chooser
+    # by construction. Since the star became the DNB claim gate the two
+    # can disagree, and a card that prints tip 3 at the top while the ★
+    # sits on tip 1 below it is telling the reader two things at once.
+    # One rule, one lane. Settled cards keep the tip 1 order so grading
+    # reads consistently.
+    face = f"{t3}{lane(*lead)}" if (t3 and best == 3) else f"{lane(*lead)}{t3}"
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
