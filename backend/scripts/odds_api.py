@@ -12,6 +12,7 @@ market MAXIMUM price instead of the market AVERAGE was worth +3.58 points of
 ROI (-5.46% -> -1.88%). That is a bigger lever than any model change this
 project has found, and it needs live prices to pull.
 
+    python scripts/odds_api.py --quotes     write config/odds_quotes.tsv
     python scripts/odds_api.py --board      quote every pending board fixture
     python scripts/odds_api.py --leagues    what maps to the API, what does not
     python scripts/odds_api.py --usage      credits left on the key
@@ -267,6 +268,53 @@ def lane_price(ev: dict, lane: str) -> dict | None:
             "quotes": quotes}
 
 
+QUOTES = ROOT / "config" / "odds_quotes.tsv"
+
+
+def write_quotes() -> int:
+    """Derive config/odds_quotes.tsv — what the market offers on every
+    pending lane. The renderer reads this file and never calls the API:
+    rendering must stay offline, deterministic and free.
+    """
+    from scripts.board import load
+    rows = []
+    for f in load():
+        if f.settled or f.status:
+            continue
+        ev = find(f.code, f.teams, f.kickoff.split(" ")[0])
+        if not ev:
+            continue
+        for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
+            c = (cell or "").strip()
+            if not c or c.startswith("—"):
+                continue
+            # A TEAM total is not a match total. No book in this feed
+            # quotes team_totals, and pricing "Bolton U1.5" off the match
+            # ladder returns a number for a different bet entirely — the
+            # first render of this file showed 4.05 on it. No source, no
+            # quote.
+            if "(team)" in c:
+                continue
+            m = (re.search(r"(1X|X2|12|DNB[12])", c) if which == 3
+                 else re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", c))
+            if not m:
+                continue
+            q = lane_price(ev, m.group(1))
+            if not q:
+                continue
+            rows.append((f.teams, str(which), q["lane"], f"{q['consensus']:.2f}",
+                         f"{q['best']:.2f}", q["book"],
+                         f"{q['unibet_nl']:.2f}" if q["unibet_nl"] else "",
+                         str(q["n"])))
+    head = ["# What the market is offering on each pending lane. Derived by",
+            "# scripts/odds_api.py --quotes from live bookmaker prices; the",
+            "# renderer reads it and never calls the API itself. Delete it and",
+            "# the cards fall back to the engine's own buy>= bar.",
+            "# fixture\twhich\tlane\tconsensus\tbest\tbook\tunibet_nl\tbooks"]
+    QUOTES.write_text("\n".join(head + ["\t".join(r) for r in rows]) + "\n")
+    return len(rows)
+
+
 def usage() -> dict:
     _d, hdr = _get("/sports/")
     return {k: v for k, v in hdr.items() if k.lower().startswith("x-requests")}
@@ -288,6 +336,10 @@ def main() -> None:
         print(f"{len(have)} of {len(codes)} board competitions map to the API")
         print("  mapped :", ", ".join(have))
         print("  no feed:", ", ".join(miss))
+        return
+    if "--quotes" in args:
+        n = write_quotes()
+        print(f"{n} lanes quoted -> {QUOTES}")
         return
     if "--board" in args:
         from scripts.board import load

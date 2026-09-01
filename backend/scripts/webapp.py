@@ -63,9 +63,57 @@ SESSIONS = [
 ]
 
 
-def _fmt(cell: str) -> str:
+_QUOTES = None
+
+
+def quotes() -> dict:
+    """(fixture, lane) -> what the market is actually offering.
+
+    Written by scripts/odds_api.py --quotes. Missing file means no quotes
+    and every card falls back to the engine's own bar — silence over a
+    guess, and the render never calls the API itself.
+    """
+    global _QUOTES
+    if _QUOTES is None:
+        _QUOTES = {}
+        path = ROOT / "config" / "odds_quotes.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                f = ln.split("\t")
+                if len(f) < 8:
+                    continue
+                _QUOTES[(f[0], f[2])] = dict(
+                    consensus=f[3], best=f[4], book=f[5],
+                    unibet=f[6], books=f[7])
+    return _QUOTES
+
+
+def _fmt(cell: str, fixture: str = "") -> str:
     s = html.escape(cell)
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
+    # The engine's buy>= is its own opinion of what a lane is worth, and
+    # measured against two seasons of closing prices it is unreachable —
+    # 77% of a real book was struck under it and the ladder returns -5.5%
+    # at market average. Where the market has actually quoted the lane,
+    # the card shows THAT instead: what is on offer, what the best book
+    # pays, and where. Line shopping measured +3.58 points, which is more
+    # than any model change this project has found.
+    # "(team)" marks a team total, which no book in the feed quotes; the
+    # match ladder must never stand in for it.
+    m = (None if "(team)" in cell else
+         re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell))
+    q = quotes().get((fixture, m.group(1))) if (m and fixture) else None
+    if q:
+        best = (f' · best <b>{html.escape(q["best"])}</b> '
+                f'<span class="dim">{html.escape(q["book"])}</span>'
+                if q["best"] != q["consensus"] else "")
+        uni = (f' <span class="dim">· Unibet {html.escape(q["unibet"])}</span>'
+               if q["unibet"] else "")
+        s = re.sub(r"buy≥\s*[\d.]+(\s*\([^)]*\))?",
+                   f'<span class="buyat">buy at min <b>{html.escape(q["consensus"])}'
+                   f'</b>{best}{uni}</span>', s)
     return s.replace(" · ", "<br>")
 
 
@@ -606,7 +654,7 @@ def _card(f, kind: str, reads: dict) -> str:
                        else "won" if s.startswith("✓") else "")
                 live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell)}"
+                f"</span> {_fmt(cell, f.teams)}"
                 f"{star if which == best else ''}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
@@ -630,7 +678,7 @@ def _card(f, kind: str, reads: dict) -> str:
     # lane that can never earn its way off probation.
     t3 = (f'<div class="lane{" best" if best == 3 else ""}">'
           f'<span class="which">Tip 3</span> '
-          f'{_fmt(f.tip3)} <span class="dim">· result lane</span>'
+          f'{_fmt(f.tip3, f.teams)} <span class="dim">· result lane</span>'
           f'{star if best == 3 else ""}</div>'
           if f.tip3.strip() else "")
     # A card leads with the lane worth reading first — which is the
@@ -1355,6 +1403,8 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border:1px solid #2b3242; color:#c8d0e0; border-radius:6px;
   padding:7px 16px; font:inherit; cursor:pointer; }}
 .fxshut:hover {{ border-color:var(--gold); color:var(--gold); }}
+.buyat {{ color:#cfd6e4; }}
+.buyat b {{ color:var(--gold); }}
 .fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
 .fhelp summary {{ cursor:pointer; }}
 .fhelp div {{ padding:8px 0 0 2px; line-height:1.7; }}
