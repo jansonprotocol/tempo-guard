@@ -123,7 +123,15 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
             # Tip 2's market, so the "what does tip 2's KIND say about the
             # other lanes" question can be scored offline (the bettor's
             # team-over / team-under observation, 31 Aug).
-            mk2=t2[0] if t2 else None))
+            mk2=t2[0] if t2 else None,
+            # Both clubs, tip 1's OWN market and edge (mk above is the
+            # PICKED lane, which is a result lane on 22% of cards, so tip
+            # 1's side was not recoverable from it) and tip 2's claim, so
+            # a dump can be re-sliced the way the board's search bar
+            # slices — by league, by team, by side — without another
+            # replay (the confluence guard, 1 Sep).
+            h=str(r["home"]), a=str(r["away"]),
+            mk1=t1mk, e1=e1, p2=t2[1] if t2 else None))
     return rows
 
 
