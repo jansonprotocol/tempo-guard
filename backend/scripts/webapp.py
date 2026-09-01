@@ -1686,10 +1686,17 @@ def main() -> None:
         comp["matches"].sort(key=lambda m: m["d"])
     live = {g for comp in bank.values() for m in comp["matches"]
             for g in (m["kh"], m["ka"])}
-    names = {g: prefer.get(g, g) for g in live}
+    # SORTED, because `live` is a set and Python randomises string hashing
+    # per process: iterating it wrote the same 8.7 MB of JSON in a
+    # different key order on every render, so `git status` came back dirty
+    # after a no-op re-render and every board commit carried a phantom
+    # diff. `alias` is sorted for the same reason — it is fed partly from
+    # set iteration further up. Same content either way; this only makes
+    # the render reproducible.
+    names = {g: prefer.get(g, g) for g in sorted(live)}
     (OUT.parent / "matchbank.json").write_text(
-        _json.dumps(dict(comps=bank, alias=alias, names=names),
-                    ensure_ascii=False))
+        _json.dumps(dict(comps=bank, alias=dict(sorted(alias.items())),
+                         names=names), ensure_ascii=False))
 
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
