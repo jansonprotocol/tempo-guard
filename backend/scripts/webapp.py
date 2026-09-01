@@ -105,7 +105,8 @@ def _fmt(cell: str, fixture: str = "") -> str:
     # match ladder must never stand in for it.
     m = (None if "(team)" in cell else
          re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell))
-    q = quotes().get((fixture, m.group(1))) if (m and fixture) else None
+    q = (quotes().get((fixture, _struck(m.group(1))))
+         if (m and fixture) else None)
     if q:
         best = (f' · best <b>{html.escape(q["best"])}</b> '
                 f'<span class="dim">{html.escape(q["book"])}</span>'
@@ -115,6 +116,23 @@ def _fmt(cell: str, fixture: str = "") -> str:
         s = re.sub(r"buy≥\s*[\d.]+(\s*\([^)]*\))?",
                    f'<span class="buyat">buy at min <b>{html.escape(q["consensus"])}'
                    f'</b>{best}{uni}</span>', s)
+    # LEAD WITH THE LINE THAT REACHES THE SLIP. Athena publishes Asian
+    # rungs; a real bet is the safer neighbour — U3.0 is struck as U3.5.
+    # Printing the rung beside a price quoted for the struck line invites
+    # exactly the wrong bet: Unibet pays 1.45 on U3.0 against 1.29 on
+    # U3.5, so a reader chasing the bigger number takes a lane that
+    # measured +0.24% where the struck one measured +0.86%.
+    if m:
+        rung = m.group(1)
+        st = _struck(rung)
+        if st != rung:
+            s = s.replace(html.escape(rung),
+                          f'<b class="play">{html.escape(st)}</b>'
+                          f'<span class="rung" title="Athena publishes the '
+                          f'Asian rung {html.escape(rung)}; the bet that '
+                          f'reaches the slip is {html.escape(st)}, and every '
+                          f'price and record here is for that line.">'
+                          f'rung {html.escape(rung)}</span>', 1)
     return s.replace(" · ", "<br>")
 
 
@@ -439,6 +457,15 @@ def _haystack(f) -> str:
             bits.append(f"~none{which}")
             continue
         bits += [c.replace("*", ""), f"tip{which}", f"tip {which}"]
+        # The card now LEADS with the struck line, so a search for what
+        # is printed on it has to find the card. The Asian rung stays
+        # searchable too — the cell text already carries it — so both
+        # "u3.0" and "u3.5" reach the same fixture.
+        rm = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", c)
+        if rm:
+            st = _struck(rm.group(1))
+            if st != rm.group(1):
+                bits += [st, f"tip{which} {st}", f"tip {which} {st}"]
         if f.lane(which) if which < 3 else False:
             bits.append("playable")
         if which == 3:
@@ -583,6 +610,20 @@ def _edge(cell: str) -> float | None:
     """A lane's printed EDGE — the signed percentage after the claim."""
     m = re.search(r"%\s*\*{0,2}([+−-]\d+(?:\.\d+)?)%", cell or "")
     return float(m.group(1).replace("−", "-")) if m else None
+
+
+def _struck(rung: str) -> str:
+    """The line a printed rung is actually bought at — Rule 6's safer
+    neighbour. U3.0 is struck as U3.5, U4.25 as U4.5, O1.5 as O1.0.
+    The quote and the verdict must both speak about the line that will
+    appear on the slip, not the notation Athena prints."""
+    if not rung or rung[0] not in ("O", "U"):
+        return rung
+    from scripts.odds_api import bought
+    try:
+        return bought(rung)
+    except Exception:
+        return rung
 
 
 def _rung(cell: str) -> str:
@@ -732,7 +773,7 @@ def verdict(f, best: int) -> dict | None:
     lab, sc, cell, p = got
     hit = SAYS[lab]
     need = (1 / hit) * (1 + DECLINE_MARGIN)
-    lane = _rung(cell)
+    lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane))
     try:
         got_odds = float(q["best"] or q["consensus"]) if q else None
@@ -839,7 +880,7 @@ def _lanebar(f, cell: str, starred_label: str | None) -> str:
     need, _hit, solid = _needs(cell, starred_label)
     if need is None or f.settled:
         return ""
-    lane = _rung(cell)
+    lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane)) if lane else None
     soft = "" if solid else (' <span class="dim" title="This bar comes from '
                              'the lane&#39;s own printed claim, not from a '
@@ -1785,6 +1826,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .g-super-red {{ color:#f0a08e; border-color:#8a3a2e;
   background:rgba(138,58,46,.18); font-weight:600; }}
 .verdict {{ font-size:12px; margin:0 0 4px; letter-spacing:.03em; }}
+.play {{ color:#cfe6ff; }}
+.rung {{ font-size:10px; color:var(--dim); margin-left:6px;
+  border:1px solid #2a3346; border-radius:4px; padding:0 5px;
+  letter-spacing:.05em; cursor:help; white-space:nowrap; }}
 .lanebar {{ font-size:11px; margin-top:5px; letter-spacing:.04em; }}
 .lanebar.yes {{ color:#8fe3a8; }}
 .lanebar.no {{ color:#e08b7a; }}

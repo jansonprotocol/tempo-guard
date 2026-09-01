@@ -209,6 +209,21 @@ def _book_h2h(bk: dict, home: str, away: str) -> tuple | None:
     return None
 
 
+def bought(rung: str) -> str:
+    """The line a printed rung is actually STRUCK at.
+
+    Athena publishes Asian rungs; a real slip is a whole or half line.
+    U4.25 is bought as U4.5, U3.0 as U3.5, O1.5 as O1.0 — the same
+    mapping every ROI table in docs/ settles at. The card must quote what
+    the bettor will click, not the notation the engine prints: the two
+    are different bets and, on 1 Sep, differed by about 1.5% of price.
+    """
+    side, v = rung[0], float(rung[1:])
+    if v * 2 % 1:                      # quarter line: round to the safer half
+        return f"{side}{(math.ceil(v*2)/2 if side == 'U' else math.floor(v*2)/2):.1f}"
+    return f"{side}{v+0.5:.1f}" if side == "U" else f"{side}{v-0.5:.1f}"
+
+
 def lane_price(ev: dict, lane: str) -> dict | None:
     """What each book offers on one lane, plus consensus and best.
 
@@ -231,7 +246,11 @@ def lane_price(ev: dict, lane: str) -> dict | None:
                      "12": 1 / (h + a)}[lane]
         else:
             pairs = _book_totals(bk)
-            exact = next((p for p in pairs if f"{p[0]:g}" == lane[1:]), None)
+            # float compare, not string: f"{3.0:g}" is "3" against a
+            # lane of "3.0", so every WHOLE line silently missed its own
+            # quoted price and fell through to the fit.
+            want = float(lane[1:])
+            exact = next((p for p in pairs if abs(p[0] - want) < 1e-9), None)
             if exact:
                 price = exact[1] if lane[0] == "O" else exact[2]
             else:
@@ -299,7 +318,11 @@ def write_quotes() -> int:
                  else re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", c))
             if not m:
                 continue
-            q = lane_price(ev, m.group(1))
+            # Quote the line the bettor will actually strike, not the
+            # rung Athena prints. Result lanes are already real markets.
+            rung = m.group(1)
+            want = rung if which == 3 else bought(rung)
+            q = lane_price(ev, want)
             if not q:
                 continue
             rows.append((f.teams, str(which), q["lane"], f"{q['consensus']:.2f}",

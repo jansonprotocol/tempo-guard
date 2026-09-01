@@ -1200,3 +1200,73 @@ The split has effectively been **2022-2024 against 2024-2026** all along —
 a far healthier test than the date labels implied, and already inside the
 era this convention asks for. The priced ROI tables were never in doubt:
 they run 2024-07 to 2026-05, two consecutive seasons.
+
+---
+
+# Safer neighbour or the printed rung? (1 Sep)
+
+The bettor struck U3.5 where the card printed U3.0, noticed Unibet pays
+**1.45 on U3.0 against 1.29 on U3.5**, and asked two things: did the
+tests mix the two lines, and would the push line have been better?
+
+## The tests did not mix them
+
+Every ROI script in this file did the same thing:
+
+```
+lane  = bought(mk)                   # U3.0 -> U3.5
+price = 1/(p_win(lane, mu) * orr)    # priced at U3.5
+s     = settle_fraction(lane, goals) # settled at U3.5
+```
+
+One line, both sides. Worth noting WHY that is right rather than lucky:
+`p_win("U3.0")` and `p_win("U3.5")` return identical values, because the
+hit-rate convention counts a push as a win, while `settle_fraction` knows
+the difference — three goals pays 0.0 on U3.0 and +1.0 on U3.5. The
+scripts used the hit-rate function to price and the money function to
+settle, which is the correct pairing.
+
+## And the push line is worse, on 951 bets
+
+Both lines priced from the SAME fitted mu with the SAME book margin, both
+settled on real results:
+
+| | odds | win | push | ROI | older / newer |
+|---|---|---|---|---|---|
+| **bought line** (U3.5) | 1.35 | 75.0% | 0.0% | **+0.86%** | −0.59 / +2.30 |
+| printed rung (U3.0) | 1.49 | 57.0% | 18.0% | +0.24% | −0.62 / +1.09 |
+
+The push line pays **10.5% more** and returns less. By family: U3.0→U3.5
+gives +2.86% against the rung's +2.32%; U4.25→U4.5 gives −4.53% against
+−5.34%. And applying the BAR to the rung's own longer price is worse
+still — 1,967 bets at −1.53% — because the longer quote clears the bar
+more often and admits weaker cards.
+
+## Why, which is the useful part
+
+Two forces, pointing opposite ways.
+
+**For the push line:** the book's margin only bites the stake actually at
+risk, worth about `P(push) x (1 - 1/overround)`, roughly **+0.95%**.
+
+**Against it:** a push returns the stake at exactly 1.00, so **the edge
+earns nothing on that portion**. With 18% of stake pushing, 18% of the
+money sits out.
+
+With NO edge the push line wins — you keep more of the margin. With an
+edge you want more stake at risk, not less, and empirically the second
+force is larger by about 0.6 points.
+
+**So Rule 6's safer-neighbour convention is right because the rule has an
+edge, not by accident.** If the edge ever disappears, the better buy
+flips to the push line — which is a rather elegant canary.
+
+## The one thing that could flip it per card
+
+All of the above is at DERIVED prices, both lines from the same fitted
+mu. Unibet's live board showed a **12.4%** premium on U3.0 (1.45 against
+1.29) where the model implies **10.4%**. A book overpricing the push line
+by more than fair would favour it on that card. That is a line-shopping
+judgement per bet, not a rule change — and on the same screenshot U2.5 at
+1.83 gives the identical 6.7% overround, so Unibet was pricing the pair
+consistently and U3.5 remained the better buy.
