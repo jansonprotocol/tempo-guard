@@ -618,3 +618,64 @@ completely different project from finding a bet.
 blend test already says the best mixture is the market alone, so it would
 buy nothing, and it would destroy the one genuinely defensible claim this
 project has: that the 83.7% was produced without ever seeing a price.
+
+
+---
+
+# Before buying a lineups feed: how much could it possibly be worth? (1 Sep)
+
+Team news, injuries and confirmed lineups are most of what arrives between
+a bookmaker's OPENING price and its CLOSING price. So the open-to-close
+improvement is a measurable **upper bound** on what those features could
+buy the engine — and it needs no new data at all.
+
+On the 6,328 fixtures carrying both an opening and a closing line:
+
+| | Brier |
+|---|---|
+| Athena | 0.18630 |
+| market at OPEN | 0.18319 — Athena **1.70%** behind |
+| market at CLOSE | 0.18206 — Athena **2.33%** behind |
+
+Everything that arrives between open and close is worth **+0.616%** of
+Brier. Athena's gap to the *opening* line is **1.70%**.
+
+**So late news can close at most 36% of the gap — and that is a ceiling,
+not an estimate**, because the open-to-close move also contains late money
+and steam, not only team sheets. The real team-news share is smaller. The
+market's goal expectation only moves 0.087 goals on average across that
+whole window.
+
+Put plainly: **a perfect lineups-and-injuries feature would still leave
+Athena behind the opening line.** Roughly two thirds of the gap is in the
+base model, present before anybody knows who is playing.
+
+## Where the other two thirds probably is
+
+The store already carries more than the engine leans on: shots, **shots on
+target**, corners, fouls, cards and referee, across ~9,900 rows per major
+league. `features.py` does use `hst`/`ast` — for a per-team shots-on-target
+rate and a league conversion rate — but the ratings that set the goal
+expectation are built mainly from goals.
+
+That is the known weak spot in this class of model. Goals are a noisy
+realisation; shot volume and shots on target regress far better between
+matches, which is why every public xG-style rating outperforms a
+goals-only Elo. Rebuilding the attack/defence ratings on shots on target
+with a fitted conversion, rather than on goals, is the cheapest large
+experiment available — the data is already in the store, so it costs a
+retrosim run and nothing else.
+
+## Recommended order
+
+1. **Shot-based ratings** — free, data already local, targets the two
+   thirds of the gap that lineups cannot reach.
+2. **Lineups and injuries** — needs an api-football key (none is set;
+   `ODDS_API_KEY` serves prices only, and the odds feed carries no team
+   news). Bounded at a third of the gap, and only worth doing after (1),
+   because the harness is the same.
+3. Whatever remains after those two is measured, not guessed.
+
+The retrosim harness for either is the same shape as `final_pick.py`:
+replay as-of, score Brier and log loss against the market's line on lines
+neither party chose, and require both time windows to agree.
