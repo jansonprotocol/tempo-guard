@@ -18,11 +18,28 @@
     "  Wisla / Wisla Plock    two different clubs (Krakow and Plock), and",
     "                         neither has a historical variant stored",
     "  Wieczysta Krakow       newly promoted, no counterpart to merge with",
-    "  FC Thun, FC Vaduz      real counterparts, but their history stops in",
-    "                         2020 and 2021. Merging would produce a tip built",
-    "                         on six-year-old form, which is the recency defect",
-    "                         rather than the naming one. Left split until that",
-    "                         is fixed.",
+    "",
+    "FC Thun and FC Vaduz were left split on the same list until 1 Sep, on the",
+    "argument that folding them builds a tip on six-year-old form. That was an",
+    "assertion, so it was measured: across 68,341 replayed cards, bucketed by",
+    "how far back the rolling ten reaches, tip 1 grades 83.56% on a normal",
+    "window and 81.10% once the window reaches four years or more. Controlled",
+    "within each league — the deep windows cluster in the cups and the Scottish",
+    "lower divisions, which grade badly anyway — the drag is 1.47 points on an",
+    "equal-league average over 35 leagues. Real, one-directional, and small.",
+    "",
+    "Against that: the alternative is not a fresher tip, it is NO tip. And the",
+    "gate makes the stale rows temporary — it deactivates the moment the club",
+    "has five current-season rows of its own, so the old form bridges the first",
+    "few weeks of a season and then stops being read at all.",
+    "",
+    "Checked first: neither club has a cross-division rescue. SUI-CL holds two",
+    "rows in total, both from a 2021 playoff, so the store simply does not have",
+    "the Swiss second tier. Where an adjacent division IS stored, a merge is the",
+    "WRONG tool and must not be used — store._apply_merges runs inside",
+    "load_results, so a merged club clears min_matches and the cross-division",
+    "fallback never fires. Merging Coventry's 2000-01 Premier League rows onto",
+    "its 2026 promotion would suppress a fallback that reads last season.",
     "",
     "A merge applies only where the served variant is BELOW the match gate, so",
     "it can add a fixture the engine withheld and can never change one it",
@@ -84,6 +101,12 @@
     ],
     "St. Gallen": [
       "FC St. Gallen"
+    ],
+    "Thun": [
+      "FC Thun"
+    ],
+    "Vaduz": [
+      "FC Vaduz"
     ],
     "Young Boys": [
       "BSC Young Boys"

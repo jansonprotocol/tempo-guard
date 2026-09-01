@@ -17,12 +17,20 @@ half-way:
         A fixture the engine abstains on is still added, with the reason
         printed in its Tip 1 cell — an abstention is an answer.
 
-    python scripts/futurematch.py --reprice
+    python scripts/futurematch.py --reprice [--revive]
         Re-run every pending, not-yet-live row through the CURRENT engine
         and rewrite its tip cells. Run this after any engine change
         (constants, floors, debits): board rows are typed at slate time
         and do not move by themselves. Used three times on 27-28 Aug by
         hand before it was a script.
+
+        An abstained row is skipped by default — an abstention is an
+        answer, and re-asking it every run would let a card flicker into
+        existence on noise. --revive re-asks the pending abstentions
+        only, for the case the abstention was caused by a DATA defect
+        since fixed: a name merge or a new alias makes history the engine
+        never had available, so the old answer was to a different
+        question. Settled and live rows are untouched either way.
 
 What this command writes, precisely:
     config/fixtures.tsv        the new or re-priced rows
@@ -124,13 +132,14 @@ def add_slate(path: Path) -> None:
     print(f"{len(rows)} fixtures added · ~{playable} playable at tip 1")
 
 
-def reprice() -> None:
+def reprice(revive: bool = False) -> None:
     lines = FIXTURES.read_text().split("\n")
     changed = 0
     for f in load():
-        if f.settled or f.status or " v " not in f.teams \
-                or f.tip1.startswith("—"):
+        if f.settled or f.status or " v " not in f.teams:
             continue                      # live and graded rows never move
+        if f.tip1.startswith("—") and not revive:
+            continue                      # an abstention is an answer
         n1, n2, n3 = price(f.code, f.teams, f.kickoff.split(" ")[0])
         if n1.startswith("—") or (n1 == f.tip1 and n2 == f.tip2
                                   and n3 == f.tip3):
@@ -154,7 +163,7 @@ def reprice() -> None:
 def main() -> None:
     args = [a for a in sys.argv[1:]]
     if "--reprice" in args:
-        reprice()
+        reprice(revive="--revive" in args)
     elif args:
         add_slate(Path(args[0]))
     else:
