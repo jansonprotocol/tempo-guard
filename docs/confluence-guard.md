@@ -782,3 +782,74 @@ the odds API could answer — `draw_no_bet` is a market it carries, and
 That question outranks the team-total probe. Tip 2's signal is larger in
 hit-rate terms, but tip 2 has never shown a positive return at any price;
 the DNB lane just did.
+
+---
+
+# The go/no-go: is the synthetic DNB price reachable? (1 Sep)
+
+The +6.05% on 212 gated DNBs was settled at a price we BUILT — the best
+home quote and the best away quote across every book, combined
+arithmetically — which assumes both legs are takeable at once and carries
+no draw-no-bet margin of its own. If a real quote is 6% worse the edge is
+gone. That single unknown gated everything else.
+
+It needs no historical data and no settlement, only today's board: fetch
+`draw_no_bet` and `h2h` for upcoming fixtures in one request, rebuild the
+synthetic price from the same event, and compare. **60 credits, 24
+fixtures, 48 comparable prices.**
+
+## The gap widens with the price, and we bet the short end
+
+| synthetic band | n | mean gap | median | worst |
+|---|---|---|---|---|
+| **1.00–1.25** | 5 | **−1.81%** | −2.27% | −2.38% |
+| **1.25–1.45** | 10 | **−2.85%** | −2.90% | −4.51% |
+| 1.45–1.80 | 7 | −3.50% | −3.61% | −4.00% |
+| 1.80–2.60 | 8 | −3.71% | −3.76% | −5.42% |
+| 2.60+ | 18 | −6.07% | −6.56% | −16.30% |
+
+**Every one of the 48 real quotes is worse than the synthetic** — no book
+gives the arbitrage away. But the shading is not flat: books shade their
+draw-no-bet line hardest on longshots and barely at all on short
+favourites, which is exactly where the gated DNBs live. **Our 212 bets
+averaged 1.160.**
+
+## Which leaves the edge intact, at about +3.7%
+
+| gap applied | P | ROI |
+|---|---|---|
+| synthetic, as backtested | 1.160 | +6.04% |
+| all prices pooled, mean −4.19% | 1.111 | +2.05% |
+| **the band we bet (1.00–1.45), mean −2.50%** | **1.131** | **+3.66%** |
+| the band we bet, median −2.34% | 1.133 | +3.81% |
+
+Break-even sits at P = 1.086, a gap of **−6.3%**. **Of the 15 short-price
+quotes, none were worse than that** — the worst in the 1.00–1.25 band was
+−2.38%, leaving nearly four points of headroom.
+
+**The go/no-go passes.** The gated DNB lane is playable at real quotes at
+roughly +3.7%, down from +6.04% but clearly above zero.
+
+## What the probe also found, which constrains how it is played
+
+**Liquidity is thin.** Draw-no-bet is quoted by **1 to 4 books** per
+fixture against 7 to 13 for the match odds. That is a stake-size
+constraint, not a price problem, but it is real.
+
+**Two leagues on our board carry no DNB market at all** — NED-ED and
+POR-PL, 6 of the 30 fixtures probed. A gated DNB there cannot be played
+as a DNB.
+
+## The residual uncertainty, stated plainly
+
+The backtest's synthetic came from football-data's **maximum CLOSING**
+1X2 across its book panel. This probe's synthetic came from the odds
+API's EU books at a pre-match moment. If football-data's max-closing runs
+higher than the odds API's best, the true haircut against the backtested
+price is **larger** than the −2.50% measured here, and this estimate is
+optimistic by that difference.
+
+The headroom absorbs a fair amount of it — break-even needs −6.3% and the
+in-band worst case was −4.51% — but the number to trust is the forward
+log, not this one. n is 48 prices on a single day, and the base result is
+212 bets.
