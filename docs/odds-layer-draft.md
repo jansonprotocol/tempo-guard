@@ -529,3 +529,92 @@ Three honest conclusions:
    1.5% of cards.
 3. **Line shopping is worth more than the model** — +3.58 points against
    +2.14 — and needs no engine change at all.
+
+
+---
+
+# Is the probability read the best we can make? (1 Sep)
+
+The decisive test, and it needed no new data: score Athena and the market
+as *forecasters* on the same fixtures, on lines **neither of them chose**,
+with Brier score and log loss. 7,613 fixtures, two seasons.
+
+| line | n | Brier Athena | Brier market | winner |
+|---|---|---|---|---|
+| U1.5 | 7,613 | 0.1888 | **0.1839** | market |
+| U2.5 | 7,613 | 0.2496 | **0.2431** | market |
+| U3.5 | 7,613 | 0.2014 | **0.1961** | market |
+| U4.5 | 7,613 | 0.1108 | **0.1084** | market |
+| **overall** | | **0.1876** | **0.1829** | market by 2.6% |
+
+**The two forecasts are genuinely independent.** Correlation between the
+goal expectations is only **0.562**, mean absolute difference 0.25 goals.
+Athena is not copying the market — it sees something different. Both are
+close on average (Athena 2.740, market 2.695, actual 2.667).
+
+**But the independent part is noise.** Blending them, sweeping the weight
+on Athena from 0 to 1:
+
+| weight on Athena | Brier (all) | older half | newer half |
+|---|---|---|---|
+| **0.0 — market alone** | **0.18287** | 0.18299 | 0.18276 |
+| 0.2 | 0.18313 | 0.18333 | 0.18293 |
+| 0.5 | 0.18417 | 0.18455 | 0.18380 |
+| 1.0 — Athena alone | 0.18762 | 0.18842 | 0.18683 |
+
+**The optimal weight on Athena is zero**, monotonically, in both windows.
+Adding any of it to the market makes the forecast worse. Whatever Athena
+knows that the market does not, it does not help predict goals.
+
+**And it is not a timing artefact.** The obvious defence — the engine
+prices days ahead while a closing line carries team news it cannot have —
+does not survive. Against the **opening** line the gap is still there:
+
+| | Athena | market | gap |
+|---|---|---|---|
+| vs closing | 0.18762 | 0.18287 | +2.60% |
+| vs opening | 0.18709 | 0.18329 | +2.07% |
+
+Best blend weight against the opening line is also **0.00**. There is no
+early window in which Athena is ahead and the market catches up.
+
+## What that means for the mission
+
+The mission reads *"most accurate tipper, therefore positive ROI"*. The
+measurement separates those two claims:
+
+- **Accurate:** yes, and demonstrably so — 83.7% on the final pick, and a
+  Brier of 0.188 is a real forecaster, not a coin flip.
+- **More accurate than the market:** no. 2.1–2.6% behind on every line,
+  before and after team news, and it adds nothing in combination.
+- **Therefore positive ROI:** does not follow, and the price data says it
+  does not hold. The market's number sits between Athena's and the truth,
+  and the margin sits on top of that.
+
+## The three paths that are still open
+
+None of them is an accuracy path.
+
+1. **Line shopping** — +3.58 points, needs no engine change, and the live
+   board shows Unibet at or below consensus on every lane.
+2. **The DNB modesty bucket** — +2.14%, two-window validated. It works
+   *because* the engine is wrong in a known direction that happens to
+   align with the market's favourite-longshot bias.
+3. **Thin markets** — the Jong PSV 1.44 against a 1.21 consensus was a
+   19% overlay in a league the odds feed barely covers. That is where the
+   bettor's own realised profit came from, and it is a market-inefficiency
+   play, not a model play.
+
+## If accuracy itself is the goal
+
+The market's advantage is almost certainly information the engine has no
+access to: confirmed lineups, injuries, rest days, table motivation,
+travel and weather. The engine has Elo, form, venue and its cup debits.
+api-football carries lineups and injuries on the same key that now serves
+prices — that is a real roadmap for closing a 2% Brier gap, and it is a
+completely different project from finding a bet.
+
+**What must not happen** is feeding the market price into the engine. The
+blend test already says the best mixture is the market alone, so it would
+buy nothing, and it would destroy the one genuinely defensible claim this
+project has: that the 83.7% was produced without ever seeing a price.
