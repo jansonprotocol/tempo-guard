@@ -655,3 +655,130 @@ guard ships as *information with a registered prediction*, and NO PLAY
 ships as protocol. Whether skipping red pays is a question only real
 forward quotes can answer, because even super red wins three in four and
 declining it forfeits those wins.
+
+---
+
+# The rule that was never tested: decline on the PRICE
+
+Everything measured so far selects a card and then looks at what it
+costs. The bettor's question inverts that: the guard picks a lane, finds
+the minimum odds that lane needs, and if the market will not pay it,
+**declines**.
+
+That is a different kind of rule. Every losing rule in this file selected
+for a higher hit rate and watched the quote shorten by exactly as much.
+A price-conditional rule does not select for hit rate at all — it selects
+for cards where **the market has not shortened enough**. It is the first
+rule here that hunts a book error rather than an engine strength.
+
+Each label already carries a hit rate, so it implies a break-even price
+of 1/hit. Bars learned on the OLDER half only, then applied to the newer:
+
+| label | train hit | break-even |
+|---|---|---|
+| super green | 89.23% | 1.121 |
+| green | 86.62% | 1.154 |
+| orange | 83.28% | 1.201 |
+| red | 78.35% | 1.276 |
+| super red | 76.34% | 1.310 |
+
+The split is cleanly out-of-sample by accident of coverage:
+football-data carries two seasons, the deep bank about four, so **all
+8,121 priced cards fall in the newer half** and none of them touched the
+bars that judge them.
+
+| rule | n | odds | hit | ROI |
+|---|---|---|---|---|
+| play everything | 8,121 | 1.16 | 81.8% | −1.67% ± 0.46 |
+| decline under break-even | 2,597 | 1.29 | 77.1% | −0.91% ± 1.06 |
+| decline under break-even +2% | 1,967 | 1.31 | 75.5% | −0.84% ± 1.26 |
+| decline under break-even +4% | 1,479 | 1.34 | 74.4% | −0.21% ± 1.51 |
+| **decline under break-even +6%** | 1,127 | 1.36 | 73.7% | **+0.83% ± 1.77** |
+| **decline under break-even +8%** | 845 | 1.39 | 72.7% | **+1.49% ± 2.10** |
+| decline under break-even +12% | 463 | 1.44 | 69.8% | +1.59% ± 3.03 |
+
+**A monotone gradient from −1.67% to +1.59%, crossing zero at about +5%.**
+The hit rate FALLS the whole way — 81.8% down to 69.8% — which is the
+point. This is the first thing in the project to make money by taking
+*worse* bets at *better* prices.
+
+No single positive cell is significant on its own (±1.77 on +0.83). The
+gradient across seven thresholds is the evidence, not any one row.
+
+## Two controls, both of which could have killed it
+
+**Does the label do any work, or is it just "longer prices pay"?** Matched
+selectivity, price alone against the label rule:
+
+| bar | label rule | plain price, same n |
+|---|---|---|
+| +4% | −0.21% | −0.29% |
+| +6% | **+0.83%** | −0.41% |
+| +8% | **+1.49%** | +0.18% |
+
+The label adds about 1.2 to 1.3 points at the tighter bars, and nothing
+at +4%. Inside the error bars, but consistent in direction.
+
+**Is it an artifact of the fitted mu?** Ladder prices are derived — a mu
+fitted to the book's 2.5 line, the rung read off it — and selecting on a
+derived price while settling at the *same* derived price biases returns
+upward wherever the fit overestimates. If that were the mechanism, the
+effect would be strongest in the lanes furthest from 2.5.
+
+| distance from 2.5 | n | all | kept at +6% |
+|---|---|---|---|
+| 0.6–1.1 | 2,298 | −2.53% | **+1.48%** |
+| 1.1–1.6 | 1,990 | −3.42% | (none kept) |
+| 1.6+ (heavy extrapolation) | 3,615 | −0.63% | **−4.53%** |
+
+The opposite of the artifact signature: positive in the moderate band,
+**negative** where extrapolation is worst. The control passes.
+
+## But most of it is the DNB lane
+
+Splitting the priced set by how its price was built:
+
+| | n | odds | hit | ROI |
+|---|---|---|---|---|
+| **ladder rungs only** | 7,909 | 1.16 | 81.8% | −1.88% |
+| ladder, decline +6% | 1,070 | 1.36 | 73.8% | **+0.03%** |
+| ladder, decline +8% | 799 | 1.39 | 73.0% | +0.69% |
+| **DNBs only** | 212 | 1.16 | 82.1% | **+6.05% ± 1.98** |
+| DNBs, decline +6% | 57 | 1.34 | 71.9% | **+15.92% ± 4.88** |
+
+**The ladder reaches break-even and stops.** −1.88% to about +0.3%, well
+inside its error bars. Worth having, not worth celebrating.
+
+**The DNB lane is the finding.** +6.05% before any price bar at all, on
+prices that are EXACT rather than fitted — derived arithmetically from the
+book's 1X2 with no Poisson step anywhere. And it splits clean:
+
+| | n | hit | ROI |
+|---|---|---|---|
+| older half | 106 | 84.9% | +6.14% ± 3.07 |
+| newer half | 106 | 79.2% | +5.96% ± 2.52 |
+
+Two halves, six-tenths of a point apart. Behind it: the market prices
+these at an implied 86.2% of decisive matches and Athena wins **92.0%**
+of them — the same underclaim the DNB lane was found to have on 30
+August, now showing up as money at real quotes.
+
+It also explains the super-green cell: 65 of its 90 kept cards are DNBs.
+
+## The caveat that decides what happens next
+
+**The DNB price here is synthesised, not quoted.** It is built from the
+best home price and the best away price across every book, which assumes
+both can be taken at once and carries no DNB-market margin of its own.
+A real draw-no-bet quote from a single book will be worse — possibly much
+worse, since DNB is a secondary market.
+
+So the honest statement is: **at fair synthetic prices the gated DNB lane
+returns +6%, two windows, on exact arithmetic.** Whether it survives a
+real quote is unmeasured, and it is now the single most valuable thing
+the odds API could answer — `draw_no_bet` is a market it carries, and
+212 historical bets is a smaller ask than any backfill considered so far.
+
+That question outranks the team-total probe. Tip 2's signal is larger in
+hit-rate terms, but tip 2 has never shown a positive return at any price;
+the DNB lane just did.

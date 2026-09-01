@@ -16,6 +16,7 @@ to grade the rule honestly on history; here there is no history to
 protect, only a card that has not kicked off.
 
     python scripts/guard_slices.py --write          all leagues
+    python scripts/guard_slices.py --write --out part.tsv
     python scripts/guard_slices.py --leagues E0,I1
 
 Read by scripts/webapp.py to print a label per card. The label rules and
@@ -32,10 +33,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.data import store
 from scripts.confluence import (CLUB_WINDOW, KPRIOR, MIN_LEAGUE, MIN_SLICE,
                                 Counter, Mem, _side, region)
-from scripts.final_pick import DEFAULT_N, chosen, grade
+from scripts.final_pick import chosen, grade
 from scripts.two_tips import tips
 
 OUT = Path(__file__).resolve().parents[2] / "config" / "guard_slices.tsv"
+
+# MUST match the bank the frozen thresholds were calibrated on. The score
+# is a sum of shrunk deviations, and shrinkage depends on how many cards
+# each slice holds: a league or side row built from 300 fixtures is pulled
+# harder toward the baseline than one built from 1,500, so the same card
+# scores SMALLER on a shallower table. Built at 300 against thresholds
+# fitted at 1,500, live scores spanned -5.0 to +3.8 against a super-green
+# bar of +6.34 — no card could ever have earned a super label. Club rows
+# are unaffected either way, since Mem caps them at CLUB_WINDOW.
+CALIBRATION_N = 1500
 
 # The frozen thresholds, set on the European population and registered in
 # docs/confluence-guard.md. Changing either is a new experiment, not a
@@ -163,7 +174,7 @@ def read_table(path: Path = OUT) -> dict:
 
 def main() -> None:
     args = sys.argv[1:]
-    n = int(args[args.index("--n") + 1]) if "--n" in args else DEFAULT_N
+    n = int(args[args.index("--n") + 1]) if "--n" in args else CALIBRATION_N
     codes = (args[args.index("--leagues") + 1].split(",")
              if "--leagues" in args else sorted(store.available_leagues()))
     lines = [
@@ -185,9 +196,10 @@ def main() -> None:
             continue
         if C:
             lines += rows_for(c, C)
+    out = Path(args[args.index("--out") + 1]) if "--out" in args else OUT
     if "--write" in args:
-        OUT.write_text("\n".join(lines) + "\n")
-        print(f"{len(lines)-8} slice rows -> {OUT}")
+        out.write_text("\n".join(lines) + "\n")
+        print(f"{len(lines)-8} slice rows -> {out}")
     else:
         print(f"{len(lines)-8} slice rows (dry run; pass --write)")
 
