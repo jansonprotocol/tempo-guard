@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 81.3%
+## CURRENT CONFIRMED HITRATE: 81.4%
 
     lane                        Tip 1              Tip 2
-    all matches            205 / 252  81.3%    128 / 187  68.4%
+    all matches            206 / 253  81.4%    128 / 187  68.4%
     played lanes  >+1%      99 / 126  78.6%    128 / 187  68.4%
     placed bets            108 / 136  79.4%    ROI +0.1%
 
@@ -317,7 +317,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔴 LIVE 1-1 (HT) <b>Dijon v Saint-Étienne</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (75.9 −6.5)</td><td>U4.25 84.2% <b>−4.4%</b><br>buy≥1.26 (+7.1% margin) · <i>room for 2 · half from the 2nd</i></td><td>O1.75 75.1% +3.1%<br>buy≥1.46 (+4.3% margin) · floor −2.9 · <i>needs 1 more (half in)</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 31-08 22:00 <b>Atlético Grau v Melgar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 75.2% +1.4%<br>buy≥1.39 (+4.8% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔵 01-09 01:00 <b>Deportivo Pasto v Deportivo Pereira</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U3.0 79.5% <b>+0.0%</b><br>buy≥1.23 (+1.3% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 01-09 03:05 <b>Tolima v Cúcuta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U3.0 79.5% <b>+0.0%</b><br>buy≥1.36 (+1.3% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.9% +9.7% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 01-09 20:00 <b>Al-Hilal v Al-Ahli</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>O1.5 84.9% +5.0%<br>buy≥1.27 (+8.0% margin)</td><td>O2.25 65.3% +8.0%<br>buy≥1.43 (+3.6% margin) · floor −9.7</td></tr></table>
 <table align="left"><tr><th align="left">🔵 01-09 20:30 <b>Zürich v Young Boys</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Swiss Super League (82.6 +0.7)</td><td>O1.5 83.8% +4.9%<br>buy≥1.28 (+8.7% margin)</td><td><b>Young Boys O1.5</b> 62.4% +29.5%<br>buy≥1.66 (+3.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 79.5% +4.7% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -347,7 +346,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 205 / 252   ·   81.3%**   ·   **Tip 2 — 128 / 187   ·   68.4%**
+**Tip 1 — 206 / 253   ·   81.4%**   ·   **Tip 2 — 128 / 187   ·   68.4%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -618,6 +617,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-1 · 01-09 00:15 <b>Unión La Calera v La Serena</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 86.0% <b>+0.6%</b><br>buy≥1.25 (+6.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 01-09 00:30 <b>Fortaleza v Operário-PR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>O1.0 88.5% <b>−0.7%</b><br>buy≥1.23 (+6.1% margin)</td><td>✅ O1.75 66.2% +1.2%<br>buy≥1.65 (+0.5% margin) · floor −8.8</td></tr></table>
 <table align="left"><tr><th align="left">❌ 2-3 · 01-09 01:00 <b>Remo v Coritiba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 75.5% <b>+0.2%</b><br>buy≥1.52 (+4.8% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">◦ 1-2 · 01-09 01:00 <b>Deportivo Pasto v Deportivo Pereira</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U3.0 79.5% <b>+0.0%</b><br>buy≥1.23 (+1.3% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 01-09 02:45 <b>Universidad Católica v O'Higgins</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga de Primera (81.9 −3.3)</td><td>U4.25 84.7% <b>−0.7%</b><br>buy≥1.27 (+5.7% margin)</td><td>✅ <b>Universidad Católica O0.5</b> 80.6% +3.0%<br>buy≥1.29 (+4.0% margin) · team</td></tr></table>
 
 <br clear="all">
