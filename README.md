@@ -1047,6 +1047,11 @@ that premium the book is keeping the insurance money.
 | — open | Hoffenheim v Dortmund | U4.5 | 1.29 | — | TOTO — clears the 1.2707 bar; Pinnacle 1.40, so 7.9% left behind |
 | — open | West Ham v Derby | O1.5 | 1.22 | — | TOTO — under the bar; Pinnacle 1.29, Unibet NL 1.18 |
 | — open | NEC v Feyenoord | U4.5 | 1.38 | — | TOTO — clears comfortably, and the best price taken tonight: 1.38 against a board best of 1.40 |
+| — open | Carrarese v Empoli | U3.5 | 1.23 | — | Unibet — the card's struck lane, but under the 1.2707 bar; best 1.33 |
+| — open | Ceuta v Celta Fortuna | U3.5 | 1.37 | — | TOTO — the card's struck lane, clears well; best 1.40, so 2.1% off |
+| — open | Ascoli v Benevento | U3.5 | 1.28 | — | TOTO — the card's struck lane, clears; best 1.39 |
+| — open | Lens v Lorient | U3.5 | 1.51 | — | TOTO — own read. The card's lane is O1.5 at 81.7%, an OVER; U3.5 is not tip 1, 2 or 3. Not a contradiction though — O1.5 and U3.5 both win on 2 or 3 goals, so this is the same match read narrower |
+| — open | Luzern v Vaduz | DNB (home) | 1.27 | — | TOTO — own read, and a SECOND position on a fixture already held at U4.5 1.37. The card prints no tip 3 here at all, so this DNB is not a lane the engine offered |
 
 <!-- HYPOTHESES:START -->
 
