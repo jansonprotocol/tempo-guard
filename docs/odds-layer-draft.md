@@ -679,3 +679,128 @@ retrosim run and nothing else.
 The retrosim harness for either is the same shape as `final_pick.py`:
 replay as-of, score Brier and log loss against the market's line on lines
 neither party chose, and require both time windows to agree.
+
+
+---
+
+# The risk guard, priced (1 Sep)
+
+The guard sorts a printed card into three tiers **before** any result is
+known, from what Athena itself says — never from odds:
+
+```
+green   the pick is a gated DNB, OR tip 1 claims >=84% on a modest edge (<1.0)
+red     tip 1 claims <76%, OR claims <80% on an OVER
+orange  everything else
+```
+
+Graded on hitrate alone it separates cleanly. The question the bettor asked
+is the harder one: **does it move ROI**, at prices anyone could actually
+have taken? Settled every pick at football-data's *maximum closing* price
+across books — result lanes derived exactly from 1X2, ladder rungs through
+a `mu` fitted to the 2.5 line — across 16 European leagues.
+
+**7,673 final picks settled at a real price.**
+
+| tier | n | avg odds | hit | ROI |
+|---|---|---|---|---|
+| ALL | 7,673 | 1.15 | 82.1% | **−1.70% ± 0.46** |
+| green | 1,556 | 1.12 | 87.0% | −1.05% ± 0.92 |
+| orange | 4,631 | 1.17 | 82.5% | −1.08% ± 0.62 |
+| red | 1,486 | 1.13 | 75.8% | **−4.30% ± 1.03** |
+| dropping red | 6,187 | 1.16 | 83.6% | −1.07% ± 0.52 |
+
+So: **yes, red does take out most of the bad ones — and no, it does not
+survive the two-window split.**
+
+| window | green | orange | red |
+|---|---|---|---|
+| older | −0.91% | −0.88% | **−1.17%** |
+| newer | −1.20% | −1.30% | **−6.28%** |
+
+The *hitrate* separation holds in both halves (86.7 vs 77.2, then 87.3 vs
+74.9). The *ROI* separation is entirely a newer-window effect: in the older
+half red's longer average price paid for its lower strike rate almost
+exactly, and the tier was worth nothing. One window is not a result — that
+rule has killed six hypotheses in this file and it kills this one too.
+
+**What is honest to say:** the guard is a good *confidence* marker and an
+unproven *ROI* filter. Dropping red lifts the whole book from −1.70% to
+−1.07%, but −1.07% is still a loss, and half the evidence for the lift
+comes from one time period. It can ship as a colour on the card. It cannot
+ship as a claim that it makes the book profitable.
+
+---
+
+# Are thin markets actually softer? (1 Sep)
+
+The one route left open after the ladder, the DNB, 1X2, the inverse play
+and the shot blend had all failed was **thin markets**: the idea that
+Athena's edge, invisible against Pinnacle on the Premier League, might
+survive where the book is lazier. It was the framing behind two of the
+bettor's best plays — Jong PSV at 1.44 against a 1.21 consensus, and
+América-MG U3.5 — and it deserved a measurement rather than another
+anecdote.
+
+Backfilled the-odds-api at **BRA-SB, CHI-PD and SAU-PL** — three leagues
+with no football-data feed at all — sampling 239 snapshots for about 3,200
+credits. The UEFA cups were deliberately *excluded*: they are the most
+liquid markets on the board, the opposite of the hypothesis. **854 graded
+final picks joined.**
+
+## The premise is wrong on the market we actually bet
+
+| market | overround, best price across real books |
+|---|---|
+| totals, thin leagues | **5.09%** (n=1,763) |
+| 1X2, thin leagues | **8.53%** (n=8,390) |
+| totals, Europe (measured earlier) | 5.60% |
+
+**Thin-league totals are priced slightly TIGHTER than European totals**, not
+wider. The margin is fat on 1X2 — 8.53% is a genuinely soft market — but
+the ladder is where the picker spends most of its plays, and there the
+"thin means soft" premise simply does not hold. Totals are the easiest
+market in football to make and the arbitrage is trivial, so a small Chilean
+book copies a good totals line and works its margin into 1X2 instead.
+
+## And the returns are worse, not better
+
+| slice | n | avg odds | hit | ROI |
+|---|---|---|---|---|
+| ALL | 854 | 1.12 | 85.9% | **−2.90% ± 1.36** |
+| green | 550 | 1.10 | 88.9% | −2.47% ± 1.56 |
+| orange | 286 | 1.17 | 81.5% | −4.40% ± 2.69 |
+| red | 18 | — | — | (thin) |
+| dropping red | 836 | 1.12 | 86.4% | −3.13% ± 1.38 |
+| BRA-SB | 553 | 1.13 | 86.1% | −3.38% ± 1.75 |
+| CHI-PD | 291 | 1.12 | 86.6% | −1.41% ± 2.11 |
+
+−2.90% against Europe's −1.70%, on a **higher** hitrate (85.9% vs 82.1%) at
+a **shorter** average price. That is the whole story in one line: these
+books know which matches are safe and price them accordingly.
+
+Dropping red makes it **worse** here (−3.13%), because red is 18 of 854
+cards — the guard has nothing to remove. The green/orange gap does survive
+(−2.47 vs −4.40), which is the one piece of independent support the guard
+has picked up all day.
+
+## What this does and does not close
+
+**Closed:** "thin leagues are softer on totals, so play the ladder there."
+Measured over 854 picks and false in both the margin and the return.
+
+**Still open, and now the last thing standing:** the specific overlays that
+started this — Jong PSV — were in **NED-D2**, a reserve league that neither
+football-data nor the-odds-api carries. The market that actually produced
+the 1.44-vs-1.21 gap remains unmeasured, and cannot be measured with any
+feed currently obtainable. Two anecdotes are not a strategy, and I framed
+them as one earlier in this file; that framing was ahead of its evidence.
+What survives is narrower and worth saying plainly: *the edge, if there is
+one, is in markets so thin that nobody sells the data for them* — which is
+also the reason it would be hard to get money down on.
+
+## Credits
+
+Roughly 16,800 of the API allowance remain. Nothing above justifies
+spending more of it on a wider backfill; the marginal snapshot buys another
+decimal place on a negative number. Held.
