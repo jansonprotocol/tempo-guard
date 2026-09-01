@@ -1101,3 +1101,59 @@ best-of-market columns rather than at either end.
 Concretely, from today's board: Unibet showed 1.08 where Pinnacle paid
 1.12, and 1.44 where GTbets paid 1.49. That gap is the difference between
 the rule working and not.
+
+## How often it fires, corrected twice
+
+The rate has been wrong twice in this file and both errors ran the same
+way — overstating volume.
+
+**First**, "one or two a week" was the gated-DNB rate applied to the whole
+rule. **Second**, the replacement figure of 15.1 a week divided 1,008
+bets by 468 MATCH days, but those match days sit inside **660 calendar
+days**; football has off-days, and dividing by match days overstates the
+weekly rate by 1.41x.
+
+**The rate is 10.7 per calendar week**, and even that is an average across
+two seasons that behave differently:
+
+| | bets | per week | clear rate | ROI |
+|---|---|---|---|---|
+| 2024-25 | 687 | 15.3 | 15.6% | +1.09% ± 2.23 |
+| **2025-26 (recent)** | 321 | **7.5** | **8.6%** | **+3.04% ± 3.18** |
+| both | 1,008 | 10.7 | 12.4% | +1.71% ± 1.82 |
+
+**The recent season fires at half the rate and returns three times as
+much**, on similar card volume — 3,728 priced against 4,393. That is the
+engine's own shipped conservatism showing up as money rather than as
+withheld volume: `REL_SAYS_DEBIT`, the streak debit, `MU_SHRINK` and the
+consensus cap push more cards into orange and red, and red is refused.
+
+So the forward expectation is **7 to 8 bets a week across the 16 priced
+leagues**, not 15. The worked ledger's 40 bets spanned five weeks at 8.5
+a week, which is why it did not match the rate quoted beside it.
+
+The caveat on the good news: ±3.18 on +3.04% puts the recent season's
+edge anywhere between roughly zero and +6%. 321 bets is not many, and the
+same debits that improved it were shipped DURING that season, so part of
+the gap is a changing rule rather than a changing market.
+
+## What EUR 50 actually supports
+
+Every rolling 40-bet window of the rule, flat stakes, best-of-panel
+prices — 969 windows:
+
+| | median | 10th | 25th | 75th | 90th | worst | losing windows |
+|---|---|---|---|---|---|---|---|
+| best of ~10 books | €51.41 | 43.05 | 46.13 | 56.33 | 59.20 | **32.78** | **41%** |
+| thinner panel (−2.8%) | €50.85 | 42.58 | 45.56 | 55.70 | 58.55 | 32.37 | 43% |
+
+At EUR 2 flat on EUR 50 — 4% a bet, near full Kelly on an edge whose
+error bar includes zero — four windows in ten lose money and the worst
+observed took the bank to EUR 32.78, a 35% drawdown. At a defensible 1%
+stake the shape is identical and the median month makes about fifty
+cents.
+
+**EUR 50 is a logging bank, not an earning bank.** What it is genuinely
+enough for is running the rule live at small stakes to fill the forward
+log with prices actually struck, which is the only thing that will settle
+whether any of this survives outside a replay.
