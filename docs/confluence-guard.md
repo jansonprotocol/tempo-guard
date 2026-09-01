@@ -853,3 +853,76 @@ The headroom absorbs a fair amount of it — break-even needs −6.3% and the
 in-band worst case was −4.51% — but the number to trust is the forward
 log, not this one. n is 48 prices on a single day, and the base result is
 212 bets.
+
+---
+
+# Should a declined card fall back to another lane? (1 Sep)
+
+The bettor's rule, from the Swansea card: tip 1 is struck on price, so
+the DNB is next in line, and if IT clears its own bar the card plays that
+instead.
+
+This is not the pivot already rejected. That one flipped when the SCORE
+condemned a pick and lost. This one flips only when the PRICE fails and
+the alternative's own price clears — and price-conditional selection is
+the one thing here that has ever produced a positive return. Two margins
+swept separately, because the star's bar rests on a validated label hit
+rate and the fallback's only on its own printed claim.
+
+**8,121 priced cards, 2,476 with a priced fallback as well.**
+
+| | n | odds | hit | ROI |
+|---|---|---|---|---|
+| star bar +6%, alone | 1,008 | 1.35 | 74.8% | **+1.71%** |
+| star +6%, else fall back at +0% | 1,741 | 1.48 | 60.8% | −0.49% |
+| star +6%, else fall back at +6% | 1,550 | 1.49 | 61.9% | −0.62% |
+| **the fallback bets alone** | 733 | 1.66 | **41.5%** | **−3.53%** |
+
+The fallback destroys the only positive result in the project. And
+loosening its bar HELPS — −3.53% at +0% against −6.35% at +12% — which is
+the tell.
+
+## Why: the claim is not a rate
+
+The fallback DNBs **claim 72.2% and hit 41.5%**. Sliced by how far the
+price sits above what that claim demands:
+
+| price over break-even | n | odds | claims | hit | ROI |
+|---|---|---|---|---|---|
+| +0–5% | 165 | 1.40 | 73.1% | **52.7%** | +1.03% |
+| +5–15% | 256 | 1.52 | 72.4% | 44.1% | +0.09% |
+| +15–35% | 207 | 1.72 | 72.0% | 37.2% | −5.01% |
+| +35%+ | 105 | 2.26 | 70.7% | **25.7%** | −16.60% |
+
+The claim is flat at about 72% the whole way down while the truth
+collapses from 52.7% to 25.7%. Monotone, and in both windows (−3.82%
+older, −3.24% newer).
+
+**This is the anti-predictive property in its purest form.** A bar of the
+shape "price ≥ 1/rate × margin" selects cards where the market disagrees
+with `rate` most. If `rate` is a validated hit rate, that finds market
+error. If `rate` is the engine's own claim, it finds ENGINE error — and
+the harder the bar, the more of it you buy.
+
+Same arithmetic, opposite sign, and the only difference is whether the
+number in the denominator has been measured:
+
+* star bar, from the label's validated rate → **+1.71%**
+* fallback bar, from the card's own claim → **−3.53%**
+
+That is why the card marks those lanes `claim-based`. It is not a
+cosmetic caveat; it is the whole distinction between finding the market's
+mistake and finding your own.
+
+## Two corrections this run produced
+
+**The shipped rule is better than previously reported.** The +0.83%
+quoted for the star bar at +6% included red-labelled cards. The card
+already refuses those, and excluding them as it does gives **+1.71% on
+1,008 bets**. The earlier figure understated what ships.
+
+**The fallback is refused, and the card should keep showing it.** The
+per-lane verdicts stay — a reader is entitled to see that the DNB was
+4.4% short — but the guard must never promote a fallback to a play. What
+the card shows and what it recommends are different things, and this is
+one of the places they have to stay different.
