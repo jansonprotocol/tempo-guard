@@ -1157,3 +1157,46 @@ cents.
 enough for is running the rule live at small stakes to fill the forward
 log with prices actually struck, which is the only thing that will settle
 whether any of this survives outside a replay.
+
+---
+
+# The measurement era: 2022 onward (1 Sep)
+
+**Standing convention, at the bettor's call:** measurement is reported on
+**2022–2026**. Football before that had thinner inputs, different scoring
+and a different market, and a result that depends on 2016 to hold is not
+a result about the game being played now.
+
+Adopting it cost almost nothing, which is itself informative.
+
+| label | registered (all data) | 2022–2026 | required price moves |
+|---|---|---|---|
+| super green | 89.72% | 89.75% | 1.181 → 1.181 |
+| green | 87.37% | 87.68% | 1.213 → 1.209 |
+| orange | 83.42% | 83.35% | 1.271 → 1.272 |
+| red | 77.88% | 77.73% | 1.361 → 1.364 |
+| super red | 77.38% | 77.78% | 1.370 → 1.363 |
+
+**The largest movement in any required price is 0.007.** The tier ordering
+the five labels depend on holds in both cuts — orange's best score
+quartile under green's worst, red's best under orange's worst.
+
+**The registered rates therefore stay as they are.** They survive the era
+restriction inside noise, and re-freezing thresholds to chase a third
+decimal would break the property that makes the forward log gradeable at
+all: that a card scored today faces the same bar as one scored last
+month.
+
+## And a correction to how the windows were described
+
+**55,544 of the bank's 62,528 cards are already 2022 or later — only 11%
+predates it.** So the earlier description of the full-bank split as "nine
+years against two" was true of the DATE RANGE and misleading about the
+DATA. Card density rose sharply as the project added leagues and
+backfilled, so the older half, running 2015 to May 2024, is itself about
+78% post-2022.
+
+The split has effectively been **2022-2024 against 2024-2026** all along —
+a far healthier test than the date labels implied, and already inside the
+era this convention asks for. The priced ROI tables were never in doubt:
+they run 2024-07 to 2026-05, two consecutive seasons.
