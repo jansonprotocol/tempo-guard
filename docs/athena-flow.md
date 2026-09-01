@@ -18,8 +18,27 @@ across 63 competitions. `scripts/ingest_board.py` folds the board's own
 completed matches back into it, so a fixture graded yesterday is history
 today.
 
+**One club, one name.** Before any of that is read, `load_results` folds
+every spelling of a club onto one. The provider changed convention on
+2024-08-10 and the store kept both, so `Chelsea` held 912 matches ending
+in May 2024 while `Chelsea FC` held the two seasons since — 22.2% of all
+rows stored since that date were invisible to the name a hand-typed
+fixture resolves to. The fold is the canonical key for decoration plus
+276 typed pairs for abbreviations, and it is guarded by a fact about
+football rather than a similarity score: **a club plays at most one match
+a day**, so two spellings sharing a date are different clubs and the fold
+is refused. 552 folds, 3 refusals. `scripts/name_unify.py` prints all of
+it. It recovers 179 fixtures per two seasons and does **not** move the
+hit rate — a correctness fix, not an accuracy one.
+
 **Gate 0.** A club with fewer than `MIN_MATCHES = 5` resolvable prior
 fixtures is skipped outright (`features.py:47`). No card is printed.
+
+There is no maximum AGE on the rolling window, only a maximum count. A
+club returning after years away is read on its last ten matches whenever
+they happened, which costs about 1.47 points of hit rate within-league
+once the window reaches four years back. Measured, registered, and not
+currently gated.
 
 ---
 

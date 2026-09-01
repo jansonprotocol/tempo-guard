@@ -1270,3 +1270,35 @@ by more than fair would favour it on that card. That is a line-shopping
 judgement per bet, not a rule change — and on the same screenshot U2.5 at
 1.83 gives the identical 6.7% overround, so Unibet was pricing the pair
 consistently and U3.5 remained the better buy.
+
+## Correction, same day: it applies to TWO rungs, not to a direction
+
+Everything above was measured on unders — U3.0 against U3.5, U4.25
+against U4.5. The shipped `bought()` was written as arithmetic instead:
+shift unders up a half, overs down a half. That generalised a two-case
+finding into a rule nobody had tested, and it got the over side
+**backwards**.
+
+The mechanism above is that the better buy is the line where the whole
+stake stays at risk, so the edge earns on all of it. For an under that
+means moving *up*, off the push. For an over the printed line is already
+the no-push one: O1.5 loses on 0 or 1 and wins on 2+. `O1.0` is its push
+line — a one-goal game returns the stake. So the arithmetic moved
+*toward* the push, the exact direction the measurement rejected.
+
+Two consequences on the live board, both visible:
+
+* 159 cards printing O1.5 were quoted as O1.0, where a book offers about
+  **1.01** because it is near-certain. Nothing could ever clear a 1.27
+  bar, so every over card was silently unplayable.
+* the 50 cards printing O0.5 were mapped to `O0.0`, which is not a bet.
+
+`bought()` is now the table it should always have been:
+
+```
+STRUCK = {"U3.0": "U3.5", "U4.25": "U4.5"}
+```
+
+A rule measured on two lines applies to two lines. Nothing above changes
+— both substitutions and both ROI comparisons stand exactly as recorded,
+because both are unders.

@@ -29,7 +29,6 @@ Writes config/odds_cache.json — derived, delete it and the next sweep rebuilds
 from __future__ import annotations
 
 import json
-import math
 import os
 import re
 import sys
@@ -209,19 +208,54 @@ def _book_h2h(bk: dict, home: str, away: str) -> tuple | None:
     return None
 
 
+# The ONLY two substitutions, and the only two ever measured. A table
+# rather than arithmetic, deliberately — see bought().
+STRUCK = {"U3.0": "U3.5", "U4.25": "U4.5"}
+
+
+def same_bet(a: str, b: str) -> bool:
+    """Do these two rungs win on exactly the same final totals?
+
+    Asked of the engine's own grader rather than asserted here, so the
+    answer cannot drift away from what the selector believes.
+    """
+    from app.engine.market_select import winning_totals
+    return winning_totals(a) == winning_totals(b)
+
+
 def bought(rung: str) -> str:
     """The line a printed rung is actually STRUCK at.
 
-    Athena publishes Asian rungs; a real slip is a whole or half line.
-    U4.25 is bought as U4.5, U3.0 as U3.5, O1.5 as O1.0 — the same
-    mapping every ROI table in docs/ settles at. The card must quote what
-    the bettor will click, not the notation the engine prints: the two
-    are different bets and, on 1 Sep, differed by about 1.5% of price.
+    Two rungs are bought one notch away from what the card prints, and
+    both are UNDERS: U3.0 as U3.5, U4.25 as U4.5. Those are the two the
+    ROI tables in docs/ measured — U3.0->U3.5 returns +2.86% against the
+    rung's +2.32%, U4.25->U4.5 -4.53% against -5.34%. Everything else is
+    bought exactly as printed.
+
+    AND THE SUBSTITUTION ONLY FIRES WHILE THE TWO ARE THE SAME BET.
+    Under the hit-rate convention `U3.0` and `U3.5` win on exactly the
+    same totals — 0 through 3 — because evaluate_market reports a whole
+    line landing on its own number as a half_win so the hit-rate column
+    can count it. So the engine cannot mean `U3.0` as distinct from
+    `U3.5`; it prints `U3.0` only because that string sits earlier in
+    LADDER. The substitution is therefore not swapping one bet for
+    another, it is giving the bet the engine actually chose its honest
+    name — the one whose win condition matches the arithmetic behind the
+    claim. If a future change ever makes p_win tell the two apart, this
+    stops substituting by itself. That is the "unless it is truly U3.0"
+    clause, enforced rather than remembered.
+
+    Same test, applied to the version this replaced, is why that one was
+    wrong: `O1.5` wins on 2+ and `O1.0` wins on 1+, so they are DIFFERENT
+    bets, and the old arithmetic swapped one for the other. It also
+    quoted 159 O1.5 cards at a price no one would take (1.01, because a
+    book prices near-certainty accordingly) and turned the 50 cards
+    printing O0.5 into `O0.0`, which is not a bet at all.
     """
-    side, v = rung[0], float(rung[1:])
-    if v * 2 % 1:                      # quarter line: round to the safer half
-        return f"{side}{(math.ceil(v*2)/2 if side == 'U' else math.floor(v*2)/2):.1f}"
-    return f"{side}{v+0.5:.1f}" if side == "U" else f"{side}{v-0.5:.1f}"
+    sub = STRUCK.get(rung)
+    if sub is None or not same_bet(rung, sub):
+        return rung
+    return sub
 
 
 def lane_price(ev: dict, lane: str) -> dict | None:
@@ -290,6 +324,33 @@ def lane_price(ev: dict, lane: str) -> dict | None:
 QUOTES = ROOT / "config" / "odds_quotes.tsv"
 
 
+BOARD_UTC_OFFSET = 2        # board kickoffs are written in UTC+2
+
+
+def started(kickoff: str) -> bool:
+    """Has this fixture kicked off? Then its market is IN-PLAY.
+
+    The feed keeps quoting a match after it starts, and those prices
+    describe a game in progress rather than the one Athena forecast.
+    Sheffield United v Bolton, 22 minutes in, was quoting Under 4.5 at
+    1.83 where a pre-match line sits near 1.15 — long enough to clear the
+    decline bar and print PLAY on a match already underway, at a price
+    the engine's probability does not describe. Three of the board's four
+    plays were this, and all three were legitimate an hour earlier: a
+    re-fetch is what turned them.
+
+    Unparseable kickoffs return False, so a malformed row is quoted as
+    before rather than silently dropped.
+    """
+    from datetime import datetime, timedelta, timezone
+    try:
+        ko = datetime.strptime(kickoff.strip()[:16], "%Y-%m-%d %H:%M")
+    except (ValueError, AttributeError):
+        return False
+    ko = ko.replace(tzinfo=timezone(timedelta(hours=BOARD_UTC_OFFSET)))
+    return ko <= datetime.now(timezone.utc)
+
+
 def write_quotes() -> int:
     """Derive config/odds_quotes.tsv — what the market offers on every
     pending lane. The renderer reads this file and never calls the API:
@@ -298,7 +359,7 @@ def write_quotes() -> int:
     from scripts.board import load
     rows = []
     for f in load():
-        if f.settled or f.status:
+        if f.settled or f.status or started(f.kickoff):
             continue
         ev = find(f.code, f.teams, f.kickoff.split(" ")[0])
         if not ev:
