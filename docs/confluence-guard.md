@@ -968,3 +968,74 @@ forward log is the only thing that will settle any of this.
 The two can be run together: **stake narrow, log wide.** The card already
 labels every lane and the log already stamps every quoted one, so the
 wide record accumulates whether or not it is backed.
+
+---
+
+# Should each league face its own bar? (1 Sep)
+
+A fair question, since the engine is per-league almost everywhere — its
+own goal mean, tempo factor, floor, shrink, and for seven leagues a
+consensus cap — while the DECISION layer judges all 56 competitions
+against one pooled label rate and one 6% margin. Serie A's final pick
+grades about a point above the pooled rate, so on the face of it its
+orange cards are being asked for more price than they need.
+
+Fixed the way the confluence score fixes its club slices: shrink the
+league's own record toward the pooled rate rather than replacing it. Two
+variants — **cell** (the league's record for that label) and **offset**
+(the league's overall deviation, applied to every label) — with every
+rate learned on the TRAIN half and applied to the TEST half.
+
+**Matched to the same 1,008 bets, so this is not the volume effect:**
+
+| rule | n | odds | hit | ROI | older / newer |
+|---|---|---|---|---|---|
+| **POOLED (shipped)** | 1,008 | 1.35 | 74.8% | **+1.71%** | +0.62 / +2.80 |
+| cell, prior 100 | 1,007 | 1.34 | 74.5% | +0.64% | +0.58 / +0.69 |
+| cell, prior 400 | 1,008 | 1.35 | 74.2% | +0.65% | +0.79 / +0.52 |
+| offset, prior 200 | 1,007 | 1.34 | 74.1% | +0.07% | +0.33 / −0.20 |
+
+And the swap is blunt. At prior 400 the two rules share 88% of their
+bets; of the 119 they disagree on, the ones per-league **adds** return
+−1.78% and the ones it **drops** return +7.17%.
+
+## Why it fails
+
+The per-league bar LOWERS the requirement where a league historically
+hits well — Serie A 1.273 → 1.225 — and raises it where it does not. But
+a league that hits well is one **the market also knows hits well**, and
+its prices are already short. So the adjustment admits short-priced bets
+in efficiently-priced markets and excludes the long-priced ones that
+carried the value.
+
+**The bar works because it is uniform and the market is not.** It does
+not judge the match; it judges the price against a FIXED reference, and
+market disagreement is the entire signal. Moving the reference toward the
+league's own record cancels the thing being measured.
+
+## The caveat that stops this being a clean rejection
+
+Pooled's advantage is one window. Older: pooled +0.62 against cell-400's
++0.79, where per-league is BETTER. Newer: +2.80 against +0.52. The whole
+gap sits in the recent half, which is the pattern that has killed six
+hypotheses in this file, and it does not get an exemption here.
+
+So the honest verdict is **no evidence per-league helps**, not "per-league
+is worse". Pooled stays because it is simpler and already shipped, not
+because it won.
+
+## Where per-league fairness already lives
+
+Worth stating, because the concern behind the question is right even
+though the fix is not. By the time a card reaches the bar, Serie A has
+passed through its own goal mean, a `tempo_factor` of 0.40 against the
+0.50 default, a floor raised to 0.78, the relative-overreach debit
+measured against ITS OWN base rate, and the consensus cap — one of only
+seven leagues that gets it. The confluence score then reads Serie A's own
+league baseline, its own side split (1,295 of 1,483 cards are unders,
+hitting 87.6% against overs' 76.7%), and its own clubs.
+
+A Bundesliga card and a Ligue 1 card are already treated differently
+everywhere that judges the MATCH. The price bar is the one place they
+should not be, because there the reference has to stay fixed for the
+comparison to mean anything.
