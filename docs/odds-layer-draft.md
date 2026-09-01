@@ -388,3 +388,72 @@ could move +2.14% either side of zero. Seven buckets were searched to find
 this one. The rule would play roughly 13% of cards. Nothing here is
 established enough to bet differently tomorrow — it is established enough
 to be the thing the next run tests properly.
+
+
+---
+
+# The inverse play, tested (1 Sep)
+
+The bettor's idea: if the printed side is unbackable at the offered price,
+maybe the other side is the play — Athena says over, but the goal
+expectation is weak enough that the under is where the value sits.
+
+Tested on 7,613 lanes with both sides priceable, two seasons, market
+maximum prices.
+
+| | n | avg odds | ROI |
+|---|---|---|---|
+| back Athena's side | 7,613 | 1.15 | **−1.87% ± 0.47** |
+| back the inverse | 7,613 | 6.17 | **−20.53% ± 2.35** |
+
+Rejected, and not narrowly. Every bucket of disagreement is worse on the
+inverse than on Athena's own side.
+
+**The fair version fails the same way.** Scanning the whole ladder for the
+line with the highest expected value — rather than flipping the printed
+one — picks `O4.5` on 3,414 fixtures and `U1.0` on 2,515, with a claimed
+median EV of **+14.3%**. Every choice is an extreme of the ladder, because
+EV is a *ratio* and long shots inflate it, and the Poisson tail is exactly
+where the model is least trustworthy. That is the same trade the inverse
+test priced at −20%.
+
+**But the buckets do contain a real gradient**, and it points somewhere:
+
+| Athena's mu vs the market's | n | ROI on Athena's side |
+|---|---|---|
+| much lower (< −0.5) | 419 | **−0.98% ± 2.43** |
+| lower (−0.5 to −0.2) | 973 | −2.39% |
+| agree (± 0.2) | 3,807 | −1.59% |
+| higher (+0.2 to +0.5) | 1,958 | −2.01% |
+| much higher (> +0.5) | 456 | **−3.35% ± 1.41** |
+
+The engine does best where it is more **bearish** than the market and
+worst where it is more **bullish**. Its overs are where it is most wrong.
+
+## The structural problem, stated plainly
+
+The book averages **1.15**. At 1.15 against a 5.6% margin, a model has to
+be roughly **five points more accurate than the market** merely to break
+even — and the measurement says Athena and the market agree to within two
+tenths of a point. No amount of lane selection fixes that, because the
+arithmetic is in the price, not the pick.
+
+This is why every route through the ladder closes, and why the only
+positive result in the whole study sits at **1.18–1.50** — the DNB lanes.
+The same relative edge is worth far more in absolute terms at a longer
+price.
+
+**The path that remains**, in order of evidence:
+
+1. **DNB where Athena underclaims the market by 5+ points** — +2.14% ±
+   1.06 on 1,113 lanes, +2.10% / +2.17% across two independent windows.
+2. **Always take the best available price** — worth +3.58 points, and the
+   live sweep shows Unibet (NL) sitting at or below consensus on every
+   lane of the current board.
+3. **Stop treating the ladder as a money lane.** It remains the honest
+   headline hitrate; it is not a bet.
+
+Volume will be low — the DNB rule fires on roughly 1.5% of cards. The
+bettor has accepted that trade. What must not be oversold is the size:
++2.14% at an average 1.18 is about two cents per euro staked, and it needs
+hundreds of bets before it can be distinguished from nothing.
