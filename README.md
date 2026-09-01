@@ -1051,7 +1051,7 @@ that premium the book is keeping the insurance money.
 | — open | Ceuta v Celta Fortuna | U3.5 | 1.37 | — | TOTO — the card's struck lane, clears well; best 1.40, so 2.1% off |
 | — open | Ascoli v Benevento | U3.5 | 1.28 | — | TOTO — the card's struck lane, clears; best 1.39 |
 | — open | Lens v Lorient | U3.5 | 1.51 | — | TOTO — own read. The card's lane is O1.5 at 81.7%, an OVER; U3.5 is not tip 1, 2 or 3. Not a contradiction though — O1.5 and U3.5 both win on 2 or 3 goals, so this is the same match read narrower |
-| — open | Luzern v Vaduz | DNB (home) | 1.27 | — | TOTO — own read, and a SECOND position on a fixture already held at U4.5 1.37. The card prints no tip 3 here at all, so this DNB is not a lane the engine offered |
+| — open | Young Boys v Luzern | DNB (home) | 1.21 | — | = tip 3's DNB1 print (86.6% +22.6%), the board's SUPER GREEN card — bar 1.1836, clears by 2.2%. Replaces a Luzern DNB struck on the wrong fixture (Luzern v Vaduz). Board best 1.31, Unibet NL 1.30, so 7.6% of price left at TOTO's 1.21 |
 
 <!-- HYPOTHESES:START -->
 
