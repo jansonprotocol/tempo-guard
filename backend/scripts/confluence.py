@@ -39,14 +39,28 @@ import math
 import pickle
 import re
 import sys
-from collections import defaultdict
+from collections import defaultdict, deque
 
 MIN_SLICE = 15        # a slice below this many cards does not get a vote
 MIN_LEAGUE = 100      # a league below this many cards is not scored at all
 DEAD = 2.0            # points of deadband around the league baseline
 KPRIOR = 25.0         # empirical-Bayes prior, in cards, for the shrunk mode
+CLUB_WINDOW = 40      # club cards remembered; 0 remembers everything
 
 SIDE = re.compile(r"^([OU])\d")
+
+# Region, because the effect turned out to be a EUROPEAN one — +2.86
+# points of quartile spread there against +0.18 in the Americas — and
+# nothing in this file means much without that split.
+EUR = {"ENG", "GER", "ITA", "ESP", "FRA", "NED", "BEL", "POR", "TUR", "GRE",
+       "SCO", "AUT", "SUI", "CRO", "CZE", "DEN", "FIN", "IRL", "NOR", "POL",
+       "ROU", "RUS", "SWE", "UKR", "UCL", "UEL", "UECL"}
+AME = {"ARG", "BRA", "CHI", "COL", "ECU", "MEX", "MLS", "PAR", "PER", "COPA"}
+
+
+def region(code: str) -> str:
+    p = code.split("-")[0]
+    return "Europe" if p in EUR else "Americas" if p in AME else "RoW"
 
 
 def _side(mk: str | None) -> str | None:
@@ -68,6 +82,43 @@ class Counter:
         c = self.d[key]
         c[0] += bool(hit)
         c[1] += 1
+
+
+class Mem:
+    """A counter that can forget: the last W cards, or the last D days.
+
+    Only CLUB reads get one. An earlier sweep windowed every slice at
+    once and lost to remembering everything, but that bundled two
+    different ideas — "ENG-PL on overs" is a league statistic built from
+    hundreds of cards and there is no reason to cut it to thirty. With
+    the league reads left cumulative, club memory turns out to be
+    NEUTRAL: every setting from last-20 to last-730-days lands within
+    0.15 points of cumulative. CLUB_WINDOW is a reasoned default —
+    squads and styles do change, and it never loses — not a measured
+    gain.
+    """
+
+    def __init__(self, w: int = 0, days: int = 0):
+        self.w, self.days = w, days
+        self.d: dict = defaultdict(deque)
+
+    def _trim(self, q, today) -> None:
+        if self.w:
+            while len(q) > self.w:
+                q.popleft()
+        if self.days and today is not None:
+            while q and (today - q[0][0]).days > self.days:
+                q.popleft()
+
+    def rate(self, key, floor: int, today=None):
+        q = self.d[key]
+        self._trim(q, today)
+        if len(q) < floor:
+            return None, len(q)
+        return sum(x[1] for x in q) / len(q), len(q)
+
+    def add(self, key, hit: bool, when=None) -> None:
+        self.d[key].append((when, bool(hit)))
 
 
 # Which field carries the grade, the claim and the market, per lane.
@@ -242,6 +293,98 @@ def report(scored: list, label: str, lane: int = 1) -> None:
               f"{(rate(drop, hitf)[0] or 0)*100:.2f}%")
 
 
+def walk_best(rows: list, lane: int = 0, window: int = CLUB_WINDOW,
+              days: int = 0, dedup: bool = True) -> list:
+    """The refined scorer, as opposed to the proposal `walk` replays.
+
+    Three differences from the rule as it was put, each measured:
+
+    CONTINUOUS. Votes are the shrunk deviations themselves, in points,
+    not their signs. A sign vote has a deadband to fall inside, so it
+    loses resolution as history deepens and every slice converges on the
+    baseline — exactly where its inputs got more reliable.
+
+    DE-DUPLICATED. In a league that leans one way — Serie A, where nearly
+    every pick is an under — "Pisa" and "Pisa on unders" are the SAME
+    thirty cards, so one measurement casts two votes and the double
+    weight lands on whichever club is extreme. The crossing therefore
+    reports a RESIDUAL against the club's own rate rather than against
+    the league, which removes the overlap by construction. Same signal,
+    and its cross-window gap falls from 1.38 points to 0.09.
+
+    FORGETFUL, optionally, and only about clubs. See `Mem`.
+    """
+    hitf, claimf, _ = LANE[lane]
+    lg, side = Counter(), Counter()
+    team, ts = Mem(window, days), Mem(window, days)
+    rows = sorted(rows, key=lambda r: (r["d"], r["code"]))
+    out: list = []
+    i = 0
+    while i < len(rows):
+        j = i
+        while j < len(rows) and rows[j]["d"] == rows[i]["d"]:
+            j += 1
+        today = rows[i]["d"]
+        for r in rows[i:j]:
+            if r.get(hitf) is None:
+                continue
+            base, _n = lg.rate((r["code"],), MIN_LEAGUE)
+            if base is None:
+                continue
+            tot = 0.0
+            if r.get(claimf) is not None:
+                tot += (r[claimf] - base) * 100
+            club: dict = {}
+            for kind, key in slices(r, lane):
+                if kind == "side":
+                    rr, n = side.rate(key, MIN_SLICE)
+                elif kind == "team":
+                    rr, n = team.rate(key, MIN_SLICE, today)
+                else:
+                    rr, n = ts.rate(key, MIN_SLICE, today)
+                if rr is None:
+                    continue
+                sh = (rr * n + base * KPRIOR) / (n + KPRIOR)
+                if kind == "team":
+                    club[key[1]] = sh
+                    tot += (sh - base) * 100
+                elif kind == "side":
+                    tot += (sh - base) * 100
+                else:
+                    ref = club.get(key[1], base) if dedup else base
+                    tot += (sh - ref) * 100
+            out.append(dict(r, cscore=tot))
+        for r in rows[i:j]:
+            if r.get(hitf) is None:
+                continue
+            lg.add((r["code"],), r[hitf])
+            for kind, key in slices(r, lane):
+                if kind == "side":
+                    side.add(key, r[hitf])
+                elif kind == "team":
+                    team.add(key, r[hitf], today)
+                else:
+                    ts.add(key, r[hitf], today)
+        i = j
+    return out
+
+
+def quartiles(sel: list, hitf: str = "hit_pick", frac: float = 0.40):
+    """Hit rate by score quartile INSIDE the claim's own top slice.
+
+    This is the measurement that matters: the claim already ranks cards
+    well, so the only question is whether the score sorts the ones it
+    cannot tell apart. Returns None on a sample too small to read.
+    """
+    if len(sel) < 800:
+        return None
+    top = sorted(sel, key=lambda r: -r["says_pick"])[:int(len(sel) * frac)]
+    top.sort(key=lambda r: r["cscore"])
+    q = len(top) // 4
+    return [rate(top[i * q:(i + 1) * q] if i < 3 else top[3 * q:], hitf)[0] * 100
+            for i in range(4)]
+
+
 BANDS = ((0.0, 0.76), (0.76, 0.80), (0.80, 0.84), (0.84, 1.01))
 BUCKETS = (("<=-2", lambda s: s <= -2), ("-1", lambda s: s == -1),
            ("0", lambda s: s == 0), ("+1", lambda s: s == 1),
@@ -324,6 +467,36 @@ def main() -> None:
     rows = pickle.loads(open(path, "rb").read())
     rows = [r for r in rows if r.get("h")]
     print(f"{len(rows)} cards carrying both clubs")
+
+    if "--best" in args:
+        # The refined scorer, split the two ways that decide what it is
+        # worth: by time, and by region. The region split is the load
+        # bearing one — the effect is European.
+        sc = [r for r in walk_best(rows) if r.get("says_pick") is not None]
+        sc.sort(key=lambda r: r["d"])
+        half = len(sc) // 2
+        print(f"\n  refined scorer: continuous, de-duplicated, club memory "
+              f"{CLUB_WINDOW or 'unbounded'}")
+        print("  quartiles of score INSIDE the claim's top 40%\n")
+        print("  slice                    n      Q1     Q2     Q3     Q4  spread")
+
+        def line(lbl, sel):
+            q = quartiles(sel)
+            if q:
+                print(f"  {lbl:20} {len(sel):6}  "
+                      + " ".join(f"{x:6.2f}" for x in q)
+                      + f"  {q[3]-q[0]:+6.2f}")
+        line("ALL", sc)
+        line("  older half", sc[:half])
+        line("  newer half", sc[half:])
+        for reg in ("Europe", "Americas", "RoW"):
+            R = [r for r in sc if region(r["code"]) == reg]
+            h = len(R) // 2
+            print()
+            line(reg, R)
+            line("  older", R[:h])
+            line("  newer", R[h:])
+        return
     for lane, modes in ((1, ("sign", "shrunk", "noclaim")), (2, ("shrunk",))):
         for mode in modes:
             scored = walk(rows, mode, dead, k, lane)

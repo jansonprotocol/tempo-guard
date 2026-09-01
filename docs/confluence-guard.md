@@ -355,3 +355,140 @@ What it should be: a **small, one-directional fourth input to the risk
 guard** — it demotes, it never promotes, and it cannot rescue a red card.
 What it should not be: a five-colour system, a reroute rule to tip 2 or
 tip 3, or a reason to enlarge the bank.
+
+---
+
+# Re-checks: the effect is European, and the red inversion was noise
+
+A fresh read of everything above found four claims resting on cells too
+small or too narrow to carry them. Three were re-run on the deep bank
+with the refined scorer. Two of them changed.
+
+## The red-tier inversion does not survive
+
+The doc said, in its strongest sentence, that inside the guard's red tier
+the score **inverts** — 79.4% at score ≤−2 against 76.2% at ≥+2. That came
+from cells of roughly 420 and 1,630 cards, on the shallow bank, with the
+sign score, and it was never re-run. Everything else halved when the bank
+doubled.
+
+Re-run on 62,528 cards with the de-duplicated continuous score, by score
+quartile within each tier:
+
+| tier | n | overall | Q1 (worst) | Q2 | Q3 | Q4 (best) | spread |
+|---|---|---|---|---|---|---|---|
+| green | 16,296 | 87.81% | 87.24 | 86.60 | 88.39 | 89.00 | +1.77 |
+| orange | 36,607 | 83.42% | 81.64 | 83.02 | 83.46 | 85.56 | +3.92 |
+| **red** | 9,625 | 77.80% | 76.97 | 76.60 | 78.35 | **79.27** | **+2.29** |
+
+**There is no inversion.** Red sorts in the normal direction, +2.29, and
+positive in both windows (+3.03 older, +1.40 newer). The earlier figure
+was noise in a thin cell, and the doc stated it as fact.
+
+**The advice does not change, but the reason does.** A red card with the
+best possible score grades **79.27%** — still below orange's *worst*
+quartile at 81.64%, and far below green's 87.81%. So promotion remains
+unjustified, not because a good score means nothing inside red, but
+because **red's ceiling sits under orange's floor**. That is a claim about
+levels, which the data supports, rather than about direction, which it
+does not.
+
+## Era was the wrong cut — the effect is regional
+
+Two era readings in this file disagree in sign: the shallow bank gave
++2.14 older against +0.90 newer, the deep bank +1.48 older against +3.04
+newer. An unstable confound usually means the real variable is something
+else.
+
+It is not league mix — the region shares barely move between halves
+(Europe 72.0% of the older half, 68.9% of the newer). It is region
+itself. Quartile spread inside the claim's top 40%, refined scorer:
+
+| slice | n | Q1 | Q2 | Q3 | Q4 | spread |
+|---|---|---|---|---|---|---|
+| ALL | 62,528 | 86.04 | 86.29 | 87.76 | 88.55 | +2.52 |
+| **Europe** | 44,043 | 85.24 | 85.99 | 86.60 | 88.81 | **+3.57** |
+| — older | 22,021 | | | | | +1.82 |
+| — newer | 22,022 | | | | | +3.68 |
+| **Americas** | 12,556 | 87.17 | 87.97 | 88.37 | 87.11 | **−0.06** |
+| — older | 6,278 | | | | | −0.41 |
+| — newer | 6,278 | | | | | +1.49 |
+| RoW | 5,929 | 87.16 | 90.37 | 89.86 | 91.43 | +4.27 |
+| — older | 2,964 | | | | | +5.77 |
+| — newer | 2,965 | | | | | +1.75 |
+
+**The score is a European-leagues effect.** +3.57 in Europe, positive in
+both windows. **Exactly zero in the Americas** — −0.06 overall, −0.41 in
+one half. RoW reads +4.27 on 5,929 cards, which is about 300 per
+quartile-half, and swings +5.77 to +1.75; that is a sample too small to
+carry a claim either way.
+
+This is the cut that should have been made first, and it changes what the
+finding is: not "a card can be scored against its own searches" but "a
+card in a European league can be."
+
+## Which undercuts selection 2 rather than supporting it
+
+The blended top-15% selection kept only 245 of 8,121 priced cards, and the
+obvious reading was that it concentrates in leagues football-data cannot
+see — the same territory as the open tip-2 question, and therefore a
+lead worth chasing.
+
+Region composition says otherwise:
+
+| region | share of the bank | share of the blended top 15% |
+|---|---|---|
+| Europe | 70.4% | **52.8%** |
+| Americas | 20.1% | 23.4% |
+| RoW | 9.5% | **23.8%** |
+
+RoW is **two and a half times over-represented** in that selection, and
+RoW is precisely where the score does not work stably. Selection 2's
+−0.96% is therefore drawn disproportionately from the population where the
+signal is weakest, on 245 cards at ±2.03. It is not a lead. It is what a
+noisy sub-population looks like when it lands on the favourable side.
+
+## Club memory: neutral, and the earlier harm explained
+
+The proposal that the club slices should forget — squads and styles change
+— was swept properly, windowing **only** the club reads and leaving the
+league and side reads cumulative:
+
+| club memory | score alone (k25) | best blend (k25) | quartile spread |
+|---|---|---|---|
+| cumulative | 86.62 | 88.13 | +2.08 |
+| last 20 | 86.69 | 88.10 | +2.37 |
+| last 30 | 86.60 | 88.16 | +2.29 |
+| last 40 | 86.51 | 88.13 | +2.52 |
+| last 60 | 86.57 | 88.12 | +2.12 |
+| last 365 days | 86.66 | 88.12 | +2.21 |
+| last 550 days | 86.59 | 88.16 | +2.04 |
+| last 730 days | 86.65 | 88.10 | +2.07 |
+
+Everything within about 0.15 points. **Club memory is neutral.** Last-40
+does edge cumulative in both windows (+1.48 against +1.28 older, +3.04
+against +2.47 newer) but by less than the standard error on the cells, so
+it ships as a **reasoned default** — it never loses and the mechanism is
+real — and not as a measured gain.
+
+**It does explain the earlier result, though.** An earlier sweep found
+windowing actively harmful (last-30 at +1.74 against cumulative +2.17).
+That sweep windowed *every* slice, including "ENG-PL on overs" — a league
+statistic built from hundreds of cards, which has no staleness problem and
+every reason to want all of them. With the league reads left alone the
+harm disappears. The earlier test was measuring the wrong thing, and the
+conclusion drawn from it — "staleness is not the mechanism" — was not
+supported by it.
+
+`walk_best` in `scripts/confluence.py` now carries all three refinements,
+so none of this lives only in a scratch file.
+
+## Two smaller corrections
+
+**"As stable as anything this project has measured"**, said of the
+86.04/86.07 window split, was luck of the shallow cut. The same selection
+on the deep bank splits 86.40/87.85.
+
+**The blend's best `w` is read off the table**, which is a free parameter
+chosen after seeing the answer. Live expectation should be quoted at the
+pre-registered **w = 0.2**, not at whichever row happens to top its column.
