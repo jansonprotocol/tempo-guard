@@ -123,7 +123,7 @@ def replay(league: str, n: int, weak: set, capped: set) -> list[dict]:
             # Tip 2's market, so the "what does tip 2's KIND say about the
             # other lanes" question can be scored offline (the bettor's
             # team-over / team-under observation, 31 Aug).
-            mk2=t2[0] if t2 else None,
+            mk2=t2[0] if t2 else None, mk3=t3[0] if t3 else None,
             # Both clubs, tip 1's OWN market and edge (mk above is the
             # PICKED lane, which is a result lane on 22% of cards, so tip
             # 1's side was not recoverable from it) and tip 2's claim, so

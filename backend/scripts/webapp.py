@@ -716,15 +716,21 @@ def _guard(f, best: int) -> str:
     lane = _rung(cell)
     q = quotes().get((f.teams, lane))
     need = (1 / hit) * (1 + DECLINE_MARGIN)
+    # NAME the lane. The verdict sits at the top of the card while the
+    # lane it judges can be the last one printed, and three different
+    # price ideas share the card already — the engine's buy≥ on tip 2,
+    # the market's buy-at-min on the quoted lanes, and this bar. Without
+    # the lane on the line, the reader has to work out which one it means.
+    who = f'Tip {best} {html.escape(lane)}' if lane else f'Tip {best}'
     if lab.endswith("red"):
         # The tier already condemned it, and a good score cannot rescue a
         # red: red's BEST score quartile grades 79.27% against orange's
         # WORST at 81.64%. Its ceiling sits under orange's floor.
-        line = (f'<div class="verdict no">no play '
-                f'<span class="dim">· the tier says avoid</span></div>')
+        line = (f'<div class="verdict no">no play <span class="dim">· '
+                f'{who} · the tier says avoid</span></div>')
     elif not q:
-        line = (f'<div class="verdict dimv">needs <b>{need:.2f}</b> '
-                f'<span class="dim">· no quote yet</span></div>')
+        line = (f'<div class="verdict dimv">{who} needs <b>{need:.2f}</b> '
+                f'<span class="dim">· nothing quoted yet</span></div>')
     else:
         try:
             got = float(q["best"] or q["consensus"])
@@ -733,14 +739,14 @@ def _guard(f, best: int) -> str:
         if got is None:
             line = ""
         elif got >= need:
-            line = (f'<div class="verdict yes">PLAY '
+            line = (f'<div class="verdict yes">PLAY {who} '
                     f'<span class="dim">· needs {need:.2f}, '
                     f'{html.escape(q["book"] or "market")} pays</span> '
                     f'<b>{got:.2f}</b></div>')
         else:
-            line = (f'<div class="verdict no">DECLINE '
-                    f'<span class="dim">· needs {need:.2f}, best is</span> '
-                    f'<b>{got:.2f}</b></div>')
+            line = (f'<div class="verdict no">DECLINE {who} '
+                    f'<span class="dim">· needs {need:.2f}, best anywhere '
+                    f'is</span> <b>{got:.2f}</b></div>')
         _stamp(f, best, lane, lab, sc, p, need, q)
     return badge + line
 
