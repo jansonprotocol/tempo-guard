@@ -290,6 +290,33 @@ def lane_price(ev: dict, lane: str) -> dict | None:
 QUOTES = ROOT / "config" / "odds_quotes.tsv"
 
 
+BOARD_UTC_OFFSET = 2        # board kickoffs are written in UTC+2
+
+
+def started(kickoff: str) -> bool:
+    """Has this fixture kicked off? Then its market is IN-PLAY.
+
+    The feed keeps quoting a match after it starts, and those prices
+    describe a game in progress rather than the one Athena forecast.
+    Sheffield United v Bolton, 22 minutes in, was quoting Under 4.5 at
+    1.83 where a pre-match line sits near 1.15 — long enough to clear the
+    decline bar and print PLAY on a match already underway, at a price
+    the engine's probability does not describe. Three of the board's four
+    plays were this, and all three were legitimate an hour earlier: a
+    re-fetch is what turned them.
+
+    Unparseable kickoffs return False, so a malformed row is quoted as
+    before rather than silently dropped.
+    """
+    from datetime import datetime, timedelta, timezone
+    try:
+        ko = datetime.strptime(kickoff.strip()[:16], "%Y-%m-%d %H:%M")
+    except (ValueError, AttributeError):
+        return False
+    ko = ko.replace(tzinfo=timezone(timedelta(hours=BOARD_UTC_OFFSET)))
+    return ko <= datetime.now(timezone.utc)
+
+
 def write_quotes() -> int:
     """Derive config/odds_quotes.tsv — what the market offers on every
     pending lane. The renderer reads this file and never calls the API:
@@ -298,7 +325,7 @@ def write_quotes() -> int:
     from scripts.board import load
     rows = []
     for f in load():
-        if f.settled or f.status:
+        if f.settled or f.status or started(f.kickoff):
             continue
         ev = find(f.code, f.teams, f.kickoff.split(" ")[0])
         if not ev:

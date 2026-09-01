@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts import board, headline, ledger
+from scripts import board, headline, ledger, odds_api
 from scripts.league_badges import rates
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -781,8 +781,13 @@ def verdict(f, best: int) -> dict | None:
         got_odds = None
     strong = (region_silent(f.code) is False and sc is not None
               and sc >= STRONG_SCORE)
+    # A match that has kicked off is not playable, whatever the file says.
+    # odds_api stops QUOTING a started fixture, but the quote file is a
+    # file: it outlives the moment it was written, and a render an hour
+    # later would go on offering a price from a game now in progress. The
+    # bar belongs on the decision, not only on the fetch.
     play = (not lab.endswith("red")) and got_odds is not None \
-        and got_odds >= need
+        and got_odds >= need and not odds_api.started(f.kickoff)
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
                 need=need, odds=got_odds, book=(q or {}).get("book"),
                 play=play, strong=play and strong,
