@@ -3,39 +3,38 @@
 # renderer reads it and never calls the API itself. Delete it and
 # the cards fall back to the engine's own buy>= bar.
 # fixture	which	lane	consensus	best	book	unibet_nl	books
-Al-Hilal v Al-Ahli	1	O1.5	1.11	1.26	Pinnacle	1.11	7
-Al-Hilal v Al-Ahli	2	O2.25	1.45	1.85	Pinnacle	1.45	7
-Zürich v Young Boys	1	O1.5	1.07	1.11	Pinnacle	1.02	8
-Zürich v Young Boys	3	12	1.17	1.21	GTbets	1.17	13
-Portsmouth v Derby	1	U4.25	1.06	1.10	Pinnacle	1.05	13
-Portsmouth v Derby	3	12	1.29	1.33	BetOnline.ag	1.28	20
-Preston v Bristol City	1	U3.0	1.30	1.35	Pinnacle	1.27	14
-Preston v Bristol City	2	U2.75	1.87	1.95	Pinnacle	1.81	14
-Sheffield United v Bolton	1	U3.0	1.34	1.38	1xBet	1.34	14
-Sheffield United v Bolton	3	DNB1	1.33	1.37	PMU (FR)	1.36	20
-Swansea v Watford	1	U4.25	1.09	1.12	Pinnacle	1.08	14
-Swansea v Watford	3	DNB1	1.45	1.49	GTbets	1.44	19
-Lincoln v Blackburn	1	U4.25	1.08	1.12	Pinnacle	1.07	14
-Birmingham v Southampton	1	U4.25	1.10	1.13	Nordic Bet	1.09	14
-Stoke v Norwich	1	U4.25	1.10	1.11	Nordic Bet	1.10	14
-Stoke v Norwich	2	O1.75	1.21	1.34	Pinnacle	1.20	14
-Londrina v Juventude	1	U3.0	1.14	1.20	BetOnline.ag	1.14	11
-Avispa Fukuoka v Urawa Reds	1	U4.25	1.04	1.09	Pinnacle		3
-Cerezo Osaka v Kashiwa	1	U4.25	1.08	1.13	Pinnacle	1.10	13
-Cerezo Osaka v Kashiwa	2	O1.75	1.23	1.31	BetAnything	1.17	13
-Cerezo Osaka v Kashiwa	3	12	1.27	1.31	1xBet	1.25	19
-JEF United Chiba v Okayama	1	U4.25	1.07	1.12	Pinnacle	1.05	11
+Al-Hilal v Al-Ahli	2	O2.0	1.09	1.10	Unibet (NL)	1.10	7
+Zürich v Young Boys	1	O1.0	1.01	1.01	Matchbook		1
+Zürich v Young Boys	3	12	1.16	1.20	BetOnline.ag	1.17	12
+Portsmouth v Derby	1	U4.5	1.07	1.10	Pinnacle	1.05	13
+Portsmouth v Derby	3	12	1.30	1.33	Pinnacle	1.28	20
+Preston v Bristol City	1	U3.5	1.30	1.36	Pinnacle	1.28	14
+Preston v Bristol City	2	U3.0	1.30	1.36	Pinnacle	1.28	14
+Sheffield United v Bolton	1	U3.5	1.36	1.39	BetOnline.ag	1.35	14
+Sheffield United v Bolton	3	DNB1	1.32	1.34	PMU (FR)	1.33	20
+Swansea v Watford	1	U4.5	1.08	1.11	Pinnacle	1.08	14
+Swansea v Watford	3	DNB1	1.45	1.48	Winamax (FR)	1.44	19
+Lincoln v Blackburn	1	U4.5	1.08	1.12	Pinnacle	1.07	14
+Birmingham v Southampton	1	U4.5	1.13	1.14	BetOnline.ag	1.09	14
+Stoke v Norwich	1	U4.5	1.09	1.11	Pinnacle	1.09	14
+Stoke v Norwich	2	O1.5	1.25	1.31	Pinnacle	1.21	14
+Londrina v Juventude	1	U3.5	1.16	1.29	Pinnacle	1.14	11
+Avispa Fukuoka v Urawa Reds	1	U4.5	1.06	1.09	Pinnacle		4
+Cerezo Osaka v Kashiwa	1	U4.5	1.10	1.14	Pinnacle	1.10	13
+Cerezo Osaka v Kashiwa	2	O1.5	1.22	1.27	Pinnacle	1.17	13
+Cerezo Osaka v Kashiwa	3	12	1.26	1.32	Pinnacle	1.25	19
+JEF United Chiba v Okayama	1	U4.5	1.07	1.13	Pinnacle	1.05	11
 JEF United Chiba v Okayama	3	12	1.26	1.30	Coolbet	1.26	18
-Machida Zelvia v Kawasaki	1	U4.25	1.08	1.13	Pinnacle	1.07	13
-Machida Zelvia v Kawasaki	2	O1.75	1.23	1.31	BetAnything	1.22	13
-Machida Zelvia v Kawasaki	3	DNB1	1.52	1.54	888sport	1.52	19
-Mito Hollyhock v Kashima	1	U4.25	1.06	1.09	Pinnacle	1.02	12
-Sanfrecce v Nagoya	1	U4.25	1.12	1.19	Tipico	1.12	13
-Sanfrecce v Nagoya	3	DNB1	1.27	1.30	Winamax (FR)	1.28	19
-Shimizu v FC Tokyo	1	U4.25	1.05	1.09	Pinnacle	1.04	12
-Shimizu v FC Tokyo	2	U3.75	1.24	1.29	Pinnacle	1.23	13
-Tokyo Verdy v Vissel Kobe	1	U4.25	1.02	1.02	1xBet		1
-Tokyo Verdy v Vissel Kobe	2	U3.75	1.10	1.14	William Hill	1.10	13
-Nagasaki v Gamba Osaka	1	U4.25	1.08	1.13	Pinnacle	1.05	12
-Yokohama FM v Kyoto Sanga	1	U4.25	1.07	1.12	Pinnacle	1.05	12
-Yokohama FM v Kyoto Sanga	2	U3.75	1.28	1.36	Pinnacle	1.25	13
+Machida Zelvia v Kawasaki	1	U4.5	1.08	1.13	Pinnacle	1.07	13
+Machida Zelvia v Kawasaki	2	O1.5	1.23	1.31	BetAnything	1.22	13
+Machida Zelvia v Kawasaki	3	DNB1	1.51	1.54	888sport	1.52	19
+Mito Hollyhock v Kashima	1	U4.5	1.06	1.11	BetOnline.ag	1.02	12
+Sanfrecce v Nagoya	1	U4.5	1.12	1.19	Tipico	1.12	13
+Sanfrecce v Nagoya	3	DNB1	1.26	1.29	PMU (FR)	1.28	19
+Shimizu v FC Tokyo	1	U4.5	1.05	1.11	BetOnline.ag	1.04	12
+Shimizu v FC Tokyo	2	U4.0	1.05	1.11	BetOnline.ag	1.04	12
+Tokyo Verdy v Vissel Kobe	1	U4.5	1.02	1.02	1xBet		1
+Tokyo Verdy v Vissel Kobe	2	U4.0	1.02	1.02	1xBet		1
+Nagasaki v Gamba Osaka	1	U4.5	1.08	1.14	Pinnacle	1.05	12
+Yokohama FM v Kyoto Sanga	1	U4.5	1.08	1.13	Pinnacle	1.05	12
+Yokohama FM v Kyoto Sanga	2	U4.0	1.08	1.13	Pinnacle	1.05	12

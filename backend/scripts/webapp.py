@@ -105,7 +105,8 @@ def _fmt(cell: str, fixture: str = "") -> str:
     # match ladder must never stand in for it.
     m = (None if "(team)" in cell else
          re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell))
-    q = quotes().get((fixture, m.group(1))) if (m and fixture) else None
+    q = (quotes().get((fixture, _struck(m.group(1))))
+         if (m and fixture) else None)
     if q:
         best = (f' · best <b>{html.escape(q["best"])}</b> '
                 f'<span class="dim">{html.escape(q["book"])}</span>'
@@ -585,6 +586,20 @@ def _edge(cell: str) -> float | None:
     return float(m.group(1).replace("−", "-")) if m else None
 
 
+def _struck(rung: str) -> str:
+    """The line a printed rung is actually bought at — Rule 6's safer
+    neighbour. U3.0 is struck as U3.5, U4.25 as U4.5, O1.5 as O1.0.
+    The quote and the verdict must both speak about the line that will
+    appear on the slip, not the notation Athena prints."""
+    if not rung or rung[0] not in ("O", "U"):
+        return rung
+    from scripts.odds_api import bought
+    try:
+        return bought(rung)
+    except Exception:
+        return rung
+
+
 def _rung(cell: str) -> str:
     m = re.search(r"(?:^|[^A-Za-z])((?:[OU]\d+(?:\.\d+)?)|1X|X2|12|DNB[12])",
                   cell or "")
@@ -732,7 +747,7 @@ def verdict(f, best: int) -> dict | None:
     lab, sc, cell, p = got
     hit = SAYS[lab]
     need = (1 / hit) * (1 + DECLINE_MARGIN)
-    lane = _rung(cell)
+    lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane))
     try:
         got_odds = float(q["best"] or q["consensus"]) if q else None
@@ -839,7 +854,7 @@ def _lanebar(f, cell: str, starred_label: str | None) -> str:
     need, _hit, solid = _needs(cell, starred_label)
     if need is None or f.settled:
         return ""
-    lane = _rung(cell)
+    lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane)) if lane else None
     soft = "" if solid else (' <span class="dim" title="This bar comes from '
                              'the lane&#39;s own printed claim, not from a '
