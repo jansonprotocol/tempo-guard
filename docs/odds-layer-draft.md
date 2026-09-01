@@ -51,6 +51,32 @@ is the correct behaviour — silence, not a guess.
 Unibet is not a historical source. It would only ever be the live quote
 for upcoming fixtures, entered the way prices are entered today.
 
+### A second source — what it can and cannot do
+
+**Cross-validation does not need one.** The main files already carry the
+same match priced by Bet365, **Pinnacle**, William Hill, and the market
+Max and Avg. Pinnacle is the sharpest book in the file and the natural
+reference; disagreement between it and the Avg column is itself a signal,
+and a lane where the books disagree wildly is one to distrust. This is
+free, already downloaded, and should be the first cross-check built.
+
+**Gap-filling does need one, and there is no free bulk option.** The
+`new/` list does not include Saudi, Peru, Chile, Colombia, Brazil Série B
+or the Dutch second tier — the leagues we are actually missing. Probed
+from this environment:
+
+| source | status | verdict |
+|---|---|---|
+| the-odds-api.com | 401 without a key | reachable; historical is a paid tier |
+| api-sports.io (api-football) | 403 without a key | reachable; covers Saudi, Peru, Chile, Colombia, Brazil B |
+| sportmonks | 401 without a key | reachable; paid |
+| historicdata.betfair.com | 403 | account required; major leagues only |
+
+So filling the 18 uncovered competitions is a **key decision, not a code
+decision**. api-football is the best fit for our particular gaps. Nothing
+should be built against it until a key exists, and the layer must work
+correctly with those leagues simply absent — silence is a valid verdict.
+
 ## 2. The coverage problem, and the way through it
 
 Our lanes are not the lanes the market file carries.
@@ -83,6 +109,14 @@ exist, check the implied mu is stable between them.
 **Team totals have no source and never will.** Tip 2 stays unpriced. Since
 the chooser never stars tip 2, this costs the final-pick layer nothing.
 
+### The rung actually bought is the whole line
+
+`U4.25` is an engine rung; the ticket struck against it is `U4.5`, and the
+same holds down the ladder (`U3.0` is bought as `U3.5`). The layer prices
+**what is bought**, not what is printed — which is convenient, because
+whole lines are what the implied-mu derivation prices most cleanly and
+they cannot push.
+
 ## 3. The thing that must not be got wrong
 
 The obvious rule — *reject anything priced below `buy≥`* — would gut the
@@ -102,6 +136,50 @@ volume. At an 83.7% hitrate, volume is most of the edge.
 
 This is the single largest design risk, and it is why the layer must be
 **fitted, not assumed**.
+
+## 3a. The volume problem is concentrated, and there is a ladder out of it
+
+The bettor's read — low-tempo leagues pay too little on the under to be
+worth backing — is where most of the NO PLAYs would land. It is
+measurable without any odds at all, because the bank carries the scores.
+
+Across the **14,649** bank cards whose tip 1 is an under at 4.0 or above
+(average 2.65 goals, tip 1 claiming 85.1%):
+
+| line bought | hits | hitrate | break-even |
+|---|---|---|---|
+| U5.5 | 13,900 | 94.89% | **1.054** |
+| **U4.5** (today's play) | 12,724 | **86.86%** | **1.151** |
+| **U3.5** (the pivot) | 10,624 | **72.52%** | **1.379** |
+| U2.5 | 7,348 | 50.16% | 1.994 |
+
+And on those same cards a result lane prints only **41%** of the time,
+grading 78.48% — the DNB subset **81.10%**, break-even **1.233**.
+
+Three things follow.
+
+**U3.5 is a real candidate, not a consolation.** Its break-even of 1.379
+sits in a far more competitive stretch of the price curve than U4.5's
+1.151. Short prices carry disproportionately heavy margin — the
+favourite-longshot bias — so a book quoting 1.14 on a 1.151 lane can be
+quoting 1.40 on a 1.379 one and leave real room. Whether that is true is
+exactly what the odds data would settle, and it is the first thing to
+measure.
+
+**The pivot is a price decision, never a probability one.** Athena claims
+85.1% for its own rung and has no opinion about U3.5; the 72.52% above is
+an empirical bank rate, not an engine number. Any pivot rule has to carry
+that distinction, and the pivoted lane's break-even has to come from the
+measured rate with its own confidence interval.
+
+**Tip 3 cannot be the whole answer.** It is only available on 41% of these
+cards. Where it exists and is a DNB it is strong — 81.10% at a 1.233 bar,
+comfortably inside normal DNB pricing. Where it does not, the choice is
+U4.5, a rung down, or no play.
+
+So the pivot order to test is: **U4.5 → DNB (if printed) → U3.5 → no
+play**, with each step gated on its own measured break-even rather than on
+`buy≥`.
 
 ## 4. What the layer would actually compute
 
