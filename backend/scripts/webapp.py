@@ -116,6 +116,23 @@ def _fmt(cell: str, fixture: str = "") -> str:
         s = re.sub(r"buy≥\s*[\d.]+(\s*\([^)]*\))?",
                    f'<span class="buyat">buy at min <b>{html.escape(q["consensus"])}'
                    f'</b>{best}{uni}</span>', s)
+    # LEAD WITH THE LINE THAT REACHES THE SLIP. Athena publishes Asian
+    # rungs; a real bet is the safer neighbour — U3.0 is struck as U3.5.
+    # Printing the rung beside a price quoted for the struck line invites
+    # exactly the wrong bet: Unibet pays 1.45 on U3.0 against 1.29 on
+    # U3.5, so a reader chasing the bigger number takes a lane that
+    # measured +0.24% where the struck one measured +0.86%.
+    if m:
+        rung = m.group(1)
+        st = _struck(rung)
+        if st != rung:
+            s = s.replace(html.escape(rung),
+                          f'<b class="play">{html.escape(st)}</b>'
+                          f'<span class="rung" title="Athena publishes the '
+                          f'Asian rung {html.escape(rung)}; the bet that '
+                          f'reaches the slip is {html.escape(st)}, and every '
+                          f'price and record here is for that line.">'
+                          f'rung {html.escape(rung)}</span>', 1)
     return s.replace(" · ", "<br>")
 
 
@@ -440,6 +457,15 @@ def _haystack(f) -> str:
             bits.append(f"~none{which}")
             continue
         bits += [c.replace("*", ""), f"tip{which}", f"tip {which}"]
+        # The card now LEADS with the struck line, so a search for what
+        # is printed on it has to find the card. The Asian rung stays
+        # searchable too — the cell text already carries it — so both
+        # "u3.0" and "u3.5" reach the same fixture.
+        rm = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", c)
+        if rm:
+            st = _struck(rm.group(1))
+            if st != rm.group(1):
+                bits += [st, f"tip{which} {st}", f"tip {which} {st}"]
         if f.lane(which) if which < 3 else False:
             bits.append("playable")
         if which == 3:
@@ -1800,6 +1826,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .g-super-red {{ color:#f0a08e; border-color:#8a3a2e;
   background:rgba(138,58,46,.18); font-weight:600; }}
 .verdict {{ font-size:12px; margin:0 0 4px; letter-spacing:.03em; }}
+.play {{ color:#cfe6ff; }}
+.rung {{ font-size:10px; color:var(--dim); margin-left:6px;
+  border:1px solid #2a3346; border-radius:4px; padding:0 5px;
+  letter-spacing:.05em; cursor:help; white-space:nowrap; }}
 .lanebar {{ font-size:11px; margin-top:5px; letter-spacing:.04em; }}
 .lanebar.yes {{ color:#8fe3a8; }}
 .lanebar.no {{ color:#e08b7a; }}
