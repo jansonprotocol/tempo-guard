@@ -213,30 +213,49 @@ def _book_h2h(bk: dict, home: str, away: str) -> tuple | None:
 STRUCK = {"U3.0": "U3.5", "U4.25": "U4.5"}
 
 
+def same_bet(a: str, b: str) -> bool:
+    """Do these two rungs win on exactly the same final totals?
+
+    Asked of the engine's own grader rather than asserted here, so the
+    answer cannot drift away from what the selector believes.
+    """
+    from app.engine.market_select import winning_totals
+    return winning_totals(a) == winning_totals(b)
+
+
 def bought(rung: str) -> str:
     """The line a printed rung is actually STRUCK at.
 
     Two rungs are bought one notch away from what the card prints, and
     both are UNDERS: U3.0 as U3.5, U4.25 as U4.5. Those are the two the
     ROI tables in docs/ measured — U3.0->U3.5 returns +2.86% against the
-    rung's +2.32%, U4.25->U4.5 -4.53% against -5.34% — and the mechanism
-    is specific: both moves land on the NO-PUSH line, so the whole stake
-    stays at risk and the edge earns on all of it. Everything else is
+    rung's +2.32%, U4.25->U4.5 -4.53% against -5.34%. Everything else is
     bought exactly as printed.
 
-    This used to be arithmetic — shift unders up a half, overs down a
-    half — which generalised a two-case finding into a rule nobody had
-    tested, and got the over side BACKWARDS. O1.5 became O1.0, and O1.0
-    is the push line for a one-goal game: the shift moved TOWARD the
-    push, the opposite of the direction that was validated. It also
+    AND THE SUBSTITUTION ONLY FIRES WHILE THE TWO ARE THE SAME BET.
+    Under the hit-rate convention `U3.0` and `U3.5` win on exactly the
+    same totals — 0 through 3 — because evaluate_market reports a whole
+    line landing on its own number as a half_win so the hit-rate column
+    can count it. So the engine cannot mean `U3.0` as distinct from
+    `U3.5`; it prints `U3.0` only because that string sits earlier in
+    LADDER. The substitution is therefore not swapping one bet for
+    another, it is giving the bet the engine actually chose its honest
+    name — the one whose win condition matches the arithmetic behind the
+    claim. If a future change ever makes p_win tell the two apart, this
+    stops substituting by itself. That is the "unless it is truly U3.0"
+    clause, enforced rather than remembered.
+
+    Same test, applied to the version this replaced, is why that one was
+    wrong: `O1.5` wins on 2+ and `O1.0` wins on 1+, so they are DIFFERENT
+    bets, and the old arithmetic swapped one for the other. It also
     quoted 159 O1.5 cards at a price no one would take (1.01, because a
     book prices near-certainty accordingly) and turned the 50 cards
-    printing O0.5 into `O0.0`, which is not a bet.
-
-    So the substitutions are enumerated. A rule measured on two lines
-    applies to two lines.
+    printing O0.5 into `O0.0`, which is not a bet at all.
     """
-    return STRUCK.get(rung, rung)
+    sub = STRUCK.get(rung)
+    if sub is None or not same_bet(rung, sub):
+        return rung
+    return sub
 
 
 def lane_price(ev: dict, lane: str) -> dict | None:
