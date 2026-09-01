@@ -820,7 +820,6 @@ that premium the book is keeping the insurance money.
 | ✅ | Jong PSV v Jong Ajax | U4.5 | 1.44 | 1.44x | softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21 |
 | — open | Luzern v Vaduz | U4.5 | 1.34 | — | = the card's struck lane (U4.25 rung), STRONG at +5.63 — board best 1.42, took 1.34 |
 | — open | Millwall v Wrexham | U3.5 | 1.29 | — | own read — the card moved to U4.25/U4.5 on the name fold and declines at 1.11 |
-| — open | West Brom v Charlton | U3.5 | 1.26 | — | own read — card is RED at 75.8%, 0.2 under the 76% line, and never plays |
 | — open | Preston v Bristol City | U3.5 | 1.29 | — | R6 softer off the U3.0 tip — struck pre-match, now live |
 | — open | Al-Hilal v Al-Ahli | O2.5 | 1.52 | — | harder line off tip 2's O2.25 (65.3%) — 1.52 against a fair 1.53 |
 | — open | Sheffield United v Bolton | U3.5 | 1.36 | — | R6 softer off the U3.0 tip — struck pre-match, now live |
