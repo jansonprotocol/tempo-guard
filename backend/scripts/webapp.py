@@ -502,11 +502,6 @@ def _t1_rates() -> dict:
     return _T1RATES
 
 
-def _weak_leagues() -> set:
-    """The protocol's 'read tip 3 first' tier: tip 1 baseline under 80%."""
-    return {c for c, r in _t1_rates().items() if r < 0.80}
-
-
 # How far a DNB must out-claim tip 1 before it takes the star. Fitted and
 # validated 1 Sep over 29,953 graded bank cards: on the 426 where a DNB
 # clears tip 1 by more than this, the DNB grades 94.13% against tip 1's
@@ -619,17 +614,16 @@ def _card(f, kind: str, reads: dict) -> str:
           f'{_fmt(f.tip3)} <span class="dim">· result lane</span>'
           f'{star if best == 3 else ""}</div>'
           if f.tip3.strip() else "")
-    # Protocol step 2, applied to the layout itself: in a league whose
-    # tip 1 baseline runs under 80% — or a consensus-capped one — a card
-    # whose tip 1 did not clear the playable bar leads with tip 3
-    # instead. Same principle as the playable tab's lead swap: a card
-    # leads with the lane worth reading first. Settled cards keep the
-    # tip 1 order so grading reads consistently.
-    face = f"{lane(*lead)}{t3}"
-    if (t3 and not f.settled and not f.lane(1)
-            and (f.code in _weak_leagues()
-                 or "capped" in (rates().get(f.code) or ""))):
-        face = f"{t3}{lane(*lead)}"
+    # A card leads with the lane worth reading first — which is the
+    # STARRED lane, and nothing else. This used to run its own weak-tier
+    # rule (lead with tip 3 in a sub-80% or consensus-capped league when
+    # tip 1 missed the playable bar), which agreed with the old chooser
+    # by construction. Since the star became the DNB claim gate the two
+    # can disagree, and a card that prints tip 3 at the top while the ★
+    # sits on tip 1 below it is telling the reader two things at once.
+    # One rule, one lane. Settled cards keep the tip 1 order so grading
+    # reads consistently.
+    face = f"{t3}{lane(*lead)}" if (t3 and best == 3) else f"{lane(*lead)}{t3}"
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
