@@ -926,3 +926,45 @@ per-lane verdicts stay — a reader is entitled to see that the DNB was
 4.4% short — but the guard must never promote a fallback to a play. What
 the card shows and what it recommends are different things, and this is
 one of the places they have to stay different.
+
+## How often it fires, and where the edge really sits
+
+A figure of "one or two qualifying bets a week" was quoted earlier in
+conversation and it was wrong by about seven times: it was the gated-DNB
+rate, attached by mistake to the whole rule.
+
+Over **468 distinct match days** in the 16 priced leagues, **1,008 of
+8,121 cards clear the bar — 12.4%, or 2.15 plays per match day**, call it
+fifteen a week. DNBs clearing the bar are 57 over the same 468 days,
+which is about **0.85 a week**, and that is the number the original claim
+belonged to.
+
+The composition matters more than the rate:
+
+| slice | n | share of plays | odds | hit | ROI |
+|---|---|---|---|---|---|
+| everything that clears | 1,008 | 100% | 1.35 | 74.8% | +1.71% ± 1.82 |
+| **the DNBs** | 57 | **5.7%** | 1.34 | 71.9% | **+15.92% ± 4.88** |
+| **the ladder rungs** | 951 | **94.3%** | 1.35 | 75.0% | **+0.86% ± 1.91** |
+
+**5.7% of the bets carry 53% of the profit.** The ladder, which is 94% of
+what would actually be placed, returns +0.86% against an error bar of
+±1.91 — not distinguishable from zero. And the DNB's +15.92% is at
+synthetic prices; the measured in-band haircut of −2.5% takes it to
+roughly +13%, on 57 bets.
+
+So the rule has two honest modes, and they are not variations of each
+other:
+
+**Narrow** — DNBs only, when they clear. About one bet a week, the
+strongest measured edge in the project, and a sample small enough that no
+single month can confirm or refuse it.
+
+**Wide** — everything that clears. Fifteen a week and a +1.71% headline,
+but mostly ladder bets whose own return is statistically zero. Its real
+argument is that it fills the forward log fifteen times faster, and the
+forward log is the only thing that will settle any of this.
+
+The two can be run together: **stake narrow, log wide.** The card already
+labels every lane and the log already stamps every quoted one, so the
+wide record accumulates whether or not it is backed.
