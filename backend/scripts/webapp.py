@@ -606,6 +606,14 @@ SAYS = {"super green": 0.8956, "green": 0.8740, "orange": 0.8342,
 # choice, not the best cell in the table.
 DECLINE_MARGIN = 0.06
 
+# STRONG: a play that also carries a top-quartile confluence score, in
+# Europe where the score means anything. Measured on the 1,008 bets the
+# bar fires on: strong grades 81.0% and +8.87% (+9.91 / +7.83 across the
+# two windows) while everything else grades 72.8% and -0.67%. So the
+# split is not cosmetic — one half carries the entire return and the
+# other has no measured edge at all.
+STRONG_SCORE = 0.71
+
 FORWARD = ROOT / "config" / "forward_log.tsv"
 _LOGGED: set | None = None
 
@@ -692,6 +700,55 @@ def _label_of(f, best: int, full: bool = False):
     return (lab, sc, cell, p) if full else lab
 
 
+def _star(f) -> int:
+    """The chooser: which lane the card stars. Extracted because the TABS
+    now need it too — a tab that decides playability from a different
+    lane than the card marks would be two rules pretending to be one.
+
+    Tip 1 by default; a DNB that out-claims it by DNB_GATE takes it.
+    Tip 2 is never starred (it graded 12.7 points below tip 1 on the same
+    fixtures) and double chance is never gated in (a DC switch lost 3.53
+    points where the DNB gained 9.08).
+    """
+    if f.settled:
+        return 0
+    p1, p3 = _claim(f.tip1), _claim(f.tip3)
+    if p1 is not None:
+        if _is_dnb(f.tip3) and p3 is not None and p3 - p1 > DNB_GATE:
+            return 3
+        return 1
+    return 3 if f.tip3.strip() else 0
+
+
+def verdict(f, best: int) -> dict | None:
+    """PLAY (normal or strong) or NO PLAY, decided once.
+
+    The tabs and the card must never disagree about whether something is
+    playable, so both read this rather than each applying the rule.
+    """
+    got = _label_of(f, best, full=True)
+    if not got:
+        return None
+    lab, sc, cell, p = got
+    hit = SAYS[lab]
+    need = (1 / hit) * (1 + DECLINE_MARGIN)
+    lane = _rung(cell)
+    q = quotes().get((f.teams, lane))
+    try:
+        got_odds = float(q["best"] or q["consensus"]) if q else None
+    except (TypeError, ValueError):
+        got_odds = None
+    strong = (region_silent(f.code) is False and sc is not None
+              and sc >= STRONG_SCORE)
+    play = (not lab.endswith("red")) and got_odds is not None \
+        and got_odds >= need
+    return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
+                need=need, odds=got_odds, book=(q or {}).get("book"),
+                play=play, strong=play and strong,
+                mark=("strong" if play and strong else
+                      "normal" if play else "no play"))
+
+
 def _guard(f, best: int) -> str:
     """The card's risk label: five bands, registered in docs/.
 
@@ -703,10 +760,10 @@ def _guard(f, best: int) -> str:
 
     The score is silent outside Europe, where it measured -0.06.
     """
-    got = _label_of(f, best, full=True)
-    if not got:
+    v = verdict(f, best)
+    if not v:
         return ""
-    lab, sc, cell, p = got
+    lab, sc = v["label"], v["score"]
     hit = SAYS[lab]
     tip = (f"Guard: {lab}. Cards labelled this way graded {hit*100:.1f}% "
            f"over 62,528 replayed picks, in both time windows. "
@@ -716,47 +773,37 @@ def _guard(f, best: int) -> str:
     badge = (f'<div class="guard g-{lab.replace(" ", "-")}" '
              f'title="{html.escape(tip)}">{lab}</div>')
 
-    # The DECISION. A label on its own is only a hit rate; what decides a
-    # play is whether the market pays MORE than that hit rate needs. On
-    # 8,121 priced picks, taking everything returned -1.67% while taking
-    # only what cleared break-even by 6% returned +0.83%, and the hit rate
-    # FELL from 81.8% to 73.7% along the way. The bar is not looking for
-    # good cards, it is looking for cards the market has underpriced.
-    lane = _rung(cell)
-    q = quotes().get((f.teams, lane))
-    need = (1 / hit) * (1 + DECLINE_MARGIN)
-    # NAME the lane. The verdict sits at the top of the card while the
-    # lane it judges can be the last one printed, and three different
-    # price ideas share the card already — the engine's buy≥ on tip 2,
-    # the market's buy-at-min on the quoted lanes, and this bar. Without
-    # the lane on the line, the reader has to work out which one it means.
-    who = f'Tip {best} {html.escape(lane)}' if lane else f'Tip {best}'
-    if lab.endswith("red"):
-        # The tier already condemned it, and a good score cannot rescue a
-        # red: red's BEST score quartile grades 79.27% against orange's
-        # WORST at 81.64%. Its ceiling sits under orange's floor.
+    # THE MARK, one of three, and the tabs read the same verdict() so the
+    # board can never say playable while the card says decline.
+    #
+    # STRONG is not decoration. On the 1,008 bets the bar fires on, a
+    # top-quartile score in Europe grades 81.0% and +8.87% (+9.91/+7.83
+    # by window) while everything else grades 72.8% and -0.67%. One half
+    # carries the entire return; the other has no measured edge at all.
+    who = f'Tip {best} {html.escape(v["lane"])}' if v["lane"] else f'Tip {best}'
+    need, odds, book = v["need"], v["odds"], v["book"] or "market"
+    if v["strong"]:
+        line = (f'<div class="verdict strong">★ STRONG · PLAY {who} '
+                f'<span class="dim">· needs {need:.2f}, '
+                f'{html.escape(book)} pays</span> <b>{odds:.2f}</b>'
+                f'<span class="dim"> · score {sc:+.1f}</span></div>')
+    elif v["play"]:
+        line = (f'<div class="verdict yes">PLAY {who} '
+                f'<span class="dim">· needs {need:.2f}, '
+                f'{html.escape(book)} pays</span> <b>{odds:.2f}</b></div>')
+    elif lab.endswith("red"):
         line = (f'<div class="verdict no">no play <span class="dim">· '
                 f'{who} · the tier says avoid</span></div>')
-    elif not q:
+    elif odds is None:
         line = (f'<div class="verdict dimv">{who} needs <b>{need:.2f}</b> '
                 f'<span class="dim">· nothing quoted yet</span></div>')
     else:
-        try:
-            got = float(q["best"] or q["consensus"])
-        except (TypeError, ValueError):
-            got = None
-        if got is None:
-            line = ""
-        elif got >= need:
-            line = (f'<div class="verdict yes">PLAY {who} '
-                    f'<span class="dim">· needs {need:.2f}, '
-                    f'{html.escape(q["book"] or "market")} pays</span> '
-                    f'<b>{got:.2f}</b></div>')
-        else:
-            line = (f'<div class="verdict no">DECLINE {who} '
-                    f'<span class="dim">· needs {need:.2f}, best anywhere '
-                    f'is</span> <b>{got:.2f}</b></div>')
-        _stamp(f, best, lane, lab, sc, p, need, q)
+        line = (f'<div class="verdict no">no play <span class="dim">· {who} '
+                f'needs {need:.2f}, best anywhere is</span> '
+                f'<b>{odds:.2f}</b></div>')
+    if odds is not None:
+        _stamp(f, best, v["lane"], lab, sc, v["claim"], need,
+               quotes().get((f.teams, v["lane"])) or {})
     return badge + line
 
 
@@ -863,18 +910,12 @@ def _card(f, kind: str, reads: dict) -> str:
         # DC switch LOST 3.53 points where the DNB gained 9.08. The star
         # means "read this first", never "this is the better bet" — the
         # buy≥ bracket decides that.
-        p1, p3 = _claim(f.tip1), _claim(f.tip3)
-        if p1 is not None:
-            best = 1
-            if _is_dnb(f.tip3) and p3 is not None and p3 - p1 > DNB_GATE:
-                best = 3
-        elif f.tip3.strip():
-            best = 3
+        best = _star(f)
     star = ('<span class="best-tag" title="The lane to read first on this '
             'card — not a claim that it is the better bet; the buy≥ '
             'bracket decides that">★ read first</span>')
 
-    def lane(which, cell, lab=None):
+    def lane(which, cell, lab=None, noplay=False):
         if cell.strip() in ("", "—", "— none"):
             return ""
         pl = " pl" if (not f.settled and f.lane(which)) else ""
@@ -890,6 +931,11 @@ def _card(f, kind: str, reads: dict) -> str:
                        else "won" if s.startswith("✓") else "")
                 live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
         tail = " <span class=\"dim\">· result lane</span>" if which == 3 else ""
+        if noplay:
+            tail += ('<span class="noplay" title="Shown for the record. '
+                     'This lane is not what the guard would stake — either '
+                     'the price never cleared its bar or it is not the '
+                     'starred lane.">no play</span>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
                 f"</span> {_fmt(cell, f.teams)}{tail}"
                 f"{star if which == best else ''}"
@@ -924,13 +970,23 @@ def _card(f, kind: str, reads: dict) -> str:
     # Only the STARRED lane carries a validated bar; the others are
     # priced off their own claim and say so.
     lab = _label_of(f, best) if not f.settled else None
-    face = "".join(lane(w, cells[w], lab if w == best else None)
-                   for w in seq)
+    v = verdict(f, best) if not f.settled else None
+    playing = bool(v and v["play"])
+    # The card leads with the ONE line that would be staked, and nothing
+    # else. Everything the engine also published sits behind the fold,
+    # each lane marked no play — still readable, still carrying its own
+    # arithmetic, but never mistakable for an instruction. On a card the
+    # guard refuses outright, every lane is marked.
+    # A settled card is a record, not an instruction, so it carries no
+    # no-play marks at all — the grade already says what happened.
+    mark = not f.settled
+    face = lane(seq[0], cells[seq[0]], lab, noplay=mark and not playing)
+    rest = "".join(lane(w, cells[w], None, noplay=mark) for w in seq[1:])
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'<div class="meta">{head} · {league}</div>{kw}'
            f"{_guard(f, best)}{face}")
-    body = tie_html
+    body = rest + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
     if not body:
@@ -1158,11 +1214,21 @@ def main() -> None:
 
     reads = _reads(fixtures)
     pending = [f for f in fixtures if not f.settled]
-    playable = [f for f in pending if f.lane(1) or f.lane(2)]
-    # "Athena lanes" is everything the engine published for this run, the
-    # playable ones included — the playable tab is a filter on top of it,
-    # not a slice taken out of it.
-    waiting = pending
+    # PLAYABLE now means what it says: cards the guard would actually
+    # stake. It used to mean "a lane cleared the engine's edge bar", which
+    # is a different and much looser question — 8,121 priced cards cleared
+    # that and returned -1.67%, while the 1,008 clearing THIS one returned
+    # +1.71%. A tab called playable that lists cards nobody should back was
+    # the wrong promise.
+    #
+    # Everything else moves to Athena lanes, which is now the data tab:
+    # still published, still graded, still feeding the bank and the
+    # forward log, but marked no play.
+    def _v(f):
+        return verdict(f, _star(f))
+    playable = [f for f in pending if (v := _v(f)) and v["play"]]
+    strong_n = sum(1 for f in playable if (v := _v(f)) and v["strong"])
+    waiting = [f for f in pending if f not in playable]
     done = [f for f in fixtures if f.settled][::-1]
 
     def tile(label, value, sub):
@@ -1727,6 +1793,18 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .verdict.yes b {{ color:#b8f0c8; }}
 .verdict.no {{ color:#e08b7a; }}
 .verdict.dimv {{ color:var(--dim); }}
+.verdict.strong {{ color:#ffd875; background:rgba(230,195,92,.10);
+  border:1px solid rgba(230,195,92,.45); border-radius:6px;
+  padding:4px 8px; font-weight:600; }}
+.verdict.strong b {{ color:#fff0c2; }}
+.panenote {{ font-size:12px; color:var(--dim); line-height:1.55;
+  border-left:2px solid #2a3346; padding:2px 0 2px 10px; margin:2px 0 12px; }}
+.panenote b {{ color:var(--tx); }}
+.panenote .sgm {{ color:#ffd875; }}
+.card.pend .lane {{ opacity:.72; }}
+.noplay {{ font-size:10px; text-transform:uppercase; letter-spacing:.12em;
+  color:#e08b7a; border:1px solid #6b3129; border-radius:4px;
+  padding:1px 6px; margin-left:8px; white-space:nowrap; }}
 .prog {{ margin-top:5px; font-size:11px; letter-spacing:.04em;
   color:var(--gold); }}
 .prog.won {{ color:var(--green); }}
@@ -1872,12 +1950,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div id="ask-out"></div>
  </div>
  <div class="tabs">
-  <a href="#home/playable" data-t="playable">🟢 Playable lanes
-   <span class="dim">{len(playable)}</span></a>
+  <a href="#home/playable" data-t="playable">🟢 Playing now
+   <span class="dim">{len(playable)}{f" · ★{strong_n}" if strong_n else ""}</span></a>
   <a href="#home/bets" data-t="bets" class="gold">🟡 Found bets
    <span class="dim">{bh}/{bn}</span></a>
   <a href="#home/lanes" data-t="lanes" class="blue">🔵 Athena lanes
-   <span class="dim">{len(waiting)}</span></a>
+   <span class="dim">{len(waiting)} · no play</span></a>
   <a href="#home/done" data-t="done" class="grey">⚪ Completed
    <span class="dim">{len(done)}</span></a>
  </div>
@@ -1911,7 +1989,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <div class="fxbox" id="fxbox"></div>
   <button class="fxshut" onclick="hideCard()">close</button>
  </div>
- <div class="tabpane" id="t-playable">{_grid(playable, "play", reads)}</div>
+ <div class="tabpane" id="t-playable">
+  <div class="panenote">Only what the guard would actually stake: the
+  starred lane cleared its label's break-even by {DECLINE_MARGIN*100:.0f}%
+  and the tier is not red. <b class="sgm">★ STRONG</b> adds a top-quartile
+  confluence score in Europe — on 1,008 replayed bets those graded 81.0%
+  and +8.87%, against 72.8% and −0.67% for the rest.</div>
+  {_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th><th data-sort="s">Kickoff</th>
@@ -1920,7 +2004,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <th data-sort="n">Return</th><th data-sort="s">Athena says</th>
   <th data-sort="s">Note</th></tr>
   {bets_html}</table></div></div>
- <div class="tabpane" id="t-lanes">{_grid(waiting, "pend", reads)}</div>
+ <div class="tabpane" id="t-lanes">
+  <div class="panenote">Everything Athena published that is <b>not</b>
+  being played — the price never cleared, or the tier said avoid. Kept
+  in full because it is graded, banked and fed back into the record;
+  it is data, not a shortlist. Open a card to see why it was refused.</div>
+  {_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
  {_learn()}
 </section>

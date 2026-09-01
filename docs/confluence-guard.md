@@ -853,3 +853,350 @@ The headroom absorbs a fair amount of it — break-even needs −6.3% and the
 in-band worst case was −4.51% — but the number to trust is the forward
 log, not this one. n is 48 prices on a single day, and the base result is
 212 bets.
+
+---
+
+# Should a declined card fall back to another lane? (1 Sep)
+
+The bettor's rule, from the Swansea card: tip 1 is struck on price, so
+the DNB is next in line, and if IT clears its own bar the card plays that
+instead.
+
+This is not the pivot already rejected. That one flipped when the SCORE
+condemned a pick and lost. This one flips only when the PRICE fails and
+the alternative's own price clears — and price-conditional selection is
+the one thing here that has ever produced a positive return. Two margins
+swept separately, because the star's bar rests on a validated label hit
+rate and the fallback's only on its own printed claim.
+
+**8,121 priced cards, 2,476 with a priced fallback as well.**
+
+| | n | odds | hit | ROI |
+|---|---|---|---|---|
+| star bar +6%, alone | 1,008 | 1.35 | 74.8% | **+1.71%** |
+| star +6%, else fall back at +0% | 1,741 | 1.48 | 60.8% | −0.49% |
+| star +6%, else fall back at +6% | 1,550 | 1.49 | 61.9% | −0.62% |
+| **the fallback bets alone** | 733 | 1.66 | **41.5%** | **−3.53%** |
+
+The fallback destroys the only positive result in the project. And
+loosening its bar HELPS — −3.53% at +0% against −6.35% at +12% — which is
+the tell.
+
+## Why: the claim is not a rate
+
+The fallback DNBs **claim 72.2% and hit 41.5%**. Sliced by how far the
+price sits above what that claim demands:
+
+| price over break-even | n | odds | claims | hit | ROI |
+|---|---|---|---|---|---|
+| +0–5% | 165 | 1.40 | 73.1% | **52.7%** | +1.03% |
+| +5–15% | 256 | 1.52 | 72.4% | 44.1% | +0.09% |
+| +15–35% | 207 | 1.72 | 72.0% | 37.2% | −5.01% |
+| +35%+ | 105 | 2.26 | 70.7% | **25.7%** | −16.60% |
+
+The claim is flat at about 72% the whole way down while the truth
+collapses from 52.7% to 25.7%. Monotone, and in both windows (−3.82%
+older, −3.24% newer).
+
+**This is the anti-predictive property in its purest form.** A bar of the
+shape "price ≥ 1/rate × margin" selects cards where the market disagrees
+with `rate` most. If `rate` is a validated hit rate, that finds market
+error. If `rate` is the engine's own claim, it finds ENGINE error — and
+the harder the bar, the more of it you buy.
+
+Same arithmetic, opposite sign, and the only difference is whether the
+number in the denominator has been measured:
+
+* star bar, from the label's validated rate → **+1.71%**
+* fallback bar, from the card's own claim → **−3.53%**
+
+That is why the card marks those lanes `claim-based`. It is not a
+cosmetic caveat; it is the whole distinction between finding the market's
+mistake and finding your own.
+
+## Two corrections this run produced
+
+**The shipped rule is better than previously reported.** The +0.83%
+quoted for the star bar at +6% included red-labelled cards. The card
+already refuses those, and excluding them as it does gives **+1.71% on
+1,008 bets**. The earlier figure understated what ships.
+
+**The fallback is refused, and the card should keep showing it.** The
+per-lane verdicts stay — a reader is entitled to see that the DNB was
+4.4% short — but the guard must never promote a fallback to a play. What
+the card shows and what it recommends are different things, and this is
+one of the places they have to stay different.
+
+## How often it fires, and where the edge really sits
+
+A figure of "one or two qualifying bets a week" was quoted earlier in
+conversation and it was wrong by about seven times: it was the gated-DNB
+rate, attached by mistake to the whole rule.
+
+Over **468 distinct match days** in the 16 priced leagues, **1,008 of
+8,121 cards clear the bar — 12.4%, or 2.15 plays per match day**, call it
+fifteen a week. DNBs clearing the bar are 57 over the same 468 days,
+which is about **0.85 a week**, and that is the number the original claim
+belonged to.
+
+The composition matters more than the rate:
+
+| slice | n | share of plays | odds | hit | ROI |
+|---|---|---|---|---|---|
+| everything that clears | 1,008 | 100% | 1.35 | 74.8% | +1.71% ± 1.82 |
+| **the DNBs** | 57 | **5.7%** | 1.34 | 71.9% | **+15.92% ± 4.88** |
+| **the ladder rungs** | 951 | **94.3%** | 1.35 | 75.0% | **+0.86% ± 1.91** |
+
+**5.7% of the bets carry 53% of the profit.** The ladder, which is 94% of
+what would actually be placed, returns +0.86% against an error bar of
+±1.91 — not distinguishable from zero. And the DNB's +15.92% is at
+synthetic prices; the measured in-band haircut of −2.5% takes it to
+roughly +13%, on 57 bets.
+
+So the rule has two honest modes, and they are not variations of each
+other:
+
+**Narrow** — DNBs only, when they clear. About one bet a week, the
+strongest measured edge in the project, and a sample small enough that no
+single month can confirm or refuse it.
+
+**Wide** — everything that clears. Fifteen a week and a +1.71% headline,
+but mostly ladder bets whose own return is statistically zero. Its real
+argument is that it fills the forward log fifteen times faster, and the
+forward log is the only thing that will settle any of this.
+
+The two can be run together: **stake narrow, log wide.** The card already
+labels every lane and the log already stamps every quoted one, so the
+wide record accumulates whether or not it is backed.
+
+---
+
+# Should each league face its own bar? (1 Sep)
+
+A fair question, since the engine is per-league almost everywhere — its
+own goal mean, tempo factor, floor, shrink, and for seven leagues a
+consensus cap — while the DECISION layer judges all 56 competitions
+against one pooled label rate and one 6% margin. Serie A's final pick
+grades about a point above the pooled rate, so on the face of it its
+orange cards are being asked for more price than they need.
+
+Fixed the way the confluence score fixes its club slices: shrink the
+league's own record toward the pooled rate rather than replacing it. Two
+variants — **cell** (the league's record for that label) and **offset**
+(the league's overall deviation, applied to every label) — with every
+rate learned on the TRAIN half and applied to the TEST half.
+
+**Matched to the same 1,008 bets, so this is not the volume effect:**
+
+| rule | n | odds | hit | ROI | older / newer |
+|---|---|---|---|---|---|
+| **POOLED (shipped)** | 1,008 | 1.35 | 74.8% | **+1.71%** | +0.62 / +2.80 |
+| cell, prior 100 | 1,007 | 1.34 | 74.5% | +0.64% | +0.58 / +0.69 |
+| cell, prior 400 | 1,008 | 1.35 | 74.2% | +0.65% | +0.79 / +0.52 |
+| offset, prior 200 | 1,007 | 1.34 | 74.1% | +0.07% | +0.33 / −0.20 |
+
+And the swap is blunt. At prior 400 the two rules share 88% of their
+bets; of the 119 they disagree on, the ones per-league **adds** return
+−1.78% and the ones it **drops** return +7.17%.
+
+## Why it fails
+
+The per-league bar LOWERS the requirement where a league historically
+hits well — Serie A 1.273 → 1.225 — and raises it where it does not. But
+a league that hits well is one **the market also knows hits well**, and
+its prices are already short. So the adjustment admits short-priced bets
+in efficiently-priced markets and excludes the long-priced ones that
+carried the value.
+
+**The bar works because it is uniform and the market is not.** It does
+not judge the match; it judges the price against a FIXED reference, and
+market disagreement is the entire signal. Moving the reference toward the
+league's own record cancels the thing being measured.
+
+## The caveat that stops this being a clean rejection
+
+Pooled's advantage is one window. Older: pooled +0.62 against cell-400's
++0.79, where per-league is BETTER. Newer: +2.80 against +0.52. The whole
+gap sits in the recent half, which is the pattern that has killed six
+hypotheses in this file, and it does not get an exemption here.
+
+So the honest verdict is **no evidence per-league helps**, not "per-league
+is worse". Pooled stays because it is simpler and already shipped, not
+because it won.
+
+## Where per-league fairness already lives
+
+Worth stating, because the concern behind the question is right even
+though the fix is not. By the time a card reaches the bar, Serie A has
+passed through its own goal mean, a `tempo_factor` of 0.40 against the
+0.50 default, a floor raised to 0.78, the relative-overreach debit
+measured against ITS OWN base rate, and the consensus cap — one of only
+seven leagues that gets it. The confluence score then reads Serie A's own
+league baseline, its own side split (1,295 of 1,483 cards are unders,
+hitting 87.6% against overs' 76.7%), and its own clubs.
+
+A Bundesliga card and a Ligue 1 card are already treated differently
+everywhere that judges the MATCH. The price bar is the one place they
+should not be, because there the reference has to stay fixed for the
+comparison to mean anything.
+
+---
+
+# Loosening the bar, and the lever that matters more (1 Sep)
+
+Two questions, and the second one turned out to dwarf the first.
+
+## More lanes by loosening: no
+
+ROI alone is the wrong scoreboard — 1,000 bets at +1% beats 300 at +2% —
+so the margin sweep is reported here in **units won** as well.
+
+| bar | per week | hit | ROI | units | older / newer |
+|---|---|---|---|---|---|
+| +0% | 35.1 | 78.0% | −0.41% | **−9.6** | +0.36 / −1.18 |
+| +2% | 26.5 | 76.5% | −0.17% | −3.1 | +0.13 / −0.47 |
+| +4% | 19.7 | 75.5% | +0.66% | +8.7 | +0.19 / +1.14 |
+| **+5%** | 17.2 | 75.7% | +1.92% | **+22.1** | +1.14 / +2.70 |
+| **+6% (shipped)** | 15.1 | 74.8% | +1.71% | +17.3 | +0.62 / +2.80 |
+| +8% | 11.3 | 73.5% | +2.08% | +15.7 | +2.44 / +1.72 |
+| +10% | 8.4 | 72.3% | +2.54% | +14.2 | +2.18 / +2.90 |
+| +12% | 6.3 | 69.9% | +1.27% | +5.3 | +0.21 / +2.34 |
+
+There is a **plateau from +5% to +10%** — units between +14 and +22, both
+windows positive throughout — and it collapses below +4%, where volume is
+bought with negative-expectation bets. +5% is the peak but +5/+6/+7/+8
+read 1.92 / 1.71 / 1.43 / 2.08, and that bounce is noise. The registered
++6% sits inside the plateau, which is the only property worth having.
+
+**Red back in adds nothing**: +9.4 units at +6% against +17.3 without, and
+red on its own at that bar returns −6.60% on 119 bets.
+
+## Where the edge actually lives: the price panel
+
+Every figure in this file is settled at the MAXIMUM price across
+football-data's book panel. Re-settling the identical rule at one book,
+and at the market average:
+
+| price level, +6% bar | per week | odds | hit | ROI | units |
+|---|---|---|---|---|---|
+| **best of ~10 books** | 15.1 | 1.35 | 74.8% | **+1.71%** | +17.3 |
+| **Bet365 alone** | 9.4 | 1.35 | 73.3% | **+0.62%** | +3.9 |
+| **market average** | 7.9 | 1.35 | 72.4% | **−0.69%** | −3.6 |
+
+The same shape holds at every bar: at +8% it is +2.08% / +1.15% /
+−0.31%, at +4% it is +0.66% / −0.47% / −1.51%.
+
+**Line shopping is not a refinement here, it is most of the edge.** About
+1.1 points of ROI separates best-of-market from a single book at the same
+bar — more than the margin choice, and more than the entire per-league
+question tested the same day. At the market average the rule loses money
+at every bar.
+
+This is the number to plan around. The bettor holds Dutch accounts
+(betcity, jacks, toto, unibet); four books is a real panel but the +1.71%
+is measured against roughly ten including Pinnacle, which is not
+reachable from NL. The honest expectation sits between the one-book and
+best-of-market columns rather than at either end.
+
+Concretely, from today's board: Unibet showed 1.08 where Pinnacle paid
+1.12, and 1.44 where GTbets paid 1.49. That gap is the difference between
+the rule working and not.
+
+## How often it fires, corrected twice
+
+The rate has been wrong twice in this file and both errors ran the same
+way — overstating volume.
+
+**First**, "one or two a week" was the gated-DNB rate applied to the whole
+rule. **Second**, the replacement figure of 15.1 a week divided 1,008
+bets by 468 MATCH days, but those match days sit inside **660 calendar
+days**; football has off-days, and dividing by match days overstates the
+weekly rate by 1.41x.
+
+**The rate is 10.7 per calendar week**, and even that is an average across
+two seasons that behave differently:
+
+| | bets | per week | clear rate | ROI |
+|---|---|---|---|---|
+| 2024-25 | 687 | 15.3 | 15.6% | +1.09% ± 2.23 |
+| **2025-26 (recent)** | 321 | **7.5** | **8.6%** | **+3.04% ± 3.18** |
+| both | 1,008 | 10.7 | 12.4% | +1.71% ± 1.82 |
+
+**The recent season fires at half the rate and returns three times as
+much**, on similar card volume — 3,728 priced against 4,393. That is the
+engine's own shipped conservatism showing up as money rather than as
+withheld volume: `REL_SAYS_DEBIT`, the streak debit, `MU_SHRINK` and the
+consensus cap push more cards into orange and red, and red is refused.
+
+So the forward expectation is **7 to 8 bets a week across the 16 priced
+leagues**, not 15. The worked ledger's 40 bets spanned five weeks at 8.5
+a week, which is why it did not match the rate quoted beside it.
+
+The caveat on the good news: ±3.18 on +3.04% puts the recent season's
+edge anywhere between roughly zero and +6%. 321 bets is not many, and the
+same debits that improved it were shipped DURING that season, so part of
+the gap is a changing rule rather than a changing market.
+
+## What EUR 50 actually supports
+
+Every rolling 40-bet window of the rule, flat stakes, best-of-panel
+prices — 969 windows:
+
+| | median | 10th | 25th | 75th | 90th | worst | losing windows |
+|---|---|---|---|---|---|---|---|
+| best of ~10 books | €51.41 | 43.05 | 46.13 | 56.33 | 59.20 | **32.78** | **41%** |
+| thinner panel (−2.8%) | €50.85 | 42.58 | 45.56 | 55.70 | 58.55 | 32.37 | 43% |
+
+At EUR 2 flat on EUR 50 — 4% a bet, near full Kelly on an edge whose
+error bar includes zero — four windows in ten lose money and the worst
+observed took the bank to EUR 32.78, a 35% drawdown. At a defensible 1%
+stake the shape is identical and the median month makes about fifty
+cents.
+
+**EUR 50 is a logging bank, not an earning bank.** What it is genuinely
+enough for is running the rule live at small stakes to fill the forward
+log with prices actually struck, which is the only thing that will settle
+whether any of this survives outside a replay.
+
+---
+
+# The measurement era: 2022 onward (1 Sep)
+
+**Standing convention, at the bettor's call:** measurement is reported on
+**2022–2026**. Football before that had thinner inputs, different scoring
+and a different market, and a result that depends on 2016 to hold is not
+a result about the game being played now.
+
+Adopting it cost almost nothing, which is itself informative.
+
+| label | registered (all data) | 2022–2026 | required price moves |
+|---|---|---|---|
+| super green | 89.72% | 89.75% | 1.181 → 1.181 |
+| green | 87.37% | 87.68% | 1.213 → 1.209 |
+| orange | 83.42% | 83.35% | 1.271 → 1.272 |
+| red | 77.88% | 77.73% | 1.361 → 1.364 |
+| super red | 77.38% | 77.78% | 1.370 → 1.363 |
+
+**The largest movement in any required price is 0.007.** The tier ordering
+the five labels depend on holds in both cuts — orange's best score
+quartile under green's worst, red's best under orange's worst.
+
+**The registered rates therefore stay as they are.** They survive the era
+restriction inside noise, and re-freezing thresholds to chase a third
+decimal would break the property that makes the forward log gradeable at
+all: that a card scored today faces the same bar as one scored last
+month.
+
+## And a correction to how the windows were described
+
+**55,544 of the bank's 62,528 cards are already 2022 or later — only 11%
+predates it.** So the earlier description of the full-bank split as "nine
+years against two" was true of the DATE RANGE and misleading about the
+DATA. Card density rose sharply as the project added leagues and
+backfilled, so the older half, running 2015 to May 2024, is itself about
+78% post-2022.
+
+The split has effectively been **2022-2024 against 2024-2026** all along —
+a far healthier test than the date labels implied, and already inside the
+era this convention asks for. The priced ROI tables were never in doubt:
+they run 2024-07 to 2026-05, two consecutive seasons.

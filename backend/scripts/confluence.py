@@ -41,6 +41,14 @@ import re
 import sys
 from collections import defaultdict, deque
 
+# Measurement era. Football before 2022 had thinner inputs, different
+# scoring and a different market, so a result that needs 2016 to hold is
+# not a result about the game being played now. Restricting to it moved
+# every registered label rate by at most 0.007 of required price, because
+# 55,544 of the bank's 62,528 cards are already 2022 or later — the old
+# tail is 11% of the data, not a rival half.
+ERA_FROM = 2022
+
 MIN_SLICE = 15        # a slice below this many cards does not get a vote
 MIN_LEAGUE = 100      # a league below this many cards is not scored at all
 DEAD = 2.0            # points of deadband around the league baseline
