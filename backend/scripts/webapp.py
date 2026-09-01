@@ -1216,6 +1216,12 @@ def main() -> None:
             keep.append(m)
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
 
+    # The headline number is what a reader FOLLOWING THE STAR actually
+    # gets, so it scores the chosen lane rather than tip 1 — the same
+    # chooser the cards apply (_card: tip 1 unless a DNB out-claims it by
+    # DNB_GATE). The population is unchanged: still the cards whose tip 1
+    # cleared the playable bar, which is what the site offers, so the
+    # number stays directly comparable to the tip-1 figure it replaces.
     graded = []
     for comp in bank.values():
         for m in comp["matches"]:
@@ -1223,19 +1229,26 @@ def main() -> None:
                 continue
             e = re.search(r"([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)",
                           m.get("tip", ""))
-            if not e:
+            if not e or float(e.group(1).replace("−", "-")) <= 1.0:
                 continue
-            if float(e.group(1).replace("−", "-")) > 1.0:
-                graded.append((m["d"], m["mark"]))
+            p1, p3 = _claim(m.get("tip")), _claim(m.get("t3"))
+            mark = m["mark"]
+            if (_is_dnb(m.get("t3")) and p1 is not None and p3 is not None
+                    and p3 - p1 > DNB_GATE
+                    and m.get("m3") in ("✅", "◦", "❌")):
+                mark = m["m3"]
+            graded.append((m["d"], mark))
     graded.sort(reverse=True)
     window = graded[:300]
     # A push counts as a hit, same as everywhere on the board: the
-    # standing offset plays the rung a notch softer, which wins there.
+    # standing offset plays the rung a notch softer, which wins there,
+    # and a DNB on a draw returns the stake.
     hero_rate = (sum(1 for _d, mk in window
                      if mk.startswith("✅") or mk == "◦")
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
-    hero_fine = "Tip 1 · the 300 most recent graded playable lanes"
+    hero_fine = ("The final pick · the 300 most recent graded "
+                 "playable cards")
 
     for shown in set(nick.values()):
         prefer[base_key(shown)] = shown
