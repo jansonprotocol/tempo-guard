@@ -1039,3 +1039,65 @@ A Bundesliga card and a Ligue 1 card are already treated differently
 everywhere that judges the MATCH. The price bar is the one place they
 should not be, because there the reference has to stay fixed for the
 comparison to mean anything.
+
+---
+
+# Loosening the bar, and the lever that matters more (1 Sep)
+
+Two questions, and the second one turned out to dwarf the first.
+
+## More lanes by loosening: no
+
+ROI alone is the wrong scoreboard — 1,000 bets at +1% beats 300 at +2% —
+so the margin sweep is reported here in **units won** as well.
+
+| bar | per week | hit | ROI | units | older / newer |
+|---|---|---|---|---|---|
+| +0% | 35.1 | 78.0% | −0.41% | **−9.6** | +0.36 / −1.18 |
+| +2% | 26.5 | 76.5% | −0.17% | −3.1 | +0.13 / −0.47 |
+| +4% | 19.7 | 75.5% | +0.66% | +8.7 | +0.19 / +1.14 |
+| **+5%** | 17.2 | 75.7% | +1.92% | **+22.1** | +1.14 / +2.70 |
+| **+6% (shipped)** | 15.1 | 74.8% | +1.71% | +17.3 | +0.62 / +2.80 |
+| +8% | 11.3 | 73.5% | +2.08% | +15.7 | +2.44 / +1.72 |
+| +10% | 8.4 | 72.3% | +2.54% | +14.2 | +2.18 / +2.90 |
+| +12% | 6.3 | 69.9% | +1.27% | +5.3 | +0.21 / +2.34 |
+
+There is a **plateau from +5% to +10%** — units between +14 and +22, both
+windows positive throughout — and it collapses below +4%, where volume is
+bought with negative-expectation bets. +5% is the peak but +5/+6/+7/+8
+read 1.92 / 1.71 / 1.43 / 2.08, and that bounce is noise. The registered
++6% sits inside the plateau, which is the only property worth having.
+
+**Red back in adds nothing**: +9.4 units at +6% against +17.3 without, and
+red on its own at that bar returns −6.60% on 119 bets.
+
+## Where the edge actually lives: the price panel
+
+Every figure in this file is settled at the MAXIMUM price across
+football-data's book panel. Re-settling the identical rule at one book,
+and at the market average:
+
+| price level, +6% bar | per week | odds | hit | ROI | units |
+|---|---|---|---|---|---|
+| **best of ~10 books** | 15.1 | 1.35 | 74.8% | **+1.71%** | +17.3 |
+| **Bet365 alone** | 9.4 | 1.35 | 73.3% | **+0.62%** | +3.9 |
+| **market average** | 7.9 | 1.35 | 72.4% | **−0.69%** | −3.6 |
+
+The same shape holds at every bar: at +8% it is +2.08% / +1.15% /
+−0.31%, at +4% it is +0.66% / −0.47% / −1.51%.
+
+**Line shopping is not a refinement here, it is most of the edge.** About
+1.1 points of ROI separates best-of-market from a single book at the same
+bar — more than the margin choice, and more than the entire per-league
+question tested the same day. At the market average the rule loses money
+at every bar.
+
+This is the number to plan around. The bettor holds Dutch accounts
+(betcity, jacks, toto, unibet); four books is a real panel but the +1.71%
+is measured against roughly ten including Pinnacle, which is not
+reachable from NL. The honest expectation sits between the one-book and
+best-of-market columns rather than at either end.
+
+Concretely, from today's board: Unibet showed 1.08 where Pinnacle paid
+1.12, and 1.44 where GTbets paid 1.49. That gap is the difference between
+the rule working and not.
