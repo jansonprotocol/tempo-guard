@@ -204,12 +204,14 @@ def test_board_matches_fixtures_tsv():
 
 def test_fixtures_tsv_is_well_formed():
     """The typed source: seven tab-separated columns per row, kickoff parseable,
-    status either empty, LIVE, or a graded mark. A malformed row here is the
-    new version of a broken pipe table, so it fails loudly."""
+    status either empty, LIVE, or a graded mark — and a graded mark is one
+    of THREE: hit, miss, or the push (◦) a whole line lands on when the
+    total equals its own number. A malformed row here is the new version
+    of a broken pipe table, so it fails loudly."""
     from scripts import board
 
     for f in board.load():
         assert len(f.kickoff) == 16 and f.kickoff[4] == "-", f.kickoff
         assert " v " in f.teams, f.teams
-        assert (f.status == "" or f.status.startswith(("✅", "❌", "LIVE"))
+        assert (f.status == "" or f.status.startswith(("✅", "❌", "◦", "LIVE"))
                 or f.status.startswith(("🔴", "FT"))), f.status

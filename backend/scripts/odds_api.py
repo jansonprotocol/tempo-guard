@@ -128,7 +128,14 @@ def fetch_league(code: str, force: bool = False) -> list:
         return hit["events"] if hit else []
     c[sport] = {"at": time.time(), "events": data,
                 "left": hdr.get("x-requests-remaining")}
-    CACHE.write_text(json.dumps(c))
+    # Rename into place: the cache is a 2.6 MB file rewritten after every
+    # league, and a crash mid-write would leave unparseable JSON that
+    # _cache() reads as EMPTY — the next run would then refetch all 26
+    # leagues and spend the month's credits repairing a file it could
+    # simply have kept.
+    tmp = CACHE.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(c))
+    tmp.replace(CACHE)
     return data
 
 
@@ -324,7 +331,7 @@ def lane_price(ev: dict, lane: str) -> dict | None:
 QUOTES = ROOT / "config" / "odds_quotes.tsv"
 
 
-BOARD_UTC_OFFSET = 2        # board kickoffs are written in UTC+2
+BOARD_TZ = "Europe/Amsterdam"   # board kickoffs are typed in Dutch local time
 
 
 def started(kickoff: str) -> bool:
@@ -341,13 +348,20 @@ def started(kickoff: str) -> bool:
 
     Unparseable kickoffs return False, so a malformed row is quoted as
     before rather than silently dropped.
+
+    The board's clock is Dutch LOCAL time, not a fixed offset: the first
+    version pinned UTC+2, which is right until the last Sunday of October
+    and then an hour early for five months — every card would have been
+    declared in-play sixty minutes before kickoff, and its quote dropped
+    while the market was still pre-match.
     """
-    from datetime import datetime, timedelta, timezone
+    from datetime import datetime, timezone
+    from zoneinfo import ZoneInfo
     try:
         ko = datetime.strptime(kickoff.strip()[:16], "%Y-%m-%d %H:%M")
     except (ValueError, AttributeError):
         return False
-    ko = ko.replace(tzinfo=timezone(timedelta(hours=BOARD_UTC_OFFSET)))
+    ko = ko.replace(tzinfo=ZoneInfo(BOARD_TZ))
     return ko <= datetime.now(timezone.utc)
 
 
@@ -395,7 +409,15 @@ def write_quotes() -> int:
             "# renderer reads it and never calls the API itself. Delete it and",
             "# the cards fall back to the engine's own buy>= bar.",
             "# fixture\twhich\tlane\tconsensus\tbest\tbook\tunibet_nl\tbooks"]
-    QUOTES.write_text("\n".join(head + ["\t".join(r) for r in rows]) + "\n")
+    # Whole file or nothing. The loop above fetches one league at a time,
+    # and a connection dropped halfway through used to leave a file that
+    # quoted the first half of the board and silently un-quoted the rest —
+    # a card with no row reads as "nothing quoted yet", not as an error.
+    # Written beside the target and renamed into place, so a reader never
+    # sees a partial file and a crash mid-write leaves the old one intact.
+    tmp = QUOTES.with_suffix(".tsv.tmp")
+    tmp.write_text("\n".join(head + ["\t".join(r) for r in rows]) + "\n")
+    tmp.replace(QUOTES)
     return len(rows)
 
 

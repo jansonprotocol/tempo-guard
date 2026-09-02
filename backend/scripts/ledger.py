@@ -181,7 +181,16 @@ def main() -> None:
         if fx is None:
             missing.append(name)
             continue
-        rows.append((name, rung, float(odds), side, cash == "1", fx, p_over))
+        # Column 5 is the cash-out MULTIPLE, read the way headline.bets
+        # reads it: "1" is the full stake back, a fraction is a partial
+        # cash-out at that return, empty or "0" is a position still on.
+        # This CLI used to read it as a yes/no flag and then settle the
+        # bet on the fixture's result anyway — so a cashed-out position
+        # was scored twice, once as money already taken and once as
+        # whatever the match later did, and the CLI's hit count sat one
+        # off the board's.
+        cashed = float(cash) if cash not in ("", "0") else None
+        rows.append((name, rung, float(odds), side, cashed, fx, p_over))
 
     if missing:
         print("NOT FOUND in README (fix the name in bets.tsv):")
@@ -201,6 +210,16 @@ def main() -> None:
             continue
 
         label = rung if side == "-" else f"{rung}({side})"
+        if cash is not None:
+            # Realised money settles when it is taken, at the multiple that
+            # came back; the fixture's result belongs to whatever replaced
+            # the position, never to this one as well.
+            out.append((name, rung, odds, None, None, None, cash, label))
+            staked += 1
+            returned += cash
+            n_settled += 1
+            n_hit += cash >= 1.0
+            continue
         if rung in ("DNB", "1X", "X2", "12"):
             # The result family — draw-no-bet and the two double chances —
             # settles on the match RESULT, not on goals, so `pricing`, which
@@ -234,6 +253,14 @@ def main() -> None:
             # tip, so it is read off the Tip 2 cell — and every team rung
             # offered is a .5 line, where 1/p IS the break-even.
             p_side = p_over or (fx["p2"] if fx["rung2"] == rung else None)
+            if not p_side:
+                # A team lane the card never printed — the bettor's own
+                # read. bet_prob re-derives it from the fixture's goal
+                # expectation, the same number the app and the board show
+                # on that row; without it the CLI used to drop the bet
+                # from every total and report 139 settled where the
+                # surfaces said 144.
+                p_side = bet_prob(rung, side, fx)
             be = 1 / p_side if p_side else None
             goals = None if fx["hg"] is None else (
                 fx["hg"] if side == "H" else fx["ag"])
