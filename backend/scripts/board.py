@@ -677,6 +677,18 @@ def verify(quiet: bool = False) -> None:
     if bad:
         raise SystemExit("BOARD VERIFY FAILED\n  " + "\n  ".join(bad))
     if not quiet:
+        # Quote coverage is not a render fault, so it never fails the
+        # verify — but a pending card the feed carries and did not price
+        # is a play that cannot appear, so it is said out loud every time
+        # the board renders, until the nickname that pairs it is typed.
+        qf = ROOT / "config" / "odds_quotes.tsv"
+        miss = [ln.split("\t")[1:3] for ln in qf.read_text().splitlines()
+                if ln.startswith("# unmatched\t")] if qf.exists() else []
+        if miss:
+            print(f"QUOTES MISSING on {len(miss)} pending cards the feed "
+                  "carries (name miss — fix in club_nicknames.tsv, then "
+                  "scripts/odds_api.py --quotes): "
+                  + ", ".join(f"{t} ({c})" for t, c in miss))
         print(f"verified: {len(fixtures)} fixtures across README and "
               f"{'app' if app else 'README only'} "
               f"({len(playable)} playable, {len(pending)} pending, "

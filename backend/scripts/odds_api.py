@@ -377,12 +377,25 @@ def write_quotes() -> int:
     rendering must stay offline, deterministic and free.
     """
     from scripts.board import load
-    rows = []
+    rows, unmatched = [], []
     for f in load():
         if f.settled or f.status or started(f.kickoff):
             continue
-        ev = find(f.code, f.teams, f.kickoff.split(" ")[0])
+        day = f.kickoff.split(" ")[0]
+        ev = find(f.code, f.teams, day)
         if not ev:
+            # A card in a league the feed CARRIES that matched no event is
+            # a name miss, not an absence — and a name miss on a board
+            # that decides on the price is a play that never appears
+            # (QPR v Cardiff, 2 Sep: 1.43 on a 1.27 bar, unseen). So it is
+            # named, with the feed's own fixtures that day beside it, so
+            # the nickname that fixes it can be typed at once.
+            if f.code in SPORT:
+                near = [f'{e["home_team"]} v {e["away_team"]}'
+                        for e in fetch_league(f.code)
+                        if e.get("commence_time", "")[:10] in
+                        (day, _shift(day, 1), _shift(day, -1))]
+                unmatched.append((f.teams, f.code, day, near[:4]))
             continue
         for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
             c = (cell or "").strip()
@@ -415,6 +428,16 @@ def write_quotes() -> int:
             "# renderer reads it and never calls the API itself. Delete it and",
             "# the cards fall back to the engine's own buy>= bar.",
             "# fixture\twhich\tlane\tconsensus\tbest\tbook\tunibet_nl\tbooks"]
+    # The misses travel with the quotes, so the render can say them too.
+    for teams, code, day, near in unmatched:
+        head.append(f"# unmatched\t{teams}\t{code}\t{day}\t" + " | ".join(near))
+    if unmatched:
+        print(f"UNMATCHED in a league the feed carries — {len(unmatched)} "
+              "pending cards got no quote (a name miss until proven "
+              "otherwise; add the nickname to config/club_nicknames.tsv):")
+        for teams, code, day, near in unmatched:
+            print(f"  {code:7} {teams:34} feed that day: "
+                  + (" | ".join(near) if near else "nothing"))
     # Whole file or nothing. The loop above fetches one league at a time,
     # and a connection dropped halfway through used to leave a file that
     # quoted the first half of the board and silently un-quoted the rest —

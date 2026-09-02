@@ -3,6 +3,7 @@
 # renderer reads it and never calls the API itself. Delete it and
 # the cards fall back to the engine's own buy>= bar.
 # fixture	which	lane	consensus	best	book	unibet_nl	books
+# unmatched	Vancouver v Montréal	MLS	2026-09-03	New York City FC v Nashville SC
 AGF v Midtjylland	1	O1.5	1.16	1.31	Coolbet	1.15	15
 AGF v Midtjylland	3	12	1.25	1.30	GTbets	1.25	22
 St Truiden v St. Gilloise	1	O1.5	1.19	1.34	Pinnacle	1.20	13
@@ -108,6 +109,8 @@ New York City v Nashville	1	O1.5	1.22	1.31	Pinnacle	1.22	14
 New York City v Nashville	2	O2.25	1.76	2.00	Pinnacle	1.76	14
 Athletic v Vila Nova	1	U3.5	1.14	1.18	Unibet (SE)	1.18	10
 Athletic v Vila Nova	2	U2.75	1.50	1.60	Unibet (SE)	1.60	10
+CRB v América-MG	1	O1.0	1.02	1.02	Pinnacle		1
+CRB v América-MG	3	DNB1	1.26	1.29	LeoVegas (SE)	1.28	13
 D. Concepción v Audax Italiano	1	U4.5	1.05	1.10	BetOnline.ag		8
 D. Concepción v Audax Italiano	3	DNB1	1.59	1.65	888sport		11
 Fukuoka v Mito Hollyhock	2	U3.75	1.12	1.12	LeoVegas (SE)	1.12	4
