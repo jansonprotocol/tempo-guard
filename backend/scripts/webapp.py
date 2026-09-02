@@ -699,6 +699,15 @@ SAYS = {"super green": 0.8956, "green": 0.8740, "orange": 0.8342,
 # choice, not the best cell in the table.
 DECLINE_MARGIN = 0.06
 
+# WATCH: a card whose starred lane is NOT red and whose best quote sits
+# UNDER the bar by no more than this. Not a play — but the feed is 26
+# books and the bettor's are not among the sharpest, so a card the panel
+# prices a few percent short is one a book of his own may clear: West
+# Brom v Watford read 1.26 against a 1.2707 bar on the feed and 1.27 at
+# Unibet (2 Sep). Beyond five percent the panel's best is already far
+# from the bar and no reachable book is likely to beat it.
+WATCH_BAND = 0.05
+
 # STRONG: a play that also carries a top-quartile confluence score, in
 # Europe where the score means anything. Measured on the 1,008 bets the
 # bar fires on: strong grades 81.0% and +8.87% (+9.91 / +7.83 across the
@@ -772,19 +781,14 @@ def _label_of(f, best: int, full: bool = False):
         return None
     e = _edge(cell)
     dnb = best == 3 and _is_dnb(f.tip3)
-    # The shipped tier, unchanged: a gated DNB or a high, modest-edge tip
-    # 1 is green; a low claim, or a middling claim on an OVER, is red.
-    side = _rung(cell)[:1] if _rung(cell)[:1] in ("O", "U") else ""
-    if dnb or (p >= 84 and (e is None or e < 1.0)):
-        tier = "green"
-    elif p < 76 or (p < 80 and side == "O"):
-        tier = "red"
-    else:
-        tier = "orange"
-    if _SLICES is None:
-        from scripts import guard_slices
-        _SLICES = guard_slices.read_table()
+    # The shipped tier — one definition, shared with the bank
+    # (guard_slices.tier_of): a gated DNB or a high, modest-edge tip 1 is
+    # green; a low claim, or a middling claim on an OVER, is red.
     from scripts import guard_slices
+    side = _rung(cell)[:1] if _rung(cell)[:1] in ("O", "U") else ""
+    tier = guard_slices.tier_of(p, e, side, dnb)
+    if _SLICES is None:
+        _SLICES = guard_slices.read_table()
     sc = None
     if _SLICES and " v " in f.teams:
         h, a = [t.strip() for t in f.teams.split(" v ")]
@@ -838,11 +842,17 @@ def verdict(f, best: int) -> dict | None:
     # file: it outlives the moment it was written, and a render an hour
     # later would go on offering a price from a game now in progress. The
     # bar belongs on the decision, not only on the fetch.
+    live = odds_api.started(f.kickoff)
     play = (not lab.endswith("red")) and got_odds is not None \
-        and got_odds >= need and not odds_api.started(f.kickoff)
+        and got_odds >= need and not live
+    # The watch list: same lane, same bar, the panel's best a little short
+    # of it. Decided here beside PLAY, so the tab and the verify cannot
+    # hold two definitions of "just shy".
+    watch = (not play) and (not lab.endswith("red")) and got_odds is not None \
+        and got_odds >= need * (1 - WATCH_BAND) and not live
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
                 need=need, odds=got_odds, book=(q or {}).get("book"),
-                play=play, strong=play and strong,
+                play=play, watch=watch, strong=play and strong,
                 mark=("strong" if play and strong else
                       "normal" if play else "no play"))
 
@@ -1291,6 +1301,10 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "U4.25 as U4.5, because the engine cannot tell those apart and "
          "the safer line pays more on settlement. Everything else as "
          "printed."),
+        ("👀 Watch lanes", "the starred lane is not red and the panel's "
+         "best sits under its bar by five percent or less. Not a play on "
+         "the feed's prices — but your own book may clear it: check the "
+         "offer, take it only at or above the needs price on the card."),
         ("When to decide", "at first sight, two or three days out. A card "
          "that clears then may be bought later if its price has drifted "
          "out. A card that does not clear then is not a play on Saturday "
@@ -1384,7 +1398,11 @@ def main() -> None:
         return verdict(f, _star(f))
     playable = [f for f in pending if (v := _v(f)) and v["play"]]
     strong_n = sum(1 for f in playable if (v := _v(f)) and v["strong"])
-    waiting = [f for f in pending if f not in playable]
+    # Three-way, not two: PLAY, WATCH (the bettor's list, 2 Sep — a
+    # starred lane a few percent short of its bar on the panel, worth
+    # checking at his own books), and the rest.
+    watch = [f for f in pending if (v := _v(f)) and v["watch"]]
+    waiting = [f for f in pending if f not in playable and f not in watch]
     done = [f for f in fixtures if f.settled][::-1]
 
     def tile(label, value, sub):
@@ -1688,6 +1706,21 @@ def main() -> None:
         rd = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
         if rd:
             entry["kw"] = rd[0]
+        # The guard on a board card, in the bank's own fields, so Ask
+        # Athena reads a live card and a past one with the same words:
+        # label, score, strong, the starred lane, and the verdict at the
+        # live quote (a settled card keeps the verdict it was offered at
+        # only through the forward log; here it shows its label).
+        if not f.settled:
+            v = verdict(f, _star(f))
+            if v:
+                entry["g"], entry["pk"] = v["label"], _star(f)
+                if v["score"] is not None:
+                    entry["cs"] = round(v["score"], 1)
+                entry["st"] = int(bool(v["strong"]))
+                if v["odds"] is not None:
+                    entry["bp"], entry["need"] = round(v["odds"], 2), round(v["need"], 2)
+                    entry["v"] = v["mark"]
         comp["matches"].append(entry)
     # The hero banner's number: Tip 1 over the most recent 300 graded
     # lanes AT THE PLAYABLE STANDARD (edge above +1%) — the lanes the
@@ -1937,7 +1970,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border-radius:5px; padding:0 4px; color:var(--dim); }}
 #ask-out .card summary {{ cursor:pointer; }}
 #ask-out .grid {{ max-height:70vh; overflow-y:auto; }}
-#ask-counts {{ grid-template-columns:repeat(4,1fr); }}
+#ask-counts {{ grid-template-columns:repeat(5,1fr); }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -1979,6 +2012,8 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .card {{ background:var(--card); border:1px solid var(--edge);
   border-radius:10px; padding:12px 14px; border-left:3px solid var(--edge); }}
 .card.play {{ border-left-color:var(--green); }}
+.card.watch {{ border-left-color:var(--gold); }}
+.tabs a.on.amber {{ background:var(--gold); color:#111; }}
 .card.pend {{ border-left-color:var(--blue); }}
 .card.done {{ opacity:.85; }}
 .teams {{ font-weight:700; }}
@@ -2177,6 +2212,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <div class="tabs">
   <a href="#home/playable" data-t="playable">🟢 Playing now
    <span class="dim">{len(playable)}{f" · ★{strong_n}" if strong_n else ""}</span></a>
+  <a href="#home/watch" data-t="watch" class="amber">👀 Watch lanes
+   <span class="dim">{len(watch)}</span></a>
   <a href="#home/bets" data-t="bets" class="gold">🟡 Found bets
    <span class="dim">{bh}/{bn}</span></a>
   <a href="#home/lanes" data-t="lanes" class="blue">🔵 Athena lanes
@@ -2226,6 +2263,14 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   confluence score in Europe — on 1,008 replayed bets those graded 81.0%
   and +8.87%, against 72.8% and −0.67% for the rest.</div>
   {_grid(playable, "play", reads)}</div>
+ <div class="tabpane" id="t-watch">
+  <div class="panenote">Not plays — yet. The starred lane is not red and
+  the panel's best quote sits under its bar by no more than
+  {WATCH_BAND*100:.0f}%. The feed is 26 books and yours are not the
+  sharpest, so a card the panel prices a little short is one your own book
+  may clear: check the offer, and take it only at or above the
+  <b>needs</b> price on the card. Under that it is still a decline.</div>
+  {_grid(watch, "watch", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th><th data-sort="s">Kickoff</th>
@@ -2492,7 +2537,7 @@ function route() {{
   const h = (location.hash || "#home").slice(1).split("/");
   const page = ["home","sessions","retrosim","patches","about"]
     .includes(h[0]) ? h[0] : "home";
-  const tab = ["playable","bets","lanes","done"].includes(h[1])
+  const tab = ["playable","watch","bets","lanes","done"].includes(h[1])
     ? h[1] : "playable";
   for (const s of document.querySelectorAll(".page"))
     s.classList.toggle("on", s.id === "p-" + page);
@@ -2905,6 +2950,20 @@ document.getElementById("ask-lg").addEventListener("change", maybeAuto);
 function askHay(m, comp) {{
   const bits = [m.h, m.a, comp.name, COUNTRY[comp.code] || "", m.d,
                 m.tip, m.t2 || "", m.kw || ""];
+  // The guard's words, the same ones the board bar takes: the label
+  // (green / orange / red / super …), "guard x" and "label x" for the
+  // case where a bare "red" also finds NY Red Bulls, "strong", and the
+  // verdict where a closing price exists ("verdict play" / "verdict no
+  // play"); "unpriced" for the cards no price reached.
+  if (m.g) {{
+    bits.push(m.g, "guard " + m.g, "label " + m.g);
+    if (m.g.startsWith("super ")) bits.push("guard " + m.g.slice(6), "label " + m.g.slice(6));
+  }}
+  if (m.st) bits.push("strong");
+  if (m.v) {{
+    bits.push("verdict " + m.v);
+    bits.push(m.v === "no play" ? "verdict no play" : "verdict play");
+  }} else if (m.g) bits.push("unpriced");
   const rung = /(?:^|[^A-Za-z])([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
   if (rung) {{
     const side = rung[1] === "O" ? "over" : "under";
@@ -2958,6 +3017,24 @@ function askCard(m, comp, note, open) {{
   let g = "";
   for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
     if (gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
+  // The guard on a past card: its label as a badge, and where a closing
+  // price exists the verdict line a live card shows. NORMAL and STRONG
+  // are counted on the STARRED lane's mark (pk: tip 1, or a gated DNB on
+  // tip 3), only on cards the verdict said PLAY — so the two tiles read
+  // "what following the board's plays would have scored", by kind.
+  if (m.g) {{
+    const star = m.pk === 3 ? gm("m3") : gm("mark");
+    if (m.v && m.v !== "no play" && star !== null)
+      g += ' data-g' + (m.v === "strong" ? "s" : "n") + '="' + star + '"';
+    body = '<div class="guard g-' + m.g.replaceAll(" ", "-") + '">' + m.g
+      + (m.st ? " · ★ strong" : "") + "</div>"
+      + (m.v ? '<div class="verdict ' + (m.v === "no play" ? "no" : m.v === "strong" ? "strong" : "yes") + '">'
+          + (m.v === "no play" ? "no play" : (m.v === "strong" ? "★ STRONG · PLAY" : "PLAY"))
+          + ' <span class="dim">· tip ' + (m.pk || 1) + " needs " + m.need.toFixed(2)
+          + ", closed at</span> <b>" + m.bp.toFixed(2) + "</b></div>"
+        : '<div class="verdict dimv">unpriced <span class="dim">· no closing price for this league</span></div>')
+      + body;
+  }}
   // Each lane's claim, for the threshold terms ("tip 2 <80"). First
   // percentage in the cell is the probability; the rest is edge/margin.
   for (const [k, key] of [["tip", "p1"], ["t2", "p2"], ["t3", "p3"]]) {{
@@ -2987,7 +3064,7 @@ function askCard(m, comp, note, open) {{
 function askFilter() {{
   const q = document.getElementById("ask-q");
   const terms = qterms(q ? q.value : "");
-  const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
+  const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0], gn: [0, 0], gs: [0, 0]}};
   let shown = 0;
   for (const c of document.querySelectorAll("#ask-out .card")) {{
     const hay = c.dataset.t || "";
@@ -2995,7 +3072,7 @@ function askFilter() {{
     c.style.display = vis ? "" : "none";
     if (!vis) continue;
     shown++;
-    for (const k of ["g1", "g2", "g3"]) {{
+    for (const k of ["g1", "g2", "g3", "gn", "gs"]) {{
       const v = c.dataset[k];
       if (v === undefined) continue;
       t[k][1]++; t[k][0] += v === "1" ? 1 : 0;
@@ -3013,11 +3090,11 @@ function askFilter() {{
       '</div><div class="l">' + label + '</div><div class="s">' +
       (nn ? hh + "/" + nn : "not in this slice") + "</div></div>";
   }};
+  // NORMAL and STRONG: the starred lane on the cards the guard would
+  // have marked PLAY at the closing price, by kind — the bettor's tiles
+  // (2 Sep), in place of the bare match count.
   box.innerHTML = cell("tip 1", "g1") + cell("tip 2", "g2") +
-    cell("tip 3", "g3") +
-    '<div class="fc"><div class="v">' + shown +
-    '</div><div class="l">matches</div><div class="s">' +
-    "of " + document.querySelectorAll("#ask-out .card").length + "</div></div>";
+    cell("tip 3", "g3") + cell("normal", "gn") + cell("★ strong", "gs");
 }}
 async function askAthena() {{
   await ensureBank();

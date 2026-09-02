@@ -518,7 +518,7 @@ def verify(quiet: bool = False) -> None:
             if f'id="{pid}"' not in app:
                 bad.append(f"app page {pid} vanished")
         panes = {}
-        for pid in ("t-playable", "t-bets", "t-lanes", "t-done"):
+        for pid in ("t-playable", "t-watch", "t-bets", "t-lanes", "t-done"):
             if f'id="{pid}"' not in app:
                 bad.append(f"app tab {pid} vanished")
                 continue
@@ -528,20 +528,22 @@ def verify(quiet: bool = False) -> None:
                                 app.find("</section>", i + 1)) if x > 0]
             panes[pid] = app[i:min(ends)] if ends else app[i:]
 
-        # 5. Each fixture appears in exactly ONE pending tab. Playable no
-        #    longer filters the Athena lanes, it PARTITIONS them: it holds
-        #    what the guard would stake and the lanes tab holds the rest,
-        #    so a card in both would be the board contradicting itself.
-        #    The check therefore asks the app which is which rather than
-        #    re-deriving it — two definitions of playable is exactly the
+        # 5. Each fixture appears in exactly ONE pending tab. Playable,
+        #    watch and lanes PARTITION the pending cards: what the guard
+        #    would stake, what sits a few percent short of its bar on the
+        #    panel (the bettor's watch list, 2 Sep), and the rest — so a
+        #    card in two would be the board contradicting itself. The
+        #    check asks the app which is which rather than re-deriving it
+        #    — two definitions of playable or of watch is exactly the
         #    drift this verify exists to catch.
         from scripts.webapp import verdict, _star
-        play, rest = [], []
+        play, watch, rest = [], [], []
         for f in pending:
             v = verdict(f, _star(f))
-            (play if (v and v["play"]) else rest).append(f)
-        for pid, want in (("t-playable", play), ("t-lanes", rest),
-                          ("t-done", done)):
+            (play if (v and v["play"]) else
+             watch if (v and v["watch"]) else rest).append(f)
+        for pid, want in (("t-playable", play), ("t-watch", watch),
+                          ("t-lanes", rest), ("t-done", done)):
             body = panes.get(pid, "")
             for f in want:
                 if not in_app(f.teams, body):
@@ -550,11 +552,12 @@ def verify(quiet: bool = False) -> None:
             if got != len(want):
                 bad.append(f"app tab {pid} shows {got} cards, "
                            f"expected {len(want)}")
-        # and nothing may sit in both pending tabs
+        # and nothing may sit in two pending tabs
         for f in pending:
-            if (in_app(f.teams, panes.get("t-playable", ""))
-                    and in_app(f.teams, panes.get("t-lanes", ""))):
-                bad.append(f"{f.teams!r} is in BOTH pending tabs")
+            n = sum(1 for pid in ("t-playable", "t-watch", "t-lanes")
+                    if in_app(f.teams, panes.get(pid, "")))
+            if n > 1:
+                bad.append(f"{f.teams!r} is in {n} pending tabs")
 
         # 6. The ledger reaches the app too.
         for name in set(bets):
@@ -677,6 +680,18 @@ def verify(quiet: bool = False) -> None:
     if bad:
         raise SystemExit("BOARD VERIFY FAILED\n  " + "\n  ".join(bad))
     if not quiet:
+        # Quote coverage is not a render fault, so it never fails the
+        # verify — but a pending card the feed carries and did not price
+        # is a play that cannot appear, so it is said out loud every time
+        # the board renders, until the nickname that pairs it is typed.
+        qf = ROOT / "config" / "odds_quotes.tsv"
+        miss = [ln.split("\t")[1:3] for ln in qf.read_text().splitlines()
+                if ln.startswith("# unmatched\t")] if qf.exists() else []
+        if miss:
+            print(f"QUOTES MISSING on {len(miss)} pending cards the feed "
+                  "carries (name miss — fix in club_nicknames.tsv, then "
+                  "scripts/odds_api.py --quotes): "
+                  + ", ".join(f"{t} ({c})" for t, c in miss))
         print(f"verified: {len(fixtures)} fixtures across README and "
               f"{'app' if app else 'README only'} "
               f"({len(playable)} playable, {len(pending)} pending, "
