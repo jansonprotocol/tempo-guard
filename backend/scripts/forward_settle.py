@@ -88,20 +88,44 @@ def _settle(lane: str, hg: int, ag: int):
     return money, (r in (True, "half_win", "push"))
 
 
+def _artefact(lane: str) -> bool:
+    """A lane the board never actually offered as a play.
+
+    The log is keyed by (date, fixture, LANE), and on 1 Sept the lane a
+    card was struck at was rewritten twice in one afternoon — first by a
+    directional rule that turned O1.5 into O1.0 (a different bet, quoted
+    at 1.01) and U4.25 into U4.5, then by the enumerated table that
+    replaced it. Each rewrite re-stamped every open card under its new
+    lane name, so 24 fixtures carry two or three rows and the record was
+    counting the same match twice. Rows under a rung the rule substitutes
+    (U3.0, U4.25 — printed but never struck) or under the directional
+    bug's output (O1.0, O0.0) are artefacts of the rename, not sightings.
+    """
+    from scripts.odds_api import STRUCK
+    return lane in STRUCK or lane in ("O1.0", "O0.0")
+
+
 def rows() -> list[dict]:
+    """One settled row per fixture-date: the FIRST sighting under a lane
+    the board could actually strike. First sight is the principle the
+    log was written on; this only stops a renamed lane from counting as
+    a second sighting of the same card."""
     if not FORWARD.exists():
         return []
     res = _results()
-    out = []
+    out, seen = [], set()
     for ln in FORWARD.read_text().splitlines():
         if ln.startswith("#") or not ln.strip():
             continue
         p = ln.split("\t")
         if len(p) < 13:
             continue
+        if _artefact(p[5]) or (p[1], p[3]) in seen:
+            continue
         got = res.get((p[1], p[3]))
         if not got:
             continue
+        seen.add((p[1], p[3]))
         got2 = _settle(p[5], *got)
         if got2 is None:
             continue

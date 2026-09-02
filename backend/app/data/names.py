@@ -62,6 +62,30 @@ def norm_accent(s: Optional[str]) -> str:
     return strip_accents(norm(s or ""))
 
 
+# Tokens that mark a club's RESERVE side. A name is a reserve side when its
+# canonical form carries one of these; "Real Sociedad B", "Jong Ajax",
+# "Borussia Dortmund II", "Real Madrid Castilla", "Barcelona Atlètic".
+# Celta's reserve plays as "Celta Fortuna", which carries no marker, so it
+# is named outright.
+RESERVE_TOKENS = {"b", "ii", "iii", "jong", "u21", "u23", "u19", "castilla",
+                  "atletic", "reserves", "amateure", "2"}
+RESERVE_NAMES = {"celta fortuna"}
+
+
+def reserve_side(name: str) -> bool:
+    """Is this a club's reserve/second team rather than the club itself?
+
+    The fuzzy matcher scores "real sociedad b" against "real sociedad" as
+    a perfect token-set match, so a reserve side with thin rows resolved to
+    its parent's first team — across divisions, where the parent always
+    sits one rung up with a full window. Ajax's rows were about to price
+    Jong Ajax. A reserve and its parent are different clubs, and no
+    matcher may join them.
+    """
+    c = canonical(name)
+    return c in RESERVE_NAMES or bool(set(c.split()) & RESERVE_TOKENS)
+
+
 def canonical(name: str) -> str:
     """
     Reduce a club name to its identifying core: lowercased, accent-free,

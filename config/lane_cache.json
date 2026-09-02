@@ -44,6 +44,7 @@
 "pa": 0.882,
 "ph": 0.812
 },
+"ESP-L2|Ceuta v Celta Fortuna|2026-09-05": null,
 "FRA-L1|Monaco v Marseille|2026-08-30": {
 "mu": 3.019,
 "pa": 0.672,
@@ -144,10 +145,20 @@
 "pa": 0.814,
 "ph": 0.747
 },
+"SUI-SL|Luzern v Vaduz|2026-09-02": {
+"mu": 2.784,
+"pa": 0.758,
+"ph": 0.802
+},
 "SUI-SL|Servette v Luzern|2026-08-29": {
 "mu": 3.002,
 "pa": 0.756,
 "ph": 0.868
+},
+"SUI-SL|Young Boys v Luzern|2026-09-05": {
+"mu": 3.647,
+"pa": 0.82,
+"ph": 0.916
 },
 "SUI-SL|Z\u00fcrich v Young Boys|2026-09-01": {
 "mu": 3.362,

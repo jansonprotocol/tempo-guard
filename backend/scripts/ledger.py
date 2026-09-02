@@ -56,9 +56,13 @@ def read_fixtures() -> dict[str, dict]:
         if ln.startswith("#") or not ln.strip():
             continue
         _ko, _code, _league, name, tip1, tip2, status = ln.split("\t")[:7]
+        # An abstained card is still a fixture a bet can sit on — the
+        # bettor's own read, or a tip the engine later WITHDREW (Ceuta v
+        # Celta Fortuna, 2 Sept, priced off the wrong club and then not at
+        # all). Skipping these rows made the position vanish from the book
+        # as "NOT FOUND". The card carries no rung and no claim; the bet
+        # still settles on the score and prices through lane_price.
         m = TIP.search(tip1)
-        if not m:
-            continue
         # Only a SETTLED row carries a result. The status column shows live
         # scores too ("LIVE: 2-1 (90')"), and an earlier version matched those
         # as final — settling bets off matches still being played, which is the
@@ -79,8 +83,8 @@ def read_fixtures() -> dict[str, dict]:
         m3 = TIP3.match(tip3.strip())
         out[name] = {
             "code": _code, "teams": name, "day": _ko.split(" ")[0],
-            "rung": m.group(1),
-            "p": float(m.group(2)) / 100,
+            "rung": m.group(1) if m else None,
+            "p": float(m.group(2)) / 100 if m else None,
             "rung2": m2.group(1) if m2 else None,
             "p2": float(m2.group(2)) / 100 if m2 else None,
             "lane3": m3.group(1) if m3 else None,
@@ -110,7 +114,7 @@ def bet_prob(rung: str, side: str, fx: dict) -> float | None:
         want = ("DNB1" if side == "H" else "DNB2") if rung == "DNB" else rung
         if fx.get("lane3") == want:
             return fx["p3"]
-    elif side == "-":
+    elif side == "-" and fx.get("rung"):
         mu = mu_for(fx["rung"], fx["p"])
         if mu is not None:
             from app.engine import market_select
@@ -181,7 +185,16 @@ def main() -> None:
         if fx is None:
             missing.append(name)
             continue
-        rows.append((name, rung, float(odds), side, cash == "1", fx, p_over))
+        # Column 5 is the cash-out MULTIPLE, read the way headline.bets
+        # reads it: "1" is the full stake back, a fraction is a partial
+        # cash-out at that return, empty or "0" is a position still on.
+        # This CLI used to read it as a yes/no flag and then settle the
+        # bet on the fixture's result anyway — so a cashed-out position
+        # was scored twice, once as money already taken and once as
+        # whatever the match later did, and the CLI's hit count sat one
+        # off the board's.
+        cashed = float(cash) if cash not in ("", "0") else None
+        rows.append((name, rung, float(odds), side, cashed, fx, p_over))
 
     if missing:
         print("NOT FOUND in README (fix the name in bets.tsv):")
@@ -195,23 +208,34 @@ def main() -> None:
     dead, out = [], []
 
     for name, rung, odds, side, cash, fx, p_over in rows:
-        mu = mu_for(fx["rung"], fx["p"])
-        if mu is None:
+        mu = mu_for(fx["rung"], fx["p"]) if fx.get("rung") else None
+        if mu is None and fx.get("rung"):
             print(f"could not invert {name} ({fx['rung']} {fx['p']:.3f})")
             continue
 
         label = rung if side == "-" else f"{rung}({side})"
-        if rung == "DNB":
-            # Draw No Bet: settles on the match result — win, push on a draw,
-            # loss. The engine neither tips nor prices 1X2, so break-even here
-            # is only the bettor's own record; no buy-from judgement applies.
-            gf = None if fx["hg"] is None else (
-                fx["hg"] if side == "H" else fx["ag"])
-            ga = None if fx["hg"] is None else (
-                fx["ag"] if side == "H" else fx["hg"])
-            out.append((name, rung, odds, None, None, gf, cash, label))
-            if gf is not None:
-                s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        if cash is not None:
+            # Realised money settles when it is taken, at the multiple that
+            # came back; the fixture's result belongs to whatever replaced
+            # the position, never to this one as well.
+            out.append((name, rung, odds, None, None, None, cash, label))
+            staked += 1
+            returned += cash
+            n_settled += 1
+            n_hit += cash >= 1.0
+            continue
+        if rung in ("DNB", "1X", "X2", "12"):
+            # The result family — draw-no-bet and the two double chances —
+            # settles on the match RESULT, not on goals, so `pricing`, which
+            # only knows totals, has nothing to say about it: asking it for a
+            # break-even raises. Settlement goes through bet_state, the one
+            # gate the board and the app already use, and no buy-from
+            # judgement applies — the card's own `buy≥` print is the only
+            # bar these positions were ever measured against.
+            s = bet_state(rung, side, fx)
+            score = None if fx["hg"] is None else f"{fx['hg']}-{fx['ag']}"
+            out.append((name, rung, odds, None, None, score, cash, label))
+            if s is not None:
                 staked += 1
                 returned += max(s, 0.0) * odds + (1 - abs(s))
                 n_settled += 1
@@ -225,7 +249,16 @@ def main() -> None:
             # 95%, and scoring it that way marks a losing bet as a good buy.
             # A p_override on a match total means exactly that: price this off
             # the supplied probability, because the fixture had moved.
-            be = 1 / p_over if p_over else pricing.break_even(rung, mu)
+            if p_over:
+                be = 1 / p_over
+            elif mu is not None:
+                be = pricing.break_even(rung, mu)
+            else:
+                # No card to invert — a bet on an abstained or withdrawn
+                # fixture prices off the engine's re-derived number, as
+                # the board does; the dash stays if there is none.
+                pb = bet_prob(rung, side, fx)
+                be = 1 / pb if pb else None
             goals = None if fx["hg"] is None else fx["hg"] + fx["ag"]
         else:
             # A team rung is priced off that SIDE's expectation, which the
@@ -233,6 +266,14 @@ def main() -> None:
             # tip, so it is read off the Tip 2 cell — and every team rung
             # offered is a .5 line, where 1/p IS the break-even.
             p_side = p_over or (fx["p2"] if fx["rung2"] == rung else None)
+            if not p_side:
+                # A team lane the card never printed — the bettor's own
+                # read. bet_prob re-derives it from the fixture's goal
+                # expectation, the same number the app and the board show
+                # on that row; without it the CLI used to drop the bet
+                # from every total and report 139 settled where the
+                # surfaces said 144.
+                p_side = bet_prob(rung, side, fx)
             be = 1 / p_side if p_side else None
             goals = None if fx["hg"] is None else (
                 fx["hg"] if side == "H" else fx["ag"])

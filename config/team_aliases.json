@@ -77,11 +77,13 @@
   "Inter de Bogotá": "Internacional de Bogotá",
   "Inter de Bogota": "Internacional de Bogotá",
   "Atl. Nacional": "Atlético Nacional",
-  "Dep. Cali": "Deportivo Cali"
+  "Dep. Cali": "Deportivo Cali",
+  "Junior Barranquilla": "Atlético Junior"
  },
  "MLS": {
   "LA Galaxy": "Los Angeles Galaxy",
-  "NY Red Bulls": "New York Red Bulls"
+  "NY Red Bulls": "New York Red Bulls",
+  "LAFC": "Los Angeles FC"
  },
  "JPN-J1": {
   "Machida Z": "Machida Zelvia",
@@ -89,7 +91,8 @@
   "Yokohama FM": "Yokohama F. Marinos"
  },
  "CHN-SL": {
-  "Tongliang Long": "Chongqing Tonglianglong"
+  "Tongliang Long": "Chongqing Tonglianglong",
+  "Chongqing Tongliang Long": "Chongqing Tonglianglong"
  },
  "DEN-SL": {
   "AGF": "Aarhus",
@@ -142,5 +145,11 @@
  },
  "ALG-L1": {
   "Sétif": "ES Sétif"
+ },
+ "BEL-PL": {
+  "OH Leuven": "Oud-Heverlee Leuven"
+ },
+ "BRA-SA": {
+  "Atlético-MG": "CA Mineiro"
  }
 }

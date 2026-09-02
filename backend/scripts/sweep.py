@@ -26,10 +26,15 @@ was and named in the summary, so it can be graded by hand.
 
 Usage:  python scripts/sweep.py            sweep, then render the board
         python scripts/sweep.py --dry      show what would change
+        python scripts/sweep.py --set "Home v Away" 2-1
+                                           grade ONE kicked-off fixture by
+                                           hand, for the leagues no feed
+                                           carries (Swiss, Polish, Algerian)
 """
 from __future__ import annotations
 
 import json
+import re
 import sys
 import urllib.request
 from datetime import date, datetime, timedelta
@@ -170,7 +175,93 @@ def settle(cell: str, teams: str, hg: int, ag: int):
     return ("✅" if s > 0 else "◦" if s == 0 else "❌"), s
 
 
+def grade_cells(f, hg: int, ag: int, note: str = "") -> tuple[str, str, str]:
+    """(tip2, status, tip3) for one fixture at a final score.
+
+    The ONE place a result becomes marks on a row, whether the score came
+    off ESPN or was typed by hand — the same settle() for the totals and
+    the same result_market for the result lane, so a hand-graded row can
+    never carry a mark the sweep would not have written.
+    """
+    from app.engine import result_market
+    got1 = settle(f.tip1, f.teams, hg, ag)
+    tip2, tip3 = f.tip2, f.tip3
+    got2 = settle(f.tip2, f.teams, hg, ag)
+    if got2 and not tip2.lstrip().startswith(("✅", "❌", "◦")):
+        tip2 = f"{got2[0]} {tip2}"
+    # Tip 3 settles on the RESULT, not the total — a DNB draw is
+    # the one push in the family.
+    if tip3.strip() and not tip3.lstrip().startswith(("✅", "❌", "◦")):
+        try:
+            g3 = result_market.won(tip3.split()[0], hg, ag)
+            tip3 = ("◦ " if g3 is None else "✅ " if g3 else "❌ ") + tip3
+        except (ValueError, IndexError):
+            pass
+    if got1 is None:
+        status = f"FT {hg}-{ag} (no tip)"
+    else:
+        word = ("HIT" if got1[1] > 0 else "PUSH" if got1[1] == 0 else "MISS")
+        status = f"{got1[0]} {word} — {hg}-{ag}{note}"
+    return tip2, status, tip3
+
+
+def _write_row(lines: list[str], f, tip2: str, status: str, tip3: str) -> bool:
+    for i, ln in enumerate(lines):
+        parts = ln.split("\t")
+        if len(parts) in (7, 8) and parts[0] == f.kickoff and parts[3] == f.teams:
+            parts[5], parts[6] = tip2, status
+            if len(parts) == 8:
+                parts[7] = tip3
+            lines[i] = "\t".join(parts)
+            return True
+    return False
+
+
+def set_result(teams: str, score: str) -> None:
+    """Grade ONE unsettled fixture by hand: --set "Home v Away" 2-4.
+
+    For the leagues no feed carries. ESPN's Swiss slug answers with the
+    league's name and zero events on every date asked; Poland and
+    Algeria have no slug at all. Sixteen pending cards sit in those
+    three, and the board's verify step refuses a card four hours past
+    kickoff with no result — correctly — which until now meant a
+    scratchpad script or a mark typed into the row by hand. Same
+    grader as the sweep, same render, same verify.
+    """
+    m = re.fullmatch(r"\s*(\d+)\s*-\s*(\d+)\s*", score)
+    if not m:
+        raise SystemExit(f"score must look like 2-1, got {score!r}")
+    hg, ag = int(m.group(1)), int(m.group(2))
+    hits = [f for f in load() if f.teams == teams and not f.settled]
+    if len(hits) != 1:
+        raise SystemExit(f"{len(hits)} unsettled rows match {teams!r}; "
+                         "type the fixture exactly as the board prints it")
+    f = hits[0]
+    if not odds_started(f.kickoff):
+        raise SystemExit(f"{teams} has not kicked off yet ({f.kickoff})")
+    tip2, status, tip3 = grade_cells(f, hg, ag)
+    lines = FIXTURES.read_text().split("\n")
+    if not _write_row(lines, f, tip2, status, tip3):
+        raise SystemExit(f"row for {teams} not found in {FIXTURES}")
+    FIXTURES.write_text("\n".join(lines))
+    print(f"set {f.teams}: {status}")
+    from scripts import board
+    board.main()
+
+
+def odds_started(kickoff: str) -> bool:
+    from scripts.odds_api import started
+    return started(kickoff)
+
+
 def main() -> None:
+    if "--set" in sys.argv:
+        i = sys.argv.index("--set")
+        try:
+            set_result(sys.argv[i + 1], sys.argv[i + 2])
+        except IndexError:
+            raise SystemExit('usage: sweep.py --set "Home v Away" 2-1')
+        return
     dry = "--dry" in sys.argv
     fixtures = load()
     todo = [f for f in fixtures if not f.settled]
@@ -288,38 +379,11 @@ def main() -> None:
                     continue
                 note = f" (90'; {hg}-{ag} aet)"
                 hg, ag = reg
-            got1 = settle(f.tip1, f.teams, hg, ag)
-            tip2 = f.tip2
-            got2 = settle(f.tip2, f.teams, hg, ag)
-            if got2 and not tip2.lstrip().startswith(("✅", "❌", "◦")):
-                tip2 = f"{got2[0]} {tip2}"
-            # Tip 3 settles on the RESULT, not the total — a DNB draw is
-            # the one push in the family.
-            if tip3.strip() and not tip3.lstrip().startswith(("✅", "❌", "◦")):
-                from app.engine import result_market
-                try:
-                    g3 = result_market.won(tip3.split()[0], hg, ag)
-                    tip3 = ("◦ " if g3 is None else
-                            "✅ " if g3 else "❌ ") + tip3
-                except (ValueError, IndexError):
-                    pass
-            if got1 is None:
-                status = f"FT {hg}-{ag} (no tip)"
-            else:
-                word = ("HIT" if got1[1] > 0 else
-                        "PUSH" if got1[1] == 0 else "MISS")
-                status = f"{got1[0]} {word} — {hg}-{ag}{note}"
+            tip2, status, tip3 = grade_cells(f, hg, ag, note)
 
         if status == f.status and tip2 == f.tip2 and tip3 == f.tip3:
             continue
-        for i, ln in enumerate(lines):
-            parts = ln.split("\t")
-            if len(parts) in (7, 8) and parts[0] == f.kickoff and parts[3] == f.teams:
-                parts[5], parts[6] = tip2, status
-                if len(parts) == 8:
-                    parts[7] = tip3
-                lines[i] = "\t".join(parts)
-                break
+        _write_row(lines, f, tip2, status, tip3)
         changed.append(f"{f.teams}: {status}")
 
     for c in changed:
