@@ -540,6 +540,7 @@ that premium the book is keeping the insurance money.
 | — open | Porto v Moreirense | U4.5 | 1.19 | — | Unibet — the card's struck lane (U4.25 rung), SUPER GREEN watch card: bar 1.1836, panel best 1.18, and 1.19 at his own book clears it — the watch list working as meant |
 | — open | Flamengo v Mirassol | U4.5 | 1.25 | — | Unibet — the card's struck lane (U4.25 rung), watch card: orange bar 1.2707, panel best 1.26, taken at 1.25 — 1.6% under the bar |
 | ✅ | Grasshoppers v St. Gallen | U4.5 | 1.21 | 1.21x | Unibet — the card's struck lane (U4.25 rung); logged off the book on 2 Sep as dropped, but the ticket stood — reinstated after settlement, won 2-0 |
+| — open | Gent v OH Leuven | U3.5 | 1.41 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.4 Tipico, taken at 1.41 (+11.0% vs the bar) |
 
 <!-- HYPOTHESES:START -->
 
