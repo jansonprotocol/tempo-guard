@@ -526,7 +526,13 @@ def _match_team(target: str, candidates: List[str]) -> Optional[str]:
     if t_canon in canon_map:
         return canon_map[t_canon]
 
-    keys = list(canon_map.keys())
+    # A reserve side and its parent club are different clubs, and the
+    # token-set scorer cannot tell them apart: "real sociedad b" against
+    # "real sociedad" is a perfect 100. So the fuzzy pass only ever looks
+    # at candidates on the SAME side of that line as the target — a
+    # reserve resolves among reserves, a first team among first teams.
+    want = names.reserve_side(target)
+    keys = [k for k, c in canon_map.items() if names.reserve_side(c) == want]
     if not keys:
         return None
     best = process.extractOne(t_canon, keys, scorer=fuzz.token_set_ratio,

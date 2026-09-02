@@ -684,6 +684,12 @@ def test_alias_overrules_a_confident_wrong_match():
     rows, `U. de Concepción` onto Deportes Concepción, `América-MG` onto a
     spelling retired in 2013. While the alias table was consulted only for
     names that matched nothing, none of those entries could fire.
+
+    The reserve guard has since closed the Celta case at the matcher: a
+    reserve side no longer resolves to its parent at all, so the wrong
+    match here is refused rather than overruled. The alias still has to
+    win over whatever the resolver says — pinned on a first-team name
+    the scorer would otherwise take with confidence.
     """
     import pandas as pd
 
@@ -695,10 +701,25 @@ def test_alias_overrules_a_confident_wrong_match():
         "away": ["Celta B", "Celta", "Celta B", "Celta"],
         "hg": [1, 1, 1, 1], "ag": [1, 1, 1, 1]})
 
-    # Precondition: the raw name resolves, and resolves to the wrong club.
-    assert features._resolve_in_frame(df, "Celta Fortuna") == "Celta"
-    # The alias overrules it anyway.
+    # The reserve guard: a reserve side never lands on the first team.
+    assert features._resolve_in_frame(df, "Celta Fortuna") is None
+    # And the alias routes it to its own rows.
     assert features._aliased("ESP-L2", df, "Celta Fortuna") == "Celta B"
+
+    # Alias over a CONFIDENT wrong match on the same side of the reserve
+    # line, which the guard does not touch: a first team the scorer takes
+    # for another first team.
+    df2 = pd.DataFrame({
+        "date": pd.to_datetime(["2020-01-01"] * 2),
+        "home": ["Deportes Concepción", "Universidad de Concepción"],
+        "away": ["Universidad de Concepción", "Deportes Concepción"],
+        "hg": [1, 1], "ag": [1, 1]})
+    assert features._resolve_in_frame(df2, "U. de Concepción") \
+        == "Deportes Concepción"
+    from app.data import aliases
+    if aliases.get("CHI-PD", "U. de Concepción") == "Universidad de Concepción":
+        assert features._aliased("CHI-PD", df2, "U. de Concepción") \
+            == "Universidad de Concepción"
 
 
 def test_alias_pointing_at_a_missing_name_is_ignored():
