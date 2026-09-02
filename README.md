@@ -535,6 +535,8 @@ that premium the book is keeping the insurance money.
 | — open | Fluminense v Vasco | U3.5 | 1.26 | — | TOTO — the card's struck lane (U3.0 rung), PLAY at Pinnacle 1.36; orange needs 1.2707 and 1.26 is 0.8% under; Unibet NL 1.22 |
 | — open | Philadelphia v Montréal | U4.5 | 1.25 | — | TOTO — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707 and 1.25 is 1.6% under; best 1.36 Pinnacle, Unibet NL 1.26. Replaces a Vancouver v Montréal U4.5 logged against the wrong match |
 | — open | QPR v Cardiff | U3.5 | 1.43 | — | Unibet — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 12.5%; best 1.52 Nordic Bet. The card said nothing quoted until the feed matcher learned QPR — first sight was this price |
+| — open | Degerfors v Halmstad | U3.5 | 1.30 | — | Unibet — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 2.3%; best 1.36 BetOnline, Unibet NL 1.27 — 1.30 beats the column |
+| — open | West Brom v Watford | U3.5 | 1.27 | — | Unibet — the card's struck lane (U3.0 rung), card says no play at the feed's best 1.26; 1.27 sits on the orange bar (1.2707) to within a tenth of a percent and beats the whole panel |
 
 <!-- HYPOTHESES:START -->
 
