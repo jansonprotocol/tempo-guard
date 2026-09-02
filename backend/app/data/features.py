@@ -1221,16 +1221,10 @@ def asof_features(
     # division above or below — see the fallback's header for the measured
     # exchange rate. Rescue-only: this branch is unreachable for any club the
     # league already has `min_matches` rows for.
-    if len(H) < min_matches:
-        got = _cross_division_rows(league_code, home_team, cutoff,
-                                   min_matches, "home")
-        if got is not None:
-            home_team, H, H_home = got
-    if len(A) < min_matches:
-        got = _cross_division_rows(league_code, away_team, cutoff,
-                                   min_matches, "away")
-        if got is not None:
-            away_team, A, A_away = got
+    home_team, H, H_home = _with_fallback(league_code, home_team, H, H_home,
+                                          cutoff, min_matches, "home")
+    away_team, A, A_away = _with_fallback(league_code, away_team, A, A_away,
+                                          cutoff, min_matches, "away")
 
     if len(H) < min_matches or len(A) < min_matches:
         return {}
@@ -1285,6 +1279,28 @@ DIVISION_LADDERS = [
 ]
 PROMOTED_SCORED = 0.754
 PROMOTED_CONCEDED = 1.516
+
+# WHEN the fallback fires. "count" is the shipped rule: only under
+# min_matches own-league rows. "age" also fires when the club's own window
+# is STALE — half or more of its rows older than STALE_WINDOW_DAYS — and
+# the adjacent division holds a fresher one; the stale window is then
+# replaced. "union" takes the club's last ROLLING_MATCHES wherever it
+# played them, own rows as they are and adjacent rows rescaled, so a club
+# three matches into a new division reads its last ten, not its last three.
+# The A/B behind whichever is set here is registered in hypotheses.tsv.
+FALLBACK_MODE = "count"
+STALE_WINDOW_DAYS = 365
+
+
+def _window_stale(rows: pd.DataFrame, cutoff: datetime) -> bool:
+    if rows.empty:
+        return True
+    ages = (cutoff - rows["date"]).dt.days
+    return float((ages > STALE_WINDOW_DAYS).mean()) >= 0.5
+
+
+def _median_age(rows: pd.DataFrame, cutoff: datetime) -> float:
+    return float((cutoff - rows["date"]).dt.days.median()) if len(rows) else 1e9
 
 
 def _adjacent_divisions(league_code: str) -> List[Tuple[str, bool]]:
@@ -1341,6 +1357,61 @@ def _cross_division_rows(
         return (matched, scale(rows),
                 scale(_find_venue_rows(df, matched, cutoff, venue)))
     return None
+
+
+def _with_fallback(
+    league_code: str, team: str, rows: pd.DataFrame, venue_rows: pd.DataFrame,
+    cutoff: datetime, min_matches: int, venue: str,
+) -> Tuple[str, pd.DataFrame, pd.DataFrame]:
+    """The club's window after the cross-division rule, under FALLBACK_MODE.
+
+    count  — the shipped gate: the fallback fires only under min_matches
+             own-league rows, and a club the league already has five rows
+             for is read from those rows however old they are.
+    age    — fires too when the own window is stale and the adjacent
+             division's window is fresher (by median row age); the stale
+             window is REPLACED by the rescaled one.
+    union  — the club's last ROLLING_MATCHES wherever it played them: own
+             rows as they are, adjacent rows rescaled and renamed to the
+             club's own spelling so the rolling metrics see one club.
+    """
+    thin = len(rows) < min_matches
+    if FALLBACK_MODE == "count" or (FALLBACK_MODE == "age" and not thin
+                                    and not _window_stale(rows, cutoff)):
+        if not thin:
+            return team, rows, venue_rows
+        got = _cross_division_rows(league_code, team, cutoff, min_matches, venue)
+        return got if got is not None else (team, rows, venue_rows)
+
+    got = _cross_division_rows(league_code, team, cutoff,
+                               1 if FALLBACK_MODE == "union" else min_matches,
+                               venue)
+    if got is None:
+        return team, rows, venue_rows
+    matched, adj, adj_venue = got
+
+    if FALLBACK_MODE == "age":
+        if thin or _median_age(adj, cutoff) < _median_age(rows, cutoff):
+            return matched, adj, adj_venue
+        return team, rows, venue_rows
+
+    # union
+    def renamed(frame: pd.DataFrame) -> pd.DataFrame:
+        out = frame.copy()
+        out["home"] = out["home"].astype(str).where(
+            out["home"].astype(str) != matched, team)
+        out["away"] = out["away"].astype(str).where(
+            out["away"].astype(str) != matched, team)
+        return out
+
+    def merge(own: pd.DataFrame, other: pd.DataFrame) -> pd.DataFrame:
+        if other.empty:
+            return own
+        both = pd.concat([own, renamed(other)], ignore_index=True)
+        both = both[both["date"] < cutoff]
+        return both.sort_values("date", ascending=False).head(ROLLING_MATCHES)
+
+    return team, merge(rows, adj), merge(venue_rows, adj_venue)
 
 
 def validate_match_existed(

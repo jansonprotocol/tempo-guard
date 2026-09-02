@@ -827,19 +827,40 @@ def test_cross_division_directions_are_reciprocal(monkeypatch):
     assert first["ag"] == pytest.approx(2 / features.PROMOTED_CONCEDED)
 
 
-def test_fallback_is_rescue_only():
-    """The guard mirrors the merge gate: a club its own league can already
-    describe never goes cross-division, so no existing tip can move. Pinned
-    at the call site — the fallback runs only inside `len(H) < min_matches`."""
-    import inspect
+def test_fallback_is_rescue_only(monkeypatch):
+    """Under the shipped gate a club its own league can already describe
+    never goes cross-division, so no existing tip can move. Pinned on
+    BEHAVIOUR now that the gate has modes: in "count" mode, five own rows
+    keep their window even when a fresher one sits next door, and the
+    fallback is never consulted for them."""
+    from datetime import datetime
 
     from app.data import features
 
-    src = inspect.getsource(features.asof_features)
-    h = src.index("_cross_division_rows(league_code, home_team")
-    assert "if len(H) < min_matches:" in src[:h]
-    a = src.index("_cross_division_rows(league_code, away_team")
-    assert "if len(A) < min_matches:" in src[:a]
+    assert features.FALLBACK_MODE == "count"
+    own = _division_frame([
+        ("2023-03-01", "Yoyo FC", "Rival", 1, 1),
+        ("2023-03-08", "Rival", "Yoyo FC", 2, 0),
+        ("2023-03-15", "Yoyo FC", "Rival", 0, 0),
+        ("2023-03-22", "Rival", "Yoyo FC", 1, 3),
+        ("2023-03-29", "Yoyo FC", "Rival", 2, 2),
+    ])
+    calls = []
+
+    def never(*a, **k):
+        calls.append(a)
+        return ("Yoyo FC", own, own)
+
+    monkeypatch.setattr(features, "_cross_division_rows", never)
+    cut = datetime(2026, 8, 25)
+    rows = features._find_team_rows(own, "Yoyo FC", cut)
+    name, got, _venue = features._with_fallback(
+        "ESP-L2", "Yoyo FC", rows, rows, cut, 5, "home")
+    assert name == "Yoyo FC" and got is rows and calls == []
+
+    thin = rows.head(3)
+    features._with_fallback("ESP-L2", "Yoyo FC", thin, thin, cut, 5, "home")
+    assert len(calls) == 1
 
 
 def test_no_ladder_means_no_fallback():
