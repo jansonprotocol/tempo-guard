@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 90.0%
+## CURRENT CONFIRMED HITRATE: 90.5%
 
     lane                        Tip 1              Tip 2
-    all matches             18 / 20   90.0%     11 / 16   68.8%
-    played lanes  >+1%       5 / 5   100.0%     11 / 16   68.8%
+    all matches             19 / 21   90.5%     11 / 17   64.7%
+    played lanes  >+1%       6 / 6   100.0%     11 / 17   64.7%
     placed bets              4 / 4   100.0%    ROI +25.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 16 / 21   ·   76.2%**   ·   **Tip 1 — 5 / 5   ·   100.0%**   ·   **Tip 2 — 11 / 16   ·   68.8%**
+**Playable — 17 / 23   ·   73.9%**   ·   **Tip 1 — 6 / 6   ·   100.0%**   ·   **Tip 2 — 11 / 17   ·   64.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -138,7 +138,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-3 · 02-09 20:45 <b>Millwall v Wrexham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>— under +1%</td><td>❌ <b>Millwall O0.5</b> 80.1% +3.1%<br>buy≥1.32 (+5.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 71.7% +12.3% · buy≥1.47 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">◦ 2-1 · 02-09 20:45 <b>QPR v Cardiff</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.7% +2.5%<br>buy≥1.46 (+3.1% margin)</td><td>❌ U2.75 55.5% +3.0%<br>buy≥1.60 (−0.4% margin) · floor −19.5</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 1X 73.8% +3.8% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 02-09 20:45 <b>West Brom v Charlton</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 75.8% +1.6%<br>buy≥1.48 (+2.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 1X 74.0% +4.0% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 83' 1-1 <b>Burnley v Middlesbrough</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>O1.5 79.2% +6.5%<br>buy≥1.37 (+8.4% margin) · <i>✓ landed</i></td><td>O2.25 56.4% +9.0%<br>buy≥1.62 (+2.9% margin) · floor −18.6 · <i>needs 1 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.5% +2.8% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 02-09 21:00 <b>Burnley v Middlesbrough</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>O1.5 79.2% +6.5%<br>buy≥1.37 (+8.4% margin)</td><td>❌ O2.25 56.4% +9.0%<br>buy≥1.62 (+2.9% margin) · floor −18.6</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 76.5% +2.8% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 02-09 22:00 <b>Coquimbo Unido v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (81.9 −3.3)</td><td>U4.25 87.2% +1.8%<br>buy≥1.23 (+6.3% margin)</td><td>U3.75 73.2% +3.1%<br>buy≥1.28 (+0.9% margin) · floor −4.8</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.7% +12.1% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 02-09 22:30 <b>Flamengo v Mirassol</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Série A (75.8 −5.5)</td><td>— under +1%</td><td><b>Flamengo O1.5</b> 57.3% +14.3%<br>buy≥1.80 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 80.1% +15.1% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 03-09 00:30 <b>Deportes Limache v Ñublense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (81.9 −3.3)</td><td>— under +1%</td><td><b>Ñublense O0.5</b> 80.7% +11.2%<br>buy≥1.33 (+7.4% margin) · team</td></tr></table>
@@ -293,7 +293,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 83' 1-1 <b>Burnley v Middlesbrough</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>O1.5 79.2% +6.5%<br>buy≥1.37 (+8.4% margin) · <i>✓ landed</i></td><td>O2.25 56.4% +9.0%<br>buy≥1.62 (+2.9% margin) · floor −18.6 · <i>needs 1 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.5% +2.8% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 02-09 22:00 <b>Coquimbo Unido v U. de Concepción</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (81.9 −3.3)</td><td>U4.25 87.2% +1.8%<br>buy≥1.23 (+6.3% margin)</td><td>U3.75 73.2% +3.1%<br>buy≥1.28 (+0.9% margin) · floor −4.8</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.7% +12.1% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 02-09 22:30 <b>Flamengo v Mirassol</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Série A (75.8 −5.5)</td><td>U4.25 83.0% <b>−5.9%</b><br>buy≥1.25 (+6.8% margin)</td><td><b>Flamengo O1.5</b> 57.3% +14.3%<br>buy≥1.80 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 80.1% +15.1% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 03-09 00:30 <b>Deportes Limache v Ñublense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (81.9 −3.3)</td><td>U4.25 84.7% <b>−0.6%</b><br>buy≥1.27 (+5.7% margin)</td><td><b>Ñublense O0.5</b> 80.7% +11.2%<br>buy≥1.33 (+7.4% margin) · team</td></tr></table>
@@ -476,7 +475,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 18 / 20   ·   90.0%**   ·   **Tip 2 — 11 / 16   ·   68.8%**
+**Tip 1 — 19 / 21   ·   90.5%**   ·   **Tip 2 — 11 / 17   ·   64.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -498,6 +497,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-3 · 02-09 20:45 <b>Millwall v Wrexham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U4.25 83.6% <b>−4.5%</b><br>buy≥1.22 (+6.2% margin)</td><td>❌ <b>Millwall O0.5</b> 80.1% +3.1%<br>buy≥1.32 (+5.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 71.7% +12.3% · buy≥1.47 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">◦ 2-1 · 02-09 20:45 <b>QPR v Cardiff</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 76.7% +2.5%<br>buy≥1.46 (+3.1% margin)</td><td>❌ U2.75 55.5% +3.0%<br>buy≥1.60 (−0.4% margin) · floor −19.5</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 1X 73.8% +3.8% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 02-09 20:45 <b>West Brom v Charlton</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>U3.0 75.8% +1.6%<br>buy≥1.48 (+2.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 1X 74.0% +4.0% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 02-09 21:00 <b>Burnley v Middlesbrough</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.0 −3.0)</td><td>O1.5 79.2% +6.5%<br>buy≥1.37 (+8.4% margin)</td><td>❌ O2.25 56.4% +9.0%<br>buy≥1.62 (+2.9% margin) · floor −18.6</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 76.5% +2.8% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
