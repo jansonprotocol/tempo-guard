@@ -547,7 +547,11 @@ def _haystack(f) -> str:
             if lab.startswith("super "):
                 base = lab[6:]
                 bits += [f"guard {base}", f"label {base}"]
+            # A play's mark is "normal" or "strong"; "verdict play" has
+            # to find both, and "verdict no play" only the rest.
             bits.append("verdict " + v["mark"])
+            if v["play"]:
+                bits.append("verdict play")
             if v["strong"]:
                 bits.append("strong")
     raw = " ".join(bits).lower()
