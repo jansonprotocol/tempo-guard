@@ -29,13 +29,41 @@ from scripts.league_badges import rates
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "web" / "index.html"
 TITLE = "ATHENA — TEMPO GUARD"
-STAGE = "PRE-ALFA 1"          # bumped at each stage transition, deliberately
-SESSION_NO = 4                # bumped when a run closes and a new one opens
-SESSION_START = "28 Aug"      # the reset date of the current run
+STAGE = "PRE-ALFA 2"          # bumped at each stage transition, deliberately
+SESSION_NO = 6                # bumped when a run closes and a new one opens
+SESSION_START = "2 Sep"       # the reset date of the current run
 
 # The archived eras: frozen history, recorded once (the numbers live in
 # archive/*/log.md and the README's archive section; they never change).
 SESSIONS = [
+    dict(name="Sessions #4–5 · the odds layer", dates="28 Aug – 1 Sep 2026",
+         nums=[("Tip 1", "216/267 · 80.9%"), ("Tip 2", "135/196 · 68.9%"),
+               ("Playable", "103/132 · 78.0%"), ("Bets", "113/143 · ROI −0.3%")],
+         patches=["The odds layer: live prices from 26 books, the card "
+                  "showing what the market pays, the line that reaches the "
+                  "slip quoted (U3.0 printed, U3.5 struck)",
+                  "The guard: five labels from the card's tier and an as-of "
+                  "confluence score, frozen on two windows over 62,528 "
+                  "replayed picks; the decline rule on top — PLAY only when "
+                  "the best quote clears the label's break-even by 6%, "
+                  "never on red — the first positive return at real prices",
+                  "The measurement that moved the project: the edge lives in "
+                  "the panel (+1.71% best of ten books, +0.62% at one) and "
+                  "in the STRONG lane (+8.87% on 1,008 bets against −0.67% "
+                  "for the rest), not in volume",
+                  "The market disagrees most exactly where Athena is most "
+                  "wrong: every card-tracking bar tested negative, so the "
+                  "bar is a category rate — a blended probability, an "
+                  "inverse play and per-league bars all declined with numbers",
+                  "One club, one name: 552 spellings folded store-wide, "
+                  "hidden rows 22% → 0.8%; and seven seasons the store never "
+                  "had, 1,921 results filled from football-data",
+                  "Decide at first sight: cards that clear the bar only "
+                  "because the price drifted out late lose in both seasons "
+                  "at both books; cards that clear early may be bought later",
+                  "Closed at 80.9% tips / −0.3% ROI on 143 positions — flat, "
+                  "the best a book has done here, and the reason Session #6 "
+                  "plays fewer cards, not more"]),
     dict(name="The cup run", dates="24–27 Aug 2026",
          nums=[("Tip 1", "59/72 · 81.9%"), ("Tip 2", "41/58 · 70.7%"),
                ("Playable", "43/51 · 84.3%"), ("Bets", "25/35 · ROI −7.5%")],
@@ -1155,61 +1183,119 @@ def _hypothesis_html() -> str:
     return "".join(out)
 
 
-def _learn() -> str:
-    """The teaching block: one example card, each part explained in a line."""
-    card = """<details class="card play" open>
-<summary><div class="teams">Real Madrid v Real Sociedad<span class="more">more \u25be</span></div>
-<div class="meta">\U0001f551 26-08 21:00 \u00b7 LaLiga <span class="badge">(81.7 +3.4)</span></div>
-<div class="kw">\U0001f9e0 elite attack vs leaky defence</div>
-<div class="lane pl"><span class="which">Tip 1</span> O1.5 81.2% +6.8%<br>buy\u22651.32 (+8.0% margin)</div></summary>
-<div class="lane pl"><span class="which">Tip 2</span> <b>Real Madrid O1.5</b> 67.0% +24.7% (team)<br>buy\u22651.43 (\u22124.2% margin)</div>
-<div class="read"><b>Real Madrid</b>: elite attack, elite defence, in form \u2014 against <b>Real Sociedad</b>: leaky defence, struggling. That pairing \u2014 firepower against a defence that leaks \u2014 is where the goals in this tip come from.</div>
-</details>"""
+def _learn(playable: list, waiting: list, reads: dict) -> str:
+    """The teaching block: three LIVE cards from today's board \u2014 a normal
+    play, a strong play, and a card with no play on it \u2014 each rendered
+    exactly as it is on its tab, with the reading rules beside them.
+
+    Live rather than hand-written, so the example can never drift from
+    what the card actually shows: when the verdict line changes, the
+    lesson changes with it.
+    """
+    def pick(cards, want):
+        for f in sorted(cards, key=lambda x: x.kickoff):
+            v = verdict(f, _star(f))
+            if v and v["mark"] == want:
+                return f
+        return None
+
+    strong = pick(playable, "strong")
+    normal = pick(playable, "normal")
+    none = next((f for f in sorted(waiting, key=lambda x: x.kickoff)
+                 if (v := verdict(f, _star(f))) and v["odds"] is not None
+                 and not v["play"]), None)
+
+    def show(f, kind, caption, lesson):
+        if f is None:
+            return (f'<div class="learncard"><h3>{caption}</h3>'
+                    '<p class="dim">no card of this kind on the board right '
+                    'now \u2014 it will appear here when one is.</p></div>')
+        return (f'<div class="learncard"><h3>{caption}</h3>'
+                f'<div class="grid" style="max-width:420px">'
+                f'{_card(f, kind, reads)}</div>'
+                f'<div class="lesson">{lesson}</div></div>')
+
+    blocks = show(normal, "play", "1 \u00b7 A normal play",
+        "The card is green-bordered and the verdict line says <b>PLAY</b> "
+        "with the lane, the price it needs and the book that pays it. Read "
+        "it in this order: the <b>label</b> (green, orange, super green \u2014 the "
+        "guard's read of this kind of card; orange lands 83.4% of the time, "
+        "green 87.4%), then <b>needs</b> (the break-even that label implies "
+        "plus 6%), then the <b>price</b>. The price cleared the bar, so this "
+        "is a bet: 4% of the bankroll at that price or better. If the book "
+        "you use is short of the bar, it is not a bet there.") + show(
+        strong, "play", "2 \u00b7 A strong play",
+        "Same as a normal play, plus <b>\u2605 STRONG</b>: the confluence score "
+        "\u2014 the card run back through the board's own searches, league, each "
+        "club, the side, club-and-side, all as-of \u2014 sits in the top quarter "
+        "in a European league. On 1,008 replayed bets the strong ones landed "
+        "81.0% at +8.87% while the rest landed 72.8% at \u22120.67%. In the "
+        "bankroll replay this lane is the only thing that compounds: play "
+        "these first, and never skip one for price if any book you hold "
+        "clears the bar.") + show(
+        none, "pend", "3 \u00b7 A card with no play",
+        "The lane bars say <b>DECLINE</b> or <b>needs</b> and the verdict "
+        "says <b>no play</b>: either the tier is red (the guard says avoid, "
+        "whatever the price) or no book clears the bar. Nothing here is a "
+        "bet. Do not buy a declined card because it is a good read \u2014 the "
+        "market disagrees with Athena most exactly where Athena is most "
+        "wrong, and every attempt to bet those cards has lost. And do not "
+        "come back later hoping the price drifts out: a card that clears "
+        "only because the price moved late lost in both seasons at both "
+        "books.")
+
     rows = [
-        ("The matchup", "home team first, away team second \u2014 venue "
-         "matters and is already in the numbers."),
-        ("\U0001f551 / \U0001f534 / \u2705\u274c", "the clock before "
-         "kickoff, red while live, then the verdict with the final score "
-         "once graded."),
-        ("The league line", "the competition. On cup cards, \u00b7 "
-         "probationary marks a lane still earning trust with live "
-         "results."),
-        ("(81.7 +3.4)", "the league's proven PLAYABLE record: how its "
-         "above-bar lanes \u2014 the ones worth betting \u2014 actually land, and "
-         "how far that sits from the league's all-tips baseline. A "
-         "consensus-cap league shows (82.0 capped): no lane there may "
-         "claim edge, so it has no playable record to show."),
-        ("\U0001f9e0 the read", "what Athena measured in this matchup, in "
-         "keywords \u2014 tap the card for the full story in sentences."),
-        ("Tip 1", "the engine's best market. O1.5 = over 1.5 goals in the "
-         "match; 81.2% = claimed probability; +6.8% = edge over a typical "
-         "match."),
-        ("buy\u22651.32 (+8.0% margin)", "the minimum odds that make this tip "
-         "worth money. The price listens to the tip AND the league's "
-         "playable record \u2014 a tip below that record leans on it (0.4/0.6), "
-         "one above it mostly trusts itself (0.8/0.2) \u2014 so lower-"
-         "probability lanes become reachable at real-world odds. The "
-         "bracket is what margin the printed price still holds over the "
-         "tip's own break-even: negative means the blend is reaching down "
-         "to make the lane buyable, eyes open."),
-        ("Green border / lane", "a playable lane: edge above +1%. These "
-         "are the tips with real value \u2014 the rest are shown for "
-         "honesty, not for money."),
-        ("Tip 2 \u00b7 more \u25be", "the second lane. (team) means a "
-         "TEAM total \u2014 here Real Madrid alone to score 2+ \u2014 a "
-         "different market from the match total, offered when its edge "
-         "beats the ladder's runner-up. On other cards (floor \u2212x) "
-         "says how far Tip 2 sits below the confidence bar."),
-        ("\U0001f9e0 the story", "tap any card open: the read in full "
-         "sentences \u2014 every phrase maps to something measured (attack "
-         "and defence bands, form, table stakes, cup Elo), never "
-         "invented."),
+        ("The rule in one line", "Bet only what the verdict line says "
+         "PLAY, at 4% of the bankroll, at or above the price it needs. "
+         "Everything else on the board is graded and banked, not played."),
+        ("Label", "the guard's read of this KIND of card, from the card's "
+         "own tier and its confluence score. Five: super green, green, "
+         "orange, red, super red. Each carries one measured hit rate; red "
+         "and super red are never played."),
+        ("needs", "the price the label's hit rate needs to break even, "
+         "plus 6%. The bar is the same for every card with that label \u2014 "
+         "that is deliberate: a bar built per card finds exactly the cards "
+         "the market is right about."),
+        ("PASS / DECLINE", "every lane on the card carries its own bar: "
+         "PASS means the best quote clears it, DECLINE means it does not, "
+         "needs x.xx means nothing is quoted yet. Only the starred lane's "
+         "bar is backed by a validated hit rate; the others are shown for "
+         "honesty."),
+        ("\u2605 the star", "the lane the card is read from: tip 1 unless a "
+         "draw-no-bet on tip 3 out-claims it by two points. Tip 2 is never "
+         "starred and never a play."),
+        ("The struck line", "the board quotes the line that reaches the "
+         "slip, not the rung Athena prints: U3.0 is bought as U3.5 and "
+         "U4.25 as U4.5, because the engine cannot tell those apart and "
+         "the safer line pays more on settlement. Everything else as "
+         "printed."),
+        ("When to decide", "at first sight, two or three days out. A card "
+         "that clears then may be bought later if its price has drifted "
+         "out. A card that does not clear then is not a play on Saturday "
+         "either."),
+        ("Kickoff", "a match that has kicked off is not playable. Quotes "
+         "stop at kickoff and the verdict checks the clock."),
+        ("Tip 2 \u00b7 (team)", "a TEAM total \u2014 one side alone to score. "
+         "Printed and graded, never played: it landed 12.7 points below "
+         "tip 1 on the same fixtures."),
+        ("Tip 3", "the result lane \u2014 double chance or draw no bet. Only a "
+         "gated DNB is ever the star; double chance is never played."),
+        ("\U0001f9e0 the read", "what Athena measured in this matchup; tap "
+         "the card for the full story. Every phrase maps to something "
+         "measured, never invented."),
     ]
     items = "".join(f'<tr><td class="mk"><b>{k}</b></td><td>{v}</td></tr>'
                     for k, v in rows)
-    return (f'<div id="learn"><h2>\U0001f393 Learn Athena \u2014 how to '
-            f'read a block</h2><div class="grid" style="max-width:420px">'
-            f"{card}</div><div class=\"wrap\" style=\"margin-top:10px\">"
+    return ('<style>.learngrid{display:grid;gap:14px;grid-template-columns:'
+            'repeat(auto-fit,minmax(300px,1fr))}.learncard h3{margin:6px 0}'
+            '.lesson{font-size:.93em;line-height:1.45;margin-top:8px;'
+            'padding:8px 10px;border-left:3px solid #888;opacity:.92}</style>'
+            f'<div id="learn"><h2>\U0001f393 Learn Athena \u2014 how the '
+            f'board is played</h2>'
+            f'<p class="dim">Three cards from today\'s board, live: the '
+            f'lesson is whatever they show right now.</p>'
+            f'<div class="learngrid">{blocks}</div>'
+            f'<div class="wrap" style="margin-top:10px">'
             f"<table>{items}</table></div>"
             # window. is not optional here: an inline handler runs with
             # the element in its scope chain, and Element.prototype has a
@@ -2070,7 +2156,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   it is data, not a shortlist. Open a card to see why it was refused.</div>
   {_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
- {_learn()}
+ {_learn(playable, waiting, reads)}
 </section>
 
 <section class="page" id="p-sessions">
@@ -2186,41 +2272,50 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    </div>
  </div>
 
- <h3>How to read a card — the bettor's protocol</h3>
- <p>Written down 30 Aug after the first hundred positions, so the next
- run inherits it instead of rediscovering it. Four steps, in order:</p>
- <p><b>1. Start at the league badge.</b> It shows the playable record and
- its distance from baseline — <i>(83.7 +1.7)</i>. The delta matters as
- much as the level: a plus sign means the league is running above its own
- nature. At 84%+ with a plus, tip 1 is the engine's home turf — read it
- first and buy it when the bookmaker clears the buy≥.</p>
- <p><b>2. In a weak or capped league with no playable tip 1, read tip
- 3.</b> Tip 3 does not inherit a league's tip 1 weakness — it reads who
- is stronger, not how many goals, a signal that survives totals-chaos:</p>
+ <h3>How the board is played — the rules of PRE-ALFA 2</h3>
+ <p>Written down 2 Sep at the reset, from what two runs and the odds
+ layer measured. Session #6 plays these and changes nothing while it
+ runs. Six rules, in order:</p>
+ <p><b>1. The verdict line is the whole decision.</b> Every card marks
+ one lane — tip 1, or a draw-no-bet on tip 3 that out-claims it by two
+ points — and the guard reads that lane into one of five labels from the
+ card's own tier and its confluence score, the card run back through the
+ board's searches as-of. Each label carries one measured hit rate, frozen
+ on two windows over 62,528 replayed picks. The card says <b>PLAY</b> only
+ when the best live quote clears that label's break-even by 6% and the
+ tier is not red. That is a bet. Anything else on the board is graded and
+ banked, not played.</p>
+ <p><b>2. Flat 4% of the bankroll as it stands.</b> Measured again this
+ session through two seasons at real closing prices: the whole book at
+ 4% is a coin flip with a near-halving drawdown; the STRONG lane compounds
+ (€50 to €106, every year-long start above €50). So the stake is flat,
+ and the volume is low — the target is a few plays a week, not fifteen.</p>
+ <p><b>3. STRONG first.</b> A play whose confluence score sits in the top
+ quarter in a European league landed 81.0% at +8.87% on the 1,008 bets
+ the bar fires on, against 72.8% and −0.67% for the rest. Never skip a
+ strong card for price if any book you hold clears its bar.</p>
+ <p><b>4. Decide at first sight, buy later if it drifts out.</b> On the
+ same 8,506 cards the early line is lower than the close 61% of the time
+ — the market drifts away from Athena's side toward kickoff — but cards
+ that clear the bar only because the price drifted out late lost in both
+ seasons at both books. A card that does not clear on Thursday is not a
+ play on Saturday; a card that did may be bought at Saturday's longer
+ price.</p>
+ <p><b>5. The bar is a category, not the card.</b> Every attempt to bet
+ on Athena's own number — the claim, a blend of claim and searches, an
+ inverse play, per-league bars — lost at real prices, because the market
+ disagrees with Athena most exactly where Athena is most wrong. The five
+ coarse labels are the only bar that has stayed positive in both seasons,
+ and they stay coarse on purpose.</p>
+ <p><b>6. The line that reaches the slip.</b> U3.0 is bought as U3.5 and
+ U4.25 as U4.5 — the engine cannot tell those apart and the safer line
+ pays more on settlement; everything else as printed. A match that has
+ kicked off is not playable. Tip 2 and double chance are never played.
+ Where no feed carries a league (Swiss, Polish, Algerian) the score is
+ typed by hand through the same grader as the sweep.</p>
+ <p class="dim">The result lane's own record, kept because tip 3 does not
+ inherit a league's tip 1 weakness:</p>
  {read_tiers}
- <p class="dim">Corrected the same day it was written. Replaying the
- star's chooser over 16,554 fixtures showed every deviation from tip 1
- grading WORSE on hitrate, and — the real surprise — a tip 1 that misses
- the playable bar still lands <b>84.3%</b>: a thin edge means the
- league's baseline is already high, not that the tip is weak. Dropping
- tip 2 from the chooser recovered most of the loss (79.5% → 82.1%
- against always-tip-1's 83.5%), so the star is now only ever tip 1 or
- tip 3. The residue is honest and stays: where the star leaves a
- sub-bar tip 1 for a result lane, that lane lands 77.9% against tip 1's
- 84.3% on the same fixtures — a swap that pays only if the result lane
- is priced at least 8% above the total. Which is exactly what the buy≥
- bracket is for, and why the star says read first, not bet this.</p>
- <p><b>3. Between two result-lane prints at the same probability, prefer
- DNB or 1X over 12.</b> The 15,048-fixture dive found DNB underclaims —
- the higher it says, the more it is right (+4.2 overall, +8.7 in its top
- band) — while 12 is the family's one overclaimer (−2.0 on 7,884
- prints).</p>
- <p><b>4. The price gate never sleeps.</b> Whatever the card says, the
- buy≥ and its margin bracket are the final word — no ticket below a
- negative-bracket lane's asking price, no ticket on a lane the engine
- never priced, DNB never under ~1.35 (Rule 7). A great prediction at the
- wrong price is still a losing bet; that is the founding lesson of this
- project.</p>
 
  <p><b>What it does not see:</b> Athena prices one match's goal total.
  It has no concept of a two-legged tie, an aggregate score, or what a
@@ -2245,7 +2340,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  therefore both the product and the experiment — the only honest test of
  a change is the next run's number, because that is the only sample the
  engine has never seen.</p>
- <p>Three runs so far, and the arc between them is the whole story:</p>
+ <p>Five runs so far, and the arc between them is the whole story:</p>
  <div class="runs">
   <div class="run"><b>Pre-calibration <span class="when">· 20–23 Aug
    2026</span></b>Tip 1 landed 84.2% and the run still LOST money —
@@ -2279,11 +2374,23 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    numbers ended up correcting the engine that produces them. Closed at
    Tip 1 <b>81.9%</b> on 72 settled, found bets <b>−7.5%</b> ROI — the
    gap between hitrate and price is the lesson the next run inherits.</div>
+  <div class="run"><b>Sessions #4–5 <span class="when">· 28 Aug – 1 Sep
+   2026 · closed</span></b>The first full run on the calibrated floors,
+   and then the two build days that changed how the board is read: live
+   prices from 26 books, the guard's five labels, the decline rule — the
+   first rule in this project with a positive return at real prices — and
+   the finding underneath it, that the edge lives in the panel and the
+   STRONG lane rather than in volume. Seven missing seasons filled, 552
+   club spellings folded, five drifted guards closed. Closed at Tip 1
+   <b>80.9%</b> on 267 settled, found bets <b>−0.3%</b> ROI on 143 — flat,
+   the best a book has done here, and still not the number.</div>
   <div class="run"><b>Session #{SESSION_NO} <span class="when">· {SESSION_START}
-   2026 – running</span></b>The current run: the first full session on the
-   calibrated floors, the high-says debit and the buy-from discipline —
-   everything Session #3 measured, now facing fixtures it has never
-   seen. {live_line}</div>
+   2026 – running</span></b><b>PRE-ALFA 2, the long run.</b> Nothing in the
+   engine or its rules is touched while it runs: the board plays the six
+   rules above exactly as written, at 4% flat, STRONG first, decided at
+   first sight, and the forward log grades the guard on cards it has never
+   seen. The only sample that can settle whether the odds layer is real is
+   this one. {live_line}</div>
  </div>
  <p class="dim">The per-run numbers, frozen at close, are on the
  <a href="#sessions">Past sessions</a> page. What each run changed, and

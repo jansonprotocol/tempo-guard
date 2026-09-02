@@ -1,10 +1,13 @@
-# Every bet actually placed, from 24 Aug 2026.
+# Every bet actually placed in Session #6, from 2 Sep 2026 — PRE-ALFA 2, the long
+# run: the engine and its rules are not touched while it runs.
 #
 # Earlier books are archived and deliberately not mixed in:
-#   archive/2026-08-23-first-calibrated-slate/bets.tsv   the calibrated engine's
-#     first slate, 22/27 at ROI +6.1%
-#   archive/2026-08-pre-calibration/bets.tsv             priced against
-#     probabilities now known to be ~10.8 points optimistic
+#   archive/2026-08-28-sessions-4-5-odds-layer/bets.tsv   113/143, ROI -0.3%
+#   archive/2026-08-24-session-3-cup-run/bets.tsv         25/35, ROI -7.5%
+#   archive/2026-08-23-first-calibrated-slate/bets.tsv   22/27, ROI +6.1%
+#   archive/2026-08-pre-calibration/bets.tsv             ROI -10.1%
+# The one carried-over settled row is Londrina v Juventude, kept by the bettor
+# as the first row of this book.
 #
 # fixture   must match the fixture name in README.md's tables exactly; the
 #           score, Tip 1 rung and Tip 1 probability are joined from there
@@ -17,151 +20,8 @@
 #           the pre-match number no longer describes it
 #
 # fixture	rung	odds	side	cashout	[p_override]
-Clermont v Sochaux	U1.5	1.41	A	0		widened: team under on the away side
-Montpellier v Boulogne	DNB	1.26	H	0		rule 5 shape, home favourite
-Laval v Grenoble	U3.5	1.24	-	0		rule-6 harder line off the U3.0 tip (79.9%)
-Den Bosch v Vitesse	X2	1.46	A	0		own read: double chance Vitesse or draw
-Volendam v Dordrecht	O1.5	1.62	H	0		widened: Volendam team over
-Volendam v Dordrecht	O1.5	1.18	-	0		softer companion to the O1.5 tip
-Jong AZ v MVV	U4.5	1.28	-	0		softer line above the U4.25 tip
-Roda v NAC Breda	U4.5	1.20	-	0		softer line above the U4.25 tip
-TOP Oss v Jong FC Utrecht	U4.5	1.22	-	0		softer line above the U4.25 tip
-Groningen v Fortuna Sittard	U4.5	1.24	-	0		softer line above the U4.25 tip (+5.8%)
-Legia v Śląsk	DNB	1.17	H	0		rule 5 shape on the sub-bar fixture
-Milan v Venezia	U3.5	1.37	-	0		softer line above the U3.0 tip (+5.2%)
-Al-Riyadh v Neom	DNB	1.42	A	0		rule 5 shape, away side
-Dalian Yingbo v Guoan	DNB	1.53	A	0		rule 5 shape, away side
-Shenhua v Taishan	O0.5	1.18	A	0		= Tip 2 team lane (81.8% +9.2%, buy≥1.32 — taken under it, widened)
-Shenzhen v Port	U4.5	1.20	-	0		softer line above the U4.25 tip (+5.3%)
-Braunschweig v Hertha	O1.5	1.19	-	0		= Tip 1 rung (83.5% +2.9%, buy≥ not met — widened)
-Bochum v Osnabrück	DNB	1.25	H	0		rule 5 shape, home favourite
-Gençlerbirliği v Erzurumspor	U1.5	1.36	A	0		widened: away team under beside the U4.25 tip (89.5%)
-Genk v Beveren	U4.5	1.20	-	0		softer line above the U4.25 tip (86.7% +1.3%)
-Crystal Palace v Man City	O1.5	1.61	A	0		widened: Man City team over
-Crystal Palace v Man City	O1.5	1.20	-	0		= Tip 1 rung (84.3% +4.5%), under buy≥ — widened
-Comerciantes Unidos v Cajamarca	DNB	1.24	H	0		rule 5 shape, home side of the O1.5 tip
-Jong Ajax v Helmond Sport	U4.5	1.21	-	0		R6 softer line above the U4.25 tip (84.1% +4.4%, buy≥1.29)
-Lille v PSG	O1.5	1.22	-	0		= Tip 1 rung (80.1% +2.8%), under buy≥1.31 — widened
-Náutico v Athletic	U3.5	1.20	-	0		R6 softer line above the U3.0 tip (83.1% +1.4%, buy≥1.32)
-Gamba Osaka v Sanfrecce	U4.5	1.19	-	0		R6 softer above the U4.25 tip
-Mito Hollyhock v Machida Zelvia	X2	1.18	-	0		Machida or draw — own read on the promoted host
-Qingdao Hainiu v Wuhan Three Towns	O0.5	1.18	A	0		Three Towns to score — team lane own read
-Kawasaki v Chiba	U4.5	1.18	-	0		R6 softer above the U4.25 tip (90.0% +1.7%)
-Nagoya v Okayama	O1.5	1.35	-	0		own read against the sub-bar U-tip
-Tokyo Verdy v Kashima	O0.5	1.18	A	0		Kashima to score — team lane own read
-Heidenheim v Dresden	12	1.23	-	0		either side outright — own read DC
-Cottbus v Fürth	U4.5	1.23	-	0		R6 softer above the U4.25 tip (+3.9%)
-Zhejiang v Yunnan Yukun	12	1.21	-	0		either side outright — own read DC
-Liverpool v Nottingham Forest	O1.5	1.18	-	0		= Tip 1 rung (84.2% +4.4%), under buy≥1.28 — widened
-Middlesbrough v West Brom	O1.5	1.24	-	0		= Tip 1 rung (76.5% +3.8%), under buy≥1.39 — widened
-Häcken v Västerås SK	U4.5	1.30	-	0		R6 softer above the U4.25 tip
-Köln v Hoffenheim	O0.5	1.20	H	0		Köln to score — team lane own read
-Mainz v Paderborn	DNB	1.26	H	0		rule 5 shape, Mainz side
-Leipzig v Mönchengladbach	O1.5	1.42	H	0		Leipzig team over — own read
-Elversberg v Leverkusen	O1.5	1.42	A	0		Leverkusen team over — own read
-Bournemouth v Everton	O1.5	1.24	-	0		vs the board's lane — widened
-Coventry v Hull	1X	1.20	-	0		Coventry or draw — own read DC
-Blackburn v QPR	U3.5	1.26	-	0		R6 off the U-tip
-Bristol City v Portsmouth	O1.5	1.30	-	0		vs the board's lane — widened
-Charlton v Preston	U3.5	1.22	-	0		R6 off the U-tip
-Norwich v Burnley	O1.5	1.24	-	0		vs the board's lane — widened
-Watford v West Ham	O1.5	1.67	A	0		West Ham team over — own read, the slip's big price
-La Louvière v Mechelen	O0.5	1.30	H	0		La Louvière to score — team lane own read
-Excelsior v Sparta Rotterdam	U4.5	1.21	-	0		R6 softer off the U-tip
-Arouca v Marítimo	O1.5	1.34	-	0		vs the board's lane — widened
-Levante v Real Betis	O1.5	1.25	-	0		vs the board's lane — widened
-Strasbourg v Lens	O1.5	1.19	-	0		vs the board's lane — widened
-Halmstad v Kalmar	U3.5	1.32	-	0		R6 off the U-tip
-Lausanne v Zürich	O1.5	1.62	H	0		Lausanne team over — own read
-Servette v Luzern	1X	1.25	-	0		Servette or draw — own read DC
-Al-Kholood v Al-Ahli	O1.5	1.19	-	0		vs the board's lane — widened
-Tottenham v Newcastle	O0.5	1.25	A	0		Newcastle to score — team lane own read
-Monza v Udinese	X2	1.36	-	0		Udinese or draw — own read DC
-AZ v Go Ahead Eagles	O2.5	1.35	-	0		harder line off the O-tip
-Real Sociedad v Espanyol	O1.5	1.24	-	0		vs the board's lane — widened
-Al-Fateh v Al-Ittihad	U4.5	1.23	-	0		R6 softer off the U-tip
-Nürnberg v Bielefeld	O1.5	1.20	-	0		vs the board's lane — widened
-Galatasaray v Göztepe	U4.5	1.21	-	0		R6 softer off the U-tip
-Lyon v Le Havre	O1.5	1.20	-	0		vs the board's lane — widened
-Juventus v Parma	U3.5	1.44	-	0		R6 off the U-tip
-Cercle Brugge v Lommel	O1.5	1.44	H	0		Cercle team over — own read
-Tottenham v Newcastle	12	1.28	-	0		either side outright — taken IN-PLAY at 0-1, the tip3 lane
-Auxerre v Angers	DNB	1.43	H	0		rule 5 shape, Auxerre side
-Ascoli v Carrarese	U3.5	1.28	-	0		R6 off the U-tip
-Zwolle v NEC	12	1.23	-	0		either side outright — own read DC
-Sevilla v Atlético Madrid	U3.5	1.28	-	0		R6 softer above the U3.0 tip (+5.3%)
-Girona v Las Palmas	U1.5	1.20	A	0		Las Palmas team under — own read
-Deportes Limache v Everton	O0.5	1.22	A	0		Everton to score — team lane own read
-NY Red Bulls v Philadelphia	12	1.25	-	0		either side outright — own read DC
-Ñublense v Deportes Concepción	O0.5	1.22	H	0		Ñublense to score — team lane own read
-Vasco v Cruzeiro	U3.5	1.26	-	0		R6 off the U-tip
-Houston v San Jose	DNB	1.28	H	0		rule 5 shape, Houston side
-Nashville v Cincinnati	12	1.23	-	0		either side outright — own read DC
-Kansas City v Vancouver	U4.5	1.32	-	0		R6 softer off the U-tip
-Colorado v Salt Lake	U4.5	1.19	-	0		R6 softer off the U-tip
-Portland v Austin	DNB	1.22	H	0		= tip 3's DNB1 print (82.8%) — following the probation lane
-Utrecht v PSV	12	1.21	-	0		= tip 3's 12 print (79.3%) — draw the only out
-Eindhoven v Heracles	DNB	1.23	A	1		Heracles side off the team-over read — cashed out 100% pre-match, Rule 7 applied (DNB under 1.35 / below buy≥)
-Gent v Club Brugge	DNB	1.27	A	1		= tip 3's DNB2 print (73.2% +32.4%) — following the probation lane — cashed out 100% pre-match, Rule 7 applied (DNB under 1.35 / below buy≥)
-Magdeburg v Kiel	U4.5	1.21	-	0		R6 softer off the U4.25 tip
-Darmstadt v Hannover	U4.5	1.22	-	0		R6 softer off the U4.25 tip
-Lyngby v OB	U4.5	1.18	-	0		R6 softer off the U4.25 tip
-Silkeborg v Midtjylland	U4.5	1.25	-	0		R6 softer off the U4.25 tip
-Gent v Club Brugge	O1.5	1.19	-	0		tip 1 rung, bought under buy≥1.27
-Vålerenga v Molde	12	1.20	-	0		own read DC — lane unpriced (card predates tip 3)
-AIK v Hammarby	12	1.20	-	0		own read DC — no tip 3 print on this card
-Willem II v Heerenveen	U4.5	1.26	-	0		R6 softer off the U4.25 tip
-Raków v Jagiellonia	O1.5	1.22	-	0		tip 1 rung, bought under buy≥1.34
-Chelsea v Brighton	DNB	1.33	H	0		= tip 3's DNB1 (81.1%) ABOVE its buy≥1.29 — Rule 7 compliant buy
-Sunderland v Fulham	1X	1.37	-	0		= tip 3's 1X print (74.4%), just under buy≥1.41
-Paris FC v Nice	O1.5	1.32	-	0		= tip 1 rung above buy≥1.31 — clean buy
-Freiburg v Bremen	12	1.29	-	0		= tip 3's 12 print (76.8%), under buy≥1.37
-Randers v AGF	12	1.28	-	0		= tip 3's 12 print (78.0%), a shade under buy≥1.35
-Antwerp v St. Truiden	O1.5	1.23	-	0		tip 1 rung, bought under buy≥1.28
-Nacional v Estrela Amadora	U3.5	1.29	-	0		R6 softer off the U3.0 tip
-VVV-Venlo v Emmen	12	1.22	-	0		own read DC — no tip 3 print on this card
-HamKam v Kristiansund	U1.5	1.41	A	0		= tip 2's team lane (75.4%) bought ABOVE its buy≥1.36 — clean buy
-IK Start v KFUM Oslo	U3.5	1.41	-	0		R6 harder line, priced well over buy≥1.26 +0.10
-Tromsø v Sarpsborg 08	O2.5	1.50	-	0		R6 harder line, priced well over buy≥1.27 +0.10
-Randers v AGF	O1.5	1.83	A	0.63		= tip 2's starred lane (60.1%) ABOVE its buy≥1.72 — the accent's first sale — cashed out €0.57 of €0.90 while AGF trailed; the lane later missed
-Augsburg v Schalke	O0.5	1.19	H	0		R6 softer off tip 2's Augsburg O1.5 team lane
-Nordsjælland v Brøndby	U4.5	1.21	-	0		R6 softer off the U4.25 tip
-Al-Hazem v Al-Shabab	O0.5	1.33	H	0		= tip 2's team lane (80.6%) ABOVE its buy≥1.26 — clean buy
-St. Gilloise v Anderlecht	O1.5	1.23	-	0		tip 1 rung, a shade under buy≥1.27
-Arezzo v Palermo	12	1.28	-	0		= tip 3's 12 print (74.8%), under buy≥1.40
-Cádiz v Real Valladolid	U1.5	1.32	A	0		= tip 2's team lane (75.4%), a shade under buy≥1.34
-Casa Pia v Moreirense	1X	1.37	-	0		= tip 3's 1X print (72.5%), under buy≥1.45
-Westerlo v Zulte Waregem	U4.5	1.21	-	0		R6 softer off the U4.25 tip
-Cambuur v Twente	U4.5	1.29	-	0		R6 softer off the U4.25 tip
-Widzew v Lech	O1.5	1.18	-	0		tip 1 rung, bought under buy≥1.34
-Samsunspor v Fenerbahçe	O1.5	1.17	-	0		tip 1 rung, bought well under buy≥1.32
-Monaco v Marseille	12	1.27	-	0		own read DC — card's tip 3 is DNB1, not the 12
-Lazio v Genoa	U3.5	1.18	-	0		R6 softer off the U3.0 tip
-Benevento v Südtirol	1X	1.22	-	0		own read DC — card's tip 3 is DNB1, not the 1X
-Pisa v Catanzaro	O1.5	1.38	-	0		= tip 1 rung at 1.38, one cent under buy≥1.39
-Corinthians v Santos	12	1.30	-	0		= tip 3's 12 print (75.6%), under buy≥1.39
-América-MG v Ponte Preta	U3.5	1.72	-	0		R6 softer off the U3.0 tip (85.6%) — 1.72 is far above its ask
-Avaí v Atlético-GO	U3.5	1.19	-	0		R6 softer off the U3.0 tip
-Celta Vigo v Athletic Bilbao	O1.5	1.35	-	0		= tip 1 rung ABOVE buy≥1.32 — clean buy
-Famalicão v Gil Vicente	DNB	1.48	H	0		= tip 3's DNB1 (68.0%), under buy≥1.54 but clear of the 1.35 floor
-Sport Boys v Sporting Cristal	12	1.29	-	0		own read DC — card's tip 3 is DNB1, not the 12
-Grêmio v Chapecoense	U3.5	1.35	-	0		R6 softer off the U3.0 tip (83.1%, +10.3% margin)
-Mirassol v Palmeiras	12	1.32	-	0		= tip 3's 12 print (76.2%), under buy≥1.38
-Aston Villa v Arsenal	O1.5	1.23	-	0		= tip 1 rung, under buy≥1.26
-Braga v Vitória	O1.5	1.27	-	0		= tip 1 rung, under buy≥1.32
-Braga v Vitória	DNB	1.29	H			DNB1 print (69.1%) — under buy≥1.52 and under the 1.35 floor; Rule 7
-FC Copenhagen v Sonderjyske	O1.5	1.30	H			= tip 2 team lane (74.4%), taken under buy≥1.40
-CA Osasuna v Getafe CF	DNB	1.42	H			DNB1 print (66.0%) — under buy≥1.59; Rule 7
-Jong PSV v Jong Ajax	U4.5	1.44	-			softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21
-Preston v Bristol City	U3.5	1.29	-	0		R6 softer off the U3.0 tip — struck pre-match, now live
-Al-Hilal v Al-Ahli	O2.5	1.52	-			harder line off tip 2's O2.25 (65.3%) — 1.52 against a fair 1.53
-Sheffield United v Bolton	U3.5	1.36	-			R6 softer off the U3.0 tip — struck pre-match, now live
-Sheffield United v Bolton	DNB	1.26	H	1		second position on the same fixture, taken in play and CASHED OUT
 Cerezo Osaka v Kashiwa	O1.5	1.19	-			swapped out of the 12 at 1.24
-Swansea v Watford	DNB	1.35	H			Swansea DNB — swapped out of the 1X at 1.22; = tip 3's DNB1 lane
 Londrina v Juventude	U3.5	1.17	-	0		R6 softer off the U3.0 tip
-West Ham v Wolves	O1.5	1.24	-	0		= tip 1 rung (82.6%, +9.8% edge), under buy>=1.32
-Portsmouth v Derby	12	1.30	-	0		own read DC — card's tip 3 is the 12 at 76.4%, buy>=1.37
 Anderlecht v Kortrijk	U4.5	1.21	-	0		the STRONG green card, taken 0.0028 under its 1.2128 bar — 1xBet had the 1.22 that clears
 Náutico v Botafogo-SP	U3.0	1.36	-	0		the Asian PUSH line, not the card's struck U3.5 at 1.33; U3.0 needs 1.43 to match, so this costs 4.6% of stake — P(push) is 19.6% here
 Pau v Sochaux	U3.5	1.25	-	0		TOTO — under the 1.2707 bar; Pinnacle had 1.35, so 7.4% of price left behind
