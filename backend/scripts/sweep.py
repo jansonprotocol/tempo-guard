@@ -232,7 +232,11 @@ def set_result(teams: str, score: str) -> None:
     if not m:
         raise SystemExit(f"score must look like 2-1, got {score!r}")
     hg, ag = int(m.group(1)), int(m.group(2))
-    hits = [f for f in load() if f.teams == teams and not f.settled]
+    # An unsettled row, or the "FT — no source" placeholder an earlier
+    # sweep left on a match no feed carried: that is a settled row with no
+    # score in it, and exactly the kind this command exists to finish.
+    hits = [f for f in load() if f.teams == teams
+            and (not f.settled or f.status.strip() == "FT — no source")]
     if len(hits) != 1:
         raise SystemExit(f"{len(hits)} unsettled rows match {teams!r}; "
                          "type the fixture exactly as the board prints it")
