@@ -99,6 +99,69 @@ def league_entries(code: str) -> tuple[list[str], list[dict]]:
     return teams, out
 
 
+LANE_RE = __import__("re").compile(
+    r"^(?:[✅❌◦]\s*)?(?:\*\*)?(?:[A-Za-z][^*]*? )?([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])"
+    r"(?:\*\*)?\s+(\d+(?:\.\d+)?)%\s*(?:\*\*)?([+\-−]\d+(?:\.\d+)?)%")
+
+
+def guard(bank: dict) -> None:
+    """Give every past card what a live card carries: the guard's label,
+    its confluence score, the STRONG flag, the starred lane, and — where
+    a closing price exists — the verdict.
+
+    The score is the as-of walker over the whole bank, every card scored
+    only from cards dated before it, exactly as the live guard's table
+    was calibrated. The label is the live rule (guard_slices.tier_of and
+    label). The verdict is the live rule at football-data's closing price
+    (retro_odds): PLAY when the best of the panel clears the label's
+    break-even by the registered margin and the tier is not red. A card
+    with no price is marked unpriced rather than guessed.
+    """
+    import datetime as dt
+    from scripts import confluence as CF, guard_slices as GS, retro_odds
+    from scripts.odds_api import bought
+    from scripts.webapp import DECLINE_MARGIN, DNB_GATE, SAYS, STRONG_SCORE
+
+    rows = []
+    for code, comp in bank.items():
+        for m in comp["matches"]:
+            t1 = LANE_RE.match(m["tip"])
+            if not t1:
+                continue
+            m["_mk1"], p1, e1 = t1.group(1), float(t1.group(2)), float(t1.group(3).replace("−", "-"))
+            pk, mk, says = 1, t1.group(1), p1
+            if m.get("t3"):
+                t3 = LANE_RE.match(m["t3"])
+                if t3 and t3.group(1).startswith("DNB") and float(t3.group(2)) - p1 > DNB_GATE:
+                    pk, mk, says = 3, t3.group(1), float(t3.group(2))
+            hit = (m["mark"] if pk == 1 else m.get("m3", "")) != "❌"
+            rows.append(dict(d=dt.date.fromisoformat(m["d"]), code=code, h=m["h"], a=m["a"],
+                             hit_pick=hit, says_pick=says / 100, mk=mk,
+                             _m=m, _p1=p1, _e1=e1, _pk=pk))
+    scored = {id(r["_m"]): r for r in CF.walk_best(rows, 0)}
+    for r in rows:
+        m = r["_m"]
+        s = scored.get(id(m))
+        cs = s["cscore"] if s else None
+        dnb = r["_pk"] == 3
+        side = r["mk"][:1] if r["mk"][:1] in ("O", "U") else ""
+        lab = GS.label(r["code"], GS.tier_of(r["_p1"] if not dnb else r["says_pick"] * 100,
+                                             r["_e1"], side, dnb), cs, dnb)
+        m["pk"], m["g"] = r["_pk"], lab
+        if cs is not None:
+            m["cs"] = round(cs, 1)
+        m["st"] = int(cs is not None and cs >= STRONG_SCORE and CF.region(r["code"]) == "Europe")
+        lane = r["mk"] if dnb else bought(r["mk"])
+        row = retro_odds.find(r["code"], m["d"], m["h"], m["a"])
+        bp = retro_odds.price(row, lane) if row else None
+        if bp:
+            need = (1 / SAYS[lab]) * (1 + DECLINE_MARGIN)
+            m["bp"], m["need"] = round(bp, 2), round(need, 2)
+            m["v"] = "no play" if lab.endswith("red") or bp < need else \
+                ("strong" if m["st"] else "normal")
+        m.pop("_mk1", None)
+
+
 def main() -> None:
     bank = {}
     for code in sorted(store.available_leagues()):
@@ -114,6 +177,9 @@ def main() -> None:
         bank[code] = dict(name=config.get(code).name or code,
                           teams=teams, matches=entries)
         print(f"{code}: {len(entries)} matches, {len(teams)} teams")
+    guard(bank)
+    priced = sum(1 for b in bank.values() for m in b["matches"] if "v" in m)
+    print(f"guard: labels on every card, {priced} with a closing-price verdict")
     OUT.write_text(json.dumps(bank, ensure_ascii=False))
     print(f"bank written: {len(bank)} competitions, "
           f"{sum(len(b['matches']) for b in bank.values())} matches, "

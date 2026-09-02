@@ -144,6 +144,24 @@ def score(code: str, home: str, away: str, mk: str, says: float,
     return tot
 
 
+def tier_of(p: float | None, e: float | None, side: str, dnb: bool) -> str:
+    """The card's tier from the card alone, in percentage points.
+
+    ONE definition, read by the live card (webapp._label_of) and by the
+    bank (matchbank), so a past card and a live card can never be
+    tiered by two copies of the rule: a gated DNB or a high, modest-edge
+    tip 1 is green; a low claim, or a middling claim on an OVER, is red;
+    the rest orange.
+    """
+    if dnb or (p is not None and p >= 84 and (e is None or e < 1.0)):
+        return "green"
+    if p is None:
+        return "orange"
+    if p < 76 or (p < 80 and side == "O"):
+        return "red"
+    return "orange"
+
+
 def label(code: str, tier: str, sc: float | None, is_dnb: bool) -> str:
     """The five labels. Outside Europe the score is silent — it measured
     -0.06 there — so no card gets a super-label off it."""
