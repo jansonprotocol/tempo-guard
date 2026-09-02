@@ -699,6 +699,15 @@ SAYS = {"super green": 0.8956, "green": 0.8740, "orange": 0.8342,
 # choice, not the best cell in the table.
 DECLINE_MARGIN = 0.06
 
+# WATCH: a card whose starred lane is NOT red and whose best quote sits
+# UNDER the bar by no more than this. Not a play — but the feed is 26
+# books and the bettor's are not among the sharpest, so a card the panel
+# prices a few percent short is one a book of his own may clear: West
+# Brom v Watford read 1.26 against a 1.2707 bar on the feed and 1.27 at
+# Unibet (2 Sep). Beyond five percent the panel's best is already far
+# from the bar and no reachable book is likely to beat it.
+WATCH_BAND = 0.05
+
 # STRONG: a play that also carries a top-quartile confluence score, in
 # Europe where the score means anything. Measured on the 1,008 bets the
 # bar fires on: strong grades 81.0% and +8.87% (+9.91 / +7.83 across the
@@ -833,11 +842,17 @@ def verdict(f, best: int) -> dict | None:
     # file: it outlives the moment it was written, and a render an hour
     # later would go on offering a price from a game now in progress. The
     # bar belongs on the decision, not only on the fetch.
+    live = odds_api.started(f.kickoff)
     play = (not lab.endswith("red")) and got_odds is not None \
-        and got_odds >= need and not odds_api.started(f.kickoff)
+        and got_odds >= need and not live
+    # The watch list: same lane, same bar, the panel's best a little short
+    # of it. Decided here beside PLAY, so the tab and the verify cannot
+    # hold two definitions of "just shy".
+    watch = (not play) and (not lab.endswith("red")) and got_odds is not None \
+        and got_odds >= need * (1 - WATCH_BAND) and not live
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
                 need=need, odds=got_odds, book=(q or {}).get("book"),
-                play=play, strong=play and strong,
+                play=play, watch=watch, strong=play and strong,
                 mark=("strong" if play and strong else
                       "normal" if play else "no play"))
 
@@ -1286,6 +1301,10 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "U4.25 as U4.5, because the engine cannot tell those apart and "
          "the safer line pays more on settlement. Everything else as "
          "printed."),
+        ("👀 Watch lanes", "the starred lane is not red and the panel's "
+         "best sits under its bar by five percent or less. Not a play on "
+         "the feed's prices — but your own book may clear it: check the "
+         "offer, take it only at or above the needs price on the card."),
         ("When to decide", "at first sight, two or three days out. A card "
          "that clears then may be bought later if its price has drifted "
          "out. A card that does not clear then is not a play on Saturday "
@@ -1379,7 +1398,11 @@ def main() -> None:
         return verdict(f, _star(f))
     playable = [f for f in pending if (v := _v(f)) and v["play"]]
     strong_n = sum(1 for f in playable if (v := _v(f)) and v["strong"])
-    waiting = [f for f in pending if f not in playable]
+    # Three-way, not two: PLAY, WATCH (the bettor's list, 2 Sep — a
+    # starred lane a few percent short of its bar on the panel, worth
+    # checking at his own books), and the rest.
+    watch = [f for f in pending if (v := _v(f)) and v["watch"]]
+    waiting = [f for f in pending if f not in playable and f not in watch]
     done = [f for f in fixtures if f.settled][::-1]
 
     def tile(label, value, sub):
@@ -1989,6 +2012,8 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .card {{ background:var(--card); border:1px solid var(--edge);
   border-radius:10px; padding:12px 14px; border-left:3px solid var(--edge); }}
 .card.play {{ border-left-color:var(--green); }}
+.card.watch {{ border-left-color:var(--gold); }}
+.tabs a.on.amber {{ background:var(--gold); color:#111; }}
 .card.pend {{ border-left-color:var(--blue); }}
 .card.done {{ opacity:.85; }}
 .teams {{ font-weight:700; }}
@@ -2187,6 +2212,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <div class="tabs">
   <a href="#home/playable" data-t="playable">🟢 Playing now
    <span class="dim">{len(playable)}{f" · ★{strong_n}" if strong_n else ""}</span></a>
+  <a href="#home/watch" data-t="watch" class="amber">👀 Watch lanes
+   <span class="dim">{len(watch)}</span></a>
   <a href="#home/bets" data-t="bets" class="gold">🟡 Found bets
    <span class="dim">{bh}/{bn}</span></a>
   <a href="#home/lanes" data-t="lanes" class="blue">🔵 Athena lanes
@@ -2236,6 +2263,14 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   confluence score in Europe — on 1,008 replayed bets those graded 81.0%
   and +8.87%, against 72.8% and −0.67% for the rest.</div>
   {_grid(playable, "play", reads)}</div>
+ <div class="tabpane" id="t-watch">
+  <div class="panenote">Not plays — yet. The starred lane is not red and
+  the panel's best quote sits under its bar by no more than
+  {WATCH_BAND*100:.0f}%. The feed is 26 books and yours are not the
+  sharpest, so a card the panel prices a little short is one your own book
+  may clear: check the offer, and take it only at or above the
+  <b>needs</b> price on the card. Under that it is still a decline.</div>
+  {_grid(watch, "watch", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th><th data-sort="s">Kickoff</th>
@@ -2502,7 +2537,7 @@ function route() {{
   const h = (location.hash || "#home").slice(1).split("/");
   const page = ["home","sessions","retrosim","patches","about"]
     .includes(h[0]) ? h[0] : "home";
-  const tab = ["playable","bets","lanes","done"].includes(h[1])
+  const tab = ["playable","watch","bets","lanes","done"].includes(h[1])
     ? h[1] : "playable";
   for (const s of document.querySelectorAll(".page"))
     s.classList.toggle("on", s.id === "p-" + page);
