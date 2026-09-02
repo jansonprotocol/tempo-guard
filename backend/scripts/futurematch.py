@@ -141,9 +141,18 @@ def reprice(revive: bool = False) -> None:
         if f.tip1.startswith("—") and not revive:
             continue                      # an abstention is an answer
         n1, n2, n3 = price(f.code, f.teams, f.kickoff.split(" ")[0])
-        if n1.startswith("—") or (n1 == f.tip1 and n2 == f.tip2
-                                  and n3 == f.tip3):
+        if n1 == f.tip1 and n2 == f.tip2 and n3 == f.tip3:
             continue
+        if n1.startswith("—"):
+            # The engine no longer stands behind this card. Until 2 Sept
+            # the old tip was left in place here, on the theory that an
+            # abstention on reprice was noise — and Ceuta v Celta Fortuna
+            # kept a U3.0 built on Celta Vigo's first team for a day after
+            # the matcher had stopped joining the two clubs. A tip the
+            # engine has withdrawn is withdrawn on the board too, and the
+            # cell says so rather than pretending the row was never priced.
+            n1 = n1.replace("— no tip:", "— no tip: WITHDRAWN on reprice —", 1)
+            print(f"  WITHDRAWN       {f.teams}: {f.tip1.split()[0]} -> no tip")
         for i, ln in enumerate(lines):
             p = ln.split("\t")
             if len(p) in (7, 8) and p[0] == f.kickoff and p[3] == f.teams:

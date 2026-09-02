@@ -56,9 +56,13 @@ def read_fixtures() -> dict[str, dict]:
         if ln.startswith("#") or not ln.strip():
             continue
         _ko, _code, _league, name, tip1, tip2, status = ln.split("\t")[:7]
+        # An abstained card is still a fixture a bet can sit on — the
+        # bettor's own read, or a tip the engine later WITHDREW (Ceuta v
+        # Celta Fortuna, 2 Sept, priced off the wrong club and then not at
+        # all). Skipping these rows made the position vanish from the book
+        # as "NOT FOUND". The card carries no rung and no claim; the bet
+        # still settles on the score and prices through lane_price.
         m = TIP.search(tip1)
-        if not m:
-            continue
         # Only a SETTLED row carries a result. The status column shows live
         # scores too ("LIVE: 2-1 (90')"), and an earlier version matched those
         # as final — settling bets off matches still being played, which is the
@@ -79,8 +83,8 @@ def read_fixtures() -> dict[str, dict]:
         m3 = TIP3.match(tip3.strip())
         out[name] = {
             "code": _code, "teams": name, "day": _ko.split(" ")[0],
-            "rung": m.group(1),
-            "p": float(m.group(2)) / 100,
+            "rung": m.group(1) if m else None,
+            "p": float(m.group(2)) / 100 if m else None,
             "rung2": m2.group(1) if m2 else None,
             "p2": float(m2.group(2)) / 100 if m2 else None,
             "lane3": m3.group(1) if m3 else None,
@@ -110,7 +114,7 @@ def bet_prob(rung: str, side: str, fx: dict) -> float | None:
         want = ("DNB1" if side == "H" else "DNB2") if rung == "DNB" else rung
         if fx.get("lane3") == want:
             return fx["p3"]
-    elif side == "-":
+    elif side == "-" and fx.get("rung"):
         mu = mu_for(fx["rung"], fx["p"])
         if mu is not None:
             from app.engine import market_select
@@ -204,8 +208,8 @@ def main() -> None:
     dead, out = [], []
 
     for name, rung, odds, side, cash, fx, p_over in rows:
-        mu = mu_for(fx["rung"], fx["p"])
-        if mu is None:
+        mu = mu_for(fx["rung"], fx["p"]) if fx.get("rung") else None
+        if mu is None and fx.get("rung"):
             print(f"could not invert {name} ({fx['rung']} {fx['p']:.3f})")
             continue
 
@@ -245,7 +249,16 @@ def main() -> None:
             # 95%, and scoring it that way marks a losing bet as a good buy.
             # A p_override on a match total means exactly that: price this off
             # the supplied probability, because the fixture had moved.
-            be = 1 / p_over if p_over else pricing.break_even(rung, mu)
+            if p_over:
+                be = 1 / p_over
+            elif mu is not None:
+                be = pricing.break_even(rung, mu)
+            else:
+                # No card to invert — a bet on an abstained or withdrawn
+                # fixture prices off the engine's re-derived number, as
+                # the board does; the dash stays if there is none.
+                pb = bet_prob(rung, side, fx)
+                be = 1 / pb if pb else None
             goals = None if fx["hg"] is None else fx["hg"] + fx["ag"]
         else:
             # A team rung is priced off that SIDE's expectation, which the
