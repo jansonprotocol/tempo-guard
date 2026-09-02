@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-02	session	The bettor's operating decision for the long run: play what the board allows — PLAY cards at or above their bar, watch lanes only when a book of his own clears the bar — and stop hunting own reads. His own reads had graded 83.9% at +7.2% on 31 archived bets, but finding them meant verifying a choice already made against the engine's searches, which felt like gambling. The record from here is the rule's record
 2026-09-02	session	Session #6 opens on the 2 Sep board as PRE-ALFA 2, the long run: the engine and its rules are not touched while it runs. Sessions #4-5 archived whole in archive/2026-08-28-sessions-4-5-odds-layer/ — Tip 1 80.9% on 267, playable 78.0%, bets 113/143 at ROI −0.3%
 2026-09-02	board	Early or closing, measured on the same 8,506 cards: the market drifts away from Athena's side toward kickoff (early price lower 61% of the time), but the bar applied at the early price plays fewer cards for more — cards that clear only because the price drifted out late return −3.67% in both seasons. Rule: decide at first sight, buy later if it has drifted out
 2026-09-02	guard	Blended probability tested as the guard and declined: every card-tracking bar negative at real prices, the five coarse labels +0.93% in both seasons. The label works as a bar because the market cannot see through it card by card
