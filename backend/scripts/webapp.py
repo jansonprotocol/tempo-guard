@@ -32,6 +32,9 @@ TITLE = "ATHENA — TEMPO GUARD"
 STAGE = "PRE-ALFA 2"          # bumped at each stage transition, deliberately
 SESSION_NO = 6                # bumped when a run closes and a new one opens
 SESSION_START = "2 Sep"       # the reset date of the current run
+SESSION_DATE = "2026-09-02"   # the same, as a date: the forward log is
+                              # append-only across resets and is read from
+                              # here for the session's own play record
 
 # The archived eras: frozen history, recorded once (the numbers live in
 # archive/*/log.md and the README's archive section; they never change).
@@ -1415,21 +1418,78 @@ def main() -> None:
     def claims(w):
         return (f" · claims {sum(says[w])/len(says[w]):.1f}"
                 if says[w] else "")
+    # The four lane records, fused into ONE bar in the baseline bar's
+    # style (the bettor's layout, 2 Sep): still this session's numbers,
+    # read as one line rather than four tiles.
+    def sc(name, h, n, extra=""):
+        v = f"<b>{h / n * 100:.1f}%</b>" if n else "<b>—</b>"
+        return f'{name} {v}<span class="dim"> {h}/{n}{extra}</span>'
+    sessbar = (
+        f'<div class="basebar">Session #{SESSION_NO} — hit vs claimed: '
+        + " · ".join([
+            sc("final pick", fh, fn,
+               (f" · claims {sum(fsays)/len(fsays):.1f}" if fsays else "")),
+            sc("tip 1", pb1, pq1, claims(1)),
+            sc("tip 2", pb2, pq2, claims(2)),
+            sc("tip 3", h3, n3, claims(3) + (f" · {hs3} hindsight" if hs3 else "")
+               + " · probation"),
+        ])
+        + ' <span class="dim">— the ★ lane, then each family\'s PLAYABLE '
+          'lanes, graded on this session\'s completed cards</span></div>')
+
+    # NORMAL and STRONG: the record of the cards the board itself marked
+    # PLAY, by kind, from the forward log — stamped at first sight, so a
+    # card counts as the play it was when it was offered, at the price it
+    # was offered at. This is the guard graded on cards it had never
+    # seen, split the way the rules split it: STRONG first.
+    from scripts import forward_settle as _fs
+    from scripts.confluence import region as _region
+    final = {}
+    for f in fixtures:
+        if f.settled and "—" in f.status:
+            sc_ = f.status.split("—")[-1].strip().split(" ")[0]
+            if "-" in sc_:
+                try:
+                    hg, ag = sc_.split("-")
+                    final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
+                except ValueError:
+                    pass
+    kinds = {"normal": [0, 0], "strong": [0, 0]}
+    seen: set = set()
+    if FORWARD.exists():
+        for ln in FORWARD.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            p = ln.split("\t")
+            if len(p) < 13 or p[1] < SESSION_DATE or _fs._artefact(p[5]):
+                continue
+            key = (p[1], p[3])
+            if key in seen:
+                continue
+            seen.add(key)
+            try:
+                need, best = float(p[9]), float(p[11] or p[10])
+                score = float(p[8]) if p[8] else None
+            except ValueError:
+                continue
+            if p[7].endswith("red") or best < need or key not in final:
+                continue
+            got = _fs._settle(p[5], *final[key])
+            if got is None:
+                continue
+            kind = ("strong" if (score is not None and score >= STRONG_SCORE
+                                 and _region(p[2]) == "Europe") else "normal")
+            kinds[kind][1] += 1
+            kinds[kind][0] += got[1]
+    (nh, nn), (sh, sn) = kinds["normal"], kinds["strong"]
     tiles = "".join([
-        tile("final pick", f"{fh / fn * 100:.1f}%" if fn else "—",
-             f"the ★ lane · {fh}/{fn}"
-             + (f" · claims {sum(fsays)/len(fsays):.1f}" if fsays else "")),
-        tile("tip 1", f"{pb1 / pq1 * 100:.1f}%" if pq1 else "—",
-             f"playable · {pb1}/{pq1}{claims(1)}"),
-        tile("tip 2", f"{pb2 / pq2 * 100:.1f}%" if pq2 else "—",
-             f"playable · {pb2}/{pq2}{claims(2)}"),
-        tile("tip 3", f"{h3 / n3 * 100:.1f}%" if n3 else "—",
-             (f"{h3}/{n3} · probation{claims(3)}" +
-              (f" · {hs3} hindsight" if hs3 else "")) if n3
-             else "probation · first grades tonight"),
         tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
              f"your lanes · {bh}/{bn} hits"),
         tile("roi", f"{roi:+.1f}%", f"flat stakes · {bn} settled"),
+        tile("normal", f"{nh / nn * 100:.1f}%" if nn else "—",
+             f"PLAY cards · {nh}/{nn}" if nn else "PLAY cards · none settled yet"),
+        tile("★ strong", f"{sh / sn * 100:.1f}%" if sn else "—",
+             f"STRONG cards · {sh}/{sn}" if sn else "STRONG cards · none settled yet"),
     ])
 
     bet_rows = _bets_rows()
@@ -2071,6 +2131,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   </div>
  </div>
  {basebar}
+ {sessbar}
  <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}{
     f" · longest hit streak <b>{best_streak}</b>" if best_streak else ""}</div>
  <div class="tiles">{tiles}</div>
