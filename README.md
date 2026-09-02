@@ -1022,8 +1022,6 @@ that premium the book is keeping the insurance money.
 | ✅ | FC Copenhagen v Sonderjyske | O1.5 (home) | 1.30 | 1.30x | = tip 2 team lane (74.4%), taken under buy≥1.40 |
 | ✅ | CA Osasuna v Getafe CF | DNB (home) | 1.42 | 1.42x | DNB1 print (66.0%) — under buy≥1.59; Rule 7 |
 | ✅ | Jong PSV v Jong Ajax | U4.5 | 1.44 | 1.44x | softer line above the U4.25 tip (82.5%) — 1.44 against a fair 1.21 |
-| — open | Luzern v Vaduz | U4.5 | 1.37 | — | = the card's struck lane (U4.25 rung), STRONG at +5.63 — re-shopped from 1.34 to 1.37 at TOTO, +2.2% of price; Pinnacle's 1.42 still the best on the board |
-| — open | Millwall v Wrexham | U3.5 | 1.29 | — | own read — the card moved to U4.25/U4.5 on the name fold and declines at 1.11 |
 | ❌ | Preston v Bristol City | U3.5 | 1.29 | 0.00x | R6 softer off the U3.0 tip — struck pre-match, now live |
 | ✅ | Al-Hilal v Al-Ahli | O2.5 | 1.52 | 1.52x | harder line off tip 2's O2.25 (65.3%) — 1.52 against a fair 1.53 |
 | ❌ | Sheffield United v Bolton | U3.5 | 1.36 | 0.00x | R6 softer off the U3.0 tip — struck pre-match, now live |
@@ -1033,7 +1031,6 @@ that premium the book is keeping the insurance money.
 | ✅ | Londrina v Juventude | U3.5 | 1.17 | 1.17x | R6 softer off the U3.0 tip |
 | ✅ | West Ham v Wolves | O1.5 | 1.24 | 1.24x | = tip 1 rung (82.6%, +9.8% edge), under buy>=1.32 |
 | ✅ | Portsmouth v Derby | 12 | 1.30 | 1.30x | own read DC — card's tip 3 is the 12 at 76.4%, buy>=1.37 |
-| — open | Grasshoppers v St. Gallen | U4.5 | 1.21 | — | own read — orange needs 1.2707 and this is 4.7% under; score +6.11, a quarter point off the super-green bar that would have made it clear |
 | — open | Anderlecht v Kortrijk | U4.5 | 1.21 | — | the STRONG green card, taken 0.0028 under its 1.2128 bar — 1xBet had the 1.22 that clears |
 | — open | Náutico v Botafogo-SP | U3.0 | 1.36 | — | the Asian PUSH line, not the card's struck U3.5 at 1.33; U3.0 needs 1.43 to match, so this costs 4.6% of stake — P(push) is 19.6% here |
 | — open | Pau v Sochaux | U3.5 | 1.25 | — | TOTO — under the 1.2707 bar; Pinnacle had 1.35, so 7.4% of price left behind |
@@ -1049,9 +1046,10 @@ that premium the book is keeping the insurance money.
 | — open | West Ham v Derby | O1.5 | 1.22 | — | TOTO — under the bar; Pinnacle 1.29, Unibet NL 1.18 |
 | — open | NEC v Feyenoord | U4.5 | 1.38 | — | TOTO — clears comfortably, and the best price taken tonight: 1.38 against a board best of 1.40 |
 | — open | Carrarese v Empoli | U3.5 | 1.23 | — | Unibet — the card's struck lane, but under the 1.2707 bar; best 1.33 |
-| — open | Ceuta v Celta Fortuna | U3.5 | 1.37 | — | TOTO — the card's struck lane, clears well; best 1.40, so 2.1% off |
 | — open | Ascoli v Benevento | U3.5 | 1.28 | — | TOTO — the card's struck lane, clears; best 1.39 |
 | — open | Young Boys v Luzern | DNB (home) | 1.21 | — | = tip 3's DNB1 print (86.6% +22.6%), the board's SUPER GREEN card — bar 1.1836, clears by 2.2%. Replaces a Luzern DNB struck on the wrong fixture (Luzern v Vaduz). Board best 1.31, Unibet NL 1.30, so 7.6% of price left at TOTO's 1.21 |
+| — open | Real Sociedad B v Tenerife | U3.5 | 1.22 | — | TOTO — the card's struck lane (U3.0 rung, 76.3%); orange needs 1.2707 and this is 4.0% under; best 1.31 Pinnacle, unquoted at Unibet NL |
+| — open | Millwall v Bolton | U3.5 | 1.30 | — | TOTO — the card's struck lane (U3.0 rung, 78.4% +4.2%); orange needs 1.2707, clears by 2.3%; TOTO's 1.30 beats the board's best 1.28 (Betsson) |
 
 <!-- HYPOTHESES:START -->
 
