@@ -535,6 +535,21 @@ def _haystack(f) -> str:
         bits.append("live")
     if "capped" in (rates().get(f.code) or ""):
         bits.append("capped")
+    # The guard's label and verdict, so the bar can be asked for "green",
+    # "orange", "red", "super green", "strong", "no play" (the bettor's
+    # request, 2 Sep). "guard red" and "label red" are there too, because
+    # a bare "red" also finds NY Red Bulls.
+    if not f.settled:
+        v = verdict(f, _star(f))
+        if v:
+            lab = v["label"]
+            bits += [lab, f"guard {lab}", f"label {lab}"]
+            if lab.startswith("super "):
+                base = lab[6:]
+                bits += [f"guard {base}", f"label {base}"]
+            bits.append("verdict " + v["mark"])
+            if v["strong"]:
+                bits.append("strong")
     raw = " ".join(bits).lower()
     folded = _fold(raw)
     return html.escape(raw if folded == raw else raw + " " + folded)
@@ -2181,6 +2196,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <code>double chance</code>, <code>draw no bet</code>,
   <code>result lane</code>, <code>playable</code>. Tie one to a lane with
   <code>tip 1 under</code>, <code>tip 2 over</code>.<br>
+  <b>the guard</b> — <code>green</code>, <code>orange</code>,
+  <code>red</code>, <code>super green</code>, <code>super red</code>: the
+  label on the card. Type <code>guard red</code> or <code>label red</code>
+  to keep clubs called Red out of it. Also <code>strong</code>,
+  <code>verdict play</code>, <code>verdict no play</code>.<br>
   <b>an absent lane</b> — <code>tip 2 none</code> (also
   <code>no tip 3</code>): the cards where that lane never printed.<br>
   <b>a probability threshold</b> — <code>tip 2 &lt;80</code>,
