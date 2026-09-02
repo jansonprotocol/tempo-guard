@@ -144,12 +144,18 @@ def find(code: str, teams: str, day: str) -> dict | None:
     if " v " not in teams:
         return None
     hh, aa = (x.strip() for x in teams.split(" v ", 1))
-    th, ta = _toks(hh), _toks(aa)
+    # The sweep's club matcher, not a bare token overlap: nickname-aware
+    # (QPR, LAFC, København, Laval), prefix-tolerant (Grasshoppers /
+    # Grasshopper, Djurgården / Djurgardens) and accent-folded. The raw
+    # overlap left 36 pending cards unquoted on 2 Sep — QPR v Cardiff
+    # among them, a card the bettor could see priced at 1.43 on a 1.27
+    # bar while the board said "nothing quoted yet".
+    from scripts.liveline import same_club
     for ev in fetch_league(code):
         if ev.get("commence_time", "")[:10] not in (day, _shift(day, 1),
                                                     _shift(day, -1)):
             continue
-        if _toks(ev["home_team"]) & th and _toks(ev["away_team"]) & ta:
+        if same_club(hh, ev["home_team"]) and same_club(aa, ev["away_team"]):
             return ev
     return None
 
