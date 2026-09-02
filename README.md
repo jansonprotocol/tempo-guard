@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 1
 
 
-## CURRENT CONFIRMED HITRATE: 81.3%
+## CURRENT CONFIRMED HITRATE: 81.0%
 
     lane                        Tip 1              Tip 2
-    all matches            218 / 268  81.3%    136 / 197  69.0%
+    all matches            218 / 269  81.0%    136 / 197  69.0%
     played lanes  >+1%     103 / 132  78.0%    136 / 197  69.0%
     placed bets            114 / 144  79.2%    ROI -0.2%
 
@@ -589,14 +589,14 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 218 / 268   ·   81.3%**   ·   **Tip 2 — 136 / 197   ·   69.0%**
+**Tip 1 — 218 / 269   ·   81.0%**   ·   **Tip 2 — 136 / 197   ·   69.0%**
 
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 01:10 <b>Llaneros v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.19</td><td>✅ O1.75 69.5% +2.3%<br>buy≥1.62 · floor −5.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 03:15 <b>Internacional de Bogotá v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 90.0% <b>−1.5%</b><br>buy≥1.18</td><td>✅ <b>Internacional de Bogotá O0.5</b> 82.9% +7.5%<br>buy≥1.31 · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.4% +7.0% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 28-08 13:35 <b>Dalian Yingbo v Guoan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>O1.5 83.0% +1.1%<br>buy≥1.26 (+4.5% margin)</td><td>❌ <b>Guoan O1.5</b> 56.2% +17.2%<br>buy≥1.49 (−16.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 2-3 · 28-08 13:35 <b>Shenhua v Taishan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 79.7% <b>+0.4%</b><br>buy≥1.31 (+1.9% margin)</td><td>✅ <b>Taishan O0.5</b> 81.8% +9.2%<br>buy≥1.31 (+6.9% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 28-08 14:00 <b>Shenzhen v Port</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Chinese Super League (83.7 +1.7)</td><td>U4.25 83.9% +4.6%<br>buy≥1.30 (+8.4% margin)</td><td>❌ <b>Port O1.5</b> 57.3% +18.4%<br>buy≥1.48 (−15.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB2 71.4% +32.4% · hindsight — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">⚪ — no source · 28-08 17:00 <b>Shooting Stars SC v Inter Lagos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>NPFL (88.7 −1.8)</td><td>— no tip: Inter Lagos has no history in the data</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">⚪ 2-1 (no tip) · 28-08 17:00 <b>Shooting Stars SC v Inter Lagos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>NPFL (88.7 −1.8)</td><td>— no tip: Inter Lagos has no history in the data</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 28-08 17:50 <b>Al-Riyadh v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 82.6% <b>+0.7%</b><br>buy≥1.27 (+2.9% margin)</td><td>❌ <b>Neom O0.5</b> 81.4% +8.5%<br>buy≥1.29 (+5.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 28-08 18:00 <b>Wisła Płock v Korona</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U3.0 79.2% +9.0%<br>buy≥1.47 (+8.9% margin)</td><td>✅ U2.75 58.7% +10.6%<br>buy≥1.39 (−8.9% margin) · floor −19.3</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 28-08 18:00 <b>Al-Fayha v Abha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 85.9% +4.0%<br>buy≥1.28 (+8.5% margin)</td><td>❌ U3.75 70.8% +5.6%<br>buy≥1.26 (−3.5% margin) · floor −4.2</td></tr></table>
@@ -791,7 +791,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-2 · 30-08 17:15 <b>Rennes v Le Mans</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (80.3 −1.3)</td><td>U4.25 83.4% <b>−1.0%</b><br>buy≥1.26 (+5.8% margin)</td><td>✅ <b>Rennes O1.5</b> 55.1% +10.5%<br>buy≥1.86 (+2.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 79.4% +21.8% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 5-2 · 30-08 17:30 <b>Man United v Ipswich</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.7 +1.1)</td><td>U4.25 81.9% <b>+0.1%</b><br>buy≥1.28 (+2.9% margin)</td><td>✅ <b>Man United O1.5</b> 58.3% +9.1%<br>buy≥1.77 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 73.7% +16.2% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 30-08 17:30 <b>Augsburg v Schalke</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Bundesliga (84.0 −0.9)</td><td>U4.25 78.5% <b>+0.2%</b><br>buy≥1.32 (+1.1% margin)</td><td>✅ <b>Augsburg O1.5</b> 59.4% +8.9%<br>buy≥1.74 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.1% +4.7% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">⚪ — no source · 30-08 17:30 <b>Górnik Zabrze v GKS Katowice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 85.4% <b>−0.2%</b><br>buy≥1.27 (+7.0% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 30-08 17:30 <b>Górnik Zabrze v GKS Katowice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 85.4% <b>−0.2%</b><br>buy≥1.27 (+7.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 30-08 18:00 <b>Nordsjælland v Brøndby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Danish Superliga (82.2 −0.9)</td><td>U4.25 83.0% +1.9%<br>buy≥1.29 (+5.2% margin)</td><td>❌ U3.75 66.7% +2.6%<br>buy≥1.38 (+0.5% margin) · floor −8.3</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 30-08 18:00 <b>Eyüpspor v Alanyaspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Trendyol Süper Lig (80.3 −2.8)</td><td>U4.25 84.8% <b>+0.6%</b><br>buy≥1.21 (+6.1% margin)</td><td>✅ U3.75 74.4% +6.0%<br>buy≥1.30 (+4.2% margin) · floor −7.6</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-4 · 30-08 18:00 <b>Moquegua v Alianza Atlético</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>U4.25 80.9% <b>−6.5%</b><br>buy≥1.22 (+6.4% margin)</td><td>❌ U3.75 74.4% +1.2%<br>buy≥1.30 (+4.1% margin) · floor −0.6</td></tr></table>
