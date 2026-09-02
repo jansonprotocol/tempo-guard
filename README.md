@@ -533,7 +533,7 @@ that premium the book is keeping the insurance money.
 | — open | Seattle v NY Red Bulls | U4.5 | 1.32 | — | Unibet — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707, clears by 3.9%; best 1.35 1xBet, Unibet NL 1.31 |
 | — open | Eldense v Mallorca | U3.5 | 1.29 | — | TOTO — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 1.5%; best 1.36 BetOnline, Unibet NL 1.24 |
 | — open | Fluminense v Vasco | U3.5 | 1.26 | — | TOTO — the card's struck lane (U3.0 rung), PLAY at Pinnacle 1.36; orange needs 1.2707 and 1.26 is 0.8% under; Unibet NL 1.22 |
-| — open | Vancouver v Montréal | U4.5 | 1.30 | — | own read — the card stars O1.5 80.7% (orange, no play at −0.7% edge) and never printed a U4.5; nothing quoted on the lane, so no bar to hold it to |
+| — open | Philadelphia v Montréal | U4.5 | 1.25 | — | TOTO — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707 and 1.25 is 1.6% under; best 1.36 Pinnacle, Unibet NL 1.26. Replaces a Vancouver v Montréal U4.5 logged against the wrong match |
 
 <!-- HYPOTHESES:START -->
 
