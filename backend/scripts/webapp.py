@@ -1565,6 +1565,18 @@ def main() -> None:
     # lane kind exactly like a card is.
     _fxmap = {f.teams: f for f in fixtures}
 
+    def _short(note: str, cap: int = 64) -> str:
+        """The Found bets cell gets the book and the first clause; the
+        full note stays in bets.tsv, the README and the row's hover
+        (the bettor's ask, 2 Sep: shorter there, longer anywhere else)."""
+        book, _, rest = note.partition(" — ")
+        if not rest:
+            book, rest = "", note
+        first = re.split(r"\s*[;:]\s+|\s+—\s+|\.\s+", rest.strip(), 1)[0]
+        if len(first) > cap:
+            first = first[:cap].rsplit(" ", 1)[0] + "…"
+        return f"{book} · {first}" if book and first else (book or first)
+
     def _bet_tr(b):
         # Every field is searchable through the same bar the cards use —
         # the row carries its own lowercase haystack in data-t.
@@ -1623,7 +1635,8 @@ def main() -> None:
                 f'<td>{b["odds"]:.2f}</td><td>{b["ret"]}</td>'
                 f'<td><span class="align {_align_cls(b["align"])}">'
                 f'{html.escape(b["align"])}</span></td>'
-                f'<td class="note">{html.escape(b["note"])}</td></tr>')
+                f'<td class="note" title="{html.escape(b["note"])}">'
+                f'{html.escape(_short(b["note"]))}</td></tr>')
 
     bets_html = "".join(_bet_tr(b) for b in bet_rows)
     # The book's price profile in one line: what the average ticket pays,
