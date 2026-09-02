@@ -201,17 +201,18 @@ def main() -> None:
             continue
 
         label = rung if side == "-" else f"{rung}({side})"
-        if rung == "DNB":
-            # Draw No Bet: settles on the match result — win, push on a draw,
-            # loss. The engine neither tips nor prices 1X2, so break-even here
-            # is only the bettor's own record; no buy-from judgement applies.
-            gf = None if fx["hg"] is None else (
-                fx["hg"] if side == "H" else fx["ag"])
-            ga = None if fx["hg"] is None else (
-                fx["ag"] if side == "H" else fx["hg"])
-            out.append((name, rung, odds, None, None, gf, cash, label))
-            if gf is not None:
-                s = 1.0 if gf > ga else 0.0 if gf == ga else -1.0
+        if rung in ("DNB", "1X", "X2", "12"):
+            # The result family — draw-no-bet and the two double chances —
+            # settles on the match RESULT, not on goals, so `pricing`, which
+            # only knows totals, has nothing to say about it: asking it for a
+            # break-even raises. Settlement goes through bet_state, the one
+            # gate the board and the app already use, and no buy-from
+            # judgement applies — the card's own `buy≥` print is the only
+            # bar these positions were ever measured against.
+            s = bet_state(rung, side, fx)
+            score = None if fx["hg"] is None else f"{fx['hg']}-{fx['ag']}"
+            out.append((name, rung, odds, None, None, score, cash, label))
+            if s is not None:
                 staked += 1
                 returned += max(s, 0.0) * odds + (1 - abs(s))
                 n_settled += 1
