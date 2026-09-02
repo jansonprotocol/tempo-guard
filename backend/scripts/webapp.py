@@ -1570,7 +1570,9 @@ def main() -> None:
         full note stays in bets.tsv, the README and the row's hover
         (the bettor's ask, 2 Sep: shorter there, longer anywhere else)."""
         book, _, rest = note.partition(" — ")
-        if not rest:
+        if not rest or len(book) > 14:
+            # No book prefix (older notes open with the reasoning): the
+            # whole note is the clause to shorten.
             book, rest = "", note
         first = re.split(r"\s*[;:]\s+|\s+—\s+|\.\s+", rest.strip(), 1)[0]
         if len(first) > cap:
