@@ -122,7 +122,10 @@ def quotes() -> dict:
     return _QUOTES
 
 
-def _fmt(cell: str, fixture: str = "") -> str:
+def _fmt(cell: str, fixture: str = "", quoted: bool = True) -> str:
+    """One lane's text. `quoted` is False once the match has kicked off:
+    the quote file outlives the moment it was written, so injecting a
+    price there would print a market that has already closed."""
     s = html.escape(cell)
     s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
     # The engine's buy>= is its own opinion of what a lane is worth, and
@@ -137,7 +140,7 @@ def _fmt(cell: str, fixture: str = "") -> str:
     m = (None if "(team)" in cell else
          re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell))
     q = (quotes().get((fixture, _struck(m.group(1))))
-         if (m and fixture) else None)
+         if (m and fixture and quoted) else None)
     if q:
         best = (f' · best <b>{html.escape(q["best"])}</b> '
                 f'<span class="dim">{html.escape(q["book"])}</span>'
@@ -1070,6 +1073,17 @@ def _needs(cell: str, starred_label: str | None) -> tuple:
     return (1 / (c / 100.0)) * (1 + DECLINE_MARGIN), c / 100.0, False
 
 
+def _past_kick(f) -> bool:
+    """Is this card beyond the point where a price can still be taken?
+
+    Settled or merely started, the answer for the layout is the same: no
+    live bar, no no-play pills, no injected quote — the frozen verdict
+    line carries the whole price story, and the card stops changing shape
+    on its way to the archive.
+    """
+    return bool(f.settled or odds_api.started(f.kickoff))
+
+
 def _lanebar(f, cell: str, starred_label: str | None) -> str:
     """PASS or DECLINE for ONE lane, whether or not it is the star.
 
@@ -1078,7 +1092,7 @@ def _lanebar(f, cell: str, starred_label: str | None) -> str:
     to see which lanes cleared without doing the arithmetic per lane.
     """
     need, _hit, solid = _needs(cell, starred_label)
-    if need is None or f.settled:
+    if need is None or _past_kick(f):
         return ""
     lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane)) if lane else None
@@ -1130,9 +1144,11 @@ def _card(f, kind: str, reads: dict) -> str:
         head = f"🕑 {board._stamp(f)}"
 
     # The protocol's accent: the lane to read first on this card.
-    # Reading guidance only, so settled cards drop it.
+    # Reading guidance only, so a card past kickoff drops it — the star
+    # points at what to buy, and there is nothing left to buy.
+    past = _past_kick(f)
     best = 0
-    if not f.settled:
+    if not past:
         # Athena marks exactly ONE preferred lane per card (the bettor's
         # rule, 30 Aug), and the order is what the measurement supports.
         # Tip 2 is never starred: it graded 12.7 points BELOW what tip 1
@@ -1178,7 +1194,7 @@ def _card(f, kind: str, reads: dict) -> str:
                      'the price never cleared its bar or it is not the '
                      'starred lane.">no play</span>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell, f.teams)}{tail}"
+                f"</span> {_fmt(cell, f.teams, quoted=not past)}{tail}"
                 f"{star if which == best else ''}"
                 f"{_lanebar(f, cell, lab)}{live}</div>")
 
@@ -1210,17 +1226,19 @@ def _card(f, kind: str, reads: dict) -> str:
         seq = [w for i, w in enumerate(seq) if w not in seq[:i]]
     # Only the STARRED lane carries a validated bar; the others are
     # priced off their own claim and say so.
-    lab = _label_of(f, best) if not f.settled else None
-    v = verdict(f, best) if not f.settled else None
+    lab = _label_of(f, best) if not past else None
+    v = verdict(f, best) if not past else None
     playing = bool(v and v["play"])
     # The card leads with the ONE line that would be staked, and nothing
     # else. Everything the engine also published sits behind the fold,
     # each lane marked no play — still readable, still carrying its own
     # arithmetic, but never mistakable for an instruction. On a card the
     # guard refuses outright, every lane is marked.
-    # A settled card is a record, not an instruction, so it carries no
-    # no-play marks at all — the grade already says what happened.
-    mark = not f.settled
+    # A card past kickoff is a record, not an instruction, so it carries
+    # no no-play marks at all — the frozen verdict above already says what
+    # the board called, and a "no play" pill under a line reading
+    # "was PLAY" is the card arguing with itself.
+    mark = not past
     face = lane(seq[0], cells[seq[0]], lab, noplay=mark and not playing)
     rest = "".join(lane(w, cells[w], None, noplay=mark) for w in seq[1:])
     top = (f'<div class="teams">{html.escape(f.teams)}'
