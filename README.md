@@ -698,6 +698,8 @@ that premium the book is keeping the insurance money.
 | ✅ | Flamengo v Mirassol | U4.5 | 1.25 | 1.25x | Unibet — the card's struck lane (U4.25 rung), watch card: orange bar 1.2707, panel best 1.26, taken at 1.25 — 1.6% under the bar |
 | ✅ | Grasshoppers v St. Gallen | U4.5 | 1.21 | 1.21x | Unibet — the card's struck lane (U4.25 rung); logged off the book on 2 Sep as dropped, but the ticket stood — reinstated after settlement, won 2-0 |
 | — open | Gent v OH Leuven | U3.5 | 1.41 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.4 Tipico, taken at 1.41 (+11.0% vs the bar) |
+| — open | Beveren v OH Leuven | U3.5 | 1.44 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.43 1xBet, taken at 1.44 (+13.3% vs the bar) |
+| — open | Corinthians v Chapecoense | U3.5 | 1.35 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet NL, taken at 1.35 (+6.2% vs the bar) |
 
 <!-- HYPOTHESES:START -->
 
