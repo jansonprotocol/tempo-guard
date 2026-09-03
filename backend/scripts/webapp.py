@@ -903,19 +903,21 @@ def frozen() -> dict:
 
 
 def was_called(f) -> dict | None:
-    """What a now-running card WAS, or None if the board never offered it.
+    """What the board said about this card while it could still be bought.
 
-    The same two bars verdict() applies, read against the frozen price
-    rather than a live one. A decline stays a decline once the whistle
-    goes — this only rescues cards that were playable while they could
-    still be bought, so the Running tab cannot flatter the record.
+    The same bars verdict() applies, read against the frozen price rather
+    than a live one, and the mark is the same vocabulary: strong, normal,
+    watch, no play. Once the whistle goes this is the ONLY honest verdict
+    available — the live one has no price to work from — and it is what
+    the card keeps from kickoff, through Running, to Completed. A decline
+    stays a decline, so nothing here can flatter the record.
     """
     r = frozen().get((f.kickoff.split(" ")[0], f.teams))
-    if not r or str(r["label"]).endswith("red"):
+    if not r:
         return None
     best, need = r.get("best"), r.get("need")
-    if not best or not need:
-        return None
+    if str(r["label"]).endswith("red") or not best or not need:
+        return dict(row=r, mark="no play")
     if best >= need:
         sc = r.get("score")
         strong = (not region_silent(r.get("code") or f.code)
@@ -923,14 +925,58 @@ def was_called(f) -> dict | None:
         return dict(row=r, mark="strong" if strong else "normal")
     if best >= need * (1 - WATCH_BAND):
         return dict(row=r, mark="watch")
-    return None
+    return dict(row=r, mark="no play")
+
+
+PLAYED_MARKS = ("strong", "normal", "watch")
 
 
 def running_call(f) -> dict | None:
-    """was_called(), but only once the match has actually kicked off."""
+    """The frozen call on a match in progress that the board had offered.
+
+    Only the three acted-on marks qualify for the Running tab; a card the
+    board declined belongs in Athena lanes whether or not it has started.
+    """
     if f.settled or not odds_api.started(f.kickoff):
         return None
-    return was_called(f)
+    call = was_called(f)
+    return call if call and call["mark"] in PLAYED_MARKS else None
+
+
+def _frozen_guard(f, call: dict) -> str:
+    """Badge and verdict line for a card past kickoff, from the log.
+
+    One renderer for Running and Completed alike, so a card cannot change
+    its story on the way between them.
+    """
+    r = call["row"]
+    lab, sc = r["label"], r.get("score")
+    hit = SAYS.get(lab)
+    tip = (f"Guard: {lab}. Cards labelled this way graded "
+           f"{hit*100:.1f}% over 62,528 replayed picks, in both time "
+           f"windows. " if hit else f"Guard: {lab}. ")
+    tip += ("The tier says avoid. " if lab.endswith("red") else "")
+    tip += ("Score silent outside Europe."
+            if region_silent(r.get("code") or f.code)
+            else f"Confluence score {sc:+.1f}." if sc is not None else "")
+    badge = (f'<div class="guard g-{lab.replace(" ", "-")}" '
+             f'title="{html.escape(tip)}">{lab}</div>')
+
+    word = {"strong": "★ STRONG · PLAY", "normal": "PLAY",
+            "watch": "watch", "no play": "no play"}[call["mark"]]
+    cls = {"strong": "strong", "normal": "yes",
+           "watch": "dimv", "no play": "no"}[call["mark"]]
+    when = "was" if f.settled else "running · was"
+    who = f'Tip {r.get("tip") or ""} {html.escape(str(r.get("lane") or ""))}'
+    tail = ""
+    if r.get("need") and r.get("best"):
+        tail = (f'<span class="dim"> · needed {r["need"]:.2f}, '
+                f'{html.escape(str(r.get("book") or "market"))} paid</span> '
+                f'<b>{r["best"]:.2f}</b>')
+    return (badge + f'<div class="verdict {cls}">{when} {word} '
+            f'<span class="dim">· {who.strip()}</span>{tail}'
+            f'<span class="dim"> · price at first sight, '
+            f'{html.escape(r["d"])}</span></div>')
 
 
 def _guard(f, best: int) -> str:
@@ -943,7 +989,18 @@ def _guard(f, best: int) -> str:
     where a tip 3 exists.
 
     The score is silent outside Europe, where it measured -0.06.
+
+    Past kickoff the label and the mark both come from the FROZEN call
+    instead. A settled card has no starred lane and no quote, so the live
+    path renders nothing at all — which silently erased whether a
+    completed card had been strong, normal or watched. The card now looks
+    the same from kickoff through Running to Completed, because after the
+    whistle there is only one verdict left that was ever true.
     """
+    call = (was_called(f)
+            if f.settled or odds_api.started(f.kickoff) else None)
+    if call:
+        return _frozen_guard(f, call)
     v = verdict(f, best)
     if not v:
         return ""
@@ -966,25 +1023,7 @@ def _guard(f, best: int) -> str:
     # carries the entire return; the other has no measured edge at all.
     who = f'Tip {best} {html.escape(v["lane"])}' if v["lane"] else f'Tip {best}'
     need, odds, book = v["need"], v["odds"], v["book"] or "market"
-    # A card whose match has started carries no live price, so the plain
-    # "no play" branch below would report a decline on something the board
-    # DID offer an hour ago. Say what it was instead, at the frozen price.
-    ran = running_call(f)
-    if ran:
-        r = ran["row"]
-        word = {"strong": "★ STRONG · PLAY", "normal": "PLAY",
-                "watch": "watch"}[ran["mark"]]
-        cls = {"strong": "strong", "normal": "yes",
-               "watch": "dimv"}[ran["mark"]]
-        lane_txt = html.escape(str(r.get("lane") or ""))
-        src = html.escape(str(r.get("book") or "market"))
-        line = (f'<div class="verdict {cls}">running · was {word} '
-                f'<span class="dim">· Tip {r.get("tip", best)} {lane_txt} '
-                f'· needed {r["need"]:.2f}, {src} paid</span> '
-                f'<b>{r["best"]:.2f}</b>'
-                f'<span class="dim"> · price at first sight, '
-                f'{html.escape(r["d"])}</span></div>')
-    elif v["strong"]:
+    if v["strong"]:
         line = (f'<div class="verdict strong">★ STRONG · PLAY {who} '
                 f'<span class="dim">· needs {need:.2f}, '
                 f'{html.escape(book)} pays</span> <b>{odds:.2f}</b>'
