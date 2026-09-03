@@ -701,6 +701,9 @@ that premium the book is keeping the insurance money.
 | — open | Beveren v OH Leuven | U3.5 | 1.44 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.43 1xBet, taken at 1.44 (+13.3% vs the bar) |
 | — open | Corinthians v Chapecoense | U3.5 | 1.35 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet NL, taken at 1.35 (+6.2% vs the bar) |
 | ✅ | Basel v Sion | O1.5 | 1.36 | 1.36x | Unibet — in-play, struck 20:59 at 1-0 in the 42nd; the card was a WATCH at first sight (orange bar 1.2707, panel best 1.23) and the live price cleared it. Outside the board's decide-at-first-sight rule: logged as taken, not as a board play |
+| — open | ADO Den Haag v Fortuna Sittard | U4.5 | 1.30 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.41 Pinnacle, taken at 1.30 (+2.3% vs the bar) |
+| — open | Heerenveen v AZ | U4.5 | 1.29 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.29 (+1.5% vs the bar) |
+| — open | Molde v KFUM Oslo | U4.5 | 1.35 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.35 (+6.2% vs the bar); replaced the Everton under, which was never a board lane |
 
 <!-- HYPOTHESES:START -->
 
