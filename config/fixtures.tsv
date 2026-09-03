@@ -34,13 +34,13 @@
 2026-09-03 20:00	DEN-SL	Superliga	København v Nordsjælland	O1.5 84.9% +4.3% · buy≥1.25 (+9.0% margin)	✅ **København O1.5** 60.9% +13.7% (team) · buy≥1.70 (+3.3% margin)	✅ HIT — 2-0	✅ DNB1 77.1% +20.4% · buy≥1.36 · probation
 2026-09-03 20:00	ALG-L1	Ligue 1	Sétif v Ben Aknoun	U3.0 84.9% +1.8% · buy≥1.30 (+5.9% margin)	✅ U2.75 66.5% +2.6% (floor −8.5) · buy≥1.37 (+0.5% margin)	✅ HIT — 0-1	
 2026-09-03 20:00	SAU-PL	Saudi Pro League	Al Diriyah v Al-Qadsiah	— no tip: engine abstained (thin history or an unresolved name)	—	FT 0-2 (no tip)	
-2026-09-03 20:30	BEL-PL	Pro League	Gent v OH Leuven	U3.0 77.3% +7.3% · buy≥1.46 (+4.3% margin)	U2.75 56.2% +8.5% (floor −18.8) · buy≥1.64 (+2.9% margin)	LIVE 82' 1-0	1X 74.2% +4.3% · buy≥1.42 · probation
-2026-09-03 20:30	BEL-PL	Pro League	Anderlecht v Kortrijk	U4.25 85.3% **+0.0%** · buy≥1.25 (+5.2% margin)	**Anderlecht O0.5** 82.1% +4.4% (team) · buy≥1.30 (+6.3% margin)	LIVE 89' 1-0	12 76.9% +3.6% · buy≥1.37 · probation
-2026-09-03 20:30	POL-EK	Ekstraklasa	Lech v Jagiellonia	O1.5 79.7% +3.6% · buy≥1.37 (+9.0% margin)	O2.25 57.0% +5.1% (floor −21.0) · buy≥1.60 (+2.9% margin)	LIVE 81' 1-1	12 77.2% +4.6% · buy≥1.36 · probation
-2026-09-03 20:30	SUI-SL	Super League	Basel v Sion	O1.5 83.9% +3.1% · buy≥1.25 (+5.3% margin)	**Sion O1.5** 61.4% +24.9% (team) · buy≥1.68 (+3.3% margin)	LIVE 87' 1-2	12 79.2% +4.1% · buy≥1.33 · probation
-2026-09-03 20:30	SUI-SL	Super League	Lugano v Servette	O1.5 83.7% +2.9% · buy≥1.26 (+5.3% margin)	O2.25 63.3% +4.6% (floor −11.7) · buy≥1.47 (+3.5% margin)	LIVE 85' 0-0	12 77.8% +2.7% · buy≥1.35 · probation
-2026-09-03 20:45	FRA-L1	Ligue 1	Toulouse v Lille	U4.25 83.4% **−0.9%** · buy≥1.26 (+5.8% margin)	U3.75 69.8% +1.2% (floor −5.2) · buy≥1.33 (+0.7% margin)	LIVE 73' 0-0	
-2026-09-03 21:00	ESP-LL	LaLiga	Real Sociedad v Celta	O1.5 76.3% +2.1% · buy≥1.32 (+1.0% margin)	**Real Sociedad O0.5** 81.5% +2.2% (team) · buy≥1.29 (+4.8% margin)	LIVE 56' 0-0	12 76.6% +2.8% · buy≥1.37 · probation
+2026-09-03 20:30	BEL-PL	Pro League	Gent v OH Leuven	U3.0 77.3% +7.3% · buy≥1.46 (+4.3% margin)	✅ U2.75 56.2% +8.5% (floor −18.8) · buy≥1.64 (+2.9% margin)	✅ HIT — 1-0	✅ 1X 74.2% +4.3% · buy≥1.42 · probation
+2026-09-03 20:30	BEL-PL	Pro League	Anderlecht v Kortrijk	U4.25 85.3% **+0.0%** · buy≥1.25 (+5.2% margin)	✅ **Anderlecht O0.5** 82.1% +4.4% (team) · buy≥1.30 (+6.3% margin)	✅ HIT — 1-0	✅ 12 76.9% +3.6% · buy≥1.37 · probation
+2026-09-03 20:30	POL-EK	Ekstraklasa	Lech v Jagiellonia	O1.5 79.7% +3.6% · buy≥1.37 (+9.0% margin)	✅ O2.25 57.0% +5.1% (floor −21.0) · buy≥1.60 (+2.9% margin)	✅ HIT — 2-1	✅ 12 77.2% +4.6% · buy≥1.36 · probation
+2026-09-03 20:30	SUI-SL	Super League	Basel v Sion	O1.5 83.9% +3.1% · buy≥1.25 (+5.3% margin)	✅ **Sion O1.5** 61.4% +24.9% (team) · buy≥1.68 (+3.3% margin)	✅ HIT — 1-2	✅ 12 79.2% +4.1% · buy≥1.33 · probation
+2026-09-03 20:30	SUI-SL	Super League	Lugano v Servette	O1.5 83.7% +2.9% · buy≥1.26 (+5.3% margin)	❌ O2.25 63.3% +4.6% (floor −11.7) · buy≥1.47 (+3.5% margin)	❌ MISS — 1-0	✅ 12 77.8% +2.7% · buy≥1.35 · probation
+2026-09-03 20:45	FRA-L1	Ligue 1	Toulouse v Lille	U4.25 83.4% **−0.9%** · buy≥1.26 (+5.8% margin)	U3.75 69.8% +1.2% (floor −5.2) · buy≥1.33 (+0.7% margin)	LIVE 88' 0-1	
+2026-09-03 21:00	ESP-LL	LaLiga	Real Sociedad v Celta	O1.5 76.3% +2.1% · buy≥1.32 (+1.0% margin)	**Real Sociedad O0.5** 81.5% +2.2% (team) · buy≥1.29 (+4.8% margin)	LIVE 70' 0-0	12 76.6% +2.8% · buy≥1.37 · probation
 2026-09-03 22:00	ALG-L1	Ligue 1	El Biar v Olympique Akbou	— no tip: engine abstained (thin history or an unresolved name)	—		
 2026-09-04 01:00	BRA-SB	Brasileirão Série B	Náutico v Botafogo-SP	U3.0 82.0% **+0.5%** · buy≥1.33 (+3.5% margin)	— none		
 2026-09-04 01:00	COL-PA	Categoría Primera A	América v Alianza Valledupar	U4.25 85.9% **−5.4%** · buy≥1.16 (+5.4% margin)	**América O0.5** 80.0% +4.7% (team) · buy≥1.31 (+5.0% margin)		DNB1 74.9% +10.9% · buy≥1.40 · probation
