@@ -537,7 +537,20 @@ def _match_team(target: str, candidates: List[str]) -> Optional[str]:
         return None
     best = process.extractOne(t_canon, keys, scorer=fuzz.token_set_ratio,
                               score_cutoff=FUZZY_CUTOFF)
-    return canon_map[best[0]] if best else None
+    if not best:
+        return None
+    # token_set_ratio scores a SUBSET as a perfect match, so "tokyo verdy"
+    # is 100 against "tokyo" and 100 against "tokyo verdy 1969" alike, and
+    # the tie went to whichever sat first in the frame — FC Tokyo, on a
+    # card that was Tokyo Verdy's (2 Sep). Among the top-scored names,
+    # prefer the one sharing MORE tokens with the target, then the one
+    # closest in length.
+    top = [k for k in keys if fuzz.token_set_ratio(t_canon, k) == best[1]]
+    if len(top) > 1:
+        tt = set(t_canon.split())
+        top.sort(key=lambda k: (-len(tt & set(k.split())),
+                                abs(len(k) - len(t_canon))))
+    return canon_map[top[0]]
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
