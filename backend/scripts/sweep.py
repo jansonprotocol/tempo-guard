@@ -26,7 +26,8 @@ was and named in the summary, so it can be graded by hand.
 
 Usage:  python scripts/sweep.py            sweep, then render the board
         python scripts/sweep.py --dry      show what would change
-        python scripts/sweep.py --set "Home v Away" 2-1
+        python scripts/sweep.py --set  "Home v Away" 2-1
+        python scripts/sweep.py --live "Home v Away" 0-0 23
                                            grade ONE kicked-off fixture by
                                            hand, for the leagues no feed
                                            carries (Swiss, Polish, Algerian)
@@ -253,12 +254,63 @@ def set_result(teams: str, score: str) -> None:
     board.main()
 
 
+def set_live(teams: str, score: str, minute: str) -> None:
+    """Put a live score on ONE unsettled fixture by hand.
+
+        python scripts/sweep.py --live "Basel v Sion" 0-0 23
+        python scripts/sweep.py --live "Basel v Sion" 1-0 HT
+
+    The companion to --set, for the same three leagues no feed reaches.
+    Until now their cards showed a kickoff clock all evening while the
+    match was visibly running, because the only hand path settled a
+    fixture outright and there was nothing to type a score in progress
+    into. Writes the status column and nothing else: the row stays
+    unsettled, the lanes stay ungraded, and liveline reads it exactly as
+    it reads a swept one.
+    """
+    if not re.fullmatch(r"\s*\d+\s*-\s*\d+\s*", score):
+        raise SystemExit(f"score must look like 2-1, got {score!r}")
+    minute = minute.strip().upper().rstrip("'")
+    if minute != "HT" and not minute.isdigit():
+        raise SystemExit(f"minute must be a number or HT, got {minute!r}")
+    hits = [f for f in load() if f.teams == teams and not f.settled]
+    if len(hits) != 1:
+        raise SystemExit(f"{len(hits)} unsettled rows match {teams!r}; "
+                         "type the fixture exactly as the board prints it")
+    f = hits[0]
+    if not odds_started(f.kickoff):
+        raise SystemExit(f"{teams} has not kicked off yet ({f.kickoff})")
+    status = f"LIVE {minute}{'' if minute == 'HT' else chr(39)} " \
+             f"{score.strip()}"
+    lines = FIXTURES.read_text().split("\n")
+    for i, ln in enumerate(lines):
+        parts = ln.split("\t")
+        if len(parts) in (7, 8) and parts[0] == f.kickoff \
+                and parts[3] == f.teams:
+            parts[6] = status
+            lines[i] = "\t".join(parts)
+            break
+    else:
+        raise SystemExit(f"row for {teams} not found in {FIXTURES}")
+    FIXTURES.write_text("\n".join(lines))
+    print(f"live {f.teams}: {status}")
+    from scripts import board
+    board.main()
+
+
 def odds_started(kickoff: str) -> bool:
     from scripts.odds_api import started
     return started(kickoff)
 
 
 def main() -> None:
+    if "--live" in sys.argv:
+        i = sys.argv.index("--live")
+        try:
+            set_live(sys.argv[i + 1], sys.argv[i + 2], sys.argv[i + 3])
+        except IndexError:
+            raise SystemExit('usage: sweep.py --live "Home v Away" 0-0 23')
+        return
     if "--set" in sys.argv:
         i = sys.argv.index("--set")
         try:
