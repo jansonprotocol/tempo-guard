@@ -518,7 +518,8 @@ def verify(quiet: bool = False) -> None:
             if f'id="{pid}"' not in app:
                 bad.append(f"app page {pid} vanished")
         panes = {}
-        for pid in ("t-playable", "t-watch", "t-bets", "t-lanes", "t-done"):
+        for pid in ("t-playable", "t-watch", "t-running", "t-bets",
+                    "t-lanes", "t-done"):
             if f'id="{pid}"' not in app:
                 bad.append(f"app tab {pid} vanished")
                 continue
@@ -529,20 +530,23 @@ def verify(quiet: bool = False) -> None:
             panes[pid] = app[i:min(ends)] if ends else app[i:]
 
         # 5. Each fixture appears in exactly ONE pending tab. Playable,
-        #    watch and lanes PARTITION the pending cards: what the guard
-        #    would stake, what sits a few percent short of its bar on the
-        #    panel (the bettor's watch list, 2 Sep), and the rest — so a
-        #    card in two would be the board contradicting itself. The
-        #    check asks the app which is which rather than re-deriving it
-        #    — two definitions of playable or of watch is exactly the
-        #    drift this verify exists to catch.
-        from scripts.webapp import verdict, _star
-        play, watch, rest = [], [], []
+        #    watch, running and lanes PARTITION the pending cards: what
+        #    the guard would stake, what sits a few percent short of its
+        #    bar on the panel (the bettor's watch list, 2 Sep), what it
+        #    called before a kickoff that has since happened (Running,
+        #    3 Sep), and the rest — so a card in two would be the board
+        #    contradicting itself. The check asks the app which is which
+        #    rather than re-deriving it — two definitions of playable or
+        #    of watch is exactly the drift this verify exists to catch.
+        from scripts.webapp import verdict, _star, running_call
+        play, watch, live, rest = [], [], [], []
         for f in pending:
             v = verdict(f, _star(f))
             (play if (v and v["play"]) else
-             watch if (v and v["watch"]) else rest).append(f)
+             watch if (v and v["watch"]) else
+             live if running_call(f) else rest).append(f)
         for pid, want in (("t-playable", play), ("t-watch", watch),
+                          ("t-running", live),
                           ("t-lanes", rest), ("t-done", done)):
             body = panes.get(pid, "")
             for f in want:
@@ -554,7 +558,8 @@ def verify(quiet: bool = False) -> None:
                            f"expected {len(want)}")
         # and nothing may sit in two pending tabs
         for f in pending:
-            n = sum(1 for pid in ("t-playable", "t-watch", "t-lanes")
+            n = sum(1 for pid in ("t-playable", "t-watch", "t-running",
+                                  "t-lanes")
                     if in_app(f.teams, panes.get(pid, "")))
             if n > 1:
                 bad.append(f"{f.teams!r} is in {n} pending tabs")
