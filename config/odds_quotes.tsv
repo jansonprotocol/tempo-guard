@@ -3,6 +3,7 @@
 # renderer reads it and never calls the API itself. Delete it and
 # the cards fall back to the engine's own buy>= bar.
 # fixture	which	lane	consensus	best	book	unibet_nl	books
+# unmatched	Cruzeiro v Athletico-PR	BRA-SA	2026-09-06	Bragantino-SP v Bahia | Sao Paulo v Atletico Mineiro | Fluminense v Vasco da Gama | Coritiba v Mirassol
 Al-Fayha v Al-Kholood	1	U4.5	1.04	1.11	Pinnacle	1.03	5
 Al-Fayha v Al-Kholood	2	U3.75	1.20	1.34	Pinnacle	1.20	7
 Raków v Górnik	1	O1.5	1.21	1.30	Pinnacle	1.23	12
@@ -373,3 +374,60 @@ Molde v KFUM Oslo	1	U4.5	1.30	1.38	Pinnacle	1.29	14
 Molde v KFUM Oslo	3	DNB1	1.17	1.19	PMU (FR)	1.18	19
 Sarpsborg 08 v Vålerenga	1	O1.5	1.08	1.11	Coolbet	1.07	14
 Angers v Rennes	1	O1.5	1.19	1.35	Coolbet	1.19	14
+Verona v Arezzo	1	U3.5	1.26	1.32	1xBet	1.26	13
+Verona v Arezzo	2	O1.75	1.25	1.33	BetOnline.ag	1.25	13
+Verona v Arezzo	3	12	1.24	1.27	Codere (IT)	1.26	19
+Arsenal v Chelsea	1	U4.5	1.12	1.17	1xBet	1.10	16
+Arsenal v Chelsea	3	DNB1	1.34	1.36	Winamax (FR)	1.33	23
+Frankfurt v Augsburg	1	O1.5	1.10	1.15	1xBet	1.10	14
+Frankfurt v Augsburg	3	12	1.25	1.29	1xBet	1.26	22
+Lech v Raków	1	O1.5	1.17	1.33	Coolbet	1.17	11
+Lech v Raków	3	12	1.19	1.25	Unibet (SE)	1.25	17
+La Serena v Ñublense	1	O1.5	1.28	1.32	BetOnline.ag		10
+Brøndby v Randers	1	U4.5	1.14	1.18	Unibet (SE)	1.18	14
+Brøndby v Randers	2	U3.75	1.45	1.51	Unibet (SE)	1.51	14
+Brøndby v Randers	3	DNB1	1.28	1.31	William Hill	1.26	21
+Bologna v Sassuolo	1	U4.5	1.07	1.15	Pinnacle	1.07	14
+Alavés v Osasuna	1	U4.5	1.02	1.06	1xBet	1.02	8
+Alavés v Osasuna	2	U3.75	1.15	1.21	1xBet	1.16	13
+Alavés v Osasuna	3	DNB1	1.66	1.69	LeoVegas (SE)	1.68	19
+Málaga v Levante	1	U3.5	1.28	1.35	1xBet	1.26	13
+Castellón v Albacete	1	O1.5	1.17	1.35	Coolbet	1.15	13
+Castellón v Albacete	3	12	1.19	1.25	1xBet	1.20	18
+Anderlecht v Genk	1	O1.5	1.16	1.27	Coolbet	1.15	9
+Anderlecht v Genk	3	12	1.24	1.28	1xBet	1.26	15
+Vitória Guimarães v Casa Pia	1	U3.5	1.26	1.37	Pinnacle	1.25	12
+Vitória Guimarães v Casa Pia	3	DNB1	1.26	1.30	Unibet (NL)	1.30	18
+Kocaelispor v Samsunspor	1	U4.5	1.03	1.10	Pinnacle	1.02	12
+Kocaelispor v Samsunspor	2	U3.75	1.20	1.32	Pinnacle	1.20	13
+Trabzonspor v Gençlerbirliği	1	U4.5	1.10	1.15	1xBet	1.06	13
+Trabzonspor v Gençlerbirliği	2	U3.75	1.36	1.42	1xBet	1.28	13
+Trabzonspor v Gençlerbirliği	3	DNB1	1.30	1.32	Winamax (FR)	1.31	19
+Kristiansund v Tromsø	1	U4.5	1.11	1.15	1xBet	1.10	14
+Beveren v OH Leuven	1	U3.5	1.40	1.43	1xBet	1.42	10
+Beveren v OH Leuven	2	U2.75	2.11	2.15	Unibet (NL)	2.15	10
+Cremonese v Padova	1	U3.5	1.24	1.39	Pinnacle	1.24	13
+Cremonese v Padova	3	DNB1	1.42	1.48	Betclic (FR)	1.42	19
+O'Higgins v Unión La Calera	1	U4.5	1.07	1.10	Pinnacle		11
+O'Higgins v Unión La Calera	2	U3.75	1.29	1.33	Pinnacle		11
+O'Higgins v Unión La Calera	3	DNB1	1.44	1.45	Unibet (SE)		16
+Jagiellonia v Śląsk	1	U4.5	1.09	1.14	Coolbet	1.09	11
+Jagiellonia v Śląsk	2	U3.75	1.36	1.42	Coolbet	1.33	11
+Jagiellonia v Śląsk	3	DNB1	1.42	1.45	Betclic (FR)	1.40	17
+Marseille v Paris FC	1	O1.5	1.17	1.32	BetOnline.ag	1.15	14
+Marseille v Paris FC	2	O2.25	1.62	2.04	BetOnline.ag	1.57	14
+Juventus v Milan	1	U4.5	1.06	1.13	Pinnacle	1.06	13
+Juventus v Milan	3	DNB1	1.56	1.61	GTbets	1.56	22
+Espanyol v Sevilla	1	U4.5	1.04	1.09	Pinnacle		7
+Espanyol v Sevilla	2	U3.75	1.16	1.29	Pinnacle	1.15	13
+Almería v Cádiz	1	U4.5	1.10	1.16	1xBet	1.10	13
+Almería v Cádiz	3	DNB1	1.26	1.29	Winamax (FR)	1.23	18
+Internacional v Santos	1	U4.5	1.07	1.10	1xBet	1.07	15
+Remo v Flamengo	1	O1.5	1.20	1.29	Pinnacle	1.23	14
+Remo v Flamengo	3	12	1.19	1.23	GTbets	1.21	20
+Huachipato v Colo-Colo	1	O1.5	1.16	1.29	Coolbet		11
+Botafogo v Palmeiras	1	O1.5	1.26	1.29	1xBet	1.26	15
+Ponte Preta v São Bernardo	1	U3.5	1.36	1.39	Coolbet		7
+Ponte Preta v São Bernardo	3	12	1.17	1.19	888sport		10
+Corinthians v Chapecoense	1	U3.5	1.30	1.33	Unibet (NL)	1.33	15
+Corinthians v Chapecoense	3	DNB1	1.17	1.21	Winamax (FR)	1.15	21
