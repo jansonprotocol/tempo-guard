@@ -1640,7 +1640,13 @@ def main() -> None:
                 f'<td class="note" title="{html.escape(b["note"])}">'
                 f'{html.escape(_short(b["note"]))}</td></tr>')
 
-    bets_html = "".join(_bet_tr(b) for b in bet_rows)
+    # The page opens on kickoff, earliest first; a bet whose fixture has
+    # left the board has no kickoff and sits at the bottom, in log order.
+    # Any column clicked after that sorts the table its own way.
+    def _kick(b):
+        f = _fxmap.get(b["name"])
+        return (f is None, f.kickoff if f is not None else "")
+    bets_html = "".join(_bet_tr(b) for b in sorted(bet_rows, key=_kick))
     # The book's price profile in one line: what the average ticket pays,
     # over everything logged and over what has already settled — the
     # number to hold the ROI against (an 84% hit rate only pays at these
@@ -2288,7 +2294,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   {_grid(watch, "watch", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
-  <tr><th data-sort="s">·</th><th data-sort="s">Kickoff</th>
+  <tr><th data-sort="s">·</th>
+  <th data-sort="s" data-dir="asc" class="asc">Kickoff</th>
   <th data-sort="s">Fixture</th><th data-sort="s">Lane</th>
   <th data-sort="n">Prob</th><th data-sort="n">Odds</th>
   <th data-sort="n">Return</th><th data-sort="s">Athena says</th>
