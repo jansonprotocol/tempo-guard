@@ -857,6 +857,82 @@ def verdict(f, best: int) -> dict | None:
                       "normal" if play else "no play"))
 
 
+_FROZEN = None
+
+
+def frozen() -> dict:
+    """(date, fixture) -> the call as first published, from the forward log.
+
+    A kicked-off card has no live quote: odds_api stops quoting a fixture
+    the moment it starts, so the price that made it a PLAY is gone from
+    config/odds_quotes.tsv by the time anyone looks. The forward log kept
+    it, stamped at first sight and append-only, which is the only honest
+    price to show against a game already running.
+
+    Read from the raw file rather than forward_settle.rows(), which only
+    yields rows it can already GRADE — a match still in progress has no
+    result, so every card this tab exists for would be filtered out.
+    """
+    global _FROZEN
+    if _FROZEN is None:
+        from scripts import forward_settle
+        _FROZEN = {}
+        if forward_settle.FORWARD.exists():
+            for ln in forward_settle.FORWARD.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                p = ln.split("\t")
+                if len(p) < 13 or forward_settle._artefact(p[5]):
+                    continue
+                key = (p[1], p[3])
+                if key in _FROZEN:          # first sight wins
+                    continue
+                try:
+                    need, best = float(p[9]), float(p[11] or p[10])
+                except ValueError:
+                    continue
+                try:
+                    score = float(p[8])
+                except ValueError:
+                    score = None
+                _FROZEN[key] = dict(d=p[1], code=p[2], fixture=p[3],
+                                    tip=p[4], lane=p[5], label=p[7],
+                                    score=score, need=need, best=best,
+                                    book=p[12])
+    return _FROZEN
+
+
+def was_called(f) -> dict | None:
+    """What a now-running card WAS, or None if the board never offered it.
+
+    The same two bars verdict() applies, read against the frozen price
+    rather than a live one. A decline stays a decline once the whistle
+    goes — this only rescues cards that were playable while they could
+    still be bought, so the Running tab cannot flatter the record.
+    """
+    r = frozen().get((f.kickoff.split(" ")[0], f.teams))
+    if not r or str(r["label"]).endswith("red"):
+        return None
+    best, need = r.get("best"), r.get("need")
+    if not best or not need:
+        return None
+    if best >= need:
+        sc = r.get("score")
+        strong = (not region_silent(r.get("code") or f.code)
+                  and sc is not None and sc >= STRONG_SCORE)
+        return dict(row=r, mark="strong" if strong else "normal")
+    if best >= need * (1 - WATCH_BAND):
+        return dict(row=r, mark="watch")
+    return None
+
+
+def running_call(f) -> dict | None:
+    """was_called(), but only once the match has actually kicked off."""
+    if f.settled or not odds_api.started(f.kickoff):
+        return None
+    return was_called(f)
+
+
 def _guard(f, best: int) -> str:
     """The card's risk label: five bands, registered in docs/.
 
@@ -890,7 +966,25 @@ def _guard(f, best: int) -> str:
     # carries the entire return; the other has no measured edge at all.
     who = f'Tip {best} {html.escape(v["lane"])}' if v["lane"] else f'Tip {best}'
     need, odds, book = v["need"], v["odds"], v["book"] or "market"
-    if v["strong"]:
+    # A card whose match has started carries no live price, so the plain
+    # "no play" branch below would report a decline on something the board
+    # DID offer an hour ago. Say what it was instead, at the frozen price.
+    ran = running_call(f)
+    if ran:
+        r = ran["row"]
+        word = {"strong": "★ STRONG · PLAY", "normal": "PLAY",
+                "watch": "watch"}[ran["mark"]]
+        cls = {"strong": "strong", "normal": "yes",
+               "watch": "dimv"}[ran["mark"]]
+        lane_txt = html.escape(str(r.get("lane") or ""))
+        src = html.escape(str(r.get("book") or "market"))
+        line = (f'<div class="verdict {cls}">running · was {word} '
+                f'<span class="dim">· Tip {r.get("tip", best)} {lane_txt} '
+                f'· needed {r["need"]:.2f}, {src} paid</span> '
+                f'<b>{r["best"]:.2f}</b>'
+                f'<span class="dim"> · price at first sight, '
+                f'{html.escape(r["d"])}</span></div>')
+    elif v["strong"]:
         line = (f'<div class="verdict strong">★ STRONG · PLAY {who} '
                 f'<span class="dim">· needs {need:.2f}, '
                 f'{html.escape(book)} pays</span> <b>{odds:.2f}</b>'
@@ -1311,6 +1405,10 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "either."),
         ("Kickoff", "a match that has kicked off is not playable. Quotes "
          "stop at kickoff and the verdict checks the clock."),
+        ("\U0001f534 Running", "what the board called before a kickoff that "
+         "has since happened. Not buyable any more, so not a play — the "
+         "price shown is the one from first sight, kept in the forward "
+         "log. A card the board declined never appears here."),
         ("Tip 2 \u00b7 (team)", "a TEAM total \u2014 one side alone to score. "
          "Printed and graded, never played: it landed 12.7 points below "
          "tip 1 on the same fixtures."),
@@ -1402,7 +1500,15 @@ def main() -> None:
     # starred lane a few percent short of its bar on the panel, worth
     # checking at his own books), and the rest.
     watch = [f for f in pending if (v := _v(f)) and v["watch"]]
-    waiting = [f for f in pending if f not in playable and f not in watch]
+    # RUNNING (the bettor's ask, 3 Sep): cards the board offered before
+    # kickoff and that are now in progress. They cannot be PLAY or watch —
+    # both bars require an unstarted match — but dropping them straight
+    # into Athena lanes filed the night's calls next to genuine declines
+    # with nothing to tell them apart. They keep the price from the
+    # forward log, not a live quote, because there is no live quote.
+    running = [f for f in pending if running_call(f)]
+    waiting = [f for f in pending if f not in playable and f not in watch
+               and f not in running]
     done = [f for f in fixtures if f.settled][::-1]
 
     def tile(label, value, sub):
@@ -2034,7 +2140,9 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   border-radius:10px; padding:12px 14px; border-left:3px solid var(--edge); }}
 .card.play {{ border-left-color:var(--green); }}
 .card.watch {{ border-left-color:var(--gold); }}
+.card.run {{ border-left-color:#ff5d5d; }}
 .tabs a.on.amber {{ background:var(--gold); color:#111; }}
+.tabs a.on.red {{ background:#ff5d5d; color:#111; }}
 .card.pend {{ border-left-color:var(--blue); }}
 .card.done {{ opacity:.85; }}
 .teams {{ font-weight:700; }}
@@ -2235,6 +2343,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    <span class="dim">{len(playable)}{f" · ★{strong_n}" if strong_n else ""}</span></a>
   <a href="#home/watch" data-t="watch" class="amber">👀 Watch lanes
    <span class="dim">{len(watch)}</span></a>
+  <a href="#home/running" data-t="running" class="red">🔴 Running
+   <span class="dim">{len(running)}</span></a>
   <a href="#home/bets" data-t="bets" class="gold">🟡 Found bets
    <span class="dim">{bh}/{bn}</span></a>
   <a href="#home/lanes" data-t="lanes" class="blue">🔵 Athena lanes
@@ -2292,6 +2402,14 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   may clear: check the offer, and take it only at or above the
   <b>needs</b> price on the card. Under that it is still a decline.</div>
   {_grid(watch, "watch", reads)}</div>
+ <div class="tabpane" id="t-running">
+  <div class="panenote">Cards the board called before kickoff, now in
+  progress. They are no longer buyable, so they are no longer PLAY or
+  watch — but they were, and the price shown is the one from
+  <b>first sight</b> in the forward log, not a live quote. A card the
+  board declined never appears here: this tab is the night's calls
+  playing out, not a second chance at them.</div>
+  {_grid(running, "run", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th>
@@ -2559,7 +2677,8 @@ function route() {{
   const h = (location.hash || "#home").slice(1).split("/");
   const page = ["home","sessions","retrosim","patches","about"]
     .includes(h[0]) ? h[0] : "home";
-  const tab = ["playable","watch","bets","lanes","done"].includes(h[1])
+  const tab = ["playable","watch","running","bets","lanes","done"]
+    .includes(h[1])
     ? h[1] : "playable";
   for (const s of document.querySelectorAll(".page"))
     s.classList.toggle("on", s.id === "p-" + page);
