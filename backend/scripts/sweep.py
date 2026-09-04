@@ -163,14 +163,30 @@ def regulation(slug: str, ev: dict) -> tuple[int, int] | None:
 
 
 def settle(cell: str, teams: str, hg: int, ag: int):
-    """(mark, fraction) for one lane at a final score, or None."""
+    """(mark, fraction) for one lane at a final score, or None.
+
+    Graded on the line the bet is STRUCK at, not the rung the card
+    prints. The card's own headline already says so — it leads with
+    `U3.5 (rung U3.0)` — and odds_api.bought() explains why they are the
+    same bet: under the hit-rate convention U3.0 and U3.5 both win on 0
+    through 3, so the engine cannot mean one as distinct from the other.
+    Settling the rung anyway paid three goals on a U3.0 as a PUSH when
+    the bet that reached the slip was a WIN, which is how Pereira 0-3
+    came back marked ◦ (the bettor's catch, 4 Sep).
+
+    The substitution is gated on same_bet inside bought(), so it stops
+    by itself if a future change ever makes the two rungs differ. The
+    ledger and the forward log already grade this way; this was the one
+    grader still reading the printed rung.
+    """
     from app.engine import pricing
+    from scripts.odds_api import bought
     got = liveline._goals_for(cell, teams, hg, ag)
     if got is None:
         return None
     market, goals = got
     try:
-        s = pricing.settle_fraction(market, goals)
+        s = pricing.settle_fraction(bought(market), goals)
     except (ValueError, IndexError):
         return None
     return ("✅" if s > 0 else "◦" if s == 0 else "❌"), s
@@ -298,12 +314,54 @@ def set_live(teams: str, score: str, minute: str) -> None:
     board.main()
 
 
+def regrade() -> None:
+    """Re-mark every settled row from the score it already carries.
+
+        python scripts/sweep.py --regrade
+
+    Grading rules are meant to be rare, but when one is corrected the
+    rows written under the old one are wrong and stay wrong: the sweep
+    only ever looks at unsettled fixtures. This replays the recorded
+    score through the current grader, so the whole board speaks with one
+    voice rather than carrying two eras of marks. Nothing is fetched and
+    no score changes — only the marks derived from it.
+    """
+    lines = FIXTURES.read_text().split("\n")
+    changed = 0
+    for f in load():
+        if not f.settled:
+            continue
+        m = re.search(r"(\d+)\s*-\s*(\d+)", f.status or "")
+        if not m:
+            continue
+        hg, ag = int(m.group(1)), int(m.group(2))
+        # Strip the old marks first, or grade_cells would keep them:
+        # it only prefixes a cell that has none. Graded on a COPY, so a
+        # row the writer then fails to find is left exactly as it was.
+        strip = lambda s: re.sub(r"^\s*[✅❌◦]\s*", "", s or "")
+        bare = type(f)(f.kickoff, f.code, f.league, f.teams, f.tip1,
+                       strip(f.tip2), f.status, strip(f.tip3))
+        note = " — no source" if "no source" in f.status else ""
+        tip2, status, tip3 = grade_cells(bare, hg, ag, note)
+        if status != f.status or tip2 != f.tip2 or tip3 != f.tip3:
+            if _write_row(lines, f, tip2, status, tip3):
+                print(f"  {f.teams}: {f.status}  ->  {status}")
+                changed += 1
+    FIXTURES.write_text("\n".join(lines))
+    print(f"{changed} rows re-marked")
+    from scripts import board
+    board.main()
+
+
 def odds_started(kickoff: str) -> bool:
     from scripts.odds_api import started
     return started(kickoff)
 
 
 def main() -> None:
+    if "--regrade" in sys.argv:
+        regrade()
+        return
     if "--live" in sys.argv:
         i = sys.argv.index("--live")
         try:
