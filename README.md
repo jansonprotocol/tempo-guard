@@ -706,6 +706,7 @@ that premium the book is keeping the insurance money.
 | — open | Molde v KFUM Oslo | U4.5 | 1.35 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.35 (+6.2% vs the bar); replaced the Everton under, which was never a board lane |
 | ❌ | Başakşehir v Galatasaray | U4.5 | 1.28 | 0.00x | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.35 Pinnacle, taken at 1.28 (+0.7% vs the bar) |
 | ✅ | Viborg v Lyngby | U4.5 | 1.21 | 1.21x | Unibet — the card's struck lane (U4.25 rung), watch card: orange bar 1.2707, panel best 1.22, taken at 1.21 — 4.8% under the bar |
+| — open | Vitória Guimarães v Casa Pia | U3.5 | 1.33 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.37 Pinnacle, taken at 1.33 (+4.7% vs the bar) |
 
 <!-- HYPOTHESES:START -->
 
