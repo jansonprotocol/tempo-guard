@@ -704,6 +704,7 @@ that premium the book is keeping the insurance money.
 | — open | ADO Den Haag v Fortuna Sittard | U4.5 | 1.30 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.41 Pinnacle, taken at 1.30 (+2.3% vs the bar) |
 | — open | Heerenveen v AZ | U4.5 | 1.29 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.29 (+1.5% vs the bar) |
 | — open | Molde v KFUM Oslo | U4.5 | 1.35 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.35 (+6.2% vs the bar); replaced the Everton under, which was never a board lane |
+| — open | Başakşehir v Galatasaray | U4.5 | 1.28 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.35 Pinnacle, taken at 1.28 (+0.7% vs the bar) |
 
 <!-- HYPOTHESES:START -->
 
