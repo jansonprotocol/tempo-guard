@@ -864,13 +864,28 @@ _FROZEN = None
 
 
 def frozen() -> dict:
-    """(date, fixture) -> the call as first published, from the forward log.
+    """(date, fixture) -> the card's LAST published state before kickoff.
 
     A kicked-off card has no live quote: odds_api stops quoting a fixture
     the moment it starts, so the price that made it a PLAY is gone from
     config/odds_quotes.tsv by the time anyone looks. The forward log kept
-    it, stamped at first sight and append-only, which is the only honest
-    price to show against a game already running.
+    every state the card passed through, append-only, and quoting stops
+    at kickoff — so the last row for a fixture-date IS the card as it
+    stood when the whistle went.
+
+    LAST, not first, and the two differ. Başakşehir v Galatasaray was
+    logged on 1 Sep starring O1.5 at 1.26 (a watch) and on 2 Sep starring
+    U4.5 at 1.33 (a play): the star moved to a different lane as the
+    repricing came in. Freezing the first sighting made Running say
+    "was watch O1.5" about a card whose Playable entry had said "PLAY
+    U4.5" an hour earlier, which is the exact contradiction the freeze
+    exists to remove (the bettor's ask, 3 Sep: frozen at kickoff).
+
+    This is display only. The forward log's own measurement — the NORMAL
+    and STRONG tiles, through forward_settle.rows() — still counts the
+    FIRST sighting per fixture-date, because that is the decide-at-first-
+    sight rule the record is kept under and it must not be re-priced into
+    a better story.
 
     Read from the raw file rather than forward_settle.rows(), which only
     yields rows it can already GRADE — a match still in progress has no
@@ -888,8 +903,6 @@ def frozen() -> dict:
                 if len(p) < 13 or forward_settle._artefact(p[5]):
                     continue
                 key = (p[1], p[3])
-                if key in _FROZEN:          # first sight wins
-                    continue
                 try:
                     need, best = float(p[9]), float(p[11] or p[10])
                 except ValueError:
