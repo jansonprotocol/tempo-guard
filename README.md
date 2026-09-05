@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            132 / 161  82.0%     92 / 134  68.7%
     played lanes  >+1%      74 / 92   80.4%     92 / 134  68.7%
-    placed bets             26 / 31   83.9%    ROI +5.8%
+    placed bets             29 / 35   82.9%    ROI +5.6%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -737,7 +737,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 26 / 31  ·  ROI +5.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 29 / 35  ·  ROI +5.6%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -787,6 +787,10 @@ that premium the book is keeping the insurance money.
 | — open | Cardiff v Stoke | U3.5 | 1.43 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.40 Unibet NL, taken at 1.43 (+12.5% vs the bar) |
 | — open | Blackburn v Sheffield Utd | U3.5 | 1.36 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet SE, taken at 1.36 (+7.0% vs the bar) |
 | — open | Vitória v Grêmio | U3.5 | 1.27 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.34 Pinnacle, taken at 1.27 — level with the bar |
+| ✅ | Dresden v Bochum | U4.5 | 1.46 | 1.46x | TOTO — in-play, struck 21:48 on a 20:30 kickoff. The card was NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), consensus 1.13. Outside the board's decide-at-first-sight rule; logged as taken, not as a board play |
+| ✅ | Willem II v Excelsior | U4.5 | 1.43 | 1.43x | TOTO — in-play, struck 21:37 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.17, consensus 1.13. Outside the board's rule; logged as taken, not as a board play |
+| ❌ | RB Bragantino v Bahia | U4.5 | 1.48 | 0.00x | TOTO — in-play, struck 21:36 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.12, consensus 1.09. Outside the board's rule; logged as taken, not as a board play |
+| ✅ | Sporting CP v Nacional | O1.5 | 1.27 | 1.27x | TOTO — in-play, struck after 21:48 on a 21:30 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.08, consensus 1.06. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
