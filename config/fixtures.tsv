@@ -70,7 +70,7 @@
 2026-09-04 20:00	PER-L1	Liga 1	Cajamarca v Cienciano	O1.5 76.0% +2.1% · buy≥1.38 (+5.1% margin)	✅ **Cajamarca O0.5** 82.3% +2.4% (team) · buy≥1.30 (+6.8% margin)	✅ HIT — 2-5	✅ 12 77.1% +2.4% · buy≥1.36 · probation
 2026-09-04 20:30	ESP-L2	LaLiga 2	Las Palmas v Leganés	U3.0 76.3% **+0.0%** · buy≥1.43 (+1.0% margin)	— none	✅ HIT — 0-0	◦ DNB1 67.2% +3.8% · buy≥1.56 · probation
 2026-09-04 20:30	GER-BL	Bundesliga	Stuttgart v Köln	O1.5 85.5% +2.8% · buy≥1.23 (+5.4% margin)	✅ **Stuttgart O1.5** 64.9% +14.4% (team) · buy≥1.60 (+3.6% margin)	✅ HIT — 4-1	✅ 12 80.3% +5.9% · buy≥1.31 · probation
-2026-09-04 20:30	POL-EK	Ekstraklasa	Piast v GKS Katowice	O1.5 78.8% +2.7% · buy≥1.34 (+5.4% margin)	O2.25 55.8% +3.8% (floor −22.2) · buy≥1.63 (+2.8% margin)		12 76.8% +4.2% · buy≥1.37 · probation
+2026-09-04 20:30	POL-EK	Ekstraklasa	Piast v GKS Katowice	O1.5 78.8% +2.7% · buy≥1.34 (+5.4% margin)	✅ O2.25 55.8% +3.8% (floor −22.2) · buy≥1.63 (+2.8% margin)	✅ HIT — 3-0	✅ 12 76.8% +4.2% · buy≥1.37 · probation
 2026-09-04 20:45	ITA-SA	Serie A	Genoa v Como	U4.25 86.0% **−2.6%** · buy≥1.21 (+5.4% margin)	— none	❌ MISS — 1-4	
 2026-09-04 20:45	BEL-PL	Pro League	Lommel v Club Brugge	O1.5 83.3% +7.0% · buy≥1.29 (+7.3% margin)	❌ **Club Brugge O1.5** 65.8% +31.2% (team) · buy≥1.57 (+3.6% margin)	❌ MISS — 0-1	✅ 12 80.7% +7.4% · buy≥1.30 · probation
 2026-09-04 21:00	ENG-PL	Premier League	Ipswich v Liverpool	U4.25 84.5% +2.5% · buy≥1.26 (+4.9% margin)	✅ **Liverpool O0.5** 80.8% +6.2% (team) · buy≥1.30 (+5.3% margin)	✅ HIT — 0-2	
@@ -78,13 +78,13 @@
 2026-09-04 21:00	ESP-LL	LaLiga	Real Betis v Real Madrid	O1.5 75.2% **+0.9%** · buy≥1.34 (+1.0% margin)	— none	❌ MISS — 1-0	
 2026-09-04 21:05	FRA-L1	Ligue 1	PSG v AS Monaco	O1.5 81.8% +4.5% · buy≥1.33 (+8.8% margin)	❌ **PSG O1.5** 62.8% +18.3% (team) · buy≥1.65 (+3.4% margin)	✅ HIT — 1-2	✅ 12 79.7% +3.2% · buy≥1.32 · probation
 2026-09-04 21:15	POR-PL	Liga Portugal	Porto v Moreirense	U4.25 84.2% **−2.0%** · buy≥1.24 (+6.0% margin)	✅ **Porto O1.5** 57.7% +15.1% (team) · buy≥1.79 (+3.0% margin)	✅ HIT — 2-1	✅ DNB1 80.3% +23.2% · buy≥1.31 · probation
-2026-09-04 22:00	ALG-L1	Ligue 1	Kabylie v Rouissat	— no tip: engine abstained (thin history or an unresolved name)	—		
-2026-09-04 22:15	PER-L1	Liga 1	Alianza Atlético v UTC	U4.25 81.0% **−6.3%** · buy≥1.23 (+6.4% margin)	**Alianza Atlético O1.5** 55.0% +7.5% (team) · buy≥1.87 (+2.8% margin)	LIVE 46' 2-1	DNB1 77.1% +9.5% · buy≥1.36 · probation
-2026-09-05 00:30	BRA-SB	Brasileirão Série B	Criciúma v Cuiabá	U3.0 84.9% +3.5% · buy≥1.29 (+5.2% margin)	U2.75 66.5% +4.9% (floor −8.5) · buy≥1.42 (+3.7% margin)		
-2026-09-05 01:30	MLS	MLS	New York City v Nashville	O1.5 80.7% **−0.8%** · buy≥1.29 (+6.1% margin)	O2.25 61.0% +1.3% (floor −14.0) · buy≥1.47 (+0.1% margin)		
-2026-09-05 01:30	BRA-SB	Brasileirão Série B	Athletic v Vila Nova	U3.0 83.0% +1.6% · buy≥1.32 (+4.3% margin)	U2.75 63.8% +2.2% (floor −11.2) · buy≥1.42 (+0.3% margin)		
-2026-09-05 02:30	BRA-SB	Brasileirão Série B	CRB v América-MG	O1.0 88.5% **−0.7%** · buy≥1.24 (+6.1% margin)	— none		DNB1 72.7% +6.0% · buy≥1.44 · probation
-2026-09-05 02:30	CHI-PD	Primera División	D. Concepción v Audax Italiano	U4.25 87.2% +1.8% · buy≥1.23 (+6.3% margin)	**Audax Italiano U1.5** 74.6% +8.4% (team) · buy≥1.40 (+4.2% margin)		DNB1 70.5% +11.3% · buy≥1.49 · probation
+2026-09-04 22:00	ALG-L1	Ligue 1	Kabylie v Rouissat	— no tip: engine abstained (thin history or an unresolved name)	—	FT 1-0 (no tip)	
+2026-09-04 22:15	PER-L1	Liga 1	Alianza Atlético v UTC	U4.25 81.0% **−6.3%** · buy≥1.23 (+6.4% margin)	✅ **Alianza Atlético O1.5** 55.0% +7.5% (team) · buy≥1.87 (+2.8% margin)	❌ MISS — 3-2	✅ DNB1 77.1% +9.5% · buy≥1.36 · probation
+2026-09-05 00:30	BRA-SB	Brasileirão Série B	Criciúma v Cuiabá	U3.0 84.9% +3.5% · buy≥1.29 (+5.2% margin)	✅ U2.75 66.5% +4.9% (floor −8.5) · buy≥1.42 (+3.7% margin)	✅ HIT — 2-0	
+2026-09-05 01:30	MLS	MLS	New York City v Nashville	O1.5 80.7% **−0.8%** · buy≥1.29 (+6.1% margin)	❌ O2.25 61.0% +1.3% (floor −14.0) · buy≥1.47 (+0.1% margin)	❌ MISS — 0-0	
+2026-09-05 01:30	BRA-SB	Brasileirão Série B	Athletic v Vila Nova	U3.0 83.0% +1.6% · buy≥1.32 (+4.3% margin)	❌ U2.75 63.8% +2.2% (floor −11.2) · buy≥1.42 (+0.3% margin)	❌ MISS — 5-0	
+2026-09-05 02:30	BRA-SB	Brasileirão Série B	CRB v América-MG	O1.0 88.5% **−0.7%** · buy≥1.24 (+6.1% margin)	— none	✅ HIT — 3-1	✅ DNB1 72.7% +6.0% · buy≥1.44 · probation
+2026-09-05 02:30	CHI-PD	Primera División	D. Concepción v Audax Italiano	U4.25 87.2% +1.8% · buy≥1.23 (+6.3% margin)	✅ **Audax Italiano U1.5** 74.6% +8.4% (team) · buy≥1.40 (+4.2% margin)	✅ HIT — 0-1	❌ DNB1 70.5% +11.3% · buy≥1.49 · probation
 2026-09-05 12:00	JPN-J1	J1 League	Fukuoka v Mito Hollyhock	U4.25 89.6% +1.3% · buy≥1.18 (+4.7% margin)	U3.75 76.5% +2.0% (floor −5.5) · buy≥1.23 (+1.0% margin)		DNB1 68.2% +12.6% · buy≥1.54 · probation
 2026-09-05 13:00	GER-B2	2. Bundesliga	Kaiserslautern v Darmstadt	U4.25 84.8% +3.8% · buy≥1.30 (+9.0% margin)	U3.75 69.4% +5.4% (floor −5.6) · buy≥1.38 (+3.9% margin)		DNB1 71.0% +12.3% · buy≥1.48 · probation
 2026-09-05 13:00	GER-B2	2. Bundesliga	Kiel v Nürnberg	U4.25 81.3% **+0.3%** · buy≥1.31 (+4.2% margin)	— none		
