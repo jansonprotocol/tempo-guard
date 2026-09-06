@@ -1143,6 +1143,79 @@ def _goals(f) -> int | None:
     return int(m.group(1)) + int(m.group(2)) if m else None
 
 
+_BOOK = None
+
+
+def book() -> dict:
+    """fixture -> the positions taken on it, from config/bets.tsv."""
+    global _BOOK
+    if _BOOK is None:
+        _BOOK = {}
+        for b in _bets_rows():
+            _BOOK.setdefault(b["name"], []).append(b)
+    return _BOOK
+
+
+def _taken(f, pick: str | None) -> str:
+    """The flag saying a position on this card is already in the book.
+
+    `pick` is the lane the card starred — live from verdict() before
+    kickoff, from the frozen forward-log row after it, so a completed
+    card carries the same flag it carried while it was playable.
+
+    A bet on the STARRED lane is "line taken": the board picked it and
+    the money went on it. A bet on the same fixture but a different lane
+    is not the same statement and must not wear the same badge, so it
+    says which lane it actually is.
+
+    And a position struck AFTER kickoff is a third thing again. It was
+    bought off a live price the board never quoted and off a score the
+    engine cannot see, so crediting it to the card would flatter the
+    board with a bet the board did not offer. Those read "in-play" and
+    carry their own colour. The marker is the word in the position's
+    note, which is the convention config/bets.tsv is written under.
+    """
+    got = book().get(f.teams)
+    if not got:
+        return ""
+    # Both sides go through the same normalisation before they are
+    # compared, or the flag reports a mismatch where there is none: the
+    # book logs whichever rung the slip showed (U3.0 where the card
+    # struck U3.5), and a result lane is written "DNB (home)" in the
+    # book against "DNB1" on the card.
+    def norm(lane: str) -> str:
+        rung, _, side = lane.partition(" (")
+        rung = odds_api.bought(rung.strip())
+        if rung == "DNB" and side:
+            rung += "1" if side.startswith("home") else "2"
+        return rung
+
+    want = norm(pick) if pick else None
+    out = []
+    for b in got:
+        rung = norm(b["lane"])
+        mark = "" if b["mark"] == "open" else f' {b["mark"]}'
+        live = "in-play" in (b.get("note") or "")
+        if live:
+            what = ("line" if want and rung == want
+                    else html.escape(b["lane"]))
+            out.append(f'<span class="taken live" title="Struck after '
+                       f'kickoff, off a live price the board never quoted '
+                       f'and a score the engine cannot see — not a board '
+                       f'play">{what} taken · in-play '
+                       f'<b>{b["odds"]:.2f}</b>{mark}</span>')
+        elif want and rung == want:
+            out.append(f'<span class="taken" title="The lane the card '
+                       f'starred, bought before kickoff">line taken '
+                       f'<b>{b["odds"]:.2f}</b>{mark}</span>')
+        else:
+            out.append(f'<span class="taken own" title="A position on this '
+                       f'fixture, but not on the lane the card starred">'
+                       f'{html.escape(b["lane"])} '
+                       f'taken <b>{b["odds"]:.2f}</b>{mark}</span>')
+    return f'<div class="takenbar">{"".join(out)}</div>'
+
+
 def _card(f, kind: str, reads: dict) -> str:
     badge = rates().get(f.code)
     league = html.escape(f.league) + (
@@ -1254,8 +1327,22 @@ def _card(f, kind: str, reads: dict) -> str:
     mark = not past
     face = lane(seq[0], cells[seq[0]], lab, noplay=mark and not playing)
     rest = "".join(lane(w, cells[w], None, noplay=mark) for w in seq[1:])
+    # Which lane the card starred, for the "line taken" flag: live before
+    # kickoff, frozen after it, so a completed card reads the same as it
+    # did while it was playable.
+    if past:
+        got = was_called(f)
+        pick = (got["row"].get("lane") if got else None)
+        # A card older than the forward log has no frozen row; its tip 1
+        # is still what it starred, so fall back to that rather than
+        # calling every early position an off-card line.
+        if not pick and cells.get(1):
+            pick = _struck(_rung(cells[1]))
+    else:
+        pick = v["lane"] if v else None
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
+           f'{_taken(f, pick)}'
            f'<div class="meta">{head} · {league}</div>{kw}'
            f"{_guard(f, best)}{face}")
     body = rest + tie_html
@@ -2211,6 +2298,15 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .card.play {{ border-left-color:var(--green); }}
 .card.watch {{ border-left-color:var(--gold); }}
 .card.run {{ border-left-color:#ff5d5d; }}
+.takenbar {{ display:flex; flex-wrap:wrap; gap:5px; margin:5px 0 2px; }}
+.taken {{ font-size:11px; letter-spacing:.04em; text-transform:uppercase;
+  background:rgba(212,175,55,.14); color:var(--gold); padding:2px 7px;
+  border:1px solid rgba(212,175,55,.45); border-radius:999px; }}
+.taken b {{ font-weight:700; }}
+.taken.own {{ background:transparent; color:var(--dim);
+  border-color:var(--edge); text-transform:none; letter-spacing:0; }}
+.taken.live {{ background:rgba(255,93,93,.14); color:#ff8a8a;
+  border-color:rgba(255,93,93,.45); }}
 .tabs a.on.amber {{ background:var(--gold); color:#111; }}
 .tabs a.on.red {{ background:#ff5d5d; color:#111; }}
 .card.pend {{ border-left-color:var(--blue); }}
