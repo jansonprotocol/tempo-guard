@@ -13,10 +13,17 @@
 # long as anything is running, and when the last match settles it goes
 # quiet again until the next one.
 #
-# Two things GitHub will not promise. A */5 schedule is the floor, not a
-# guarantee — runs are queued and get delayed under load, more so on the
-# hour — and a scheduled workflow is disabled automatically after 60 days
-# without repository activity.
+# THE CADENCE DOES NOT COME FROM THE CRON, and that is deliberate. A */5
+# schedule is a floor GitHub does not honour — the first run after this
+# file landed took more than four slots to appear, which is ordinary for
+# a fresh schedule and no better afterwards. So the cron only has to
+# START a session; once started, the job SWEEPS IN A LOOP on its own
+# clock, every SWEEP_EVERY seconds, for as long as the gate says football
+# is happening. One run therefore covers a whole evening at a cadence
+# GitHub cannot drift, and the loop exits the moment nothing is live.
+#
+# The concurrency group means a cron that fires while a loop is already
+# running does not start a second one.
 name: live sweep
 
 on:
@@ -57,34 +64,51 @@ jobs:
       - if: steps.gate.outputs.go == 'yes'
         run: pip install -r backend/requirements.txt
 
+      # Sweep, commit, wait, ask again — on this job's own clock rather
+      # than GitHub's. Commits only when a score actually moved: sweep.py
+      # rewrites the board every pass, so without that check the history
+      # would take a commit every five minutes saying nothing.
       - if: steps.gate.outputs.go == 'yes'
-        run: cd backend && python scripts/sweep.py
-
-      # Commit only when a score actually moved. sweep.py rewrites the
-      # board every run, so without this check the repository would take
-      # a commit every five minutes saying nothing.
-      - if: steps.gate.outputs.go == 'yes'
+        timeout-minutes: 330
+        env:
+          SWEEP_EVERY: 300          # seconds between passes
+          MAX_PASSES: 60            # ~5h, under the 6h job ceiling
         run: |
           git config user.name  "tempo-guard bot"
           git config user.email "noreply@anthropic.com"
-          git add -A config/fixtures.tsv README.md web/ config/forward_log.tsv \
-                     config/reads_cache.json || true
-          if git diff --cached --quiet; then
-            echo "nothing moved"
-            exit 0
-          fi
-          git commit -m "live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC"
-          # Someone may have pushed while this ran. Rebase rather than
-          # merge, and regenerate the two build artefacts rather than
-          # resolving them by hand: index.html and README.md are derived
-          # from config/fixtures.tsv, so the file is the truth and the
-          # render is reproducible from it.
-          for attempt in 1 2 3; do
-            if git push origin HEAD:${{ github.ref_name }}; then exit 0; fi
-            git pull --rebase origin ${{ github.ref_name }} || {
-              git checkout --ours web/index.html README.md
-              git add web/index.html README.md
-              git -c core.editor=true rebase --continue
-            }
+          cd backend
+          for pass in $(seq 1 "$MAX_PASSES"); do
+            echo "::group::pass $pass"
+            python scripts/sweep.py || echo "sweep failed, continuing"
+            cd ..
+            git add -A config/fixtures.tsv README.md web/ \
+                       config/forward_log.tsv config/reads_cache.json || true
+            if git diff --cached --quiet; then
+              echo "nothing moved"
+            else
+              git commit -m "live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC"
+              # Someone may have pushed while this ran. Rebase rather than
+              # merge, and REGENERATE the two build artefacts rather than
+              # resolving them by hand: index.html and README.md are
+              # derived from config/fixtures.tsv, so the file is the truth
+              # and the render is reproducible from it.
+              for attempt in 1 2 3; do
+                git push origin HEAD:${{ github.ref_name }} && break
+                git pull --rebase origin ${{ github.ref_name }} || {
+                  git checkout --ours web/index.html README.md
+                  git add web/index.html README.md
+                  git -c core.editor=true rebase --continue
+                }
+              done
+            fi
+            cd backend
+            echo "::endgroup::"
+            # Ask the gate again. When the last match settles the loop
+            # ends here rather than burning the rest of its ceiling.
+            if ! python scripts/livecheck.py; then
+              echo "nothing live any more — loop done after $pass passes"
+              exit 0
+            fi
+            sleep "$SWEEP_EVERY"
           done
-          exit 1
+          echo "hit the pass ceiling; the next cron picks it up"
