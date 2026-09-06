@@ -1,0 +1,90 @@
+# Keep the live board current without anyone asking for it.
+#
+# GitHub can only schedule a FIXED cron, but football is not on a fixed
+# cron, so the shape here is: wake often, decide cheaply, work rarely.
+# Every run starts with scripts/livecheck.py, which imports nothing but
+# the standard library and answers in about 40ms — is a fixture live and
+# ungraded, or about to kick off? Almost always no, and that run ends in
+# seconds having installed nothing. Only when the answer is yes does the
+# job pay for the engine's dependencies and run the real sweep.
+#
+# The effect is what the bettor described on 6 Sep: nothing happens until
+# a kickoff approaches, then the board refreshes every few minutes for as
+# long as anything is running, and when the last match settles it goes
+# quiet again until the next one.
+#
+# Two things GitHub will not promise. A */5 schedule is the floor, not a
+# guarantee — runs are queued and get delayed under load, more so on the
+# hour — and a scheduled workflow is disabled automatically after 60 days
+# without repository activity.
+name: live sweep
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:          # a manual "sweep now" button
+
+concurrency:
+  # Never let two sweeps write the board at once; queue the newer one
+  # rather than cancelling, so a run that already fetched still commits.
+  group: live-sweep
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # The gate. Exit 0 means work to do; exit 1 means go home. No
+      # dependencies are installed above this line on purpose.
+      - id: gate
+        run: |
+          cd backend
+          if python scripts/livecheck.py; then
+            echo "go=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.gate.outputs.go == 'yes'
+        run: pip install -r backend/requirements.txt
+
+      - if: steps.gate.outputs.go == 'yes'
+        run: cd backend && python scripts/sweep.py
+
+      # Commit only when a score actually moved. sweep.py rewrites the
+      # board every run, so without this check the repository would take
+      # a commit every five minutes saying nothing.
+      - if: steps.gate.outputs.go == 'yes'
+        run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          git add -A config/fixtures.tsv README.md web/ config/forward_log.tsv \
+                     config/reads_cache.json || true
+          if git diff --cached --quiet; then
+            echo "nothing moved"
+            exit 0
+          fi
+          git commit -m "live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC"
+          # Someone may have pushed while this ran. Rebase rather than
+          # merge, and regenerate the two build artefacts rather than
+          # resolving them by hand: index.html and README.md are derived
+          # from config/fixtures.tsv, so the file is the truth and the
+          # render is reproducible from it.
+          for attempt in 1 2 3; do
+            if git push origin HEAD:${{ github.ref_name }}; then exit 0; fi
+            git pull --rebase origin ${{ github.ref_name }} || {
+              git checkout --ours web/index.html README.md
+              git add web/index.html README.md
+              git -c core.editor=true rebase --continue
+            }
+          done
+          exit 1
