@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            160 / 199  80.4%    112 / 164  68.3%
     played lanes  >+1%      81 / 100  81.0%    112 / 164  68.3%
-    placed bets             34 / 41   82.9%    ROI +5.0%
+    placed bets             36 / 43   83.7%    ROI +6.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -737,7 +737,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 34 / 41  ·  ROI +5.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 36 / 43  ·  ROI +6.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -791,6 +791,8 @@ that premium the book is keeping the insurance money.
 | ✅ | Willem II v Excelsior | U4.5 | 1.43 | 1.43x | TOTO — in-play, struck 21:37 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.17, consensus 1.13. Outside the board's rule; logged as taken, not as a board play |
 | ❌ | RB Bragantino v Bahia | U4.5 | 1.48 | 0.00x | TOTO — in-play, struck 21:36 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.12, consensus 1.09. Outside the board's rule; logged as taken, not as a board play |
 | ✅ | Sporting CP v Nacional | O1.5 | 1.27 | 1.27x | TOTO — in-play, struck after 21:48 on a 21:30 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.08, consensus 1.06. Outside the board's rule; logged as taken, not as a board play |
+| ✅ | Vissel Kobe v Nagasaki | U4.5 | 1.29 | 1.29x | TOTO — in-play. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.12 (Pinnacle), and the card claimed 89.5%. Outside the board's rule; logged as taken, not as a board play |
+| ✅ | Kawasaki v Shimizu | U4.5 | 1.23 | 1.23x | TOTO — in-play. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.18 (1xBet), and the card claimed 89.3%. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
