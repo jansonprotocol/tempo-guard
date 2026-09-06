@@ -1,12 +1,18 @@
 # Every bet actually placed in Session #6, from 2 Sep 2026 — PRE-ALFA 2, the long
 # run: the engine and its rules are not touched while it runs.
 #
+# COLUMNS: fixture, rung, odds, side, cash-out multiple, probability
+# override, note, STAKE. The stake is column 8 and is required — flat-unit
+# ROI is stake-blind and stays right either way, but the money column is
+# not, and stakes stopped being flat on 6 Sep when the size rose to 1.10.
+#
 # CONVENTION: a position struck AFTER kickoff must carry the words
-# "in-play" in its note. Record the score AT STRIKE only when it is known
-# from the bettor or a timestamped slip — the score printed on a slip is
-# the CURRENT one and says nothing about the moment the bet was struck. The board reads that word to badge the card and
+# "in-play" in its note. The board reads that word to badge the card and
 # to keep live strikes out of the board's own record — they are bought
 # off a price the board never quoted and a score the engine cannot see.
+# Record the score AT STRIKE only when it is known from the bettor or a
+# timestamped slip: the score printed on a slip is the CURRENT one and
+# says nothing about the moment the bet was struck.
 #
 # Earlier books are archived and deliberately not mixed in:
 #   archive/2026-08-28-sessions-4-5-odds-layer/bets.tsv   113/143, ROI -0.3%
@@ -26,68 +32,68 @@
 # p_override  the probability to price against, for a bet struck IN PLAY where
 #           the pre-match number no longer describes it
 #
-# fixture	rung	odds	side	cashout	[p_override]
-Cerezo Osaka v Kashiwa	O1.5	1.19	-			swapped out of the 12 at 1.24
-Londrina v Juventude	U3.5	1.17	-	0		R6 softer off the U3.0 tip
-Anderlecht v Kortrijk	U4.5	1.21	-	0		the STRONG green card, taken 0.0028 under its 1.2128 bar — 1xBet had the 1.22 that clears
-Náutico v Botafogo-SP	U3.0	1.36	-	0		the Asian PUSH line, not the card's struck U3.5 at 1.33; U3.0 needs 1.43 to match, so this costs 4.6% of stake — P(push) is 19.6% here
-Pau v Sochaux	U3.5	1.25	-	0		TOTO — under the 1.2707 bar; Pinnacle had 1.35, so 7.4% of price left behind
-Sparta v Zwolle	U4.5	1.29	-	0		TOTO — clears the bar; Pinnacle had 1.37, 5.8% better
-Las Palmas v Leganés	U3.5	1.28	-	0		TOTO — clears the bar; BetAnything had 1.41, 9.2% better
-Ipswich v Liverpool	U4.5	1.27	-	0		TOTO — misses the 1.2707 bar by 0.0007; Pinnacle had 1.38
-Sandefjord v Viking	U4.5	1.26	-	0		TOTO — under the 1.2707 bar; Pinnacle had 1.35
-New York City v Nashville	O1.5	1.23	-	0		Unibet — under the 1.2707 bar; Pinnacle 1.31, and the board's Unibet NL quote was 1.22
-Wolfsburg v Cottbus	U4.5	1.27	-	0		Unibet — the STRONG card, missing the 1.2707 bar by 0.0007; matches the board's Unibet NL quote exactly; Pinnacle 1.39
-Preston v Blackburn	U3.5	1.27	-	0		TOTO — misses the bar by 0.0007; Pinnacle 1.38, Unibet NL 1.22
-Taishan v Shenzhen	DNB	1.26	H	0		Unibet — the GREEN gated DNB, bar 1.2128, clears well. 1.26 against the board's 1.36 is the SYNTHETIC DNB gap, not a shopping loss: the board derives DNB from 1X2 and the probe measured real quotes about 2.5% under it
-Hoffenheim v Dortmund	U4.5	1.29	-	0		TOTO — clears the 1.2707 bar; Pinnacle 1.40, so 7.9% left behind
-West Ham v Derby	O1.5	1.22	-	0		TOTO — under the bar; Pinnacle 1.29, Unibet NL 1.18
-NEC v Feyenoord	U4.5	1.38	-	0		TOTO — clears comfortably, and the best price taken tonight: 1.38 against a board best of 1.40
-Carrarese v Empoli	U3.5	1.23	-	0		Unibet — the card's struck lane, but under the 1.2707 bar; best 1.33
-Ascoli v Benevento	U3.5	1.28	-	0		TOTO — the card's struck lane, clears; best 1.39
-Young Boys v Luzern	DNB	1.21	H	0		= tip 3's DNB1 print (86.6% +22.6%), the board's SUPER GREEN card — bar 1.1836, clears by 2.2%. Replaces a Luzern DNB struck on the wrong fixture (Luzern v Vaduz). Board best 1.31, Unibet NL 1.30, so 7.6% of price left at TOTO's 1.21
-Real Sociedad B v Tenerife	U3.5	1.22	-	0		TOTO — the card's struck lane (U3.0 rung, 76.3%); orange needs 1.2707 and this is 4.0% under; best 1.31 Pinnacle, unquoted at Unibet NL
-Millwall v Bolton	U3.5	1.30	-	0		TOTO — the card's struck lane (U3.0 rung, 78.4% +4.2%); orange needs 1.2707, clears by 2.3%; TOTO's 1.30 beats the board's best 1.28 (Betsson)
-Ceará v Sport Recife	U3.5	1.25	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY at Pinnacle 1.33; orange needs 1.2707 and 1.25 is 1.6% under; Unibet NL 1.24, so 1.25 is the reachable price
-Dallas v Kansas City	U4.5	1.32	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707, clears by 3.9%; best 1.39 Pinnacle
-Seattle v NY Red Bulls	U4.5	1.32	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707, clears by 3.9%; best 1.35 1xBet, Unibet NL 1.31
-Eldense v Mallorca	U3.5	1.29	-	0		TOTO — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 1.5%; best 1.36 BetOnline, Unibet NL 1.24
-Fluminense v Vasco	U3.5	1.26	-	0		TOTO — the card's struck lane (U3.0 rung), PLAY at Pinnacle 1.36; orange needs 1.2707 and 1.26 is 0.8% under; Unibet NL 1.22
-Philadelphia v Montréal	U4.5	1.25	-	0		TOTO — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707 and 1.25 is 1.6% under; best 1.36 Pinnacle, Unibet NL 1.26. Replaces a Vancouver v Montréal U4.5 logged against the wrong match
-QPR v Cardiff	U3.5	1.43	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 12.5%; best 1.52 Nordic Bet. The card said nothing quoted until the feed matcher learned QPR — first sight was this price
-Degerfors v Halmstad	U3.5	1.30	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 2.3%; best 1.36 BetOnline, Unibet NL 1.27 — 1.30 beats the column
-West Brom v Watford	U3.5	1.27	-	0		Unibet — the card's struck lane (U3.0 rung), card says no play at the feed's best 1.26; 1.27 sits on the orange bar (1.2707) to within a tenth of a percent and beats the whole panel
-Porto v Moreirense	U4.5	1.19	-	0		Unibet — the card's struck lane (U4.25 rung), SUPER GREEN watch card: bar 1.1836, panel best 1.18, and 1.19 at his own book clears it — the watch list working as meant
-Flamengo v Mirassol	U4.5	1.25	-	0		Unibet — the card's struck lane (U4.25 rung), watch card: orange bar 1.2707, panel best 1.26, taken at 1.25 — 1.6% under the bar
-Grasshoppers v St. Gallen	U4.5	1.21	-	0		Unibet — the card's struck lane (U4.25 rung); logged off the book on 2 Sep as dropped, but the ticket stood — reinstated after settlement, won 2-0
-Gent v OH Leuven	U3.5	1.41	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.4 Tipico, taken at 1.41 (+11.0% vs the bar)
-Beveren v OH Leuven	U3.5	1.44	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.43 1xBet, taken at 1.44 (+13.3% vs the bar)
-Corinthians v Chapecoense	U3.5	1.35	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet NL, taken at 1.35 (+6.2% vs the bar)
-Basel v Sion	O1.5	1.36	-	0		Unibet — in-play, struck 20:59 on a 20:30 kickoff (score at strike not recorded); the card was a WATCH at first sight (orange bar 1.2707, panel best 1.23) and the live price cleared it. Outside the board's decide-at-first-sight rule: logged as taken, not as a board play
-ADO Den Haag v Fortuna Sittard	U4.5	1.30	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.41 Pinnacle, taken at 1.30 (+2.3% vs the bar)
-Heerenveen v AZ	U4.5	1.29	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.29 (+1.5% vs the bar)
-Molde v KFUM Oslo	U4.5	1.35	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.35 (+6.2% vs the bar); replaced the Everton under, which was never a board lane
-Başakşehir v Galatasaray	U4.5	1.28	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.35 Pinnacle, taken at 1.28 (+0.7% vs the bar)
-Viborg v Lyngby	U4.5	1.21	-	0		Unibet — the card's struck lane (U4.25 rung), watch card: orange bar 1.2707, panel best 1.22, taken at 1.21 — 4.8% under the bar
-Vitória Guimarães v Casa Pia	U3.5	1.33	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.37 Pinnacle, taken at 1.33 (+4.7% vs the bar)
-Cardiff v Stoke	U3.5	1.43	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.40 Unibet NL, taken at 1.43 (+12.5% vs the bar)
-Blackburn v Sheffield Utd	U3.5	1.36	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet SE, taken at 1.36 (+7.0% vs the bar)
-Vitória v Grêmio	U3.5	1.27	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.34 Pinnacle, taken at 1.27 — level with the bar
-Dresden v Bochum	U4.5	1.46	-	0		TOTO — in-play, struck 21:48 on a 20:30 kickoff. The card was NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), consensus 1.13. Outside the board's decide-at-first-sight rule; logged as taken, not as a board play
-Willem II v Excelsior	U4.5	1.43	-	0		TOTO — in-play, struck 21:37 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.17, consensus 1.13. Outside the board's rule; logged as taken, not as a board play
-RB Bragantino v Bahia	U4.5	1.48	-	0		TOTO — in-play, struck 21:36 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.12, consensus 1.09. Outside the board's rule; logged as taken, not as a board play
-Sporting CP v Nacional	O1.5	1.27	-	0		TOTO — in-play, struck after 21:48 on a 21:30 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.08, consensus 1.06. Outside the board's rule; logged as taken, not as a board play
-Vissel Kobe v Nagasaki	U4.5	1.29	-	0		TOTO — in-play. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.12 (Pinnacle), and the card claimed 89.5%. Outside the board's rule; logged as taken, not as a board play
-Kawasaki v Shimizu	U4.5	1.23	-	0		TOTO — in-play. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.18 (1xBet), and the card claimed 89.3%. Outside the board's rule; logged as taken, not as a board play
-Chongqing Tongliang Long v Shanghai Shenhua	U4.5	1.46	-	0		TOTO — in-play, struck 13:32 on a 13:00 kickoff. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), card claimed 81.4Chongqing Tongliang Long v Shanghai Shenhua	U4.5	1.46	-	0		TOTO — in-play, struck 13:32 on a 13:00 kickoff. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), card claimed 81.4%. Outside the board's rule; logged as taken, not as a board play
-Örgryte v Hammarby	U4.5	1.31	-	0		TOTO — in-play, struck 15:11 on a 14:00 kickoff. NOT the card's lane: Athena starred O1.5 (81.3%), which was itself no play at a panel best of 1.08. Outside the board's rule; logged as taken, not as a board play
-Eibar v Granada	U3.5	1.46	-	0		TOTO — in-play, struck at 1-0 in the 25th (his own account; the slip's 3-0 is the FINAL score, not the score at strike). This one IS the card's starred lane (U3.0 rung) and it was a PLAY pre-match: orange bar 1.2707, panel best 1.30 Pinnacle — the live price paid 1.46, better than the board ever offered. Still logged in-play, not as a board play
-Frosinone v Venezia	U4.5	1.35	-	0		TOTO — in-play, struck 15:49 on a 15:00 kickoff (score at strike not recorded). NO PLAY at first sight: the card was GREEN, bar 1.2128, panel best 1.15 (1xBet). Outside the board's rule; logged as taken, not as a board play
-Everton v Man United	O1.5	1.31	-	0		TOTO — in-play, struck 15:17 on a 15:00 kickoff (score at strike not recorded). The card's starred lane: it was a PLAY pre-match, orange bar 1.2707, panel best 1.37 Coolbet — the live price paid 1.31, under the board's own best. Still logged in-play, not as a board play
-Brommapojkarna v Elfsborg	U4.5	1.38	-	0		TOTO — in-play, struck 16:40 on a 16:30 kickoff (score at strike not recorded). NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.13 (Coolbet). Outside the board's rule; logged as taken, not as a board play
-Santa Clara v Rio Ave	U3.5	1.46	-	0		TOTO — in-play, struck 16:49 on a 16:30 kickoff (score at strike not recorded). The card's starred lane (U3.0 rung) and a PLAY pre-match: orange bar 1.2707, panel best 1.31 Pinnacle; taken live at 1.46. Still logged in-play, not as a board play
-Brøndby v Randers	U4.5	1.31	-	0		TOTO — in-play, struck 18:25 on an 18:00 kickoff (score at strike not recorded). NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.18 (Unibet SE). Outside the board's rule; logged as taken, not as a board play
-Bologna v Sassuolo	U4.5	1.39	-	0		TOTO — in-play, struck 19:17 on an 18:00 kickoff (score at strike not recorded). NO PLAY at first sight: the card was GREEN, bar 1.2128, panel best 1.15 (Pinnacle). Outside the board's rule; logged as taken, not as a board play
-Trabzonspor v Gençlerbirliği	U5.5	1.62	-	0		TOTO — in-play, struck 19:38 on a 19:00 kickoff (score at strike not recorded). A lane the board does not publish: Athena starred U4.5, which was no play (green bar 1.2128, panel best 1.15) and DIED at five goals. U5.5 held. Outside the board's rule; logged as taken, not as a board play
-Cremonese v Padova	U5.5	1.29	-	0		TOTO — in-play, struck 20:48 on a 19:30 kickoff (score at strike not recorded). A lane the board does not publish: Athena starred U3.5 on a RED card (bar 1.36, panel best 1.39 — price cleared but the tier says avoid), and it DIED at four goals. U5.5 held. Outside the board's rule; logged as taken, not as a board play
-Watford v Preston	U3.5	1.34	-	0		TOTO — pre-kickoff, struck 6 Sep 22:07 for an 8 Sep kickoff. A WATCH card at first sight: orange bar 1.2707, panel best 1.27 Unibet SE — a hundredth short of the bar, and his own book paid 1.34, which clears it by 5.5%. Stake EUR1.10, the first at the raised size
+# fixture	rung	odds	side	cashout	[p_override]	note	stake
+Cerezo Osaka v Kashiwa	O1.5	1.19	-			swapped out of the 12 at 1.24	0.90
+Londrina v Juventude	U3.5	1.17	-	0		R6 softer off the U3.0 tip	0.90
+Anderlecht v Kortrijk	U4.5	1.21	-	0		the STRONG green card, taken 0.0028 under its 1.2128 bar — 1xBet had the 1.22 that clears	0.90
+Náutico v Botafogo-SP	U3.0	1.36	-	0		the Asian PUSH line, not the card's struck U3.5 at 1.33; U3.0 needs 1.43 to match, so this costs 4.6% of stake — P(push) is 19.6% here	0.90
+Pau v Sochaux	U3.5	1.25	-	0		TOTO — under the 1.2707 bar; Pinnacle had 1.35, so 7.4% of price left behind	0.90
+Sparta v Zwolle	U4.5	1.29	-	0		TOTO — clears the bar; Pinnacle had 1.37, 5.8% better	0.90
+Las Palmas v Leganés	U3.5	1.28	-	0		TOTO — clears the bar; BetAnything had 1.41, 9.2% better	0.90
+Ipswich v Liverpool	U4.5	1.27	-	0		TOTO — misses the 1.2707 bar by 0.0007; Pinnacle had 1.38	0.90
+Sandefjord v Viking	U4.5	1.26	-	0		TOTO — under the 1.2707 bar; Pinnacle had 1.35	0.90
+New York City v Nashville	O1.5	1.23	-	0		Unibet — under the 1.2707 bar; Pinnacle 1.31, and the board's Unibet NL quote was 1.22	0.90
+Wolfsburg v Cottbus	U4.5	1.27	-	0		Unibet — the STRONG card, missing the 1.2707 bar by 0.0007; matches the board's Unibet NL quote exactly; Pinnacle 1.39	0.90
+Preston v Blackburn	U3.5	1.27	-	0		TOTO — misses the bar by 0.0007; Pinnacle 1.38, Unibet NL 1.22	0.90
+Taishan v Shenzhen	DNB	1.26	H	0		Unibet — the GREEN gated DNB, bar 1.2128, clears well. 1.26 against the board's 1.36 is the SYNTHETIC DNB gap, not a shopping loss: the board derives DNB from 1X2 and the probe measured real quotes about 2.5% under it	0.90
+Hoffenheim v Dortmund	U4.5	1.29	-	0		TOTO — clears the 1.2707 bar; Pinnacle 1.40, so 7.9% left behind	0.90
+West Ham v Derby	O1.5	1.22	-	0		TOTO — under the bar; Pinnacle 1.29, Unibet NL 1.18	0.90
+NEC v Feyenoord	U4.5	1.38	-	0		TOTO — clears comfortably, and the best price taken tonight: 1.38 against a board best of 1.40	0.90
+Carrarese v Empoli	U3.5	1.23	-	0		Unibet — the card's struck lane, but under the 1.2707 bar; best 1.33	0.90
+Ascoli v Benevento	U3.5	1.28	-	0		TOTO — the card's struck lane, clears; best 1.39	0.90
+Young Boys v Luzern	DNB	1.21	H	0		= tip 3's DNB1 print (86.6% +22.6%), the board's SUPER GREEN card — bar 1.1836, clears by 2.2%. Replaces a Luzern DNB struck on the wrong fixture (Luzern v Vaduz). Board best 1.31, Unibet NL 1.30, so 7.6% of price left at TOTO's 1.21	0.90
+Real Sociedad B v Tenerife	U3.5	1.22	-	0		TOTO — the card's struck lane (U3.0 rung, 76.3%); orange needs 1.2707 and this is 4.0% under; best 1.31 Pinnacle, unquoted at Unibet NL	0.90
+Millwall v Bolton	U3.5	1.30	-	0		TOTO — the card's struck lane (U3.0 rung, 78.4% +4.2%); orange needs 1.2707, clears by 2.3%; TOTO's 1.30 beats the board's best 1.28 (Betsson)	0.90
+Ceará v Sport Recife	U3.5	1.25	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY at Pinnacle 1.33; orange needs 1.2707 and 1.25 is 1.6% under; Unibet NL 1.24, so 1.25 is the reachable price	0.90
+Dallas v Kansas City	U4.5	1.32	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707, clears by 3.9%; best 1.39 Pinnacle	0.90
+Seattle v NY Red Bulls	U4.5	1.32	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707, clears by 3.9%; best 1.35 1xBet, Unibet NL 1.31	0.90
+Eldense v Mallorca	U3.5	1.29	-	0		TOTO — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 1.5%; best 1.36 BetOnline, Unibet NL 1.24	0.90
+Fluminense v Vasco	U3.5	1.26	-	0		TOTO — the card's struck lane (U3.0 rung), PLAY at Pinnacle 1.36; orange needs 1.2707 and 1.26 is 0.8% under; Unibet NL 1.22	0.90
+Philadelphia v Montréal	U4.5	1.25	-	0		TOTO — the card's struck lane (U4.25 rung), PLAY; orange needs 1.2707 and 1.25 is 1.6% under; best 1.36 Pinnacle, Unibet NL 1.26. Replaces a Vancouver v Montréal U4.5 logged against the wrong match	0.90
+QPR v Cardiff	U3.5	1.43	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 12.5%; best 1.52 Nordic Bet. The card said nothing quoted until the feed matcher learned QPR — first sight was this price	0.90
+Degerfors v Halmstad	U3.5	1.30	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY; orange needs 1.2707, clears by 2.3%; best 1.36 BetOnline, Unibet NL 1.27 — 1.30 beats the column	0.90
+West Brom v Watford	U3.5	1.27	-	0		Unibet — the card's struck lane (U3.0 rung), card says no play at the feed's best 1.26; 1.27 sits on the orange bar (1.2707) to within a tenth of a percent and beats the whole panel	0.90
+Porto v Moreirense	U4.5	1.19	-	0		Unibet — the card's struck lane (U4.25 rung), SUPER GREEN watch card: bar 1.1836, panel best 1.18, and 1.19 at his own book clears it — the watch list working as meant	0.90
+Flamengo v Mirassol	U4.5	1.25	-	0		Unibet — the card's struck lane (U4.25 rung), watch card: orange bar 1.2707, panel best 1.26, taken at 1.25 — 1.6% under the bar	0.90
+Grasshoppers v St. Gallen	U4.5	1.21	-	0		Unibet — the card's struck lane (U4.25 rung); logged off the book on 2 Sep as dropped, but the ticket stood — reinstated after settlement, won 2-0	0.90
+Gent v OH Leuven	U3.5	1.41	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.4 Tipico, taken at 1.41 (+11.0% vs the bar)	0.90
+Beveren v OH Leuven	U3.5	1.44	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.43 1xBet, taken at 1.44 (+13.3% vs the bar)	0.90
+Corinthians v Chapecoense	U3.5	1.35	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet NL, taken at 1.35 (+6.2% vs the bar)	0.90
+Basel v Sion	O1.5	1.36	-	0		Unibet — in-play, struck 20:59 on a 20:30 kickoff (score at strike not recorded); the card was a WATCH at first sight (orange bar 1.2707, panel best 1.23) and the live price cleared it. Outside the board's decide-at-first-sight rule: logged as taken, not as a board play	0.90
+ADO Den Haag v Fortuna Sittard	U4.5	1.30	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.41 Pinnacle, taken at 1.30 (+2.3% vs the bar)	0.90
+Heerenveen v AZ	U4.5	1.29	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.29 (+1.5% vs the bar)	0.90
+Molde v KFUM Oslo	U4.5	1.35	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.35 (+6.2% vs the bar); replaced the Everton under, which was never a board lane	0.90
+Başakşehir v Galatasaray	U4.5	1.28	-	0		Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.35 Pinnacle, taken at 1.28 (+0.7% vs the bar)	0.90
+Viborg v Lyngby	U4.5	1.21	-	0		Unibet — the card's struck lane (U4.25 rung), watch card: orange bar 1.2707, panel best 1.22, taken at 1.21 — 4.8% under the bar	0.90
+Vitória Guimarães v Casa Pia	U3.5	1.33	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.37 Pinnacle, taken at 1.33 (+4.7% vs the bar)	0.90
+Cardiff v Stoke	U3.5	1.43	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.40 Unibet NL, taken at 1.43 (+12.5% vs the bar)	0.90
+Blackburn v Sheffield Utd	U3.5	1.36	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet SE, taken at 1.36 (+7.0% vs the bar)	0.90
+Vitória v Grêmio	U3.5	1.27	-	0		Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.34 Pinnacle, taken at 1.27 — level with the bar	0.90
+Dresden v Bochum	U4.5	1.46	-	0		TOTO — in-play, struck 21:48 on a 20:30 kickoff. The card was NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), consensus 1.13. Outside the board's decide-at-first-sight rule; logged as taken, not as a board play	0.90
+Willem II v Excelsior	U4.5	1.43	-	0		TOTO — in-play, struck 21:37 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.17, consensus 1.13. Outside the board's rule; logged as taken, not as a board play	0.90
+RB Bragantino v Bahia	U4.5	1.48	-	0		TOTO — in-play, struck 21:36 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.12, consensus 1.09. Outside the board's rule; logged as taken, not as a board play	0.90
+Sporting CP v Nacional	O1.5	1.27	-	0		TOTO — in-play, struck after 21:48 on a 21:30 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.08, consensus 1.06. Outside the board's rule; logged as taken, not as a board play	0.90
+Vissel Kobe v Nagasaki	U4.5	1.29	-	0		TOTO — in-play. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.12 (Pinnacle), and the card claimed 89.5%. Outside the board's rule; logged as taken, not as a board play	0.90
+Kawasaki v Shimizu	U4.5	1.23	-	0		TOTO — in-play. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.18 (1xBet), and the card claimed 89.3%. Outside the board's rule; logged as taken, not as a board play	0.90
+Chongqing Tongliang Long v Shanghai Shenhua	U4.5	1.46	-	0		TOTO — in-play, struck 13:32 on a 13:00 kickoff (score at strike not recorded). NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), card claimed 81.4%. Outside the board's rule; logged as taken, not as a board play	0.90
+Örgryte v Hammarby	U4.5	1.31	-	0		TOTO — in-play, struck 15:11 on a 14:00 kickoff. NOT the card's lane: Athena starred O1.5 (81.3%), which was itself no play at a panel best of 1.08. Outside the board's rule; logged as taken, not as a board play	0.90
+Eibar v Granada	U3.5	1.46	-	0		TOTO — in-play, struck at 1-0 in the 25th (his own account; the slip's 3-0 is the FINAL score, not the score at strike). This one IS the card's starred lane (U3.0 rung) and it was a PLAY pre-match: orange bar 1.2707, panel best 1.30 Pinnacle — the live price paid 1.46, better than the board ever offered. Still logged in-play, not as a board play	0.90
+Frosinone v Venezia	U4.5	1.35	-	0		TOTO — in-play, struck 15:49 on a 15:00 kickoff (score at strike not recorded). NO PLAY at first sight: the card was GREEN, bar 1.2128, panel best 1.15 (1xBet). Outside the board's rule; logged as taken, not as a board play	0.90
+Everton v Man United	O1.5	1.31	-	0		TOTO — in-play, struck 15:17 on a 15:00 kickoff (score at strike not recorded). The card's starred lane: it was a PLAY pre-match, orange bar 1.2707, panel best 1.37 Coolbet — the live price paid 1.31, under the board's own best. Still logged in-play, not as a board play	0.90
+Brommapojkarna v Elfsborg	U4.5	1.38	-	0		TOTO — in-play, struck 16:40 on a 16:30 kickoff (score at strike not recorded). NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.13 (Coolbet). Outside the board's rule; logged as taken, not as a board play	0.90
+Santa Clara v Rio Ave	U3.5	1.46	-	0		TOTO — in-play, struck 16:49 on a 16:30 kickoff (score at strike not recorded). The card's starred lane (U3.0 rung) and a PLAY pre-match: orange bar 1.2707, panel best 1.31 Pinnacle; taken live at 1.46. Still logged in-play, not as a board play	0.90
+Brøndby v Randers	U4.5	1.31	-	0		TOTO — in-play, struck 18:25 on an 18:00 kickoff (score at strike not recorded). NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.18 (Unibet SE). Outside the board's rule; logged as taken, not as a board play	0.90
+Bologna v Sassuolo	U4.5	1.39	-	0		TOTO — in-play, struck 19:17 on an 18:00 kickoff (score at strike not recorded). NO PLAY at first sight: the card was GREEN, bar 1.2128, panel best 1.15 (Pinnacle). Outside the board's rule; logged as taken, not as a board play	0.90
+Trabzonspor v Gençlerbirliği	U5.5	1.62	-	0		TOTO — in-play, struck 19:38 on a 19:00 kickoff (score at strike not recorded). A lane the board does not publish: Athena starred U4.5, which was no play (green bar 1.2128, panel best 1.15) and DIED at five goals. U5.5 held. Outside the board's rule; logged as taken, not as a board play	0.90
+Cremonese v Padova	U5.5	1.29	-	0		TOTO — in-play, struck 20:48 on a 19:30 kickoff (score at strike not recorded). A lane the board does not publish: Athena starred U3.5 on a RED card (bar 1.36, panel best 1.39 — price cleared but the tier says avoid), and it DIED at four goals. U5.5 held. Outside the board's rule; logged as taken, not as a board play	0.90
+Watford v Preston	U3.5	1.34	-	0		TOTO — pre-kickoff, struck 6 Sep 22:07 for an 8 Sep kickoff. A WATCH card at first sight: orange bar 1.2707, panel best 1.27 Unibet SE — a hundredth short of the bar, and his own book paid 1.34, which clears it by 5.5%. Stake EUR1.10, the first at the raised size	1.10
