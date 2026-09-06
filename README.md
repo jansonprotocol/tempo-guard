@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            207 / 266  77.8%    147 / 216  68.1%
     played lanes  >+1%     105 / 133  78.9%    147 / 216  68.1%
-    placed bets             48 / 59   81.4%    ROI +5.4%
+    placed bets             49 / 61   80.3%    ROI +3.8%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -737,7 +737,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 48 / 59  ·  ROI +5.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 49 / 61  ·  ROI +3.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -805,6 +805,9 @@ that premium the book is keeping the insurance money.
 | ✅ | Trabzonspor v Gençlerbirliği | U5.5 | 1.62 | 1.62x | TOTO — in-play, struck 19:38 on a 19:00 kickoff (score at strike not recorded). A lane the board does not publish: Athena starred U4.5, which was no play (green bar 1.2128, panel best 1.15) and DIED at five goals. U5.5 held. Outside the board's rule; logged as taken, not as a board play |
 | ✅ | Cremonese v Padova | U5.5 | 1.29 | 1.29x | TOTO — in-play, struck 20:48 on a 19:30 kickoff (score at strike not recorded). A lane the board does not publish: Athena starred U3.5 on a RED card (bar 1.36, panel best 1.39 — price cleared but the tier says avoid), and it DIED at four goals. U5.5 held. Outside the board's rule; logged as taken, not as a board play |
 | — open | Watford v Preston | U3.5 | 1.34 | — | TOTO — pre-kickoff, struck 6 Sep 22:07 for an 8 Sep kickoff. A WATCH card at first sight: orange bar 1.2707, panel best 1.27 Unibet SE — a hundredth short of the bar, and his own book paid 1.34, which clears it by 5.5%. Stake EUR1.10, the first at the raised size |
+| ❌ | Almería v Cádiz | U4.5 | 1.21 | 0.00x | TOTO — in-play, struck 21:16 at 2-1. NO PLAY at first sight: the card was GREEN, bar 1.2128, panel best 1.16 (1xBet). Went 3-1 quickly, held most of the second half, then 3-2 in the last minutes. Outside the board's rule; logged as taken, not as a board play |
+| ✅ | Almería v Cádiz | U5.5 | 1.29 | 1.29x | TOTO — in-play, struck 21:39 at 3-1, the second bite on the same match after the price moved. A lane the board does not publish. Held at five goals. Outside the board's rule; logged as taken, not as a board play |
+| — open | Cruzeiro v Athletico-PR | U4.5 | 1.25 | — | TOTO — in-play, struck 22:04 at 3-1. The card starred U3.5 (U3.0 rung), which had already died; U4.5 is a rung above it. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
