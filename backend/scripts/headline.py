@@ -60,7 +60,13 @@ def tally() -> tuple[int, int, int, int]:
 
 
 def bets() -> tuple[int, int, float]:
-    """(hits, settled, ROI %) straight from the ledger's own settlement."""
+    """(hits, settled, ROI %) straight from the ledger's own settlement.
+
+    ROI is money-weighted, not bet-counted: every leg is scaled by the
+    stake in column 8. While stakes were flat the two agree exactly; they
+    stopped being flat on 6 Sep, and a bigger bet has to move the number
+    more than a smaller one or the figure is not a return on anything.
+    """
     fixtures = ledger.read_fixtures()
     staked = returned = 0.0
     n = hits = 0
@@ -69,6 +75,12 @@ def bets() -> tuple[int, int, float]:
             continue
         parts = ln.split("\t")
         name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
+        # Column 8, the stake — money weighted, not bet-counted. Stakes were
+        # flat 0.90 until 6 Sep, so a row without one reads as that.
+        try:
+            stake = float(parts[7]) if len(parts) > 7 and parts[7] else 0.90
+        except ValueError:
+            stake = 0.90
         # A cashed-out position is realised money: it settles the moment it
         # is flagged, at whatever multiple of the stake came back, no matter
         # what the fixture later does — the fixture's result belongs to
@@ -79,8 +91,8 @@ def bets() -> tuple[int, int, float]:
         # cash-out counts as a hit only when it returned at least the stake.
         if len(parts) > 4 and parts[4] not in ("", "0"):
             got = float(parts[4])
-            staked += 1
-            returned += got
+            staked += stake
+            returned += got * stake
             n += 1
             hits += got >= 1.0
             continue
@@ -91,8 +103,8 @@ def bets() -> tuple[int, int, float]:
         s = ledger.bet_state(rung, side, fx) if fx else None
         if s is None:
             continue
-        returned += max(s, 0.0) * odds + (1 - abs(s))
-        staked += 1
+        returned += (max(s, 0.0) * odds + (1 - abs(s))) * stake
+        staked += stake
         n += 1
         hits += s >= 0
     roi = (returned / staked - 1) * 100 if staked else 0.0

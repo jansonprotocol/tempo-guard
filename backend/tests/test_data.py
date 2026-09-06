@@ -1052,3 +1052,37 @@ def test_cup_probability_floor_is_raised():
     for code in ("UCL", "UEL", "UECL", "UCL-Q", "UEL-Q", "UECL-Q"):
         assert config.get(code).min_win_prob == 0.82
     assert config.get("ENG-PL").min_win_prob is None
+
+
+def test_livecheck_gates_on_what_is_actually_running():
+    """The scheduler's gate: cheap, standard-library only, and right.
+
+    It decides whether the live sweep runs at all, so a wrong answer is
+    either a board that goes stale through a match or a job that installs
+    the engine every five minutes for nothing.
+    """
+    from datetime import datetime, timedelta
+    from scripts import livecheck
+
+    now = datetime(2026, 9, 6, 20, 0, tzinfo=livecheck.BOARD_TZ)
+
+    def at(rows):
+        livecheck._rows = lambda: iter(rows)
+        return livecheck.reason(now)
+
+    keep = livecheck._rows
+    try:
+        # kicked off, no result yet -> sweep
+        assert at([("2026-09-06 19:00", "A v B", "")])
+        # graded, and finished-without-a-tip, are both done
+        assert at([("2026-09-06 19:00", "A v B", "✅ HIT — 1-0")]) is None
+        assert at([("2026-09-06 19:00", "A v B", "FT 1-0 (no tip)")]) is None
+        # about to start -> sweep; comfortably later -> not yet
+        assert at([("2026-09-06 20:05", "A v B", "")])
+        assert at([("2026-09-06 21:00", "A v B", "")]) is None
+        # a row no feed will ever settle must not hold the gate open for
+        # ever: past STALE it stops asking
+        old = now - livecheck.STALE - timedelta(minutes=1)
+        assert at([(old.strftime("%Y-%m-%d %H:%M"), "A v B", "")]) is None
+    finally:
+        livecheck._rows = keep

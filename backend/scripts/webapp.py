@@ -326,6 +326,14 @@ def _bets_rows() -> list[dict]:
         parts = ln.split("\t")
         name, rung, odds, side = parts[0], parts[1], float(parts[2]), parts[3]
         note = parts[6] if len(parts) > 6 else ""
+        # Column 8, the stake. Flat-unit ROI is stake-blind and does not
+        # need it; the money column does, and stakes stopped being flat on
+        # 6 Sep. Missing reads as the old flat 0.90 rather than zero, so a
+        # row typed without it cannot silently erase itself from the P/L.
+        try:
+            stake = float(parts[7]) if len(parts) > 7 and parts[7] else 0.90
+        except ValueError:
+            stake = 0.90
         lane = rung if side == "-" else (
             f"{rung} ({'home' if side == 'H' else 'away'})")
         align = _alignment(name, rung, side, tipmap)
@@ -338,19 +346,20 @@ def _bets_rows() -> list[dict]:
             out.append(dict(mark="◦" if got >= 1 else "❌",
                             name=name, lane=lane, odds=odds,
                             ret=f"{got:.2f}x", note=note, align=align,
-                            prob=prob))
+                            prob=prob, stake=stake))
             continue
         # ledger.bet_state, same gate as the README block: FT for anything
         # that can still move, immediate for a clinched over.
         s = ledger.bet_state(rung, side, fx) if fx else None
         if s is None:
             out.append(dict(mark="open", name=name, lane=lane, odds=odds,
-                            ret="—", note=note, align=align, prob=prob))
+                            ret="—", note=note, align=align, prob=prob,
+                            stake=stake))
             continue
         ret = max(s, 0.0) * odds + (1 - abs(s))
         out.append(dict(mark=MARK[s], name=name, lane=lane, odds=odds,
                         ret=f"{ret:.2f}x", note=note, align=align,
-                        prob=prob))
+                        prob=prob, stake=stake))
     return out
 
 
@@ -1623,6 +1632,9 @@ def main() -> None:
     (h1, n1), (h2, n2) = t[1], t[2]
     (p1, q1), _ = p[1], p[2]
     bh, bn, roi = headline.bets()
+    # What the ROI is a return ON. Stakes stopped being flat on 6 Sep, so
+    # the tile names the money rather than implying a unit count.
+    _staked = sum(b["stake"] for b in _bets_rows() if b["mark"] != "open")
     # Tip 3 grades off its own column marks — on probation it feeds no
     # other tally, but its record is public from the first settled lane.
     # A ◦ (DNB draw) counts as a hit, same convention as everywhere.
@@ -1785,7 +1797,7 @@ def main() -> None:
     tiles = "".join([
         tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
              f"your lanes · {bh}/{bn} hits"),
-        tile("roi", f"{roi:+.1f}%", f"flat stakes · {bn} settled"),
+        tile("roi", f"{roi:+.1f}%", f"on €{_staked:.2f} · {bn} settled"),
         tile("normal", f"{nh / nn * 100:.1f}%" if nn else "—",
              f"PLAY cards · {nh}/{nn}" if nn else "PLAY cards · none settled yet"),
         tile("★ strong", f"{sh / sn * 100:.1f}%" if sn else "—",
