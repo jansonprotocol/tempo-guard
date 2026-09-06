@@ -1,6 +1,11 @@
 # Every bet actually placed in Session #6, from 2 Sep 2026 — PRE-ALFA 2, the long
 # run: the engine and its rules are not touched while it runs.
 #
+# CONVENTION: a position struck AFTER kickoff must carry the words
+# "in-play" in its note. The board reads that word to badge the card and
+# to keep live strikes out of the board's own record — they are bought
+# off a price the board never quoted and a score the engine cannot see.
+#
 # Earlier books are archived and deliberately not mixed in:
 #   archive/2026-08-28-sessions-4-5-odds-layer/bets.tsv   113/143, ROI -0.3%
 #   archive/2026-08-24-session-3-cup-run/bets.tsv         25/35, ROI -7.5%

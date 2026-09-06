@@ -1167,6 +1167,13 @@ def _taken(f, pick: str | None) -> str:
     the money went on it. A bet on the same fixture but a different lane
     is not the same statement and must not wear the same badge, so it
     says which lane it actually is.
+
+    And a position struck AFTER kickoff is a third thing again. It was
+    bought off a live price the board never quoted and off a score the
+    engine cannot see, so crediting it to the card would flatter the
+    board with a bet the board did not offer. Those read "in-play" and
+    carry their own colour. The marker is the word in the position's
+    note, which is the convention config/bets.tsv is written under.
     """
     got = book().get(f.teams)
     if not got:
@@ -1188,11 +1195,23 @@ def _taken(f, pick: str | None) -> str:
     for b in got:
         rung = norm(b["lane"])
         mark = "" if b["mark"] == "open" else f' {b["mark"]}'
-        if want and rung == want:
-            out.append(f'<span class="taken">line taken '
+        live = "in-play" in (b.get("note") or "")
+        if live:
+            what = ("line" if want and rung == want
+                    else html.escape(b["lane"]))
+            out.append(f'<span class="taken live" title="Struck after '
+                       f'kickoff, off a live price the board never quoted '
+                       f'and a score the engine cannot see — not a board '
+                       f'play">{what} taken · in-play '
+                       f'<b>{b["odds"]:.2f}</b>{mark}</span>')
+        elif want and rung == want:
+            out.append(f'<span class="taken" title="The lane the card '
+                       f'starred, bought before kickoff">line taken '
                        f'<b>{b["odds"]:.2f}</b>{mark}</span>')
         else:
-            out.append(f'<span class="taken own">{html.escape(b["lane"])} '
+            out.append(f'<span class="taken own" title="A position on this '
+                       f'fixture, but not on the lane the card starred">'
+                       f'{html.escape(b["lane"])} '
                        f'taken <b>{b["odds"]:.2f}</b>{mark}</span>')
     return f'<div class="takenbar">{"".join(out)}</div>'
 
@@ -2286,6 +2305,8 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .taken b {{ font-weight:700; }}
 .taken.own {{ background:transparent; color:var(--dim);
   border-color:var(--edge); text-transform:none; letter-spacing:0; }}
+.taken.live {{ background:rgba(255,93,93,.14); color:#ff8a8a;
+  border-color:rgba(255,93,93,.45); }}
 .tabs a.on.amber {{ background:var(--gold); color:#111; }}
 .tabs a.on.red {{ background:#ff5d5d; color:#111; }}
 .card.pend {{ border-left-color:var(--blue); }}
