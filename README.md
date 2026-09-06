@@ -777,7 +777,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Gent v OH Leuven | U3.5 | 1.41 | 1.41x | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.4 Tipico, taken at 1.41 (+11.0% vs the bar) |
 | — open | Beveren v OH Leuven | U3.5 | 1.44 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.43 1xBet, taken at 1.44 (+13.3% vs the bar) |
 | — open | Corinthians v Chapecoense | U3.5 | 1.35 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet NL, taken at 1.35 (+6.2% vs the bar) |
-| ✅ | Basel v Sion | O1.5 | 1.36 | 1.36x | Unibet — in-play, struck 20:59 at 1-0 in the 42nd; the card was a WATCH at first sight (orange bar 1.2707, panel best 1.23) and the live price cleared it. Outside the board's decide-at-first-sight rule: logged as taken, not as a board play |
+| ✅ | Basel v Sion | O1.5 | 1.36 | 1.36x | Unibet — in-play, struck 20:59 on a 20:30 kickoff (score at strike not recorded); the card was a WATCH at first sight (orange bar 1.2707, panel best 1.23) and the live price cleared it. Outside the board's decide-at-first-sight rule: logged as taken, not as a board play |
 | — open | ADO Den Haag v Fortuna Sittard | U4.5 | 1.30 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.41 Pinnacle, taken at 1.30 (+2.3% vs the bar) |
 | — open | Heerenveen v AZ | U4.5 | 1.29 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.29 (+1.5% vs the bar) |
 | — open | Molde v KFUM Oslo | U4.5 | 1.35 | — | Unibet — the card's struck lane (U4.25 rung), PLAY: orange bar 1.2707, panel best 1.38 Pinnacle, taken at 1.35 (+6.2% vs the bar); replaced the Everton under, which was never a board lane |
@@ -795,7 +795,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Kawasaki v Shimizu | U4.5 | 1.23 | 1.23x | TOTO — in-play. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.18 (1xBet), and the card claimed 89.3%. Outside the board's rule; logged as taken, not as a board play |
 | ✅ | Chongqing Tongliang Long v Shanghai Shenhua | U4.5 | 1.46 | 1.46x | TOTO — in-play, struck 13:32 on a 13:00 kickoff. NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), card claimed 81.4Chongqing Tongliang Long v Shanghai Shenhua |
 | ✅ | Örgryte v Hammarby | U4.5 | 1.31 | 1.31x | TOTO — in-play, struck 15:11 on a 14:00 kickoff. NOT the card's lane: Athena starred O1.5 (81.3%), which was itself no play at a panel best of 1.08. Outside the board's rule; logged as taken, not as a board play |
-| ✅ | Eibar v Granada | U3.5 | 1.46 | 1.46x | TOTO — in-play, struck 14:21 on a 14:00 kickoff. This one IS the card's starred lane (U3.0 rung) and it was a PLAY pre-match: orange bar 1.2707, panel best 1.30 Pinnacle — the live price paid 1.46, better than the board ever offered. Still logged in-play, not as a board play |
+| ✅ | Eibar v Granada | U3.5 | 1.46 | 1.46x | TOTO — in-play, struck at 1-0 in the 25th (his own account; the slip's 3-0 is the FINAL score, not the score at strike). This one IS the card's starred lane (U3.0 rung) and it was a PLAY pre-match: orange bar 1.2707, panel best 1.30 Pinnacle — the live price paid 1.46, better than the board ever offered. Still logged in-play, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
