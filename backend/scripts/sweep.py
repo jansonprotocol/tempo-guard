@@ -192,6 +192,26 @@ def settle(cell: str, teams: str, hg: int, ag: int):
     return ("✅" if s > 0 else "◦" if s == 0 else "❌"), s
 
 
+# ESPN status names that mean the match is over and the score is a
+# result. Anything else under state "post" — STATUS_POSTPONED,
+# STATUS_CANCELED, STATUS_ABANDONED, STATUS_DELAYED, STATUS_SUSPENDED,
+# or an empty name from a feed hiccup — is not a result and must not be
+# graded as one.
+FINAL_NAMES = ("STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_FINAL_PEN",
+               "STATUS_FINAL_AET", "STATUS_END_OF_EXTRATIME",
+               "STATUS_FINAL_OT")
+
+
+def _is_final(name: str, detail: str) -> bool:
+    """Is this ESPN status a finished match with a real score?"""
+    if name in FINAL_NAMES:
+        return True
+    d = (detail or "").strip()
+    # The short detail is the fallback when the name is missing: FT,
+    # AET, Pen, and their ESPN spellings.
+    return d in ("FT", "AET", "PEN", "ET", "Full Time") or d.startswith("FT")
+
+
 def grade_cells(f, hg: int, ag: int, note: str = "") -> tuple[str, str, str]:
     """(tip2, status, tip3) for one fixture at a final score.
 
@@ -460,9 +480,21 @@ def main() -> None:
         # regulation score comes from the goal timeline, same as AET.
         in_et = in_play and ((ev["status"].get("period") or 0) >= 3
                              or "OVERTIME" in (st.get("name") or ""))
+        name = st.get("name") or ""
         if in_play and not in_et:
             status = f"LIVE {detail} {hg}-{ag}"
             tip2 = f.tip2
+        elif not in_et and not _is_final(name, detail):
+            # Not live, not in extra time, and not a final either. ESPN
+            # files postponements, abandonments, delays and its own
+            # glitches under state "post" with the score as it stood —
+            # Malmö v AIK came back "post" at half time on 7 Sep and was
+            # graded a 0-0 miss while the second half was being played,
+            # and a settled row is never re-swept. Leave it as it is
+            # and say why; a real final has a name.
+            missing.append(f"{f.teams} (ESPN {name or 'no status'}, "
+                           f"{detail or '—'}: not a final, left as is)")
+            continue
         else:
             # Finished (or in extra time, which settles the same way).
             # Markets settle on the 90, so anything after it is peeled
@@ -498,7 +530,10 @@ def main() -> None:
         if status == f.status and tip2 == f.tip2 and tip3 == f.tip3:
             continue
         _write_row(lines, f, tip2, status, tip3)
-        changed.append(f"{f.teams}: {status}")
+        # The ESPN status name rides along so a wrong grade can be traced
+        # to what the feed said at the time.
+        changed.append(f"{f.teams}: {status}"
+                       + ("" if in_play and not in_et else f"  [ESPN {name}]"))
 
     for c in changed:
         print(("would set " if dry else "set ") + c)

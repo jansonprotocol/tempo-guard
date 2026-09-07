@@ -1150,3 +1150,20 @@ def test_engine_inputs_are_not_recomputed_for_display():
         r = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", name],
                            cwd=root)
         assert r.returncode == 0, f"{name} has uncommitted changes"
+
+
+def test_sweep_grades_only_a_genuine_final():
+    """Malmö v AIK, 7 Sep: ESPN returned state "post" at half time and the
+    sweep graded a 0-0 miss while the second half was being played. A
+    settled row is never re-swept, so the grade has to be right the first
+    time: only a status that names a finished match may settle a row."""
+    from scripts.sweep import _is_final
+
+    assert _is_final("STATUS_FULL_TIME", "FT")
+    assert _is_final("STATUS_FINAL_PEN", "Pen")
+    assert _is_final("", "FT")                   # name missing, detail says FT
+    assert not _is_final("STATUS_POSTPONED", "Postponed")
+    assert not _is_final("STATUS_CANCELED", "Canceled")
+    assert not _is_final("STATUS_ABANDONED", "Abandoned")
+    assert not _is_final("STATUS_HALFTIME", "HT")
+    assert not _is_final("", "")                 # a feed hiccup grades nothing
