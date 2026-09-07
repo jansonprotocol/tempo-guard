@@ -49,7 +49,7 @@ jobs:
       # of sweeping inside the budget. Beyond it the run goes home and the
       # cron (or the previous run's hand-over) asks again later.
       WAIT_MAX: 16800
-      SWEEP_EVERY: 300          # seconds between passes
+      SWEEP_EVERY: 240          # seconds between passes (the bettor, 7 Sep: "a bit faster")
     steps:
       - uses: actions/checkout@v4
 
