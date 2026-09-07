@@ -8,6 +8,14 @@ interpreter start rather than a dependency install.
 
     python scripts/livecheck.py          prints the reason, exit 0 = sweep
     python scripts/livecheck.py --quiet  exit code only
+    python scripts/livecheck.py --wait   prints seconds until the next
+                                         sweep is due: 0 = now, -1 = never
+
+The --wait form exists because GitHub's cron is not a clock. On 7 Sep it
+fired at 02:21, 07:24 and 13:35 — five to six hours apart on a */5
+schedule — and the 13:35 run found nothing live, went home, and the
+17:30 kickoff went unswept. A run that instead learns it is two hours
+early can sleep two hours on the runner and be there for the whistle.
 
 A sweep is worth running when either:
 
@@ -98,7 +106,22 @@ def next_kickoff(now: datetime | None = None):
     return best
 
 
+def wait_seconds(now: datetime | None = None) -> int:
+    """Seconds until a sweep is due: 0 when one is due now, the time to
+    LEAD before the next kickoff otherwise, -1 when nothing is coming."""
+    now = now or datetime.now(BOARD_TZ)
+    if reason(now):
+        return 0
+    nxt = next_kickoff(now)
+    if not nxt:
+        return -1
+    return max(0, int((nxt[0] - LEAD - now).total_seconds()))
+
+
 def main() -> None:
+    if "--wait" in sys.argv:
+        print(wait_seconds())
+        raise SystemExit(0)
     quiet = "--quiet" in sys.argv
     why = reason()
     if why:

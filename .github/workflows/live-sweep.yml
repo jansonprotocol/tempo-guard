@@ -1,35 +1,32 @@
 # Keep the live board current without anyone asking for it.
 #
 # GitHub can only schedule a FIXED cron, but football is not on a fixed
-# cron, so the shape here is: wake often, decide cheaply, work rarely.
+# cron, so the shape here is: wake, decide cheaply, wait if the whistle is
+# near, sweep in a loop while anything is live, hand over to a fresh run.
 # Every run starts with scripts/livecheck.py, which imports nothing but
 # the standard library and answers in about 40ms — is a fixture live and
-# ungraded, or about to kick off? Almost always no, and that run ends in
-# seconds having installed nothing. Only when the answer is yes does the
-# job pay for the engine's dependencies and run the real sweep.
-#
-# The effect is what the bettor described on 6 Sep: nothing happens until
-# a kickoff approaches, then the board refreshes every few minutes for as
-# long as anything is running, and when the last match settles it goes
-# quiet again until the next one.
+# ungraded, or about to kick off, or how long until the next one?
 #
 # THE CADENCE DOES NOT COME FROM THE CRON, and that is deliberate. A */5
-# schedule is a floor GitHub does not honour — the first run after this
-# file landed took more than four slots to appear, which is ordinary for
-# a fresh schedule and no better afterwards. So the cron only has to
-# START a session; once started, the job SWEEPS IN A LOOP on its own
-# clock, every SWEEP_EVERY seconds, for as long as the gate says football
-# is happening. One run therefore covers a whole evening at a cadence
-# GitHub cannot drift, and the loop exits the moment nothing is live.
+# schedule is a floor GitHub does not honour: on 7 Sep it fired at 02:21,
+# 07:24 and 13:35, five to six hours apart, and the 13:35 run found
+# nothing live, went home, and a 17:30 kickoff went unswept for an hour.
+# So a run that arrives early no longer goes home — if the next kickoff
+# is within WAIT_MAX it SLEEPS on the runner until LEAD minutes before
+# the whistle (the repository is public, so runner minutes are free),
+# then sweeps every SWEEP_EVERY seconds for as long as the gate says
+# football is happening. When the loop ends it DISPATCHES the next run
+# itself, so the chain continues on the board's own clock; the cron is
+# only there to restart the chain if a run ever dies.
 #
-# The concurrency group means a cron that fires while a loop is already
-# running does not start a second one.
+# The concurrency group means a cron that fires while a run is sleeping
+# or sweeping queues behind it rather than starting a second one.
 name: live sweep
 
 on:
   schedule:
     - cron: "*/5 * * * *"
-  workflow_dispatch:          # a manual "sweep now" button
+  workflow_dispatch:          # a manual "sweep now" button, and the chain
 
 concurrency:
   # Never let two sweeps write the board at once; queue the newer one
@@ -39,10 +36,20 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write              # to dispatch the follow-up run
 
 jobs:
   sweep:
     runs-on: ubuntu-latest
+    # The job's whole life, waiting included; GitHub kills a job at 6h.
+    timeout-minutes: 355
+    env:
+      LEAD_BUDGET_MIN: 340      # minutes the job plans around
+      # Sleep at most this long for a kickoff: 4h40, which leaves an hour
+      # of sweeping inside the budget. Beyond it the run goes home and the
+      # cron (or the previous run's hand-over) asks again later.
+      WAIT_MAX: 16800
+      SWEEP_EVERY: 300          # seconds between passes
     steps:
       - uses: actions/checkout@v4
 
@@ -50,16 +57,29 @@ jobs:
         with:
           python-version: "3.11"
 
-      # The gate. Exit 0 means work to do; exit 1 means go home. No
-      # dependencies are installed above this line on purpose.
+      # The gate. Either sweep now, or learn how long until the whistle
+      # and sleep for it if that fits the job's budget. No dependencies
+      # are installed above this line on purpose.
       - id: gate
         run: |
+          START=$(date +%s)
+          echo "start=$START" >> "$GITHUB_OUTPUT"
           cd backend
-          if python scripts/livecheck.py; then
-            echo "go=yes" >> "$GITHUB_OUTPUT"
-          else
-            echo "go=no" >> "$GITHUB_OUTPUT"
+          WAIT=$(python scripts/livecheck.py --wait)
+          python scripts/livecheck.py || true
+          if [ "$WAIT" -lt 0 ]; then
+            echo "nothing on the board — go home"
+            echo "go=no" >> "$GITHUB_OUTPUT"; exit 0
           fi
+          if [ "$WAIT" -gt "$WAIT_MAX" ]; then
+            echo "next kickoff is $((WAIT/60)) min away — beyond the wait window, go home"
+            echo "go=no" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          if [ "$WAIT" -gt 0 ]; then
+            echo "next kickoff in $((WAIT/60)) min — sleeping until LEAD before it"
+            sleep "$WAIT"
+          fi
+          echo "go=yes" >> "$GITHUB_OUTPUT"
 
       - if: steps.gate.outputs.go == 'yes'
         run: pip install -r backend/requirements.txt
@@ -69,15 +89,14 @@ jobs:
       # rewrites the board every pass, so without that check the history
       # would take a commit every five minutes saying nothing.
       - if: steps.gate.outputs.go == 'yes'
-        timeout-minutes: 330
-        env:
-          SWEEP_EVERY: 300          # seconds between passes
-          MAX_PASSES: 60            # ~5h, under the 6h job ceiling
         run: |
           git config user.name  "tempo-guard bot"
           git config user.email "noreply@anthropic.com"
+          DEADLINE=$(( ${{ steps.gate.outputs.start }} + LEAD_BUDGET_MIN*60 ))
           cd backend
-          for pass in $(seq 1 "$MAX_PASSES"); do
+          pass=0
+          while [ "$(date +%s)" -lt "$DEADLINE" ]; do
+            pass=$((pass+1))
             echo "::group::pass $pass"
             python scripts/sweep.py || echo "sweep failed, continuing"
             cd ..
@@ -104,11 +123,32 @@ jobs:
             cd backend
             echo "::endgroup::"
             # Ask the gate again. When the last match settles the loop
-            # ends here rather than burning the rest of its ceiling.
+            # ends here rather than burning the rest of its budget.
             if ! python scripts/livecheck.py; then
               echo "nothing live any more — loop done after $pass passes"
-              exit 0
+              break
             fi
             sleep "$SWEEP_EVERY"
           done
-          echo "hit the pass ceiling; the next cron picks it up"
+          echo "loop over after $pass passes"
+
+      # Hand over. Whatever happened above, if the board still has a
+      # fixture coming, start the next run now: it will sleep for the
+      # whistle or pick up where this one left off. Without this the
+      # chain depends on a cron that fires when it likes.
+      # (!cancelled(), not always(): a run someone stops by hand must not
+      # resurrect itself — the cron brings the chain back later.)
+      - if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd backend
+          WAIT=$(python scripts/livecheck.py --wait)
+          if [ "$WAIT" -lt 0 ]; then
+            echo "nothing on the board — no follow-up"; exit 0
+          fi
+          if [ "$WAIT" -gt "$WAIT_MAX" ]; then
+            echo "next kickoff is $((WAIT/60)) min away — leaving it to the cron"; exit 0
+          fi
+          echo "dispatching the follow-up run (next sweep due in $((WAIT/60)) min)"
+          gh workflow run live-sweep.yml --ref "${{ github.ref_name }}"

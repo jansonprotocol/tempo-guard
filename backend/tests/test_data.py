@@ -1084,6 +1084,14 @@ def test_livecheck_gates_on_what_is_actually_running():
         # ever: past STALE it stops asking
         old = now - livecheck.STALE - timedelta(minutes=1)
         assert at([(old.strftime("%Y-%m-%d %H:%M"), "A v B", "")]) is None
+        # --wait: how long a run that arrived early should sleep. Due now
+        # -> 0; an hour out -> LEAD short of an hour; nothing coming -> -1.
+        def wait(rows):
+            livecheck._rows = lambda: iter(rows)
+            return livecheck.wait_seconds(now)
+        assert wait([("2026-09-06 19:00", "A v B", "")]) == 0
+        assert wait([("2026-09-06 21:00", "A v B", "")]) == 3600 - 6 * 60
+        assert wait([("2026-09-06 19:00", "A v B", "✅ HIT — 1-0")]) == -1
     finally:
         livecheck._rows = keep
 
