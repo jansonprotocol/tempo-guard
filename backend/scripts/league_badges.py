@@ -65,6 +65,10 @@ HEADERS = ("| Live | League | Teams | Tip 1 | Tip 2 | Kickoff |",
            "| Result | League | Teams | Tip 1 | Tip 2 | Kickoff |")
 
 
+from functools import lru_cache
+
+
+@lru_cache(maxsize=1)
 def rates() -> dict[str, str]:
     """Badge per league: the PLAYABLE hitrate and its distance from the
     league's all-tips baseline — `(83.7 +1.7)` reads "playable lanes land

@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import re
+from functools import lru_cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -61,11 +62,18 @@ def _hit(mark: str | None) -> bool | None:
     return mark != "❌"
 
 
+@lru_cache(maxsize=1)
 def display_rates() -> dict[str, dict]:
     """Per league: n, hit, says, gap, play_hit, play_n — red cards out.
 
     Mirrors the columns of league_hitrates.tsv so the badge and the
     Retrosim row can be built the same way from either source.
+
+    CACHED, and it matters: this walks the whole bank (32,000 cards), and
+    the league badge on every card asked for it afresh — 1,813 times per
+    render on 7 Sep, 214 of the render's 222 profiled seconds, which is
+    what made the live sweep's passes take two minutes each. The bank
+    does not change during a render, so the answer is computed once.
     """
     out = {}
     for code, comp in bank().items():
@@ -95,6 +103,7 @@ def display_rates() -> dict[str, dict]:
     return out
 
 
+@lru_cache(maxsize=4)
 def baselines(n: int = 300, min_n: int = 30) -> dict[str, dict] | None:
     """Per league, over its most recent `n` bank cards, red cards out:
     hits/count/summed-claim for fp, t1, t2, t3 — the shape baselines.tsv
