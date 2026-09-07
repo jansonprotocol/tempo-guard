@@ -893,6 +893,7 @@ that premium the book is keeping the insurance money.
 | — open | Fortaleza v Avaí | U3.5 | 1.25 | — | TOTO — pre-kickoff, struck 7 Sep 11:00 for a 10 Sep kickoff. ORANGE at first sight, bar 1.2707, panel best 1.35 Pinnacle; TOTO's 1.25 is UNDER the bar, so this is a watch-price strike by choice. U3.0 rung struck as U3.5. |
 | — open | América-MG v Náutico | U3.5 | 1.28 | — | TOTO — pre-kickoff, struck 7 Sep 11:00 for a 10 Sep kickoff. ORANGE at first sight, bar 1.2707, panel best 1.38 Pinnacle; 1.28 clears the bar by a hair. U3.0 rung struck as U3.5. |
 | — open | Vancouver v LA Galaxy | U4.5 | 1.36 | — | TOTO — pre-kickoff, struck 7 Sep 11:00 for a 10 Sep kickoff. ORANGE at first sight, bar 1.2707, panel best 1.40 1xBet. U4.25 rung struck as U4.5, the standing translation. |
+| — open | Sport Recife v Ponte Preta | U3.5 | 1.62 | — | TOTO — pre-kickoff, struck 7 Sep 11:55 for an 11 Sep kickoff. ORANGE at first sight, bar 1.2707, panel best 1.79 Pinnacle, consensus 1.59; TOTO's 1.62 clears the bar by a street. The market has this rung near 60% against the card's 82.9 — the widest claim-to-price gap on the week's slips. U3.0 rung struck as U3.5. |
 
 <!-- HYPOTHESES:START -->
 
