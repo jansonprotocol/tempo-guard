@@ -1150,3 +1150,45 @@ def test_engine_inputs_are_not_recomputed_for_display():
         r = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", name],
                            cwd=root)
         assert r.returncode == 0, f"{name} has uncommitted changes"
+
+
+def test_sweep_grades_only_a_genuine_final():
+    """Malmö v AIK, 7 Sep: ESPN returned state "post" at half time and the
+    sweep graded a 0-0 miss while the second half was being played. A
+    settled row is never re-swept, so the grade has to be right the first
+    time: only a status that names a finished match may settle a row."""
+    from scripts.sweep import _is_final
+
+    assert _is_final("STATUS_FULL_TIME", "FT")
+    assert _is_final("STATUS_FINAL_PEN", "Pen")
+    assert _is_final("", "FT")                   # name missing, detail says FT
+    assert not _is_final("STATUS_POSTPONED", "Postponed")
+    assert not _is_final("STATUS_CANCELED", "Canceled")
+    assert not _is_final("STATUS_ABANDONED", "Abandoned")
+    assert not _is_final("STATUS_HALFTIME", "HT")
+    assert not _is_final("", "")                 # a feed hiccup grades nothing
+
+
+def test_from_here_reads_the_card_against_the_clock():
+    """The "from here" line: the card's own mu against the minute. Pinned
+    to the half-time numbers measured on 7 Sep (U4.5 at three goals lands
+    54%), and to the shapes it must stay silent on."""
+    from scripts import fromhere as F
+
+    # U4.5 card at 84% with three goals at half time: ~53%, fair ~1.9
+    r = F.read("U4.25 84.3% +3.3% · buy≥1.19", "A v B", "LIVE HT 2-1")
+    assert r and 0.48 < r["p"] < 0.58 and 1.7 < r["fair"] < 2.1
+    # the same card at 2-0 in the second half is safer than at half time
+    r2 = F.read("U4.25 84.3% +3.3% · buy≥1.19", "A v B", "LIVE 70' 2-0")
+    assert r2 and r2["p"] > r["p"]
+    # an over at 0-0 at 60' carries the haircut: well under half
+    o = F.read("O1.5 83.5% +5.1% · buy≥1.25", "A v B", "LIVE 60' 0-0")
+    assert o and o["p"] < 0.5
+    # silent where liveline already speaks, or where there is nothing to read
+    assert F.line("O1.5 83.5% +5.1% · buy≥1.25", "A v B", "LIVE 70' 1-1") == ""   # landed
+    assert F.line("U3.0 75.8% +0.5% · buy≥1.32", "A v B", "LIVE 60' 2-2") == ""   # gone
+    assert F.line("DNB1 78.7% +11.1% · buy≥1.33", "A v B", "LIVE 42' 2-0") == ""  # not a total
+    assert F.line("U4.25 84.3% +3.3% · buy≥1.19", "A v B", "") == ""              # not running
+    # a team lane reads the team's goals, not the match's
+    t = F.read("**A O1.5** 57.3% +12.5% (team) · buy≥1.80", "A v B", "LIVE 60' 1-0")
+    assert t and t["needs"] == 1

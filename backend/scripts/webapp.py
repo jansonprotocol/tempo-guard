@@ -1359,6 +1359,19 @@ def _card(f, kind: str, reads: dict) -> str:
                 cls = ("gone" if s.startswith("✗") or "gone" in s
                        else "won" if s.startswith("✓") else "")
                 live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
+            # And what the lane is worth from here: the card's own mu
+            # against the clock, for holding an in-play price against
+            # (scripts/fromhere.py — a read, not a verdict).
+            from scripts import fromhere
+            fh = fromhere.line(cell, f.teams, f.status)
+            if fh:
+                live += (f'<div class="from" title="What this lane is worth '
+                         f'now, from the card\'s own expected goals and the '
+                         f'minute. Hold an in-play price against the fair '
+                         f'number: buy above it, not below. Unders read '
+                         f'straight; overs carry a measured ten-point '
+                         f'haircut while they still need goals.">'
+                         f'{html.escape(fh)}</div>')
         tail = " <span class=\"dim\">· result lane</span>" if which == 3 else ""
         if noplay:
             tail += ('<span class="noplay" title="Shown for the record. '
@@ -2502,6 +2515,8 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   color:var(--gold); }}
 .prog.won {{ color:var(--green); }}
 .prog.gone {{ color:#e07a6a; }}
+.from {{ margin-top:3px; font-size:11px; letter-spacing:.04em;
+  color:var(--gold); cursor:help; }}
 .tie {{ margin-top:8px; font-size:12px; color:var(--tx);
   background:#111622; border-radius:7px; padding:8px 10px; }}
 summary {{ cursor:pointer; list-style:none; }}
