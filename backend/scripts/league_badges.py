@@ -82,6 +82,22 @@ def rates() -> dict[str, str]:
             out[code] = f"({play} {d:+.1f})".replace("-", "−")
         else:
             out[code] = f"({hit} capped)"
+    # The DISPLAY reads the bank with the red cards out (the bettor's
+    # rule, 7 Sep: a card that may never be played is not a card the
+    # record is judged on). The typed file above stays as it is — it is
+    # an engine input — and only shows where the bank has no row.
+    try:
+        from scripts.bankrates import display_rates
+        for code, r in display_rates().items():
+            hit = f"{r['hit'] * 100:.1f}"
+            if r["play_hit"] is not None and r["play_n"] >= 30:
+                play = f"{r['play_hit'] * 100:.1f}"
+                d = (r["play_hit"] - r["hit"]) * 100
+                out[code] = f"({play} {d:+.1f})".replace("-", "−")
+            elif code in out and "capped" in out[code]:
+                out[code] = f"({hit} capped)"
+    except Exception:
+        pass
     return out
 
 

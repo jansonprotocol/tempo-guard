@@ -195,10 +195,19 @@ def _cell(raw: str) -> str:
 
 
 def _tallies(fixtures: list[Fixture]):
+    """Hits and settled per lane — over the cards that COUNT.
+
+    A red or super-red card is never allowed to be played, so it is never
+    allowed into a hit rate either (the bettor's rule, 7 Sep). It stays
+    on the board and is still graded; it just does not count. The one
+    predicate that decides which cards count lives in webapp.counts, so
+    the README and the app can never disagree about it.
+    """
+    from scripts.webapp import counts
     t = {1: [0, 0], 2: [0, 0]}          # published lanes: hits, settled
     p = {1: [0, 0], 2: [0, 0]}          # playable lanes
     for f in fixtures:
-        if not f.settled:
+        if not f.settled or not counts(f):
             continue
         for which in (1, 2):
             cell = f.tip1 if which == 1 else f.tip2
@@ -518,7 +527,8 @@ def verify(quiet: bool = False) -> None:
             if f'id="{pid}"' not in app:
                 bad.append(f"app page {pid} vanished")
         panes = {}
-        for pid in ("t-playable", "t-watch", "t-running", "t-bets",
+        for pid in ("t-playable", "t-watch", "t-running", "t-declined",
+                    "t-bets",
                     "t-lanes", "t-done"):
             if f'id="{pid}"' not in app:
                 bad.append(f"app tab {pid} vanished")
@@ -538,15 +548,17 @@ def verify(quiet: bool = False) -> None:
         #    contradicting itself. The check asks the app which is which
         #    rather than re-deriving it — two definitions of playable or
         #    of watch is exactly the drift this verify exists to catch.
-        from scripts.webapp import verdict, _star, running_call
-        play, watch, live, rest = [], [], [], []
+        from scripts.webapp import verdict, _star, running_call, label_any
+        play, watch, live, declined, rest = [], [], [], [], []
         for f in pending:
             v = verdict(f, _star(f))
+            lab = label_any(f)
             (play if (v and v["play"]) else
              watch if (v and v["watch"]) else
-             live if running_call(f) else rest).append(f)
+             live if running_call(f) else
+             declined if (lab and lab.endswith("red")) else rest).append(f)
         for pid, want in (("t-playable", play), ("t-watch", watch),
-                          ("t-running", live),
+                          ("t-running", live), ("t-declined", declined),
                           ("t-lanes", rest), ("t-done", done)):
             body = panes.get(pid, "")
             for f in want:
@@ -559,7 +571,7 @@ def verify(quiet: bool = False) -> None:
         # and nothing may sit in two pending tabs
         for f in pending:
             n = sum(1 for pid in ("t-playable", "t-watch", "t-running",
-                                  "t-lanes")
+                                  "t-declined", "t-lanes")
                     if in_app(f.teams, panes.get(pid, "")))
             if n > 1:
                 bad.append(f"{f.teams!r} is in {n} pending tabs")

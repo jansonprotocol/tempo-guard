@@ -1084,5 +1084,69 @@ def test_livecheck_gates_on_what_is_actually_running():
         # ever: past STALE it stops asking
         old = now - livecheck.STALE - timedelta(minutes=1)
         assert at([(old.strftime("%Y-%m-%d %H:%M"), "A v B", "")]) is None
+        # --wait: how long a run that arrived early should sleep. Due now
+        # -> 0; an hour out -> LEAD short of an hour; nothing coming -> -1.
+        def wait(rows):
+            livecheck._rows = lambda: iter(rows)
+            return livecheck.wait_seconds(now)
+        assert wait([("2026-09-06 19:00", "A v B", "")]) == 0
+        assert wait([("2026-09-06 21:00", "A v B", "")]) == 3600 - 6 * 60
+        assert wait([("2026-09-06 19:00", "A v B", "✅ HIT — 1-0")]) == -1
     finally:
         livecheck._rows = keep
+
+
+def test_red_cards_count_toward_no_hit_rate():
+    """The bettor's rule, 7 Sep: a red or super-red card is never played,
+    so it never enters a hit rate — on the board or in the bank — while
+    staying visible and graded. One predicate on each side; both must
+    refuse red and accept everything else, including the unlabelled.
+    """
+    from scripts import bankrates, board, webapp
+
+    # the bank side: a labelled red card is out, everything else is in
+    assert not bankrates.counts({"g": "red"})
+    assert not bankrates.counts({"g": "super red"})
+    assert bankrates.counts({"g": "orange"})
+    assert bankrates.counts({"g": "green"})
+    assert bankrates.counts({})                     # unlabelled still counts
+
+    # the board side: the tallies must drop exactly the settled red cards
+    fx = board.load()
+    settled = [f for f in fx if f.settled]
+    red = [f for f in settled
+           if (lab := webapp.label_any(f)) and lab.endswith("red")]
+    keep = [f for f in settled if f not in red]
+    t_all, _ = board._tallies(fx)
+    # count tip 1 by hand over the kept cards, the way _tallies does
+    n = sum(1 for f in keep if f.status[:1] in ("✅", "❌", "◦")
+            and not f.tip1.startswith("—"))
+    assert t_all[1][1] == n, (t_all[1][1], n, len(red))
+    # and had the reds been in, the count would be larger by their number
+    n_red = sum(1 for f in red if f.status[:1] in ("✅", "❌", "◦"))
+    assert n_red > 0, "no settled red card on the board to test against"
+
+    # the hero: the one number that kept counting reds until 7 Sep. The
+    # rendered page must say so, and the app must flag every settled red
+    # board card as no-count so the window can skip it.
+    from pathlib import Path
+    src = Path(webapp.__file__).read_text()
+    assert 'entry["nc"] = 1' in src and 'm.get("nc")' in src
+    page = Path(webapp.__file__).resolve().parents[2] / "web" / "index.html"
+    if page.exists():
+        assert ("playable cards · red and super-red cards excluded"
+                in page.read_text())
+
+
+def test_engine_inputs_are_not_recomputed_for_display():
+    """league_hitrates.tsv feeds the REL debit and the buy-from blend, and
+    guard_slices.tsv feeds the confluence score. The display now reads the
+    bank with the red cards out; neither engine file may be touched for
+    it, or a reporting change becomes a rules change."""
+    import subprocess
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[2]
+    for name in ("config/league_hitrates.tsv", "config/guard_slices.tsv"):
+        r = subprocess.run(["git", "diff", "--quiet", "HEAD", "--", name],
+                           cwd=root)
+        assert r.returncode == 0, f"{name} has uncommitted changes"
