@@ -246,13 +246,31 @@ def _baselines() -> dict[str, float] | None:
     fixtures replayed as-of, push counted as a hit, leagues weighted
     equally). None — and no bar — when the file is missing: a missing
     baseline is better than a stale-looking typed one."""
-    path = ROOT / "config" / "baselines.tsv"
-    if not path.exists():
-        return None
     sums: dict[str, list[float]] = {"fp": [], "t1": [], "t2": [], "t3": []}
     # The claim behind those same lanes, where the replay recorded it — a
     # hitrate is only half a verdict without what was promised beside it.
     says: dict[str, list[float]] = {"fp": [], "t1": [], "t2": [], "t3": []}
+    # FIRST CHOICE: the bank, with the red cards out (the bettor's rule,
+    # 7 Sep). It carries the guard's label on every card, which the
+    # replay file never did, so it is the only source that can say which
+    # cards count. The typed file is the fallback for a checkout with no
+    # bank. baselines.tsv itself is left as it is — scripts/baselines.py
+    # still writes it and other instruments still read it.
+    from scripts import bankrates
+    from_bank = bankrates.baselines()
+    if from_bank:
+        for acc in from_bank.values():
+            for key in ("fp", "t1", "t2", "t3"):
+                h, n, s = acc[key]
+                if n >= 30:
+                    sums[key].append(h / n)
+                    says[key].append(s / n / 100)
+        return {k: (sum(v) / len(v) * 100,
+                    sum(says[k]) / len(says[k]) * 100 if says[k] else None)
+                for k, v in sums.items() if v} or None
+    path = ROOT / "config" / "baselines.tsv"
+    if not path.exists():
+        return None
     for ln in path.read_text().splitlines():
         if not ln.strip() or ln.startswith("#"):
             continue
@@ -288,18 +306,31 @@ def _baselines() -> dict[str, float] | None:
 def _read_tiers() -> str:
     """The About page's proof that tip 3 ignores league tier — derived
     from baselines.tsv at render so it moves when the replay is re-run."""
-    path = ROOT / "config" / "baselines.tsv"
-    if not path.exists():
-        return ""
     tiers = {"under 80%": [], "80–85%": [], "85%+": []}
-    for ln in path.read_text().splitlines():
-        if ln.startswith("#") or not ln.strip():
-            continue
-        p = ln.split("\t")
-        if int(p[2]) < 30:
-            continue
-        t1 = int(p[1]) / int(p[2])
-        t3 = int(p[5]) / int(p[6]) if int(p[6]) >= 30 else None
+    # Same source order as the hero bar: the bank with the red cards
+    # out, then the typed file as a fallback.
+    from scripts import bankrates
+    from_bank = bankrates.baselines()
+    rows_in = []
+    if from_bank:
+        for acc in from_bank.values():
+            t1 = acc["t1"][0] / acc["t1"][1]
+            t3 = (acc["t3"][0] / acc["t3"][1]) if acc["t3"][1] >= 30 else None
+            rows_in.append((t1, t3))
+    else:
+        path = ROOT / "config" / "baselines.tsv"
+        if not path.exists():
+            return ""
+        for ln in path.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            p = ln.split("\t")
+            if int(p[2]) < 30:
+                continue
+            t1 = int(p[1]) / int(p[2])
+            t3 = int(p[5]) / int(p[6]) if int(p[6]) >= 30 else None
+            rows_in.append((t1, t3))
+    for t1, t3 in rows_in:
         key = "under 80%" if t1 < .80 else "80–85%" if t1 < .85 else "85%+"
         tiers[key].append((t1, t3))
     rows = ""
@@ -777,15 +808,21 @@ def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
             q.get("book") or ""]) + "\n")
 
 
-def _label_of(f, best: int, full: bool = False):
+def _label_of(f, best: int, full: bool = False, force: bool = False):
     """The guard label for the starred lane, computed once.
 
     Split out of _guard because the card now needs the label BEFORE it
     renders any lane: only the starred lane's price bar is backed by a
     validated hit rate, and every other lane has to say that it is not.
+
+    `force` labels a SETTLED card too. The live path refuses those on
+    purpose — a finished card is a record, not an instruction — but the
+    record still needs to know its own colour, because a red card is
+    kept out of every hit rate (the bettor's rule, 7 Sep) and the
+    forward log only stamped the cards a feed had quoted.
     """
     global _SLICES
-    if f.settled or not best:
+    if (f.settled and not force) or not best:
         return None
     cell = f.tip3 if best == 3 else f.tip1
     p = _claim(cell)
@@ -821,12 +858,52 @@ def _star(f) -> int:
     """
     if f.settled:
         return 0
+    return _star_any(f)
+
+
+def _star_any(f) -> int:
+    """The chooser without the settled guard — what the card STARRED,
+    asked of a finished card for the record's sake."""
     p1, p3 = _claim(f.tip1), _claim(f.tip3)
     if p1 is not None:
         if _is_dnb(f.tip3) and p3 is not None and p3 - p1 > DNB_GATE:
             return 3
         return 1
     return 3 if f.tip3.strip() else 0
+
+
+def label_any(f) -> str | None:
+    """The card's guard label whether or not it has settled.
+
+    Live: the same label the card shows. Settled: the frozen forward-log
+    row where one exists — that is the label the card WAS — and otherwise
+    the tier and score recomputed on the card as it stands, which is the
+    only source for a no-feed league the log never stamped. Either way it
+    is read for the record, never for a decision: nothing here changes
+    what the board offers.
+    """
+    if not f.settled:
+        b = _star(f)
+        return _label_of(f, b) if b else None
+    got = was_called(f)
+    if got:
+        return got["row"].get("label")
+    b = _star_any(f)
+    return _label_of(f, b, force=True) if b else None
+
+
+def counts(f) -> bool:
+    """Does this card belong in a hit rate?
+
+    The bettor's rule, 7 Sep: a red or super-red card is never allowed to
+    be played, so it must never be allowed into the record either — it
+    stays on the board for analysis and is still graded, it just does not
+    count. A card with no label at all (an abstention, a card with no
+    starred lane) is not red, and whatever it graded still counts as it
+    always did.
+    """
+    lab = label_any(f)
+    return not (lab and lab.endswith("red"))
 
 
 def verdict(f, best: int) -> dict | None:
@@ -1395,6 +1472,11 @@ def _hitrates_rows() -> str:
     that league's tips — the ROI half of the story. A league can hit 90%
     and still be unbuyable if its rungs price at 1.10."""
     import math
+    # Hit, gap and the playable record come from the bank with the red
+    # cards out (the bettor's rule, 7 Sep); buy-from stays with the typed
+    # file, which is the engine's own and is not recomputed here.
+    from scripts import bankrates
+    shown = bankrates.display_rates()
     rows = []
     for ln in (ROOT / "config" / "league_hitrates.tsv").read_text().splitlines():
         if not ln.strip() or ln.startswith("#"):
@@ -1404,6 +1486,13 @@ def _hitrates_rows() -> str:
         buy = parts[4] if len(parts) > 4 and parts[4] else "—"
         p_hit = parts[5] if len(parts) > 5 and parts[5] else ""
         p_n = parts[6] if len(parts) > 6 and parts[6] else ""
+        r = shown.get(lg)
+        if r:
+            n = str(r["n"])
+            hit = f"{r['hit'] * 100:.1f}"
+            gap = f"{r['gap'] * 100:+.1f}".replace("-", "−")
+            if r["play_hit"] is not None and r["play_n"] >= 30:
+                p_hit, p_n = f"{r['play_hit'] * 100:.1f}", str(r["play_n"])
         from app.engine.market_select import CONSENSUS_CAP_LEAGUES
         play = (f'{p_hit}% <span class="dim">({p_n})</span>'
                 if p_hit else
@@ -1575,6 +1664,12 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "has since happened. Not buyable any more, so not a play — the "
          "price shown is the one from first sight, kept in the forward "
          "log. A card the board declined never appears here."),
+        ("⛔ Declined", "the tier said avoid: a red or super-red label "
+         "is a veto, never played at any price. These cards are still "
+         "swept and graded, but they count toward NO hit rate — not the "
+         "tiles, not the baselines, not a league badge, not the bank. A "
+         "card that may not be played is not a card the record is judged "
+         "on."),
         ("Tip 2 \u00b7 (team)", "a TEAM total \u2014 one side alone to score. "
          "Printed and graded, never played: it landed 12.7 points below "
          "tip 1 on the same fixtures."),
@@ -1641,8 +1736,14 @@ def main() -> None:
     # Hindsight rows — session fixtures that settled before the lane
     # existed, graded retroactively at the bettor's request — are counted
     # but named in the tile, so the live record can never hide behind them.
+    # THE CARDS THAT COUNT. A red or super-red card never plays, so it
+    # never enters a hit rate either (the bettor's rule, 7 Sep): it stays
+    # on the board, is still graded, and feeds nothing below this line.
+    # board._tallies applies the same predicate to the tip 1 and tip 2
+    # tallies, so the README and every tile here agree by construction.
+    counted = [f for f in fixtures if counts(f)]
     h3 = n3 = hs3 = 0
-    for f in fixtures:
+    for f in counted:
         mark = f.tip3.lstrip()[:1] if f.tip3.strip() else ""
         if mark in ("✅", "❌", "◦"):
             n3 += 1
@@ -1676,8 +1777,15 @@ def main() -> None:
     # with nothing to tell them apart. They keep the price from the
     # forward log, not a live quote, because there is no live quote.
     running = [f for f in pending if running_call(f)]
+    # DECLINED (the bettor's ask, 7 Sep): a red or super-red card can
+    # never be played, so it has no business sitting in Athena lanes
+    # beside cards that merely failed on price. It gets its own tab, is
+    # still swept and graded by the bot, and counts toward nothing.
+    declined = [f for f in pending if f not in playable and f not in watch
+                and f not in running
+                and (lab := label_any(f)) and lab.endswith("red")]
     waiting = [f for f in pending if f not in playable and f not in watch
-               and f not in running]
+               and f not in running and f not in declined]
     done = [f for f in fixtures if f.settled][::-1]
 
     def tile(label, value, sub):
@@ -1697,7 +1805,7 @@ def main() -> None:
     # so the tile answers "what would following the ★ have scored".
     fh = fn = fp3 = 0
     fsays: list[float] = []
-    for f in fixtures:
+    for f in counted:
         if not f.settled:
             continue
         pick = 1 if f.lane(1) else (3 if f.tip3.strip() else 1)
@@ -1716,7 +1824,7 @@ def main() -> None:
     # every says band delivers its claim in both half-windows — the only
     # honest "filter" is the expectation printed beside the outcome.
     says = {1: [], 2: [], 3: []}
-    for f in fixtures:
+    for f in counted:
         for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
             if not f.lane(which) if which < 3 else False:
                 continue
@@ -1747,7 +1855,8 @@ def main() -> None:
                + " · probation"),
         ])
         + ' <span class="dim">— the ★ lane, then each family\'s PLAYABLE '
-          'lanes, graded on this session\'s completed cards</span></div>')
+          'lanes, graded on this session\'s completed cards · red and '
+          'super-red cards excluded</span></div>')
 
     # NORMAL and STRONG: the record of the cards the board itself marked
     # PLAY, by kind, from the forward log — stamped at first sight, so a
@@ -1834,7 +1943,8 @@ def main() -> None:
             if k in base)
         basebar = (f'<div class="basebar">Baselines — hit vs said: {cells} '
                    f'<span class="dim">— every tip replayed over each '
-                   f'league’s last 300 matches, averaged</span></div>')
+                   f'league’s last 300 matches, averaged · red and '
+                   f'super-red cards excluded</span></div>')
 
     # A bet's fixture, so a row can be filtered by league, country and
     # lane kind exactly like a card is.
@@ -2310,6 +2420,8 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .card.play {{ border-left-color:var(--green); }}
 .card.watch {{ border-left-color:var(--gold); }}
 .card.run {{ border-left-color:#ff5d5d; }}
+.card.declined {{ border-left-color:#6b3129; opacity:.9; }}
+.tabs a.on.dark {{ background:#6b3129; color:#f0d6d0; }}
 .takenbar {{ display:flex; flex-wrap:wrap; gap:5px; margin:5px 0 2px; }}
 .taken {{ font-size:11px; letter-spacing:.04em; text-transform:uppercase;
   background:rgba(212,175,55,.14); color:var(--gold); padding:2px 7px;
@@ -2523,6 +2635,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    <span class="dim">{len(watch)}</span></a>
   <a href="#home/running" data-t="running" class="red">🔴 Running
    <span class="dim">{len(running)}</span></a>
+  <a href="#home/declined" data-t="declined" class="dark">⛔ Declined
+   <span class="dim">{len(declined)}</span></a>
   <a href="#home/bets" data-t="bets" class="gold">🟡 Found bets
    <span class="dim">{bh}/{bn}</span></a>
   <a href="#home/lanes" data-t="lanes" class="blue">🔵 Athena lanes
@@ -2588,6 +2702,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   board declined never appears here: this tab is the night's calls
   playing out, not a second chance at them.</div>
   {_grid(running, "run", reads)}</div>
+ <div class="tabpane" id="t-declined">
+  <div class="panenote">The tier said <b>avoid</b>. A red or super-red
+  label is a veto, not a threshold — a card here is never played at any
+  price, and it counts toward <b>no hit rate anywhere</b>, on this board
+  or in the bank. It is kept, swept and graded for the record, because
+  a rule that is never checked is only a habit.</div>
+  {_grid(declined, "declined", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th>
@@ -2599,9 +2720,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   {bets_html}</table></div></div>
  <div class="tabpane" id="t-lanes">
   <div class="panenote">Everything Athena published that is <b>not</b>
-  being played — the price never cleared, or the tier said avoid. Kept
-  in full because it is graded, banked and fed back into the record;
-  it is data, not a shortlist. Open a card to see why it was refused.</div>
+  being played because the <b>price never cleared</b>. Kept in full
+  because it is graded, banked and fed back into the record; it is data,
+  not a shortlist. Cards the tier refused outright sit under
+  <b>Declined</b> instead and count toward nothing. Open a card to see
+  why it was refused.</div>
   {_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
  {_learn(playable, waiting, reads)}
@@ -2619,7 +2742,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <img class="pagebanner" src="banner-retrosim.jpg" alt="">
  <h2>Retrosim confirmed hitrates</h2>
   <p class="dim"><b>Hit</b> grades every Tip 1 the league produced,
- filter or no filter; <b>Playable hit</b> is the same replay narrowed to
+ filter or no filter — <b>except red and super-red cards</b>, which the
+ tier forbids at any price and which therefore count toward no rate
+ here or anywhere (the bettor's rule, 7 Sep; they stay in the bank for
+ analysis). <b>Playable hit</b> is the same replay narrowed to
  the lanes the board actually offers (edge above +1%) — the number the
  Playable tab lives on, with that subset's tip count in brackets. This
  very column exposed seven leagues whose above-bar lanes ran a flat 6–7
@@ -2855,7 +2981,7 @@ function route() {{
   const h = (location.hash || "#home").slice(1).split("/");
   const page = ["home","sessions","retrosim","patches","about"]
     .includes(h[0]) ? h[0] : "home";
-  const tab = ["playable","watch","running","bets","lanes","done"]
+  const tab = ["playable","watch","running","declined","bets","lanes","done"]
     .includes(h[1])
     ? h[1] : "playable";
   for (const s of document.querySelectorAll(".page"))
@@ -3334,8 +3460,13 @@ function askCard(m, comp, note, open) {{
     + (gm("m3") !== null ? m.m3 + " " : "")
     + m.t3.replaceAll(" · ", "<br>") + "</div>";
   let g = "";
+  // A red or super-red card counts toward NO hit rate (the bettor's
+  // rule, 7 Sep): it is rendered and graded, but it carries no data-g*
+  // so askFilter's tiles never see it. It is not a bug that the tile
+  // count is smaller than the card count.
+  const red = (m.g || "").endsWith("red");
   for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
-    if (gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
+    if (!red && gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
   // The guard on a past card: its label as a badge, and where a closing
   // price exists the verdict line a live card shows. NORMAL and STRONG
   // are counted on the STARRED lane's mark (pk: tip 1, or a gated DNB on

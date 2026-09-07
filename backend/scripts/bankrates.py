@@ -1,0 +1,130 @@
+"""Hit rates for DISPLAY, derived from the bank with the red cards out.
+
+The bettor's rule, 7 Sep: a red or super-red card is never allowed to be
+played, so it is never allowed into a hit rate either. It stays in the
+bank for analysis and is still graded — it just does not count.
+
+Everything here is read from config/matchbank_retro.json, which already
+carries the guard's label on every card (matchbank.guard writes it), so
+no replay is needed and nothing is re-derived.
+
+TWO FILES ARE DELIBERATELY NOT TOUCHED. config/league_hitrates.tsv is an
+ENGINE input — market_select reads its hit and play_hit columns for the
+REL debit and the buy-from blend — and config/guard_slices.tsv is the
+confluence score's table. Recomputing either without red cards would
+change what the engine says, which is a rules change, and PRE-ALFA 2 is
+a no-touch run. So the display reads THIS module and the engine goes on
+reading its own files; the two are allowed to differ, and the difference
+is exactly the red cards.
+
+Every reader falls back to the typed file when the bank is missing, so a
+fresh checkout with no bank still renders.
+"""
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+BANK = ROOT / "config" / "matchbank_retro.json"
+
+CLAIM = re.compile(r"(\d+(?:\.\d+)?)%")
+GRADED = ("✅", "❌", "◦")
+
+_BANK: dict | None = None
+
+
+def bank() -> dict:
+    global _BANK
+    if _BANK is None:
+        _BANK = json.loads(BANK.read_text()) if BANK.exists() else {}
+    return _BANK
+
+
+def counts(m: dict) -> bool:
+    """The one predicate: a labelled red card does not count."""
+    g = m.get("g") or ""
+    return not g.endswith("red")
+
+
+def _claim(cell: str | None) -> float | None:
+    mm = CLAIM.search(cell or "")
+    return float(mm.group(1)) if mm else None
+
+
+def _hit(mark: str | None) -> bool | None:
+    """True/False for a graded lane, None for an ungraded one. A push is a
+    hit — the board's convention everywhere."""
+    if mark not in GRADED:
+        return None
+    return mark != "❌"
+
+
+def display_rates() -> dict[str, dict]:
+    """Per league: n, hit, says, gap, play_hit, play_n — red cards out.
+
+    Mirrors the columns of league_hitrates.tsv so the badge and the
+    Retrosim row can be built the same way from either source.
+    """
+    out = {}
+    for code, comp in bank().items():
+        n = h = 0
+        says = 0.0
+        pn = ph = 0
+        for m in comp.get("matches", []):
+            if not counts(m):
+                continue
+            got = _hit(m.get("mark"))
+            if got is None:
+                continue
+            c = _claim(m.get("tip"))
+            n += 1
+            h += got
+            says += (c or 0) / 100
+            if m.get("v") in ("normal", "strong"):
+                star = m.get("m3") if m.get("pk") == 3 else m.get("mark")
+                sh = _hit(star)
+                if sh is not None:
+                    pn += 1
+                    ph += sh
+        if n:
+            out[code] = dict(n=n, hit=h / n, says=says / n,
+                             gap=(h / n) - (says / n),
+                             play_hit=(ph / pn) if pn else None, play_n=pn)
+    return out
+
+
+def baselines(n: int = 300, min_n: int = 30) -> dict[str, dict] | None:
+    """Per league, over its most recent `n` bank cards, red cards out:
+    hits/count/summed-claim for fp, t1, t2, t3 — the shape baselines.tsv
+    carries, so the hero bar and the tier table read either source alike.
+    """
+    if not bank():
+        return None
+    out = {}
+    for code, comp in bank().items():
+        recent = sorted(comp.get("matches", []), key=lambda x: x.get("d", ""))[-n:]
+        acc = {k: [0, 0, 0.0] for k in ("fp", "t1", "t2", "t3")}
+        for m in recent:
+            if not counts(m):
+                continue
+            for key, mark, cell in (("t1", m.get("mark"), m.get("tip")),
+                                    ("t2", m.get("m2"), m.get("t2")),
+                                    ("t3", m.get("m3"), m.get("t3"))):
+                got = _hit(mark)
+                if got is None:
+                    continue
+                acc[key][1] += 1
+                acc[key][0] += got
+                acc[key][2] += (_claim(cell) or 0)
+            star_mark = m.get("m3") if m.get("pk") == 3 else m.get("mark")
+            star_cell = m.get("t3") if m.get("pk") == 3 else m.get("tip")
+            got = _hit(star_mark)
+            if got is not None:
+                acc["fp"][1] += 1
+                acc["fp"][0] += got
+                acc["fp"][2] += (_claim(star_cell) or 0)
+        if acc["t1"][1] >= min_n:
+            out[code] = acc
+    return out or None
