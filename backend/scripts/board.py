@@ -173,7 +173,10 @@ def _live(f, cell: str) -> str:
     if f.settled or not f.status:
         return ""
     s = liveline.progress(cell, f.teams, f.status)
-    return f" · <i>{s}</i>" if s else ""
+    from scripts import fromhere
+    fh = fromhere.line(cell, f.teams, f.status)
+    out = f" · <i>{s}</i>" if s else ""
+    return out + (f" · <i>{fh}</i>" if fh else "")
 
 
 def _cell(raw: str) -> str:
