@@ -899,9 +899,9 @@ that premium the book is keeping the insurance money.
 
 ## The ledger of everything tried
 
-Every feature suggestion and hypothesis put through the bar — 43 verified, 28 unfinished, 33 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
+Every feature suggestion and hypothesis put through the bar — 44 verified, 28 unfinished, 33 declined. Typed in `config/hypotheses.tsv`; this table and the app's Patches page both render from it, so they cannot disagree.
 
-### 🟢 Verified and helping — 43
+### 🟢 Verified and helping — 44
 
 Cleared two separate time windows and is live in the engine today.
 
@@ -950,6 +950,7 @@ Cleared two separate time windows and is live in the engine today.
 | 🟢 | 08-24 | engine | **mu is over-spread** | The founding recalibration: MU_SHRINK to 0.60 with the floor moved to match, the single largest accuracy change the engine has had |
 | 🟢 | 08-24 | engine | **The weakest sides are rated too low** | TEAM_RATE_FLOOR 0.95 |
 | 🟢 | 08-27 | engine | **IRL-PD and MAR-BP price on a mu that carries no information** | At n≈800 IRL-PD's residual slope is −2.8 (t −3.0) and NEGATIVE IN BOTH WINDOWS — mu is anti-correlated with outcomes there; MAR-BP reads −0.8 (t −2.2). Their hitrates survive because the league mean carries them, but the stated probabilities pretend knowledge. RESOLVED 28 Aug by the consensus cap: both are in CONSENSUS_CAP_LEAGUES, so their published numbers never claim more than the league baseline and no lane there badges playable — the cull happened at the claim layer, and the tips stay on the board honestly |
+| 🟢 | 09-07 | board | **Is there ONE knob on a number the card already prints that would have skipped a couple of this session's losses and none of its wins — and does the bank agree? (the bettor, 7 Sep: "even just 2, without affecting others")** | Yes: the GAP between the claim and the probability the market's best price implies. The card says 83, the panel pays 1.40, 1.40 implies 71 — a 12-point disagreement, and when it is that wide the market is the one that is right. On the bank's 1,220 priced plays at closing, hit minus claim falls monotonically with the gap and does so in BOTH halves: under 4 points +2.4/−0.6 (calibrated), 4–6 −1.6/−9.0, 6–8 −10.7/−5.5, 8–10 −13.2/−3.9, 10–12 −24.6/−1.7, 12 and over −21.7/−16.2. ROI at closing is negative in the older half from 6 points up (−9.7 to −21.4) and negative in the newer half up to 10 points; above 10 the long price buys the newer half back to about +5 on thin n (19 and 32). This session: gap >= 8 grades 17/23 (73.9) against 34/41 (82.9) below it; the one loss-only cut the search found (printed margin >= 6 AND best >= 1.38: Wolfsburg, Dallas, ADO — three losses, no wins) is this family's corner, and in the bank it grades 59.3 vs 81.4 said older and 72.3 vs 80.3 newer, ROI −20.8/−2.2 — the only session-clean cut of 969 that survives both halves. Mechanism is the winner's curse the cup work already met (25 Aug): a printed edge far above the market says the mu is wrong, not that the price is kind. The guard has a floor on price and no ceiling; this is the ceiling. Not shipped under PRE-ALFA 2: registered here, the bettor decides whether it becomes a flag on the card or a veto. Cards on the board today with gap >= 8: Sport Recife v Ponte Preta +27, Cardiff v Stoke +14, América-MG v Náutico +11, Sporting CP v Galatasaray +9, Vancouver v LA Galaxy +9, AEK v LASK +9. |
 
 ### 🟠 Unfinished — 28
 
