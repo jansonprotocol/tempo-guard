@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 77.6%
+## CURRENT CONFIRMED HITRATE: 77.3%
 
     lane                        Tip 1              Tip 2
-    all matches            191 / 246  77.6%    136 / 206  66.0%
+    all matches            191 / 247  77.3%    136 / 206  66.0%
     played lanes  >+1%      92 / 118  78.0%    136 / 205  66.3%
     placed bets             51 / 63   81.0%    ROI +4.7%
 
@@ -432,7 +432,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 07-09 18:00 <b>Wieczysta v Zagłębie</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 07-09 20:30 <b>Pogoń v Wisła Płock</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 86.2% <b>+0.6%</b><br>buy≥1.24 (+7.2% margin)</td><td><b>Wisła Płock U1.5</b> 75.0% +8.1%<br>buy≥1.42 (+6.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.1% +12.3% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+2' 2-3 <b>Elche v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (78.7 −5.9)</td><td>U4.25 85.0% <b>−2.0%</b><br>buy≥1.24 (+5.8% margin) · <i>✗ gone</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 75.9% +2.2% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-09 01:00 <b>Vitória v Grêmio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 80.7% +5.5%<br>buy≥1.45 (+9.7% margin)</td><td>U2.75 60.6% +6.9%<br>buy≥1.53 (+3.2% margin) · floor −14.4</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-09 01:00 <b>Deportes Limache v Cobresal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (81.9 −3.3)</td><td>U4.25 84.2% <b>−1.2%</b><br>buy≥1.27 (+5.6% margin)</td><td><b>Cobresal O0.5</b> 80.5% +11.0%<br>buy≥1.33 (+7.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-09 01:00 <b>Llaneros v Tolima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.3%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -507,7 +506,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 191 / 246   ·   77.6%**   ·   **Tip 2 — 136 / 206   ·   66.0%**
+**Tip 1 — 191 / 247   ·   77.3%**   ·   **Tip 2 — 136 / 206   ·   66.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -813,6 +812,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-0 · 07-09 20:45 <b>Nantes v Nancy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 2 (74.3 −8.3)</td><td>U4.25 83.9% <b>−4.8%</b><br>buy≥1.21 (+7.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 68.4% +10.7% · buy≥1.53 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 07-09 20:45 <b>Udinese v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (73.5 −14.6)</td><td>U4.25 85.9% <b>−2.8%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 1X 72.9% +4.7% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 07-09 21:15 <b>Estoril v Arouca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primeira Liga (84.4 +0.1)</td><td>U4.25 84.2% <b>−2.0%</b><br>buy≥1.24 (+6.0% margin)</td><td>❌ <b>Arouca O0.5</b> 78.4% +9.9%<br>buy≥1.36 (+6.7% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 07-09 21:30 <b>Elche v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (78.7 −5.9)</td><td>U4.25 85.0% <b>−2.0%</b><br>buy≥1.24 (+5.8% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.2% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
