@@ -1118,6 +1118,17 @@ def test_red_cards_count_toward_no_hit_rate():
     n_red = sum(1 for f in red if f.status[:1] in ("✅", "❌", "◦"))
     assert n_red > 0, "no settled red card on the board to test against"
 
+    # the hero: the one number that kept counting reds until 7 Sep. The
+    # rendered page must say so, and the app must flag every settled red
+    # board card as no-count so the window can skip it.
+    from pathlib import Path
+    src = Path(webapp.__file__).read_text()
+    assert 'entry["nc"] = 1' in src and 'm.get("nc")' in src
+    page = Path(webapp.__file__).resolve().parents[2] / "web" / "index.html"
+    if page.exists():
+        assert ("playable cards · red and super-red cards excluded"
+                in page.read_text())
+
 
 def test_engine_inputs_are_not_recomputed_for_display():
     """league_hitrates.tsv feeds the REL debit and the buy-from blend, and

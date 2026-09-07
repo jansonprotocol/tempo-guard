@@ -296,8 +296,8 @@ footer { color:var(--dim); font-size:12px; margin:26px 0 8px; }
  <div class="hero" style="background-image:url('banner-home.jpg')">
   <div class="hero-text">
    <h1>ATHENA — TEMPO GUARD</h1>
-   <p class="tag">The most accurate football predictor — 76.7% hitrate</p>
-   <p class="fine">The final pick · the 300 most recent graded playable cards</p>
+   <p class="tag">The most accurate football predictor — 80.7% hitrate</p>
+   <p class="fine">The final pick · the 300 most recent graded playable cards · red and super-red cards excluded</p>
   </div>
  </div>
  <div class="basebar">Baselines — hit vs said: final pick <b>85.0%</b><span class="dim"> vs 83.9 said</span> · tip 1 <b>84.8%</b><span class="dim"> vs 83.8 said</span> · tip 2 <b>70.4%</b><span class="dim"> vs 70.5 said</span> · tip 3 <b>79.4%</b><span class="dim"> vs 74.3 said</span> <span class="dim">— every tip replayed over each league’s last 300 matches, averaged · red and super-red cards excluded</span></div>
@@ -1160,7 +1160,7 @@ function askCard(m, comp, note, open) {
   // rule, 7 Sep): it is rendered and graded, but it carries no data-g*
   // so askFilter's tiles never see it. It is not a bug that the tile
   // count is smaller than the card count.
-  const red = (m.g || "").endsWith("red");
+  const red = (m.g || "").endsWith("red") || !!m.nc;
   for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
     if (!red && gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
   // The guard on a past card: its label as a badge, and where a closing

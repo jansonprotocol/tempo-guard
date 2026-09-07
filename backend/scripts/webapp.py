@@ -2112,6 +2112,12 @@ def main() -> None:
         rd = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
         if rd:
             entry["kw"] = rd[0]
+        # A settled board card carries no guard label in the bank (the
+        # label lives on the fixture), so the hero window below could not
+        # tell a red one apart and counted it — 64 of the 300 on 7 Sep.
+        # The board's own red test decides, and the flag says "no count".
+        if not counts(f):
+            entry["nc"] = 1
         # The guard on a board card, in the bank's own fields, so Ask
         # Athena reads a live card and a past one with the same words:
         # label, score, strong, the starred lane, and the verdict at the
@@ -2246,10 +2252,18 @@ def main() -> None:
     # DNB_GATE). The population is unchanged: still the cards whose tip 1
     # cleared the playable bar, which is what the site offers, so the
     # number stays directly comparable to the tip-1 figure it replaces.
+    # Red and super-red cards are out here too (the bettor's rule, 7 Sep):
+    # a bank row by its label, a board row by the flag set above. They
+    # were the last hit rate on the page still counting them — 76.7 with
+    # the 64 reds in the window, 80.7 without — and the headline is the
+    # one number nobody scrolls past.
+    from scripts import bankrates as _br
     graded = []
     for comp in bank.values():
         for m in comp["matches"]:
             if m.get("mark") not in ("✅", "✅½", "◦", "❌"):
+                continue
+            if m.get("nc") or not _br.counts(m):
                 continue
             e = re.search(r"([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)",
                           m.get("tip", ""))
@@ -2272,7 +2286,7 @@ def main() -> None:
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
     hero_fine = ("The final pick · the 300 most recent graded "
-                 "playable cards")
+                 "playable cards · red and super-red cards excluded")
 
     for shown in set(nick.values()):
         prefer[base_key(shown)] = shown
@@ -3465,7 +3479,7 @@ function askCard(m, comp, note, open) {{
   // rule, 7 Sep): it is rendered and graded, but it carries no data-g*
   // so askFilter's tiles never see it. It is not a bug that the tile
   // count is smaller than the card count.
-  const red = (m.g || "").endsWith("red");
+  const red = (m.g || "").endsWith("red") || !!m.nc;
   for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
     if (!red && gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
   // The guard on a past card: its label as a badge, and where a closing
