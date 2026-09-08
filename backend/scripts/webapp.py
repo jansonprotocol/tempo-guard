@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts import board, headline, ledger, odds_api
+from scripts import board, fromhere, headline, ledger, odds_api
 from scripts.league_badges import rates
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -1311,7 +1311,19 @@ def _card(f, kind: str, reads: dict) -> str:
     elif f.settled:
         head = f"{f.status[:1]} {html.escape(board._mark(f))}"
     elif f.status:
-        head = f'<span class="live">🔴 {html.escape(f.status)}</span>'
+        # The clock keeps running between sweeps (the bettor's ask, 8 Sep):
+        # the span carries the minute and the moment it was rendered, and
+        # the page counts forward from there until the next sweep lands
+        # and resets it. Half time does not tick.
+        from scripts import fromhere, liveline
+        when = fromhere.minute_of(f.status)
+        sc = liveline.score_of(f.status)
+        tick = ""
+        if when and sc and "HT" not in f.status:
+            tick = (f' data-min="{when[0]}" data-half="{2 if when[1] else 1}"'
+                    f' data-goals="{sc[0]}-{sc[1]}"'
+                    f' data-at="{int(__import__("time").time())}"')
+        head = f'<span class="live"{tick}>🔴 {html.escape(f.status)}</span>'
     else:
         head = f"🕑 {board._stamp(f)}"
 
@@ -1365,12 +1377,24 @@ def _card(f, kind: str, reads: dict) -> str:
             from scripts import fromhere
             fh = fromhere.line(cell, f.teams, f.status)
             if fh:
-                live += (f'<div class="from" title="What this lane is worth '
-                         f'now, from the card\'s own expected goals and the '
-                         f'minute. Hold an in-play price against the fair '
-                         f'number: buy above it, not below. Unders read '
-                         f'straight; overs carry a measured ten-point '
-                         f'haircut while they still need goals.">'
+                # The read's inputs ride along so the page can move it
+                # with the clock between sweeps: expected goals, the goals
+                # the lane still allows or needs, its side, and when it
+                # was rendered. The score only changes on a sweep.
+                r = fromhere.read(cell, f.teams, f.status) or {}
+                when = fromhere.minute_of(f.status)
+                attrs = ""
+                if r and when and "HT" not in f.status:
+                    attrs = (f' data-mu="{r["mu"]:.4f}" data-needs="{r["needs"]}"'
+                             f' data-under="{1 if r["under"] else 0}"'
+                             f' data-min="{when[0]}" data-half="{2 if when[1] else 1}"'
+                             f' data-at="{int(__import__("time").time())}"')
+                live += (f'<div class="from"{attrs} title="What this lane is '
+                         f'worth now, from the card\'s own expected goals and '
+                         f'the minute. Hold an in-play price against the fair '
+                         f'number: buy above it, not below. Measured at half '
+                         f'time: unders read within two points, overs are '
+                         f'exact with a goal in and conservative at 0-0.">'
                          f'{html.escape(fh)}</div>')
         tail = " <span class=\"dim\">· result lane</span>" if which == 3 else ""
         if noplay:
@@ -3204,6 +3228,50 @@ function recount() {{
       + "keep the playable standard";
 }}
 
+// THE CLOCK KEEPS RUNNING between sweeps (the bettor, 8 Sep). Every
+// live card carries the minute the last sweep saw and the moment the
+// page was rendered; this counts forward from there, so a card read
+// three minutes after a pass shows the minute the match is actually at,
+// and the next pass lands a fresh render that resets every clock. The
+// score never moves here — only a sweep knows about goals — and half
+// time does not tick. The from-here read moves with the clock on the
+// same arithmetic the server used: remaining goals shrink as the
+// minutes go, so an under firms and an over that still needs goals
+// fades, exactly as it should between two sweeps.
+const SHARE = {fromhere.SHARE}, STOPPAGE = {fromhere.STOPPAGE};
+function poisCdf(k, lam) {{
+  if (k < 0) return 0;
+  let s = 0, t = Math.exp(-lam);
+  for (let i = 0; i <= k; i++) {{ s += t; t *= lam / (i + 1); }}
+  return s;
+}}
+function remainingShare(minute, second) {{
+  if (!second) return (45 - Math.min(minute, 45)) / 45 * (1 - SHARE) + SHARE;
+  const left = minute >= 90 ? Math.max(90 + STOPPAGE - minute, 0) : 90 - minute;
+  return SHARE * Math.min(left, 45) / 45;
+}}
+function tickClocks() {{
+  const now = Date.now() / 1000;
+  for (const el of document.querySelectorAll(".live[data-min]")) {{
+    const base = +el.dataset.min, half = +el.dataset.half, at = +el.dataset.at;
+    const m = base + Math.floor(Math.max(now - at, 0) / 60);
+    const cap = half === 1 ? 45 : 90;
+    const shown = m > cap ? cap + "'+" + (m - cap) + "'" : m + "'";
+    el.textContent = "🔴 LIVE " + shown + " " + el.dataset.goals;
+  }}
+  for (const el of document.querySelectorAll(".from[data-mu]")) {{
+    const base = +el.dataset.min, half = +el.dataset.half, at = +el.dataset.at;
+    const minute = Math.min(base + Math.floor(Math.max(now - at, 0) / 60), 90 + STOPPAGE);
+    const rem = +el.dataset.mu * remainingShare(minute, half === 2);
+    const needs = +el.dataset.needs, under = el.dataset.under === "1";
+    let p = under ? poisCdf(needs, rem)
+                  : (needs <= 0 ? 1 : 1 - poisCdf(needs - 1, rem));
+    if (p <= 0) continue;
+    el.textContent = p >= 0.995 ? "from here: as good as landed"
+      : "from here " + Math.round(p * 100) + "% · fair " + (1 / p).toFixed(2);
+  }}
+}}
+tickClocks(); setInterval(tickClocks, 15000);
 addEventListener("hashchange", route); route(); recount();
 window.addEventListener("error", () => {{
   // A broken form must never hide the board: re-run the router and let
