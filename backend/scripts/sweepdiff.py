@@ -17,7 +17,7 @@ the minute from every LIVE status, and says whether anything else moved:
 a goal, a kickoff, half time, a final, a hand-set score. The loop uses
 the answer to choose the commit's SUBJECT — "live tick" for minutes,
 "live sweep" for a goal or half time, "live sweep [deploy]" for a
-kickoff, a final or a new row — and the host (vercel.json) builds
+kickoff, a final or a new row — and the host (netlify.toml, ignore) builds
 only the last kind, plus anything that is not a sweep at all. The page
 gets goals and minutes from web/live.json, which every pass commits.
 """
