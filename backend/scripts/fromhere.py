@@ -15,11 +15,11 @@ records — on 16,458 bank totals cards joined to their half-time score:
   * the UNDER read is calibrated in every band. U4.5 at 0/1/2/3/4 goals
     says 97.9/92.8/79.5/54.0/16.1 and lands 98.9/94.3/80.7/54.8/15.0;
     U3.5 at 0/1/2/3 says 95.9/86.3/63.6/28.0 and lands 95.3/86.5/61.9/26.8.
-  * the OVER read is about ten points too hopeful while the lane still
-    needs goals: O1.5 at 0-0 says 70.6 and lands 59.9, at one goal says
-    91.6 and lands 82.6. A goalless half is evidence the card's mu was
-    too high, and the arithmetic cannot know that, so an over that still
-    needs goals carries OVER_HAIRCUT.
+  * the OVER read is exact once a goal is in and conservative before:
+    O1.5 with one goal at half time says 82.7 and lands 82.6; at 0-0 it
+    says 52.0 and lands 59.9. (The first cut read overs ten points
+    hopeful — that was the back-solve one goal too strict, fixed 8 Sep,
+    not the football.)
   * the second half carries SHARE of a match's goals.
 
 The line is a READ for the bettor holding an in-play price against it,
@@ -39,7 +39,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts import liveline
 
 SHARE = 0.558          # second-half share of goals, measured 7 Sep
-OVER_HAIRCUT = 0.10    # measured at HT: over reads land ~10 points under
+# No haircut on overs. The first cut carried ten points because the
+# over read looked hopeful at half time — an artefact of back-solving
+# the over's mu one goal too high (see mu_from_claim). Re-measured 8 Sep
+# with the arithmetic right: O1.5 with one goal at half time says 82.7
+# and lands 82.6; at 0-0 it says 52.0 and lands 59.9, eight points
+# CONSERVATIVE, which is the safe side for a bettor holding a price.
+OVER_HAIRCUT = 0.0
 STOPPAGE = 2           # minutes of goals still to come at 90'+
 
 _MIN = re.compile(r"LIVE\s+(?:(?P<ht>HT)|(?P<m>\d+)'(?:\+\d+')?)")
@@ -59,11 +65,25 @@ def mu_from_claim(lane: str, p: float) -> tuple[float, int, bool]:
     which the board counts as a hit), O2.25 needs three."""
     line = float(lane[1:])
     under = lane[0] == "U"
-    k = int(math.floor(line)) if under else int(math.floor(line)) + 1
+    # A WHOLE over line pushes on the line and the board counts a push as
+    # a hit, so O1.0 "lands" at one goal (the claim it prints is P(at
+    # least one) — 91.2 measured against 88.4 said on 433 Série B cards);
+    # a half or quarter over line needs the next goal up. Unders are the
+    # mirror: U3.0 and U4.25 both land at three and four.
+    if under:
+        k = int(math.floor(line))
+    elif line == math.floor(line):
+        k = int(line)
+    else:
+        k = int(math.floor(line)) + 1
     lo, hi = 0.05, 8.0
     for _ in range(60):
         mid = (lo + hi) / 2
-        pu = pois_cdf(k, mid) if under else 1 - pois_cdf(k, mid)
+        # under lands at <= k goals; over lands at >= k goals, which is
+        # 1 - P(<= k-1). (The first cut had 1 - P(<= k) here, one goal
+        # too strict, which back-solved every over's mu a goal too high
+        # and made the over read look hopeful — found 8 Sep.)
+        pu = pois_cdf(k, mid) if under else 1 - pois_cdf(k - 1, mid)
         if (pu > p) == under:
             lo = mid
         else:
