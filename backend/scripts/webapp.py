@@ -763,7 +763,7 @@ WATCH_BAND = 0.05
 STRONG_SCORE = 0.71
 
 FORWARD = ROOT / "config" / "forward_log.tsv"
-_LOGGED: set | None = None
+_LOGGED: dict | None = None
 
 
 def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
@@ -776,22 +776,39 @@ def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
     "what the board offered when you looked at it" — a later re-render
     catches a moved price and would flatter or damn the rule by accident.
     Append-only: scripts/forward_settle.py grades it once results land.
+
+    ONE exception, since 8 Sep: a lane whose label flips to red, or back
+    out of red, is stamped AGAIN. A veto is not a moved price; it is the
+    board saying something new about the card — never play this — and
+    the record has to carry it. Blackburn v Sheffield Utd was stamped
+    orange at 1.33 on 4 Sep, went red on the 7 Sep re-price, sat on the
+    board red for a day (the bettor took his bet off on that word), and
+    then kicked off into the RUNNING tab as a call, because frozen()
+    reads the last row and the only row still said orange. Nothing else
+    re-stamps: the first-sight reads (forward_settle.rows and the
+    NORMAL/STRONG tiles) take the first row per fixture-date as they
+    always did, so the decide-at-first-sight measurement is untouched;
+    frozen() takes the last, so what a card WAS at kickoff — the Running
+    and Completed badge, and whether it counts — follows the veto.
     """
     global _LOGGED
     key = (f.kickoff.split(" ")[0], f.teams, lane)
+    red = lab.endswith("red")
     if _LOGGED is None:
         # Read the existing log ONCE per run, not once per card: the board
         # re-renders many times a day and the log only grows, so a scan
-        # per stamp is quadratic in a file that never shrinks.
-        _LOGGED = set()
+        # per stamp is quadratic in a file that never shrinks. The value
+        # is whether the LAST row for the lane was red, which is all a
+        # re-stamp needs to know.
+        _LOGGED = {}
         if FORWARD.exists():
             for ln in FORWARD.read_text().splitlines():
                 if ln.startswith("#"):
                     continue
                 p = ln.split("\t")
-                if len(p) > 5:
-                    _LOGGED.add((p[1], p[3], p[5]))
-    if key in _LOGGED:
+                if len(p) > 7:
+                    _LOGGED[(p[1], p[3], p[5])] = p[7].endswith("red")
+    if key in _LOGGED and _LOGGED[key] == red:
         return
     if not FORWARD.exists():
         FORWARD.write_text(
@@ -801,7 +818,7 @@ def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
             "# from FIRST sight so a later re-render cannot re-price it.\n"
             "# stamped\tdate\tleague\tfixture\ttip\tlane\tclaim\tlabel"
             "\tscore\tneeds\tconsensus\tbest\tbook\n")
-    _LOGGED.add(key)
+    _LOGGED[key] = red
     with FORWARD.open("a") as fh:
         fh.write("\t".join([
             dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M"),
@@ -969,6 +986,11 @@ def frozen() -> dict:
     "was watch O1.5" about a card whose Playable entry had said "PLAY
     U4.5" an hour earlier, which is the exact contradiction the freeze
     exists to remove (the bettor's ask, 3 Sep: frozen at kickoff).
+
+    The same lane can have two rows too, since 8 Sep: _stamp writes a
+    lane again when its label flips to red or back, so a card the board
+    vetoed after first sight is frozen as the veto, not as the play it
+    had been three days earlier.
 
     This is display only. The forward log's own measurement — the NORMAL
     and STRONG tiles, through forward_settle.rows() — still counts the
