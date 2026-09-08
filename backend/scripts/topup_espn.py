@@ -72,9 +72,8 @@ def topup(code: str, dry: bool = False) -> tuple[int, list[str]]:
     # a handful of matches per round and pushes the last date forward,
     # which would hide the REST of that round. The (date, home, away)
     # check below keeps anything already stored from being written twice.
+    full = live
     live = live[live["date"] > last - pd.Timedelta(days=WINDOW_DAYS)]
-    if live.empty:
-        return 0, []
     names = sorted(set(have["home"]) | set(have["away"]))
     rows, skipped = [], []
     for r in live.itertuples():
@@ -89,8 +88,6 @@ def topup(code: str, dry: bool = False) -> tuple[int, list[str]]:
         rows.append(dict(date=pd.Timestamp(r.date), home=rh, away=ra,
                          hg=int(r.hg), ag=int(r.ag), season=season,
                          league_code=code, country="", status="result", **ht))
-    if not rows:
-        return 0, skipped
     cur = store.load(code, season)
     seen = set(zip(cur["date"], cur["home"], cur["away"])) if not cur.empty else set()
     # Also against every season file, not only the current one: a round
@@ -107,8 +104,16 @@ def topup(code: str, dry: bool = False) -> tuple[int, list[str]]:
         # scores (ESPN before 8 Sep) has no column to fill; give it one.
         cur = cur.assign(hthg=float("nan"), htag=float("nan"))
     if not cur.empty:
-        ht = {(x["date"], x["home"], x["away"]): (x["hthg"], x["htag"])
-              for x in rows if "hthg" in x}
+        # The fill reads the WHOLE fetched season, not the window: the
+        # data is already in hand and a calendar-year league has rows
+        # back to January with no half-time score.
+        ht = {}
+        for r in full.itertuples():
+            if getattr(r, "hthg", None) is None or pd.isna(r.hthg):
+                continue
+            rh, ra = _resolve(code, r.home, names), _resolve(code, r.away, names)
+            if rh and ra:
+                ht[(pd.Timestamp(r.date), rh, ra)] = (int(r.hthg), int(r.htag))
         for i, r in cur.iterrows():
             k = (r["date"], r["home"], r["away"])
             if k in ht and pd.isna(r["hthg"]):
