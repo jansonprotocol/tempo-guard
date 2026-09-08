@@ -1,12 +1,12 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 77.5%
+## CURRENT CONFIRMED HITRATE: 77.6%
 
     lane                        Tip 1              Tip 2
-    all matches            193 / 249  77.5%    136 / 207  65.7%
-    played lanes  >+1%      92 / 118  78.0%    136 / 206  66.0%
-    placed bets             51 / 63   81.0%    ROI +4.7%
+    all matches            194 / 250  77.6%    137 / 208  65.9%
+    played lanes  >+1%      93 / 119  78.2%    137 / 207  66.2%
+    placed bets             52 / 64   81.2%    ROI +5.1%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 228 / 324   ·   70.4%**   ·   **Tip 1 — 92 / 118   ·   78.0%**   ·   **Tip 2 — 136 / 206   ·   66.0%**
+**Playable — 230 / 326   ·   70.6%**   ·   **Tip 1 — 93 / 119   ·   78.2%**   ·   **Tip 2 — 137 / 207   ·   66.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.4)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -372,7 +372,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-1 · 07-09 20:30 <b>Palermo v Sampdoria</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (79.2 +1.9)</td><td>— under +1%</td><td>✅ <b>Sampdoria U1.5</b> 75.3% +7.2%<br>buy≥1.39 (+4.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 69.1% +8.8% · buy≥1.52 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 07-09 20:30 <b>Pogoń v Wisła Płock</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— under +1%</td><td><b>Wisła Płock U1.5</b> 75.0% +8.1%<br>buy≥1.42 (+6.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.1% +12.3% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 07-09 21:15 <b>Estoril v Arouca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primeira Liga (84.4 +0.1)</td><td>— under +1%</td><td>❌ <b>Arouca O0.5</b> 78.4% +9.9%<br>buy≥1.36 (+6.7% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+8' 1-0 <b>Vitória v Grêmio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 80.7% +5.5%<br>buy≥1.45 (+9.7% margin) · <i>room for 1</i> · <i>from here: as good as landed</i></td><td>U2.75 60.6% +6.9%<br>buy≥1.53 (+3.2% margin) · floor −14.4 · <i>room for 1</i> · <i>from here: as good as landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 08-09 01:00 <b>Vitória v Grêmio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 80.7% +5.5%<br>buy≥1.45 (+9.7% margin)</td><td>✅ U2.75 60.6% +6.9%<br>buy≥1.53 (+3.2% margin) · floor −14.4</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 08-09 01:00 <b>Deportes Limache v Cobresal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (81.9 −3.3)</td><td>— under +1%</td><td>❌ <b>Cobresal O0.5</b> 80.5% +11.0%<br>buy≥1.33 (+7.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-09 17:55 <b>Al-Hazem v Al-Taawoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 84.7% +2.5%<br>buy≥1.25 (+4.5% margin)</td><td>U3.75 69.1% +3.5%<br>buy≥1.39 (+3.9% margin) · floor −5.9</td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-09 18:45 <b>NEC v Excelsior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (79.4 −6.4)</td><td>O1.5 86.1% +4.1%<br>buy≥1.26 (+8.7% margin)</td><td>O2.25 67.4% +6.7%<br>buy≥1.39 (+3.7% margin) · floor −7.6</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.5% +3.0% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -432,7 +432,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 07-09 18:00 <b>Wieczysta v Zagłębie</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 07-09 20:30 <b>Pogoń v Wisła Płock</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (77.2 −7.1)</td><td>U4.25 86.2% <b>+0.6%</b><br>buy≥1.24 (+7.2% margin)</td><td><b>Wisła Płock U1.5</b> 75.0% +8.1%<br>buy≥1.42 (+6.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.1% +12.3% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+8' 1-0 <b>Vitória v Grêmio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 80.7% +5.5%<br>buy≥1.45 (+9.7% margin) · <i>room for 1</i> · <i>from here: as good as landed</i></td><td>U2.75 60.6% +6.9%<br>buy≥1.53 (+3.2% margin) · floor −14.4 · <i>room for 1</i> · <i>from here: as good as landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-09 17:30 <b>Al-Ettifaq v Al Faisaly</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-09 17:55 <b>Al-Hazem v Al-Taawoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.4 +1.3)</td><td>U4.25 84.7% +2.5%<br>buy≥1.25 (+4.5% margin)</td><td>U3.75 69.1% +3.5%<br>buy≥1.39 (+3.9% margin) · floor −5.9</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-09 18:45 <b>NEC v Excelsior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (79.4 −6.4)</td><td>O1.5 86.1% +4.1%<br>buy≥1.26 (+8.7% margin)</td><td>O2.25 67.4% +6.7%<br>buy≥1.39 (+3.7% margin) · floor −7.6</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.5% +3.0% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -504,7 +503,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 193 / 249   ·   77.5%**   ·   **Tip 2 — 136 / 207   ·   65.7%**
+**Tip 1 — 194 / 250   ·   77.6%**   ·   **Tip 2 — 137 / 208   ·   65.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.0 −2.6)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -811,6 +810,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 07-09 20:45 <b>Udinese v Lazio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (73.5 −14.6)</td><td>U4.25 85.9% <b>−2.8%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 1X 72.9% +4.7% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 07-09 21:15 <b>Estoril v Arouca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primeira Liga (84.4 +0.1)</td><td>U4.25 84.2% <b>−2.0%</b><br>buy≥1.24 (+6.0% margin)</td><td>❌ <b>Arouca O0.5</b> 78.4% +9.9%<br>buy≥1.36 (+6.7% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 2-3 · 07-09 21:30 <b>Elche v Real Sociedad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (78.7 −5.9)</td><td>U4.25 85.0% <b>−2.0%</b><br>buy≥1.24 (+5.8% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.2% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 08-09 01:00 <b>Vitória v Grêmio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 80.7% +5.5%<br>buy≥1.45 (+9.7% margin)</td><td>✅ U2.75 60.6% +6.9%<br>buy≥1.53 (+3.2% margin) · floor −14.4</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 08-09 01:00 <b>Deportes Limache v Cobresal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (81.9 −3.3)</td><td>U4.25 84.2% <b>−1.2%</b><br>buy≥1.27 (+5.6% margin)</td><td>❌ <b>Cobresal O0.5</b> 80.5% +11.0%<br>buy≥1.33 (+7.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 08-09 01:00 <b>Llaneros v Tolima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.3%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr></table>
 
@@ -818,7 +818,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 51 / 63  ·  ROI +4.7%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 52 / 64  ·  ROI +5.1%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -867,7 +867,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Vitória Guimarães v Casa Pia | U3.5 | 1.33 | 1.33x | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.37 Pinnacle, taken at 1.33 (+4.7% vs the bar) |
 | — open | Cardiff v Stoke | U3.5 | 1.43 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.40 Unibet NL, taken at 1.43 (+12.5% vs the bar) GAP TEST (7 Sep): claim-to-price gap +14, kept open on purpose to see how the gap hypothesis holds up live. |
 | — open | Blackburn v Sheffield Utd | U3.5 | 1.36 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.33 Unibet SE, taken at 1.36 (+7.0% vs the bar) |
-| — open | Vitória v Grêmio | U3.5 | 1.27 | — | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.34 Pinnacle, taken at 1.27 — level with the bar |
+| ✅ | Vitória v Grêmio | U3.5 | 1.27 | 1.27x | Unibet — the card's struck lane (U3.0 rung), PLAY: orange bar 1.2707, panel best 1.34 Pinnacle, taken at 1.27 — level with the bar |
 | ✅ | Dresden v Bochum | U4.5 | 1.46 | 1.46x | TOTO — in-play, struck 21:48 on a 20:30 kickoff. The card was NO PLAY at first sight: orange bar 1.2707 against a panel best of 1.16 (1xBet), consensus 1.13. Outside the board's decide-at-first-sight rule; logged as taken, not as a board play |
 | ✅ | Willem II v Excelsior | U4.5 | 1.43 | 1.43x | TOTO — in-play, struck 21:37 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.17, consensus 1.13. Outside the board's rule; logged as taken, not as a board play |
 | ❌ | RB Bragantino v Bahia | U4.5 | 1.48 | 0.00x | TOTO — in-play, struck 21:36 on a 21:00 kickoff. NO PLAY at first sight: bar 1.2707 against a panel best of 1.12, consensus 1.09. Outside the board's rule; logged as taken, not as a board play |
