@@ -49,7 +49,14 @@ jobs:
       # of sweeping inside the budget. Beyond it the run goes home and the
       # cron (or the previous run's hand-over) asks again later.
       WAIT_MAX: 16800
-      SWEEP_EVERY: 240          # seconds between passes (the bettor, 7 Sep: "a bit faster")
+      SWEEP_EVERY: 90           # seconds between passes (the bettor, 8 Sep: "a bit more faster")
+      # A pass that moved nothing but minutes is not worth a commit — the
+      # page counts the minute forward itself since 8 Sep — and every
+      # commit is a site deploy, of which the host allows a fixed number
+      # a day. Goals, kickoffs, half time and finals commit at once;
+      # minute-only passes commit at most this often, so the page's own
+      # clock never counts from a stale base for long.
+      MINUTE_COMMIT_EVERY: 600
     steps:
       - uses: actions/checkout@v4
 
@@ -102,10 +109,18 @@ jobs:
             cd ..
             git add -A config/fixtures.tsv README.md web/ \
                        config/forward_log.tsv config/reads_cache.json || true
-            if git diff --cached --quiet; then
+            # Commit on a goal, a kickoff, half time or a final at once;
+            # on a minute-only pass only when the last commit is older
+            # than MINUTE_COMMIT_EVERY (scripts/sweepdiff.py decides).
+            RC=0; WHY=$(python backend/scripts/sweepdiff.py) || RC=$?
+            LAST=$(git log -1 --format=%ct)
+            if [ "$RC" -eq 2 ] || git diff --cached --quiet; then
               echo "nothing moved"
+            elif [ "$RC" -eq 1 ] && [ $(( $(date +%s) - LAST )) -lt "$MINUTE_COMMIT_EVERY" ]; then
+              echo "only minutes moved — the page's own clock has it; holding"
             else
-              git commit -m "live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC"
+              echo "$WHY"
+              git commit -q -m "live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC" -m "$WHY"
               # Someone may have pushed while this ran. Do not try to
               # rebase a sweep over their change: on 7 Sep a re-price
               # landed on main mid-loop and the rebase hit conflicts in
