@@ -14,9 +14,12 @@ Since 8 Sep the page counts the minute forward itself between sweeps
 nothing to tell a reader that the page is not already telling them. This
 compares the swept fixture file with the committed one after stripping
 the minute from every LIVE status, and says whether anything else moved:
-a goal, a kickoff, half time, a final, a hand-set score. The loop commits
-on those at once, and on minute-only passes only every so often, so the
-page's own clock never counts from a stale base for long.
+a goal, a kickoff, half time, a final, a hand-set score. The loop uses
+the answer to choose the commit's SUBJECT — "live tick" for minutes,
+"live sweep" for a goal or half time, "live sweep [deploy]" for a
+kickoff, a final or a new row — and the host (web/vercel.json) builds
+only the last kind, plus anything that is not a sweep at all. The page
+gets goals and minutes from web/live.json, which every pass commits.
 """
 from __future__ import annotations
 

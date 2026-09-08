@@ -50,13 +50,11 @@ jobs:
       # cron (or the previous run's hand-over) asks again later.
       WAIT_MAX: 16800
       SWEEP_EVERY: 90           # seconds between passes (the bettor, 8 Sep: "a bit more faster")
-      # A pass that moved nothing but minutes is not worth a commit — the
-      # page counts the minute forward itself since 8 Sep — and every
-      # commit is a site deploy, of which the host allows a fixed number
-      # a day. Goals, kickoffs, half time and finals commit at once;
-      # minute-only passes commit at most this often, so the page's own
-      # clock never counts from a stale base for long.
-      MINUTE_COMMIT_EVERY: 600
+      # Every pass commits web/live.json, which the page polls from the
+      # repository; the host is told (web/vercel.json, ignoreCommand) to
+      # build only commits whose subject carries [deploy] or is not a
+      # sweep at all, so the deploy budget goes to kickoffs, finals and
+      # merges rather than to goals and minutes.
     steps:
       - uses: actions/checkout@v4
 
@@ -110,18 +108,28 @@ jobs:
             git add -A config/fixtures.tsv README.md web/ \
                        config/forward_log.tsv config/reads_cache.json \
                        config/live_log.tsv || true
-            # Commit on a goal, a kickoff, half time or a final at once;
-            # on a minute-only pass only when the last commit is older
-            # than MINUTE_COMMIT_EVERY (scripts/sweepdiff.py decides).
+            # Every pass commits — but not every commit is a deploy. The
+            # page polls web/live.json from the repository between
+            # deploys, so a goal or a minute goes out as a small "live
+            # tick" commit that the host is told to ignore (the Ignored
+            # Build Step matches on the subject), and only a kickoff, a
+            # final or a new row — the things that change which tab a
+            # card sits in — carries the [deploy] marker that builds the
+            # site. scripts/sweepdiff.py says what moved.
             RC=0; WHY=$(python backend/scripts/sweepdiff.py) || RC=$?
-            LAST=$(git log -1 --format=%ct)
-            if [ "$RC" -eq 2 ] || git diff --cached --quiet; then
+            if git diff --cached --quiet; then
               echo "nothing moved"
-            elif [ "$RC" -eq 1 ] && [ $(( $(date +%s) - LAST )) -lt "$MINUTE_COMMIT_EVERY" ]; then
-              echo "only minutes moved — the page's own clock has it; holding"
             else
-              echo "$WHY"
-              git commit -q -m "live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC" -m "$WHY"
+              if [ "$RC" -eq 0 ] && echo "$WHY" | grep -qE '^(kicked off|final|new row|changed)'; then
+                SUBJECT="live sweep [deploy]: $(date -u '+%Y-%m-%d %H:%M') UTC"
+              elif [ "$RC" -eq 0 ]; then
+                SUBJECT="live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC"
+              else
+                SUBJECT="live tick: $(date -u '+%Y-%m-%d %H:%M') UTC"
+                WHY="minutes only — web/live.json carries it to the page"
+              fi
+              echo "$SUBJECT — $WHY"
+              git commit -q -m "$SUBJECT" -m "$WHY"
               # Someone may have pushed while this ran. Do not try to
               # rebase a sweep over their change: on 7 Sep a re-price
               # landed on main mid-loop and the rebase hit conflicts in
