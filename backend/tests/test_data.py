@@ -1233,3 +1233,16 @@ def test_sweepdiff_tells_minutes_from_goals():
                        row.format("E v F", "LIVE 44' 1-0")])
     assert any(x.startswith("final: A v B") for x in kinds(before, after))
     assert kinds(before, before) == []
+
+
+def test_espn_half_time_from_the_goal_timeline():
+    """ESPN's scoreboard lists every goal with a minute and a team; the
+    half-time score is the goals at 45' or earlier, first-half stoppage
+    included. No timeline at all means None, never 0-0."""
+    from app.data.espn import half_time
+    goal = lambda clock, tid: {"scoringPlay": True, "clock": {"displayValue": clock}, "team": {"id": tid}}
+    card = {"scoringPlay": False, "clock": {"displayValue": "30'"}, "team": {"id": "1"}}
+    comp = {"details": [goal("12'", "1"), card, goal("45'+2'", "2"), goal("46'", "1"), goal("88'", "2")]}
+    assert half_time(comp, "1", "2") == (1, 1)
+    assert half_time({"details": []}, "1", "2") == (0, 0)
+    assert half_time({}, "1", "2") == (None, None)

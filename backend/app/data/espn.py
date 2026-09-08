@@ -81,11 +81,45 @@ _FINISHED = {"STATUS_FULL_TIME", "STATUS_FINAL_PEN"}
 
 # Columns a frame from here may contain. Mirrors the football-data allowlist.
 COLUMNS = [
-    "date", "home", "away", "hg", "ag",
+    "date", "home", "away", "hg", "ag", "hthg", "htag",
     "hs", "as_", "hst", "ast", "hc", "ac", "hf", "af",
     "hpos", "apos",
     "season", "league_code", "country", "status",
 ]
+
+
+def half_time(competition: dict, home_id: str, away_id: str):
+    """(hthg, htag) from the goal timeline, or (None, None) when the
+    feed carries no timeline for this match.
+
+    ESPN's scoreboard lists every goal with its minute and the team it
+    counts for, so the half-time score is the goals at 45' or earlier —
+    first-half stoppage ("45'+2'") included. This is the half-time data
+    the store lacked for every ESPN-sourced row, which is what the
+    in-play read's per-club split needs (8 Sep). A timeline that exists
+    but holds no goals is a real 0-0, not a missing one; a match with no
+    timeline at all stays None so nothing is read as 0-0 by mistake.
+    """
+    details = competition.get("details")
+    if details is None:
+        return None, None
+    hthg = htag = 0
+    for d in details:
+        if not d.get("scoringPlay"):
+            continue
+        clock = (d.get("clock") or {}).get("displayValue") or ""
+        try:
+            minute = int(clock.split("'")[0].split("+")[0])
+        except ValueError:
+            continue
+        if minute > 45:
+            continue
+        tid = str((d.get("team") or {}).get("id"))
+        if tid == str(home_id):
+            hthg += 1
+        elif tid == str(away_id):
+            htag += 1
+    return hthg, htag
 
 _ODDS_HINTS = ("odd", "b365", "bw", "iw", "ps", "wh", "vc", "max", "avg",
                "ahh", "aha", "line", "price")
@@ -162,11 +196,12 @@ def fetch_season(espn_code: str, year: int, league_code: str,
             continue
 
         hs, as_ = _stats(h), _stats(a)
+        hthg, htag = half_time(c, h["team"].get("id"), a["team"].get("id"))
         rows.append({
             "date": datetime.strptime(c["date"][:10], "%Y-%m-%d"),
             "home": h["team"]["displayName"],
             "away": a["team"]["displayName"],
-            "hg": hg, "ag": ag,
+            "hg": hg, "ag": ag, "hthg": hthg, "htag": htag,
             "hs": hs["s"], "as_": as_["s"],
             "hst": hs["st"], "ast": as_["st"],
             "hc": hs["c"], "ac": as_["c"],

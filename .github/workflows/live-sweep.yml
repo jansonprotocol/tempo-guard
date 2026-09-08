@@ -108,7 +108,8 @@ jobs:
             python scripts/sweep.py || echo "sweep failed, continuing"
             cd ..
             git add -A config/fixtures.tsv README.md web/ \
-                       config/forward_log.tsv config/reads_cache.json || true
+                       config/forward_log.tsv config/reads_cache.json \
+                       config/live_log.tsv || true
             # Commit on a goal, a kickoff, half time or a final at once;
             # on a minute-only pass only when the last commit is older
             # than MINUTE_COMMIT_EVERY (scripts/sweepdiff.py decides).
