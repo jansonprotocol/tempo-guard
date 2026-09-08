@@ -51,7 +51,7 @@ jobs:
       WAIT_MAX: 16800
       SWEEP_EVERY: 90           # seconds between passes (the bettor, 8 Sep: "a bit more faster")
       # Every pass commits web/live.json, which the page polls from the
-      # repository; the host is told (web/vercel.json, ignoreCommand) to
+      # repository; the host is told (vercel.json, ignoreCommand) to
       # build only commits whose subject carries [deploy] or is not a
       # sweep at all, so the deploy budget goes to kickoffs, finals and
       # merges rather than to goals and minutes.
