@@ -31,7 +31,9 @@ ROOT = Path(__file__).resolve().parents[2]
 BANK = ROOT / "config" / "matchbank_retro.json"
 
 CLAIM = re.compile(r"(\d+(?:\.\d+)?)%")
+EDGE = re.compile(r"%\s*\**([+\-−]\d+(?:\.\d+)?)%")
 GRADED = ("✅", "❌", "◦")
+PLAYABLE_EDGE = 1.0     # the board's playable bar: printed edge >= +1%
 
 _BANK: dict | None = None
 
@@ -52,6 +54,12 @@ def counts(m: dict) -> bool:
 def _claim(cell: str | None) -> float | None:
     mm = CLAIM.search(cell or "")
     return float(mm.group(1)) if mm else None
+
+
+def _edge(cell: str | None) -> float | None:
+    """The printed edge after the claim: "U4.25 84.0% **−0.5%** …" -> -0.5."""
+    mm = EDGE.search(cell or "")
+    return float(mm.group(1).replace("−", "-")) if mm else None
 
 
 def _hit(mark: str | None) -> bool | None:
@@ -90,12 +98,17 @@ def display_rates() -> dict[str, dict]:
             n += 1
             h += got
             says += (c or 0) / 100
-            if m.get("v") in ("normal", "strong"):
-                star = m.get("m3") if m.get("pk") == 3 else m.get("mark")
-                sh = _hit(star)
-                if sh is not None:
-                    pn += 1
-                    ph += sh
+            # PLAYABLE means what league_hitrates.tsv always meant: tip 1
+            # above the +1% edge bar — hundreds of cards per league. Not
+            # the priced plays (v normal/strong): those are the fifty-odd
+            # cards per league that cleared the PRICE bar at closing, the
+            # market-paid-long corner the gap finding describes, and on
+            # 7-8 Sep the badge was reading them — Turkey (64.7 −20.1) on
+            # 51 cards while its cards land 84.8 across 619.
+            e = _edge(m.get("tip"))
+            if e is not None and e >= PLAYABLE_EDGE:
+                pn += 1
+                ph += got
         if n:
             out[code] = dict(n=n, hit=h / n, says=says / n,
                              gap=(h / n) - (says / n),

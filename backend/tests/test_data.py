@@ -1192,3 +1192,14 @@ def test_from_here_reads_the_card_against_the_clock():
     # a team lane reads the team's goals, not the match's
     t = F.read("**A O1.5** 57.3% +12.5% (team) · buy≥1.80", "A v B", "LIVE 60' 1-0")
     assert t and t["needs"] == 1
+
+
+def test_league_badge_reads_the_edge_lanes_not_the_priced_corner():
+    """The badge's PLAYABLE number is tip 1 above the +1% edge bar, red
+    cards out — hundreds of cards per league — not the priced plays,
+    which are the fifty-odd market-paid-long cards the gap finding
+    describes. On 7-8 Sep it read the latter: Turkey (64.7 −20.1) on 51
+    cards while the league's cards land 84.8 across 619."""
+    from scripts.bankrates import display_rates
+    r = display_rates().get("TUR-SL")
+    assert r and r["play_n"] > 200 and r["play_hit"] > 0.78, r
