@@ -742,6 +742,9 @@ SAYS = {"super green": 0.8956, "green": 0.8740, "orange": 0.8342,
 # choice, not the best cell in the table.
 DECLINE_MARGIN = 0.06
 
+# Where the page fetches web/live.json from between deploys (8 Sep).
+REPO = "jansonprotocol/tempo-guard"
+
 # WATCH: a card whose starred lane is NOT red and whose best quote sits
 # UNDER the bar by no more than this. Not a play — but the feed is 26
 # books and the bettor's are not among the sharpest, so a card the panel
@@ -1300,6 +1303,63 @@ def _taken(f, pick: str | None) -> str:
                        f'{html.escape(b["lane"])} '
                        f'taken <b>{b["odds"]:.2f}</b>{mark}</span>')
     return f'<div class="takenbar">{"".join(out)}</div>'
+
+
+def _live_json(fixtures) -> None:
+    """web/live.json: what every card that has kicked off looks like right
+    now, in a few kilobytes — the page polls this from GitHub between
+    deploys and patches its cards in place.
+
+    WHY (8 Sep): the site deploys once per commit, the host allows a
+    fixed number of deploys a day, and an evening of sweeps spent them —
+    two goals sat on main for ten minutes while the page showed 0-0. A
+    goal must not depend on a deploy. So the sweep writes this file every
+    pass, the loop commits it every pass, and the page fetches it from
+    the repository itself: the status line, the minute and score the
+    clock counts from, each lane's live state and its from-here inputs,
+    and the final mark once a card settles. Cards that have not kicked
+    off are not here; the deploy still carries the board's structure.
+    """
+    from scripts import fromhere, liveline
+    now = int(__import__("time").time())
+    cards = {}
+    for f in fixtures:
+        if not f.status or f.kickoff[:10] < dt.date.today().isoformat():
+            continue
+        entry = dict(status=f.status, settled=bool(f.settled))
+        if f.settled:
+            entry["head"] = (f"⚪ {f.status[3:] or f.status}" if f.status.startswith("FT")
+                             else f"{f.status[:1]} {board._mark(f)}")
+        else:
+            when = fromhere.minute_of(f.status)
+            sc = liveline.score_of(f.status)
+            if when and sc and "HT" not in f.status:
+                entry.update(min=when[0], half=2 if when[1] else 1,
+                             goals=f"{sc[0]}-{sc[1]}")
+            lanes = {}
+            for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
+                if cell.strip() in ("", "—", "— none"):
+                    continue
+                s = liveline.progress(cell, f.teams, f.status)
+                lane = {}
+                if s:
+                    lane["prog"] = s
+                    lane["cls"] = ("gone" if s.startswith("✗") or "gone" in s
+                                   else "won" if s.startswith("✓") else "")
+                fh = fromhere.line(cell, f.teams, f.status)
+                r = fromhere.read(cell, f.teams, f.status) if fh else None
+                if fh:
+                    lane["from"] = fh
+                    if r and when and "HT" not in f.status:
+                        lane["fr"] = dict(mu=round(r["mu"], 4), needs=r["needs"],
+                                          under=1 if r["under"] else 0)
+                if lane:
+                    lanes[str(which)] = lane
+            entry["lanes"] = lanes
+        cards[f.teams] = entry
+    import json as _json
+    (OUT.parent / "live.json").write_text(
+        _json.dumps(dict(at=now, cards=cards), ensure_ascii=False))
 
 
 def _card(f, kind: str, reads: dict) -> str:
@@ -2352,6 +2412,7 @@ def main() -> None:
     (OUT.parent / "matchbank.json").write_text(
         _json.dumps(dict(comps=bank, alias=dict(sorted(alias.items())),
                          names=names), ensure_ascii=False))
+    _live_json(fixtures)
 
     page = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -3272,6 +3333,76 @@ function tickClocks() {{
   }}
 }}
 tickClocks(); setInterval(tickClocks, 15000);
+
+// LIVE WITHOUT A DEPLOY (8 Sep). The site deploys once per commit and
+// the host allows a fixed number a day; an evening of sweeps spent them
+// and two goals sat on main while the page showed 0-0. So the sweep
+// writes web/live.json every pass and this fetches it FROM THE
+// REPOSITORY, not from the site — a goal reaches the page within a
+// sweep pass whatever the deploy budget says. Patched in place: the
+// status line and the clock's base, each lane's live state and its
+// from-here inputs, the final mark once a card settles. Cards that have
+// not kicked off, and which tab a card sits in, still come from the
+// deploy. Polled every 90s while the tab is visible; the API allows 60
+// unauthenticated requests an hour per address, the raw mirror is the
+// fallback and lags a few minutes.
+const LIVE_API = "https://api.github.com/repos/{REPO}/contents/web/live.json?ref=main";
+const LIVE_RAW = "https://raw.githubusercontent.com/{REPO}/main/web/live.json";
+let liveSeen = 0;
+async function pollLive() {{
+  if (document.hidden) return;
+  let data = null;
+  try {{
+    const r = await fetch(LIVE_API, {{headers: {{Accept: "application/vnd.github.raw+json"}}, cache: "no-store"}});
+    if (r.ok) data = await r.json();
+  }} catch (e) {{}}
+  if (!data) {{
+    try {{
+      const r = await fetch(LIVE_RAW + "?t=" + Math.floor(Date.now() / 60000), {{cache: "no-store"}});
+      if (r.ok) data = await r.json();
+    }} catch (e) {{ return; }}
+  }}
+  if (!data || !data.cards || !(data.at > liveSeen)) return;
+  liveSeen = data.at;
+  for (const [fx, c] of Object.entries(data.cards)) {{
+    for (const card of document.querySelectorAll('.card[data-fx="' + CSS.escape(fx) + '"]')) {{
+      const live = card.querySelector("summary .live");
+      if (!live) continue;                    // not rendered as running: needs the deploy
+      if (c.settled) {{
+        live.textContent = c.head || c.status;
+        live.classList.remove("live"); delete live.dataset.min;
+        for (const el of card.querySelectorAll(".prog, .from")) el.remove();
+        continue;
+      }}
+      live.textContent = "🔴 " + c.status;
+      if (c.min !== undefined) {{
+        live.dataset.min = c.min; live.dataset.half = c.half;
+        live.dataset.goals = c.goals; live.dataset.at = data.at;
+      }} else {{ delete live.dataset.min; }}
+      for (const lane of card.querySelectorAll(".lane")) {{
+        const which = (lane.querySelector(".which") || {{}}).textContent || "";
+        const m = which.match(/Tip (\d)/); if (!m) continue;
+        const L = (c.lanes || {{}})[m[1]] || {{}};
+        let prog = lane.querySelector(".prog"), from = lane.querySelector(".from");
+        if (L.prog) {{
+          if (!prog) {{ prog = document.createElement("div"); lane.appendChild(prog); }}
+          prog.className = "prog " + (L.cls || ""); prog.textContent = L.prog;
+        }} else if (prog) prog.remove();
+        if (L.from) {{
+          if (!from) {{ from = document.createElement("div"); from.className = "from"; lane.appendChild(from); }}
+          from.textContent = L.from;
+          if (L.fr) {{
+            from.dataset.mu = L.fr.mu; from.dataset.needs = L.fr.needs; from.dataset.under = L.fr.under;
+            from.dataset.min = c.min; from.dataset.half = c.half; from.dataset.at = data.at;
+          }} else {{ delete from.dataset.mu; }}
+        }} else if (from) from.remove();
+      }}
+    }}
+  }}
+  tickClocks();
+}}
+pollLive(); setInterval(pollLive, 90000);
+addEventListener("visibilitychange", () => {{ if (!document.hidden) pollLive(); }});
 addEventListener("hashchange", route); route(); recount();
 window.addEventListener("error", () => {{
   // A broken form must never hide the board: re-run the router and let
