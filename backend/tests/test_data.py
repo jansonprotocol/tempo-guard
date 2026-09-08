@@ -1246,3 +1246,40 @@ def test_espn_half_time_from_the_goal_timeline():
     assert half_time(comp, "1", "2") == (1, 1)
     assert half_time({"details": []}, "1", "2") == (0, 0)
     assert half_time({}, "1", "2") == (None, None)
+
+
+def test_forward_log_restamps_a_lane_when_its_label_flips_to_red(tmp_path, monkeypatch):
+    """A veto after first sight is a new statement, and the frozen call
+    follows it (Blackburn v Sheffield Utd, 8 Sep: stamped orange on 4 Sep,
+    red from the 7 Sep re-price, kicked off into Running as a call)."""
+    from scripts import board, forward_settle, webapp
+    log = tmp_path / "forward_log.tsv"
+    monkeypatch.setattr(webapp, "FORWARD", log)
+    monkeypatch.setattr(forward_settle, "FORWARD", log)
+    monkeypatch.setattr(webapp, "_LOGGED", None)
+    monkeypatch.setattr(webapp, "_FROZEN", None)
+    f = board.Fixture("2026-09-01 20:45", "ENG-CH", "Championship",
+                      "Blackburn v Sheffield Utd",
+                      "U3.0 75.6% +1.4% · buy≥1.48 (+2.2% margin)", "— none", "")
+    q = dict(consensus="1.33", best="1.33", book="Unibet (SE)")
+    rows = lambda: [ln for ln in log.read_text().splitlines() if not ln.startswith("#")]
+    webapp._stamp(f, 1, "U3.5", "orange", -4.67, 76.1, 1.271, q)
+    webapp._stamp(f, 1, "U3.5", "orange", -4.90, 76.0, 1.271, q)   # a moved price: first sight holds
+    assert len(rows()) == 1
+    webapp._stamp(f, 1, "U3.5", "red", -5.17, 75.6, 1.360, dict(q, best="1.36"))
+    webapp._stamp(f, 1, "U3.5", "super red", -5.17, 75.6, 1.360, q)   # red to red is not a flip
+    assert len(rows()) == 2
+    assert [r.split("\t")[7] for r in rows()] == ["orange", "red"]
+    # The frozen call is the LAST row: a veto, so not a Running call and
+    # not in the record; the first-sight reader still sees the orange row.
+    monkeypatch.setattr(webapp, "_FROZEN", None)
+    assert webapp.frozen()[("2026-09-01", f.teams)]["label"] == "red"
+    assert webapp.was_called(f)["mark"] == "no play"
+    assert webapp.running_call(f) is None
+    f.status = "✅ HIT — 1-0"
+    assert webapp.label_any(f) == "red" and not webapp.counts(f)
+    # And the veto can lift: orange again is a third row, a call again.
+    f.status = ""
+    webapp._stamp(f, 1, "U3.5", "orange", -4.67, 76.1, 1.271, q)
+    monkeypatch.setattr(webapp, "_FROZEN", None)
+    assert len(rows()) == 3 and webapp.was_called(f)["mark"] == "normal"
