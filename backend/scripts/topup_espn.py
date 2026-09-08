@@ -83,9 +83,12 @@ def topup(code: str, dry: bool = False) -> tuple[int, list[str]]:
             skipped.append(f"{code}: {r.home} v {r.away} — "
                            f"{'home' if rh is None else 'away'} unresolved")
             continue
+        ht = {}
+        if getattr(r, "hthg", None) is not None and not pd.isna(r.hthg):
+            ht = dict(hthg=int(r.hthg), htag=int(r.htag))
         rows.append(dict(date=pd.Timestamp(r.date), home=rh, away=ra,
                          hg=int(r.hg), ag=int(r.ag), season=season,
-                         league_code=code, country="", status="result"))
+                         league_code=code, country="", status="result", **ht))
     if not rows:
         return 0, skipped
     cur = store.load(code, season)
@@ -94,10 +97,29 @@ def topup(code: str, dry: bool = False) -> tuple[int, list[str]]:
     # the board ingest already wrote may sit under either label.
     seen |= set(zip(have["date"], have["home"], have["away"]))
     fresh = [x for x in rows if (x["date"], x["home"], x["away"]) not in seen]
-    if fresh and not dry:
-        add = pd.DataFrame(fresh)
-        store.save(code, season, pd.concat([cur, add], ignore_index=True)
-                   if not cur.empty else add)
+    # Rows the store already holds but without a half-time score — every
+    # ESPN-sourced row before 8 Sep, and everything the board ingest
+    # wrote — get it filled from the timeline now. Scores are never
+    # overwritten; only an empty half-time cell is written.
+    filled = 0
+    if not cur.empty and "hthg" not in cur:
+        # A season file from a provider that never carried half-time
+        # scores (ESPN before 8 Sep) has no column to fill; give it one.
+        cur = cur.assign(hthg=float("nan"), htag=float("nan"))
+    if not cur.empty:
+        ht = {(x["date"], x["home"], x["away"]): (x["hthg"], x["htag"])
+              for x in rows if "hthg" in x}
+        for i, r in cur.iterrows():
+            k = (r["date"], r["home"], r["away"])
+            if k in ht and pd.isna(r["hthg"]):
+                cur.at[i, "hthg"], cur.at[i, "htag"] = ht[k]
+                filled += 1
+    if (fresh or filled) and not dry:
+        out = pd.concat([cur, pd.DataFrame(fresh)], ignore_index=True) \
+            if fresh and not cur.empty else (pd.DataFrame(fresh) if fresh else cur)
+        store.save(code, season, out)
+    if filled:
+        skipped.append(f"{code}: half-time filled on {filled} stored rows")
     return len(fresh), skipped
 
 

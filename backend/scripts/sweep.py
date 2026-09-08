@@ -202,6 +202,43 @@ FINAL_NAMES = ("STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_FINAL_PEN",
                "STATUS_FINAL_OT")
 
 
+LIVE_LOG = FIXTURES.parent / "live_log.tsv"
+
+
+def _log_live(f, ev: dict, detail: str, hg: int, ag: int) -> None:
+    """One row per running match per pass: what ESPN says the match is
+    doing right now. The minute-level bank the from-here read needs —
+    until 8 Sep it was calibrated at half time only, the one in-play
+    moment the results store records — and the raw material for a tempo
+    signal later (shots so far against the matchup's expected rate).
+    Append-only; a row a pass cannot read (no statistics yet) still
+    carries the minute and score."""
+    try:
+        comp = ev["competitions"][0]
+        sides = {x.get("homeAway"): x for x in comp.get("competitors") or []}
+        h, a = sides.get("home") or {}, sides.get("away") or {}
+
+        def stat(side, key):
+            for s in side.get("statistics") or []:
+                if s.get("name") == key:
+                    return s.get("displayValue") or ""
+            return ""
+        cols = [datetime.utcnow().strftime("%Y-%m-%d %H:%M"), f.kickoff.split(" ")[0],
+                f.code, f.teams, detail, str(hg), str(ag)]
+        for key in ("totalShots", "shotsOnTarget", "wonCorners", "possessionPct"):
+            cols += [stat(h, key), stat(a, key)]
+        new = not LIVE_LOG.exists()
+        with LIVE_LOG.open("a", encoding="utf-8") as fh:
+            if new:
+                fh.write("# One row per running match per sweep pass, from ESPN's "
+                         "scoreboard. Append-only; scripts/sweep.py writes it.\n"
+                         "# stamped\tdate\tleague\tfixture\tminute\thg\tag\t"
+                         "hs\tas\thst\tast\thc\tac\thpos\tapos\n")
+            fh.write("\t".join(cols) + "\n")
+    except Exception:
+        pass                                 # the log must never stop a sweep
+
+
 def _is_final(name: str, detail: str) -> bool:
     """Is this ESPN status a finished match with a real score?"""
     if name in FINAL_NAMES:
@@ -484,6 +521,8 @@ def main() -> None:
         if in_play and not in_et:
             status = f"LIVE {detail} {hg}-{ag}"
             tip2 = f.tip2
+            if not dry:
+                _log_live(f, ev, detail, hg, ag)
         elif not in_et and not _is_final(name, detail):
             # Not live, not in extra time, and not a final either. ESPN
             # files postponements, abandonments, delays and its own
