@@ -1203,3 +1203,33 @@ def test_league_badge_reads_the_edge_lanes_not_the_priced_corner():
     from scripts.bankrates import display_rates
     r = display_rates().get("TUR-SL")
     assert r and r["play_n"] > 200 and r["play_hit"] > 0.78, r
+
+
+def test_sweepdiff_tells_minutes_from_goals():
+    """The live loop commits on a goal, a kickoff, half time or a final,
+    and holds on a pass that moved nothing but minutes — the page counts
+    those forward itself. sweepdiff.kinds is the judge."""
+    from scripts.sweepdiff import kinds
+    row = "2026-09-08 20:45\tENG-CH\tChampionship\t{}\tU3.0 76% +1%\t— none\t{}\t"
+    before = "\n".join([row.format("A v B", "LIVE 31' 0-0"),
+                        row.format("C v D", ""),
+                        row.format("E v F", "LIVE 44' 1-0")])
+    # minutes only
+    after = "\n".join([row.format("A v B", "LIVE 35' 0-0"),
+                       row.format("C v D", ""),
+                       row.format("E v F", "LIVE 45'+2' 1-0")])
+    assert kinds(before, after) == []
+    # a goal, a kickoff and half time
+    after = "\n".join([row.format("A v B", "LIVE 35' 1-0"),
+                       row.format("C v D", "LIVE 2' 0-0"),
+                       row.format("E v F", "LIVE HT 1-0")])
+    k = kinds(before, after)
+    assert any(x.startswith("score: A v B") for x in k)
+    assert any(x.startswith("kicked off: C v D") for x in k)
+    assert any(x.startswith("half time: E v F") for x in k)
+    # a final
+    after = "\n".join([row.format("A v B", "✅ HIT — 1-0"),
+                       row.format("C v D", ""),
+                       row.format("E v F", "LIVE 44' 1-0")])
+    assert any(x.startswith("final: A v B") for x in kinds(before, after))
+    assert kinds(before, before) == []
