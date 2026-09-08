@@ -1,0 +1,23 @@
+# Netlify. The site is static and already rendered: scripts/board.py writes
+# web/index.html and commits it, so there is no build command and no base
+# directory — Netlify publishes web/ as it is on the production branch.
+#
+# The one rule that matters is IGNORE. The live loop commits every pass
+# (see .github/workflows/live-sweep.yml), and the page fetches goals and
+# minutes from web/live.json straight from the repository, so a commit
+# whose subject is "live tick:" or "live sweep:" has nothing for the host
+# to publish. Exit 0 = skip the deploy; anything else = deploy. That
+# leaves "live sweep [deploy]:" (a kickoff, a final, a new row) and every
+# ordinary commit or merge to build, which is a few dozen a day, not a
+# hundred and forty.
+[build]
+  publish = "web"
+  ignore  = "git log -1 --pretty=%s | grep -qE '^live (tick|sweep):'"
+
+# index.html changes with every deploy; never let a browser hold on to a
+# stale copy. Netlify's default already revalidates every asset, this
+# only makes the intent explicit for the page itself.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

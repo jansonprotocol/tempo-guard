@@ -1,4 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "ignoreCommand": "git log -1 --pretty=%s | grep -qE '^live (tick|sweep):' && exit 0 || exit 1"
-}
