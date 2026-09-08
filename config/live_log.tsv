@@ -1,0 +1,7 @@
+# One row per running match per sweep pass, from ESPN's scoreboard. Append-only; scripts/sweep.py writes it.
+# stamped	date	league	fixture	minute	hg	ag	hs	as	hst	ast	hc	ac	hpos	apos
+2026-09-08 16:52	2026-09-08	SAU-PL	Al-Ettifaq v Al Faisaly	60'	0	0	0	0	0	0	0	0	0	0
+2026-09-08 16:52	2026-09-08	SAU-PL	Al-Hazem v Al-Taawoun	HT	1	0	0	0	0	0	0	0	0	0
+2026-09-08 16:52	2026-09-08	NED-ED	NEC v Excelsior	6'	0	0	0	1	0	1	1	0	76.1	23.9
+2026-09-08 16:52	2026-09-08	UCL	AEK v LASK	6'	0	0	1	1	1	0	0	0	47.9	52.1
+2026-09-08 16:52	2026-09-08	UCL	Club Brugge v Aston Villa	5'	0	0	0	2	0	0	0	0	18.5	81.5
