@@ -106,19 +106,23 @@ jobs:
               echo "nothing moved"
             else
               git commit -m "live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC"
-              # Someone may have pushed while this ran. Rebase rather than
-              # merge, and REGENERATE the two build artefacts rather than
-              # resolving them by hand: index.html and README.md are
-              # derived from config/fixtures.tsv, so the file is the truth
-              # and the render is reproducible from it.
-              for attempt in 1 2 3; do
-                git push origin HEAD:${{ github.ref_name }} && break
-                git pull --rebase origin ${{ github.ref_name }} || {
-                  git checkout --ours web/index.html README.md
-                  git add web/index.html README.md
-                  git -c core.editor=true rebase --continue
-                }
-              done
+              # Someone may have pushed while this ran. Do not try to
+              # rebase a sweep over their change: on 7 Sep a re-price
+              # landed on main mid-loop and the rebase hit conflicts in
+              # fixtures.tsv and matchbank.json, files the old resolver
+              # never touched, and the pass died with exit 1. A sweep is
+              # reproducible from the feed, so the right move is to DROP
+              # this pass, reset onto what was pushed, and sweep again on
+              # top of it — the next pass writes the same scores onto the
+              # newer board.
+              if ! git push origin HEAD:${{ github.ref_name }}; then
+                echo "push refused — resetting onto upstream and sweeping again"
+                git fetch origin ${{ github.ref_name }}
+                git reset --hard origin/${{ github.ref_name }}
+                cd backend
+                echo "::endgroup::"
+                continue
+              fi
             fi
             cd backend
             echo "::endgroup::"
