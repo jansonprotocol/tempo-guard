@@ -290,7 +290,7 @@
 2026-09-07 01:10	COL-PA	Primera A	Deportivo Pereira v Millonarios	U3.0 79.5% **+0.0%** · buy≥1.34 (+1.3% margin)	✅ **Deportivo Pereira U1.5** 73.4% +12.9% (team) · buy≥1.42 (+4.1% margin)	✅ HIT — 1-1	
 2026-09-07 01:30	PER-L1	Liga 1	Melgar v ADT	O1.5 75.3% +1.5% · buy≥1.39 (+4.8% margin)	✅ **Melgar O1.5** 55.4% +7.9% (team) · buy≥1.86 (+2.8% margin)	✅ HIT — 3-0	✅ DNB1 78.7% +11.1% · buy≥1.33 · probation
 2026-09-07 17:30	SAU-PL	Saudi Pro League	Al-Khaleej v Al-Riyadh	U4.25 84.8% +2.8% · buy≥1.25 (+4.5% margin)	✅ U3.75 69.2% +3.9% (floor −5.8) · buy≥1.38 (+3.9% margin)	✅ HIT — 0-0	
-2026-09-07 18:00	POL-EK	Ekstraklasa	Wieczysta v Zagłębie	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-09-07 18:00	POL-EK	Ekstraklasa	Wieczysta v Zagłębie	— no tip: engine abstained (thin history or an unresolved name)	—	FT 1-1 (no tip)	
 2026-09-07 18:30	ITA-SA	Serie A	Cagliari v Lecce	U3.0 75.0% **+0.0%** · buy≥1.36 (+1.0% margin)	✅ **Lecce U1.5** 75.4% +9.5% (team) · buy≥1.38 (+4.2% margin)	✅ HIT — 1-0	✅ 1X 74.3% +6.1% · buy≥1.41 · probation
 2026-09-07 19:00	DEN-SL	Superliga	Midtjylland v Nordsjælland	U4.25 82.8% +1.9% · buy≥1.29 (+5.2% margin)	❌ U3.75 66.5% +2.5% (floor −8.5) · buy≥1.39 (+0.5% margin)	✅ HIT — 2-2	
 2026-09-07 19:00	SWE-AL	Allsvenskan	Kalmar v Djurgården	O1.5 80.7% +2.4% · buy≥1.28 (+3.3% margin)	❌ **Djurgården O1.5** 56.6% +19.2% (team) · buy≥1.82 (+2.9% margin)	❌ MISS — 0-1	
@@ -304,7 +304,7 @@
 2026-09-07 20:00	SAU-PL	Saudi Pro League	Al-Hilal v Neom	O1.5 84.5% +4.8% · buy≥1.27 (+7.7% margin)	❌ **Al-Hilal O1.5** 61.9% +16.9% (team) · buy≥1.67 (+3.4% margin)	✅ HIT — 0-2	❌ DNB1 80.1% +24.6% · buy≥1.31 · probation
 2026-09-07 20:30	ITA-SB	Serie B	Palermo v Sampdoria	U3.0 75.8% **+0.5%** · buy≥1.47 (+2.0% margin)	✅ **Sampdoria U1.5** 75.3% +7.2% (team) · buy≥1.39 (+4.9% margin)	❌ MISS — 3-1	✅ DNB1 69.1% +8.8% · buy≥1.52 · probation
 2026-09-07 20:30	ESP-L2	LaLiga 2	Sabadell v Córdoba	U4.25 84.3% **−5.2%** · buy≥1.20 (+5.4% margin)	— none	❌ MISS — 3-2	
-2026-09-07 20:30	POL-EK	Ekstraklasa	Pogoń v Wisła Płock	U4.25 86.2% **+0.6%** · buy≥1.24 (+7.2% margin)	**Wisła Płock U1.5** 75.0% +8.1% (team) · buy≥1.42 (+6.5% margin)		DNB1 73.1% +12.3% · buy≥1.44 · probation
+2026-09-07 20:30	POL-EK	Ekstraklasa	Pogoń v Wisła Płock	U4.25 86.2% **+0.6%** · buy≥1.24 (+7.2% margin)	✅ **Wisła Płock U1.5** 75.0% +8.1% (team) · buy≥1.42 (+6.5% margin)	✅ HIT — 1-1	◦ DNB1 73.1% +12.3% · buy≥1.44 · probation
 2026-09-07 20:45	FRA-L2	Ligue 2	Nantes v Nancy	U4.25 83.9% **−4.8%** · buy≥1.21 (+7.0% margin)	— none	✅ HIT — 1-0	✅ DNB1 68.4% +10.7% · buy≥1.53 · probation
 2026-09-07 20:45	ITA-SA	Serie A	Udinese v Lazio	U4.25 85.9% **−2.8%** · buy≥1.19 (+5.4% margin)	— none	✅ HIT — 1-2	❌ 1X 72.9% +4.7% · buy≥1.44 · probation
 2026-09-07 21:15	POR-PL	Primeira Liga	Estoril v Arouca	U4.25 84.2% **−2.0%** · buy≥1.24 (+6.0% margin)	❌ **Arouca O0.5** 78.4% +9.9% (team) · buy≥1.36 (+6.7% margin)	✅ HIT — 0-0	
