@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 78.6%
+## CURRENT CONFIRMED HITRATE: 78.7%
 
     lane                        Tip 1              Tip 2
-    all matches            217 / 276  78.6%    152 / 226  67.3%
-    played lanes  >+1%     107 / 134  79.9%    152 / 224  67.9%
+    all matches            218 / 277  78.7%    153 / 227  67.4%
+    played lanes  >+1%     108 / 135  80.0%    153 / 225  68.0%
     placed bets             60 / 73   82.2%    ROI +6.8%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 259 / 358   ·   72.3%**   ·   **Tip 1 — 107 / 134   ·   79.9%**   ·   **Tip 2 — 152 / 224   ·   67.9%**
+**Playable — 261 / 360   ·   72.5%**   ·   **Tip 1 — 108 / 135   ·   80.0%**   ·   **Tip 2 — 153 / 225   ·   68.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -396,7 +396,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 09-09 20:45 <b>Norwich v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>— under +1%</td><td>✅ O1.75 74.8% +2.1%<br>buy≥1.42 (+1.6% margin) · floor −0.2</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 09-09 21:00 <b>Charlton v QPR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>U3.0 77.0% +2.8%<br>buy≥1.46 (+3.4% margin)</td><td>✅ U2.75 55.9% +3.3%<br>buy≥1.60 (−0.4% margin) · floor −19.1</td></tr></table>
 <table align="left"><tr><th align="left">✅ 6-1 · 09-09 21:00 <b>PSG v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O2.25 80.8% +17.4%<br>buy≥1.24 (+5.5% margin)</td><td>✅ O1.75 91.1% +7.3%<br>buy≥1.21 (+9.9% margin) · lower edge</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 0-4 <b>Moreirense v Benfica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (81.4 −2.9)</td><td>O1.5 80.1% +5.0%<br>buy≥1.35 (+8.1% margin) · <i>✓ landed</i></td><td><b>Benfica O1.5</b> 67.1% +32.2%<br>buy≥1.55 (+3.7% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 78.7% +35.9% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-4 · 09-09 21:45 <b>Moreirense v Benfica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (81.4 −2.9)</td><td>O1.5 80.1% +5.0%<br>buy≥1.35 (+8.1% margin)</td><td>✅ <b>Benfica O1.5</b> 67.1% +32.2%<br>buy≥1.55 (+3.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB2 78.7% +35.9% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 10-09 00:30 <b>Botafogo-SP v Novorizontino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>— under +1%</td><td>O1.75 66.5% +1.3%<br>buy≥1.64 (+0.5% margin) · floor −8.5</td></tr></table>
 <table align="left"><tr><th align="left">🟢 10-09 00:30 <b>Fortaleza v Avaí</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.5% +1.1%<br>buy≥1.33 (+3.9% margin)</td><td>U2.75 63.0% +1.5%<br>buy≥1.44 (+0.2% margin) · floor −12.0</td></tr></table>
 <table align="left"><tr><th align="left">🟢 10-09 01:30 <b>Atlanta v Orlando</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>— under +1%</td><td><b>Orlando O0.5</b> 81.6% +8.3%<br>buy≥1.34 (+9.7% margin) · team</td></tr></table>
@@ -505,7 +505,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 0-4 <b>Moreirense v Benfica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (81.4 −2.9)</td><td>O1.5 80.1% +5.0%<br>buy≥1.35 (+8.1% margin) · <i>✓ landed</i></td><td><b>Benfica O1.5</b> 67.1% +32.2%<br>buy≥1.55 (+3.7% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 78.7% +35.9% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-09 00:30 <b>Botafogo-SP v Novorizontino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>O1.0 88.5% <b>−0.7%</b><br>buy≥1.22 (+6.1% margin)</td><td>O1.75 66.5% +1.3%<br>buy≥1.64 (+0.5% margin) · floor −8.5</td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-09 00:30 <b>Fortaleza v Avaí</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.5% +1.1%<br>buy≥1.33 (+3.9% margin)</td><td>U2.75 63.0% +1.5%<br>buy≥1.44 (+0.2% margin) · floor −12.0</td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-09 01:30 <b>Atlanta v Orlando</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>U4.25 80.5% <b>+0.7%</b><br>buy≥1.35 (+6.1% margin)</td><td><b>Orlando O0.5</b> 81.6% +8.3%<br>buy≥1.34 (+9.7% margin) · team</td></tr></table>
@@ -644,7 +643,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 217 / 276   ·   78.6%**   ·   **Tip 2 — 152 / 226   ·   67.3%**
+**Tip 1 — 218 / 277   ·   78.7%**   ·   **Tip 2 — 153 / 227   ·   67.4%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -988,6 +987,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 6-1 · 09-09 21:00 <b>PSG v Slovan Bratislava</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O2.25 80.8% +17.4%<br>buy≥1.24 (+5.5% margin)</td><td>✅ O1.75 91.1% +7.3%<br>buy≥1.21 (+9.9% margin) · lower edge</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 09-09 21:00 <b>Sporting CP v Galatasaray</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O1.5 81.7% <b>−2.0%</b><br>buy≥1.26 (+2.9% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 09-09 21:00 <b>Napoli v Arsenal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O1.5 80.8% <b>−2.9%</b><br>buy≥1.26 (+2.2% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-4 · 09-09 21:45 <b>Moreirense v Benfica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (81.4 −2.9)</td><td>O1.5 80.1% +5.0%<br>buy≥1.35 (+8.1% margin)</td><td>✅ <b>Benfica O1.5</b> 67.1% +32.2%<br>buy≥1.55 (+3.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB2 78.7% +35.9% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
