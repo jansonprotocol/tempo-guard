@@ -1040,6 +1040,12 @@ that premium the book is keeping the insurance money.
 | — open | MVV v Almere | U4.5 | 1.30 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.25 rung struck as U4.5, orange, need 1.27); no feed quote for the Eerste Divisie, the bettor's book is the price. Clears the bar at 1.30 |
 | — open | NAC Breda v Jong FC Utrecht | U4.5 | 1.36 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.25 rung struck as U4.5, orange, need 1.27); no feed quote for the Eerste Divisie, the bettor's book is the price. Clears the bar at 1.36 |
 | — open | VVV-Venlo v TOP Oss | U4.5 | 1.29 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.25 rung struck as U4.5, orange, need 1.27); no feed quote for the Eerste Divisie, the bettor's book is the price. Clears the bar at 1.29 |
+| — open | Bolton v Cardiff | U3.5 | 1.44 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 82.4%, orange, need 1.27); clears at 1.44, best anywhere 1.50 Betsson |
+| — open | West Brom v QPR | U3.5 | 1.35 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 76.9%, orange, need 1.27); clears at 1.35, Betsson 1.36 |
+| — open | Dortmund v Paderborn | U4.5 | 1.34 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U4.5 80.5%, orange, need 1.27); clears at 1.34, 1xBet 1.43 |
+| — open | Aston Villa v Nottingham Forest | O1.5 | 1.28 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (O1.5 82.0%, orange, need 1.27); clears by a hundredth at 1.28, 1xBet 1.34 |
+| — open | Chelsea v Hull | U4.5 | 1.33 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's STRONG lane (U4.5 85.5%, orange, need 1.27); clears at 1.33, Pinnacle 1.44 |
+| — open | Liverpool v Fulham | U4.5 | 1.30 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U4.5 83.5%, orange, need 1.27); clears at 1.30, Pinnacle 1.38 |
 
 <!-- HYPOTHESES:START -->
 
