@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            207 / 264  78.4%    145 / 218  66.5%
     played lanes  >+1%     101 / 127  79.5%    145 / 216  67.1%
-    placed bets             56 / 68   82.4%    ROI +6.8%
+    placed bets             57 / 69   82.6%    ROI +7.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -818,7 +818,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 56 / 68  ·  ROI +6.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 57 / 69  ·  ROI +7.3%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -897,6 +897,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Bolton v West Ham | DNB (away) | 1.23 | 1.23x | TOTO — pre-kickoff, struck 8 Sep for tonight. The card's RESULT lane, DNB2 80.9% +40.3%, on a card whose tip 1 (O1.5 75.4%) was RED at first sight and sits in Declined. Panel consensus 1.33, best 1.37 Winamax; 1.23 is under both, taken at the bettor's book. The DNB lane's own bar is 1.35 on the card. |
 | — open | Derby v West Brom | U3.5 | 1.36 | — | TOTO — pre-kickoff, struck 8 Sep for a 9 Sep kickoff. The card re-priced on the topped-up store from U4.25 83.6% to U3.0 76.0% +1.8% (orange); U3.0 rung struck as U3.5, the standing translation. Panel consensus 1.30, best 1.34 LeoVegas; 1.36 beats the panel and clears the 1.2707 bar. |
 | ✅ | Al-Ittihad v Al-Fayha | U4.5 | 1.28 | 1.28x | TOTO — pre-kickoff, struck 8 Sep for tonight. ORANGE at first sight (score +5.87), bar 1.2707; the panel read 1.16 then and 1.24 consensus / 1.33 Pinnacle now. 1.28 clears the bar; the card re-priced on the topped-up store to U4.25 83.8% +1.6%. U4.25 rung struck as U4.5, the standing translation. |
+| ✅ | Porto v Man City | O1.5 | 1.36 | 1.36x | TOTO — in-play, struck around 20' at 0-0 (goals came 49' and 90'+1'). The card's own lane, O1.5 80.4% at a printed edge of −3.3%, under the playable bar — an Athena-lane card, one of the negative-edge cards the 8 Sep stay-out hypothesis is watching. From here at 0-0 20' the board's read said 70%, fair 1.43; 1.36 sat under it, so no edge by the board's own in-play read — it landed anyway. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
