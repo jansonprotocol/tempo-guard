@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 78.3%
+## CURRENT CONFIRMED HITRATE: 78.4%
 
     lane                        Tip 1              Tip 2
-    all matches            209 / 267  78.3%    147 / 221  66.5%
-    played lanes  >+1%     102 / 129  79.1%    147 / 219  67.1%
+    all matches            210 / 268  78.4%    148 / 222  66.7%
+    played lanes  >+1%     103 / 130  79.2%    148 / 220  67.3%
     placed bets             58 / 70   82.9%    ROI +7.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 249 / 348   ·   71.6%**   ·   **Tip 1 — 102 / 129   ·   79.1%**   ·   **Tip 2 — 147 / 219   ·   67.1%**
+**Playable — 251 / 350   ·   71.7%**   ·   **Tip 1 — 103 / 130   ·   79.2%**   ·   **Tip 2 — 148 / 220   ·   67.3%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -389,9 +389,9 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-2 · 09-09 02:30 <b>Criciúma v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 86.1% +4.8%<br>buy≥1.31 (+8.9% margin)</td><td>✅ U2.75 68.3% +6.8%<br>buy≥1.38 (+3.8% margin) · floor −6.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 09-09 17:55 <b>Al-Kholood v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>U4.25 84.3% +2.2%<br>buy≥1.26 (+4.2% margin)</td><td>✅ U3.75 68.6% +3.0%<br>buy≥1.35 (+0.6% margin) · floor −6.4</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-0 · 09-09 18:45 <b>Twente v Telstar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (86.9 +1.1)</td><td>O1.5 84.0% +1.9%<br>buy≥1.24 (+4.5% margin)</td><td>❌ <b>Twente O1.5</b> 57.9% +8.0%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.5% +4.0% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+3' 5-1 <b>Barcelona v Feyenoord</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O1.5 87.3% +3.5%<br>buy≥1.25 (+9.1% margin) · <i>✓ landed</i></td><td>O2.25 72.6% +9.2%<br>buy≥1.33 (+4.1% margin) · floor −9.4 · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 5-1 · 09-09 18:45 <b>Barcelona v Feyenoord</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O1.5 87.3% +3.5%<br>buy≥1.25 (+9.1% margin)</td><td>✅ O2.25 72.6% +9.2%<br>buy≥1.33 (+4.1% margin) · floor −9.4</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 09-09 18:45 <b>Stuttgart v Viking</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>— under +1%</td><td>✅ O2.25 65.7% +2.3%<br>buy≥1.39 (+0.4% margin) · floor −16.3</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 39' 1-0 <b>Al-Nassr v Abha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>O1.5 81.1% +1.6%<br>buy≥1.25 (+1.7% margin) · <i>needs 1 more</i> · <i>from here 85% · fair 1.18</i></td><td><b>Al-Nassr O1.5</b> 61.3% +16.4%<br>buy≥1.69 (+3.3% margin) · team · <i>needs 1 more</i> · <i>from here 72% · fair 1.39</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.4% +21.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 41' 1-0 <b>Al-Nassr v Abha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>O1.5 81.1% +1.6%<br>buy≥1.25 (+1.7% margin) · <i>needs 1 more</i> · <i>from here 84% · fair 1.19</i></td><td><b>Al-Nassr O1.5</b> 61.3% +16.4%<br>buy≥1.69 (+3.3% margin) · team · <i>needs 1 more</i> · <i>from here 71% · fair 1.41</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.4% +21.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 09-09 20:45 <b>Derby v West Brom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>U3.0 76.0% +1.8%<br>buy≥1.48 (+2.6% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🟢 09-09 20:45 <b>Norwich v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>— under +1%</td><td>O1.75 74.8% +2.1%<br>buy≥1.42 (+1.6% margin) · floor −0.2</td></tr></table>
 <table align="left"><tr><th align="left">🟢 09-09 21:00 <b>Charlton v QPR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>U3.0 77.0% +2.8%<br>buy≥1.46 (+3.4% margin)</td><td>U2.75 55.9% +3.3%<br>buy≥1.60 (−0.4% margin) · floor −19.1</td></tr></table>
@@ -505,9 +505,8 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+3' 5-1 <b>Barcelona v Feyenoord</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O1.5 87.3% +3.5%<br>buy≥1.25 (+9.1% margin) · <i>✓ landed</i></td><td>O2.25 72.6% +9.2%<br>buy≥1.33 (+4.1% margin) · floor −9.4 · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 40' 1-1 <b>Al-Fateh v Al Diriyah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 39' 1-0 <b>Al-Nassr v Abha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>O1.5 81.1% +1.6%<br>buy≥1.25 (+1.7% margin) · <i>needs 1 more</i> · <i>from here 85% · fair 1.18</i></td><td><b>Al-Nassr O1.5</b> 61.3% +16.4%<br>buy≥1.69 (+3.3% margin) · team · <i>needs 1 more</i> · <i>from here 72% · fair 1.39</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.4% +21.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 42' 1-1 <b>Al-Fateh v Al Diriyah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 41' 1-0 <b>Al-Nassr v Abha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>O1.5 81.1% +1.6%<br>buy≥1.25 (+1.7% margin) · <i>needs 1 more</i> · <i>from here 84% · fair 1.19</i></td><td><b>Al-Nassr O1.5</b> 61.3% +16.4%<br>buy≥1.69 (+3.3% margin) · team · <i>needs 1 more</i> · <i>from here 71% · fair 1.41</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.4% +21.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 09-09 20:45 <b>Derby v West Brom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>U3.0 76.0% +1.8%<br>buy≥1.48 (+2.6% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 09-09 20:45 <b>Norwich v Birmingham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>U4.25 83.7% <b>−4.4%</b><br>buy≥1.24 (+6.2% margin)</td><td>O1.75 74.8% +2.1%<br>buy≥1.42 (+1.6% margin) · floor −0.2</td></tr></table>
 <table align="left"><tr><th align="left">🔵 09-09 21:00 <b>Charlton v QPR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>U3.0 77.0% +2.8%<br>buy≥1.46 (+3.4% margin)</td><td>U2.75 55.9% +3.3%<br>buy≥1.60 (−0.4% margin) · floor −19.1</td></tr></table>
@@ -654,7 +653,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 209 / 267   ·   78.3%**   ·   **Tip 2 — 147 / 221   ·   66.5%**
+**Tip 1 — 210 / 268   ·   78.4%**   ·   **Tip 2 — 148 / 222   ·   66.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -987,6 +986,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-2 · 09-09 02:30 <b>Criciúma v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 86.1% +4.8%<br>buy≥1.31 (+8.9% margin)</td><td>✅ U2.75 68.3% +6.8%<br>buy≥1.38 (+3.8% margin) · floor −6.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 09-09 17:55 <b>Al-Kholood v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>U4.25 84.3% +2.2%<br>buy≥1.26 (+4.2% margin)</td><td>✅ U3.75 68.6% +3.0%<br>buy≥1.35 (+0.6% margin) · floor −6.4</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-0 · 09-09 18:45 <b>Twente v Telstar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (86.9 +1.1)</td><td>O1.5 84.0% +1.9%<br>buy≥1.24 (+4.5% margin)</td><td>❌ <b>Twente O1.5</b> 57.9% +8.0%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.5% +4.0% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 5-1 · 09-09 18:45 <b>Barcelona v Feyenoord</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O1.5 87.3% +3.5%<br>buy≥1.25 (+9.1% margin)</td><td>✅ O2.25 72.6% +9.2%<br>buy≥1.33 (+4.1% margin) · floor −9.4</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 09-09 18:45 <b>Stuttgart v Viking</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>O1.5 83.7% <b>−0.1%</b><br>buy≥1.25 (+4.4% margin)</td><td>✅ O2.25 65.7% +2.3%<br>buy≥1.39 (+0.4% margin) · floor −16.3</td></tr></table>
 
 <br clear="all">
