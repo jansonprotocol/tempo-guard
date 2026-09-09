@@ -971,6 +971,9 @@ that premium the book is keeping the insurance money.
 | — open | Derby v West Brom | U3.5 | 1.36 | — | TOTO — pre-kickoff, struck 8 Sep for a 9 Sep kickoff. The card re-priced on the topped-up store from U4.25 83.6% to U3.0 76.0% +1.8% (orange); U3.0 rung struck as U3.5, the standing translation. Panel consensus 1.30, best 1.34 LeoVegas; 1.36 beats the panel and clears the 1.2707 bar. |
 | ✅ | Al-Ittihad v Al-Fayha | U4.5 | 1.28 | 1.28x | TOTO — pre-kickoff, struck 8 Sep for tonight. ORANGE at first sight (score +5.87), bar 1.2707; the panel read 1.16 then and 1.24 consensus / 1.33 Pinnacle now. 1.28 clears the bar; the card re-priced on the topped-up store to U4.25 83.8% +1.6%. U4.25 rung struck as U4.5, the standing translation. |
 | ✅ | Porto v Man City | O1.5 | 1.36 | 1.36x | TOTO — in-play, struck around 20' at 0-0 (goals came 49' and 90'+1'). The card's own lane, O1.5 80.4% at a printed edge of −3.3%, under the playable bar — an Athena-lane card, one of the negative-edge cards the 8 Sep stay-out hypothesis is watching. From here at 0-0 20' the board's read said 70%, fair 1.43; 1.36 sat under it, so no edge by the board's own in-play read — it landed anyway. Outside the board's rule; logged as taken, not as a board play |
+| — open | Al Faisaly v Al-Ittihad | U4.5 | 1.25 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.5 86.0%, orange, need 1.27): 1.25 sits UNDER the bar at the bettor's book; the PLAY was Pinnacle's 1.32. Logged as taken at a price the board did not clear |
+| — open | Burgos v Ceuta | U3.5 | 1.34 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U3.5 76.5%, orange, need 1.27); clears the bar at 1.34, best anywhere 1.38 1xBet |
+| — open | Benevento v Verona | U3.5 | 1.28 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's STRONG lane (U3.5 76.8%, orange, need 1.27); clears the bar by a hundredth at 1.28, Pinnacle 1.37 |
 
 <!-- HYPOTHESES:START -->
 
