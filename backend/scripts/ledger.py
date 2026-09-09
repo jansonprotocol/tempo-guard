@@ -97,6 +97,20 @@ def read_fixtures() -> dict[str, dict]:
     return out
 
 
+def _lane(rung: str, side: str) -> tuple[str, str]:
+    """The ledger's spelling of a draw-no-bet position: rung DNB, side H
+    or A. The CARD spells the same lane DNB1 / DNB2, and a bet logged
+    off the card in that spelling (Bolton v West Ham, 8 Sep: "DNB2", side
+    "-") reached settle_fraction as a totals market and threw — and
+    because the ledger is rendered inside the board, every sweep pass
+    from that final on graded the fixture and then failed to write the
+    README, the page and live.json, which sat at 90'+5' for five hours.
+    One spelling in, one spelling out; nothing else is normalised."""
+    if rung in ("DNB1", "DNB2"):
+        return "DNB", "H" if rung == "DNB1" else "A"
+    return rung, side
+
+
 def bet_prob(rung: str, side: str, fx: dict) -> float | None:
     """The engine's probability for THIS bet's lane, where derivable.
 
@@ -110,6 +124,7 @@ def bet_prob(rung: str, side: str, fx: dict) -> float | None:
 
     None only when the engine abstains on the fixture entirely — that is
     an answer, and it stays a dash rather than a guess."""
+    rung, side = _lane(rung, side)
     if rung in ("DNB", "1X", "X2", "12"):
         want = ("DNB1" if side == "H" else "DNB2") if rung == "DNB" else rung
         if fx.get("lane3") == want:
@@ -141,6 +156,7 @@ def bet_state(rung: str, side: str, fx: dict) -> float | None:
     Everything that can still move waits for the whistle: unders, DNB,
     double chance, and a quarter-line over sitting on a half-win that one
     more goal would upgrade to a full one."""
+    rung, side = _lane(rung, side)
     hg, ag, live = fx["hg"], fx["ag"], False
     if hg is None:
         if rung[:1] in ("O", "U") and fx.get("lhg") is not None:

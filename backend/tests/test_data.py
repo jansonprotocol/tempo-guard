@@ -1283,3 +1283,18 @@ def test_forward_log_restamps_a_lane_when_its_label_flips_to_red(tmp_path, monke
     webapp._stamp(f, 1, "U3.5", "orange", -4.67, 76.1, 1.271, q)
     monkeypatch.setattr(webapp, "_FROZEN", None)
     assert len(rows()) == 3 and webapp.was_called(f)["mark"] == "normal"
+
+
+def test_ledger_reads_the_card_spelling_of_a_draw_no_bet_position():
+    """DNB2 / side "-" is what a slip copied off the card says; the ledger's
+    own spelling is DNB / A. Both must settle, and neither may throw —
+    a throw here blanked the board for five hours on 8 Sep."""
+    from scripts import ledger
+    final = dict(hg=2, ag=3, lhg=None, lag=None)
+    assert ledger.bet_state("DNB2", "-", final) == 1.0
+    assert ledger.bet_state("DNB", "A", final) == 1.0
+    assert ledger.bet_state("DNB1", "-", final) == -1.0
+    assert ledger.bet_state("DNB2", "-", dict(hg=1, ag=1, lhg=None, lag=None)) == 0.0
+    assert ledger.bet_state("DNB2", "-", dict(hg=None, ag=None, lhg=1, lag=2)) is None
+    fx = dict(lane3="DNB2", p3=0.809, hg=None, ag=None)
+    assert ledger.bet_prob("DNB2", "-", fx) == 0.809
