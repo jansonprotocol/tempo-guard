@@ -1313,17 +1313,17 @@ def _taken(f, pick: str | None) -> str:
             out.append(f'<span class="taken live" title="Struck after '
                        f'kickoff, off a live price the board never quoted '
                        f'and a score the engine cannot see — not a board '
-                       f'play">{what} taken · in-play '
-                       f'<b>{b["odds"]:.2f}</b>{mark}</span>')
+                       f'play">{what} taken at '
+                       f'<b>{b["odds"]:.2f}</b> · in-play{mark}</span>')
         elif want and rung == want:
             out.append(f'<span class="taken" title="The lane the card '
-                       f'starred, bought before kickoff">line taken '
+                       f'starred, bought before kickoff">line taken at '
                        f'<b>{b["odds"]:.2f}</b>{mark}</span>')
         else:
             out.append(f'<span class="taken own" title="A position on this '
                        f'fixture, but not on the lane the card starred">'
                        f'{html.escape(b["lane"])} '
-                       f'taken <b>{b["odds"]:.2f}</b>{mark}</span>')
+                       f'taken at <b>{b["odds"]:.2f}</b>{mark}</span>')
     return f'<div class="takenbar">{"".join(out)}</div>'
 
 
