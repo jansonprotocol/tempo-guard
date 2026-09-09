@@ -1086,6 +1086,11 @@ that premium the book is keeping the insurance money.
 | — open | Aston Villa v Nottingham Forest | O1.5 | 1.28 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (O1.5 82.0%, orange, need 1.27); clears by a hundredth at 1.28, 1xBet 1.34 |
 | — open | Chelsea v Hull | U4.5 | 1.33 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's STRONG lane (U4.5 85.5%, orange, need 1.27); clears at 1.33, Pinnacle 1.44 |
 | — open | Liverpool v Fulham | U4.5 | 1.30 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U4.5 83.5%, orange, need 1.27); clears at 1.30, Pinnacle 1.38 |
+| — open | Beveren v St Truiden | U4.5 | 1.23 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's STRONG lane (U4.5 85.8%, super green, need 1.18); clears at 1.23, Unibet NL 1.22 |
+| — open | Preston v Lincoln | U3.5 | 1.35 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 78.5%, orange, need 1.27); clears at 1.35, matches Pinnacle |
+| — open | Watford v Stoke | U3.5 | 1.28 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 82.0%, orange, need 1.27); clears by a hundredth at 1.28, Pinnacle 1.34 |
+| — open | Cádiz v Las Palmas | U3.5 | 1.26 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 76.5%, orange, need 1.27): 1.26 sits UNDER the bar by a tick; the PLAY was Pinnacle's 1.39. Logged as taken at a price the board did not clear |
+| — open | Nacional v Alverca | U3.5 | 1.27 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 76.5%, orange, need 1.271): 1.27 misses the bar by a thousandth; the PLAY was BetOnline's 1.35 |
 
 <!-- HYPOTHESES:START -->
 
