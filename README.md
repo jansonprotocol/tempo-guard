@@ -1091,6 +1091,7 @@ that premium the book is keeping the insurance money.
 | — open | Watford v Stoke | U3.5 | 1.28 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 82.0%, orange, need 1.27); clears by a hundredth at 1.28, Pinnacle 1.34 |
 | — open | Cádiz v Las Palmas | U3.5 | 1.26 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 76.5%, orange, need 1.27): 1.26 sits UNDER the bar by a tick; the PLAY was Pinnacle's 1.39. Logged as taken at a price the board did not clear |
 | — open | Nacional v Alverca | U3.5 | 1.27 | — | Bettor's Dutch book (slip unnamed) — pre-kickoff, struck 9 Sep for Saturday. The card's PLAY lane (U3.5 76.5%, orange, need 1.271): 1.27 misses the bar by a thousandth; the PLAY was BetOnline's 1.35 |
+| — open | Al-Kholood v Al-Shabab | U4.5 | 1.26 | — | Bettor's Dutch book (slip unnamed) — in-play, struck in the first half at 1-1 (goals 8' and 31'; the slip carries the Live mark and 1.26 is above any pre-match U4.5 price). The card's lane (U4.25 rung struck as U4.5, orange, need 1.27): 1.26 sits a tick under the bar — the bettor's call, "slightly under the mark but good enough". From here at 1-1 around 40' the board's read says 75%, fair 1.33; 1.26 is under it. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
