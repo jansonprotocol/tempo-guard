@@ -974,6 +974,10 @@ that premium the book is keeping the insurance money.
 | — open | Al Faisaly v Al-Ittihad | U4.5 | 1.25 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.5 86.0%, orange, need 1.27): 1.25 sits UNDER the bar at the bettor's book; the PLAY was Pinnacle's 1.32. Logged as taken at a price the board did not clear |
 | — open | Burgos v Ceuta | U3.5 | 1.34 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U3.5 76.5%, orange, need 1.27); clears the bar at 1.34, best anywhere 1.38 1xBet |
 | — open | Benevento v Verona | U3.5 | 1.28 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's STRONG lane (U3.5 76.8%, orange, need 1.27); clears the bar by a hundredth at 1.28, Pinnacle 1.37 |
+| — open | Helmond Sport v Jong PSV | U4.5 | 1.26 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.25 rung struck as U4.5, orange, need 1.27); no feed quote for the Eerste Divisie, the bettor's book is the price. 1.26 misses the bar by a tick |
+| — open | MVV v Almere | U4.5 | 1.30 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.25 rung struck as U4.5, orange, need 1.27); no feed quote for the Eerste Divisie, the bettor's book is the price. Clears the bar at 1.30 |
+| — open | NAC Breda v Jong FC Utrecht | U4.5 | 1.36 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.25 rung struck as U4.5, orange, need 1.27); no feed quote for the Eerste Divisie, the bettor's book is the price. Clears the bar at 1.36 |
+| — open | VVV-Venlo v TOP Oss | U4.5 | 1.29 | — | TOTO — pre-kickoff, struck 9 Sep for Friday. The card's lane (U4.25 rung struck as U4.5, orange, need 1.27); no feed quote for the Eerste Divisie, the bettor's book is the price. Clears the bar at 1.29 |
 
 <!-- HYPOTHESES:START -->
 
