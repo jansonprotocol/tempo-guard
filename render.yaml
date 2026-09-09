@@ -1,0 +1,22 @@
+# Render. The site is static and already rendered: scripts/board.py
+# writes web/index.html and the sweep commits it, so there is nothing to
+# build and no server to run — a Static Site that publishes web/ as it
+# is. This file is the Blueprint form of the same settings the dashboard
+# asks for (New → Static Site), so either path gives the same service.
+#
+# Deploys that only moved a goal or a minute are skipped by the commit
+# message: the live loop appends "[skip render]" to "live tick:" and
+# "live sweep:" subjects (see .github/workflows/live-sweep.yml), and the
+# page fetches those from web/live.json in the repository. Kickoffs,
+# finals, new rows and merges deploy.
+services:
+  - type: web
+    name: athena
+    runtime: static
+    branch: main
+    buildCommand: ""
+    staticPublishPath: web
+    headers:
+      - path: /index.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate

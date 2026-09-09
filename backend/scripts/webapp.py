@@ -6,7 +6,7 @@ and patchlog.tsv are the typed sources, and this renders them; nothing on
 the page is hand-written twice. `board.py` calls this at the end of every
 render, so the app and the README can never disagree. The output is a
 single static file with inline CSS/JS (hash-routed pages, no framework,
-no build step) — the host (Netlify, netlify.toml) serves `web/` as-is.
+no build step) — the host (Render, render.yaml) serves `web/` as-is.
 
 Pages:  Home (tabs: Playable · Found bets · Athena lanes · Completed)
         Past sessions · Retrosim · Patches · About

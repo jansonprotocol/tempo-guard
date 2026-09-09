@@ -51,10 +51,10 @@ jobs:
       WAIT_MAX: 16800
       SWEEP_EVERY: 90           # seconds between passes (the bettor, 8 Sep: "a bit more faster")
       # Every pass commits web/live.json, which the page polls from the
-      # repository; the host is told (netlify.toml, build.ignore) to
-      # build only commits whose subject carries [deploy] or is not a
-      # sweep at all, so the deploy budget goes to kickoffs, finals and
-      # merges rather than to goals and minutes.
+      # repository; the host is told to skip commits that only moved a
+      # goal or a minute, so the deploy budget goes to kickoffs, finals
+      # and merges. Render reads "[skip render]" in the commit message;
+      # netlify.toml matches the same subjects by their prefix.
     steps:
       - uses: actions/checkout@v4
 
@@ -111,8 +111,9 @@ jobs:
             # Every pass commits — but not every commit is a deploy. The
             # page polls web/live.json from the repository between
             # deploys, so a goal or a minute goes out as a small "live
-            # tick" commit that the host is told to ignore (netlify.toml's
-            # ignore rule matches on the subject), and only a kickoff, a
+            # tick" commit that the host is told to skip — Render reads
+            # the "[skip render]" tag in the subject, Netlify matches the
+            # "live tick:" / "live sweep:" prefix — and only a kickoff, a
             # final or a new row — the things that change which tab a
             # card sits in — carries the [deploy] marker that builds the
             # site. scripts/sweepdiff.py says what moved.
@@ -123,9 +124,9 @@ jobs:
               if [ "$RC" -eq 0 ] && echo "$WHY" | grep -qE '^(kicked off|final|new row|changed)'; then
                 SUBJECT="live sweep [deploy]: $(date -u '+%Y-%m-%d %H:%M') UTC"
               elif [ "$RC" -eq 0 ]; then
-                SUBJECT="live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC"
+                SUBJECT="live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC [skip render]"
               else
-                SUBJECT="live tick: $(date -u '+%Y-%m-%d %H:%M') UTC"
+                SUBJECT="live tick: $(date -u '+%Y-%m-%d %H:%M') UTC [skip render]"
                 WHY="minutes only — web/live.json carries it to the page"
               fi
               echo "$SUBJECT — $WHY"
