@@ -1298,3 +1298,13 @@ def test_ledger_reads_the_card_spelling_of_a_draw_no_bet_position():
     assert ledger.bet_state("DNB2", "-", dict(hg=None, ag=None, lhg=1, lag=2)) is None
     fx = dict(lane3="DNB2", p3=0.809, hg=None, ag=None)
     assert ledger.bet_prob("DNB2", "-", fx) == 0.809
+
+
+def test_live_poll_patches_the_status_line_not_the_taken_pill():
+    """The in-play pill ("line taken · in-play") also carries class live;
+    the poll must patch the status line in the meta row only, else a card
+    with a live position shows two clocks (9 Sep)."""
+    from scripts import webapp
+    src = webapp.__file__ and open(webapp.__file__, encoding="utf-8").read()
+    assert 'card.querySelector("summary .meta .live")' in src
+    assert 'card.querySelector("summary .live")' not in src

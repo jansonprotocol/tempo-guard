@@ -3388,7 +3388,12 @@ async function pollLive() {{
   liveSeen = data.at;
   for (const [fx, c] of Object.entries(data.cards)) {{
     for (const card of document.querySelectorAll('.card[data-fx="' + CSS.escape(fx) + '"]')) {{
-      const live = card.querySelector("summary .live");
+      // The STATUS line, in the meta row — not the first ".live" in the
+      // summary: on a card with an in-play position that is the "line
+      // taken · in-play" pill, and patching it put "LIVE HT 1-1" on the
+      // pill while the real status line kept ticking from its deploy-time
+      // base — two clocks on one card (the bettor, 9 Sep).
+      const live = card.querySelector("summary .meta .live");
       if (!live) continue;                    // not rendered as running: needs the deploy
       if (c.settled) {{
         live.textContent = c.head || c.status;
