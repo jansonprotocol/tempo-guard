@@ -478,3 +478,36 @@
 2026-09-12 17:30	CHI-PD	Primera División	Ñublense v Everton	O1.5 79.9% +3.8% · buy≥1.34 (+6.8% margin)	**Everton O0.5** 78.4% +8.9% (team) · buy≥1.35 (+5.5% margin)		
 2026-09-12 17:50	SAU-PL	Saudi Pro League	Al-Taawoun v Al-Hilal	O1.5 82.1% +2.6% · buy≥1.25 (+2.5% margin)	**Al-Hilal O1.5** 56.2% +17.9% (team) · buy≥1.83 (+2.9% margin)		
 2026-09-12 18:00	NOR-EL	Eliteserien	Rosenborg v Tromsø	O1.5 85.9% +5.0% · buy≥1.27 (+9.1% margin)	**Rosenborg O1.5** 60.6% +11.4% (team) · buy≥1.70 (+3.2% margin)		
+2026-09-12 18:00	ITA-SA	Serie A	Lazio v Milan	U4.25 85.8% **−2.8%** · buy≥1.18 (+5.4% margin)	— none		1X 74.1% +5.8% · buy≥1.42 · probation
+2026-09-12 18:00	SUI-SL	Super League	St. Gallen v Sion	O1.5 82.6% +1.8% · buy≥1.27 (+5.0% margin)	**Sion O1.5** 51.5% +14.8% (team) · buy≥1.99 (+2.4% margin)		12 77.9% +2.8% · buy≥1.35 · probation
+2026-09-12 18:00	SUI-SL	Super League	Thun v Grasshoppers	U4.25 81.5% **+0.8%** · buy≥1.30 (+4.2% margin)	**Grasshoppers O0.5** 80.1% +5.2% (team) · buy≥1.33 (+6.4% margin)		12 77.3% +2.2% · buy≥1.36 · probation
+2026-09-12 18:15	BEL-PL	Pro League	Westerlo v Standard Liège	O1.5 77.7% +1.4% · buy≥1.30 (+1.1% margin)	**Standard Liège O0.5** 84.1% +15.2% (team) · buy≥1.28 (+7.9% margin)		12 76.8% +3.3% · buy≥1.37 · probation
+2026-09-12 18:30	ENG-PL	Premier League	Tottenham v Everton	U4.25 85.6% +3.6% · buy≥1.28 (+8.6% margin)	U3.75 70.6% +5.2% (floor −4.4) · buy≥1.36 (+3.9% margin)		
+2026-09-12 18:30	ESP-LL	LaLiga	Athletic Club v Elche	O1.5 75.3% **+0.9%** · buy≥1.34 (+1.0% margin)	— none		12 76.1% +2.4% · buy≥1.38 · probation
+2026-09-12 18:30	ESP-L2	LaLiga 2	Girona v Castellón	O1.5 70.6% **+0.0%** · buy≥1.29 (+0.7% margin)	— none		12 75.5% +3.4% · buy≥1.39 · probation
+2026-09-12 18:30	ESP-L2	LaLiga 2	Granada v Albacete	U3.0 76.5% **+0.0%** · buy≥1.43 (+1.0% margin)	— none		
+2026-09-12 18:30	GER-BL	Bundesliga	Köln v Bremen	U4.25 78.8% **+0.5%** · buy≥1.32 (+1.1% margin)	**Köln O1.5** 56.9% +6.3% (team) · buy≥1.81 (+2.9% margin)		12 78.3% +3.7% · buy≥1.34 · probation
+2026-09-12 18:45	NED-ED	Eredivisie	Go Ahead Eagles v Groningen	O1.5 85.9% +3.8% · buy≥1.27 (+8.7% margin)	**Go Ahead Eagles O1.5** 58.6% +8.7% (team) · buy≥1.76 (+3.1% margin)		12 79.1% +4.7% · buy≥1.33 · probation
+2026-09-12 19:00	POR-PL	Liga Portugal	Casa Pia v Porto	U4.25 84.2% **−2.2%** · buy≥1.24 (+5.9% margin)	**Casa Pia U1.5** 74.5% +16.9% (team) · buy≥1.40 (+4.2% margin)		DNB2 68.8% +26.0% · buy≥1.53 · probation
+2026-09-12 19:00	TUR-SL	Trendyol Süper Lig	Alanyaspor v Göztepe	U4.25 84.1% **−0.4%** · buy≥1.28 (+5.9% margin)	— none		
+2026-09-12 19:00	TUR-SL	Trendyol Süper Lig	Konyaspor v Trabzonspor	U4.25 85.1% **+0.6%** · buy≥1.26 (+6.2% margin)	U3.75 70.3% +1.6% (floor −11.7) · buy≥1.32 (+0.7% margin)		
+2026-09-12 19:00	SUI-SL	Super League	Lugano v Young Boys	O1.5 83.3% +2.5% · buy≥1.17 (+5.2% margin)	O2.25 74.1% +15.4% (floor −0.9) · buy≥1.29 (+4.1% margin)		12 80.3% +5.2% · buy≥1.31 · probation
+2026-09-12 19:30	ITA-SB	Serie B	Cesena v Cremonese	O1.5 73.6% +1.9% · buy≥1.37 (+0.9% margin)	— none		12 74.8% +7.0% · buy≥1.40 · probation
+2026-09-12 20:00	FRA-L2	Ligue 2	Dunkerque v St Etienne	U4.25 84.1% **−4.5%** · buy≥1.29 (+7.1% margin)	**St Etienne O0.5** 79.1% +11.7% (team) · buy≥1.38 (+9.2% margin)		12 77.1% +5.0% · buy≥1.36 · probation
+2026-09-12 20:00	NED-ED	Eredivisie	Fortuna Sittard v Ajax	U4.25 79.2% **+0.1%** · buy≥1.31 (+1.2% margin)	**Ajax O0.5** 80.2% +7.7% (team) · buy≥1.31 (+4.9% margin)		
+2026-09-12 20:00	ALG-L1	Ligue 1	Rouissat v Olympique Akbou	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-09-12 20:00	SAU-PL	Saudi Pro League	Al-Khaleej v Al-Nassr	O1.5 80.5% **+1.0%** · buy≥1.26 (+1.3% margin)	**Al-Nassr O1.5** 63.8% +25.6% (team) · buy≥1.62 (+3.5% margin)		
+2026-09-12 20:00	SAU-PL	Saudi Pro League	Al-Shabab v Al-Fayha	U4.25 83.7% +1.6% · buy≥1.26 (+3.8% margin)	**Al-Shabab O0.5** 80.6% +2.9% (team) · buy≥1.26 (+1.4% margin)		
+2026-09-12 20:00	PER-L1	Liga 1	Comerciantes Unidos v Sport Huancayo	O1.5 78.0% +3.8% · buy≥1.40 (+9.1% margin)	— none		12 77.3% +2.4% · buy≥1.36 · probation
+2026-09-12 20:00	CHI-PD	Primera División	Cobresal v Coquimbo Unido	U4.25 85.2% **−0.2%** · buy≥1.26 (+5.8% margin)	— none		
+2026-09-12 20:15	POL-EK	Ekstraklasa	Zagłębie v GKS Katowice	U4.25 86.1% **+0.5%** · buy≥1.22 (+7.2% margin)	U3.75 75.1% +4.8% (floor −2.9) · buy≥1.32 (+6.6% margin)		
+2026-09-12 20:30	GER-B2	2. Bundesliga	St. Pauli v Wolfsburg	O1.5 81.7% +1.1% · buy≥1.28 (+4.6% margin)	O2.25 60.2% +1.7% (floor −14.8) · buy≥1.48 (+0.0% margin)		
+2026-09-12 20:45	FRA-L1	Ligue 1	Auxerre v Nice	U4.25 83.2% **−1.0%** · buy≥1.23 (+5.7% margin)	U3.75 72.9% +4.4% (floor −2.1) · buy≥1.33 (+4.1% margin)		DNB1 68.5% +11.5% · buy≥1.53 · probation
+2026-09-12 20:45	FRA-L1	Ligue 1	Le Havre v Angers	U4.25 83.2% **−1.0%** · buy≥1.23 (+5.7% margin)	U3.75 72.6% +4.1% (floor −2.4) · buy≥1.33 (+4.1% margin)		DNB1 70.2% +13.1% · buy≥1.50 · probation
+2026-09-12 20:45	FRA-L1	Ligue 1	Lorient v Toulouse	U4.25 83.4% **−0.9%** · buy≥1.25 (+5.8% margin)	U3.75 70.5% +2.0% (floor −4.5) · buy≥1.32 (+0.7% margin)		DNB1 68.2% +11.2% · buy≥1.54 · probation
+2026-09-12 20:45	FRA-L1	Ligue 1	Paris FC v Lyon	O1.5 81.0% +3.6% · buy≥1.34 (+8.6% margin)	O2.25 59.1% +5.3% (floor −15.9) · buy≥1.55 (+3.1% margin)		
+2026-09-12 20:45	ITA-SA	Serie A	Atalanta v Cagliari	U4.25 85.8% **−2.8%** · buy≥1.18 (+5.4% margin)	— none		1X 74.0% +5.8% · buy≥1.42 · probation
+2026-09-12 20:45	BEL-PL	Pro League	OH Leuven v Cercle Brugge	O1.5 77.0% **+0.7%** · buy≥1.31 (+1.1% margin)	**Cercle Brugge O1.5** 56.2% +21.3% (team) · buy≥1.83 (+2.9% margin)		12 77.3% +3.8% · buy≥1.36 · probation
+2026-09-12 20:45	BEL-PL	Pro League	St. Gilloise v Lommel	O1.5 78.3% +2.0% · buy≥1.29 (+1.1% margin)	**St. Gilloise O0.5** 82.4% +5.0% (team) · buy≥1.29 (+6.6% margin)		DNB1 73.7% +15.0% · buy≥1.43 · probation
+2026-09-12 21:00	ENG-PL	Premier League	Sunderland v Arsenal	U4.25 82.4% **+0.4%** · buy≥1.28 (+3.3% margin)	— none		
+2026-09-12 21:00	ESP-LL	LaLiga	Real Madrid v Rayo Vallecano	O1.5 79.4% +5.0% · buy≥1.34 (+6.5% margin)	**Real Madrid O1.5** 56.4% +13.9% (team) · buy≥1.83 (+2.9% margin)		DNB1 74.3% +11.7% · buy≥1.41 · probation
