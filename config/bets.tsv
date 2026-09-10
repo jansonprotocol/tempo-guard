@@ -5,6 +5,10 @@
 # override, note, STAKE. The stake is column 8 and is required — flat-unit
 # ROI is stake-blind and stays right either way, but the money column is
 # not, and stakes stopped being flat on 6 Sep when the size rose to 1.10.
+# STAKE RULE: 4% of the running balance, re-sized by the bettor's word,
+# not per bet. 1.10 from 6 Sep; 1.25 from 10 Sep 21:00 CEST (the bettor,
+# after the PSV in-play hit: "green light to up the stakes"). Positions
+# already open keep the stake they were struck at.
 #
 # CONVENTION: a position struck AFTER kickoff must carry the words
 # "in-play" in its note. The board reads that word to badge the card and
