@@ -1284,6 +1284,11 @@ that premium the book is keeping the insurance money.
 | ◦ | Orlando v Toronto | U4.5 | 1.31 | 1.00x | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 01:30. The card's PLAY lane (U4.5 80.1%, orange, need 1.27); clears at 1.31, 1xBet 1.35. CASHED OUT at stake 11 Sep 22:50, minutes after the strike — three MLS unders on one night in the board's weakest league was too much concentration for the day after four losses (the bettor: "taking back all MLS") |
 | ◦ | Kansas City v LAFC | U4.5 | 1.25 | 1.00x | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 02:30. The card's PLAY lane (U4.5 80.8%, orange, need 1.27): 1.25 sits two ticks under the bar; the PLAY was Pinnacle's 1.34. CASHED OUT at stake 11 Sep 22:50, minutes after the strike — three MLS unders on one night in the board's weakest league was too much concentration for the day after four losses (the bettor: "taking back all MLS") |
 | — open | Chapecoense v Internacional | U3.5 | 1.29 | — | Unibet (NL) — pre-kickoff, struck 11 Sep 22:41 for Saturday 22:00. The card's PLAY lane (U3.5 77.8%, orange, need 1.27); clears at 1.29, Pinnacle 1.34 |
+| — open | Zürich v Vaduz | U4.5 | 1.31 | — | TOTO — pre-kickoff, struck 11 Sep 23:14 for Sunday 14:00, at the 1.15 stake. The card's STRONG lane (U4.5 82.9%, orange, need 1.27); clears at 1.31, Pinnacle 1.41 |
+| — open | Celta v Málaga | U3.5 | 1.27 | — | TOTO — pre-kickoff, struck 11 Sep 23:14 for Sunday 14:00. The card's PLAY lane (U3.5 76.5%, orange, need 1.271): 1.27 misses the bar by a thousandth; the PLAY was Pinnacle's 1.40 |
+| — open | Karlsruhe v Cottbus | U4.5 | 1.35 | — | TOTO — pre-kickoff, struck 11 Sep 23:14 for Sunday 13:30. The card's PLAY lane (U4.5 81.1%, orange, need 1.27); clears at 1.35, Pinnacle 1.37 |
+| — open | Wisła Płock v Cracovia | U3.5 | 1.31 | — | TOTO — pre-kickoff, struck 11 Sep 23:14 for Sunday 12:15. The card's PLAY lane (U3.5 81.2%, orange, need 1.27); clears at 1.31, BetOnline 1.40. Ekstraklasa: no feed, graded on the bettor's score |
+| — open | Botafogo v RB Bragantino | U3.5 | 1.32 | — | Unibet (NL) — pre-kickoff, struck 11 Sep 23:17 for Sunday 01:30. The card's PLAY lane (U3.5 76.3%, orange, need 1.27); clears at 1.32, 1xBet 1.36 |
 
 <!-- HYPOTHESES:START -->
 
