@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            247 / 309  79.9%    174 / 251  69.3%
     played lanes  >+1%     115 / 142  81.0%    174 / 249  69.9%
-    placed bets             66 / 79   83.5%    ROI +9.4%
+    placed bets             67 / 80   83.8%    ROI +9.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -1107,7 +1107,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 66 / 79  ·  ROI +9.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 67 / 80  ·  ROI +9.7%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -1213,6 +1213,7 @@ that premium the book is keeping the insurance money.
 | — open | Thun v Grasshoppers | U4.5 | 1.27 | — | TOTO — pre-kickoff, struck 10 Sep 20:18 for Saturday. The card's STRONG lane (U4.5 81.5%, orange, need 1.271): 1.27 misses the bar by a thousandth; the PLAY was Pinnacle's 1.37 |
 | — open | Granada v Albacete | U3.5 | 1.24 | — | Unibet (NL) — pre-kickoff, struck 10 Sep for Saturday. The card's PLAY lane (U3.5 76.5%, orange, need 1.27): 1.24 sits three ticks under the bar; the PLAY was Pinnacle's 1.37. Logged as taken at a price the board did not clear |
 | — open | Fortuna Sittard v Ajax | U4.5 | 1.34 | — | Unibet (NL) — pre-kickoff, struck 10 Sep for Saturday. The card's PLAY lane (U4.5 79.2%, orange, need 1.27); clears at 1.34, Coolbet 1.39 |
+| ✅ | Darmstadt v Bielefeld | U4.5 | 1.26 | 1.26x | Unibet (NL) — in-play, struck 18:50 CEST around 20' at 1-0 (goals 4', 60', 86'; final 2-1). The card's own lane (U4.25 rung struck as U4.5, orange, need 1.27): 1.26 a tick under the bar. The board's from-here line at 1-0 20' said 78%, fair 1.28; 1.26 is above it. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
