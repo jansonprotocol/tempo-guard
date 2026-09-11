@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 79.9%
+## CURRENT CONFIRMED HITRATE: 79.7%
 
     lane                        Tip 1              Tip 2
-    all matches            242 / 303  79.9%    170 / 246  69.1%
-    played lanes  >+1%     112 / 139  80.6%    170 / 244  69.7%
+    all matches            243 / 305  79.7%    171 / 247  69.2%
+    played lanes  >+1%     112 / 139  80.6%    171 / 245  69.8%
     placed bets             65 / 78   83.3%    ROI +9.2%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 282 / 383   ·   73.6%**   ·   **Tip 1 — 112 / 139   ·   80.6%**   ·   **Tip 2 — 170 / 244   ·   69.7%**
+**Playable — 283 / 384   ·   73.7%**   ·   **Tip 1 — 112 / 139   ·   80.6%**   ·   **Tip 2 — 171 / 245   ·   69.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -422,7 +422,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-3 · 10-09 21:00 <b>Slavia Praha v Lens</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (85.0 +4.3)</td><td>— under +1%</td><td>❌ U4.25 78.8% +2.0%<br>buy≥1.32 (+1.2% margin) · floor −3.2</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 10-09 21:15 <b>Estrela Amadora v Braga</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (81.4 −2.9)</td><td>O1.5 78.6% +3.5%<br>buy≥1.36 (+6.9% margin)</td><td>✅ <b>Braga O0.5</b> 82.9% +14.6%<br>buy≥1.32 (+9.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 76.9% +2.7% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 11-09 02:30 <b>Sport Recife v Ponte Preta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>— under +1%</td><td>✅ <b>Sport Recife O0.5</b> 80.5% +4.2%<br>buy≥1.31 (+5.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.7% +7.8% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-3 <b>Kyoto Sanga v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>— under +1%</td><td><b>Kashiwa O0.5</b> 83.7% +14.4%<br>buy≥1.25 (+4.6% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.0% +3.6% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 11-09 12:00 <b>Kyoto Sanga v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>— under +1%</td><td>✅ <b>Kashiwa O0.5</b> 83.7% +14.4%<br>buy≥1.25 (+4.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 77.0% +3.6% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 11-09 17:25 <b>Al-Qadsiah v Al-Ettifaq</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>O1.5 83.9% +4.4%<br>buy≥1.28 (+7.2% margin)</td><td><b>Al-Qadsiah O1.5</b> 55.5% +10.6%<br>buy≥1.85 (+2.8% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 11-09 17:45 <b>Al Faisaly v Al-Ittihad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>U4.25 86.0% +3.9%<br>buy≥1.27 (+8.5% margin)</td><td>U3.75 72.2% +6.6%<br>buy≥1.34 (+4.0% margin) · floor −2.8</td></tr></table>
 <table align="left"><tr><th align="left">🟢 11-09 18:00 <b>Raków v Motor Lublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>— under +1%</td><td><b>Raków O0.5</b> 81.6% +2.9%<br>buy≥1.30 (+6.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.6% +4.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -558,8 +558,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 10-09 03:00 <b>Boyacá Chicó v Atlético Nacional</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (84.3 capped)</td><td>U4.25 86.1% <b>−5.2%</b><br>buy≥1.20 (+5.4% margin)</td><td><b>Atlético Nacional O1.5</b> 54.6% +29.8%<br>buy≥1.88 (+2.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.8% +5.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-09 21:00 <b>Ben Aknoun v Biskra</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 Algeria (81.2 −6.3)</td><td>U3.0 86.4% +3.4%<br>buy≥1.27 (+6.3% margin)</td><td>U2.75 68.8% +5.0%<br>buy≥1.38 (+3.8% margin) · floor −6.2</td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-09 21:00 <b>USM Alger v El Biar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 Algeria (81.2 −6.3)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-3 <b>Kyoto Sanga v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 84.7% <b>−3.5%</b><br>buy≥1.22 (+1.4% margin) · <i>✗ gone</i></td><td><b>Kashiwa O0.5</b> 83.7% +14.4%<br>buy≥1.25 (+4.6% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.0% +3.6% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+9' 2-1 <b>Vissel Kobe v Kashima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 88.5% <b>+0.3%</b><br>buy≥1.19 (+3.9% margin) · <i>room for 1 · half from the 1st</i> · <i>from here: as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 17:25 <b>Al-Qadsiah v Al-Ettifaq</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>O1.5 83.9% +4.4%<br>buy≥1.28 (+7.2% margin)</td><td><b>Al-Qadsiah O1.5</b> 55.5% +10.6%<br>buy≥1.85 (+2.8% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 17:45 <b>Al Faisaly v Al-Ittihad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Saudi Pro League (85.7 +0.4)</td><td>U4.25 86.0% +3.9%<br>buy≥1.27 (+8.5% margin)</td><td>U3.75 72.2% +6.6%<br>buy≥1.34 (+4.0% margin) · floor −2.8</td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 18:00 <b>Raków v Motor Lublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>U4.25 84.9% <b>−0.7%</b><br>buy≥1.28 (+6.9% margin)</td><td><b>Raków O0.5</b> 81.6% +2.9%<br>buy≥1.30 (+6.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.6% +4.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -727,7 +725,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 242 / 303   ·   79.9%**   ·   **Tip 2 — 170 / 246   ·   69.1%**
+**Tip 1 — 243 / 305   ·   79.7%**   ·   **Tip 2 — 171 / 247   ·   69.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1102,6 +1100,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-0 · 11-09 00:30 <b>Vila Nova v Goiás</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>O1.0 88.5% <b>−0.7%</b><br>buy≥1.23 (+6.1% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 11-09 02:30 <b>Sport Recife v Ponte Preta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.4% +1.0%<br>buy≥1.33 (+3.8% margin)</td><td>✅ <b>Sport Recife O0.5</b> 80.5% +4.2%<br>buy≥1.31 (+5.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.7% +7.8% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 11-09 03:00 <b>Millonarios v Deportivo Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 67.2% +3.0% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 11-09 12:00 <b>Kyoto Sanga v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 84.7% <b>−3.5%</b><br>buy≥1.22 (+1.4% margin)</td><td>✅ <b>Kashiwa O0.5</b> 83.7% +14.4%<br>buy≥1.25 (+4.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 77.0% +3.6% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 11-09 12:00 <b>Vissel Kobe v Kashima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 88.5% <b>+0.3%</b><br>buy≥1.19 (+3.9% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
