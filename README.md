@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 79.5%
 
     lane                        Tip 1              Tip 2
-    all matches            263 / 331  79.5%    187 / 271  69.0%
+    all matches            264 / 332  79.5%    188 / 272  69.1%
     played lanes  >+1%     123 / 154  79.9%    187 / 268  69.8%
     placed bets             74 / 91   81.3%    ROI +4.6%
 
@@ -557,7 +557,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-1 <b>Raków v Motor Lublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>U4.25 84.9% <b>−0.7%</b><br>buy≥1.28 (+6.9% margin) · <i>room for 2 · half from the 2nd</i> · <i>from here 79% · fair 1.26</i></td><td><b>Raków O0.5</b> 81.6% +2.9%<br>buy≥1.30 (+6.1% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.6% +4.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 20:00 <b>MC Oran v Temouchent</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (81.2 −6.3)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 20:30 <b>Wisła Kraków v Jagiellonia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>O1.5 79.7% +3.7%<br>buy≥1.37 (+9.0% margin)</td><td>O2.25 57.1% +5.3%<br>buy≥1.60 (+3.0% margin) · floor −20.9</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.8% +4.1% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 1-0 <b>Sevilla v Valencia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.0 −3.6)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.22 (+5.8% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here: as good as landed</i></td><td>U3.75 73.3% +1.0%<br>buy≥1.28 (+0.9% margin) · floor −1.7 · <i>room for 2</i> · <i>from here: as good as landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 22:00 <b>Belouizdad v Sétif</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (81.2 −6.3)</td><td>U3.0 83.5% <b>+0.5%</b><br>buy≥1.33 (+5.6% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-1 <b>UTC v Juan Pablo II</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (71.9 −8.4)</td><td>U4.25 81.0% <b>−6.0%</b><br>buy≥1.22 (+6.4% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here 91% · fair 1.10</i></td><td>U3.75 74.1% +1.7%<br>buy≥1.30 (+3.8% margin) · floor −0.9 · <i>room for 2</i> · <i>from here 82% · fair 1.21</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-09 01:15 <b>Jaguares v Fortaleza CEIF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -690,7 +689,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 263 / 331   ·   79.5%**   ·   **Tip 2 — 187 / 271   ·   69.0%**
+**Tip 1 — 264 / 332   ·   79.5%**   ·   **Tip 2 — 188 / 272   ·   69.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1100,6 +1099,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 6-0 · 11-09 21:00 <b>West Ham v Wrexham</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.5 −4.7)</td><td>O1.5 79.9% +7.2%<br>buy≥1.36 (+8.6% margin)</td><td>✅ <b>West Ham O1.5</b> 58.6% +17.6%<br>buy≥1.76 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 75.9% +16.4% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-1 · 11-09 21:00 <b>Benevento v Verona</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (78.5 +1.2)</td><td>U3.0 76.8% +1.6%<br>buy≥1.46 (+2.9% margin)</td><td>❌ U2.75 55.7% +1.9%<br>buy≥1.60 (−0.4% margin) · floor −19.3</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 74.0% +6.3% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-4 · 11-09 21:00 <b>Pisa v Entella</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (78.5 +1.2)</td><td>O1.5 74.0% +2.3%<br>buy≥1.36 (+0.9% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 71.9% +11.6% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 11-09 21:00 <b>Sevilla v Valencia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.0 −3.6)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.22 (+5.8% margin)</td><td>✅ U3.75 73.3% +1.0%<br>buy≥1.28 (+0.9% margin) · floor −1.7</td></tr></table>
 
 <br clear="all">
 
