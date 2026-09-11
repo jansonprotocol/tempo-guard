@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            263 / 330  79.7%    187 / 270  69.3%
     played lanes  >+1%     123 / 153  80.4%    187 / 267  70.0%
-    placed bets             71 / 88   80.7%    ROI +4.8%
+    placed bets             74 / 91   81.3%    ROI +4.6%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -1105,7 +1105,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 71 / 88  ·  ROI +4.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 74 / 91  ·  ROI +4.6%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -1214,9 +1214,9 @@ that premium the book is keeping the insurance money.
 | ✅ | Darmstadt v Bielefeld | U4.5 | 1.26 | 1.26x | Unibet (NL) — in-play, struck 18:50 CEST around 20' at 1-0 (goals 4', 60', 86'; final 2-1). The card's own lane (U4.25 rung struck as U4.5, orange, need 1.27): 1.26 a tick under the bar. The board's from-here line at 1-0 20' said 78%, fair 1.28; 1.26 is above it. Outside the board's rule; logged as taken, not as a board play |
 | ❌ | Dijon v Laval | U4.5 | 1.41 | 0.00x | TOTO — in-play, struck 21:19 CEST around 62' at 2-1 (goals 4', 33', 37', then 75' and 81'; final 3-2, LOST). An ATHENA-LANE card with a NEGATIVE printed edge (U4.25 84.0% −4.6%), the slice the 8 Sep stay-out hypothesis says not to buy into live. The board's from-here line at 2-1 62' said 74%, fair 1.35; 1.41 was above it. Outside the board's rule; logged as taken, not as a board play |
 | ✅ | Eindhoven v Dordrecht | U4.5 | 1.26 | 1.26x | TOTO — in-play, struck 20:52 CEST at half time, 1-1 (goals 16', 45'+1', 64'; final 2-1). The card's own lane (U4.25 rung struck as U4.5, orange, +4.0% edge, need 1.31 with no feed quote). The board's from-here line at 1-1 HT said 78%, fair 1.28; 1.26 is under it. Outside the board's rule; logged as taken, not as a board play |
-| — open | Columbus v NY Red Bulls | U4.5 | 1.30 | — | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 01:30, at the 1.15 stake. The card's PLAY lane (U4.5 80.2%, orange, need 1.27); clears at 1.30, Pinnacle 1.43 |
-| — open | Orlando v Toronto | U4.5 | 1.31 | — | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 01:30. The card's PLAY lane (U4.5 80.1%, orange, need 1.27); clears at 1.31, 1xBet 1.35 |
-| — open | Kansas City v LAFC | U4.5 | 1.25 | — | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 02:30. The card's PLAY lane (U4.5 80.8%, orange, need 1.27): 1.25 sits two ticks under the bar; the PLAY was Pinnacle's 1.34 |
+| ◦ | Columbus v NY Red Bulls | U4.5 | 1.30 | 1.00x | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 01:30, at the 1.15 stake. The card's PLAY lane (U4.5 80.2%, orange, need 1.27); clears at 1.30, Pinnacle 1.43. CASHED OUT at stake 11 Sep 22:50, minutes after the strike — three MLS unders on one night in the board's weakest league was too much concentration for the day after four losses (the bettor: "taking back all MLS") |
+| ◦ | Orlando v Toronto | U4.5 | 1.31 | 1.00x | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 01:30. The card's PLAY lane (U4.5 80.1%, orange, need 1.27); clears at 1.31, 1xBet 1.35. CASHED OUT at stake 11 Sep 22:50, minutes after the strike — three MLS unders on one night in the board's weakest league was too much concentration for the day after four losses (the bettor: "taking back all MLS") |
+| ◦ | Kansas City v LAFC | U4.5 | 1.25 | 1.00x | TOTO — pre-kickoff, struck 11 Sep 22:43 for Sunday 02:30. The card's PLAY lane (U4.5 80.8%, orange, need 1.27): 1.25 sits two ticks under the bar; the PLAY was Pinnacle's 1.34. CASHED OUT at stake 11 Sep 22:50, minutes after the strike — three MLS unders on one night in the board's weakest league was too much concentration for the day after four losses (the bettor: "taking back all MLS") |
 | — open | Chapecoense v Internacional | U3.5 | 1.29 | — | Unibet (NL) — pre-kickoff, struck 11 Sep 22:41 for Saturday 22:00. The card's PLAY lane (U3.5 77.8%, orange, need 1.27); clears at 1.29, Pinnacle 1.34 |
 
 <!-- HYPOTHESES:START -->
