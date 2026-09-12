@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-12	interface	Live-safety tag on every unstaked card (Athena lane or watch): safe / cautious / unsafe by lane and printed-edge band, the bettor's bands from the session's negative-edge tally; taken pills no longer wrap; the frozen verdict's first-sight date moved to hover
 2026-09-10	ledger	Stake stepped to 1.25 (4% of the running balance) from 10 Sep 21:00 CEST on the bettor's word; open positions keep 1.10
 2026-09-08	board	Forward log re-stamps a lane when its label flips to red or back: a card vetoed after first sight is frozen as the veto at kickoff (Running, Completed, hit rates), not as the play it had been; three flips from the 7 Sep re-price written into the log
 2026-09-07	data	The results store had stopped at 30 Aug in every league on the board — openfootball trails, football-data.co.uk was 503 site-wide, and the board ingest only carries the board's own fixtures — so a week's rounds were missing under every card priced since. scripts/topup_espn.py fetches the season scoreboard ESPN already serves the sweep and appends what the store lacks, names resolved through the engine's own three layers and never guessed: 259 results across 28 leagues, 35 rows skipped on an unresolved spelling (Argentina mostly). The store now reads 6–7 Sep in 32 leagues; a re-price of the 48 pending cards on it moves 7 markets and is held for the bettor's call

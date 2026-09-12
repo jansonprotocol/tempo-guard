@@ -1057,6 +1057,74 @@ def was_called(f) -> dict | None:
 
 PLAYED_MARKS = ("strong", "normal", "watch")
 
+# LIVE SAFETY (the bettor's bands, 12 Sep). Whether a card that the board
+# did not stake — an Athena lane, or a watch card — is one to buy into in
+# play, read off its printed EDGE and its lane. Set by the bettor from the
+# session's negative-edge tally: Athena cards at −4 or worse were 22 of
+# 32 in the first week and the only slice that broke; watch cards above
+# +1 were the weakest watch slice at 76.7% on thirty. Display only: it
+# labels, it does not decide, and the priced plays carry no tag — those
+# are the board's own stakes and the price bar already spoke.
+LIVE_TAG = {
+    "athena": {"+1 up": "safe", "−1..+1": "safe", "−4..−1": "safe",
+               "−4 down": "unsafe"},
+    "watch":  {"+1 up": "unsafe", "−1..+1": "safe", "−4..−1": "cautious",
+               "−4 down": "cautious"},
+}
+
+
+def edge_band(edge: float) -> str:
+    return ("+1 up" if edge >= 1 else "−1..+1" if edge > -1
+            else "−4..−1" if edge > -4 else "−4 down")
+
+
+def live_tag(lane: str | None, edge: float | None) -> str | None:
+    """'safe', 'cautious' or 'unsafe' for an Athena or watch card, else
+    None — a priced play, a red card, a settled card or an abstention
+    carries no tag."""
+    if lane not in LIVE_TAG or edge is None:
+        return None
+    return LIVE_TAG[lane][edge_band(edge)]
+
+
+def live_lane(f) -> str | None:
+    """Which unstaked lane a card sits in, for the live tag: 'athena' or
+    'watch'. Frozen after kickoff (the same call Running reads), live
+    before it (the same verdict the tabs read), None once settled and
+    for anything the board stakes or declines."""
+    if f.settled:
+        return None
+    if odds_api.started(f.kickoff):
+        call = was_called(f)
+        if call:
+            if call["mark"] == "watch":
+                return "watch"
+            if call["mark"] == "no play" and not str(call["row"]["label"]).endswith("red"):
+                return "athena"
+            return None
+        lab = label_any(f)
+        return None if (not lab or lab.endswith("red")) else "athena"
+    v = verdict(f, _star(f))
+    if not v or v["label"].endswith("red") or v["play"]:
+        return None
+    return "watch" if v["watch"] else "athena"
+
+
+def _livetag_html(f) -> str:
+    lane = live_lane(f)
+    if not lane:
+        return ""
+    e = _edge(f.tip3 if _star_any(f) == 3 else f.tip1)
+    tag = live_tag(lane, e)
+    if not tag:
+        return ""
+    who = "Athena lane" if lane == "athena" else "watch card"
+    tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). "
+           "The bettor's bands from the session's negative-edge tally, 12 Sep. "
+           "A label for buying into this card in play; it decides nothing.")
+    return (f'<div class="livebar"><span class="livetag lt-{tag}" '
+            f'title="{html.escape(tip)}">live {tag}</span></div>')
+
 
 def running_call(f) -> dict | None:
     """The frozen call on a match in progress that the board had offered.
@@ -1100,10 +1168,12 @@ def _frozen_guard(f, call: dict) -> str:
         tail = (f'<span class="dim"> · needed {r["need"]:.2f}, '
                 f'{html.escape(str(r.get("book") or "market"))} paid</span> '
                 f'<b>{r["best"]:.2f}</b>')
-    return (badge + f'<div class="verdict {cls}">{when} {word} '
-            f'<span class="dim">· {who.strip()}</span>{tail}'
-            f'<span class="dim"> · price at first sight, '
-            f'{html.escape(r["d"])}</span></div>')
+    # The date the price was frozen goes on hover rather than in the
+    # line: on a phone the strong block ran to four lines (the bettor,
+    # 12 Sep: "some are big").
+    return (badge + f'<div class="verdict {cls}" title="price at first '
+            f'sight, {html.escape(r["d"])}">{when} {word} '
+            f'<span class="dim">· {who.strip()}</span>{tail}</div>')
 
 
 def _guard(f, best: int) -> str:
@@ -1547,6 +1617,7 @@ def _card(f, kind: str, reads: dict) -> str:
         pick = v["lane"] if v else None
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
+           f'{_livetag_html(f)}'
            f'{_taken(f, pick)}'
            f'<div class="meta">{head} · {league}</div>{kw}'
            f"{_guard(f, best)}{face}")
@@ -2560,7 +2631,15 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .takenbar {{ display:flex; flex-wrap:wrap; gap:5px; margin:5px 0 2px; }}
 .taken {{ font-size:11px; letter-spacing:.04em; text-transform:uppercase;
   background:rgba(212,175,55,.14); color:var(--gold); padding:2px 7px;
-  border:1px solid rgba(212,175,55,.45); border-radius:999px; }}
+  border:1px solid rgba(212,175,55,.45); border-radius:999px;
+  white-space:nowrap; }}
+.livebar {{ margin:5px 0 0; }}
+.livetag {{ display:inline-block; font-size:10px; text-transform:uppercase;
+  letter-spacing:.11em; padding:2px 8px; border-radius:999px;
+  border:1px solid transparent; white-space:nowrap; cursor:help; }}
+.lt-safe {{ color:#8fe3a8; border-color:#2f6b45; background:rgba(47,107,69,.16); }}
+.lt-cautious {{ color:#d9b46a; border-color:#5b4a24; background:rgba(91,74,36,.16); }}
+.lt-unsafe {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.18); }}
 .taken b {{ font-weight:700; }}
 .taken.own {{ background:transparent; color:var(--dim);
   border-color:var(--edge); text-transform:none; letter-spacing:0; }}
@@ -2608,7 +2687,7 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .verdict.dimv {{ color:var(--dim); }}
 .verdict.strong {{ color:#ffd875; background:rgba(230,195,92,.10);
   border:1px solid rgba(230,195,92,.45); border-radius:6px;
-  padding:4px 8px; font-weight:600; }}
+  padding:3px 7px; font-weight:600; line-height:1.45; }}
 .verdict.strong b {{ color:#fff0c2; }}
 .panenote {{ font-size:12px; color:var(--dim); line-height:1.55;
   border-left:2px solid #2a3346; padding:2px 0 2px 10px; margin:2px 0 12px; }}

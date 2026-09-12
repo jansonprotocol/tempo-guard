@@ -1308,3 +1308,14 @@ def test_live_poll_patches_the_status_line_not_the_taken_pill():
     src = webapp.__file__ and open(webapp.__file__, encoding="utf-8").read()
     assert 'card.querySelector("summary .meta .live")' in src
     assert 'card.querySelector("summary .live")' not in src
+
+
+def test_live_tag_follows_the_bettors_bands():
+    """The bettor's live-safety bands, 12 Sep: by lane and printed-edge band."""
+    from scripts import webapp
+    t = webapp.live_tag
+    assert [t("athena", e) for e in (3.0, 1.0, 0.0, -0.9, -1.0, -3.9, -4.0, -6.0)] == \
+        ["safe", "safe", "safe", "safe", "safe", "safe", "unsafe", "unsafe"]
+    assert [t("watch", e) for e in (3.0, 1.0, 0.0, -0.9, -1.0, -3.9, -4.0, -6.0)] == \
+        ["unsafe", "unsafe", "safe", "safe", "cautious", "cautious", "cautious", "cautious"]
+    assert t("priced", -5.0) is None and t(None, 2.0) is None and t("athena", None) is None
