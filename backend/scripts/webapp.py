@@ -2011,7 +2011,10 @@ def main() -> None:
     # into Athena lanes filed the night's calls next to genuine declines
     # with nothing to tell them apart. They keep the price from the
     # forward log, not a live quote, because there is no live quote.
-    running = [f for f in pending if running_call(f)]
+    # A running card tagged LIVE UNSAFE files under Declined too (the
+    # bettor, 12 Sep): a watch card above +1 that has kicked off is not
+    # one to buy into, and Running is the tab a live buy is read from.
+    running = [f for f in pending if running_call(f) and live_tag_of(f) != "unsafe"]
     # DECLINED (the bettor's ask, 7 Sep): a red or super-red card can
     # never be played, so it has no business sitting in Athena lanes
     # beside cards that merely failed on price. It gets its own tab, is

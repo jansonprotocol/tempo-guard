@@ -560,7 +560,7 @@ def verify(quiet: bool = False) -> None:
             unsafe = live_tag_of(f) == "unsafe"
             (play if (v and v["play"]) else
              watch if (v and v["watch"] and not unsafe) else
-             live if running_call(f) else
+             live if (running_call(f) and not unsafe) else
              declined if ((lab and lab.endswith("red")) or unsafe) else
              rest).append(f)
         for pid, want in (("t-playable", play), ("t-watch", watch),
