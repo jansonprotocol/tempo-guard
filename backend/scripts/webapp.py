@@ -8,7 +8,8 @@ render, so the app and the README can never disagree. The output is a
 single static file with inline CSS/JS (hash-routed pages, no framework,
 no build step) — the host (Render, render.yaml) serves `web/` as-is.
 
-Pages:  Home (tabs: Playable · Found bets · Athena lanes · Completed)
+Pages:  Home (tabs: Playable · Watch · Running · Declined · Found bets ·
+        Live Watch · Completed)
         Past sessions · Retrosim · Patches · About
 
 Usage:  python scripts/webapp.py          (also runs inside board.py main)
@@ -1110,14 +1111,22 @@ def live_lane(f) -> str | None:
     return "watch" if v["watch"] else "athena"
 
 
-def _livetag_html(f) -> str:
+def live_tag_of(f) -> str | None:
+    """The card's live-safety word, or None. One reader for the pill,
+    the tabs and board.verify, so a card cannot be tagged one way and
+    filed another."""
     lane = live_lane(f)
     if not lane:
+        return None
+    return live_tag(lane, _edge(f.tip3 if _star_any(f) == 3 else f.tip1))
+
+
+def _livetag_html(f) -> str:
+    lane = live_lane(f)
+    tag = live_tag_of(f)
+    if not lane or not tag:
         return ""
     e = _edge(f.tip3 if _star_any(f) == 3 else f.tip1)
-    tag = live_tag(lane, e)
-    if not tag:
-        return ""
     who = "Athena lane" if lane == "athena" else "watch card"
     tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). "
            "The bettor's bands from the session's negative-edge tally, 12 Sep. "
@@ -1854,12 +1863,18 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "has since happened. Not buyable any more, so not a play — the "
          "price shown is the one from first sight, kept in the forward "
          "log. A card the board declined never appears here."),
-        ("⛔ Declined", "the tier said avoid: a red or super-red label "
-         "is a veto, never played at any price. These cards are still "
-         "swept and graded, but they count toward NO hit rate — not the "
-         "tiles, not the baselines, not a league badge, not the bank. A "
-         "card that may not be played is not a card the record is judged "
-         "on."),
+        ("⛔ Declined", "two kinds. A red or super-red label is the tier "
+         "saying avoid: never played at any price, and it counts toward "
+         "NO hit rate — not the tiles, not the baselines, not a league "
+         "badge, not the bank. A card tagged LIVE UNSAFE is the bettor "
+         "keeping it out of live buys too — an Athena lane at −4 or "
+         "worse, a watch card above +1 — and it still counts in the "
+         "record. Both are swept and graded."),
+        ("🔵 Live Watch", "the cards the price never cleared and the tier "
+         "did not refuse, tagged live safe or live cautious: the ones a "
+         "live buy may be read on, with the from-here line once they "
+         "kick off. Graded and banked like every card; data, not a "
+         "shortlist."),
         ("Tip 2 \u00b7 (team)", "a TEAM total \u2014 one side alone to score. "
          "Printed and graded, never played: it landed 12.7 points below "
          "tip 1 on the same fixtures."),
@@ -1959,7 +1974,11 @@ def main() -> None:
     # Three-way, not two: PLAY, WATCH (the bettor's list, 2 Sep — a
     # starred lane a few percent short of its bar on the panel, worth
     # checking at his own books), and the rest.
-    watch = [f for f in pending if (v := _v(f)) and v["watch"]]
+    # A watch card tagged LIVE UNSAFE (the bettor, 12 Sep) goes to
+    # Declined instead: the price may be a few percent short, but the
+    # bettor does not want it offered for a live buy either.
+    watch = [f for f in pending if (v := _v(f)) and v["watch"]
+             and live_tag_of(f) != "unsafe"]
     # RUNNING (the bettor's ask, 3 Sep): cards the board offered before
     # kickoff and that are now in progress. They cannot be PLAY or watch —
     # both bars require an unstarted match — but dropping them straight
@@ -1971,9 +1990,14 @@ def main() -> None:
     # never be played, so it has no business sitting in Athena lanes
     # beside cards that merely failed on price. It gets its own tab, is
     # still swept and graded by the bot, and counts toward nothing.
+    # Since 12 Sep Declined also holds every unstaked card tagged LIVE
+    # UNSAFE — an Athena lane at −4 or worse, a watch card above +1. The
+    # RECORD rule is unchanged: only a red label is kept out of the hit
+    # rates; an unsafe card still counts, it is only not offered.
     declined = [f for f in pending if f not in playable and f not in watch
                 and f not in running
-                and (lab := label_any(f)) and lab.endswith("red")]
+                and (((lab := label_any(f)) and lab.endswith("red"))
+                     or live_tag_of(f) == "unsafe")]
     waiting = [f for f in pending if f not in playable and f not in watch
                and f not in running and f not in declined]
     done = [f for f in fixtures if f.settled][::-1]
@@ -2855,7 +2879,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
    <span class="dim">{len(declined)}</span></a>
   <a href="#home/bets" data-t="bets" class="gold">🟡 Found bets
    <span class="dim">{bh}/{bn}</span></a>
-  <a href="#home/lanes" data-t="lanes" class="blue">🔵 Athena lanes
+  <a href="#home/lanes" data-t="lanes" class="blue">🔵 Live Watch
    <span class="dim">{len(waiting)} · no play</span></a>
   <a href="#home/done" data-t="done" class="grey">⚪ Completed
    <span class="dim">{len(done)}</span></a>
@@ -2919,11 +2943,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   playing out, not a second chance at them.</div>
   {_grid(running, "run", reads)}</div>
  <div class="tabpane" id="t-declined">
-  <div class="panenote">The tier said <b>avoid</b>. A red or super-red
-  label is a veto, not a threshold — a card here is never played at any
-  price, and it counts toward <b>no hit rate anywhere</b>, on this board
-  or in the bank. It is kept, swept and graded for the record, because
-  a rule that is never checked is only a habit.</div>
+  <div class="panenote">Two kinds of card. A <b>red or super-red</b> label
+  is the tier saying avoid — never played at any price, and it counts
+  toward <b>no hit rate anywhere</b>, on this board or in the bank. A
+  card tagged <b>live unsafe</b> is one the bettor keeps out of live
+  buys as well — an Athena lane at −4 or worse, a watch card above +1 —
+  and it still counts in the record. Both are kept, swept and graded,
+  because a rule that is never checked is only a habit.</div>
   {_grid(declined, "declined", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
@@ -2936,11 +2962,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   {bets_html}</table></div></div>
  <div class="tabpane" id="t-lanes">
   <div class="panenote">Everything Athena published that is <b>not</b>
-  being played because the <b>price never cleared</b>. Kept in full
-  because it is graded, banked and fed back into the record; it is data,
-  not a shortlist. Cards the tier refused outright sit under
-  <b>Declined</b> instead and count toward nothing. Open a card to see
-  why it was refused.</div>
+  being played because the <b>price never cleared</b>, and that the live
+  tag calls <b>safe</b> or <b>cautious</b> for a buy in play. Kept in
+  full because it is graded, banked and fed back into the record; it is
+  data, not a shortlist. Cards the tier refused outright, and cards tagged
+  live unsafe, sit under <b>Declined</b> instead. Open a card to see why
+  it was refused on price.</div>
   {_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
  {_learn(playable, waiting, reads)}

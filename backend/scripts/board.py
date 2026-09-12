@@ -551,15 +551,18 @@ def verify(quiet: bool = False) -> None:
         #    contradicting itself. The check asks the app which is which
         #    rather than re-deriving it — two definitions of playable or
         #    of watch is exactly the drift this verify exists to catch.
-        from scripts.webapp import verdict, _star, running_call, label_any
+        from scripts.webapp import (verdict, _star, running_call, label_any,
+                                    live_tag_of)
         play, watch, live, declined, rest = [], [], [], [], []
         for f in pending:
             v = verdict(f, _star(f))
             lab = label_any(f)
+            unsafe = live_tag_of(f) == "unsafe"
             (play if (v and v["play"]) else
-             watch if (v and v["watch"]) else
+             watch if (v and v["watch"] and not unsafe) else
              live if running_call(f) else
-             declined if (lab and lab.endswith("red")) else rest).append(f)
+             declined if ((lab and lab.endswith("red")) or unsafe) else
+             rest).append(f)
         for pid, want in (("t-playable", play), ("t-watch", watch),
                           ("t-running", live), ("t-declined", declined),
                           ("t-lanes", rest), ("t-done", done)):
