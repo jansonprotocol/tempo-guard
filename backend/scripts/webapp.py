@@ -782,8 +782,46 @@ SAYS = {"super green": 0.8956, "green": 0.8740, "orange": 0.8342,
 # Swept on 8,121 priced picks: taking everything returned -1.67%, and the
 # gradient crossed zero at about +5% — +0.83% at this bar and +1.49% at
 # +8%, on a hit rate FALLING from 81.8% to 72.7%. Six is the registered
-# choice, not the best cell in the table.
+# choice, not the best cell in the table. Since 12 Sep the STARRED lane
+# no longer prices off this (see BAND_BAR); the other lanes still do.
 DECLINE_MARGIN = 0.06
+
+# THE BAND BARS (the bettor, 12 Sep: "optimize each band for most
+# effective ROI, then apply to board"). The PLAY bar by the starred
+# lane's CLAIM BAND rather than by its label's rate. Found on the bank —
+# 7,780 non-red cards with a closing price, ROI at close swept over the
+# bar in cent steps, smoothed over ±2 cents, both halves of the window
+# checked:
+#
+#   claim 85+    1.14   742 plays at 1.13, hit 85.0, ROI +0.3% — flat
+#                       from 1.05 to 1.15, falling to −4.8% at the old
+#                       green bar of 1.21 and −8% beyond. The market
+#                       closes an 88% card at 1.12: no bar finds value
+#                       here, this one stops losing it.
+#   claim 80–85  1.18   1,994 plays, hit 79.1, ROI −1.9% — the fair
+#                       price of the band (it lands 84.5%); every bar
+#                       loses at close, the old orange bar of 1.27 lost
+#                       −4.3% on 557. The least-bad plateau.
+#   claim 75–80  1.31   348 plays, hit 77.9, ROI +6.6% — the one band
+#                       the market underprices, plateau +5.6..+6.6 from
+#                       1.27 to 1.33, +5.7% and +7.7% by half. Stricter
+#                       than the old 1.27, on purpose.
+#
+# Colours and the label rates are UNCHANGED: the tier still says red,
+# the score still says strong. Only the price the starred lane must
+# reach moved. matchbank.guard prices the bank the same way on the next
+# rebuild. Registered in config/hypotheses.tsv, 12 Sep.
+BAND_BAR = {"85+": 1.14, "80–85": 1.18, "75–80": 1.31}
+
+
+def claim_band(p: float) -> str:
+    """The claim band a percentage falls in, BAND_BAR's key."""
+    return "85+" if p >= 85 else "80–85" if p >= 80 else "75–80"
+
+
+def band_bar(p: float) -> float:
+    """The PLAY bar for a starred lane claiming p percent."""
+    return BAND_BAR[claim_band(p)]
 
 # Where the page fetches web/live.json from between deploys (8 Sep).
 REPO = "jansonprotocol/tempo-guard"
@@ -992,7 +1030,9 @@ def verdict(f, best: int) -> dict | None:
         return None
     lab, sc, cell, p = got
     hit = SAYS[lab]
-    need = (1 / hit) * (1 + DECLINE_MARGIN)
+    # The bar by claim band (BAND_BAR), not by the label's rate: the
+    # label still decides red and strong, the claim decides the price.
+    need = band_bar(p)
     lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane))
     try:
@@ -1015,6 +1055,7 @@ def verdict(f, best: int) -> dict | None:
     watch = (not play) and (not lab.endswith("red")) and got_odds is not None \
         and got_odds >= need * (1 - WATCH_BAND) and not live
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
+                band=claim_band(p),
                 need=need, odds=got_odds, book=(q or {}).get("book"),
                 play=play, watch=watch, strong=play and strong,
                 mark=("strong" if play and strong else
@@ -1366,23 +1407,27 @@ def _guard(f, best: int) -> str:
     # carries the entire return; the other has no measured edge at all.
     who = f'Tip {best} {html.escape(v["lane"])}' if v["lane"] else f'Tip {best}'
     need, odds, book = v["need"], v["odds"], v["book"] or "market"
+    bt = html.escape(
+        f"The bar is set by the claim band, not the colour: a lane claiming "
+        f"{v['claim']:.1f}% is in the {v['band']} band, whose ROI-optimal bar on "
+        f"the bank is {need:.2f} (the bettor's rule, 12 Sep).")
     if v["strong"]:
-        line = (f'<div class="verdict strong">★ STRONG · PLAY {who} '
+        line = (f'<div class="verdict strong" title="{bt}">★ STRONG · PLAY {who} '
                 f'<span class="dim">· needs {need:.2f}, '
                 f'{html.escape(book)} pays</span> <b>{odds:.2f}</b>'
                 f'<span class="dim"> · score {sc:+.1f}</span></div>')
     elif v["play"]:
-        line = (f'<div class="verdict yes">PLAY {who} '
+        line = (f'<div class="verdict yes" title="{bt}">PLAY {who} '
                 f'<span class="dim">· needs {need:.2f}, '
                 f'{html.escape(book)} pays</span> <b>{odds:.2f}</b></div>')
     elif lab.endswith("red"):
         line = (f'<div class="verdict no">no play <span class="dim">· '
                 f'{who} · the tier says avoid</span></div>')
     elif odds is None:
-        line = (f'<div class="verdict dimv">{who} needs <b>{need:.2f}</b> '
+        line = (f'<div class="verdict dimv" title="{bt}">{who} needs <b>{need:.2f}</b> '
                 f'<span class="dim">· nothing quoted yet</span></div>')
     else:
-        line = (f'<div class="verdict no">no play <span class="dim">· {who} '
+        line = (f'<div class="verdict no" title="{bt}">no play <span class="dim">· {who} '
                 f'needs {need:.2f}, best anywhere is</span> '
                 f'<b>{odds:.2f}</b></div>')
     if odds is not None:
@@ -1404,10 +1449,9 @@ def _needs(cell: str, starred_label: str | None) -> tuple:
     only its own printed claim, which has never been tested as a price
     input — so the card says so rather than dressing the two up alike.
     """
-    if starred_label:
-        return (1 / SAYS[starred_label]) * (1 + DECLINE_MARGIN), \
-            SAYS[starred_label], True
     c = _claim(cell)
+    if starred_label and c is not None:
+        return band_bar(c), SAYS[starred_label], True
     if c is None:
         return None, None, False
     return (1 / (c / 100.0)) * (1 + DECLINE_MARGIN), c / 100.0, False
@@ -3109,8 +3153,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  </div>
  <div class="tabpane" id="t-playable">
   <div class="panenote">Only what the guard would actually stake: the
-  starred lane cleared its label's break-even by {DECLINE_MARGIN*100:.0f}%
-  and the tier is not red. <b class="sgm">★ STRONG</b> adds a top-quartile
+  starred lane cleared its <b>claim band's bar</b> — 1.14 for a claim of
+  85 or more, 1.18 for 80–85, 1.31 for 75–80, each the ROI-optimal bar
+  on the bank at closing prices (the bettor's rule, 12 Sep) — and the
+  tier is not red. <b class="sgm">★ STRONG</b> adds a top-quartile
   confluence score in Europe — on 1,008 replayed bets those graded 81.0%
   and +8.87%, against 72.8% and −0.67% for the rest.</div>
   {_grid(playable, "play", reads)}</div>
@@ -3292,8 +3338,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  card's own tier and its confluence score, the card run back through the
  board's searches as-of. Each label carries one measured hit rate, frozen
  on two windows over 62,528 replayed picks. The card says <b>PLAY</b> only
- when the best live quote clears that label's break-even by 6% and the
- tier is not red. That is a bet. Anything else on the board is graded and
+ when the best live quote clears the starred lane's <b>claim band bar</b>
+ — 1.14 at a claim of 85 or more, 1.18 at 80–85, 1.31 at 75–80, each the
+ ROI-optimal bar on the bank at closing prices (12 Sep; until then the
+ label's break-even plus 6%) — and the tier is not red. That is a bet. Anything else on the board is graded and
  banked, not played.</p>
  <p><b>2. Flat 4% of the bankroll as it stands.</b> Measured again this
  session through two seasons at real closing prices: the whole book at

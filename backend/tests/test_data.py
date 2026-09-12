@@ -1257,6 +1257,26 @@ def test_completed_cards_are_searchable_by_label():
     assert any("verdict play" in webapp._haystack(f) for f in fx)
 
 
+def test_the_play_bar_follows_the_claim_band():
+    """The bettor's rule, 12 Sep: the PLAY bar is the claim band's
+    ROI-optimal bar on the bank, not the label's break-even plus a margin.
+    Colours and label rates are untouched."""
+    from scripts import webapp
+    assert webapp.BAND_BAR == {"85+": 1.14, "80–85": 1.18, "75–80": 1.31}
+    assert webapp.claim_band(91.0) == "85+" and webapp.claim_band(85.0) == "85+"
+    assert webapp.claim_band(84.9) == "80–85" and webapp.claim_band(80.0) == "80–85"
+    assert webapp.claim_band(79.9) == "75–80" and webapp.claim_band(76.0) == "75–80"
+    assert webapp.band_bar(88.0) == 1.14 and webapp.band_bar(78.0) == 1.31
+    # the starred lane's required price comes from the band, an unstarred
+    # lane still prices off its own claim plus the margin
+    need, hit, solid = webapp._needs("U4.25 82.7% −1.9% · buy≥1.30 (+5.6% margin)", "orange")
+    assert need == 1.18 and solid
+    need2, _h, solid2 = webapp._needs("U4.25 82.7% −1.9% · buy≥1.30 (+5.6% margin)", None)
+    assert abs(need2 - (1 / 0.827) * 1.06) < 1e-9 and not solid2
+    # the label rates the record is graded against did not move
+    assert webapp.SAYS["orange"] == 0.8342 and webapp.SAYS["green"] == 0.8740
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""

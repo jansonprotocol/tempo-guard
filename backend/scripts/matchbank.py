@@ -120,7 +120,7 @@ def guard(bank: dict) -> None:
     import datetime as dt
     from scripts import confluence as CF, guard_slices as GS, retro_odds
     from scripts.odds_api import bought
-    from scripts.webapp import DECLINE_MARGIN, DNB_GATE, SAYS, STRONG_SCORE
+    from scripts.webapp import DNB_GATE, STRONG_SCORE, band_bar
 
     rows = []
     for code, comp in bank.items():
@@ -155,7 +155,7 @@ def guard(bank: dict) -> None:
         row = retro_odds.find(r["code"], m["d"], m["h"], m["a"])
         bp = retro_odds.price(row, lane) if row else None
         if bp:
-            need = (1 / SAYS[lab]) * (1 + DECLINE_MARGIN)
+            need = band_bar(r["says_pick"] * 100)     # the claim band's bar (12 Sep)
             m["bp"], m["need"] = round(bp, 2), round(need, 2)
             m["v"] = "no play" if lab.endswith("red") or bp < need else \
                 ("strong" if m["st"] else "normal")
