@@ -2566,6 +2566,7 @@ def main() -> None:
 :root {{ color-scheme:dark; --bg:#0e1116; --card:#161b24; --edge:#232a36; --tx:#dbe2ee;
   --dim:#8b95a7; --green:#37c26b; --blue:#4f8ef7; --gold:#e8b93c; }}
 * {{ box-sizing:border-box; margin:0; }}
+html {{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }}
 body {{ background:var(--bg); color:var(--tx); font:15px/1.45 system-ui,
   -apple-system,"Segoe UI",Roboto,sans-serif; max-width:1200px;
   margin:0 auto; padding:0 16px 16px; }}
@@ -2794,6 +2795,23 @@ td.pos {{ color:var(--green); }} td.neg {{ color:#e07a6a; }}
   .hero {{ min-height:150px; }}
   .hero-text {{ max-width:78%; padding:16px 18px; }}
 }}
+/* A phone. The card is the unit the bettor reads on one, and on 12 Sep
+   a running card ran to a screen and a half: the lane's first line broke
+   three times, the strong verdict four. Tighter type, a hair less
+   padding, and the rung pill — hover text, useless without a pointer —
+   goes. Nothing is removed that a phone can act on. */
+@media (max-width:480px) {{
+  .card {{ padding:10px 11px; }}
+  .teams {{ font-size:15px; }}
+  .lane {{ font-size:12px; padding:6px 8px; }}
+  .lane .which {{ margin-right:4px; }}
+  .rung {{ display:none; }}
+  .verdict {{ font-size:11px; }}
+  .verdict.strong {{ padding:2px 6px; }}
+  .meta, .kw {{ font-size:11px; }}
+  .prog, .from {{ font-size:10px; }}
+  .taken, .livetag {{ font-size:10px; padding:1px 6px; }}
+}}
 .pagebanner {{ width:100%; max-height:260px; object-fit:cover;
   object-position:center 30%; border-radius:12px;
   border:1px solid var(--edge); margin-bottom:16px; display:block; }}
@@ -2829,11 +2847,16 @@ h3.hyp .n {{ background:var(--card); border:1px solid var(--edge);
 .about p {{ margin:10px 0; max-width:74ch; }}
 .about h3 {{ margin:26px 0 6px; font-size:15px; color:var(--gold); }}
 .runs {{ display:grid; gap:10px; margin:12px 0 4px; }}
-.run {{ background:var(--card); border:1px solid var(--edge);
+/* The session-run boxes on the Past sessions page. Scoped to .runs
+   since 12 Sep: bare .run also matched the RUNNING tab's cards
+   (class "run"), and ".runs .run b {{display:block}}" put every bold on those
+   cards on its own line — the wrapped pill, the price under the
+   verdict, the lane broken into five. */
+.runs .run {{ background:var(--card); border:1px solid var(--edge);
   border-left:3px solid var(--gold); border-radius:8px; padding:11px 14px;
   max-width:74ch; }}
-.run b {{ display:block; margin-bottom:3px; }}
-.run .when {{ color:var(--dim); font-size:12px; }}
+.runs .run b {{ display:block; margin-bottom:3px; }}
+.runs .run .when {{ color:var(--dim); font-size:12px; }}
 .feats {{ display:grid; gap:8px; margin:12px 0 4px;
   grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); max-width:74ch; }}
 .feat {{ background:var(--card); border:1px solid var(--edge);
