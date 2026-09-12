@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            307 / 381  80.6%    210 / 309  68.0%
     played lanes  >+1%     141 / 175  80.6%    208 / 304  68.4%
-    placed bets             87 / 106  82.1%    ROI +5.9%
+    placed bets             87 / 107  81.3%    ROI +4.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -1241,7 +1241,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 87 / 106  ·  ROI +5.9%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 87 / 107  ·  ROI +4.7%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -1363,6 +1363,9 @@ that premium the book is keeping the insurance money.
 | ✅ | Crystal Palace v Ipswich | U5.5 | 1.25 | 1.25x | Unibet (NL) — in-play, struck 16:47 CEST at half time, 1-2 (goals 16', 25', 45'+1'). A rung ABOVE the card's lane (the card stars U4.25, struck as U4.5, 85.4% +3.4%): a lane the board does not publish. Read off the card's own goal expectation, U5.5 at 1-2 HT lands 80%, fair 1.25; 1.25 is above it. Outside the board's rule; logged as taken, not as a board play |
 | ✅ | Südtirol v Modena | U3.5 | 1.21 | 1.21x | Unibet (NL) — in-play, struck 15:40 CEST around 38' at 1-0 (goals 36', 90'). The card's own lane (U3.0 rung struck as U3.5, orange, +2.9% edge, was on watch at exactly the 1.27 bar). The board's from-here line at 1-0 38' said 81%, fair 1.23; 1.21 is under it. Outside the board's rule; logged as taken, not as a board play |
 | ❌ | Freiburg v M'gladbach | U4.5 | 1.33 | 0.00x | TOTO — in-play, struck 16:18 CEST at half time, 2-0 (goals 24', 31'). The card's own lane (U4.25 rung struck as U4.5, orange, +2.0% edge, was on watch at 1xBet 1.26). The board's from-here line at 2-0 HT said 75%, fair 1.33; 1.33 is above it. Outside the board's rule; logged as taken, not as a board play |
+| ❌ | Roda v Vitesse | O1.5 | 1.32 | 0.00x | Unibet (NL) — in-play, struck 17:52 CEST around 65' at 1-0 (the only goal, 15'; final 1-0, LOST). The card's own lane (O1.5 82.7%, orange, +0.8% edge, need 1.26). The one-goal stall — the way an O1.5 card loses one time in eight. The board's from-here line at 1-0 65' said 63%, fair 1.59; 1.32 was under it. Outside the board's rule; logged as taken, not as a board play |
+| — open | Zwolle v Feyenoord | U4.5 | 1.36 | — | Unibet (NL) — pre-kickoff, struck 12 Sep 18:15 for Sunday 16:45. The card's STRONG lane (U4.25 rung struck as U4.5, 82.4%, orange, need 1.27); clears at 1.36, 1xBet 1.40 |
+| — open | Mirassol v Vitória | U3.5 | 1.32 | — | Unibet (NL) — pre-kickoff, struck 12 Sep 18:20 for Sunday 21:00, at a 1.20 stake as the slip shows. The card's PLAY lane (U3.0 rung struck as U3.5, 80.7%, orange, need 1.27); clears at 1.32, Pinnacle 1.33 |
 
 <!-- HYPOTHESES:START -->
 
