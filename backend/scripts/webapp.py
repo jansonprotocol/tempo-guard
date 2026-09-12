@@ -148,8 +148,14 @@ def _fmt(cell: str, fixture: str = "", quoted: bool = True) -> str:
                 if q["best"] != q["consensus"] else "")
         uni = (f' <span class="dim">· Unibet {html.escape(q["unibet"])}</span>'
                if q["unibet"] else "")
+        # "market", not "buy at min" (the bettor, 12 Sep, reading it as an
+        # instruction): this is the feed's MEDIAN quote for the struck
+        # lane, what most books pay, not a price to buy at.
         s = re.sub(r"buy≥\s*[\d.]+(\s*\([^)]*\))?",
-                   f'<span class="buyat">buy at min <b>{html.escape(q["consensus"])}'
+                   f'<span class="buyat" title="The market: the median quote '
+                   f'across the feed\'s books for this lane. The engine\'s own '
+                   f'buy price is in the fixtures file; the card shows what is '
+                   f'actually on offer instead.">market <b>{html.escape(q["consensus"])}'
                    f'</b>{best}{uni}</span>', s)
     # LEAD WITH THE LINE THAT REACHES THE SLIP. Athena publishes Asian
     # rungs; a real bet is the safer neighbour — U3.0 is struck as U3.5.
