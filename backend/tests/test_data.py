@@ -1356,3 +1356,24 @@ def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
     assert webapp.live_tag("athena", -6.0) == "safe"             # measured
     assert webapp.live_bands()[("watch", "+1 up")]["n"] == 40
     monkeypatch.setattr(webapp, "_BANDS", None)
+
+
+def test_store_save_drops_the_same_match_written_a_day_apart(tmp_path, monkeypatch):
+    """A board-dated copy (Amsterdam date) of a provider-dated match — same
+    teams, same score, one day later — is dropped on save; a different
+    score or a wider gap is kept."""
+    import pandas as pd
+    from app.data import store
+    monkeypatch.setattr(store, "DATA_DIR", tmp_path) if hasattr(store, "DATA_DIR") else None
+    monkeypatch.setattr(store, "season_path", lambda code, season: tmp_path / f"{code}-{season}.parquet")
+    rows = [
+        dict(date=pd.Timestamp("2026-09-07"), home="Limache", away="Cobresal", hg=3, ag=0),
+        dict(date=pd.Timestamp("2026-09-08"), home="Limache", away="Cobresal", hg=3, ag=0),   # shifted copy
+        dict(date=pd.Timestamp("2026-09-09"), home="Limache", away="Cobresal", hg=1, ag=1),   # different score: stays
+        dict(date=pd.Timestamp("2026-09-20"), home="Limache", away="Cobresal", hg=3, ag=0),   # far apart: stays
+    ]
+    store.save("TST", "2026-27", pd.DataFrame(rows))
+    got = pd.read_parquet(tmp_path / "TST-2026-27.parquet")
+    assert len(got) == 3
+    assert sorted(got["date"].dt.strftime("%Y-%m-%d")) == ["2026-09-07", "2026-09-09", "2026-09-20"]
+    assert got[got["date"] == "2026-09-09"]["hg"].tolist() == [1]

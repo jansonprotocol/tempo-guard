@@ -54,6 +54,30 @@ def available_leagues() -> list[str]:
                   if p.is_dir() and any(p.glob("*.parquet")))
 
 
+def _drop_shifted_duplicates(df: pd.DataFrame) -> pd.DataFrame:
+    """The same match written under two dates a day apart.
+
+    The board keys a fixture by its Amsterdam kickoff, so a 01:30 game
+    in Brazil is dated a day later than the provider dates it locally;
+    the exact (date, home, away) check above cannot see that, and on
+    12 Sep the store held 29 such pairs since July — same teams, same
+    score, one day apart — each one a match counted twice in every
+    rolling feature. Same pairing, same score, dates at most a day
+    apart: keep the earlier date (the provider's) and drop the other.
+    A genuine repeat of a fixture within a day, with the same score,
+    does not happen in league football.
+    """
+    if not {"hg", "ag"} <= set(df.columns) or len(df) < 2:
+        return df
+    d = df.copy()
+    d["_d"] = pd.to_datetime(d["date"])
+    d = d.sort_values(["home", "away", "hg", "ag", "_d"], kind="stable")
+    same = (d[["home", "away", "hg", "ag"]] == d[["home", "away", "hg", "ag"]].shift()).all(axis=1)
+    close = (d["_d"] - d["_d"].shift()).dt.days.le(1)
+    keep = ~(same & close)
+    return df.loc[d.index[keep]]
+
+
 def save(league_code: str, season: str, df: pd.DataFrame) -> Path:
     """
     Write a season snapshot, creating directories as needed.
@@ -64,6 +88,7 @@ def save(league_code: str, season: str, df: pd.DataFrame) -> Path:
     """
     if not df.empty and {"date", "home", "away"} <= set(df.columns):
         df = df.drop_duplicates(subset=["date", "home", "away"], keep="first")
+        df = _drop_shifted_duplicates(df)
     path = season_path(league_code, season)
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(path, index=False)

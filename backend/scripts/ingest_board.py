@@ -37,7 +37,25 @@ from app.data.features import _match_team
 
 FIXTURES = Path(__file__).resolve().parents[2] / "config" / "fixtures.tsv"
 SCORE = re.compile(r"(\d+)-(\d+)")
-SEASON = "2026-27"
+# The season LABEL is the league's own: "2026" for a calendar-year league
+# (Brazil, MLS, Argentina...), "2026-27" for an autumn-to-spring one. A
+# single hard-coded label put every board result of a calendar-year
+# league into a second season file beside the provider's, and the exact
+# (date, home, away) check in that file could not see the provider's row
+# in the other — 27 matches counted twice by 12 Sep.
+def _season(code: str) -> str:
+    from app.data import sources
+    return sources.get(code).default_seasons()[-1]
+
+
+def _already_stored(have, date, home, away, hg, ag) -> bool:
+    """Exact match, or the same pairing with the same score within a day
+    of the date — the board keys by the Amsterdam kickoff, providers by
+    the local date, and a 01:30 kickoff in Brazil is a day apart."""
+    for d, h, a, g1, g2 in have:
+        if h == home and a == away and abs((d - date).days) <= 1 and (d == date or (g1 == hg and g2 == ag)):
+            return True
+    return False
 SKIP_PREFIX = ("UCL", "UEL", "UECL")
 
 
@@ -69,21 +87,25 @@ def main() -> None:
             continue
         rows.setdefault(code, []).append(dict(
             date=pd.Timestamp(c[0].split(" ")[0]), home=rh, away=ra,
-            hg=int(m.group(1)), ag=int(m.group(2)), season=SEASON,
+            hg=int(m.group(1)), ag=int(m.group(2)), season=_season(code),
             league_code=code, country="", status="result"))
 
     for code, new in sorted(rows.items()):
-        cur = store.load(code, SEASON)
-        have = set(zip(cur["date"], cur["home"], cur["away"])) \
-            if not cur.empty else set()
+        season = _season(code)
+        cur = store.load(code, season)
+        # Against EVERY season file the store holds for the league, not
+        # only the one being written to, and with the day-shift rule.
+        allr = store.load_results(code)
+        have = list(zip(allr["date"], allr["home"], allr["away"], allr["hg"], allr["ag"])) \
+            if not allr.empty else []
         fresh = [r for r in new
-                 if (r["date"], r["home"], r["away"]) not in have]
+                 if not _already_stored(have, r["date"], r["home"], r["away"], r["hg"], r["ag"])]
         if not fresh:
             continue
         add = pd.DataFrame(fresh)
         merged = pd.concat([cur, add], ignore_index=True) \
             if not cur.empty else add
-        store.save(code, SEASON, merged)
+        store.save(code, season, merged)
         added[code] = len(fresh)
 
     for code, n in sorted(added.items()):
