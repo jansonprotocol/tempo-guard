@@ -1369,19 +1369,20 @@ def _livetag_html(f) -> str:
         word = f"live {tag}"
         to = record_flip(f)
         if to:
-            from scripts.livebands import FLIP_BANK
             tipn = to.replace(" ", "")
             fr = live_bands()[("flip", f"{tag} {tipn}")]
-            bh, b1, bn = FLIP_BANK[(tag, tipn)]
+            fb = live_bands()[("flipbank", f"{tag} {tipn}")]
             word += f" · flipped → {to}"
             tip += (f" FLIPPED: on {tag} priced plays that also print a {to}, "
                     + (f"{to} landed {fr['hit']:.1f}% to tip 1's {fr['said']:.1f}% "
-                       f"on the same {fr['n']} cards in the last three weeks "
-                       f"(a push on {to} is no bet)."
-                       if fr["source"] == "measured" else
-                       f"the board has too few cards to measure yet ({fr['n']}); "
-                       f"the bank seeds it — {to} {bh:.1f}% to tip 1's {b1:.1f}% "
-                       f"on {bn} such cards.")
+                       f"on the same {fr['n']} board cards in the last three weeks "
+                       f"(a push on {to} is no bet; the bank says "
+                       f"{fb['hit']:.1f} to {fb['said']:.1f} on {fb['n']})."
+                       if fr["source"] == "board" else
+                       f"{to} landed {fb['hit']:.1f}% to tip 1's {fb['said']:.1f}% on "
+                       f"{fb['n']} bank cards (a push on {to} is no bet); the board has "
+                       f"{fr['n']} paired cards so far, under the {50} it needs to "
+                       f"override.")
                     + f" Read the {to} lane on this card, not tip 1.")
         pill = (f'<span class="livetag lt-{tag}" title="{html.escape(tip)}">'
                 f'{word}</span>')

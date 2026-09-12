@@ -1390,9 +1390,15 @@ UKR-PL	athena	+1 up	232	81.5	81.8	safe	league
 UKR-PL	athena	−1..+1	28	82.1	77.7	safe	thin
 UKR-PL	athena	−4..−1	2	50.0	84.3	safe	thin
 UKR-PL	athena	−4 down	108	90.7	84.3	safe	league
-flip	flip	unsafe tip3	15	93.3	66.7	flipped	measured
-flip	flip	unsafe tip2	23	87.0	60.9	flipped	measured
-flip	flip	cautious tip3	36	77.8	75.0	hold	measured
-flip	flip	cautious tip2	66	59.1	77.3	hold	measured
-flip	flip	safe tip3	0			hold	seed
-flip	flip	safe tip2	0			hold	seed
+flipbank	flip	unsafe tip3	302	72.2	71.5	hold	bank
+flip	flip	unsafe tip3	17	94.1	64.7	hold	bank
+flipbank	flip	unsafe tip2	417	65.9	72.2	hold	bank
+flip	flip	unsafe tip2	26	88.5	61.5	hold	bank
+flipbank	flip	cautious tip3	58	81.0	69.0	flipped	bank
+flip	flip	cautious tip3	18	72.2	77.8	flipped	bank
+flipbank	flip	cautious tip2	130	60.0	71.5	hold	bank
+flip	flip	cautious tip2	33	48.5	75.8	hold	bank
+flipbank	flip	safe tip3	246	74.8	78.9	hold	bank
+flip	flip	safe tip3	16	81.2	75.0	hold	bank
+flipbank	flip	safe tip2	507	63.3	79.5	hold	bank
+flip	flip	safe tip2	30	66.7	80.0	hold	bank

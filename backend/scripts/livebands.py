@@ -119,14 +119,10 @@ SEED = {
 # pill reads "live unsafe · flipped → tip 3", the card stays a priced
 # play and stays in the record.
 FLIP_AT = 5.0
-FLIP_SEED = {("unsafe", "tip3"): "flipped", ("unsafe", "tip2"): "hold",
-             ("cautious", "tip3"): "hold", ("cautious", "tip2"): "hold",
-             ("safe", "tip3"): "hold", ("safe", "tip2"): "hold"}
-# The bank's paired numbers behind each seed, for the pill's hover:
-# (lane hit, tip 1 hit, n).
-FLIP_BANK = {("unsafe", "tip3"): (77.9, 63.6, 77), ("unsafe", "tip2"): (76.1, 72.8, 92),
-             ("cautious", "tip3"): (73.3, 75.5, 408), ("cautious", "tip2"): (61.2, 76.3, 836),
-             ("safe", "tip3"): (74.4, 76.9, 121), ("safe", "tip2"): (73.0, 73.0, 126)}
+FLIP_MIN_BOARD = MIN_LEAGUE     # the board overrides the bank's flip only at this many paired cards
+FLIP_KEYS = tuple((b, t) for b in ("unsafe", "cautious", "safe") for t in ("tip3", "tip2"))
+# The last hand seed, kept only for a checkout with no bank at all.
+FLIP_SEED = {k: ("flipped" if k == ("unsafe", "tip3") else "hold") for k in FLIP_KEYS}
 
 _BANDS: dict | None = None
 
@@ -156,6 +152,10 @@ def bands() -> dict[tuple, dict]:
             key = ("flip", f"{band} {tipn}")
             _BANDS[key] = got.get(("flip", "flip", f"{band} {tipn}")) or dict(
                 n=0, hit=None, said=None, label=seed, source="seed")
+            # the bank's own pairing, written beside it, for the hover
+            _BANDS[("flipbank", f"{band} {tipn}")] = got.get(
+                ("flipbank", "flip", f"{band} {tipn}")) or dict(
+                n=0, hit=None, said=None, label=seed, source="seed")
     return _BANDS
 
 
@@ -182,11 +182,36 @@ def flip(lane: str | None, tag: str | None, has_tip2: bool, has_tip3: bool) -> s
     return None
 
 
-def flip_label(tip_hit: float | None, tip1_hit: float | None, n: int, seed: str) -> tuple[str, str]:
-    """(label, source): measured when n is enough, else the seed."""
-    if tip_hit is None or tip1_hit is None or n < MIN_N:
+def flip_label(tip_hit: float | None, tip1_hit: float | None, n: int, seed: str,
+               floor: int = MIN_N, source: str = "measured") -> tuple[str, str]:
+    """(label, source): measured when n reaches the floor, else the seed."""
+    if tip_hit is None or tip1_hit is None or n < floor:
         return seed, "seed"
-    return ("flipped" if tip_hit - tip1_hit >= FLIP_AT else "hold"), "measured"
+    return ("flipped" if tip_hit - tip1_hit >= FLIP_AT else "hold"), source
+
+
+def _flip_pairs_bank() -> dict[tuple[str, str], list]:
+    """(tag, tipN) -> [n, lane hits, tip 1 hits] over the bank's priced
+    plays, tagged as the bank reads them now, a push on the lane no bet."""
+    from scripts import bankrates as br
+    G = ("✅", "❌", "◦")
+    pair: dict[tuple[str, str], list] = {k: [0, 0, 0] for k in FLIP_KEYS}
+    for code, comp in br.bank().items():
+        for m in comp.get("matches", []):
+            if br.lane(m) != "priced":
+                continue
+            tg, m1 = br.tag(m, code), m.get("mark")
+            if tg not in ("safe", "cautious", "unsafe") or m1 not in G:
+                continue
+            for tipn, key in (("tip2", "m2"), ("tip3", "m3")):
+                mk = m.get(key)
+                if mk not in ("✅", "❌"):
+                    continue
+                t = pair[(tg, tipn)]
+                t[0] += 1
+                t[1] += mk != "❌"
+                t[2] += m1 != "❌"
+    return pair
 
 
 def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
@@ -216,12 +241,26 @@ def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
             t[0] += 1
             t[1] += mk != "❌"
             t[2] += m1 != "❌"
+    # THE BANK FIRST (13 Sep, the same lesson as the bands): the bank's
+    # pairing sets the label; the board overrides it only at
+    # FLIP_MIN_BOARD paired cards. The three-week read had "unsafe ·
+    # flipped" on 15 and 23 cards against 302 and 417 bank cards saying
+    # hold.
+    bank_pair = _flip_pairs_bank()
     rows = []
-    for (band, tipn), seed in FLIP_SEED.items():
+    for (band, tipn) in FLIP_KEYS:
+        bn, bh, bh1 = bank_pair[(band, tipn)]
+        bhit = (bh / bn * 100) if bn else None
+        bhit1 = (bh1 / bn * 100) if bn else None
+        blab, bsrc = flip_label(bhit, bhit1, bn, FLIP_SEED[(band, tipn)], MIN_N, "bank")
+        rows.append(dict(league="flipbank", lane="flip", band=f"{band} {tipn}", n=bn,
+                         hit=bhit, said=bhit1, label=blab, source=bsrc))
         n, h, h1 = pair[(band, tipn)]
         hit = (h / n * 100) if n else None
         hit1 = (h1 / n * 100) if n else None
-        lab, src = flip_label(hit, hit1, n, seed)
+        lab, src = flip_label(hit, hit1, n, blab, FLIP_MIN_BOARD, "board")
+        if src == "seed":                       # under the floor: the bank's word
+            lab, src = blab, bsrc
         rows.append(dict(league="flip", lane="flip", band=f"{band} {tipn}", n=n,
                          hit=hit, said=hit1, label=lab, source=src))
     return rows
@@ -363,12 +402,13 @@ def main() -> None:
     print(f"  league rows: {len(lg)} written, {len(spoke)} at the {MIN_LEAGUE}-card floor, "
           f"{len(differs)} of those differ from the whole bank")
     flips = flip_study(days, today)
-    print("the flip on priced plays, per tag band, paired with tip 1 (board, last "
-          f"{days} days):")
+    print("the flip on priced plays, per tag band, paired with tip 1 — the bank, then "
+          f"the board's last {days} days (board overrides at {FLIP_MIN_BOARD}):")
     for r in flips:
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
         t1 = "   —  " if r["said"] is None else f"{r['said']:5.1f}%"
-        print(f"  {r['band']:14} n={r['n']:3}  lane {hit}  tip 1 {t1}  -> {r['label']:8} ({r['source']})")
+        who = "bank " if r["league"] == "flipbank" else "board"
+        print(f"  {who} {r['band']:14} n={r['n']:4}  lane {hit}  tip 1 {t1}  -> {r['label']:8} ({r['source']})")
     rows += flips
     if not dry:
         write(rows, days, today)

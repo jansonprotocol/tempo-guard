@@ -1200,7 +1200,10 @@ def test_unsafe_priced_plays_flip_to_tip_3_not_tip_2(monkeypatch):
     # every band x lane combo is measured, so a hold can earn the flip
     assert set(livebands.FLIP_SEED) == {(b, t) for b in ("safe", "cautious", "unsafe")
                                         for t in ("tip2", "tip3")}
-    assert set(livebands.FLIP_BANK) == set(livebands.FLIP_SEED)
+    # the bank leads; the board overrides only at FLIP_MIN_BOARD paired cards
+    FL = livebands.flip_label
+    assert FL(93.3, 66.7, 15, "hold", livebands.FLIP_MIN_BOARD, "board") == ("hold", "seed")
+    assert FL(93.3, 66.7, 50, "hold", livebands.FLIP_MIN_BOARD, "board") == ("flipped", "board")
     # a measured table can flip a combo the seed holds
     livebands._BANDS[("flip", "safe tip3")] = dict(n=20, hit=90.0, said=75.0,
                                                    label="flipped", source="measured")

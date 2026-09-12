@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-13	interface	The flip study is measured on the bank first (priced plays tagged as the bank reads them now, paired, a push on the lane no bet); the board's last three weeks override only at 50 paired cards. 'Unsafe · flipped' had been on off 15 and 23 session cards while 302 and 417 bank cards said hold; now only cautious tip 3 flips (81.0 to 69.0 on 58). The pill's hover shows both readings
 2026-09-13	interface	The live-safety bands are measured on the bank per league (a league's own row at 50 cards or more, the whole bank beneath it) instead of the board's last three weeks across all leagues: out of sample the session's global 'unsafe' cards were landing 88.0 against 84.5 for its 'safe' ones, the per-league bank bands split 85.5 to 75.0. Board re-tagged: 71 settled cards back in the record, 5 unstaked cards still declined by tag; the pill's hover names the row it read
 2026-09-13	interface	Ask Athena's final-pick tiles no longer count declined bank rows (they were counting 276 unsafe Série A rows under 'final pick · orange' while tip 1 showed the 3 that count)
 2026-09-12	interface	'live watch' is a search word for the Athena lane, the tab's own name
