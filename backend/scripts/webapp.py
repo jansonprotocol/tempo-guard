@@ -3476,6 +3476,13 @@ function qterms(q) {{
       const flat = s.replace(/\\s+/g, " ");
       const n = NONEQ.exec(flat);
       if (n) return "~none" + (n[1] || n[2]);
+      // A bare tag word means THAT tag: "safe" is a substring of "unsafe",
+      // so on its own it found both bands (the bettor's "priced, safe"
+      // filter read 38 cards where the safe band holds 31, 12 Sep). The
+      // haystack carries "tag safe" / "tag unsafe" / "tag cautious", and
+      // "tag safe" is not inside "tag unsafe".
+      if (flat === "safe" || flat === "unsafe" || flat === "cautious")
+        return "tag " + flat;
       return parseCmp(flat) || s;
     }});
 }}

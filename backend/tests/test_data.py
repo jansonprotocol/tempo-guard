@@ -1220,6 +1220,18 @@ def test_filter_counters_cannot_see_a_declined_card():
     assert "if (c.dataset.nc) {{ left++; continue; }}" in src
 
 
+def test_a_bare_tag_word_is_exact_on_the_bar():
+    """"safe" is a substring of "unsafe": typed alone it must mean the safe
+    tag, so the filter rewrites it to "tag safe" (the bettor's "priced,
+    safe" read 38 cards where the safe band holds 31, 12 Sep)."""
+    from scripts import webapp
+    src = __import__("pathlib").Path(webapp.__file__).read_text()
+    assert 'if (flat === "safe" || flat === "unsafe" || flat === "cautious")' in src
+    assert 'return "tag " + flat;' in src
+    # and the haystack words the rewrite relies on are distinct
+    assert "tag safe" not in "tag unsafe"
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""
