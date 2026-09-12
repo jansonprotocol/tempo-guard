@@ -1313,12 +1313,16 @@ def test_live_poll_patches_the_status_line_not_the_taken_pill():
 def test_live_tag_follows_the_bettors_bands():
     """The bettor's live-safety bands, 12 Sep: by lane and printed-edge band."""
     from scripts import webapp
-    t = webapp.live_tag
+    # The SEED table, the bettor's hand bands; the measured table
+    # (config/live_bands.tsv) overrides it band by band from 12 Sep and is
+    # tested separately.
+    t = lambda lane, e: webapp.LIVE_TAG[lane][webapp.edge_band(e)]
     assert [t("athena", e) for e in (3.0, 1.0, 0.0, -0.9, -1.0, -3.9, -4.0, -6.0)] == \
         ["safe", "safe", "safe", "safe", "safe", "safe", "unsafe", "unsafe"]
     assert [t("watch", e) for e in (3.0, 1.0, 0.0, -0.9, -1.0, -3.9, -4.0, -6.0)] == \
         ["unsafe", "unsafe", "safe", "safe", "cautious", "cautious", "cautious", "cautious"]
-    assert t("priced", -5.0) is None and t(None, 2.0) is None and t("athena", None) is None
+    lt = webapp.live_tag
+    assert lt("priced", -5.0) is None and lt(None, 2.0) is None and lt("athena", None) is None
 
 
 def test_live_bands_label_by_hit_rate_with_a_floor_on_cards():
