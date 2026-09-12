@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 79.6%
 
     lane                        Tip 1              Tip 2
-    all matches            265 / 333  79.6%    189 / 273  69.2%
+    all matches            266 / 334  79.6%    189 / 273  69.2%
     played lanes  >+1%     123 / 154  79.9%    188 / 269  69.9%
     placed bets             74 / 91   81.3%    ROI +4.6%
 
@@ -589,9 +589,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 11-09 20:00 <b>MC Oran v Temouchent</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (81.2 −6.3)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 20:30 <b>Wisła Kraków v Jagiellonia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>O1.5 79.7% +3.7%<br>buy≥1.37 (+9.0% margin)</td><td>O2.25 57.1% +5.3%<br>buy≥1.60 (+3.0% margin) · floor −20.9</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.8% +4.1% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-09 22:00 <b>Belouizdad v Sétif</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (81.2 −6.3)</td><td>U3.0 83.5% <b>+0.5%</b><br>buy≥1.33 (+5.6% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 2-2 <b>Jaguares v Fortaleza CEIF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.17 (+5.4% margin) · <i>half safe</i> · <i>from here 93% · fair 1.07</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-2 <b>Coritiba v Athletico-PR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Série A (75.5 −6.2)</td><td>U3.0 75.6% <b>+0.5%</b><br>buy≥1.52 (+4.8% margin) · <i>push as it stands</i> · <i>from here 25% · fair 4.05</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 55' 0-1 <b>Cusco v Melgar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (71.9 −8.4)</td><td>U4.25 81.1% <b>−5.9%</b><br>buy≥1.25 (+6.5% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here 96% · fair 1.05</i></td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 56' 0-1 <b>Cusco v Melgar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (71.9 −8.4)</td><td>U4.25 81.1% <b>−5.9%</b><br>buy≥1.25 (+6.5% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here 96% · fair 1.04</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-09 11:00 <b>Mito Hollyhock v Kawasaki</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 86.9% <b>−1.3%</b><br>buy≥1.20 (+2.8% margin)</td><td>O1.75 74.4% +1.8%<br>buy≥1.43 (+0.9% margin) · floor −7.6</td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-09 11:30 <b>Shimizu v Fukuoka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 89.8% +1.6%<br>buy≥1.18 (+4.9% margin)</td><td>U3.75 76.9% +2.6%<br>buy≥1.23 (+1.1% margin) · floor −5.1</td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-09 12:00 <b>Gamba Osaka v FC Tokyo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 86.5% <b>−1.8%</b><br>buy≥1.20 (+2.5% margin)</td><td><b>Gamba Osaka O0.5</b> 80.1% +5.8%<br>buy≥1.30 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.2% +2.8% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -754,7 +753,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 265 / 333   ·   79.6%**   ·   **Tip 2 — 189 / 273   ·   69.2%**
+**Tip 1 — 266 / 334   ·   79.6%**   ·   **Tip 2 — 189 / 273   ·   69.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1166,6 +1165,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-4 · 11-09 21:00 <b>Pisa v Entella</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (78.5 +1.2)</td><td>O1.5 74.0% +2.3%<br>buy≥1.36 (+0.9% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 71.9% +11.6% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 11-09 21:00 <b>Sevilla v Valencia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.0 −3.6)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.22 (+5.8% margin)</td><td>✅ U3.75 73.3% +1.0%<br>buy≥1.28 (+0.9% margin) · floor −1.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 11-09 22:00 <b>UTC v Juan Pablo II</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (71.9 −8.4)</td><td>U4.25 81.0% <b>−6.0%</b><br>buy≥1.22 (+6.4% margin)</td><td>✅ U3.75 74.1% +1.7%<br>buy≥1.30 (+3.8% margin) · floor −0.9</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-2 · 12-09 01:15 <b>Jaguares v Fortaleza CEIF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
