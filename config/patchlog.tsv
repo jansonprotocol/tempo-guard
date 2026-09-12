@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-12	interface	Completed cards are searchable by label and call ('green', 'super green', 'guard red', 'verdict play', 'strong'); they carried no label words before
 2026-09-12	interface	Flip study: a push on the flipped lane is no bet (the card leaves the pair); bank seeds re-cut the same way. Paired and pushes out, cautious tip 3 stays flipped (78.8 to 72.7 on 33) and so does safe tip 2 (85.0 to 70.0 on 20)
 2026-09-12	interface	The flip tracks every tag band × lane combo (six rows in live_bands.tsv), seeded from the bank and measured on the board's last three weeks; the pill reads 'live <tag> · flipped → tip N' wherever a combo is on. First measurement flipped cautious tip 3 (+7.3 on 41) and safe tip 2 (+15.0 on 20) beside the seeded unsafe tip 3
 2026-09-12	interface	A bare 'safe', 'unsafe' or 'cautious' on the filter bar means that tag exactly ('safe' was also finding every unsafe card)

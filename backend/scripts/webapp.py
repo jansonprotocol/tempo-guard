@@ -602,20 +602,36 @@ def _haystack(f) -> str:
     # "orange", "red", "super green", "strong", "no play" (the bettor's
     # request, 2 Sep). "guard red" and "label red" are there too, because
     # a bare "red" also finds NY Red Bulls.
+    def _label_words(lab):
+        out = [lab, f"guard {lab}", f"label {lab}"]
+        if lab.startswith("super "):
+            out += [f"guard {lab[6:]}", f"label {lab[6:]}"]
+        return out
     if not f.settled:
         v = verdict(f, _star(f))
         if v:
-            lab = v["label"]
-            bits += [lab, f"guard {lab}", f"label {lab}"]
-            if lab.startswith("super "):
-                base = lab[6:]
-                bits += [f"guard {base}", f"label {base}"]
+            bits += _label_words(v["label"])
             # A play's mark is "normal" or "strong"; "verdict play" has
             # to find both, and "verdict no play" only the rest.
             bits.append("verdict " + v["mark"])
             if v["play"]:
                 bits.append("verdict play")
             if v["strong"]:
+                bits.append("strong")
+    else:
+        # A settled card wears the label and the call it was frozen with
+        # (the bettor, 12 Sep: "I can't search on color" — Completed had
+        # no label words at all), so "green" on Completed finds the green
+        # cards and "verdict play" the ones the board staked.
+        lab = label_any(f)
+        if lab:
+            bits += _label_words(lab)
+        call = was_called(f)
+        if call:
+            bits.append("verdict " + call["mark"])
+            if call["mark"] in ("normal", "strong"):
+                bits.append("verdict play")
+            if call["mark"] == "strong":
                 bits.append("strong")
     raw = " ".join(bits).lower()
     folded = _fold(raw)

@@ -1244,6 +1244,19 @@ def test_a_bare_tag_word_is_exact_on_the_bar():
     assert "tag safe" not in "tag unsafe"
 
 
+def test_completed_cards_are_searchable_by_label():
+    """The bettor, 12 Sep: "I can't search on color" — a settled card must
+    carry its label words ("green", "guard green") and its frozen call."""
+    from scripts import board, webapp
+    fx = [f for f in board.load() if f.settled and webapp.label_any(f)]
+    assert fx
+    for f in fx[:40]:
+        lab = webapp.label_any(f)
+        hay = webapp._haystack(f)
+        assert lab in hay and f"label {lab}" in hay
+    assert any("verdict play" in webapp._haystack(f) for f in fx)
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""
