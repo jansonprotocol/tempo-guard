@@ -1,42 +1,53 @@
-"""Measure the live-safety bands on the board's own record and label them.
+"""Measure the live-safety bands on the bank, per league, and label them.
 
     python scripts/livebands.py            measure, write config/live_bands.tsv
     python scripts/livebands.py --dry      measure, print, write nothing
-    python scripts/livebands.py --days 21  the window (default 21)
 
 THE RULE (the bettor, 12 Sep). A card the board did not stake — an Athena
 lane or a watch card — carries a live-safety tag by its lane and its
-printed-edge band. The bands were first set by hand off the session's
-tally; from here they are MEASURED every two days on the board's settled
-cards, red cards out, and labelled by hit rate:
+printed-edge band; a priced play carries the same tag for information.
+Labelled by hit rate:
 
     at or above 79%   safe
     77% to 79%        cautious
     under 77%         unsafe
 
-A band with fewer than MIN_N graded cards in the window keeps the SEED
-label (webapp.LIVE_TAG, the bettor's hand table) — a label read off a
-dozen cards would flip every fortnight on noise, which is the opposite of
-a signal. The window is rolling so the labels follow the regime the
-bettor is actually playing in, not the bank: the bank says the deep-
-negative Athena band is its best slice (+4.6 on 3,539 cards) and the
-first week of September ran it at 68.8%, and it is the second number
-the tag exists for.
+WHERE THE BANDS ARE MEASURED (the bettor, 13 Sep: "build it and re-tag
+the board"). They were first set by hand, then measured on the board's
+last three weeks across all leagues. Tested out of sample that read was
+pointing the wrong way: bands fitted on the bank before 1 August, then
+judged on the 798 unstaked cards from August on, the session's global
+"unsafe" cards landed 88.0% against 84.5% for its "safe" ones, while
+per-league bank bands separated them 85.5 to 75.0 — and on the board's
+own 305 settled unstaked cards, where the session bands were fitted IN
+sample, the per-league bank bands still split 83.3 to 66.7 against 85.5
+to 75.9. The deep-negative Athena band that the session called unsafe
+on 50 cards lands 85 to 95 in seventeen leagues on the bank (Brazil
+88.8 on 276, the Championship 91.0 on 222, LaLiga 2 89.7 on 389).
+
+So from 13 Sep the tag reads, in this order:
+    1. the LEAGUE's own bank row for that lane and band, when it has
+       MIN_LEAGUE cards or more            (source "league")
+    2. the whole bank's row for the lane and band, red out
+                                            (source "global")
+    3. the seed, the bettor's hand table    (source "seed")
+The bank ingests the board's completed cards every two days, so the
+session keeps feeding the measurement; it no longer overrides it.
 
 Nothing here touches the engine, the guard's slices or the labels. It
 decides which unstaked cards are OFFERED for a live buy and where they
-file (Declined takes the unsafe ones) — and since 12 Sep a Declined card
-is out of the record too (the bettor: "everything that now is a declined
-card must be removed from what now actual hitrates are"), so the tag
-reaches every hit rate on the board and in the bank through the two
-predicates webapp.counts and bankrates.counts.
+file (Declined takes the unsafe ones), and since 12 Sep a Declined card
+is out of the record too, so the tag reaches every hit rate on the board
+and in the bank through webapp.counts and bankrates.counts. The
+measurement keeps only the RED cards out: a band measured on a record
+that already dropped its own unsafe cards could never come back.
 
-The measurement itself keeps only the RED cards out (webapp.not_red): a
-band measured on a record that already dropped its own unsafe cards
-could never come back, and a label that cannot move is not a label.
+The flip study (tip 2 / tip 3 against tip 1 on priced plays) stays on
+the board's last three weeks, paired; see flip_study.
 
-Writes config/live_bands.tsv, read by webapp.live_tag — a typed table
-like the others, so the page and the README render from the same rule.
+Writes config/live_bands.tsv, read by webapp.live_tag and
+bankrates.tag — a typed table like the others, so the page, the README
+and the bank render from the same rule.
 """
 from __future__ import annotations
 
@@ -51,8 +62,10 @@ OUT = ROOT / "config" / "live_bands.tsv"
 
 SAFE_AT = 79.0          # hit rate at or above which a band is "safe"
 CAUTIOUS_AT = 77.0      # below this it is "unsafe"; between, "cautious" (the bettor, 12 Sep: 77)
-MIN_N = 15              # fewer graded cards than this: keep the seed label (the bettor, 12 Sep: 15)
-DAYS = 21               # rolling window, in days, of settled kickoffs
+MIN_N = 15              # fewer graded cards than this: fall through (the bettor, 12 Sep: 15)
+MIN_LEAGUE = 50         # a league's own band needs this many bank cards to speak (13 Sep)
+DAYS = 21               # rolling window, in days, for the flip study on the board
+GLOBAL = "*"            # the league column of a whole-bank row
 BANDS = ("+1 up", "−1..+1", "−4..−1", "−4 down")
 LANES = ("athena", "watch", "priced")
 
@@ -123,22 +136,38 @@ def edge_band(edge: float) -> str:
             else "−4..−1" if edge > -4 else "−4 down")
 
 
-def bands() -> dict[tuple[str, str], dict]:
-    """The MEASURED band table (config/live_bands.tsv), falling back to
-    the seed where the file is missing or a band is absent. Read once."""
+def bands() -> dict[tuple, dict]:
+    """The MEASURED band table (config/live_bands.tsv): whole-bank rows
+    keyed (lane, band), league rows keyed (league, lane, band), flip rows
+    keyed ("flip", "<tag> tipN"). A missing whole-bank or flip row falls
+    back to its seed. Read once."""
     global _BANDS
     if _BANDS is None:
         got = read() or {}
         _BANDS = {}
         for lane, seeds in SEED.items():
             for band, seed in seeds.items():
-                _BANDS[(lane, band)] = got.get((lane, band)) or dict(
+                _BANDS[(lane, band)] = got.get((GLOBAL, lane, band)) or dict(
                     n=0, hit=None, said=None, label=seed, source="seed")
+        for (code, lane, band), row in got.items():
+            if code not in (GLOBAL, "flip"):
+                _BANDS[(code, lane, band)] = row
         for (band, tipn), seed in FLIP_SEED.items():
             key = ("flip", f"{band} {tipn}")
-            _BANDS[key] = got.get(key) or dict(
+            _BANDS[key] = got.get(("flip", "flip", f"{band} {tipn}")) or dict(
                 n=0, hit=None, said=None, label=seed, source="seed")
     return _BANDS
+
+
+def band_row(lane: str, edge: float, code: str | None = None) -> dict:
+    """The row the tag reads for this card: the league's own where it is
+    measured, else the whole bank's (or the seed)."""
+    b = edge_band(edge)
+    if code:
+        row = bands().get((code, lane, b))
+        if row and row["source"] == "league":
+            return row
+    return bands()[(lane, b)]
 
 
 def flip(lane: str | None, tag: str | None, has_tip2: bool, has_tip3: bool) -> str | None:
@@ -193,89 +222,112 @@ def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
         hit = (h / n * 100) if n else None
         hit1 = (h1 / n * 100) if n else None
         lab, src = flip_label(hit, hit1, n, seed)
-        rows.append(dict(lane="flip", band=f"{band} {tipn}", n=n, hit=hit, said=hit1,
-                         label=lab, source=src))
+        rows.append(dict(league="flip", lane="flip", band=f"{band} {tipn}", n=n,
+                         hit=hit, said=hit1, label=lab, source=src))
     return rows
 
 
-def tag(lane: str | None, edge: float | None) -> str | None:
-    """'safe', 'cautious' or 'unsafe' by lane and printed edge; None for
-    no lane (a red card, an abstention) or no printed edge."""
+def tag(lane: str | None, edge: float | None, code: str | None = None) -> str | None:
+    """'safe', 'cautious' or 'unsafe' by lane, printed edge and — where
+    the league has a measured row — league; None for no lane (a red
+    card, an abstention) or no printed edge."""
     if lane not in SEED or edge is None:
         return None
-    return bands()[(lane, edge_band(edge))]["label"]
+    return band_row(lane, edge, code)["label"]
 
 
-def label(hit_pct: float | None, n: int, seed: str) -> tuple[str, str]:
-    """(label, source): measured when n is enough, else the seed."""
-    if hit_pct is None or n < MIN_N:
+def label(hit_pct: float | None, n: int, seed: str, floor: int = MIN_N,
+          source: str = "measured") -> tuple[str, str]:
+    """(label, source): measured when n reaches the floor, else the seed
+    with source "seed"."""
+    if hit_pct is None or n < floor:
         return seed, "seed"
     if hit_pct >= SAFE_AT:
-        return "safe", "measured"
+        return "safe", source
     if hit_pct >= CAUTIOUS_AT:
-        return "cautious", "measured"
-    return "unsafe", "measured"
+        return "cautious", source
+    return "unsafe", source
 
 
 def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
-    """One row per lane and band: n, hit, said, label, source."""
-    from scripts import board, webapp
-    today = today or dt.date.today()
-    since = (today - dt.timedelta(days=days)).isoformat()
-    tally: dict[tuple[str, str], list] = {(l, b): [0, 0, 0.0] for l in LANES for b in BANDS}
-    for f in board.load():
-        if not f.settled or f.kickoff[:10] < since or not f.tip1 or f.tip1.startswith("—"):
-            continue
-        if not webapp.not_red(f):        # red out; unsafe IN, or a band could never recover
-            continue
-        lane = webapp.record_lane(f)
-        if lane is None:
-            continue
-        cell = f.tip3 if webapp._star_any(f) == 3 else f.tip1
-        e, c = webapp._edge(cell), webapp._claim(cell)
-        if e is None or c is None:
-            continue
-        t = tally[(lane, webapp.edge_band(e))]
-        t[0] += 1
-        t[1] += f.status.startswith("✅")
-        t[2] += c
+    """The band rows: one per lane and band for the whole bank (league
+    "*"), then one per league, lane and band where the league has any
+    card there — labelled "league" at MIN_LEAGUE cards, else the row is
+    written for the record but not read. Red cards out, unsafe cards IN.
+    `days` is unused here (the flip study takes it); kept for the CLI."""
+    from scripts import bankrates as br
+    tally: dict[tuple, list] = {}
+    for code, comp in br.bank().items():
+        for m in comp.get("matches", []):
+            if not br.not_red(m):
+                continue
+            lane = br.lane(m)
+            if lane is None:
+                continue
+            cell = m.get("t3") if m.get("pk") == 3 else m.get("tip")
+            got = br._hit(m.get("m3") if m.get("pk") == 3 else m.get("mark"))
+            e, c = br._edge(cell), br._claim(cell)
+            if got is None or e is None or c is None:
+                continue
+            b = edge_band(e)
+            for key in ((GLOBAL, lane, b), (code, lane, b)):
+                t = tally.setdefault(key, [0, 0, 0.0])
+                t[0] += 1
+                t[1] += got
+                t[2] += c
     rows = []
     for lane in LANES:
         for band in BANDS:
-            n, h, c = tally[(lane, band)]
+            n, h, c = tally.get((GLOBAL, lane, band), (0, 0, 0.0))
             hit = (h / n * 100) if n else None
-            lab, src = label(hit, n, SEED[lane][band])
-            rows.append(dict(lane=lane, band=band, n=n, hit=hit,
+            lab, src = label(hit, n, SEED[lane][band], MIN_N, "global")
+            rows.append(dict(league=GLOBAL, lane=lane, band=band, n=n, hit=hit,
                              said=(c / n) if n else None, label=lab, source=src))
+    for code in sorted(k[0] for k in tally if k[0] != GLOBAL):
+        for lane in LANES:
+            for band in BANDS:
+                if (code, lane, band) not in tally:
+                    continue
+                n, h, c = tally[(code, lane, band)]
+                hit = h / n * 100
+                glob = next(r for r in rows if r["league"] == GLOBAL
+                            and r["lane"] == lane and r["band"] == band)
+                lab, src = label(hit, n, glob["label"], MIN_LEAGUE, "league")
+                if src == "seed":
+                    lab, src = glob["label"], "thin"     # written, not read
+                rows.append(dict(league=code, lane=lane, band=band, n=n, hit=hit,
+                                 said=c / n, label=lab, source=src))
     return rows
 
 
 def write(rows: list[dict], days: int, today: dt.date) -> None:
     lines = [
-        "# The live-safety bands, MEASURED on the board's settled cards, red",
-        "# cards out, over a rolling window; written by scripts/livebands.py",
-        "# every two days (the bank-refresh workflow) and read by",
-        "# scripts/webapp.py for the live tag on every unstaked card. A band",
-        f"# under {MIN_N} cards keeps the seed label (the bettor's hand table,",
-        f"# 12 Sep). Thresholds: safe >= {SAFE_AT:.0f}, cautious >= {CAUTIOUS_AT:.0f}, else unsafe.",
-        f"# window\t{days} days to {today.isoformat()}",
+        "# The live-safety bands, MEASURED on the bank, red cards out; written by",
+        "# scripts/livebands.py every two days (the bank-refresh workflow) and read",
+        "# by scripts/webapp.py and scripts/bankrates.py for the live tag. The tag",
+        f"# reads the league's own row where it has {MIN_LEAGUE} cards or more (source",
+        "# 'league'), else the whole bank's row (league '*', source 'global'), else",
+        "# the seed. A league row under the floor is written as 'thin' and not read.",
+        f"# Thresholds: safe >= {SAFE_AT:.0f}, cautious >= {CAUTIOUS_AT:.0f}, else unsafe.",
+        f"# written\t{today.isoformat()}",
         "# The 'flip' rows: priced plays with that tag that also print that lane,",
-        "# paired — n cards where tip 1 graded and that lane won or lost (a push",
-        "# on the lane is no bet), hit = THAT lane, said = tip 1 on the same cards;",
-        f"# flipped when the lane beats tip 1 by {FLIP_AT:.0f} points.",
-        "# lane\tband\tn\thit\tsaid\tlabel\tsource",
+        f"# paired on the board's last {days} days — n cards where tip 1 graded and",
+        "# that lane won or lost (a push on the lane is no bet), hit = THAT lane,",
+        f"# said = tip 1 on the same cards; flipped when the lane beats tip 1 by {FLIP_AT:.0f}.",
+        "# league\tlane\tband\tn\thit\tsaid\tlabel\tsource",
     ]
     for r in rows:
         lines.append("\t".join([
-            r["lane"], r["band"], str(r["n"]),
+            r.get("league", GLOBAL), r["lane"], r["band"], str(r["n"]),
             "" if r["hit"] is None else f"{r['hit']:.1f}",
             "" if r["said"] is None else f"{r['said']:.1f}",
             r["label"], r["source"]]))
     OUT.write_text("\n".join(lines) + "\n")
 
 
-def read() -> dict[tuple[str, str], dict] | None:
-    """The written table, or None when it does not exist yet."""
+def read() -> dict[tuple, dict] | None:
+    """The written table keyed (league, lane, band) — flip rows under
+    league "flip" — or None when it does not exist yet."""
     if not OUT.exists():
         return None
     out = {}
@@ -283,11 +335,11 @@ def read() -> dict[tuple[str, str], dict] | None:
         if ln.startswith("#") or not ln.strip():
             continue
         p = ln.split("\t")
-        if len(p) < 7:
+        if len(p) < 8:
             continue
-        out[(p[0], p[1])] = dict(n=int(p[2]), hit=(float(p[3]) if p[3] else None),
-                                 said=(float(p[4]) if p[4] else None),
-                                 label=p[5], source=p[6])
+        out[(p[0], p[1], p[2])] = dict(n=int(p[3]), hit=(float(p[4]) if p[4] else None),
+                                       said=(float(p[5]) if p[5] else None),
+                                       label=p[6], source=p[7])
     return out
 
 
@@ -298,12 +350,21 @@ def main() -> None:
         days = int(sys.argv[sys.argv.index("--days") + 1])
     today = dt.date.today()
     rows = measure(days, today)
-    print(f"live bands, last {days} days to {today}, red cards out:")
+    print("live bands on the bank, red cards out — whole bank:")
     for r in rows:
+        if r["league"] != GLOBAL:
+            continue
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
-        print(f"  {r['lane']:6} {r['band']:8} n={r['n']:3}  hit {hit}  -> {r['label']:8} ({r['source']})")
+        print(f"  {r['lane']:6} {r['band']:8} n={r['n']:5}  hit {hit}  -> {r['label']:8} ({r['source']})")
+    lg = [r for r in rows if r["league"] != GLOBAL]
+    spoke = [r for r in lg if r["source"] == "league"]
+    differs = [r for r in spoke if r["label"] != next(
+        g["label"] for g in rows if g["league"] == GLOBAL and g["lane"] == r["lane"] and g["band"] == r["band"])]
+    print(f"  league rows: {len(lg)} written, {len(spoke)} at the {MIN_LEAGUE}-card floor, "
+          f"{len(differs)} of those differ from the whole bank")
     flips = flip_study(days, today)
-    print("the flip on priced plays, per tag band, paired with tip 1:")
+    print("the flip on priced plays, per tag band, paired with tip 1 (board, last "
+          f"{days} days):")
     for r in flips:
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
         t1 = "   —  " if r["said"] is None else f"{r['said']:5.1f}%"

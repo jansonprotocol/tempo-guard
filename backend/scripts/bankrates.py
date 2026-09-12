@@ -110,30 +110,31 @@ def lane(m: dict) -> str | None:
     return "athena"
 
 
-def tag(m: dict) -> str | None:
-    """The bank card's live-safety word, by its lane and the printed edge
-    of its starred lane (tip 3 where the DNB gate took it, else tip 1)."""
+def tag(m: dict, code: str | None = None) -> str | None:
+    """The bank card's live-safety word, by its lane, the printed edge of
+    its starred lane (tip 3 where the DNB gate took it, else tip 1) and,
+    where the league's own band is measured, its league."""
     ln = lane(m)
     if not ln:
         return None
     cell = m.get("t3") if m.get("pk") == 3 else m.get("tip")
-    return livebands.tag(ln, _edge(cell))
+    return livebands.tag(ln, _edge(cell), code)
 
 
-def flip(m: dict) -> str | None:
-    """"tip 3" / "tip 2" when this bank card is an unsafe priced play whose
-    pill would read flipped (livebands.flip), else None."""
-    return livebands.flip(lane(m), tag(m), bool(m.get("t2")), bool(m.get("t3")))
+def flip(m: dict, code: str | None = None) -> str | None:
+    """"tip 3" / "tip 2" when this bank card is a priced play whose pill
+    would read flipped (livebands.flip), else None."""
+    return livebands.flip(lane(m), tag(m, code), bool(m.get("t2")), bool(m.get("t3")))
 
 
-def counts(m: dict) -> bool:
+def counts(m: dict, code: str | None = None) -> bool:
     """The one predicate, the bank's copy of webapp.counts: a labelled
     red card does not count, and neither does an unstaked card — Athena
     lane or watch — tagged live unsafe. A priced play counts whatever
     its tag says, and an unlabelled card always did."""
     if not not_red(m):
         return False
-    return not (lane(m) in ("athena", "watch") and tag(m) == "unsafe")
+    return not (lane(m) in ("athena", "watch") and tag(m, code) == "unsafe")
 
 
 def _claim(cell: str | None) -> float | None:
@@ -174,7 +175,7 @@ def display_rates() -> dict[str, dict]:
         says = 0.0
         pn = ph = 0
         for m in comp.get("matches", []):
-            if not counts(m):
+            if not counts(m, code):
                 continue
             got = _hit(m.get("mark"))
             if got is None:
@@ -214,7 +215,7 @@ def baselines(n: int = 300, min_n: int = 30) -> dict[str, dict] | None:
         recent = sorted(comp.get("matches", []), key=lambda x: x.get("d", ""))[-n:]
         acc = {k: [0, 0, 0.0] for k in ("fp", "t1", "t2", "t3")}
         for m in recent:
-            if not counts(m):
+            if not counts(m, code):
                 continue
             for key, mark, cell in (("t1", m.get("mark"), m.get("tip")),
                                     ("t2", m.get("m2"), m.get("t2")),

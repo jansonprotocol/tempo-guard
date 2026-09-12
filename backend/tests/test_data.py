@@ -1532,6 +1532,8 @@ def test_live_bands_label_by_hit_rate_with_a_floor_on_cards():
     assert L(0.0, 1, "cautious") == ("cautious", "seed")
     assert L(None, 0, "safe") == ("safe", "seed")
     assert L(60.0, livebands.MIN_N - 1, "safe") == ("safe", "seed")
+    assert L(60.0, 49, "safe", livebands.MIN_LEAGUE, "league") == ("safe", "seed")
+    assert L(60.0, 50, "safe", livebands.MIN_LEAGUE, "league") == ("unsafe", "league")
 
 
 def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
@@ -1543,12 +1545,25 @@ def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
     assert webapp.live_tag("athena", -6.0) == "unsafe"           # seed
     monkeypatch.setattr(livebands, "_BANDS", None)
     monkeypatch.setattr(livebands, "OUT", tmp_path / "live_bands.tsv")
-    rows = [dict(lane=l, band=b, n=40, hit=82.0, said=84.0, label="safe", source="measured")
+    rows = [dict(league="*", lane=l, band=b, n=400, hit=82.0, said=84.0, label="safe", source="global")
             for l in livebands.LANES for b in livebands.BANDS]
+    # a league that speaks for itself, and one under the floor
+    rows.append(dict(league="BRA-SA", lane="athena", band="−4 down", n=276, hit=88.8, said=84.0,
+                     label="safe", source="league"))
+    rows.append(dict(league="ITA-SB", lane="athena", band="+1 up", n=113, hit=70.0, said=84.0,
+                     label="unsafe", source="league"))
+    rows.append(dict(league="SUI-SL", lane="athena", band="+1 up", n=9, hit=40.0, said=84.0,
+                     label="safe", source="thin"))
     import datetime as dt
-    livebands.write(rows, 21, dt.date(2026, 9, 12))
-    assert webapp.live_tag("athena", -6.0) == "safe"             # measured
-    assert webapp.live_bands()[("watch", "+1 up")]["n"] == 40
+    livebands.write(rows, 21, dt.date(2026, 9, 13))
+    assert webapp.live_tag("athena", -6.0) == "safe"                 # the whole bank
+    assert webapp.live_tag("athena", -6.0, "BRA-SA") == "safe"       # the league agrees
+    assert webapp.live_tag("athena", 3.0, "ITA-SB") == "unsafe"      # the league overrides
+    assert webapp.live_tag("athena", 3.0, "SUI-SL") == "safe"        # thin: the whole bank
+    assert webapp.live_tag("athena", 3.0, "NOWHERE") == "safe"       # unknown league: the whole bank
+    assert webapp.live_bands()[("watch", "+1 up")]["n"] == 400
+    assert livebands.band_row("athena", 3.0, "ITA-SB")["source"] == "league"
+    assert livebands.band_row("athena", 3.0, "SUI-SL")["source"] == "global"
     monkeypatch.setattr(livebands, "_BANDS", None)
 
 

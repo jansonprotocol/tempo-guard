@@ -5,11 +5,12 @@
 # The bettor's ask, 12 Sep. Three commands the operator used to run by
 # hand, in the order they depend on each other:
 #   scripts/ingest_board.py   completed board cards -> the store (idempotent)
-#   scripts/livebands.py      the live tag's bands, measured on the last
-#                             three weeks of settled cards (red cards
-#                             out), labelled by hit rate (safe >= 79,
-#                             cautious >= 77, else unsafe; a thin band
-#                             keeps the seed label)
+#   scripts/livebands.py      the live tag's bands, measured on the bank
+#                             per league (50 cards or more) and for the
+#                             whole bank, red cards out, labelled by hit
+#                             rate (safe >= 79, cautious >= 77, else
+#                             unsafe); the flip study on the board's
+#                             last three weeks
 #   scripts/board.py          render README + app + live.json, then verify
 #
 # The engine is not touched: no re-pricing, no recomputed guard slices,

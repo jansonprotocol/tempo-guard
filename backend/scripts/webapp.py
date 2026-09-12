@@ -1242,19 +1242,20 @@ from scripts.livebands import SEED as LIVE_TAG, edge_band  # noqa: E402
 
 def live_bands() -> dict:
     """The MEASURED band table (config/live_bands.tsv, written every two
-    days by scripts/livebands.py from the board's own record), falling
-    back to the seed table where the file is missing or a band had too
-    few cards."""
+    days by scripts/livebands.py from the bank, per league where a
+    league has enough cards), falling back to the seed table where the
+    file is missing."""
     from scripts import livebands
     return livebands.bands()
 
 
-def live_tag(lane: str | None, edge: float | None) -> str | None:
+def live_tag(lane: str | None, edge: float | None, code: str | None = None) -> str | None:
     """'safe', 'cautious' or 'unsafe' for an Athena lane, a watch card or
     a priced play, else None — a red card, a settled card without a lane
-    or an abstention carries no tag."""
+    or an abstention carries no tag. With a league code the league's own
+    measured band is read first (livebands.band_row)."""
     from scripts import livebands
-    return livebands.tag(lane, edge)
+    return livebands.tag(lane, edge, code)
 
 
 def record_lane(f) -> str | None:
@@ -1287,7 +1288,7 @@ def record_tag(f) -> str | None:
     lane = record_lane(f)
     if not lane:
         return None
-    return live_tag(lane, _edge(f.tip3 if _star_any(f) == 3 else f.tip1))
+    return live_tag(lane, _edge(f.tip3 if _star_any(f) == 3 else f.tip1), f.code)
 
 
 def _has_lane(cell: str) -> bool:
@@ -1349,12 +1350,16 @@ def _livetag_html(f) -> str:
     if lane and tag:
         e = _edge(f.tip3 if _star_any(f) == 3 else f.tip1)
         who = {"athena": "Athena lane", "watch": "watch card", "priced": "priced play"}[lane]
-        row = live_bands()[(lane, edge_band(e))]
-        how = (f"This band landed {row['hit']:.1f}% on {row['n']} cards in the last "
-               f"three weeks, red cards out (safe at 79, cautious at 77)."
-               if row["source"] == "measured" else
-               f"Too few cards in the last three weeks to measure ({row['n']}); "
-               "the bettor's seed label of 12 Sep stands.")
+        from scripts import livebands as _lb
+        row = _lb.band_row(lane, e, f.code)
+        how = (f"In this league this band landed {row['hit']:.1f}% on {row['n']} bank "
+               f"cards, red cards out (safe at 79, cautious at 77)."
+               if row["source"] == "league" else
+               f"Across the bank this band landed {row['hit']:.1f}% on {row['n']:,} cards, "
+               f"red cards out (safe at 79, cautious at 77); this league has too few "
+               f"cards in it to speak for itself."
+               if row["source"] == "global" else
+               "Not measured yet; the bettor's seed label of 12 Sep stands.")
         tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). {how} "
                "A label for buying into this card in play"
                + (", and an unsafe one on an unstaked card files it under "
@@ -2722,7 +2727,7 @@ def main() -> None:
     # 288 rows after the 31 Aug ingest, which pulled the hero window down
     # twice as far as the week deserved. The retro row wins; it carries
     # every lane, where the board row carries at most two.
-    for comp in bank.values():
+    for code, comp in bank.items():
         seen, keep = set(), []
         for m in sorted(comp["matches"], key=lambda x: x.get("src") == "board"):
             k = (m["d"], m.get("kh"), m.get("ka"))
@@ -2735,12 +2740,12 @@ def main() -> None:
             # tagged live unsafe — bankrates.counts, the bank's copy of
             # the board's predicate) and "lt" for its tag's search word.
             if m.get("src") != "board":
-                if not _br.counts(m):
+                if not _br.counts(m, code):
                     m["nc"] = 1
-                lt = _br.tag(m)
+                lt = _br.tag(m, code)
                 if lt:
                     m["lt"] = lt
-                fl = _br.flip(m)
+                fl = _br.flip(m, code)
                 if fl:
                     m["fl"] = fl
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
@@ -2757,11 +2762,11 @@ def main() -> None:
     # the 64 reds in the window, 80.7 without — and the headline is the
     # one number nobody scrolls past.
     graded = []
-    for comp in bank.values():
+    for code, comp in bank.items():
         for m in comp["matches"]:
             if m.get("mark") not in ("✅", "✅½", "◦", "❌"):
                 continue
-            if m.get("nc") or not _br.counts(m):
+            if m.get("nc") or not _br.counts(m, code):
                 continue
             e = re.search(r"([+\-−]\d+(?:\.\d+)?)%\s*(?:\(|·|$)",
                           m.get("tip", ""))
