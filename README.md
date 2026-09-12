@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 80.7%
 
     lane                        Tip 1              Tip 2
-    all matches            288 / 357  80.7%    203 / 292  69.5%
+    all matches            289 / 358  80.7%    203 / 292  69.5%
     played lanes  >+1%     131 / 162  80.9%    202 / 288  70.1%
     placed bets             78 / 95   82.1%    ROI +6.0%
 
@@ -585,7 +585,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 11-09 22:00 <b>Belouizdad v Sétif</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (81.2 −6.3)</td><td>U3.0 83.5% <b>+0.5%</b><br>buy≥1.33 (+5.6% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 90'+5' 1-4 <b>AIK v Västerås SK</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (81.0 −3.6)</td><td>O1.5 78.2% <b>+0.1%</b><br>buy≥1.29 (+1.3% margin) · <i>✓ landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 87' 1-1 <b>Genoa v Frosinone</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.2 capped)</td><td>U4.25 85.9% <b>−2.8%</b><br>buy≥1.18 (+5.4% margin) · <i>room for 2 · half from the 2nd</i> · <i>from here: as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 90'+7' 1-1 <b>Vicenza v Juve Stabia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (78.5 +1.2)</td><td>U3.0 75.5% <b>+0.2%</b><br>buy≥1.48 (+1.8% margin) · <i>next goal hurts</i> · <i>from here: as good as landed</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 72.8% +5.0% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -727,7 +726,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 288 / 357   ·   80.7%**   ·   **Tip 2 — 203 / 292   ·   69.5%**
+**Tip 1 — 289 / 358   ·   80.7%**   ·   **Tip 2 — 203 / 292   ·   69.5%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1141,6 +1140,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-1 · 11-09 21:00 <b>Benevento v Verona</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (78.5 +1.2)</td><td>U3.0 76.8% +1.6%<br>buy≥1.46 (+2.9% margin)</td><td>❌ U2.75 55.7% +1.9%<br>buy≥1.60 (−0.4% margin) · floor −19.3</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 74.0% +6.3% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-4 · 11-09 21:00 <b>Pisa v Entella</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (78.5 +1.2)</td><td>O1.5 74.0% +2.3%<br>buy≥1.36 (+0.9% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 71.9% +11.6% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 11-09 21:00 <b>Sevilla v Valencia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.0 −3.6)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.22 (+5.8% margin)</td><td>✅ U3.75 73.3% +1.0%<br>buy≥1.28 (+0.9% margin) · floor −1.7</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 11-09 22:00 <b>Belouizdad v Sétif</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (81.2 −6.3)</td><td>U3.0 83.5% <b>+0.5%</b><br>buy≥1.33 (+5.6% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 11-09 22:00 <b>UTC v Juan Pablo II</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (71.9 −8.4)</td><td>U4.25 81.0% <b>−6.0%</b><br>buy≥1.22 (+6.4% margin)</td><td>✅ U3.75 74.1% +1.7%<br>buy≥1.30 (+3.8% margin) · floor −0.9</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 12-09 01:15 <b>Jaguares v Fortaleza CEIF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-3 · 12-09 02:00 <b>Coritiba v Athletico-PR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Série A (75.5 −6.2)</td><td>U3.0 75.6% <b>+0.5%</b><br>buy≥1.52 (+4.8% margin)</td><td>— none</td></tr></table>
