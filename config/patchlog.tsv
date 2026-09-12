@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-12	board	Live-safety thresholds re-set on the bettor's word: unsafe under 77 (was 75), and a band is measured from 15 cards (was 20)
 2026-09-12	board	Bank refresh every two days (workflow): completed board cards merged into the bank, live-safety bands re-measured on the last three weeks of settled cards and labelled by hit rate (safe >= 79, cautious >= 75, else unsafe; a band under 20 cards keeps the bettor's seed label), board re-rendered. Engine, guard slices and label rates untouched
 2026-09-12	interface	Declined now also holds every unstaked card tagged live unsafe (Athena lane at −4 or worse, watch card above +1); the record rule is unchanged, only red cards are kept out of the hit rates. Athena lanes tab renamed Live Watch: the safe and cautious cards a live buy may be read on
 2026-09-12	interface	Live-safety tag on every unstaked card (Athena lane or watch): safe / cautious / unsafe by lane and printed-edge band, the bettor's bands from the session's negative-edge tally; taken pills no longer wrap; the frozen verdict's first-sight date moved to hover

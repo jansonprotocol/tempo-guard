@@ -11,8 +11,8 @@ tally; from here they are MEASURED every two days on the board's settled
 cards, red cards out, and labelled by hit rate:
 
     at or above 79%   safe
-    75% to 79%        cautious
-    under 75%         unsafe
+    77% to 79%        cautious
+    under 77%         unsafe
 
 A band with fewer than MIN_N graded cards in the window keeps the SEED
 label (webapp.LIVE_TAG, the bettor's hand table) — a label read off a
@@ -42,8 +42,8 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "config" / "live_bands.tsv"
 
 SAFE_AT = 79.0          # hit rate at or above which a band is "safe"
-CAUTIOUS_AT = 75.0      # below this it is "unsafe"; between, "cautious"
-MIN_N = 20              # fewer graded cards than this: keep the seed label
+CAUTIOUS_AT = 77.0      # below this it is "unsafe"; between, "cautious" (the bettor, 12 Sep: 77)
+MIN_N = 15              # fewer graded cards than this: keep the seed label (the bettor, 12 Sep: 15)
 DAYS = 21               # rolling window, in days, of settled kickoffs
 BANDS = ("+1 up", "−1..+1", "−4..−1", "−4 down")
 LANES = ("athena", "watch")

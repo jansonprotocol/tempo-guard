@@ -1151,7 +1151,7 @@ def _livetag_html(f) -> str:
     who = "Athena lane" if lane == "athena" else "watch card"
     row = live_bands()[(lane, edge_band(e))]
     how = (f"This band landed {row['hit']:.1f}% on {row['n']} cards in the last "
-           f"three weeks, red cards out (safe at 79, cautious at 75)."
+           f"three weeks, red cards out (safe at 79, cautious at 77)."
            if row["source"] == "measured" else
            f"Too few cards in the last three weeks to measure ({row['n']}); "
            "the bettor's seed label of 12 Sep stands.")

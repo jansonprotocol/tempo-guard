@@ -7,7 +7,7 @@
 #   scripts/ingest_board.py   completed board cards -> the store (idempotent)
 #   scripts/livebands.py      the live tag's bands, measured on the last
 #                             three weeks of settled cards, labelled by
-#                             hit rate (safe >= 79, cautious >= 75, else
+#                             hit rate (safe >= 79, cautious >= 77, else
 #                             unsafe; a thin band keeps the seed label)
 #   scripts/board.py          render README + app + live.json, then verify
 #

@@ -1326,15 +1326,15 @@ def test_live_tag_follows_the_bettors_bands():
 
 
 def test_live_bands_label_by_hit_rate_with_a_floor_on_cards():
-    """The bettor's thresholds, 12 Sep: safe at 79, cautious at 75, else
+    """The bettor's thresholds, 12 Sep: safe at 79, cautious at 77, else
     unsafe — and a band with too few cards keeps its seed label."""
     from scripts import livebands
     L = livebands.label
     assert L(83.3, 90, "unsafe") == ("safe", "measured")
     assert L(79.0, 30, "unsafe") == ("safe", "measured")
     assert L(78.9, 30, "safe") == ("cautious", "measured")
-    assert L(75.0, 30, "safe") == ("cautious", "measured")
-    assert L(74.9, 30, "safe") == ("unsafe", "measured")
+    assert L(77.0, 30, "safe") == ("cautious", "measured")
+    assert L(76.9, 30, "safe") == ("unsafe", "measured")
     assert L(0.0, 1, "cautious") == ("cautious", "seed")
     assert L(None, 0, "safe") == ("safe", "seed")
     assert L(60.0, livebands.MIN_N - 1, "safe") == ("safe", "seed")
