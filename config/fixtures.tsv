@@ -381,7 +381,7 @@
 2026-09-11 12:00	JPN-J1	J1 League	Vissel Kobe v Kashima	U4.25 88.5% **+0.3%** · buy≥1.19 (+3.9% margin)	— none	✅ HIT — 2-1	
 2026-09-11 17:25	SAU-PL	Saudi Pro League	Al-Qadsiah v Al-Ettifaq	O1.5 83.9% +4.4% · buy≥1.28 (+7.2% margin)	✅ **Al-Qadsiah O1.5** 55.5% +10.6% (team) · buy≥1.85 (+2.8% margin)	✅ HIT — 3-3	
 2026-09-11 17:45	SAU-PL	Saudi Pro League	Al Faisaly v Al-Ittihad	U4.25 86.0% +3.9% · buy≥1.27 (+8.5% margin)	❌ U3.75 72.2% +6.6% (floor −2.8) · buy≥1.34 (+4.0% margin)	✅ HIT — 1-3	
-2026-09-11 18:00	POL-EK	Ekstraklasa	Raków v Motor Lublin	U4.25 84.9% **−0.7%** · buy≥1.28 (+6.9% margin)	**Raków O0.5** 81.6% +2.9% (team) · buy≥1.30 (+6.1% margin)	LIVE HT 1-1	12 76.6% +4.0% · buy≥1.37 · probation
+2026-09-11 18:00	POL-EK	Ekstraklasa	Raków v Motor Lublin	U4.25 84.9% **−0.7%** · buy≥1.28 (+6.9% margin)	✅ **Raków O0.5** 81.6% +2.9% (team) · buy≥1.30 (+6.1% margin)	✅ HIT — 2-1	✅ 12 76.6% +4.0% · buy≥1.37 · probation
 2026-09-11 18:30	GER-B2	2. Bundesliga	Nürnberg v Hannover	O1.5 81.5% **+0.8%** · buy≥1.28 (+4.4% margin)	✅ O2.25 59.8% +1.3% (floor −15.2) · buy≥1.49 (−0.0% margin)	✅ HIT — 2-1	✅ 12 77.8% +3.1% · buy≥1.35 · probation
 2026-09-11 18:30	GER-B2	2. Bundesliga	Darmstadt v Bielefeld	U4.25 82.1% +1.2% · buy≥1.30 (+4.8% margin)	✅ **Bielefeld O0.5** 79.0% +5.6% (team) · buy≥1.34 (+5.7% margin)	✅ HIT — 2-1	
 2026-09-11 19:00	DEN-SL	Superliga	København v Horsens	O2.25 76.5% +18.0% · buy≥1.26 (+4.3% margin)	✅ **København O1.5** 81.9% +34.6% (team) · buy≥1.32 (+8.1% margin)	❌ MISS — 2-0	✅ DNB1 83.7% +27.2% · buy≥1.25 · probation
@@ -402,11 +402,11 @@
 2026-09-11 20:00	NED-D2	Eerste Divisie	MVV v Almere	U4.25 80.0% **+0.7%** · buy≥1.30 (+1.8% margin)	— none	✅ HIT — 0-4	
 2026-09-11 20:00	NED-D2	Eerste Divisie	NAC Breda v Jong FC Utrecht	U4.25 81.6% +2.2% · buy≥1.29 (+2.9% margin)	❌ U3.75 64.8% +2.9% (floor −10.2) · buy≥1.42 (+0.4% margin)	❌ MISS — 2-3	
 2026-09-11 20:00	NED-D2	Eerste Divisie	VVV-Venlo v TOP Oss	U4.25 80.2% **+0.8%** · buy≥1.30 (+1.8% margin)	❌ U3.75 62.9% +1.0% (floor −12.1) · buy≥1.46 (+0.2% margin)	✅ HIT — 3-1	
-2026-09-11 20:00	ALG-L1	Ligue 1	MC Oran v Temouchent	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-09-11 20:00	ALG-L1	Ligue 1	MC Oran v Temouchent	— no tip: engine abstained (thin history or an unresolved name)	—	FT 2-0 (no tip)	
 2026-09-11 20:00	SAU-PL	Saudi Pro League	Al-Ahli v Al-Hazem	O1.5 83.0% +3.5% · buy≥1.28 (+6.5% margin)	✅ **Al-Ahli O1.5** 58.5% +13.6% (team) · buy≥1.76 (+3.1% margin)	✅ HIT — 3-1	✅ DNB1 78.2% +22.7% · buy≥1.34 · probation
 2026-09-11 20:30	ESP-L2	LaLiga 2	Burgos v Ceuta	U3.0 76.5% **+0.0%** · buy≥1.38 (+1.0% margin)	✅ **Ceuta U1.5** 75.4% +3.9% (team) · buy≥1.38 (+4.2% margin)	❌ MISS — 3-1	✅ DNB1 68.5% +5.1% · buy≥1.53 · probation
 2026-09-11 20:30	GER-BL	Bundesliga	Union Berlin v Schalke	U4.25 78.3% **+0.0%** · buy≥1.33 (+1.1% margin)	❌ **Union Berlin O1.5** 58.4% +7.7% (team) · buy≥1.77 (+3.1% margin)	✅ HIT — 1-3	✅ 12 79.0% +4.3% · buy≥1.33 · probation
-2026-09-11 20:30	POL-EK	Ekstraklasa	Wisła Kraków v Jagiellonia	O1.5 79.7% +3.7% · buy≥1.37 (+9.0% margin)	O2.25 57.1% +5.3% (floor −20.9) · buy≥1.60 (+3.0% margin)		12 76.8% +4.1% · buy≥1.37 · probation
+2026-09-11 20:30	POL-EK	Ekstraklasa	Wisła Kraków v Jagiellonia	O1.5 79.7% +3.7% · buy≥1.37 (+9.0% margin)	❌ O2.25 57.1% +5.3% (floor −20.9) · buy≥1.60 (+3.0% margin)	✅ HIT — 2-0	✅ 12 76.8% +4.1% · buy≥1.37 · probation
 2026-09-11 20:45	FRA-L1	Ligue 1	Rennes v Marseille	O1.5 78.5% +1.1% · buy≥1.32 (+3.6% margin)	✅ **Rennes O0.5** 79.3% +2.3% (team) · buy≥1.31 (+4.2% margin)	❌ MISS — 1-0	
 2026-09-11 20:45	ITA-SA	Serie A	Venezia v Fiorentina	U3.0 75.0% **+0.0%** · buy≥1.36 (+1.0% margin)	— none	❌ MISS — 2-4	
 2026-09-11 20:45	BEL-PL	Pro League	Mechelen v Anderlecht	U4.25 85.8% **+0.5%** · buy≥1.22 (+5.3% margin)	✅ **Anderlecht O0.5** 81.8% +12.9% (team) · buy≥1.30 (+6.1% margin)	✅ HIT — 0-1	✅ 12 75.8% +2.3% · buy≥1.38 · probation
@@ -437,7 +437,7 @@
 2026-09-12 14:00	FRA-L2	Ligue 2	Sochaux v Nantes	U4.25 83.8% **−4.8%** · buy≥1.20 (+7.0% margin)	✅ U3.75 77.4% +2.5% (floor −0.6) · buy≥1.27 (+5.4% margin)	✅ HIT — 1-0	
 2026-09-12 14:00	ESP-LL	LaLiga	Racing Santander v Alavés	O1.5 81.9% +7.5% · buy≥1.32 (+8.4% margin)	✅ **Alavés O0.5** 80.1% +11.5% (team) · buy≥1.34 (+7.0% margin)	✅ HIT — 2-1	✅ 12 78.1% +4.4% · buy≥1.34 · probation
 2026-09-12 14:00	ESP-L2	LaLiga 2	Andorra v Real Sociedad B	U4.25 84.4% **−5.2%** · buy≥1.21 (+5.4% margin)	✅ **Andorra O0.5** 82.3% +6.2% (team) · buy≥1.31 (+8.0% margin)	✅ HIT — 1-3	❌ DNB1 75.7% +12.3% · buy≥1.39 · probation
-2026-09-12 14:45	POL-EK	Ekstraklasa	Śląsk v Korona Kielce	U4.25 86.1% **+0.6%** · buy≥1.23 (+7.2% margin)	U3.75 74.2% +3.9% (floor −3.8) · buy≥1.33 (+5.8% margin)		
+2026-09-12 14:45	POL-EK	Ekstraklasa	Śląsk v Korona Kielce	U4.25 86.1% **+0.6%** · buy≥1.23 (+7.2% margin)	✅ U3.75 74.2% +3.9% (floor −3.8) · buy≥1.33 (+5.8% margin)	✅ HIT — 1-2	
 2026-09-12 15:00	SWE-AL	Allsvenskan	AIK v Västerås SK	O1.5 78.2% **+0.1%** · buy≥1.29 (+1.3% margin)	— none	LIVE 90'+3' 1-4	
 2026-09-12 15:00	ITA-SA	Serie A	Genoa v Frosinone	U4.25 85.9% **−2.8%** · buy≥1.18 (+5.4% margin)	— none	LIVE 85' 1-1	
 2026-09-12 15:00	ITA-SB	Serie B	Vicenza v Juve Stabia	U3.0 75.5% **+0.2%** · buy≥1.48 (+1.8% margin)	— none	LIVE 90'+5' 1-1	12 72.8% +5.0% · buy≥1.44 · probation
