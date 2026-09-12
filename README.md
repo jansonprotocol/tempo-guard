@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            275 / 344  79.9%    193 / 281  68.7%
     played lanes  >+1%     125 / 156  80.1%    192 / 277  69.3%
-    placed bets             74 / 91   81.3%    ROI +4.6%
+    placed bets             75 / 92   81.5%    ROI +4.9%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -1171,7 +1171,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 74 / 91  ·  ROI +4.6%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 75 / 92  ·  ROI +4.9%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -1289,6 +1289,7 @@ that premium the book is keeping the insurance money.
 | — open | Karlsruhe v Cottbus | U4.5 | 1.35 | — | TOTO — pre-kickoff, struck 11 Sep 23:14 for Sunday 13:30. The card's PLAY lane (U4.5 81.1%, orange, need 1.27); clears at 1.35, Pinnacle 1.37 |
 | — open | Wisła Płock v Cracovia | U3.5 | 1.31 | — | TOTO — pre-kickoff, struck 11 Sep 23:14 for Sunday 12:15. The card's PLAY lane (U3.5 81.2%, orange, need 1.27); clears at 1.31, BetOnline 1.40. Ekstraklasa: no feed, graded on the bettor's score |
 | — open | Botafogo v RB Bragantino | U3.5 | 1.32 | — | Unibet (NL) — pre-kickoff, struck 11 Sep 23:17 for Sunday 01:30. The card's PLAY lane (U3.5 76.3%, orange, need 1.27); clears at 1.32, 1xBet 1.36 |
+| ✅ | Magdeburg v Kaiserslautern | U4.5 | 1.33 | 1.33x | TOTO — in-play, struck 14:02 CEST at the start of the second half, 3-0 (goals 13', 18', 32'; no more; final 3-0). The card's own lane (U4.25 rung struck as U4.5, orange, +3.7% edge, need 1.31, was on watch at 1xBet 1.24). The board's from-here line at 3-0 46' said 55%, fair 1.83; 1.33 is above it — the second half had to stay under two goals. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
