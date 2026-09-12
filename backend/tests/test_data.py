@@ -1194,8 +1194,17 @@ def test_unsafe_priced_plays_flip_to_tip_3_not_tip_2(monkeypatch):
     assert F("priced", "unsafe", False, True) == "tip 3"
     assert F("priced", "unsafe", True, False) is None          # tip 2 holds
     assert F("priced", "unsafe", False, False) is None
-    assert F("priced", "cautious", True, True) is None         # unsafe only
+    assert F("priced", "cautious", True, True) is None         # tracked, not flipped on the seed
+    assert F("priced", "safe", True, True) is None
     assert F("athena", "unsafe", True, True) is None           # priced only
+    # every band x lane combo is measured, so a hold can earn the flip
+    assert set(livebands.FLIP_SEED) == {(b, t) for b in ("safe", "cautious", "unsafe")
+                                        for t in ("tip2", "tip3")}
+    assert set(livebands.FLIP_BANK) == set(livebands.FLIP_SEED)
+    # a measured table can flip a combo the seed holds
+    livebands._BANDS[("flip", "safe tip3")] = dict(n=20, hit=90.0, said=75.0,
+                                                   label="flipped", source="measured")
+    assert F("priced", "safe", False, True) == "tip 3"
     L = livebands.flip_label
     assert L(82.0, 70.0, 20, "hold") == ("flipped", "measured")
     assert L(74.0, 70.0, 20, "flipped") == ("hold", "measured")

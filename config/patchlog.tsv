@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-12	interface	The flip tracks every tag band × lane combo (six rows in live_bands.tsv), seeded from the bank and measured on the board's last three weeks; the pill reads 'live <tag> · flipped → tip N' wherever a combo is on. First measurement flipped cautious tip 3 (+7.3 on 41) and safe tip 2 (+15.0 on 20) beside the seeded unsafe tip 3
 2026-09-12	interface	A bare 'safe', 'unsafe' or 'cautious' on the filter bar means that tag exactly ('safe' was also finding every unsafe card)
 2026-09-12	interface	The Completed filter counters no longer see a declined card (it carries no grade keys); the caption says how many cards on screen were left out. Found from the bettor's 'unsafe' filter reading 87 cards where the record holds 7
 2026-09-12	interface	The flip: an unsafe priced play that prints a tip 3 reads 'live unsafe · flipped → tip 3' (bank: tip 3 81.5 to tip 1's 69.6 on 92 such cards; tip 2 holds at +3.3). Measured every two days with the live bands, paired on the board's last three weeks; the board takes over at 15 cards. Search 'flipped'. Display only

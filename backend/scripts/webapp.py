@@ -1229,16 +1229,18 @@ def _livetag_html(f) -> str:
         word = f"live {tag}"
         to = record_flip(f)
         if to:
-            fr = live_bands()[("flip", to.replace(" ", ""))]
+            from scripts.livebands import FLIP_BANK
+            tipn = to.replace(" ", "")
+            fr = live_bands()[("flip", f"{tag} {tipn}")]
+            bh, b1, bn = FLIP_BANK[(tag, tipn)]
             word += f" · flipped → {to}"
-            tip += (f" FLIPPED: on unsafe priced plays that also print a {to}, "
+            tip += (f" FLIPPED: on {tag} priced plays that also print a {to}, "
                     + (f"{to} landed {fr['hit']:.1f}% to tip 1's {fr['said']:.1f}% "
                        f"on the same {fr['n']} cards in the last three weeks."
                        if fr["source"] == "measured" else
                        f"the board has too few cards to measure yet ({fr['n']}); "
-                       f"the bank seeds it — {to} 81.5% to tip 1's 69.6% on 92 "
-                       f"unsafe priced plays." if to == "tip 3" else
-                       f"the bank seeds it on 92 cards.")
+                       f"the bank seeds it — {to} {bh:.1f}% to tip 1's {b1:.1f}% "
+                       f"on {bn} such cards.")
                     + f" Read the {to} lane on this card, not tip 1.")
         pill = (f'<span class="livetag lt-{tag}" title="{html.escape(tip)}">'
                 f'{word}</span>')
