@@ -46,7 +46,7 @@ CAUTIOUS_AT = 77.0      # below this it is "unsafe"; between, "cautious" (the be
 MIN_N = 15              # fewer graded cards than this: keep the seed label (the bettor, 12 Sep: 15)
 DAYS = 21               # rolling window, in days, of settled kickoffs
 BANDS = ("+1 up", "−1..+1", "−4..−1", "−4 down")
-LANES = ("athena", "watch")
+LANES = ("athena", "watch", "priced")
 
 
 def label(hit_pct: float | None, n: int, seed: str) -> tuple[str, str]:
@@ -74,8 +74,9 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
         call = webapp.was_called(f)
         mark = call["mark"] if call else "no row"
         lane = ("watch" if mark == "watch" else
+                "priced" if mark in ("normal", "strong") else
                 "athena" if mark in ("no play", "no row") else None)
-        if lane is None:                               # a priced play: no tag
+        if lane is None:
             continue
         cell = f.tip3 if webapp._star_any(f) == 3 else f.tip1
         e, c = webapp._edge(cell), webapp._claim(cell)

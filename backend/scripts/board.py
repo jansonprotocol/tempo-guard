@@ -552,12 +552,12 @@ def verify(quiet: bool = False) -> None:
         #    rather than re-deriving it — two definitions of playable or
         #    of watch is exactly the drift this verify exists to catch.
         from scripts.webapp import (verdict, _star, running_call, label_any,
-                                    live_tag_of)
+                                    live_unsafe)
         play, watch, live, declined, rest = [], [], [], [], []
         for f in pending:
             v = verdict(f, _star(f))
             lab = label_any(f)
-            unsafe = live_tag_of(f) == "unsafe"
+            unsafe = live_unsafe(f)
             (play if (v and v["play"]) else
              watch if (v and v["watch"] and not unsafe) else
              live if (running_call(f) and not unsafe) else

@@ -1071,6 +1071,14 @@ LIVE_TAG = {
                "−4 down": "unsafe"},
     "watch":  {"+1 up": "unsafe", "−1..+1": "safe", "−4..−1": "cautious",
                "−4 down": "cautious"},
+    # The board's own PLAYs, once running (the bettor, 12 Sep: "this one
+    # doesn't have a live tag"). Seeded from the bank's priced plays by
+    # edge band — 76.9% above +1, 73.0% around zero, 66.0% and 73.3% in
+    # the negative bands, all under claim — and measured like the others.
+    # INFORMATION ONLY on this lane: a priced play is the board's stake
+    # and files under Playable or Running whatever its tag says.
+    "priced": {"+1 up": "cautious", "−1..+1": "unsafe", "−4..−1": "unsafe",
+               "−4 down": "unsafe"},
 }
 
 
@@ -1121,15 +1129,23 @@ def live_lane(f) -> str | None:
         if call:
             if call["mark"] == "watch":
                 return "watch"
+            if call["mark"] in ("normal", "strong"):
+                return "priced"
             if call["mark"] == "no play" and not str(call["row"]["label"]).endswith("red"):
                 return "athena"
             return None
         lab = label_any(f)
         return None if (not lab or lab.endswith("red")) else "athena"
     v = verdict(f, _star(f))
-    if not v or v["label"].endswith("red") or v["play"]:
+    if not v or v["label"].endswith("red"):
         return None
-    return "watch" if v["watch"] else "athena"
+    return "priced" if v["play"] else "watch" if v["watch"] else "athena"
+
+
+def live_unsafe(f) -> bool:
+    """Files under Declined: an UNSTAKED card tagged unsafe. A priced play
+    carries the tag for information and stays where the price put it."""
+    return live_lane(f) in ("athena", "watch") and live_tag_of(f) == "unsafe"
 
 
 def live_tag_of(f) -> str | None:
@@ -1148,7 +1164,7 @@ def _livetag_html(f) -> str:
     if not lane or not tag:
         return ""
     e = _edge(f.tip3 if _star_any(f) == 3 else f.tip1)
-    who = "Athena lane" if lane == "athena" else "watch card"
+    who = {"athena": "Athena lane", "watch": "watch card", "priced": "priced play"}[lane]
     row = live_bands()[(lane, edge_band(e))]
     how = (f"This band landed {row['hit']:.1f}% on {row['n']} cards in the last "
            f"three weeks, red cards out (safe at 79, cautious at 77)."
@@ -2004,7 +2020,7 @@ def main() -> None:
     # Declined instead: the price may be a few percent short, but the
     # bettor does not want it offered for a live buy either.
     watch = [f for f in pending if (v := _v(f)) and v["watch"]
-             and live_tag_of(f) != "unsafe"]
+             and not live_unsafe(f)]
     # RUNNING (the bettor's ask, 3 Sep): cards the board offered before
     # kickoff and that are now in progress. They cannot be PLAY or watch —
     # both bars require an unstarted match — but dropping them straight
@@ -2014,7 +2030,7 @@ def main() -> None:
     # A running card tagged LIVE UNSAFE files under Declined too (the
     # bettor, 12 Sep): a watch card above +1 that has kicked off is not
     # one to buy into, and Running is the tab a live buy is read from.
-    running = [f for f in pending if running_call(f) and live_tag_of(f) != "unsafe"]
+    running = [f for f in pending if running_call(f) and not live_unsafe(f)]
     # DECLINED (the bettor's ask, 7 Sep): a red or super-red card can
     # never be played, so it has no business sitting in Athena lanes
     # beside cards that merely failed on price. It gets its own tab, is
@@ -2026,7 +2042,7 @@ def main() -> None:
     declined = [f for f in pending if f not in playable and f not in watch
                 and f not in running
                 and (((lab := label_any(f)) and lab.endswith("red"))
-                     or live_tag_of(f) == "unsafe")]
+                     or live_unsafe(f))]
     waiting = [f for f in pending if f not in playable and f not in watch
                and f not in running and f not in declined]
     done = [f for f in fixtures if f.settled][::-1]

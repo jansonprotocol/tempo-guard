@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-12	interface	Live tag on priced plays too (information only: a priced card keeps its file under Playable or Running whatever the tag says). Third lane in the bands table, seeded from the bank's priced-play hit rates by printed-edge band and measured every two days like the other two
 2026-09-12	interface	Running cards were a screen and a half on a phone: a rule for the session-run boxes (.run b, display block) also matched the Running tab's cards and put every bold on its own line. Scoped to the sessions page; phone type tightened under 480px; text inflation disabled
 2026-09-12	data	The same match written twice under dates a day apart (board keyed by the Amsterdam kickoff, provider by the local date): 28 such pairs since July dropped from the store, store.save now drops them on the way in, and the board ingest writes each league's own season file and checks every season with the day-shift rule before adding
 2026-09-12	board	Live-safety thresholds re-set on the bettor's word: unsafe under 77 (was 75), and a band is measured from 15 cards (was 20)

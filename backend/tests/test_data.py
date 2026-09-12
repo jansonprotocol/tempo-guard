@@ -1321,8 +1321,9 @@ def test_live_tag_follows_the_bettors_bands():
         ["safe", "safe", "safe", "safe", "safe", "safe", "unsafe", "unsafe"]
     assert [t("watch", e) for e in (3.0, 1.0, 0.0, -0.9, -1.0, -3.9, -4.0, -6.0)] == \
         ["unsafe", "unsafe", "safe", "safe", "cautious", "cautious", "cautious", "cautious"]
+    assert [t("priced", e) for e in (3.0, 0.0, -2.0, -6.0)] == ["cautious", "unsafe", "unsafe", "unsafe"]
     lt = webapp.live_tag
-    assert lt("priced", -5.0) is None and lt(None, 2.0) is None and lt("athena", None) is None
+    assert lt("settled", -5.0) is None and lt(None, 2.0) is None and lt("athena", None) is None
 
 
 def test_live_bands_label_by_hit_rate_with_a_floor_on_cards():
