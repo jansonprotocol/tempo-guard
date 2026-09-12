@@ -1250,11 +1250,19 @@ def test_completed_cards_are_searchable_by_label():
     from scripts import board, webapp
     fx = [f for f in board.load() if f.settled and webapp.label_any(f)]
     assert fx
-    for f in fx[:40]:
-        lab = webapp.label_any(f)
+    for f in fx[:60]:
+        lab = webapp.label_any(f)                       # the label it was called under
+        now = webapp._label_of(f, webapp._star_any(f), force=True)   # the band it sits in now
         hay = webapp._haystack(f)
-        assert lab in hay and f"label {lab}" in hay
+        assert f"label {lab}" in hay and f"called {lab}" in hay
+        assert now in hay and f"band {now}" in hay
     assert any("verdict play" in webapp._haystack(f) for f in fx)
+    # a card called orange that now sits in the pink band answers "pink",
+    # not a bare "orange"
+    moved = [f for f in fx if webapp.label_any(f) != webapp._label_of(f, webapp._star_any(f), force=True)]
+    assert moved, "no completed card has moved band"
+    hay = webapp._haystack(moved[0])
+    assert webapp._label_of(moved[0], webapp._star_any(moved[0]), force=True) in hay
 
 
 def test_the_play_bar_follows_the_claim_band():

@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-12	interface	Completed cards carry two colours in the search index: the band they sit in now (bare word, 'band pink') and the label they were called under ('label orange', 'called orange'); 119 of 510 had moved band on the ladder
 2026-09-12	guard	PLAY needs the lane's value price (the engine's buy≥ with its margin) less 3%, floored at the claim band's bar; a card that clears or nearly clears the band bar but is short of value is a watch card. The band bar alone had called 40 plays with 25 well under the engine's price
 2026-09-12	interface	A quoted lane keeps the engine's own buy price on the line as 'value x' beside market and best: the one number on the card that still carries a margin since the band bars
 2026-09-12	interface	'buy at min x' on a quoted lane now reads 'market x': it is the feed's median quote, not a price to buy at (the bettor read it as an instruction)

@@ -639,9 +639,22 @@ def _haystack(f) -> str:
         # (the bettor, 12 Sep: "I can't search on color" — Completed had
         # no label words at all), so "green" on Completed finds the green
         # cards and "verdict play" the ones the board staked.
+        # Two colours on a settled card since the ladder (12 Sep): the
+        # band it sits in NOW (the bare word, "band pink") and the label
+        # it was CALLED under ("label orange", "called orange"). A search
+        # for "pink" finds the band; "label orange" finds the call.
         lab = label_any(f)
+        now = _label_of(f, _star_any(f), force=True) if _star_any(f) else None
+        if now:
+            bits += [now, f"band {now}"]
+            if now.endswith("+"):
+                bits += [f"{now[:-1]} plus", f"band {now[:-1]} plus"]
         if lab:
-            bits += _label_words(lab)
+            bits += [f"label {lab}", f"guard {lab}", f"called {lab}"]
+            if lab.startswith("super "):
+                bits += [f"label {lab[6:]}", f"guard {lab[6:]}"]
+            if not now:
+                bits.append(lab)
         call = was_called(f)
         if call:
             bits.append("verdict " + call["mark"])
