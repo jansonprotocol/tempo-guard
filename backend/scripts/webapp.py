@@ -1236,7 +1236,8 @@ def _livetag_html(f) -> str:
             word += f" · flipped → {to}"
             tip += (f" FLIPPED: on {tag} priced plays that also print a {to}, "
                     + (f"{to} landed {fr['hit']:.1f}% to tip 1's {fr['said']:.1f}% "
-                       f"on the same {fr['n']} cards in the last three weeks."
+                       f"on the same {fr['n']} cards in the last three weeks "
+                       f"(a push on {to} is no bet)."
                        if fr["source"] == "measured" else
                        f"the board has too few cards to measure yet ({fr['n']}); "
                        f"the bank seeds it — {to} {bh:.1f}% to tip 1's {b1:.1f}% "

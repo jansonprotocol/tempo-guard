@@ -6,24 +6,25 @@
 # 12 Sep). Thresholds: safe >= 79, cautious >= 77, else unsafe.
 # window	21 days to 2026-09-12
 # The 'flip' rows: priced plays with that tag that also print that lane,
-# paired — n cards where both graded, hit = THAT lane, said = tip 1 on
-# the same cards; flipped when the lane beats tip 1 by 5 points.
+# paired — n cards where tip 1 graded and that lane won or lost (a push
+# on the lane is no bet), hit = THAT lane, said = tip 1 on the same cards;
+# flipped when the lane beats tip 1 by 5 points.
 # lane	band	n	hit	said	label	source
-athena	+1 up	94	84.0	84.0	safe	measured
-athena	−1..+1	71	85.9	84.0	safe	measured
+athena	+1 up	96	84.4	83.9	safe	measured
+athena	−1..+1	72	84.7	84.0	safe	measured
 athena	−4..−1	23	82.6	84.8	safe	measured
-athena	−4 down	50	76.0	83.8	unsafe	measured
+athena	−4 down	51	76.5	83.8	unsafe	measured
 watch	+1 up	30	76.7	82.3	unsafe	measured
 watch	−1..+1	18	94.4	82.8	safe	measured
 watch	−4..−1	7	71.4	83.8	cautious	seed
 watch	−4 down	1	0.0	84.4	cautious	seed
 priced	+1 up	65	78.5	80.9	cautious	measured
-priced	−1..+1	31	80.6	80.3	safe	measured
+priced	−1..+1	32	78.1	80.3	cautious	measured
 priced	−4..−1	6	66.7	81.2	unsafe	seed
 priced	−4 down	1	0.0	83.4	unsafe	seed
 flip	unsafe tip3	2	100.0	0.0	flipped	seed
 flip	unsafe tip2	2	100.0	0.0	hold	seed
-flip	cautious tip3	41	82.9	75.6	flipped	measured
+flip	cautious tip3	33	78.8	72.7	flipped	measured
 flip	cautious tip2	61	62.3	77.0	hold	measured
-flip	safe tip3	14	92.9	78.6	hold	seed
-flip	safe tip2	20	85.0	70.0	flipped	measured
+flip	safe tip3	13	92.3	76.9	hold	seed
+flip	safe tip2	21	85.7	66.7	flipped	measured

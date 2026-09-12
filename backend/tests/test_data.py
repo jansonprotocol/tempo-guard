@@ -1205,6 +1205,9 @@ def test_unsafe_priced_plays_flip_to_tip_3_not_tip_2(monkeypatch):
     livebands._BANDS[("flip", "safe tip3")] = dict(n=20, hit=90.0, said=75.0,
                                                    label="flipped", source="measured")
     assert F("priced", "safe", False, True) == "tip 3"
+    # a push on the flipped lane is no bet: the study's source must skip "◦"
+    src = __import__("pathlib").Path(livebands.__file__).read_text()
+    assert 'if mk not in ("✅", "❌"):          # ungraded, or a push: no bet' in src
     L = livebands.flip_label
     assert L(82.0, 70.0, 20, "hold") == ("flipped", "measured")
     assert L(74.0, 70.0, 20, "flipped") == ("hold", "measured")

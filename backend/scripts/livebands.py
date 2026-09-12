@@ -85,30 +85,35 @@ SEED = {
 # tip 3 is asked, per TAG BAND and per LANE, whether that lane beats tip
 # 1 on the same cards. Measured on the board window, paired (only cards
 # where both lanes graded); a combo is flipped when the lane beats tip 1
-# by FLIP_AT points on at least MIN_N cards. Under MIN_N the bank seeds
-# it, paired the same way over its priced plays:
+# by FLIP_AT points on at least MIN_N cards. A PUSH ON THE FLIPPED LANE
+# IS NO BET (the bettor, 12 Sep): a draw-no-bet draw returns the stake
+# and earns nothing, so the card leaves the pair rather than counting as
+# a hit the way the tiles score it — the flip claims the lane would
+# have EARNED more than tip 1. Tip 1 keeps the board's convention (a
+# printed push wins the softer rung actually played). Under MIN_N the
+# bank seeds it, paired and scored the same way over its priced plays:
 #
 #     band      lane    n     lane   tip 1   diff
-#     unsafe    tip 3   92    81.5   69.6   +12.0   flipped
+#     unsafe    tip 3   77    77.9   63.6   +14.3   flipped
 #     unsafe    tip 2   92    76.1   72.8    +3.3   hold
-#     cautious  tip 3  493    77.9   76.3    +1.6   hold
+#     cautious  tip 3  408    73.3   75.5    −2.2   hold
 #     cautious  tip 2  836    61.2   76.3   −15.1   hold
-#     safe      tip 3  137    77.4   74.5    +2.9   hold
+#     safe      tip 3  121    74.4   76.9    −2.5   hold
 #     safe      tip 2  126    73.0   73.0    +0.0   hold
 #
 # So only one combo starts flipped; the session (tip 3 ahead of tip 1 on
-# every band, on 14 to 46 paired cards) can flip the others itself at 15
-# cards. Display only: the pill reads "live unsafe · flipped → tip 3",
-# the card stays a priced play and stays in the record.
+# every band) can flip the others itself at 15 cards. Display only: the
+# pill reads "live unsafe · flipped → tip 3", the card stays a priced
+# play and stays in the record.
 FLIP_AT = 5.0
 FLIP_SEED = {("unsafe", "tip3"): "flipped", ("unsafe", "tip2"): "hold",
              ("cautious", "tip3"): "hold", ("cautious", "tip2"): "hold",
              ("safe", "tip3"): "hold", ("safe", "tip2"): "hold"}
 # The bank's paired numbers behind each seed, for the pill's hover:
 # (lane hit, tip 1 hit, n).
-FLIP_BANK = {("unsafe", "tip3"): (81.5, 69.6, 92), ("unsafe", "tip2"): (76.1, 72.8, 92),
-             ("cautious", "tip3"): (77.9, 76.3, 493), ("cautious", "tip2"): (61.2, 76.3, 836),
-             ("safe", "tip3"): (77.4, 74.5, 137), ("safe", "tip2"): (73.0, 73.0, 126)}
+FLIP_BANK = {("unsafe", "tip3"): (77.9, 63.6, 77), ("unsafe", "tip2"): (76.1, 72.8, 92),
+             ("cautious", "tip3"): (73.3, 75.5, 408), ("cautious", "tip2"): (61.2, 76.3, 836),
+             ("safe", "tip3"): (74.4, 76.9, 121), ("safe", "tip2"): (73.0, 73.0, 126)}
 
 _BANDS: dict | None = None
 
@@ -157,10 +162,10 @@ def flip_label(tip_hit: float | None, tip1_hit: float | None, n: int, seed: str)
 
 def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
     """Six rows, lane "flip", band "<tag> tip2" / "<tag> tip3": n paired
-    cards in the window (priced plays with that tag where tip 1 and that
-    lane both graded), hit = that lane's hit rate, said = TIP 1's hit rate
-    on the same cards (the column is reused; the header says so), label,
-    source."""
+    cards in the window (priced plays with that tag where tip 1 graded and
+    that lane WON or LOST — a push is no bet), hit = that lane's hit rate,
+    said = TIP 1's hit rate on the same cards (the column is reused; the
+    header says so), label, source."""
     from scripts import board, webapp
     today = today or dt.date.today()
     since = (today - dt.timedelta(days=days)).isoformat()
@@ -176,7 +181,7 @@ def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
             continue
         for tipn, cell in (("tip2", f.tip2), ("tip3", f.tip3)):
             mk = cell.lstrip().replace("*", "")[:1]
-            if mk not in ("✅", "❌", "◦"):
+            if mk not in ("✅", "❌"):          # ungraded, or a push: no bet
                 continue
             t = pair[(tag, tipn)]
             t[0] += 1
@@ -255,8 +260,9 @@ def write(rows: list[dict], days: int, today: dt.date) -> None:
         f"# 12 Sep). Thresholds: safe >= {SAFE_AT:.0f}, cautious >= {CAUTIOUS_AT:.0f}, else unsafe.",
         f"# window\t{days} days to {today.isoformat()}",
         "# The 'flip' rows: priced plays with that tag that also print that lane,",
-        "# paired — n cards where both graded, hit = THAT lane, said = tip 1 on",
-        f"# the same cards; flipped when the lane beats tip 1 by {FLIP_AT:.0f} points.",
+        "# paired — n cards where tip 1 graded and that lane won or lost (a push",
+        "# on the lane is no bet), hit = THAT lane, said = tip 1 on the same cards;",
+        f"# flipped when the lane beats tip 1 by {FLIP_AT:.0f} points.",
         "# lane\tband\tn\thit\tsaid\tlabel\tsource",
     ]
     for r in rows:
