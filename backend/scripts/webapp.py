@@ -1079,13 +1079,34 @@ def edge_band(edge: float) -> str:
             else "−4..−1" if edge > -4 else "−4 down")
 
 
+_BANDS = None
+
+
+def live_bands() -> dict:
+    """The MEASURED band table (config/live_bands.tsv, written every two
+    days by scripts/livebands.py from the board's own record), falling
+    back to the seed table above where the file is missing or a band had
+    too few cards. Read once per render."""
+    global _BANDS
+    if _BANDS is None:
+        from scripts import livebands
+        got = livebands.read() or {}
+        _BANDS = {}
+        for lane, bands in LIVE_TAG.items():
+            for band, seed in bands.items():
+                row = got.get((lane, band))
+                _BANDS[(lane, band)] = row or dict(n=0, hit=None, said=None,
+                                                   label=seed, source="seed")
+    return _BANDS
+
+
 def live_tag(lane: str | None, edge: float | None) -> str | None:
     """'safe', 'cautious' or 'unsafe' for an Athena or watch card, else
     None — a priced play, a red card, a settled card or an abstention
     carries no tag."""
     if lane not in LIVE_TAG or edge is None:
         return None
-    return LIVE_TAG[lane][edge_band(edge)]
+    return live_bands()[(lane, edge_band(edge))]["label"]
 
 
 def live_lane(f) -> str | None:
@@ -1128,8 +1149,13 @@ def _livetag_html(f) -> str:
         return ""
     e = _edge(f.tip3 if _star_any(f) == 3 else f.tip1)
     who = "Athena lane" if lane == "athena" else "watch card"
-    tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). "
-           "The bettor's bands from the session's negative-edge tally, 12 Sep. "
+    row = live_bands()[(lane, edge_band(e))]
+    how = (f"This band landed {row['hit']:.1f}% on {row['n']} cards in the last "
+           f"three weeks, red cards out (safe at 79, cautious at 75)."
+           if row["source"] == "measured" else
+           f"Too few cards in the last three weeks to measure ({row['n']}); "
+           "the bettor's seed label of 12 Sep stands.")
+    tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). {how} "
            "A label for buying into this card in play; it decides nothing.")
     return (f'<div class="livebar"><span class="livetag lt-{tag}" '
             f'title="{html.escape(tip)}">live {tag}</span></div>')

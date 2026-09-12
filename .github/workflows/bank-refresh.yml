@@ -1,0 +1,66 @@
+# Every two days: feed the board's completed matches back into the
+# results bank, re-measure the live-safety bands on the board's own
+# record, re-render, and commit to main so the site deploys.
+#
+# The bettor's ask, 12 Sep. Three commands the operator used to run by
+# hand, in the order they depend on each other:
+#   scripts/ingest_board.py   completed board cards -> the store (idempotent)
+#   scripts/livebands.py      the live tag's bands, measured on the last
+#                             three weeks of settled cards, labelled by
+#                             hit rate (safe >= 79, cautious >= 75, else
+#                             unsafe; a thin band keeps the seed label)
+#   scripts/board.py          render README + app + live.json, then verify
+#
+# The engine is not touched: no re-pricing, no recomputed guard slices,
+# no label rates. What can change is which unstaked cards are OFFERED for
+# a live buy and where they file, and the bank the retrosim reads.
+#
+# The commit subject carries no "[skip render]" on purpose: this is one
+# that should deploy. If the live sweep pushes first the push is refused;
+# the job resets onto main and runs the three commands again — all of
+# them are reproducible from the files, so a retry writes the same thing
+# onto the newer board.
+name: bank refresh
+
+on:
+  schedule:
+    - cron: "0 6 */2 * *"      # 06:00 UTC every other day
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r backend/requirements.txt
+      - run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          for try in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cd backend
+            python scripts/ingest_board.py
+            python scripts/livebands.py
+            python scripts/board.py
+            cd ..
+            git add -A data/ config/live_bands.tsv config/forward_log.tsv \
+                       config/reads_cache.json README.md web/
+            if git diff --cached --quiet; then
+              echo "nothing changed"; exit 0
+            fi
+            git commit -q -m "bank refresh: $(date -u '+%Y-%m-%d %H:%M') UTC" \
+              -m "board results merged into the bank; live-safety bands re-measured on the last three weeks; board re-rendered"
+            if git push origin HEAD:main; then
+              echo "pushed on try $try"; exit 0
+            fi
+            echo "push refused on try $try — resetting onto main and running again"
+          done
+          echo "could not push after 3 tries"; exit 1

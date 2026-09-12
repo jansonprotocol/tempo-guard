@@ -1319,3 +1319,36 @@ def test_live_tag_follows_the_bettors_bands():
     assert [t("watch", e) for e in (3.0, 1.0, 0.0, -0.9, -1.0, -3.9, -4.0, -6.0)] == \
         ["unsafe", "unsafe", "safe", "safe", "cautious", "cautious", "cautious", "cautious"]
     assert t("priced", -5.0) is None and t(None, 2.0) is None and t("athena", None) is None
+
+
+def test_live_bands_label_by_hit_rate_with_a_floor_on_cards():
+    """The bettor's thresholds, 12 Sep: safe at 79, cautious at 75, else
+    unsafe — and a band with too few cards keeps its seed label."""
+    from scripts import livebands
+    L = livebands.label
+    assert L(83.3, 90, "unsafe") == ("safe", "measured")
+    assert L(79.0, 30, "unsafe") == ("safe", "measured")
+    assert L(78.9, 30, "safe") == ("cautious", "measured")
+    assert L(75.0, 30, "safe") == ("cautious", "measured")
+    assert L(74.9, 30, "safe") == ("unsafe", "measured")
+    assert L(0.0, 1, "cautious") == ("cautious", "seed")
+    assert L(None, 0, "safe") == ("safe", "seed")
+    assert L(60.0, livebands.MIN_N - 1, "safe") == ("safe", "seed")
+
+
+def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
+    """webapp.live_tag follows config/live_bands.tsv when it exists and the
+    seed table when it does not."""
+    from scripts import livebands, webapp
+    monkeypatch.setattr(webapp, "_BANDS", None)
+    monkeypatch.setattr(livebands, "OUT", tmp_path / "none.tsv")
+    assert webapp.live_tag("athena", -6.0) == "unsafe"           # seed
+    monkeypatch.setattr(webapp, "_BANDS", None)
+    monkeypatch.setattr(livebands, "OUT", tmp_path / "live_bands.tsv")
+    rows = [dict(lane=l, band=b, n=40, hit=82.0, said=84.0, label="safe", source="measured")
+            for l in livebands.LANES for b in livebands.BANDS]
+    import datetime as dt
+    livebands.write(rows, 21, dt.date(2026, 9, 12))
+    assert webapp.live_tag("athena", -6.0) == "safe"             # measured
+    assert webapp.live_bands()[("watch", "+1 up")]["n"] == 40
+    monkeypatch.setattr(webapp, "_BANDS", None)
