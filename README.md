@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            267 / 326  81.9%    182 / 272  66.9%
     played lanes  >+1%     126 / 155  81.3%    180 / 267  67.4%
-    placed bets             92 / 113  81.4%    ROI +4.8%
+    placed bets             93 / 114  81.6%    ROI +4.9%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -1241,7 +1241,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 92 / 113  ·  ROI +4.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 93 / 114  ·  ROI +4.9%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -1369,6 +1369,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Köln v Bremen | U4.5 | 1.38 | 1.38x | Unibet (NL) — in-play, struck 18:51 CEST around 21' at 1-0 (goal 12'). The card's own lane (U4.25 rung struck as U4.5, orange, +0.5% edge, was on watch at exactly the 1.27 bar). The board's from-here line at 1-0 21' said 76%, fair 1.32; 1.38 is above it. Outside the board's rule; logged as taken, not as a board play |
 | ✅ | Konyaspor v Trabzonspor | U4.5 | 1.19 | 1.19x | Unibet (NL) — in-play, struck 19:27 CEST around 27' at 1-0 (goal 4'). The card's own lane (U4.25 rung struck as U4.5, green, +0.6% edge, was on watch at 1xBet 1.18 under the 1.21 bar). The board's from-here line at 1-0 27' said 85%, fair 1.18; 1.19 is under it. Outside the board's rule; logged as taken, not as a board play |
 | ✅ | Go Ahead Eagles v Groningen | O1.5 | 1.60 | 1.60x | TOTO — in-play, a live test at a €0.50 stake, struck 12 Sep 20:20 CEST around 76' with one goal on the board; landed at 1-1 on 82'. The card's PLAY lane (O1.5, 85.9%, green, need 1.27); 1.60 clears it by a distance |
+| ✅ | Atalanta v Cagliari | U4.5 | 1.19 | 1.19x | Unibet (NL) — in-play, struck 21:09 CEST around 24' at 0-1. The card's own lane (U4.25 rung struck as U4.5, green, −2.8% edge, an Athena lane at 1xBet 1.13 under the 1.21 bar) and the first card bought on its live tag: LIVE SAFE (Athena −4..−1 band, 82.6% on 23). The board's from-here line at 0-1 24' said 84%, fair 1.19; 1.19 is at it. Outside the board's rule; logged as taken, not as a board play |
 
 <!-- HYPOTHESES:START -->
 
