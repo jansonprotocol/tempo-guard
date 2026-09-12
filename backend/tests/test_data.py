@@ -1203,6 +1203,23 @@ def test_unsafe_priced_plays_flip_to_tip_3_not_tip_2(monkeypatch):
     monkeypatch.setattr(livebands, "_BANDS", None)
 
 
+def test_filter_counters_cannot_see_a_declined_card():
+    """The Completed filter counters read data-g* off each card; a declined
+    card carries none, only data-nc, so "unsafe" typed in the bar counts
+    the priced plays and not the cards that are out of the record."""
+    from scripts import board, webapp
+    fx = [f for f in board.load() if f.settled]
+    out = [f for f in fx if webapp.is_declined(f)]
+    kept = [f for f in fx if not webapp.is_declined(f)]
+    assert out and kept
+    for f in out[:30]:
+        assert webapp._gradekeys(f) == ' data-nc="1"'
+    assert any("g1=" in webapp._gradekeys(f) for f in kept)
+    assert all("nc" not in webapp._gradekeys(f) for f in kept[:60])
+    src = __import__("pathlib").Path(webapp.__file__).read_text()
+    assert "if (c.dataset.nc) {{ left++; continue; }}" in src
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""

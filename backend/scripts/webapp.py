@@ -646,8 +646,8 @@ def _gradekeys(f) -> str:
     can recount hitrates for whatever subset is on screen — a league, a
     team, a rung — without the page re-deriving anything from text.
 
-    EVERY graded lane on the card counts, playable or not — the counters
-    answer "how did the tips do on what I am looking at", which is not
+    EVERY graded lane on a COUNTED card counts, playable or not — the
+    counters answer "how did the tips do on what I am looking at", which is not
     the tiles' question (those keep the playable standard, because that
     is the subset a bettor acts on). The bettor asked for this after a
     J1 filter showed tip 1 at 0/2: six cards on screen, only two of them
@@ -655,6 +655,13 @@ def _gradekeys(f) -> str:
     """
     if not f.settled:
         return ""
+    # A DECLINED card — red, or an unstaked card tagged live unsafe —
+    # carries no grade keys at all, so the counters cannot see it (the
+    # bettor's rule, 12 Sep: out of every hit rate, the filter counters
+    # included). It carries data-nc instead, so the caption can say how
+    # many cards on screen were left out rather than silently shrink.
+    if is_declined(f):
+        return ' data-nc="1"'
     def mark(which):
         src = f.status if which == 1 else (f.tip2 if which == 2 else f.tip3)
         m = src.lstrip()[:1]
@@ -3532,9 +3539,11 @@ function recount() {{
   const box = document.getElementById("fcounts");
   if (!box) return;
   const t = {{gf: [0, 0], g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
+  let left = 0;                       // declined cards on screen, not counted
   for (const c of document.querySelectorAll(".card.done")) {{
     if (c.style.display === "none" || c.closest("#ask-out")
         || c.closest("#fxbox")) continue;
+    if (c.dataset.nc) {{ left++; continue; }}
     for (const k of ["gf", "g1", "g2", "g3"]) {{
       const v = c.dataset[k];
       if (v === undefined) continue;
@@ -3578,10 +3587,12 @@ function recount() {{
   box.style.gridTemplateColumns = "repeat(4,1fr)";
   box.innerHTML = cell("final pick", "gf") + cell("tip 1", "g1") +
                   cell("tip 2", "g2") + cell("tip 3", "g3");
+  const skipped = left ? " · " + left + " declined card" + (left > 1 ? "s" : "")
+    + " on screen not counted" : "";
   if (cap) cap.textContent = t.g1[1] + t.g2[1] + t.g3[1] === 0
-    ? "no completed matches in this filter"
+    ? "no counted matches in this filter" + skipped
     : "every graded lane on screen, playable or not — the tiles above "
-      + "keep the playable standard";
+      + "keep the playable standard" + skipped;
 }}
 
 // THE CLOCK KEEPS RUNNING between sweeps (the bettor, 8 Sep). Every
