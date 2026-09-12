@@ -162,17 +162,31 @@ def tier_of(p: float | None, e: float | None, side: str, dnb: bool) -> str:
     return "orange"
 
 
-def label(code: str, tier: str, sc: float | None, is_dnb: bool) -> str:
-    """The five labels. Outside Europe the score is silent — it measured
-    -0.06 there — so no card gets a super-label off it."""
-    if region(code) != "Europe":
-        return tier
-    if tier == "green":
-        return "super green" if (is_dnb or (sc is not None and sc >= SUPER_GREEN)) \
-            else "green"
+# THE COLOUR LADDER BY CLAIM (the bettor, 12 Sep: "sort it on the actual
+# hit"). Within every old label the cards landed on their own claim —
+# gaps of a point or less on the bank, declined out — so the claim is the
+# band and the colour follows it: green+ 92.1% on 572, green 88.0% on
+# 8,521, orange 82.9% on 11,791, pink 78.3% on 2,560. Red and super red
+# are still the tier and the score saying avoid; nothing about them moved.
+LADDER = (("green+", 90.0), ("green", 85.0), ("orange", 80.0), ("pink", 0.0))
+
+
+def label(code: str, tier: str, sc: float | None, is_dnb: bool,
+          p: float | None = None) -> str:
+    """The label: red or super red from the tier and the score (outside
+    Europe the score is silent — it measured -0.06 there — so no card
+    gets super red off it); every other card by its claim band, `p` in
+    percent. Without a claim the tier stands, as it did before 12 Sep."""
     if tier == "red":
-        return "super red" if (sc is not None and sc <= SUPER_RED) else "red"
-    return tier
+        if region(code) == "Europe" and sc is not None and sc <= SUPER_RED:
+            return "super red"
+        return "red"
+    if p is None:
+        return tier
+    for name, floor in LADDER:
+        if p >= floor:
+            return name
+    return "pink"
 
 
 def read_table(path: Path = OUT) -> dict:

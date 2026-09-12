@@ -1273,8 +1273,30 @@ def test_the_play_bar_follows_the_claim_band():
     assert need == 1.18 and solid
     need2, _h, solid2 = webapp._needs("U4.25 82.7% −1.9% · buy≥1.30 (+5.6% margin)", None)
     assert abs(need2 - (1 / 0.827) * 1.06) < 1e-9 and not solid2
-    # the label rates the record is graded against did not move
-    assert webapp.SAYS["orange"] == 0.8342 and webapp.SAYS["green"] == 0.8740
+    # red keeps its registered rate; the four colours carry the ladder's
+    assert webapp.SAYS["red"] == 0.7796 and webapp.SAYS["green+"] == 0.921
+
+
+def test_the_colour_ladder_follows_the_claim():
+    """The bettor, 12 Sep: sort the colours on the actual hit — green+ at
+    a claim of 90+, green 85–90, orange 80–85, pink under 80; red and
+    super red stay the tier's and the score's call."""
+    from scripts import bankrates, guard_slices as GS
+    L = lambda p, tier="orange", sc=None: GS.label("ENG-PL", tier, sc, False, p)
+    assert L(91.0) == "green+" and L(90.0) == "green+"
+    assert L(89.9) == "green" and L(85.0) == "green"
+    assert L(84.9) == "orange" and L(80.0) == "orange"
+    assert L(79.9) == "pink" and L(76.0) == "pink"
+    assert L(91.0, tier="green") == "green+"                    # the old tier does not matter
+    assert L(91.0, tier="red") == "red"                          # red is the tier
+    assert L(91.0, tier="red", sc=-99.0) == "super red"          # and the score
+    assert GS.label("ENG-PL", "green", 9.0, False) == "green"    # no claim: the tier stands
+    # the stored bank is read on the same ladder without a rebuild
+    assert bankrates.relabel({"g": "orange", "tip": "U4.25 91.2% +1.0% · buy≥1.10"}) == "green+"
+    assert bankrates.relabel({"g": "green", "tip": "U4.25 82.0% +1.0% · buy≥1.10"}) == "orange"
+    assert bankrates.relabel({"g": "super green", "tip": "O1.5 78.0% +1.0% · buy≥1.30"}) == "pink"
+    assert bankrates.relabel({"g": "red", "tip": "U4.25 91.2% +1.0% · buy≥1.10"}) == "red"
+    assert bankrates.relabel({"g": "orange", "pk": 3, "tip": "U4.25 82.0% +1.0%", "t3": "DNB1 86.0% +5.0%"}) == "green"
 
 
 def test_live_tag_words_are_searchable():

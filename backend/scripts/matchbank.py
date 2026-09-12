@@ -146,7 +146,8 @@ def guard(bank: dict) -> None:
         dnb = r["_pk"] == 3
         side = r["mk"][:1] if r["mk"][:1] in ("O", "U") else ""
         lab = GS.label(r["code"], GS.tier_of(r["_p1"] if not dnb else r["says_pick"] * 100,
-                                             r["_e1"], side, dnb), cs, dnb)
+                                             r["_e1"], side, dnb), cs, dnb,
+                       r["says_pick"] * 100)
         m["pk"], m["g"] = r["_pk"], lab
         if cs is not None:
             m["cs"] = round(cs, 1)

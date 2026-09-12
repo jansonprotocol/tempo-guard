@@ -48,10 +48,39 @@ PLAYABLE_EDGE = 1.0     # the board's playable bar: printed edge >= +1%
 _BANK: dict | None = None
 
 
+def relabel(m: dict) -> str:
+    """The card's colour on the claim ladder (guard_slices.LADDER): a red
+    or super red row keeps its label — that is the tier and the score,
+    untouched — and every other row is coloured by the claim of its
+    starred lane. The stored bank still carries the pre-12-Sep labels
+    until the next rebuild; this reads the same colour off it that a
+    rebuilt bank would write."""
+    g = m.get("g") or ""
+    if not g or g.endswith("red"):
+        return g
+    from scripts.guard_slices import LADDER
+    c = _claim(m.get("t3") if m.get("pk") == 3 else m.get("tip"))
+    if c is None:
+        return g
+    for name, floor in LADDER:
+        if c >= floor:
+            return name
+    return "pink"
+
+
+def relabel_all(bank_dict: dict) -> dict:
+    """Rewrite every row's label in place on the ladder; returns the dict."""
+    for comp in bank_dict.values():
+        for m in comp.get("matches", []):
+            if m.get("g"):
+                m["g"] = relabel(m)
+    return bank_dict
+
+
 def bank() -> dict:
     global _BANK
     if _BANK is None:
-        _BANK = json.loads(BANK.read_text()) if BANK.exists() else {}
+        _BANK = relabel_all(json.loads(BANK.read_text()) if BANK.exists() else {})
     return _BANK
 
 

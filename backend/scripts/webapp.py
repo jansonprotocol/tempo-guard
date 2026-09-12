@@ -606,6 +606,8 @@ def _haystack(f) -> str:
         out = [lab, f"guard {lab}", f"label {lab}"]
         if lab.startswith("super "):
             out += [f"guard {lab[6:]}", f"label {lab[6:]}"]
+        if lab.endswith("+"):
+            out += [f"{lab[:-1]} plus", f"guard {lab[:-1]} plus", f"label {lab[:-1]} plus"]
         return out
     if not f.settled:
         v = verdict(f, _star(f))
@@ -772,11 +774,32 @@ def _rung(cell: str) -> str:
 
 _SLICES = None
 
-# What each label graded over 62,528 replayed picks, in both time
-# windows. Registered in docs/confluence-guard.md — these are the numbers
-# the live period is being graded against, so they are not tuned.
-SAYS = {"super green": 0.8956, "green": 0.8740, "orange": 0.8342,
-        "red": 0.7796, "super red": 0.7705}
+# What each label lands. The four colours are the CLAIM LADDER (the
+# bettor, 12 Sep, guard_slices.LADDER): measured on the bank, declined
+# cards out, on the starred lane. Red and super red keep the numbers
+# registered in docs/confluence-guard.md over 62,528 replayed picks.
+# "super green" stays as a legacy key so the forward log's rows stamped
+# before 12 Sep still read.
+SAYS = {"green+": 0.921, "green": 0.880, "orange": 0.829, "pink": 0.783,
+        "red": 0.7796, "super red": 0.7705, "super green": 0.8956}
+SAYS_N = {"green+": 572, "green": 8521, "orange": 11791, "pink": 2560}
+
+
+def _gclass(lab: str) -> str:
+    """The CSS class for a label: "green+" -> "green-plus"."""
+    return lab.replace(" ", "-").replace("+", "-plus")
+
+
+def _says_text(lab: str) -> str:
+    """The hover's one line about the label's measured rate."""
+    hit = SAYS.get(lab)
+    if hit is None:
+        return f"Guard: {lab}. "
+    if lab in SAYS_N:
+        return (f"Guard: {lab} — the claim band. Cards on this band landed "
+                f"{hit*100:.1f}% over {SAYS_N[lab]:,} bank cards, declined out. ")
+    return (f"Guard: {lab}. Cards labelled this way graded {hit*100:.1f}% "
+            f"over 62,528 replayed picks, in both time windows. ")
 
 # How far above break-even a quote must sit before the card says PLAY.
 # Swept on 8,121 priced picks: taking everything returned -1.67%, and the
@@ -943,7 +966,7 @@ def _label_of(f, best: int, full: bool = False, force: bool = False):
     if _SLICES and " v " in f.teams:
         h, a = [t.strip() for t in f.teams.split(" v ")]
         sc = guard_slices.score(f.code, h, a, _rung(cell), p / 100.0, _SLICES)
-    lab = guard_slices.label(f.code, tier, sc, dnb)
+    lab = guard_slices.label(f.code, tier, sc, dnb, p)
     return (lab, sc, cell, p) if full else lab
 
 
@@ -1333,15 +1356,12 @@ def _frozen_guard(f, call: dict) -> str:
     """
     r = call["row"]
     lab, sc = r["label"], r.get("score")
-    hit = SAYS.get(lab)
-    tip = (f"Guard: {lab}. Cards labelled this way graded "
-           f"{hit*100:.1f}% over 62,528 replayed picks, in both time "
-           f"windows. " if hit else f"Guard: {lab}. ")
+    tip = _says_text(lab)
     tip += ("The tier says avoid. " if lab.endswith("red") else "")
     tip += ("Score silent outside Europe."
             if region_silent(r.get("code") or f.code)
             else f"Confluence score {sc:+.1f}." if sc is not None else "")
-    badge = (f'<div class="guard g-{lab.replace(" ", "-")}" '
+    badge = (f'<div class="guard g-{_gclass(lab)}" '
              f'title="{html.escape(tip)}">{lab}</div>')
 
     word = {"strong": "★ STRONG · PLAY", "normal": "PLAY",
@@ -1389,13 +1409,11 @@ def _guard(f, best: int) -> str:
     if not v:
         return ""
     lab, sc = v["label"], v["score"]
-    hit = SAYS[lab]
-    tip = (f"Guard: {lab}. Cards labelled this way graded {hit*100:.1f}% "
-           f"over 62,528 replayed picks, in both time windows. "
+    tip = (_says_text(lab)
            + ("The tier says avoid. " if lab.endswith("red") else "")
            + ("Score silent outside Europe." if region_silent(f.code)
               else f"Confluence score {sc:+.1f}." if sc is not None else ""))
-    badge = (f'<div class="guard g-{lab.replace(" ", "-")}" '
+    badge = (f'<div class="guard g-{_gclass(lab)}" '
              f'title="{html.escape(tip)}">{lab}</div>')
 
     # THE MARK, one of three, and the tabs read the same verdict() so the
@@ -1979,10 +1997,10 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
     blocks = show(normal, "play", "1 \u00b7 A normal play",
         "The card is green-bordered and the verdict line says <b>PLAY</b> "
         "with the lane, the price it needs and the book that pays it. Read "
-        "it in this order: the <b>label</b> (green, orange, super green \u2014 the "
-        "guard's read of this kind of card; orange lands 83.4% of the time, "
-        "green 87.4%), then <b>needs</b> (the break-even that label implies "
-        "plus 6%), then the <b>price</b>. The price cleared the bar, so this "
+        "it in this order: the <b>label</b> (green+, green, orange, pink \u2014 the "
+        "claim band the starred lane sits in; orange lands 82.9% of the time, "
+        "green 88.0%), then <b>needs</b> (the band's bar: 1.14 at a claim of "
+        "85 or more, 1.18 at 80\u201385, 1.31 at 75\u201380), then the <b>price</b>. The price cleared the bar, so this "
         "is a bet: 4% of the bankroll at that price or better. If the book "
         "you use is short of the bar, it is not a bet there.") + show(
         strong, "play", "2 \u00b7 A strong play",
@@ -2009,12 +2027,14 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         ("The rule in one line", "Bet only what the verdict line says "
          "PLAY, at 4% of the bankroll, at or above the price it needs. "
          "Everything else on the board is graded and banked, not played."),
-        ("Label", "the guard's read of this KIND of card, from the card's "
-         "own tier and its confluence score. Five: super green, green, "
-         "orange, red, super red. Each carries one measured hit rate; red "
-         "and super red are never played."),
-        ("needs", "the price the label's hit rate needs to break even, "
-         "plus 6%. The bar is the same for every card with that label \u2014 "
+        ("Label", "the colour of the starred lane's CLAIM BAND (the "
+         "bettor's ladder, 12 Sep): green+ at 90 or more, green 85\u201390, "
+         "orange 80\u201385, pink 75\u201380, each with its measured hit rate on "
+         "the bank. Red and super red are still the tier and the "
+         "confluence score saying avoid; they are never played."),
+        ("needs", "the band's bar: 1.14 at a claim of 85 or more, 1.18 at "
+         "80\u201385, 1.31 at 75\u201380 \u2014 each the ROI-optimal bar on the bank at "
+         "closing prices. The bar is the same for every card in the band \u2014 "
          "that is deliberate: a bar built per card finds exactly the cards "
          "the market is right about."),
         ("PASS / DECLINE", "every lane on the card carries its own bar: "
@@ -2470,7 +2490,8 @@ def main() -> None:
     # (matchbank.py) plus everything on the current board.
     import json as _json
     retro_path = ROOT / "config" / "matchbank_retro.json"
-    bank = _json.loads(retro_path.read_text()) if retro_path.exists() else {}
+    from scripts import bankrates as _br
+    bank = _br.relabel_all(_json.loads(retro_path.read_text()) if retro_path.exists() else {})
     for f in fixtures:
         comp = bank.setdefault(f.code, dict(name=f.league, teams=[],
                                             matches=[]))
@@ -2641,7 +2662,6 @@ def main() -> None:
     # 288 rows after the 31 Aug ingest, which pulled the hero window down
     # twice as far as the week deserved. The retro row wins; it carries
     # every lane, where the board row carries at most two.
-    from scripts import bankrates as _br
     for comp in bank.values():
         seen, keep = set(), []
         for m in sorted(comp["matches"], key=lambda x: x.get("src") == "board"):
@@ -2811,8 +2831,8 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border-radius:5px; padding:0 4px; color:var(--dim); }}
 #ask-out .card summary {{ cursor:pointer; }}
 #ask-out .grid {{ max-height:70vh; overflow-y:auto; }}
-#ask-counts {{ grid-template-columns:repeat(6,1fr); }}
-@media (max-width:640px) {{ #ask-counts {{ grid-template-columns:repeat(3,1fr); }} }}
+#ask-counts {{ grid-template-columns:repeat(7,1fr); }}
+@media (max-width:640px) {{ #ask-counts {{ grid-template-columns:repeat(4,1fr); }} }}
 .basebar {{ background:var(--card); border:1px solid var(--edge);
   border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
 .basebar b {{ color:var(--gold); }}
@@ -2899,10 +2919,11 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .guard {{ display:inline-block; margin:6px 0 2px; padding:2px 8px;
   border-radius:999px; font-size:10px; text-transform:uppercase;
   letter-spacing:.11em; border:1px solid transparent; cursor:help; }}
-.g-super-green {{ color:#8fe3a8; border-color:#2f6b45;
+.g-super-green, .g-green-plus {{ color:#8fe3a8; border-color:#2f6b45;
   background:rgba(47,107,69,.16); }}
 .g-green {{ color:#7fc79a; border-color:#27523a; }}
 .g-orange {{ color:#d9b46a; border-color:#5b4a24; }}
+.g-pink {{ color:#e9a3c9; border-color:#6b2f57; background:rgba(107,47,87,.14); }}
 .g-red {{ color:#e08b7a; border-color:#6b3129; }}
 .g-super-red {{ color:#f0a08e; border-color:#8a3a2e;
   background:rgba(138,58,46,.18); font-weight:600; }}
@@ -3132,9 +3153,9 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <code>double chance</code>, <code>draw no bet</code>,
   <code>result lane</code>, <code>playable</code>. Tie one to a lane with
   <code>tip 1 under</code>, <code>tip 2 over</code>.<br>
-  <b>the guard</b> — <code>green</code>, <code>orange</code>,
-  <code>red</code>, <code>super green</code>, <code>super red</code>: the
-  label on the card. Type <code>guard red</code> or <code>label red</code>
+  <b>the guard</b> — <code>green+</code> (also <code>green plus</code>),
+  <code>green</code>, <code>orange</code>, <code>pink</code>,
+  <code>red</code>, <code>super red</code>: the label on the card. Type <code>guard red</code> or <code>label red</code>
   to keep clubs called Red out of it. Also <code>strong</code>,
   <code>verdict play</code>, <code>verdict no play</code>.<br>
   <b>an absent lane</b> — <code>tip 2 none</code> (also
@@ -3335,9 +3356,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <p><b>1. The verdict line is the whole decision.</b> Every card marks
  one lane — tip 1, or a draw-no-bet on tip 3 that out-claims it by two
  points — and the guard reads that lane into one of five labels from the
- card's own tier and its confluence score, the card run back through the
- board's searches as-of. Each label carries one measured hit rate, frozen
- on two windows over 62,528 replayed picks. The card says <b>PLAY</b> only
+ starred lane's claim band — green+ at 90 or more, green 85–90, orange
+ 80–85, pink 75–80, each with its hit rate measured on the bank (the
+ bettor's ladder, 12 Sep) — with red and super red still the tier and
+ the confluence score saying avoid. The card says <b>PLAY</b> only
  when the best live quote clears the starred lane's <b>claim band bar</b>
  — 1.14 at a claim of 85 or more, 1.18 at 80–85, 1.31 at 75–80, each the
  ROI-optimal bar on the bank at closing prices (12 Sep; until then the
@@ -4092,15 +4114,16 @@ function askCard(m, comp, note, open) {{
   // The guard on a past card: its label as a badge, and where a closing
   // price exists the verdict line a live card shows. The FINAL PICK tiles
   // (the bettor's, 7 Sep) count the STARRED lane's mark (pk: tip 1, or a
-  // gated DNB on tip 3) by the guard's colour — super green, green,
-  // orange — so they read "what the final pick scored, per label". The
+  // gated DNB on tip 3) by the guard's colour — green+, green, orange,
+  // pink, the claim ladder — so they read "what the final pick scored,
+  // per label". The
   // colour is the guard's read of the card, not of its price, so a card
   // counts whether or not a closing price was ever found for it.
   if (m.g) {{
     const star = m.pk === 3 ? gm("m3") : gm("mark");
-    const tile = {{"super green": "gsg", "green": "gg", "orange": "go"}}[m.g];
+    const tile = {{"green+": "ggp", "green": "gg", "orange": "go", "pink": "gp"}}[m.g];
     if (tile && star !== null) g += " data-" + tile + '="' + star + '"';
-    body = '<div class="guard g-' + m.g.replaceAll(" ", "-") + '">' + m.g
+    body = '<div class="guard g-' + m.g.replaceAll(" ", "-").replaceAll("+", "-plus") + '">' + m.g
       + (m.st ? " · ★ strong" : "") + "</div>"
       + (m.v ? '<div class="verdict ' + (m.v === "no play" ? "no" : m.v === "strong" ? "strong" : "yes") + '">'
           + (m.v === "no play" ? "no play" : (m.v === "strong" ? "★ STRONG · PLAY" : "PLAY"))
@@ -4139,7 +4162,7 @@ function askFilter() {{
   const q = document.getElementById("ask-q");
   const terms = qterms(q ? q.value : "");
   const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0],
-             gsg: [0, 0], gg: [0, 0], go: [0, 0]}};
+             ggp: [0, 0], gg: [0, 0], go: [0, 0], gp: [0, 0]}};
   let shown = 0;
   for (const c of document.querySelectorAll("#ask-out .card")) {{
     const hay = c.dataset.t || "";
@@ -4147,7 +4170,7 @@ function askFilter() {{
     c.style.display = vis ? "" : "none";
     if (!vis) continue;
     shown++;
-    for (const k of ["g1", "g2", "g3", "gsg", "gg", "go"]) {{
+    for (const k of ["g1", "g2", "g3", "ggp", "gg", "go", "gp"]) {{
       const v = c.dataset[k];
       if (v === undefined) continue;
       t[k][1]++; t[k][0] += v === "1" ? 1 : 0;
@@ -4165,13 +4188,14 @@ function askFilter() {{
       '</div><div class="l">' + label + '</div><div class="s">' +
       (nn ? hh + "/" + nn : "not in this slice") + "</div></div>";
   }};
-  // FINAL PICK by label: the starred lane's record on the super green,
-  // green and orange cards — the bettor's tiles (7 Sep), replacing the
+  // FINAL PICK by label: the starred lane's record on the green+, green,
+  // orange and pink cards — the bettor's tiles (7 Sep), replacing the
   // NORMAL / STRONG pair. Declined cards (red, super red, live unsafe)
   // carry no data-g* and so have no tile: they count toward nothing.
   box.innerHTML = cell("tip 1", "g1") + cell("tip 2", "g2") +
-    cell("tip 3", "g3") + cell("final pick · super green", "gsg") +
-    cell("final pick · green", "gg") + cell("final pick · orange", "go");
+    cell("tip 3", "g3") + cell("final pick · green+", "ggp") +
+    cell("final pick · green", "gg") + cell("final pick · orange", "go") +
+    cell("final pick · pink", "gp");
 }}
 async function askAthena() {{
   await ensureBank();

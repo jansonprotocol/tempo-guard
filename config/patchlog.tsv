@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-12	guard	The colour ladder by claim: green+ (claim 90+, lands 92.1), green (85–90, 88.0), orange (80–85, 82.9), pink (75–80, 78.3), measured on the bank with declined cards out; red and super red unchanged; super green retired. Bank rows relabelled on read, Ask Athena's final-pick tiles now green+ / green / orange / pink; 'pink' and 'green plus' are search words
 2026-09-12	guard	The PLAY bar follows the starred lane's claim band, optimised for ROI on the bank at closing prices: 1.14 at a claim of 85+, 1.18 at 80–85, 1.31 at 75–80 (was the label's break-even plus 6%: 1.18 / 1.21 / 1.27 by colour). Colours, tier, strong and the label rates unchanged; the bank rebuild prices the same way. The bettor's call, mid PRE-ALFA 2
 2026-09-12	interface	Completed cards are searchable by label and call ('green', 'super green', 'guard red', 'verdict play', 'strong'); they carried no label words before
 2026-09-12	interface	Flip study: a push on the flipped lane is no bet (the card leaves the pair); bank seeds re-cut the same way. Paired and pushes out, cautious tip 3 stays flipped (78.8 to 72.7 on 33) and so does safe tip 2 (85.0 to 70.0 on 20)
