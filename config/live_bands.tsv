@@ -6,15 +6,15 @@
 # 12 Sep). Thresholds: safe >= 79, cautious >= 77, else unsafe.
 # window	21 days to 2026-09-12
 # lane	band	n	hit	said	label	source
-athena	+1 up	92	83.7	84.0	safe	measured
-athena	−1..+1	70	85.7	84.0	safe	measured
+athena	+1 up	94	84.0	84.0	safe	measured
+athena	−1..+1	71	85.9	84.0	safe	measured
 athena	−4..−1	23	82.6	84.8	safe	measured
 athena	−4 down	50	76.0	83.8	unsafe	measured
 watch	+1 up	30	76.7	82.3	unsafe	measured
-watch	−1..+1	17	94.1	82.7	safe	measured
-watch	−4..−1	6	83.3	83.7	cautious	seed
+watch	−1..+1	18	94.4	82.8	safe	measured
+watch	−4..−1	7	71.4	83.8	cautious	seed
 watch	−4 down	1	0.0	84.4	cautious	seed
 priced	+1 up	65	78.5	80.9	cautious	measured
-priced	−1..+1	30	80.0	80.3	safe	measured
+priced	−1..+1	31	80.6	80.3	safe	measured
 priced	−4..−1	6	66.7	81.2	unsafe	seed
 priced	−4 down	1	0.0	83.4	unsafe	seed

@@ -1096,13 +1096,15 @@ def test_livecheck_gates_on_what_is_actually_running():
         livecheck._rows = keep
 
 
-def test_red_cards_count_toward_no_hit_rate():
+def test_declined_cards_count_toward_no_hit_rate():
     """The bettor's rule, 7 Sep: a red or super-red card is never played,
     so it never enters a hit rate — on the board or in the bank — while
-    staying visible and graded. One predicate on each side; both must
-    refuse red and accept everything else, including the unlabelled.
+    staying visible and graded. And 12 Sep: neither does any other
+    DECLINED card, an unstaked card tagged live unsafe. One predicate on
+    each side; both must refuse those and accept everything else,
+    including the unlabelled and the priced plays whatever their tag.
     """
-    from scripts import bankrates, board, webapp
+    from scripts import bankrates, board, livebands, webapp
 
     # the bank side: a labelled red card is out, everything else is in
     assert not bankrates.counts({"g": "red"})
@@ -1110,33 +1112,90 @@ def test_red_cards_count_toward_no_hit_rate():
     assert bankrates.counts({"g": "orange"})
     assert bankrates.counts({"g": "green"})
     assert bankrates.counts({})                     # unlabelled still counts
+    # ... and so is an unstaked card whose band is unsafe. Pin the bands
+    # to the seed so the test does not move with the measured table.
+    monkey = livebands._BANDS
+    livebands._BANDS = {(l, b): dict(label=lab, n=0, hit=None, said=None, source="seed")
+                        for l, bs in livebands.SEED.items() for b, lab in bs.items()}
+    try:
+        deep = "U4.25 84.0% **−5.0%** · buy≥1.22 (+6.1% margin)"
+        high = "U4.25 84.0% **+3.0%** · buy≥1.22 (+6.1% margin)"
+        # an Athena lane (no closing price) at −5: unsafe, out
+        assert bankrates.lane({"g": "orange", "tip": deep}) == "athena"
+        assert bankrates.tag({"g": "orange", "tip": deep}) == "unsafe"
+        assert not bankrates.counts({"g": "orange", "tip": deep})
+        # the same card at +3 is safe and in
+        assert bankrates.counts({"g": "orange", "tip": high})
+        # a watch card (closing price inside the watch band) above +1: out
+        w = {"g": "green", "tip": high, "v": "no play", "bp": 1.20, "need": 1.22}
+        assert bankrates.lane(w) == "watch" and not bankrates.counts(w)
+        # a card the price missed by more than the band is an Athena lane: in
+        a = dict(w, bp=1.05)
+        assert bankrates.lane(a) == "athena" and bankrates.counts(a)
+        # a priced play is never declined by its tag
+        pl = {"g": "green", "tip": deep, "v": "normal", "bp": 1.30, "need": 1.22}
+        assert bankrates.lane(pl) == "priced" and bankrates.tag(pl) == "unsafe"
+        assert bankrates.counts(pl)
+        # red stays red whatever the price
+        assert bankrates.lane({"g": "red", "tip": high, "v": "no play", "bp": 1.3, "need": 1.2}) is None
+    finally:
+        livebands._BANDS = monkey
 
-    # the board side: the tallies must drop exactly the settled red cards
+    # the board side: the tallies must drop exactly the settled declined
+    # cards — red, and the unstaked ones tagged unsafe
     fx = board.load()
     settled = [f for f in fx if f.settled]
-    red = [f for f in settled
-           if (lab := webapp.label_any(f)) and lab.endswith("red")]
-    keep = [f for f in settled if f not in red]
+    out = [f for f in settled if webapp.is_declined(f)]
+    red = [f for f in out if (lab := webapp.label_any(f)) and lab.endswith("red")]
+    keep = [f for f in settled if f not in out]
     t_all, _ = board._tallies(fx)
     # count tip 1 by hand over the kept cards, the way _tallies does
     n = sum(1 for f in keep if f.status[:1] in ("✅", "❌", "◦")
             and not f.tip1.startswith("—"))
-    assert t_all[1][1] == n, (t_all[1][1], n, len(red))
-    # and had the reds been in, the count would be larger by their number
+    assert t_all[1][1] == n, (t_all[1][1], n, len(out))
+    # and had the declined been in, the count would be larger by their number
     n_red = sum(1 for f in red if f.status[:1] in ("✅", "❌", "◦"))
     assert n_red > 0, "no settled red card on the board to test against"
+    # a priced play is in the record whatever its tag says
+    for f in keep:
+        if webapp.record_lane(f) == "priced":
+            assert webapp.counts(f)
+    for f in out:
+        assert not webapp.counts(f)
+        if f not in red:
+            assert webapp.record_lane(f) in ("athena", "watch")
+            assert webapp.record_tag(f) == "unsafe"
+    # the measurement behind the tag keeps only the red cards out, or an
+    # unsafe band could never come back
+    assert all(webapp.not_red(f) for f in keep)
+    assert any(webapp.not_red(f) and not webapp.counts(f) for f in out)
 
     # the hero: the one number that kept counting reds until 7 Sep. The
-    # rendered page must say so, and the app must flag every settled red
+    # rendered page must say so, and the app must flag every declined
     # board card as no-count so the window can skip it.
     from pathlib import Path
     src = Path(webapp.__file__).read_text()
     assert 'entry["nc"] = 1' in src and 'm.get("nc")' in src
     page = Path(webapp.__file__).resolve().parents[2] / "web" / "index.html"
     if page.exists():
-        assert ("playable cards · red and super-red cards excluded"
-                in page.read_text())
+        assert ("playable cards · declined cards excluded (red, super red, "
+                "live unsafe)" in page.read_text())
 
+
+def test_live_tag_words_are_searchable():
+    """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
+    find cards on the bar, on the board and in the bank."""
+    from scripts import board, webapp
+    fx = board.load()
+    tagged = [f for f in fx if webapp.record_tag(f)]
+    assert tagged, "no tagged card on the board"
+    for f in tagged[:40]:
+        hay = webapp._haystack(f)
+        assert f"live {webapp.record_tag(f)}" in hay
+        assert ("declined" in hay) == webapp.is_declined(f)
+        assert ("counted" in hay) == (not webapp.is_declined(f))
+    src = __import__("pathlib").Path(webapp.__file__).read_text()
+    assert 'bits.push("live " + m.lt' in src
 
 def test_engine_inputs_are_not_recomputed_for_display():
     """league_hitrates.tsv feeds the REL debit and the buy-from blend, and
@@ -1310,6 +1369,8 @@ def test_live_poll_patches_the_status_line_not_the_taken_pill():
     assert 'card.querySelector("summary .live")' not in src
 
 
+
+
 def test_live_tag_follows_the_bettors_bands():
     """The bettor's live-safety bands, 12 Sep: by lane and printed-edge band."""
     from scripts import webapp
@@ -1345,10 +1406,10 @@ def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
     """webapp.live_tag follows config/live_bands.tsv when it exists and the
     seed table when it does not."""
     from scripts import livebands, webapp
-    monkeypatch.setattr(webapp, "_BANDS", None)
+    monkeypatch.setattr(livebands, "_BANDS", None)
     monkeypatch.setattr(livebands, "OUT", tmp_path / "none.tsv")
     assert webapp.live_tag("athena", -6.0) == "unsafe"           # seed
-    monkeypatch.setattr(webapp, "_BANDS", None)
+    monkeypatch.setattr(livebands, "_BANDS", None)
     monkeypatch.setattr(livebands, "OUT", tmp_path / "live_bands.tsv")
     rows = [dict(lane=l, band=b, n=40, hit=82.0, said=84.0, label="safe", source="measured")
             for l in livebands.LANES for b in livebands.BANDS]
@@ -1356,7 +1417,7 @@ def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
     livebands.write(rows, 21, dt.date(2026, 9, 12))
     assert webapp.live_tag("athena", -6.0) == "safe"             # measured
     assert webapp.live_bands()[("watch", "+1 up")]["n"] == 40
-    monkeypatch.setattr(webapp, "_BANDS", None)
+    monkeypatch.setattr(livebands, "_BANDS", None)
 
 
 def test_store_save_drops_the_same_match_written_a_day_apart(tmp_path, monkeypatch):

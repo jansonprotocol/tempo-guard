@@ -201,10 +201,11 @@ def _tallies(fixtures: list[Fixture]):
     """Hits and settled per lane — over the cards that COUNT.
 
     A red or super-red card is never allowed to be played, so it is never
-    allowed into a hit rate either (the bettor's rule, 7 Sep). It stays
-    on the board and is still graded; it just does not count. The one
-    predicate that decides which cards count lives in webapp.counts, so
-    the README and the app can never disagree about it.
+    allowed into a hit rate either (the bettor's rule, 7 Sep), and since
+    12 Sep neither is any other DECLINED card — an unstaked card tagged
+    live unsafe. It stays on the board and is still graded; it just does
+    not count. The one predicate that decides which cards count lives in
+    webapp.counts, so the README and the app can never disagree about it.
     """
     from scripts.webapp import counts
     t = {1: [0, 0], 2: [0, 0]}          # published lanes: hits, settled

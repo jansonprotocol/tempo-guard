@@ -579,6 +579,21 @@ def _haystack(f) -> str:
         bits.append("live")
     if "capped" in (rates().get(f.code) or ""):
         bits.append("capped")
+    # The live-safety tag (the bettor's ask, 12 Sep: "make searchable
+    # keywords: live unsafe, live safe"): "live safe", "live cautious",
+    # "live unsafe", and the lane it was read on. A settled card carries
+    # the words too, so Completed can be asked what the tag would have
+    # said. "declined" finds every card that is out of the record.
+    tag = record_tag(f)
+    if tag:
+        lane = record_lane(f)
+        bits += [f"live {tag}", f"tag {tag}", f"live tag {tag}",
+                 {"athena": "athena lane", "watch": "watch lane",
+                  "priced": "priced play"}[lane], f"{tag} {lane}"]
+    if is_declined(f):
+        bits += ["declined", "no count"]
+    else:
+        bits.append("counted")
     # The guard's label and verdict, so the bar can be asked for "green",
     # "orange", "red", "super green", "strong", "no play" (the bettor's
     # request, 2 Sep). "guard red" and "label red" are there too, because
@@ -913,18 +928,30 @@ def label_any(f) -> str | None:
     return _label_of(f, b, force=True) if b else None
 
 
+def not_red(f) -> bool:
+    """The 7 Sep rule on its own: a red or super-red card is never in a
+    hit rate. livebands.measure reads THIS, not counts — a band measured
+    on a record that had already dropped its own unsafe cards could never
+    come back."""
+    lab = label_any(f)
+    return not (lab and lab.endswith("red"))
+
+
 def counts(f) -> bool:
     """Does this card belong in a hit rate?
 
     The bettor's rule, 7 Sep: a red or super-red card is never allowed to
     be played, so it must never be allowed into the record either — it
     stays on the board for analysis and is still graded, it just does not
-    count. A card with no label at all (an abstention, a card with no
-    starred lane) is not red, and whatever it graded still counts as it
-    always did.
+    count. Since 12 Sep the same goes for every card the board DECLINES:
+    an Athena lane or a watch card tagged live unsafe is out of the
+    record the way a red card is (the bettor: "everything that now is a
+    declined card must be removed from what now actual hitrates are").
+    A card with no label at all (an abstention, a card with no starred
+    lane) is not declined, and whatever it graded still counts as it
+    always did. bankrates.counts is the same predicate on a bank card.
     """
-    lab = label_any(f)
-    return not (lab and lab.endswith("red"))
+    return not is_declined(f)
 
 
 def verdict(f, best: int) -> dict | None:
@@ -1060,71 +1087,37 @@ PLAYED_MARKS = ("strong", "normal", "watch")
 
 # LIVE SAFETY (the bettor's bands, 12 Sep). Whether a card that the board
 # did not stake — an Athena lane, or a watch card — is one to buy into in
-# play, read off its printed EDGE and its lane. Set by the bettor from the
-# session's negative-edge tally: Athena cards at −4 or worse were 22 of
-# 32 in the first week and the only slice that broke; watch cards above
-# +1 were the weakest watch slice at 76.7% on thirty. Display only: it
-# labels, it does not decide, and the priced plays carry no tag — those
-# are the board's own stakes and the price bar already spoke.
-LIVE_TAG = {
-    "athena": {"+1 up": "safe", "−1..+1": "safe", "−4..−1": "safe",
-               "−4 down": "unsafe"},
-    "watch":  {"+1 up": "unsafe", "−1..+1": "safe", "−4..−1": "cautious",
-               "−4 down": "cautious"},
-    # The board's own PLAYs, once running (the bettor, 12 Sep: "this one
-    # doesn't have a live tag"). Seeded from the bank's priced plays by
-    # edge band — 76.9% above +1, 73.0% around zero, 66.0% and 73.3% in
-    # the negative bands, all under claim — and measured like the others.
-    # INFORMATION ONLY on this lane: a priced play is the board's stake
-    # and files under Playable or Running whatever its tag says.
-    "priced": {"+1 up": "cautious", "−1..+1": "unsafe", "−4..−1": "unsafe",
-               "−4 down": "unsafe"},
-}
-
-
-def edge_band(edge: float) -> str:
-    return ("+1 up" if edge >= 1 else "−1..+1" if edge > -1
-            else "−4..−1" if edge > -4 else "−4 down")
-
-
-_BANDS = None
+# play, read off its printed EDGE and its lane; the priced plays carry
+# the same tag for information. The seed table, the band cut and the
+# measured table live in scripts/livebands.py, so scripts/bankrates.py
+# can put the same tag on a bank card without importing the app.
+from scripts.livebands import SEED as LIVE_TAG, edge_band  # noqa: E402
 
 
 def live_bands() -> dict:
     """The MEASURED band table (config/live_bands.tsv, written every two
     days by scripts/livebands.py from the board's own record), falling
-    back to the seed table above where the file is missing or a band had
-    too few cards. Read once per render."""
-    global _BANDS
-    if _BANDS is None:
-        from scripts import livebands
-        got = livebands.read() or {}
-        _BANDS = {}
-        for lane, bands in LIVE_TAG.items():
-            for band, seed in bands.items():
-                row = got.get((lane, band))
-                _BANDS[(lane, band)] = row or dict(n=0, hit=None, said=None,
-                                                   label=seed, source="seed")
-    return _BANDS
+    back to the seed table where the file is missing or a band had too
+    few cards."""
+    from scripts import livebands
+    return livebands.bands()
 
 
 def live_tag(lane: str | None, edge: float | None) -> str | None:
-    """'safe', 'cautious' or 'unsafe' for an Athena or watch card, else
-    None — a priced play, a red card, a settled card or an abstention
-    carries no tag."""
-    if lane not in LIVE_TAG or edge is None:
-        return None
-    return live_bands()[(lane, edge_band(edge))]["label"]
+    """'safe', 'cautious' or 'unsafe' for an Athena lane, a watch card or
+    a priced play, else None — a red card, a settled card without a lane
+    or an abstention carries no tag."""
+    from scripts import livebands
+    return livebands.tag(lane, edge)
 
 
-def live_lane(f) -> str | None:
-    """Which unstaked lane a card sits in, for the live tag: 'athena' or
-    'watch'. Frozen after kickoff (the same call Running reads), live
-    before it (the same verdict the tabs read), None once settled and
-    for anything the board stakes or declines."""
-    if f.settled:
-        return None
-    if odds_api.started(f.kickoff):
+def record_lane(f) -> str | None:
+    """Which lane a card sits in for the tag: 'athena', 'watch' or
+    'priced', for ANY card. Frozen from the forward log once the match has
+    kicked off or settled (the call the board made at first sight), live
+    from the verdict before it. None for a red card and for a card with
+    no label at all."""
+    if f.settled or odds_api.started(f.kickoff):
         call = was_called(f)
         if call:
             if call["mark"] == "watch":
@@ -1142,39 +1135,83 @@ def live_lane(f) -> str | None:
     return "priced" if v["play"] else "watch" if v["watch"] else "athena"
 
 
+def record_tag(f) -> str | None:
+    """The card's live-safety word by its lane and its starred lane's
+    printed edge, for any card; None where record_lane is None."""
+    lane = record_lane(f)
+    if not lane:
+        return None
+    return live_tag(lane, _edge(f.tip3 if _star_any(f) == 3 else f.tip1))
+
+
+def is_declined(f) -> bool:
+    """Is this a Declined card: a red or super-red label (the tier saying
+    avoid), or an UNSTAKED card — Athena lane or watch — tagged live
+    unsafe. A priced play is never declined by its tag."""
+    lab = label_any(f)
+    if lab and lab.endswith("red"):
+        return True
+    return record_lane(f) in ("athena", "watch") and record_tag(f) == "unsafe"
+
+
+def live_lane(f) -> str | None:
+    """record_lane for a card still to settle — the pill, the tabs and
+    board.verify read this; a settled card shows no pill."""
+    return None if f.settled else record_lane(f)
+
+
 def live_unsafe(f) -> bool:
-    """Files under Declined: an UNSTAKED card tagged unsafe. A priced play
-    carries the tag for information and stays where the price put it."""
-    return live_lane(f) in ("athena", "watch") and live_tag_of(f) == "unsafe"
+    """Files under Declined by its tag: an UNSTAKED card, still to settle,
+    tagged unsafe. A priced play carries the tag for information and
+    stays where the price put it."""
+    return not f.settled and not (
+        (lab := label_any(f)) and lab.endswith("red")) and is_declined(f)
 
 
 def live_tag_of(f) -> str | None:
     """The card's live-safety word, or None. One reader for the pill,
     the tabs and board.verify, so a card cannot be tagged one way and
     filed another."""
-    lane = live_lane(f)
-    if not lane:
-        return None
-    return live_tag(lane, _edge(f.tip3 if _star_any(f) == 3 else f.tip1))
+    return None if f.settled else record_tag(f)
 
 
 def _livetag_html(f) -> str:
-    lane = live_lane(f)
-    tag = live_tag_of(f)
-    if not lane or not tag:
+    """The live-safety pill on top of the card, and — on a card that is
+    out of the record — the words that say so. A settled card keeps the
+    pill its lane and band give it now, so Completed shows what the tag
+    would have said and why the card does or does not count."""
+    lane = record_lane(f)
+    tag = record_tag(f)
+    out = is_declined(f)
+    if not (lane and tag) and not out:
         return ""
-    e = _edge(f.tip3 if _star_any(f) == 3 else f.tip1)
-    who = {"athena": "Athena lane", "watch": "watch card", "priced": "priced play"}[lane]
-    row = live_bands()[(lane, edge_band(e))]
-    how = (f"This band landed {row['hit']:.1f}% on {row['n']} cards in the last "
-           f"three weeks, red cards out (safe at 79, cautious at 77)."
-           if row["source"] == "measured" else
-           f"Too few cards in the last three weeks to measure ({row['n']}); "
-           "the bettor's seed label of 12 Sep stands.")
-    tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). {how} "
-           "A label for buying into this card in play; it decides nothing.")
-    return (f'<div class="livebar"><span class="livetag lt-{tag}" '
-            f'title="{html.escape(tip)}">live {tag}</span></div>')
+    pill = ""
+    if lane and tag:
+        e = _edge(f.tip3 if _star_any(f) == 3 else f.tip1)
+        who = {"athena": "Athena lane", "watch": "watch card", "priced": "priced play"}[lane]
+        row = live_bands()[(lane, edge_band(e))]
+        how = (f"This band landed {row['hit']:.1f}% on {row['n']} cards in the last "
+               f"three weeks, red cards out (safe at 79, cautious at 77)."
+               if row["source"] == "measured" else
+               f"Too few cards in the last three weeks to measure ({row['n']}); "
+               "the bettor's seed label of 12 Sep stands.")
+        tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). {how} "
+               "A label for buying into this card in play"
+               + (", and an unsafe one on an unstaked card files it under "
+                  "Declined and out of the record." if lane != "priced" else
+                  "; a priced play keeps its file and its place in the record "
+                  "whatever the tag says."))
+        pill = (f'<span class="livetag lt-{tag}" title="{html.escape(tip)}">'
+                f'live {tag}</span>')
+    nocount = ""
+    if out:
+        why = ("the tier says avoid" if (lab := label_any(f)) and lab.endswith("red")
+               else "tagged live unsafe")
+        nocount = (f'<span class="nocount" title="Declined: {why}. Swept and graded, '
+                   'but in no hit rate — not the tiles, not the baselines, not a '
+                   'league badge, not the bank (the bettor\'s rule, 12 Sep).">'
+                   '⛔ not in the record</span>')
+    return f'<div class="livebar">{pill}{nocount}</div>'
 
 
 def running_call(f) -> dict | None:
@@ -1905,13 +1942,14 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "has since happened. Not buyable any more, so not a play — the "
          "price shown is the one from first sight, kept in the forward "
          "log. A card the board declined never appears here."),
-        ("⛔ Declined", "two kinds. A red or super-red label is the tier "
-         "saying avoid: never played at any price, and it counts toward "
-         "NO hit rate — not the tiles, not the baselines, not a league "
-         "badge, not the bank. A card tagged LIVE UNSAFE is the bettor "
-         "keeping it out of live buys too — an Athena lane at −4 or "
-         "worse, a watch card above +1 — and it still counts in the "
-         "record. Both are swept and graded."),
+        ("⛔ Declined", "two kinds, one rule. A red or super-red label is "
+         "the tier saying avoid: never played at any price. A card tagged "
+         "LIVE UNSAFE is the bettor keeping an unstaked card out of live "
+         "buys too — an Athena lane or a watch card whose edge band is "
+         "landing under 77 in the last three weeks. Either way the card "
+         "counts toward NO hit rate — not the tiles, not the baselines, "
+         "not a league badge, not the bank (the bettor's rule, 12 Sep). "
+         "Both are swept and graded."),
         ("🔵 Live Watch", "the cards the price never cleared and the tier "
          "did not refuse, tagged live safe or live cautious: the ones a "
          "live buy may be read on, with the from-here line once they "
@@ -2036,13 +2074,11 @@ def main() -> None:
     # beside cards that merely failed on price. It gets its own tab, is
     # still swept and graded by the bot, and counts toward nothing.
     # Since 12 Sep Declined also holds every unstaked card tagged LIVE
-    # UNSAFE — an Athena lane at −4 or worse, a watch card above +1. The
-    # RECORD rule is unchanged: only a red label is kept out of the hit
-    # rates; an unsafe card still counts, it is only not offered.
+    # UNSAFE — an Athena lane at −4 or worse, a watch card above +1 — and
+    # since the same evening a Declined card is OUT OF THE RECORD like a
+    # red one (is_declined is the predicate behind counts).
     declined = [f for f in pending if f not in playable and f not in watch
-                and f not in running
-                and (((lab := label_any(f)) and lab.endswith("red"))
-                     or live_unsafe(f))]
+                and f not in running and is_declined(f)]
     waiting = [f for f in pending if f not in playable and f not in watch
                and f not in running and f not in declined]
     done = [f for f in fixtures if f.settled][::-1]
@@ -2114,8 +2150,8 @@ def main() -> None:
                + " · probation"),
         ])
         + ' <span class="dim">— the ★ lane, then each family\'s PLAYABLE '
-          'lanes, graded on this session\'s completed cards · red and '
-          'super-red cards excluded</span></div>')
+          'lanes, graded on this session\'s completed cards · declined '
+          'cards excluded (red, super red, live unsafe)</span></div>')
 
     # NORMAL and STRONG: the record of the cards the board itself marked
     # PLAY, by kind, from the forward log — stamped at first sight, so a
@@ -2202,8 +2238,8 @@ def main() -> None:
             if k in base)
         basebar = (f'<div class="basebar">Baselines — hit vs said: {cells} '
                    f'<span class="dim">— every tip replayed over each '
-                   f'league’s last 300 matches, averaged · red and '
-                   f'super-red cards excluded</span></div>')
+                   f'league’s last 300 matches, averaged · declined '
+                   f'cards excluded (red, super red, live unsafe)</span></div>')
 
     # A bet's fixture, so a row can be filtered by league, country and
     # lane kind exactly like a card is.
@@ -2374,9 +2410,14 @@ def main() -> None:
         # A settled board card carries no guard label in the bank (the
         # label lives on the fixture), so the hero window below could not
         # tell a red one apart and counted it — 64 of the 300 on 7 Sep.
-        # The board's own red test decides, and the flag says "no count".
+        # The board's own test decides — red, and since 12 Sep the
+        # unstaked cards tagged live unsafe — and the flag says "no count".
         if not counts(f):
             entry["nc"] = 1
+        # The live tag, for the bank card's search words ("live unsafe").
+        lt = record_tag(f)
+        if lt:
+            entry["lt"] = lt
         # The guard on a board card, in the bank's own fields, so Ask
         # Athena reads a live card and a past one with the same words:
         # label, score, strong, the starred lane, and the verdict at the
@@ -2495,6 +2536,7 @@ def main() -> None:
     # 288 rows after the 31 Aug ingest, which pulled the hero window down
     # twice as far as the week deserved. The retro row wins; it carries
     # every lane, where the board row carries at most two.
+    from scripts import bankrates as _br
     for comp in bank.values():
         seen, keep = set(), []
         for m in sorted(comp["matches"], key=lambda x: x.get("src") == "board"):
@@ -2503,6 +2545,16 @@ def main() -> None:
                 continue
             seen.add(k)
             keep.append(m)
+            # A bank row wears the same two flags a board row does: "nc"
+            # when it is out of the record (red, or an unstaked card
+            # tagged live unsafe — bankrates.counts, the bank's copy of
+            # the board's predicate) and "lt" for its tag's search word.
+            if m.get("src") != "board":
+                if not _br.counts(m):
+                    m["nc"] = 1
+                lt = _br.tag(m)
+                if lt:
+                    m["lt"] = lt
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
 
     # The headline number is what a reader FOLLOWING THE STAR actually
@@ -2516,7 +2568,6 @@ def main() -> None:
     # were the last hit rate on the page still counting them — 76.7 with
     # the 64 reds in the window, 80.7 without — and the headline is the
     # one number nobody scrolls past.
-    from scripts import bankrates as _br
     graded = []
     for comp in bank.values():
         for m in comp["matches"]:
@@ -2545,7 +2596,8 @@ def main() -> None:
                  / len(window) * 100) if len(window) >= 100 else None
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
     hero_fine = ("The final pick · the 300 most recent graded "
-                 "playable cards · red and super-red cards excluded")
+                 "playable cards · declined cards excluded (red, super "
+                 "red, live unsafe)")
 
     for shown in set(nick.values()):
         prefer[base_key(shown)] = shown
@@ -2710,6 +2762,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .lt-safe {{ color:#8fe3a8; border-color:#2f6b45; background:rgba(47,107,69,.16); }}
 .lt-cautious {{ color:#d9b46a; border-color:#5b4a24; background:rgba(91,74,36,.16); }}
 .lt-unsafe {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.18); }}
+.nocount {{ display:inline-block; font-size:10px; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--dim); white-space:nowrap;
+  cursor:help; }}
+.livetag + .nocount {{ margin-left:6px; }}
 .taken b {{ font-weight:700; }}
 .taken.own {{ background:transparent; color:var(--dim);
   border-color:var(--edge); text-transform:none; letter-spacing:0; }}
@@ -3011,13 +3067,16 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   playing out, not a second chance at them.</div>
   {_grid(running, "run", reads)}</div>
  <div class="tabpane" id="t-declined">
-  <div class="panenote">Two kinds of card. A <b>red or super-red</b> label
-  is the tier saying avoid — never played at any price, and it counts
-  toward <b>no hit rate anywhere</b>, on this board or in the bank. A
-  card tagged <b>live unsafe</b> is one the bettor keeps out of live
-  buys as well — an Athena lane at −4 or worse, a watch card above +1 —
-  and it still counts in the record. Both are kept, swept and graded,
-  because a rule that is never checked is only a habit.</div>
+  <div class="panenote">Two kinds of card, one rule. A <b>red or
+  super-red</b> label is the tier saying avoid — never played at any
+  price. A card tagged <b>live unsafe</b> is one the bettor keeps out of
+  live buys as well — an Athena lane or a watch card whose edge band is
+  landing under 77 in the last three weeks. Either way the card counts
+  toward <b>no hit rate anywhere</b>, on this board or in the bank (the
+  bettor's rule, 12 Sep). Both are kept, swept and graded, because a
+  rule that is never checked is only a habit. Search <b>declined</b>,
+  <b>live unsafe</b>, <b>live cautious</b> or <b>live safe</b> on any
+  tab to find cards by their tag.</div>
   {_grid(declined, "declined", reads)}</div>
  <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
   <table id="t-betstable" class="sortable">
@@ -3053,10 +3112,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  <img class="pagebanner" src="banner-retrosim.jpg" alt="">
  <h2>Retrosim confirmed hitrates</h2>
   <p class="dim"><b>Hit</b> grades every Tip 1 the league produced,
- filter or no filter — <b>except red and super-red cards</b>, which the
- tier forbids at any price and which therefore count toward no rate
- here or anywhere (the bettor's rule, 7 Sep; they stay in the bank for
- analysis). <b>Playable hit</b> is the same replay narrowed to
+ filter or no filter — <b>except declined cards</b>: red and super-red
+ cards, which the tier forbids at any price (the bettor's rule, 7 Sep),
+ and since 12 Sep the unstaked cards tagged <b>live unsafe</b> — an
+ Athena lane or a watch card whose edge band is landing under 77 on the
+ board's last three weeks. They count toward no rate here or anywhere
+ and stay in the bank for analysis. <b>Playable hit</b> is the same replay narrowed to
  the lanes the board actually offers (edge above +1%) — the number the
  Playable tab lives on, with that subset's tip count in brackets. This
  very column exposed seven leagues whose above-bar lanes ran a flat 6–7
@@ -3835,6 +3896,10 @@ function askHay(m, comp) {{
     if (m.g.startsWith("super ")) bits.push("guard " + m.g.slice(6), "label " + m.g.slice(6));
   }}
   if (m.st) bits.push("strong");
+  // The live tag's words and whether the card is in the record, the
+  // same vocabulary the board bar takes ("live unsafe", "declined").
+  if (m.lt) bits.push("live " + m.lt, "tag " + m.lt, "live tag " + m.lt);
+  bits.push((m.g || "").endsWith("red") || m.nc ? "declined" : "counted");
   if (m.v) {{
     bits.push("verdict " + m.v);
     bits.push(m.v === "no play" ? "verdict no play" : "verdict play");
@@ -3890,13 +3955,16 @@ function askCard(m, comp, note, open) {{
     + (gm("m3") !== null ? m.m3 + " " : "")
     + m.t3.replaceAll(" · ", "<br>") + "</div>";
   let g = "";
-  // A red or super-red card counts toward NO hit rate (the bettor's
-  // rule, 7 Sep): it is rendered and graded, but it carries no data-g*
-  // so askFilter's tiles never see it. It is not a bug that the tile
-  // count is smaller than the card count.
-  const red = (m.g || "").endsWith("red") || !!m.nc;
+  // A declined card — red or super-red (the bettor's rule, 7 Sep), or an
+  // unstaked card tagged live unsafe (12 Sep) — counts toward NO hit
+  // rate: it is rendered and graded, but it carries no data-g* so
+  // askFilter's tiles never see it. The render sets "nc" on every such
+  // row, bank or board, from the same predicate the page's other rates
+  // use. It is not a bug that the tile count is smaller than the card
+  // count.
+  const out = (m.g || "").endsWith("red") || !!m.nc;
   for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
-    if (!red && gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
+    if (!out && gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
   // The guard on a past card: its label as a badge, and where a closing
   // price exists the verdict line a live card shows. The FINAL PICK tiles
   // (the bettor's, 7 Sep) count the STARRED lane's mark (pk: tip 1, or a
@@ -3975,8 +4043,8 @@ function askFilter() {{
   }};
   // FINAL PICK by label: the starred lane's record on the super green,
   // green and orange cards — the bettor's tiles (7 Sep), replacing the
-  // NORMAL / STRONG pair. Red and super-red cards carry no data-g* and
-  // so have no tile: they count toward nothing.
+  // NORMAL / STRONG pair. Declined cards (red, super red, live unsafe)
+  // carry no data-g* and so have no tile: they count toward nothing.
   box.innerHTML = cell("tip 1", "g1") + cell("tip 2", "g2") +
     cell("tip 3", "g3") + cell("final pick · super green", "gsg") +
     cell("final pick · green", "gg") + cell("final pick · orange", "go");

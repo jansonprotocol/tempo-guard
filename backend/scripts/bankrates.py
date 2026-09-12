@@ -1,21 +1,29 @@
-"""Hit rates for DISPLAY, derived from the bank with the red cards out.
+"""Hit rates for DISPLAY, derived from the bank with the declined cards out.
 
 The bettor's rule, 7 Sep: a red or super-red card is never allowed to be
 played, so it is never allowed into a hit rate either. It stays in the
-bank for analysis and is still graded — it just does not count.
+bank for analysis and is still graded — it just does not count. Since
+12 Sep the same goes for every card the board DECLINES by its live tag:
+an unstaked card — an Athena lane, or a watch card a few percent short
+of its price bar — whose lane and printed-edge band the board's last
+three weeks have measured as live unsafe (scripts/livebands.py). The
+bettor: "everything that now is a declined card must be removed from
+what now actual hitrates are. Remove them out of bank hitrates and
+session hitrates."
 
 Everything here is read from config/matchbank_retro.json, which already
-carries the guard's label on every card (matchbank.guard writes it), so
-no replay is needed and nothing is re-derived.
+carries the guard's label on every card (matchbank.guard writes it) and,
+where a closing price exists, the verdict at that price — so a bank card
+has a lane the way a board card does, and the same tag.
 
 TWO FILES ARE DELIBERATELY NOT TOUCHED. config/league_hitrates.tsv is an
 ENGINE input — market_select reads its hit and play_hit columns for the
 REL debit and the buy-from blend — and config/guard_slices.tsv is the
-confluence score's table. Recomputing either without red cards would
-change what the engine says, which is a rules change, and PRE-ALFA 2 is
-a no-touch run. So the display reads THIS module and the engine goes on
-reading its own files; the two are allowed to differ, and the difference
-is exactly the red cards.
+confluence score's table. Recomputing either without the declined cards
+would change what the engine says, which is a rules change, and PRE-ALFA
+2 is a no-touch run. So the display reads THIS module and the engine
+goes on reading its own files; the two are allowed to differ, and the
+difference is exactly the declined cards.
 
 Every reader falls back to the typed file when the bank is missing, so a
 fresh checkout with no bank still renders.
@@ -26,6 +34,8 @@ import json
 import re
 from functools import lru_cache
 from pathlib import Path
+
+from scripts import livebands
 
 ROOT = Path(__file__).resolve().parents[2]
 BANK = ROOT / "config" / "matchbank_retro.json"
@@ -45,10 +55,50 @@ def bank() -> dict:
     return _BANK
 
 
-def counts(m: dict) -> bool:
-    """The one predicate: a labelled red card does not count."""
+def not_red(m: dict) -> bool:
+    """The 7 Sep rule on its own: a labelled red card does not count."""
     g = m.get("g") or ""
     return not g.endswith("red")
+
+
+def lane(m: dict) -> str | None:
+    """The bank card's lane for the live tag, read the way the board reads
+    a live card: 'priced' where the closing price cleared the bar,
+    'watch' where it fell inside the watch band of it, 'athena' for the
+    rest — a card the price never cleared, or one no closing price
+    reached, which is where an unquoted board card files too. None for
+    a red card and for an unlabelled one."""
+    g = m.get("g") or ""
+    if not g or g.endswith("red"):
+        return None
+    v = m.get("v")
+    if v in ("normal", "strong"):
+        return "priced"
+    if v == "no play" and m.get("bp") and m.get("need"):
+        from scripts.webapp import WATCH_BAND
+        if m["bp"] >= m["need"] * (1 - WATCH_BAND):
+            return "watch"
+    return "athena"
+
+
+def tag(m: dict) -> str | None:
+    """The bank card's live-safety word, by its lane and the printed edge
+    of its starred lane (tip 3 where the DNB gate took it, else tip 1)."""
+    ln = lane(m)
+    if not ln:
+        return None
+    cell = m.get("t3") if m.get("pk") == 3 else m.get("tip")
+    return livebands.tag(ln, _edge(cell))
+
+
+def counts(m: dict) -> bool:
+    """The one predicate, the bank's copy of webapp.counts: a labelled
+    red card does not count, and neither does an unstaked card — Athena
+    lane or watch — tagged live unsafe. A priced play counts whatever
+    its tag says, and an unlabelled card always did."""
+    if not not_red(m):
+        return False
+    return not (lane(m) in ("athena", "watch") and tag(m) == "unsafe")
 
 
 def _claim(cell: str | None) -> float | None:
@@ -72,7 +122,7 @@ def _hit(mark: str | None) -> bool | None:
 
 @lru_cache(maxsize=1)
 def display_rates() -> dict[str, dict]:
-    """Per league: n, hit, says, gap, play_hit, play_n — red cards out.
+    """Per league: n, hit, says, gap, play_hit, play_n — declined cards out.
 
     Mirrors the columns of league_hitrates.tsv so the badge and the
     Retrosim row can be built the same way from either source.
@@ -118,7 +168,7 @@ def display_rates() -> dict[str, dict]:
 
 @lru_cache(maxsize=4)
 def baselines(n: int = 300, min_n: int = 30) -> dict[str, dict] | None:
-    """Per league, over its most recent `n` bank cards, red cards out:
+    """Per league, over its most recent `n` bank cards, declined cards out:
     hits/count/summed-claim for fp, t1, t2, t3 — the shape baselines.tsv
     carries, so the hero bar and the tier table read either source alike.
     """

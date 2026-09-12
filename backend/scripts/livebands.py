@@ -23,9 +23,17 @@ negative Athena band is its best slice (+4.6 on 3,539 cards) and the
 first week of September ran it at 68.8%, and it is the second number
 the tag exists for.
 
-Display only. Nothing here touches the engine, the guard's slices, the
-labels or the record; it decides which unstaked cards are OFFERED for a
-live buy and where they file (Declined takes the unsafe ones).
+Nothing here touches the engine, the guard's slices or the labels. It
+decides which unstaked cards are OFFERED for a live buy and where they
+file (Declined takes the unsafe ones) — and since 12 Sep a Declined card
+is out of the record too (the bettor: "everything that now is a declined
+card must be removed from what now actual hitrates are"), so the tag
+reaches every hit rate on the board and in the bank through the two
+predicates webapp.counts and bankrates.counts.
+
+The measurement itself keeps only the RED cards out (webapp.not_red): a
+band measured on a record that already dropped its own unsafe cards
+could never come back, and a label that cannot move is not a label.
 
 Writes config/live_bands.tsv, read by webapp.live_tag — a typed table
 like the others, so the page and the README render from the same rule.
@@ -48,6 +56,56 @@ DAYS = 21               # rolling window, in days, of settled kickoffs
 BANDS = ("+1 up", "−1..+1", "−4..−1", "−4 down")
 LANES = ("athena", "watch", "priced")
 
+# THE SEED (the bettor's hand bands, 12 Sep). Whether a card the board did
+# not stake — an Athena lane, or a watch card — is one to buy into in
+# play, read off its printed EDGE and its lane. Set from the session's
+# negative-edge tally: Athena cards at −4 or worse were 22 of 32 in the
+# first week and the only slice that broke; watch cards above +1 were the
+# weakest watch slice at 76.7% on thirty. The priced lane — the board's
+# own PLAYs (the bettor, 12 Sep: "this one doesn't have a live tag") — is
+# seeded from the bank's priced plays by edge band, 76.9% above +1, 73.0%
+# around zero, 66.0% and 73.3% in the negative bands, all under claim.
+# INFORMATION ONLY on that lane: a priced play is the board's stake and
+# files under Playable or Running whatever its tag says, and it stays in
+# the record.
+SEED = {
+    "athena": {"+1 up": "safe", "−1..+1": "safe", "−4..−1": "safe",
+               "−4 down": "unsafe"},
+    "watch":  {"+1 up": "unsafe", "−1..+1": "safe", "−4..−1": "cautious",
+               "−4 down": "cautious"},
+    "priced": {"+1 up": "cautious", "−1..+1": "unsafe", "−4..−1": "unsafe",
+               "−4 down": "unsafe"},
+}
+
+_BANDS: dict | None = None
+
+
+def edge_band(edge: float) -> str:
+    return ("+1 up" if edge >= 1 else "−1..+1" if edge > -1
+            else "−4..−1" if edge > -4 else "−4 down")
+
+
+def bands() -> dict[tuple[str, str], dict]:
+    """The MEASURED band table (config/live_bands.tsv), falling back to
+    the seed where the file is missing or a band is absent. Read once."""
+    global _BANDS
+    if _BANDS is None:
+        got = read() or {}
+        _BANDS = {}
+        for lane, seeds in SEED.items():
+            for band, seed in seeds.items():
+                _BANDS[(lane, band)] = got.get((lane, band)) or dict(
+                    n=0, hit=None, said=None, label=seed, source="seed")
+    return _BANDS
+
+
+def tag(lane: str | None, edge: float | None) -> str | None:
+    """'safe', 'cautious' or 'unsafe' by lane and printed edge; None for
+    no lane (a red card, an abstention) or no printed edge."""
+    if lane not in SEED or edge is None:
+        return None
+    return bands()[(lane, edge_band(edge))]["label"]
+
 
 def label(hit_pct: float | None, n: int, seed: str) -> tuple[str, str]:
     """(label, source): measured when n is enough, else the seed."""
@@ -69,13 +127,9 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
     for f in board.load():
         if not f.settled or f.kickoff[:10] < since or not f.tip1 or f.tip1.startswith("—"):
             continue
-        if not webapp.counts(f):                       # red cards are not in the record
+        if not webapp.not_red(f):        # red out; unsafe IN, or a band could never recover
             continue
-        call = webapp.was_called(f)
-        mark = call["mark"] if call else "no row"
-        lane = ("watch" if mark == "watch" else
-                "priced" if mark in ("normal", "strong") else
-                "athena" if mark in ("no play", "no row") else None)
+        lane = webapp.record_lane(f)
         if lane is None:
             continue
         cell = f.tip3 if webapp._star_any(f) == 3 else f.tip1
@@ -91,7 +145,7 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
         for band in BANDS:
             n, h, c = tally[(lane, band)]
             hit = (h / n * 100) if n else None
-            lab, src = label(hit, n, webapp.LIVE_TAG[lane][band])
+            lab, src = label(hit, n, SEED[lane][band])
             rows.append(dict(lane=lane, band=band, n=n, hit=hit,
                              said=(c / n) if n else None, label=lab, source=src))
     return rows

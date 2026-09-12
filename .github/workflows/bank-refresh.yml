@@ -6,14 +6,18 @@
 # hand, in the order they depend on each other:
 #   scripts/ingest_board.py   completed board cards -> the store (idempotent)
 #   scripts/livebands.py      the live tag's bands, measured on the last
-#                             three weeks of settled cards, labelled by
-#                             hit rate (safe >= 79, cautious >= 77, else
-#                             unsafe; a thin band keeps the seed label)
+#                             three weeks of settled cards (red cards
+#                             out), labelled by hit rate (safe >= 79,
+#                             cautious >= 77, else unsafe; a thin band
+#                             keeps the seed label)
 #   scripts/board.py          render README + app + live.json, then verify
 #
 # The engine is not touched: no re-pricing, no recomputed guard slices,
 # no label rates. What can change is which unstaked cards are OFFERED for
-# a live buy and where they file, and the bank the retrosim reads.
+# a live buy and where they file — and, since 12 Sep, which cards are IN
+# THE RECORD: an unstaked card whose band is unsafe is declined and out
+# of every displayed hit rate, board and bank, so a band flipping here
+# moves the session bar, the baselines and the retrosim table.
 #
 # The commit subject carries no "[skip render]" on purpose: this is one
 # that should deploy. If the live sweep pushes first the push is refused;
