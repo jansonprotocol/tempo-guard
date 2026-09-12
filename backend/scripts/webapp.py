@@ -617,7 +617,7 @@ def _haystack(f) -> str:
     # request, 2 Sep). "guard red" and "label red" are there too, because
     # a bare "red" also finds NY Red Bulls.
     def _label_words(lab):
-        out = [lab, f"guard {lab}", f"label {lab}"]
+        out = [lab, f"guard {lab}", f"label {lab}", f"band {lab}"]
         if lab.startswith("super "):
             out += [f"guard {lab[6:]}", f"label {lab[6:]}"]
         if lab.endswith("+"):
