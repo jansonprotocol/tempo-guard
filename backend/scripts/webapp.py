@@ -590,6 +590,10 @@ def _haystack(f) -> str:
         bits += [f"live {tag}", f"tag {tag}", f"live tag {tag}",
                  {"athena": "athena lane", "watch": "watch lane",
                   "priced": "priced play"}[lane], f"{tag} {lane}"]
+        to = record_flip(f)
+        if to:
+            bits += ["flipped", "live unsafe flipped", f"flipped {to}",
+                     f"flipped to {to}"]
     if is_declined(f):
         bits += ["declined", "no count"]
     else:
@@ -1144,6 +1148,20 @@ def record_tag(f) -> str | None:
     return live_tag(lane, _edge(f.tip3 if _star_any(f) == 3 else f.tip1))
 
 
+def _has_lane(cell: str) -> bool:
+    c = (cell or "").strip().replace("*", "")
+    return bool(c) and not c.lstrip("✅❌◦ ").startswith("—")
+
+
+def record_flip(f) -> str | None:
+    """"tip 3" or "tip 2" when this unsafe priced play's pill reads
+    "flipped" (livebands.flip: the lane beats tip 1 on the board's own
+    unsafe priced plays, or the bank seeds it), else None."""
+    from scripts import livebands
+    return livebands.flip(record_lane(f), record_tag(f),
+                          _has_lane(f.tip2), _has_lane(f.tip3))
+
+
 def is_declined(f) -> bool:
     """Is this a Declined card: a red or super-red label (the tier saying
     avoid), or an UNSTAKED card — Athena lane or watch — tagged live
@@ -1201,8 +1219,22 @@ def _livetag_html(f) -> str:
                   "Declined and out of the record." if lane != "priced" else
                   "; a priced play keeps its file and its place in the record "
                   "whatever the tag says."))
+        word = f"live {tag}"
+        to = record_flip(f)
+        if to:
+            fr = live_bands()[("flip", to.replace(" ", ""))]
+            word += f" · flipped → {to}"
+            tip += (f" FLIPPED: on unsafe priced plays that also print a {to}, "
+                    + (f"{to} landed {fr['hit']:.1f}% to tip 1's {fr['said']:.1f}% "
+                       f"on the same {fr['n']} cards in the last three weeks."
+                       if fr["source"] == "measured" else
+                       f"the board has too few cards to measure yet ({fr['n']}); "
+                       f"the bank seeds it — {to} 81.5% to tip 1's 69.6% on 92 "
+                       f"unsafe priced plays." if to == "tip 3" else
+                       f"the bank seeds it on 92 cards.")
+                    + f" Read the {to} lane on this card, not tip 1.")
         pill = (f'<span class="livetag lt-{tag}" title="{html.escape(tip)}">'
-                f'live {tag}</span>')
+                f'{word}</span>')
     nocount = ""
     if out:
         why = ("the tier says avoid" if (lab := label_any(f)) and lab.endswith("red")
@@ -2418,6 +2450,9 @@ def main() -> None:
         lt = record_tag(f)
         if lt:
             entry["lt"] = lt
+        fl = record_flip(f)
+        if fl:
+            entry["fl"] = fl
         # The guard on a board card, in the bank's own fields, so Ask
         # Athena reads a live card and a past one with the same words:
         # label, score, strong, the starred lane, and the verdict at the
@@ -2555,6 +2590,9 @@ def main() -> None:
                 lt = _br.tag(m)
                 if lt:
                     m["lt"] = lt
+                fl = _br.flip(m)
+                if fl:
+                    m["fl"] = fl
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
 
     # The headline number is what a reader FOLLOWING THE STAR actually
@@ -3899,6 +3937,7 @@ function askHay(m, comp) {{
   // The live tag's words and whether the card is in the record, the
   // same vocabulary the board bar takes ("live unsafe", "declined").
   if (m.lt) bits.push("live " + m.lt, "tag " + m.lt, "live tag " + m.lt);
+  if (m.fl) bits.push("flipped", "live unsafe flipped", "flipped " + m.fl, "flipped to " + m.fl);
   bits.push((m.g || "").endsWith("red") || m.nc ? "declined" : "counted");
   if (m.v) {{
     bits.push("verdict " + m.v);

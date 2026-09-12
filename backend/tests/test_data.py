@@ -1182,6 +1182,27 @@ def test_declined_cards_count_toward_no_hit_rate():
                 "live unsafe)" in page.read_text())
 
 
+def test_unsafe_priced_plays_flip_to_tip_3_not_tip_2(monkeypatch):
+    """The bettor's ask, 12 Sep: on a priced play tagged live unsafe, say
+    when another lane beats tip 1. Per lane, seeded from the bank (tip 3
+    flipped, tip 2 hold), measured on the board at 15 paired cards."""
+    from scripts import livebands
+    monkeypatch.setattr(livebands, "_BANDS", None)
+    monkeypatch.setattr(livebands, "OUT", __import__("pathlib").Path("/nonexistent/live_bands.tsv"))
+    F = livebands.flip
+    assert F("priced", "unsafe", True, True) == "tip 3"
+    assert F("priced", "unsafe", False, True) == "tip 3"
+    assert F("priced", "unsafe", True, False) is None          # tip 2 holds
+    assert F("priced", "unsafe", False, False) is None
+    assert F("priced", "cautious", True, True) is None         # unsafe only
+    assert F("athena", "unsafe", True, True) is None           # priced only
+    L = livebands.flip_label
+    assert L(82.0, 70.0, 20, "hold") == ("flipped", "measured")
+    assert L(74.0, 70.0, 20, "flipped") == ("hold", "measured")
+    assert L(100.0, 0.0, 2, "hold") == ("hold", "seed")
+    monkeypatch.setattr(livebands, "_BANDS", None)
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""

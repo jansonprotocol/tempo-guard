@@ -91,6 +91,12 @@ def tag(m: dict) -> str | None:
     return livebands.tag(ln, _edge(cell))
 
 
+def flip(m: dict) -> str | None:
+    """"tip 3" / "tip 2" when this bank card is an unsafe priced play whose
+    pill would read flipped (livebands.flip), else None."""
+    return livebands.flip(lane(m), tag(m), bool(m.get("t2")), bool(m.get("t3")))
+
+
 def counts(m: dict) -> bool:
     """The one predicate, the bank's copy of webapp.counts: a labelled
     red card does not count, and neither does an unstaked card — Athena

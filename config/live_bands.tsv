@@ -5,6 +5,9 @@
 # under 15 cards keeps the seed label (the bettor's hand table,
 # 12 Sep). Thresholds: safe >= 79, cautious >= 77, else unsafe.
 # window	21 days to 2026-09-12
+# The two 'flip' rows: unsafe priced plays that also print that lane,
+# paired — n cards where both graded, hit = THAT lane, said = tip 1 on
+# the same cards; flipped when the lane beats tip 1 by 5 points.
 # lane	band	n	hit	said	label	source
 athena	+1 up	94	84.0	84.0	safe	measured
 athena	−1..+1	71	85.9	84.0	safe	measured
@@ -18,3 +21,5 @@ priced	+1 up	65	78.5	80.9	cautious	measured
 priced	−1..+1	31	80.6	80.3	safe	measured
 priced	−4..−1	6	66.7	81.2	unsafe	seed
 priced	−4 down	1	0.0	83.4	unsafe	seed
+flip	tip2	2	100.0	0.0	hold	seed
+flip	tip3	2	100.0	0.0	flipped	seed

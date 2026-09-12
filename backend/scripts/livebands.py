@@ -77,6 +77,23 @@ SEED = {
                "−4 down": "unsafe"},
 }
 
+# THE FLIP (the bettor, 12 Sep, off the filter "priced play, live
+# unsafe": tip 1 landed 4 of 7 while tip 2 and tip 3 landed 2 of 2 — "if
+# that keeps up, when priced play and live unsafe, flip to tip 2 or 3"). A
+# priced play tagged unsafe that also prints a tip 2 or a tip 3 is asked
+# whether THAT lane beats tip 1 on the same cards. Measured on the board
+# window, paired (only cards where both lanes graded), and the flip is
+# on when the lane beats tip 1 by FLIP_AT points on at least MIN_N cards.
+# Under MIN_N the bank seeds it: on the 92 unsafe priced plays with a
+# tip 3, tip 3 landed 81.5 to tip 1's 69.6 (+12.0, and above its own
+# 75.7 claim) — flipped; on the 92 with a tip 2, tip 2 landed 76.1 to
+# 72.8 (+3.3) — hold. The cautious band says the same the other way:
+# tip 2 there is −15 on 836 cards, so the flip is per lane, not "any
+# other tip". Display only: the pill reads "live unsafe · flipped → tip
+# 3", the card stays a priced play and stays in the record.
+FLIP_AT = 5.0
+FLIP_SEED = {"tip2": "hold", "tip3": "flipped"}
+
 _BANDS: dict | None = None
 
 
@@ -96,7 +113,65 @@ def bands() -> dict[tuple[str, str], dict]:
             for band, seed in seeds.items():
                 _BANDS[(lane, band)] = got.get((lane, band)) or dict(
                     n=0, hit=None, said=None, label=seed, source="seed")
+        for tipn, seed in FLIP_SEED.items():
+            _BANDS[("flip", tipn)] = got.get(("flip", tipn)) or dict(
+                n=0, hit=None, said=None, label=seed, source="seed")
     return _BANDS
+
+
+def flip(lane: str | None, tag: str | None, has_tip2: bool, has_tip3: bool) -> str | None:
+    """Which lane an unsafe priced play flips to — "tip 3" or "tip 2" —
+    or None: not a priced play, not unsafe, no such lane on the card, or
+    the flip for that lane is not on. Tip 3 first, where both print."""
+    if lane != "priced" or tag != "unsafe":
+        return None
+    for tipn, has in (("tip3", has_tip3), ("tip2", has_tip2)):
+        if has and bands()[("flip", tipn)]["label"] == "flipped":
+            return tipn[:3] + " " + tipn[3]
+    return None
+
+
+def flip_label(tip_hit: float | None, tip1_hit: float | None, n: int, seed: str) -> tuple[str, str]:
+    """(label, source): measured when n is enough, else the seed."""
+    if tip_hit is None or tip1_hit is None or n < MIN_N:
+        return seed, "seed"
+    return ("flipped" if tip_hit - tip1_hit >= FLIP_AT else "hold"), "measured"
+
+
+def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
+    """Two rows, lane "flip", band "tip2" / "tip3": n paired cards in the
+    window (unsafe priced plays where tip 1 and that lane both graded),
+    hit = that lane's hit rate, said = TIP 1's hit rate on the same cards
+    (the column is reused; the header says so), label, source."""
+    from scripts import board, webapp
+    today = today or dt.date.today()
+    since = (today - dt.timedelta(days=days)).isoformat()
+    pair = {"tip2": [0, 0, 0], "tip3": [0, 0, 0]}          # n, tip hits, tip 1 hits
+    for f in board.load():
+        if not f.settled or f.kickoff[:10] < since:
+            continue
+        if webapp.record_lane(f) != "priced" or webapp.record_tag(f) != "unsafe":
+            continue
+        m1 = f.status[:1]
+        if m1 not in ("✅", "❌", "◦"):
+            continue
+        for tipn, cell in (("tip2", f.tip2), ("tip3", f.tip3)):
+            mk = cell.lstrip().replace("*", "")[:1]
+            if mk not in ("✅", "❌", "◦"):
+                continue
+            t = pair[tipn]
+            t[0] += 1
+            t[1] += mk != "❌"
+            t[2] += m1 != "❌"
+    rows = []
+    for tipn in ("tip2", "tip3"):
+        n, h, h1 = pair[tipn]
+        hit = (h / n * 100) if n else None
+        hit1 = (h1 / n * 100) if n else None
+        lab, src = flip_label(hit, hit1, n, FLIP_SEED[tipn])
+        rows.append(dict(lane="flip", band=tipn, n=n, hit=hit, said=hit1,
+                         label=lab, source=src))
+    return rows
 
 
 def tag(lane: str | None, edge: float | None) -> str | None:
@@ -160,6 +235,9 @@ def write(rows: list[dict], days: int, today: dt.date) -> None:
         f"# under {MIN_N} cards keeps the seed label (the bettor's hand table,",
         f"# 12 Sep). Thresholds: safe >= {SAFE_AT:.0f}, cautious >= {CAUTIOUS_AT:.0f}, else unsafe.",
         f"# window\t{days} days to {today.isoformat()}",
+        "# The two 'flip' rows: unsafe priced plays that also print that lane,",
+        "# paired — n cards where both graded, hit = THAT lane, said = tip 1 on",
+        f"# the same cards; flipped when the lane beats tip 1 by {FLIP_AT:.0f} points.",
         "# lane\tband\tn\thit\tsaid\tlabel\tsource",
     ]
     for r in rows:
@@ -199,6 +277,13 @@ def main() -> None:
     for r in rows:
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
         print(f"  {r['lane']:6} {r['band']:8} n={r['n']:3}  hit {hit}  -> {r['label']:8} ({r['source']})")
+    flips = flip_study(days, today)
+    print("the flip on unsafe priced plays, paired with tip 1:")
+    for r in flips:
+        hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
+        t1 = "   —  " if r["said"] is None else f"{r['said']:5.1f}%"
+        print(f"  {r['band']:6} n={r['n']:3}  {r['band']} {hit}  tip 1 {t1}  -> {r['label']:8} ({r['source']})")
+    rows += flips
     if not dry:
         write(rows, days, today)
         print(f"written: {OUT.relative_to(ROOT)}")
