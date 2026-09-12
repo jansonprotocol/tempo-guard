@@ -4184,7 +4184,11 @@ function askCard(m, comp, note, open) {{
   if (m.g) {{
     const star = m.pk === 3 ? gm("m3") : gm("mark");
     const tile = {{"green+": "ggp", "green": "gg", "orange": "go", "pink": "gp"}}[m.g];
-    if (tile && star !== null) g += " data-" + tile + '="' + star + '"';
+    // gated on `out` like the lane grades: a declined row (red, or an
+    // unstaked card tagged live unsafe) has no final-pick tile either —
+    // it was counting 276 unsafe Série A rows under "final pick · orange"
+    // while tip 1 showed the 3 that count (the bettor, 13 Sep).
+    if (!out && tile && star !== null) g += " data-" + tile + '="' + star + '"';
     body = '<div class="guard g-' + m.g.replaceAll(" ", "-").replaceAll("+", "-plus") + '">' + m.g
       + (m.st ? " · ★ strong" : "") + "</div>"
       + (m.v ? '<div class="verdict ' + (m.v === "no play" ? "no" : m.v === "strong" ? "strong" : "yes") + '">'
