@@ -1269,8 +1269,13 @@ def test_the_play_bar_follows_the_claim_band():
     assert webapp.band_bar(88.0) == 1.14 and webapp.band_bar(78.0) == 1.31
     # the starred lane's required price comes from the band, an unstarred
     # lane still prices off its own claim plus the margin
+    # the starred lane needs the engine's value less 3%, floored at the band bar
     need, hit, solid = webapp._needs("U4.25 82.7% −1.9% · buy≥1.30 (+5.6% margin)", "orange")
-    assert need == 1.18 and solid
+    assert abs(need - 1.30 * 0.97) < 1e-9 and solid
+    need_f, _h, _s = webapp._needs("U4.25 82.7% −1.9% · buy≥1.15 (−2.0% margin)", "orange")
+    assert need_f == 1.18                                  # the band bar is the floor
+    assert webapp.play_bar(88.0, "U4.5 88.0% +1.0% · buy≥1.20") == (1.20 * 0.97, 1.14)
+    assert webapp.play_bar(88.0, "U4.5 88.0% +1.0%") == (1.14, 1.14)   # no printed value: the bar
     need2, _h, solid2 = webapp._needs("U4.25 82.7% −1.9% · buy≥1.30 (+5.6% margin)", None)
     assert abs(need2 - (1 / 0.827) * 1.06) < 1e-9 and not solid2
     # red keeps its registered rate; the four colours carry the ladder's

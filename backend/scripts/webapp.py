@@ -850,6 +850,31 @@ DECLINE_MARGIN = 0.06
 # rebuild. Registered in config/hypotheses.tsv, 12 Sep.
 BAND_BAR = {"85+": 1.14, "80–85": 1.18, "75–80": 1.31}
 
+# THE VALUE BAR (the bettor, 12 Sep, an hour after the band bars: "make
+# playable now cards which are close, on or over the value bar; make
+# the others watch lanes"). The band bar alone called PLAY on 40 cards
+# of which 25 sat well under the engine's own price — a play by the
+# band's record, not a value bet. So PLAY now needs the best quote at
+# or within VALUE_BAND of the lane's printed buy≥ (the engine's
+# break-even plus its margin and league blend), with the band bar as a
+# floor; a card that clears or nearly clears the band bar but is short
+# of value is a WATCH card.
+VALUE_BAND = 0.03
+
+
+def _value_of(cell: str) -> float | None:
+    """The engine's own buy price printed on the lane: "buy≥1.28"."""
+    m = re.search(r"buy≥\s*([\d.]+)", cell or "")
+    return float(m.group(1)) if m else None
+
+
+def play_bar(p: float, cell: str) -> tuple[float, float]:
+    """(the price PLAY needs, the band bar): the engine's value less
+    VALUE_BAND, floored at the claim band's bar."""
+    bar = band_bar(p)
+    val = _value_of(cell)
+    return (max(bar, val * (1 - VALUE_BAND)) if val else bar), bar
+
 
 def claim_band(p: float) -> str:
     """The claim band a percentage falls in, BAND_BAR's key."""
@@ -1067,9 +1092,9 @@ def verdict(f, best: int) -> dict | None:
         return None
     lab, sc, cell, p = got
     hit = SAYS[lab]
-    # The bar by claim band (BAND_BAR), not by the label's rate: the
-    # label still decides red and strong, the claim decides the price.
-    need = band_bar(p)
+    # The bar: the engine's value less VALUE_BAND, floored at the claim
+    # band's bar (BAND_BAR). The label still decides red and strong.
+    need, bar = play_bar(p, cell)
     lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane))
     try:
@@ -1089,10 +1114,13 @@ def verdict(f, best: int) -> dict | None:
     # The watch list: same lane, same bar, the panel's best a little short
     # of it. Decided here beside PLAY, so the tab and the verify cannot
     # hold two definitions of "just shy".
+    # WATCH: short of value, but at or within WATCH_BAND of the BAND bar
+    # — the plays the band's record alone would have called, plus the
+    # cards a book of the bettor's own may still clear.
     watch = (not play) and (not lab.endswith("red")) and got_odds is not None \
-        and got_odds >= need * (1 - WATCH_BAND) and not live
+        and got_odds >= bar * (1 - WATCH_BAND) and not live
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
-                band=claim_band(p),
+                band=claim_band(p), bar=bar, value=_value_of(cell),
                 need=need, odds=got_odds, book=(q or {}).get("book"),
                 play=play, watch=watch, strong=play and strong,
                 mark=("strong" if play and strong else
@@ -1440,9 +1468,11 @@ def _guard(f, best: int) -> str:
     who = f'Tip {best} {html.escape(v["lane"])}' if v["lane"] else f'Tip {best}'
     need, odds, book = v["need"], v["odds"], v["book"] or "market"
     bt = html.escape(
-        f"The bar is set by the claim band, not the colour: a lane claiming "
-        f"{v['claim']:.1f}% is in the {v['band']} band, whose ROI-optimal bar on "
-        f"the bank is {need:.2f} (the bettor's rule, 12 Sep).")
+        f"PLAY needs the engine's value price less {VALUE_BAND*100:.0f}% "
+        + (f"({v['value']:.2f} on this lane), " if v["value"] else "")
+        + f"floored at the {v['band']} claim band's bar of {v['bar']:.2f}: "
+        f"{need:.2f} here. A quote at or within {WATCH_BAND*100:.0f}% of the "
+        f"band bar but short of value is a watch card (the bettor's rule, 12 Sep).")
     if v["strong"]:
         line = (f'<div class="verdict strong" title="{bt}">★ STRONG · PLAY {who} '
                 f'<span class="dim">· needs {need:.2f}, '
@@ -1483,7 +1513,7 @@ def _needs(cell: str, starred_label: str | None) -> tuple:
     """
     c = _claim(cell)
     if starred_label and c is not None:
-        return band_bar(c), SAYS[starred_label], True
+        return play_bar(c, cell)[0], SAYS[starred_label], True
     if c is None:
         return None, None, False
     return (1 / (c / 100.0)) * (1 + DECLINE_MARGIN), c / 100.0, False
@@ -2013,8 +2043,9 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         "with the lane, the price it needs and the book that pays it. Read "
         "it in this order: the <b>label</b> (green+, green, orange, pink \u2014 the "
         "claim band the starred lane sits in; orange lands 82.9% of the time, "
-        "green 88.0%), then <b>needs</b> (the band's bar: 1.14 at a claim of "
-        "85 or more, 1.18 at 80\u201385, 1.31 at 75\u201380), then the <b>price</b>. The price cleared the bar, so this "
+        "green 88.0%), then <b>needs</b> (the lane's value price less 3%, "
+        "floored at the band's bar: 1.14 at a claim of 85 or more, 1.18 at "
+        "80\u201385, 1.31 at 75\u201380), then the <b>price</b>. The price cleared the bar, so this "
         "is a bet: 4% of the bankroll at that price or better. If the book "
         "you use is short of the bar, it is not a bet there.") + show(
         strong, "play", "2 \u00b7 A strong play",
@@ -2046,11 +2077,11 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "orange 80\u201385, pink 75\u201380, each with its measured hit rate on "
          "the bank. Red and super red are still the tier and the "
          "confluence score saying avoid; they are never played."),
-        ("needs", "the band's bar: 1.14 at a claim of 85 or more, 1.18 at "
-         "80\u201385, 1.31 at 75\u201380 \u2014 each the ROI-optimal bar on the bank at "
-         "closing prices. The bar is the same for every card in the band \u2014 "
-         "that is deliberate: a bar built per card finds exactly the cards "
-         "the market is right about."),
+        ("needs", "the lane's value price (the engine's break-even plus its "
+         "margin and league blend) less 3%, floored at the band's bar: 1.14 "
+         "at a claim of 85 or more, 1.18 at 80\u201385, 1.31 at 75\u201380, each the "
+         "ROI-optimal bar on the bank at closing prices (the bettor's rule, "
+         "12 Sep)."),
         ("PASS / DECLINE", "every lane on the card carries its own bar: "
          "PASS means the best quote clears it, DECLINE means it does not, "
          "needs x.xx means nothing is quoted yet. Only the starred lane's "
@@ -2065,9 +2096,11 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "the safer line pays more on settlement. Everything else as "
          "printed."),
         ("👀 Watch lanes", "the starred lane is not red and the panel's "
-         "best sits under its bar by five percent or less. Not a play on "
-         "the feed's prices — but your own book may clear it: check the "
-         "offer, take it only at or above the needs price on the card."),
+         "best clears its claim band's bar, or sits under it by five "
+         "percent or less, but is short of the lane's value price. Not a "
+         "play on the feed's prices — but your own book may clear it: "
+         "check the offer, take it only at or above the needs price on "
+         "the card."),
         ("When to decide", "at first sight, two or three days out. A card "
          "that clears then may be bought later if its price has drifted "
          "out. A card that does not clear then is not a play on Saturday "
@@ -3188,20 +3221,22 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  </div>
  <div class="tabpane" id="t-playable">
   <div class="panenote">Only what the guard would actually stake: the
-  starred lane cleared its <b>claim band's bar</b> — 1.14 for a claim of
-  85 or more, 1.18 for 80–85, 1.31 for 75–80, each the ROI-optimal bar
-  on the bank at closing prices (the bettor's rule, 12 Sep) — and the
-  tier is not red. <b class="sgm">★ STRONG</b> adds a top-quartile
+  best quote is at or within 3% of the lane's <b>value</b> price (the
+  engine's break-even plus its margin), it clears the <b>claim band's
+  bar</b> — 1.14 for a claim of 85 or more, 1.18 for 80–85, 1.31 for
+  75–80 — and the tier is not red (the bettor's rule, 12 Sep). <b class="sgm">★ STRONG</b> adds a top-quartile
   confluence score in Europe — on 1,008 replayed bets those graded 81.0%
   and +8.87%, against 72.8% and −0.67% for the rest.</div>
   {_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-watch">
   <div class="panenote">Not plays — yet. The starred lane is not red and
-  the panel's best quote sits under its bar by no more than
-  {WATCH_BAND*100:.0f}%. The feed is 26 books and yours are not the
-  sharpest, so a card the panel prices a little short is one your own book
-  may clear: check the offer, and take it only at or above the
-  <b>needs</b> price on the card. Under that it is still a decline.</div>
+  the panel's best quote clears its claim band's bar, or sits under it by
+  no more than {WATCH_BAND*100:.0f}%, but is short of the lane's
+  <b>value</b> price (the bettor's rule, 12 Sep). The feed is 26 books
+  and yours are not the sharpest, so a card the panel prices a little
+  short is one your own book may clear: check the offer, and take it
+  only at or above the <b>needs</b> price on the card. Under that it is
+  still a decline.</div>
   {_grid(watch, "watch", reads)}</div>
  <div class="tabpane" id="t-running">
   <div class="panenote">Cards the board called before kickoff, now in
