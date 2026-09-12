@@ -1322,6 +1322,8 @@ def test_live_tag_words_are_searchable():
     for f in tagged[:40]:
         hay = webapp._haystack(f)
         assert f"live {webapp.record_tag(f)}" in hay
+        if webapp.record_lane(f) == "athena":
+            assert "live watch" in hay and "athena lane" in hay
         assert ("declined" in hay) == webapp.is_declined(f)
         assert ("counted" in hay) == (not webapp.is_declined(f))
     src = __import__("pathlib").Path(webapp.__file__).read_text()

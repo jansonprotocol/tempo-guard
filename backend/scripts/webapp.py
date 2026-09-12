@@ -602,7 +602,7 @@ def _haystack(f) -> str:
     if tag:
         lane = record_lane(f)
         bits += [f"live {tag}", f"tag {tag}", f"live tag {tag}",
-                 {"athena": "athena lane", "watch": "watch lane",
+                 {"athena": "athena lane live watch", "watch": "watch lane",
                   "priced": "priced play"}[lane], f"{tag} {lane}"]
         to = record_flip(f)
         if to:
