@@ -151,12 +151,20 @@ def _fmt(cell: str, fixture: str = "", quoted: bool = True) -> str:
         # "market", not "buy at min" (the bettor, 12 Sep, reading it as an
         # instruction): this is the feed's MEDIAN quote for the struck
         # lane, what most books pay, not a price to buy at.
+        # The engine's own buy price stays on the line as "value" (the
+        # bettor, 12 Sep: "which number advises to price with margin" —
+        # since the band bars, none did on the middle band). It is the
+        # lane's break-even plus the engine's margin and league blend.
+        bm = re.search(r"buy≥\s*([\d.]+)(?:\s*\(([^)]*)\))?", s)
+        val = (f' <span class="dim" title="The engine\'s own price for this '
+               f'lane: break-even plus its margin, blended with the league\'s '
+               f'record ({html.escape(bm.group(2) or "")}). Value from here; the '
+               f'board calls PLAY from the band bar in the verdict line.">'
+               f'· value {html.escape(bm.group(1))}</span>' if bm else "")
         s = re.sub(r"buy≥\s*[\d.]+(\s*\([^)]*\))?",
                    f'<span class="buyat" title="The market: the median quote '
-                   f'across the feed\'s books for this lane. The engine\'s own '
-                   f'buy price is in the fixtures file; the card shows what is '
-                   f'actually on offer instead.">market <b>{html.escape(q["consensus"])}'
-                   f'</b>{best}{uni}</span>', s)
+                   f'across the feed\'s books for this lane.">market '
+                   f'<b>{html.escape(q["consensus"])}</b>{best}{uni}</span>{val}', s)
     # LEAD WITH THE LINE THAT REACHES THE SLIP. Athena publishes Asian
     # rungs; a real bet is the safer neighbour — U3.0 is struck as U3.5.
     # Printing the rung beside a price quoted for the struck line invites
