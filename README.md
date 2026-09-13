@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 81.4%
 
     lane                        Tip 1              Tip 2
-    all matches            345 / 424  81.4%    231 / 342  67.5%
+    all matches            346 / 425  81.4%    231 / 342  67.5%
     played lanes  >+1%     152 / 187  81.3%    229 / 337  68.0%
     placed bets             98 / 119  82.4%    ROI +6.2%
 
@@ -621,7 +621,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 12-09 20:15 <b>Zagłębie v GKS Katowice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>U4.25 86.1% <b>+0.5%</b><br>buy≥1.22 (+7.2% margin)</td><td>U3.75 75.1% +4.8%<br>buy≥1.32 (+6.6% margin) · floor −2.9</td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-09 22:00 <b>Constantine v Chlef</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (81.2 −6.3)</td><td>U3.0 84.0% <b>+1.0%</b><br>buy≥1.32 (+5.7% margin)</td><td>U2.75 65.2% +1.4%<br>buy≥1.40 (+0.4% margin) · floor −9.8</td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-09 22:15 <b>Moquegua v Sporting Cristal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>U3.0 75.2% +2.7%<br>buy≥1.53 (+4.7% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 1-0 <b>Alianza Valledupar v Atlético Junior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U3.0 79.4% <b>+0.0%</b><br>buy≥1.32 (+1.2% margin) · <i>room for 1</i> · <i>from here: as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-0 <b>LA Galaxy v Seattle</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>U4.25 80.5% <b>+0.7%</b><br>buy≥1.29 (+6.1% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here 91% · fair 1.10</i></td><td><b>Seattle U1.5</b> 73.6% +13.2%<br>buy≥1.44 (+5.9% margin) · team · <i>room for 1</i> · <i>from here 89% · fair 1.12</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 69.6% +8.9% · buy≥1.51 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-0 <b>San Jose v Houston</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>U4.25 80.7% <b>+0.9%</b><br>buy≥1.33 (+6.1% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here 91% · fair 1.10</i></td><td>U3.75 64.5% +2.0%<br>buy≥1.42 (+0.3% margin) · floor −10.5 · <i>room for 2</i> · <i>from here 76% · fair 1.31</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 13-09 11:00 <b>Tokyo Verdy v JEF United Chiba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>U4.25 90.6% +2.4%<br>buy≥1.16 (+5.1% margin)</td><td>U3.75 80.7% +6.4%<br>buy≥1.22 (+4.5% margin) · floor −1.3</td></tr></table>
@@ -706,7 +705,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 345 / 424   ·   81.4%**   ·   **Tip 2 — 231 / 342   ·   67.5%**
+**Tip 1 — 346 / 425   ·   81.4%**   ·   **Tip 2 — 231 / 342   ·   67.5%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1234,6 +1233,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 3-1 · 13-09 02:30 <b>Kansas City v LAFC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>U4.25 80.8% <b>+0.9%</b><br>buy≥1.34 (+6.1% margin)</td><td>✅ <b>LAFC O0.5</b> 80.5% +7.2%<br>buy≥1.36 (+9.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-2 · 13-09 02:30 <b>St. Louis v Minnesota</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>O1.5 80.6% <b>−0.9%</b><br>buy≥1.29 (+6.1% margin)</td><td>✅ <b>St. Louis O1.5</b> 59.8% +8.1%<br>buy≥1.73 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 77.0% +16.3% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 13-09 03:00 <b>Alianza Lima v Universitario</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 75.4% +1.1%<br>buy≥1.39 (+4.9% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 71.3% +3.5% · buy≥1.47 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 13-09 03:20 <b>Alianza Valledupar v Atlético Junior</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U3.0 79.4% <b>+0.0%</b><br>buy≥1.32 (+1.2% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 13-09 03:30 <b>Colorado v Montréal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>U4.25 80.6% <b>+0.8%</b><br>buy≥1.31 (+6.1% margin)</td><td>✅ <b>Montréal U1.5</b> 75.3% +14.9%<br>buy≥1.43 (+7.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 75.7% +15.0% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 13-09 03:30 <b>Salt Lake v New York City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>U4.25 80.4% <b>+0.6%</b><br>buy≥1.35 (+6.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 69.4% +8.8% · buy≥1.51 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
