@@ -559,7 +559,7 @@ def verify(quiet: bool = False) -> None:
             v = verdict(f, _star(f))
             lab = label_any(f)
             unsafe = live_unsafe(f)
-            (play if (v and v["play"]) else
+            (play if (v and v["play"] and not unsafe) else
              watch if (v and v["watch"] and not unsafe) else
              live if (running_call(f) and not unsafe) else
              declined if ((lab and lab.endswith("red")) or unsafe) else

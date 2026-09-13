@@ -124,6 +124,28 @@ FLIP_KEYS = tuple((b, t) for b in ("unsafe", "cautious", "safe") for t in ("tip3
 # The last hand seed, kept only for a checkout with no bank at all.
 FLIP_SEED = {k: ("flipped" if k == ("unsafe", "tip3") else "hold") for k in FLIP_KEYS}
 
+# THE STRIKE COMBOS (the bettor, 13 Sep: "start declining these ... make
+# a calibration updater in the 2-day auto updater to check if these
+# bands still are valid; when a combo sits below 77% decline it"). A
+# card's lane and its strikes (webapp.strikes: score under 0, priced
+# play / watch card, over lane on a score under 0) make a combo; each
+# combo is measured on the board's settled cards, red out, every two
+# days, and a combo landing under DECLINE_AT on COMBO_MIN_N cards or more
+# is DECLINED — the card files under Declined and leaves the record like
+# a red one. Under the floor the seed stands: the four the bettor named
+# off the session's numbers (priced + score under 0 + over 75.0 on 16,
+# watch + score under 0 69.2 on 13, watch + score under 0 + over 44.4 on
+# 9, Athena + score under 0 + over 76.5 on 17). The measurement keeps
+# only the red cards out, so a declined combo can come back.
+DECLINE_AT = 77.0
+COMBO_MIN_N = MIN_N
+COMBO_SEED = {
+    ("priced", "score under 0 + priced play + over lane"): "decline",
+    ("watch", "score under 0 + watch card"): "decline",
+    ("watch", "score under 0 + watch card + over lane"): "decline",
+    ("athena", "score under 0 + over lane"): "decline",
+}
+
 _BANDS: dict | None = None
 
 
@@ -148,6 +170,12 @@ def bands() -> dict[tuple, dict]:
         for (code, lane, band), row in got.items():
             if code not in (GLOBAL, "flip"):
                 _BANDS[(code, lane, band)] = row
+        for (code, lane, band), row in got.items():
+            if code == "combo":
+                _BANDS[("combo", lane, band)] = row
+        for (lane, band), seed in COMBO_SEED.items():
+            _BANDS.setdefault(("combo", lane, band), dict(
+                n=0, hit=None, said=None, label=seed, source="seed"))
         for (band, tipn), seed in FLIP_SEED.items():
             key = ("flip", f"{band} {tipn}")
             _BANDS[key] = got.get(("flip", "flip", f"{band} {tipn}")) or dict(
@@ -212,6 +240,52 @@ def _flip_pairs_bank() -> dict[tuple[str, str], list]:
                 t[1] += mk != "❌"
                 t[2] += m1 != "❌"
     return pair
+
+
+def combo_label(hit_pct: float | None, n: int, seed: str) -> tuple[str, str]:
+    """(label, source): "decline" under DECLINE_AT on COMBO_MIN_N cards or
+    more, "keep" at or above it, the seed under the floor."""
+    if hit_pct is None or n < COMBO_MIN_N:
+        return seed, "seed"
+    return ("decline" if hit_pct < DECLINE_AT else "keep"), "measured"
+
+
+def combo(lane: str | None, strikes: list[str]) -> str:
+    """"decline" or "keep" for a card's lane and strikes."""
+    if not lane or not strikes:
+        return "keep"
+    row = bands().get(("combo", lane, " + ".join(strikes)))
+    return row["label"] if row else "keep"
+
+
+def combo_study() -> list[dict]:
+    """One row per lane and strike combination seen on the board's settled
+    cards, red out (webapp.not_red, so a declined combo can come back):
+    n, hit, said (the claim), label, source."""
+    from scripts import board, webapp
+    tally: dict[tuple[str, str], list] = {}
+    for f in board.load():
+        if not f.settled or f.status[:1] not in ("✅", "❌", "◦"):
+            continue
+        if not f.tip1 or f.tip1.startswith("—") or not webapp.not_red(f):
+            continue
+        lane = webapp.record_lane(f)
+        if lane is None:
+            continue
+        key = (lane, " + ".join(webapp.strikes(f)) or "clean")
+        c = webapp._claim(f.tip3 if webapp._star_any(f) == 3 else f.tip1) or 0.0
+        t = tally.setdefault(key, [0, 0, 0.0])
+        t[0] += 1
+        t[1] += f.status[:1] != "❌"
+        t[2] += c
+    rows = []
+    for (lane, band) in sorted(set(tally) | set(COMBO_SEED)):
+        n, h, c = tally.get((lane, band), (0, 0, 0.0))
+        hit = (h / n * 100) if n else None
+        lab, src = combo_label(hit, n, COMBO_SEED.get((lane, band), "keep"))
+        rows.append(dict(league="combo", lane=lane, band=band, n=n, hit=hit,
+                         said=(c / n) if n else None, label=lab, source=src))
+    return rows
 
 
 def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
@@ -353,6 +427,9 @@ def write(rows: list[dict], days: int, today: dt.date) -> None:
         f"# paired on the board's last {days} days — n cards where tip 1 graded and",
         "# that lane won or lost (a push on the lane is no bet), hit = THAT lane,",
         f"# said = tip 1 on the same cards; flipped when the lane beats tip 1 by {FLIP_AT:.0f}.",
+        "# The 'combo' rows: a lane and its strikes (webapp.strikes) on the board's",
+        f"# settled cards, red out; 'decline' under {DECLINE_AT:.0f}% on {COMBO_MIN_N}+ cards, else",
+        "# 'keep', the seed under the floor. A declined combo files under Declined.",
         "# league\tlane\tband\tn\thit\tsaid\tlabel\tsource",
     ]
     for r in rows:
@@ -410,6 +487,13 @@ def main() -> None:
         who = "bank " if r["league"] == "flipbank" else "board"
         print(f"  {who} {r['band']:14} n={r['n']:4}  lane {hit}  tip 1 {t1}  -> {r['label']:8} ({r['source']})")
     rows += flips
+    combos = combo_study()
+    print(f"the strike combos on the board's settled cards, red out (decline under "
+          f"{DECLINE_AT:.0f} on {COMBO_MIN_N}+):")
+    for r in combos:
+        hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
+        print(f"  {r['lane']:7} {r['band']:44} n={r['n']:3}  hit {hit}  -> {r['label']:8} ({r['source']})")
+    rows += combos
     if not dry:
         write(rows, days, today)
         print(f"written: {OUT.relative_to(ROOT)}")

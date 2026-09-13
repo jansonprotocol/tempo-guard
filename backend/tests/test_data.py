@@ -1163,8 +1163,8 @@ def test_declined_cards_count_toward_no_hit_rate():
     for f in out:
         assert not webapp.counts(f)
         if f not in red:
-            assert webapp.record_lane(f) in ("athena", "watch")
-            assert webapp.record_tag(f) == "unsafe"
+            assert (webapp.record_lane(f) in ("athena", "watch") and webapp.record_tag(f) == "unsafe") \
+                or webapp.strike_declined(f)
     # the measurement behind the tag keeps only the red cards out, or an
     # unsafe band could never come back
     assert all(webapp.not_red(f) for f in keep)
@@ -1339,6 +1339,36 @@ def test_strikes_mark_the_loss_profile():
     assert seen == {0, 1, 2, 3}
     src = __import__("pathlib").Path(webapp.__file__).read_text()
     assert 'bits.push("strikes " + m.sk)' in src
+
+
+def test_declined_strike_combos(monkeypatch):
+    """The bettor, 13 Sep: the four combos decline from the seed; the
+    two-day measurement declines any combo under 77 on 15 cards and
+    releases one that climbs back; a priced play can be declined this way."""
+    from scripts import livebands, webapp
+    monkeypatch.setattr(livebands, "_BANDS", None)
+    monkeypatch.setattr(livebands, "OUT", __import__("pathlib").Path("/nonexistent/x.tsv"))
+    C = livebands.combo
+    assert C("priced", ["score under 0", "priced play", "over lane"]) == "decline"
+    assert C("watch", ["score under 0", "watch card"]) == "decline"
+    assert C("watch", ["score under 0", "watch card", "over lane"]) == "decline"
+    assert C("athena", ["score under 0", "over lane"]) == "decline"
+    assert C("priced", ["priced play"]) == "keep"
+    assert C("athena", ["score under 0"]) == "keep"
+    assert C("athena", []) == "keep" and C(None, ["score under 0"]) == "keep"
+    L = livebands.combo_label
+    assert L(76.9, 15, "keep") == ("decline", "measured")
+    assert L(77.0, 15, "decline") == ("keep", "measured")
+    assert L(50.0, 14, "keep") == ("keep", "seed")
+    assert L(None, 0, "decline") == ("decline", "seed")
+    # a measured table releases a seeded combo and declines an unseeded one
+    livebands._BANDS[("combo", "athena", "score under 0 + over lane")] = dict(
+        n=40, hit=80.0, said=83.0, label="keep", source="measured")
+    livebands._BANDS[("combo", "priced", "priced play")] = dict(
+        n=60, hit=70.0, said=83.0, label="decline", source="measured")
+    assert C("athena", ["score under 0", "over lane"]) == "keep"
+    assert C("priced", ["priced play"]) == "decline"
+    monkeypatch.setattr(livebands, "_BANDS", None)
 
 
 def test_live_tag_words_are_searchable():

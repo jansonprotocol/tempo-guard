@@ -1321,14 +1321,26 @@ def record_flip(f) -> str | None:
                           _has_lane(f.tip2), _has_lane(f.tip3))
 
 
+def strike_declined(f) -> bool:
+    """Declined by its strike combo (livebands.combo): the lane and the
+    strikes together sit under 77% on the board's own record, or are one
+    of the four the bettor seeded on 13 Sep."""
+    from scripts import livebands
+    lane = record_lane(f)
+    return bool(lane) and livebands.combo(lane, strikes(f)) == "decline"
+
+
 def is_declined(f) -> bool:
     """Is this a Declined card: a red or super-red label (the tier saying
-    avoid), or an UNSTAKED card — Athena lane or watch — tagged live
-    unsafe. A priced play is never declined by its tag."""
+    avoid); an UNSTAKED card — Athena lane or watch — tagged live unsafe;
+    or, since 13 Sep, any card whose strike combo is declined — that one
+    reaches priced plays too."""
     lab = label_any(f)
     if lab and lab.endswith("red"):
         return True
-    return record_lane(f) in ("athena", "watch") and record_tag(f) == "unsafe"
+    if record_lane(f) in ("athena", "watch") and record_tag(f) == "unsafe":
+        return True
+    return strike_declined(f)
 
 
 def live_lane(f) -> str | None:
@@ -1338,9 +1350,9 @@ def live_lane(f) -> str | None:
 
 
 def live_unsafe(f) -> bool:
-    """Files under Declined by its tag: an UNSTAKED card, still to settle,
-    tagged unsafe. A priced play carries the tag for information and
-    stays where the price put it."""
+    """Files under Declined by a RULE rather than the tier: a card still
+    to settle that is not red but is_declined — an unstaked card tagged
+    unsafe, or any card whose strike combo is declined (13 Sep)."""
     return not f.settled and not (
         (lab := label_any(f)) and lab.endswith("red")) and is_declined(f)
 
@@ -1409,8 +1421,14 @@ def _strikes_html(f) -> str:
            "85.5 with a positive score). By count: 0 strikes 84.3%, 1 83.3%, 2 "
            "76.1%, 3 64.0% (session #6, 13 Sep). Information only — the mark "
            "files nothing and counts nothing.")
-    return (f'<span class="strikes s{n}" title="{html.escape(tip)}">'
-            f'⚠ {n} strike{"s" if n > 1 else ""} · {" · ".join(st)}</span>')
+    dec = strike_declined(f)
+    if dec:
+        tip += (" THIS COMBO IS DECLINED: on the board's own record it sits under "
+                "77%, so the card files under Declined and leaves the record "
+                "(re-measured every two days; it comes back at 77).")
+    return (f'<span class="strikes s{n}{" sd" if dec else ""}" title="{html.escape(tip)}">'
+            f'⚠ {n} strike{"s" if n > 1 else ""} · {" · ".join(st)}'
+            f'{" · declined" if dec else ""}</span>')
 
 
 def _livetag_html(f) -> str:
@@ -1466,6 +1484,7 @@ def _livetag_html(f) -> str:
     nocount = ""
     if out:
         why = ("the tier says avoid" if (lab := label_any(f)) and lab.endswith("red")
+               else "its strike combo is declined" if strike_declined(f)
                else "tagged live unsafe")
         nocount = (f'<span class="nocount" title="Declined: {why}. Swept and graded, '
                    'but in no hit rate — not the tiles, not the baselines, not a '
@@ -2314,7 +2333,9 @@ def main() -> None:
     # forward log, but marked no play.
     def _v(f):
         return verdict(f, _star(f))
-    playable = [f for f in pending if (v := _v(f)) and v["play"]]
+    # A play whose strike combo is declined (13 Sep) files under Declined
+    # instead — the one rule that reaches a priced play.
+    playable = [f for f in pending if (v := _v(f)) and v["play"] and not live_unsafe(f)]
     strong_n = sum(1 for f in playable if (v := _v(f)) and v["strong"])
     # Three-way, not two: PLAY, WATCH (the bettor's list, 2 Sep — a
     # starred lane a few percent short of its bar on the panel, worth
@@ -3045,6 +3066,7 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .strikes.s1 {{ color:var(--dim); border-color:#2a3346; }}
 .strikes.s2 {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.12); }}
 .strikes.s3 {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.28); font-weight:600; }}
+.strikes.sd {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.28); font-weight:600; }}
 .livebar > .strikes:first-child {{ margin-left:0; }}
 .nocount {{ display:inline-block; font-size:10px; text-transform:uppercase;
   letter-spacing:.08em; color:var(--dim); white-space:nowrap;
@@ -3356,13 +3378,16 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   playing out, not a second chance at them.</div>
   {_grid(running, "run", reads)}</div>
  <div class="tabpane" id="t-declined">
-  <div class="panenote">Two kinds of card, one rule. A <b>red or
+  <div class="panenote">Three kinds of card, one rule. A <b>red or
   super-red</b> label is the tier saying avoid — never played at any
   price. A card tagged <b>live unsafe</b> is one the bettor keeps out of
   live buys as well — an Athena lane or a watch card whose edge band is
-  landing under 77 in the last three weeks. Either way the card counts
-  toward <b>no hit rate anywhere</b>, on this board or in the bank (the
-  bettor's rule, 12 Sep). Both are kept, swept and graded, because a
+  landing under 77 in its league on the bank. A card whose <b>strike
+  combo</b> is declined — its lane and strikes together landing under 77
+  on this board's own record, re-measured every two days — is the one
+  rule that reaches a priced play. Either way the card counts toward
+  <b>no hit rate anywhere</b>, on this board or in the bank (the bettor's
+  rule, 12 and 13 Sep). Both are kept, swept and graded, because a
   rule that is never checked is only a habit. Search <b>declined</b>,
   <b>live unsafe</b>, <b>live cautious</b> or <b>live safe</b> on any
   tab to find cards by their tag.</div>

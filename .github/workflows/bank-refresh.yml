@@ -10,7 +10,10 @@
 #                             whole bank, red cards out, labelled by hit
 #                             rate (safe >= 79, cautious >= 77, else
 #                             unsafe); the flip study on the board's
-#                             last three weeks
+#                             last three weeks; the STRIKE COMBOS on the
+#                             board's settled cards (a lane and its
+#                             strikes landing under 77 on 15+ cards is
+#                             declined, and released again at 77)
 #   scripts/board.py          render README + app + live.json, then verify
 #
 # The engine is not touched: no re-pricing, no recomputed guard slices,
