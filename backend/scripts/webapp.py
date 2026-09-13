@@ -3684,6 +3684,9 @@ document.addEventListener("keydown", e => {{
 // distance of one — a letter wrong, missing, extra, or two swapped.
 function near(a, b) {{
   if (a === b) return true;
+  // A short word has no room for a typo: "serie b" must not reach
+  // "serie a" through the "b" (found on the Italy filter, 13 Sep).
+  if (a.length < 5) return false;
   const la = a.length, lb = b.length;
   if (Math.abs(la - lb) > 1) return false;
   let i = 0;
