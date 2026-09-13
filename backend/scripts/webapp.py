@@ -2437,7 +2437,8 @@ def main() -> None:
         ])
         + ' <span class="dim">— the ★ lane, then each family\'s PLAYABLE '
           'lanes, graded on this session\'s completed cards · declined '
-          'cards excluded (red, super red, live unsafe)</span></div>')
+          'cards excluded (red, super red, live unsafe, a declined strike '
+          'combo)</span></div>')
 
     # NORMAL and STRONG: the record of the cards the board itself marked
     # PLAY, by kind, from the forward log — stamped at first sight, so a
@@ -2895,7 +2896,8 @@ def main() -> None:
     hero_sub = f" — {hero_rate:.1f}% hitrate" if hero_rate else ""
     hero_fine = ("The final pick · the 300 most recent graded "
                  "playable cards · declined cards excluded (red, super "
-                 "red, live unsafe)")
+                 "red, live unsafe; on the board's own cards a declined "
+                 "strike combo too)")
 
     for shown in set(nick.values()):
         prefer[base_key(shown)] = shown

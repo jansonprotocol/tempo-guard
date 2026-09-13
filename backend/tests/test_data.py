@@ -1179,7 +1179,7 @@ def test_declined_cards_count_toward_no_hit_rate():
     page = Path(webapp.__file__).resolve().parents[2] / "web" / "index.html"
     if page.exists():
         assert ("playable cards · declined cards excluded (red, super red, "
-                "live unsafe)" in page.read_text())
+                "live unsafe" in page.read_text())
 
 
 def test_unsafe_priced_plays_flip_to_tip_3_not_tip_2(monkeypatch):
