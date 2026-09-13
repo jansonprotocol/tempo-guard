@@ -619,6 +619,15 @@ def _haystack(f) -> str:
         bits += ["declined", "no count"]
     else:
         bits.append("counted")
+    # The strikes (13 Sep): "strikes 2", "strike score under 0", and the
+    # score's sign on its own — "score negative" / "score positive" /
+    # "score silent" outside Europe.
+    st = strikes(f)
+    bits.append(f"strikes {len(st)}")
+    bits += [f"strike {w}" for w in st]
+    sc = first_score(f)
+    bits.append("score silent" if sc is None else "score negative" if sc < 0
+                else "score positive")
     # The guard's label and verdict, so the bar can be asked for "green",
     # "orange", "red", "super green", "strong", "no play" (the bettor's
     # request, 2 Sep). "guard red" and "label red" are there too, because
@@ -1343,6 +1352,58 @@ def live_tag_of(f) -> str | None:
     return None if f.settled else record_tag(f)
 
 
+# THE STRIKES (the bettor, 13 Sep: "is there any profile we can put on
+# session #6 losses?"). Two marks the engine already carries, measured on
+# the session's 463 settled counted cards: the confluence SCORE under
+# zero (77.7% on 184 against 84.1 on 151 at 0..+4 and 89.0 on 73 at +4
+# up) and a PRICED or WATCH card rather than an Athena lane (77.9 on 122
+# and 79.7 on 64 against 83.8 on 277). Together: 0 strikes 85.1%, 1
+# strike 84.9%, 2 strikes 78.4% on 102. A third — Europe's big leagues,
+# 60.0% on 35 with the other two — is held out until it survives a week
+# it was not fitted on. Information only: the mark files nothing and
+# counts nothing; "strikes 2" on the bar finds the cards.
+def first_score(f) -> float | None:
+    """The confluence score the card was called with (the forward log),
+    else the score it carries now; None where the score is silent."""
+    if region_silent(f.code):
+        return None
+    c = was_called(f)
+    if c and c["row"].get("score") not in (None, ""):
+        try:
+            return float(c["row"]["score"])
+        except ValueError:
+            pass
+    got = _label_of(f, _star_any(f), full=True, force=True)
+    return got[1] if got else None
+
+
+def strikes(f) -> list[str]:
+    """The strikes on a card, in words; empty for a clean card."""
+    out = []
+    sc = first_score(f)
+    if sc is not None and sc < 0:
+        out.append("score under 0")
+    lane = record_lane(f)
+    if lane in ("priced", "watch"):
+        out.append("priced play" if lane == "priced" else "watch card")
+    return out
+
+
+def _strikes_html(f) -> str:
+    st = strikes(f)
+    if not st:
+        return ""
+    n = len(st)
+    tip = ("Strikes: the two marks the session's losses share. Cards with a "
+           "confluence score under zero landed 77.7% on 184 (89.0 at +4 and up); "
+           "priced plays and watch cards landed 77.9 and 79.7 against 83.8 for "
+           "Athena lanes. With both: 78.4% on 102, against 85 with one or none "
+           "(session #6, 13 Sep). Information only — the mark files nothing "
+           "and counts nothing.")
+    return (f'<span class="strikes s{n}" title="{html.escape(tip)}">'
+            f'⚠ {n} strike{"s" if n > 1 else ""} · {" · ".join(st)}</span>')
+
+
 def _livetag_html(f) -> str:
     """The live-safety pill on top of the card, and — on a card that is
     out of the record — the words that say so. A settled card keeps the
@@ -1351,7 +1412,7 @@ def _livetag_html(f) -> str:
     lane = record_lane(f)
     tag = record_tag(f)
     out = is_declined(f)
-    if not (lane and tag) and not out:
+    if not (lane and tag) and not out and not strikes(f):
         return ""
     pill = ""
     if lane and tag:
@@ -1401,7 +1462,7 @@ def _livetag_html(f) -> str:
                    'but in no hit rate — not the tiles, not the baselines, not a '
                    'league badge, not the bank (the bettor\'s rule, 12 Sep).">'
                    '⛔ not in the record</span>')
-    return f'<div class="livebar">{pill}{nocount}</div>'
+    return f'<div class="livebar">{pill}{nocount}{_strikes_html(f)}</div>'
 
 
 def running_call(f) -> dict | None:
@@ -2617,6 +2678,7 @@ def main() -> None:
         fl = record_flip(f)
         if fl:
             entry["fl"] = fl
+        entry["sk"] = len(strikes(f))
         # The guard on a board card, in the bank's own fields, so Ask
         # Athena reads a live card and a past one with the same words:
         # label, score, strong, the starred lane, and the verdict at the
@@ -2756,6 +2818,9 @@ def main() -> None:
                 fl = _br.flip(m, code)
                 if fl:
                     m["fl"] = fl
+                # the strikes on a bank row: score under zero, priced or watch
+                sc = m.get("cs")
+                m["sk"] = int(sc is not None and sc < 0) + int(_br.lane(m) in ("priced", "watch"))
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
 
     # The headline number is what a reader FOLLOWING THE STAR actually
@@ -2963,6 +3028,12 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .lt-safe {{ color:#8fe3a8; border-color:#2f6b45; background:rgba(47,107,69,.16); }}
 .lt-cautious {{ color:#d9b46a; border-color:#5b4a24; background:rgba(91,74,36,.16); }}
 .lt-unsafe {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.18); }}
+.strikes {{ display:inline-block; font-size:10px; text-transform:uppercase;
+  letter-spacing:.08em; margin-left:6px; white-space:nowrap; cursor:help;
+  padding:2px 8px; border-radius:999px; border:1px solid transparent; }}
+.strikes.s1 {{ color:var(--dim); border-color:#2a3346; }}
+.strikes.s2 {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.12); }}
+.livebar > .strikes:first-child {{ margin-left:0; }}
 .nocount {{ display:inline-block; font-size:10px; text-transform:uppercase;
   letter-spacing:.08em; color:var(--dim); white-space:nowrap;
   cursor:help; }}
@@ -4150,6 +4221,8 @@ function askHay(m, comp) {{
   // same vocabulary the board bar takes ("live unsafe", "declined").
   if (m.lt) bits.push("live " + m.lt, "tag " + m.lt, "live tag " + m.lt);
   if (m.fl) bits.push("flipped", "live unsafe flipped", "flipped " + m.fl, "flipped to " + m.fl);
+  if (m.sk !== undefined) bits.push("strikes " + m.sk);
+  if (m.cs !== undefined) bits.push(m.cs < 0 ? "score negative" : "score positive"); else bits.push("score silent");
   bits.push((m.g || "").endsWith("red") || m.nc ? "declined" : "counted");
   if (m.v) {{
     bits.push("verdict " + m.v);

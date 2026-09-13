@@ -1315,6 +1315,30 @@ def test_the_colour_ladder_follows_the_claim():
     assert bankrates.relabel({"g": "orange", "pk": 3, "tip": "U4.25 82.0% +1.0%", "t3": "DNB1 86.0% +5.0%"}) == "green"
 
 
+def test_strikes_mark_the_loss_profile():
+    """The bettor, 13 Sep: a strike mark for the two marks the session's
+    losses share — a confluence score under zero, and a priced or watch
+    card — searchable as "strikes N" and "score negative"."""
+    from scripts import board, webapp
+    fx = [f for f in board.load() if f.settled]
+    seen = set()
+    for f in fx:
+        st = webapp.strikes(f)
+        n = len(st); seen.add(n)
+        assert 0 <= n <= 2
+        sc = webapp.first_score(f)
+        assert ("score under 0" in st) == (sc is not None and sc < 0)
+        assert (webapp.record_lane(f) in ("priced", "watch")) == any(w in ("priced play", "watch card") for w in st)
+        hay = webapp._haystack(f)
+        assert f"strikes {n}" in hay
+        assert ("score negative" in hay) == (sc is not None and sc < 0)
+        if webapp.region_silent(f.code):
+            assert "score silent" in hay and "score under 0" not in st
+    assert seen == {0, 1, 2}
+    src = __import__("pathlib").Path(webapp.__file__).read_text()
+    assert 'bits.push("strikes " + m.sk)' in src
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""

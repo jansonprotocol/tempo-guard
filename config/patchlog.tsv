@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-09-13	interface	The strike mark: a card shows '⚠ 1 strike' or '⚠ 2 strikes' for the two marks the session's losses share — a confluence score under zero (77.7% on 184) and a priced or watch card rather than an Athena lane (77.9 / 79.7 against 83.8); both together landed 78.4% on 102 against 85 with one or none. Information only. Search words: 'strikes 2', 'strike score under 0', 'score negative', 'score positive', 'score silent'; the same words on Ask Athena's bank rows
 2026-09-13	interface	Typo tolerance on the filter bar skips words under five letters, so 'serie b' no longer reaches Serie A through the 'b' (found on 'italy, serie b': 32 cards where the code gives 18)
 2026-09-13	interface	The filter bar tolerates a one-letter typo on terms of five letters or more ('bundasliga', 'chapmionship'), and a numbered division answers to '2 bundesliga', 'bundesliga 2' and 'second bundesliga'
 2026-09-13	interface	The flip study is measured on the bank first (priced plays tagged as the bank reads them now, paired, a push on the lane no bet); the board's last three weeks override only at 50 paired cards. 'Unsafe · flipped' had been on off 15 and 23 session cards while 302 and 417 bank cards said hold; now only cautious tip 3 flips (81.0 to 69.0 on 58). The pill's hover shows both readings
