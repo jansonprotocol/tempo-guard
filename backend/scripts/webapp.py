@@ -1358,9 +1358,14 @@ def live_tag_of(f) -> str | None:
 # zero (77.7% on 184 against 84.1 on 151 at 0..+4 and 89.0 on 73 at +4
 # up) and a PRICED or WATCH card rather than an Athena lane (77.9 on 122
 # and 79.7 on 64 against 83.8 on 277). Together: 0 strikes 85.1%, 1
-# strike 84.9%, 2 strikes 78.4% on 102. A third — Europe's big leagues,
-# 60.0% on 35 with the other two — is held out until it survives a week
-# it was not fitted on. Information only: the mark files nothing and
+# strike 84.9%, 2 strikes 78.4% on 102. The third (the bettor, same
+# evening, on two Telstar overs: "these don't have more strikes?"): an
+# OVER lane on a card whose score is under zero — 69.0% on 42 against
+# 85.5 for overs with a positive score, while unders barely move with
+# the score (79.3 against 83.5). With all three: 0 strikes 84.3%, 1
+# 83.3%, 2 76.1% on 71, 3 64.0% on 25. Europe's big leagues (60.0% on
+# 35 with the first two) are held out until they survive a week they
+# were not fitted on. Information only: the mark files nothing and
 # counts nothing; "strikes 2" on the bar finds the cards.
 def first_score(f) -> float | None:
     """The confluence score the card was called with (the forward log),
@@ -1386,6 +1391,9 @@ def strikes(f) -> list[str]:
     lane = record_lane(f)
     if lane in ("priced", "watch"):
         out.append("priced play" if lane == "priced" else "watch card")
+    cell = f.tip3 if _star_any(f) == 3 else f.tip1
+    if sc is not None and sc < 0 and cell.lstrip("✅❌◦ *").startswith("O"):
+        out.append("over lane")
     return out
 
 
@@ -1394,12 +1402,13 @@ def _strikes_html(f) -> str:
     if not st:
         return ""
     n = len(st)
-    tip = ("Strikes: the two marks the session's losses share. Cards with a "
-           "confluence score under zero landed 77.7% on 184 (89.0 at +4 and up); "
-           "priced plays and watch cards landed 77.9 and 79.7 against 83.8 for "
-           "Athena lanes. With both: 78.4% on 102, against 85 with one or none "
-           "(session #6, 13 Sep). Information only — the mark files nothing "
-           "and counts nothing.")
+    tip = ("Strikes: the marks the session's losses share. A confluence score "
+           "under zero (77.7% on 184 against 89.0 at +4 and up); a priced play or "
+           "watch card rather than an Athena lane (77.9 / 79.7 against 83.8); and "
+           "an OVER lane on a card with a score under zero (69.0% on 42 against "
+           "85.5 with a positive score). By count: 0 strikes 84.3%, 1 83.3%, 2 "
+           "76.1%, 3 64.0% (session #6, 13 Sep). Information only — the mark "
+           "files nothing and counts nothing.")
     return (f'<span class="strikes s{n}" title="{html.escape(tip)}">'
             f'⚠ {n} strike{"s" if n > 1 else ""} · {" · ".join(st)}</span>')
 
@@ -2820,7 +2829,9 @@ def main() -> None:
                     m["fl"] = fl
                 # the strikes on a bank row: score under zero, priced or watch
                 sc = m.get("cs")
-                m["sk"] = int(sc is not None and sc < 0) + int(_br.lane(m) in ("priced", "watch"))
+                _cell = m.get("t3") if m.get("pk") == 3 else m.get("tip")
+                m["sk"] = (int(sc is not None and sc < 0) + int(_br.lane(m) in ("priced", "watch"))
+                           + int(sc is not None and sc < 0 and (_cell or "").lstrip("*").startswith("O")))
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
 
     # The headline number is what a reader FOLLOWING THE STAR actually
@@ -3033,6 +3044,7 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   padding:2px 8px; border-radius:999px; border:1px solid transparent; }}
 .strikes.s1 {{ color:var(--dim); border-color:#2a3346; }}
 .strikes.s2 {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.12); }}
+.strikes.s3 {{ color:#f0a08e; border-color:#8a3a2e; background:rgba(138,58,46,.28); font-weight:600; }}
 .livebar > .strikes:first-child {{ margin-left:0; }}
 .nocount {{ display:inline-block; font-size:10px; text-transform:uppercase;
   letter-spacing:.08em; color:var(--dim); white-space:nowrap;

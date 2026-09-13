@@ -1325,16 +1325,18 @@ def test_strikes_mark_the_loss_profile():
     for f in fx:
         st = webapp.strikes(f)
         n = len(st); seen.add(n)
-        assert 0 <= n <= 2
+        assert 0 <= n <= 3
         sc = webapp.first_score(f)
         assert ("score under 0" in st) == (sc is not None and sc < 0)
+        cell = f.tip3 if webapp._star_any(f) == 3 else f.tip1
+        assert ("over lane" in st) == (sc is not None and sc < 0 and cell.lstrip("✅❌◦ *").startswith("O"))
         assert (webapp.record_lane(f) in ("priced", "watch")) == any(w in ("priced play", "watch card") for w in st)
         hay = webapp._haystack(f)
         assert f"strikes {n}" in hay
         assert ("score negative" in hay) == (sc is not None and sc < 0)
         if webapp.region_silent(f.code):
             assert "score silent" in hay and "score under 0" not in st
-    assert seen == {0, 1, 2}
+    assert seen == {0, 1, 2, 3}
     src = __import__("pathlib").Path(webapp.__file__).read_text()
     assert 'bits.push("strikes " + m.sk)' in src
 
