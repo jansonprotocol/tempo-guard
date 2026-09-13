@@ -535,6 +535,13 @@ def _haystack(f) -> str:
     finds the ones that are both.
     """
     bits = [f.teams, f.league, f.code, _country(f.code)]
+    # A numbered division the way people type it: "2. Bundesliga" is
+    # also "2 bundesliga", "bundesliga 2" and "second bundesliga".
+    dm = re.match(r"^(\d)\.\s+(.+)$", f.league)
+    if dm:
+        num, rest = dm.groups()
+        word = {"2": "second", "3": "third", "4": "fourth"}.get(num, num)
+        bits += [f"{num} {rest}", f"{rest} {num}", f"{word} {rest}"]
     for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
         c = cell.strip()
         if not c or c.startswith("—"):
@@ -3671,10 +3678,37 @@ document.addEventListener("keydown", e => {{
 }});
 
 // One term against one element: a threshold, an exact league, or text.
+// One-letter tolerance (the bettor, 13 Sep: "Bundasliga" found nothing).
+// A term of five letters or more that matches nothing as typed is tried
+// against every same-length run of words in the haystack at an edit
+// distance of one — a letter wrong, missing, extra, or two swapped.
+function near(a, b) {{
+  if (a === b) return true;
+  const la = a.length, lb = b.length;
+  if (Math.abs(la - lb) > 1) return false;
+  let i = 0;
+  while (i < la && i < lb && a[i] === b[i]) i++;
+  if (la === lb) {{
+    if (a.slice(i + 1) === b.slice(i + 1)) return true;                 // one letter wrong
+    return a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2);  // swapped
+  }}
+  return la < lb ? a.slice(i) === b.slice(i + 1) : a.slice(i + 1) === b.slice(i);  // one missing
+}}
+function nearIn(t, hay) {{
+  const tw = t.split(" "), n = tw.length;
+  const hw = hay.split(/\s+/);
+  for (let i = 0; i + n <= hw.length; i++) {{
+    let ok = true;
+    for (let j = 0; j < n && ok; j++) ok = near(tw[j], hw[i + j]);
+    if (ok) return true;
+  }}
+  return false;
+}}
 function termOk(t, el, hay, lg) {{
   if (typeof t !== "string") return cmpOk(el, t);
   if (LEAGUES.has(t) && lg !== undefined) return lg === t;
-  return hay.includes(t);
+  if (hay.includes(t)) return true;
+  return t.length >= 5 && /^[a-z0-9. ]+$/.test(t) && nearIn(t, hay);
 }}
 
 function applyFilter(q) {{
