@@ -5,7 +5,7 @@
 # 'league'), else the whole bank's row (league '*', source 'global'), else
 # the seed. A league row under the floor is written as 'thin' and not read.
 # Thresholds: safe >= 79, cautious >= 77, else unsafe.
-# written	2026-09-12
+# written	2026-09-13
 # The 'flip' rows: priced plays with that tag that also print that lane,
 # paired on the board's last 21 days — n cards where tip 1 graded and
 # that lane won or lost (a push on the lane is no bet), hit = THAT lane,
@@ -1391,13 +1391,13 @@ UKR-PL	athena	−1..+1	28	82.1	77.7	safe	thin
 UKR-PL	athena	−4..−1	2	50.0	84.3	safe	thin
 UKR-PL	athena	−4 down	108	90.7	84.3	safe	league
 flipbank	flip	unsafe tip3	302	72.2	71.5	hold	bank
-flip	flip	unsafe tip3	17	94.1	64.7	hold	bank
+flip	flip	unsafe tip3	19	89.5	68.4	hold	bank
 flipbank	flip	unsafe tip2	417	65.9	72.2	hold	bank
-flip	flip	unsafe tip2	26	88.5	61.5	hold	bank
+flip	flip	unsafe tip2	28	85.7	64.3	hold	bank
 flipbank	flip	cautious tip3	58	81.0	69.0	flipped	bank
 flip	flip	cautious tip3	18	72.2	77.8	flipped	bank
 flipbank	flip	cautious tip2	130	60.0	71.5	hold	bank
-flip	flip	cautious tip2	33	48.5	75.8	hold	bank
+flip	flip	cautious tip2	34	50.0	76.5	hold	bank
 flipbank	flip	safe tip3	246	74.8	78.9	hold	bank
 flip	flip	safe tip3	16	81.2	75.0	hold	bank
 flipbank	flip	safe tip2	507	63.3	79.5	hold	bank
