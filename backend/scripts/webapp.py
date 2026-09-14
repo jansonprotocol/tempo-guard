@@ -823,9 +823,14 @@ _SLICES = None
 # registered in docs/confluence-guard.md over 62,528 replayed picks.
 # "super green" stays as a legacy key so the forward log's rows stamped
 # before 12 Sep still read.
+# Red's composition changed on 14 Sep when the Over clause left the tier:
+# what remains is a claim under 76, and it lands 75.7% on 1,698 bank
+# cards rather than the 78.0% the mixed group read. Red is still never
+# played, so this number labels rather than prices.
 SAYS = {"green+": 0.921, "green": 0.880, "orange": 0.829, "pink": 0.783,
-        "red": 0.7796, "super red": 0.7705, "super green": 0.8956}
-SAYS_N = {"green+": 572, "green": 8521, "orange": 11791, "pink": 2560}
+        "red": 0.757, "super red": 0.7705, "super green": 0.8956}
+SAYS_N = {"green+": 572, "green": 8521, "orange": 11791, "pink": 2560,
+          "red": 1698}
 
 
 def _gclass(lab: str) -> str:

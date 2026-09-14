@@ -157,7 +157,16 @@ def tier_of(p: float | None, e: float | None, side: str, dnb: bool) -> str:
         return "green"
     if p is None:
         return "orange"
-    if p < 76 or (p < 80 and side == "O"):
+    # THE OVER CLAUSE IS GONE (the bettor, 14 Sep, off a fresh-session
+    # review). It read `p < 80 and side == "O"` — a middling claim on an
+    # OVER is red — and it was inverted on the bank: overs claiming 76 to
+    # 80 land 79.5% on 2,666 cards, unders on the same claims 77.7% on
+    # 2,889. The rule declined the better group outright and passed the
+    # worse one through as pink. Those overs are now tiered on their
+    # claim like everything else, which puts them in the pink band (76 to
+    # 80) with its own 1.31 bar; red is left as the one thing it always
+    # measured honestly, a claim under 76.
+    if p < 76:
         return "red"
     return "orange"
 

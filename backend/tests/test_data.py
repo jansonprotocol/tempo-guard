@@ -1289,8 +1289,9 @@ def test_the_play_bar_follows_the_claim_band():
     assert webapp.play_bar(88.0, "U4.5 88.0% +1.0%") == (1.14, 1.14)   # no printed value: the bar
     need2, _h, solid2 = webapp._needs("U4.25 82.7% −1.9% · buy≥1.30 (+5.6% margin)", None)
     assert abs(need2 - (1 / 0.827) * 1.06) < 1e-9 and not solid2
-    # red keeps its registered rate; the four colours carry the ladder's
-    assert webapp.SAYS["red"] == 0.7796 and webapp.SAYS["green+"] == 0.921
+    # the four colours carry the ladder's rates; red carries its own,
+    # re-cut on 14 Sep when the Over clause left the tier
+    assert webapp.SAYS["red"] == 0.757 and webapp.SAYS["green+"] == 0.921
 
 
 def test_the_colour_ladder_follows_the_claim():
@@ -1403,6 +1404,20 @@ def test_watch_is_one_definition_across_the_whistle(tmp_path, monkeypatch):
     monkeypatch.setattr(webapp, "_FROZEN", None)
     f.teams = "C v D"
     assert webapp.was_called(f)["mark"] == "no play"
+
+
+def test_a_middling_over_is_no_longer_red():
+    """The bettor, 14 Sep: the tier's Over clause was inverted on the bank
+    — overs claiming 76 to 80 land 79.5% on 2,666 cards against 77.7% for
+    unders — so it is gone. Red is a claim under 76, side-blind."""
+    from scripts import guard_slices as GS
+    T = lambda p, side: GS.tier_of(p, 0.5, side, False)
+    assert T(79.0, "O") == "orange" and T(79.0, "U") == "orange"
+    assert T(76.0, "O") == "orange" and T(75.9, "O") == "red"
+    assert T(75.9, "U") == "red"                      # the claim floor still bites
+    assert T(84.0, "O") == "green"                    # the green rule is untouched
+    # side-blind below the green rule: the same claim tiers the same either way
+    assert all(T(p, "O") == T(p, "U") for p in (70.0, 75.9, 76.0, 79.9, 83.0))
 
 
 def test_live_tag_words_are_searchable():
