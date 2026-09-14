@@ -3,7 +3,6 @@
 # renderer reads it and never calls the API itself. Delete it and
 # the cards fall back to the engine's own buy>= bar.
 # fixture	which	lane	consensus	best	book	unibet_nl	books
-# unmatched	Omonia Nicosia v Celta Vigo	UEL	2026-09-16	Omonoia FC v Celta Vigo | FC Ararat-Armenia v Sparta Prague | AC Milan v Benfica | Sunderland v AZ Alkmaar
 Como v Parma	1	U4.5	1.17	1.22	1xBet	1.17	14
 Como v Parma	3	DNB1	1.09	1.26	BetAnything	1.09	21
 Torino v Roma	1	O1.5	1.23	1.31	Pinnacle	1.22	14
@@ -70,6 +69,8 @@ CRB v Sport Recife	2	O1.75	1.21	1.30	Pinnacle	1.22	11
 CRB v Sport Recife	3	DNB1	1.45	1.51	LeoVegas (SE)	1.50	14
 Ararat-Armenia v Sparta Prague	1	U4.5	1.14	1.18	1xBet	1.16	12
 Ararat-Armenia v Sparta Prague	2	U3.75	1.43	1.48	1xBet	1.47	12
+Omonia Nicosia v Celta Vigo	1	U4.5	1.05	1.12	Pinnacle	1.07	11
+Omonia Nicosia v Celta Vigo	2	U3.75	1.25	1.37	Pinnacle	1.28	11
 AIK v Mjällby	1	U4.5	1.11	1.14	GTbets	1.08	12
 Atlético Madrid v Osasuna	1	U4.5	1.14	1.19	1xBet	1.14	13
 Atlético Madrid v Osasuna	3	DNB1	1.19	1.21	Winamax (FR)	1.19	17
