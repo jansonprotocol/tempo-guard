@@ -1371,6 +1371,40 @@ def test_declined_strike_combos(monkeypatch):
     monkeypatch.setattr(livebands, "_BANDS", None)
 
 
+def test_watch_is_one_definition_across_the_whistle(tmp_path, monkeypatch):
+    """The bettor, 14 Sep: freeze it. verdict() measures watch off the
+    claim band's bar; was_called must read the same bar from the row, not
+    the play bar, or a card changes lane at kickoff."""
+    from scripts import forward_settle, webapp
+    log = tmp_path / "forward_log.tsv"
+    monkeypatch.setattr(webapp, "FORWARD", log)
+    monkeypatch.setattr(forward_settle, "FORWARD", log)
+    monkeypatch.setattr(webapp, "_LOGGED", None)
+    monkeypatch.setattr(webapp, "_FROZEN", None)
+
+    class F:
+        teams = "A v B"; code = "ENG-PL"; kickoff = "2026-09-14 20:00"
+        tip1 = "U4.25 82.0% +1.0% · buy≥1.30 (+5.0% margin)"; tip2 = tip3 = ""
+        status = ""; league = "Premier League"; settled = False
+    f = F()
+    # play bar 1.26 (value 1.30 less 3%), band bar 1.18; a quote at 1.13
+    # is under the play bar by 10% but inside the band bar's watch band.
+    q = dict(consensus="1.13", best="1.13", book="Unibet")
+    webapp._stamp(f, 1, "U4.5", "orange", 1.0, 82.0, 1.26, q, 1.18)
+    row = log.read_text().splitlines()[-1].split("\t")
+    assert row[9] == "1.260" and row[13] == "1.180"
+    monkeypatch.setattr(webapp, "_FROZEN", None)
+    assert webapp.was_called(f)["mark"] == "watch"        # the band bar decides
+    # a row stamped before the column falls back to `needs`, which is
+    # what it was called under
+    log.write_text("\t".join(["2026-09-14 10:00", "2026-09-14", "ENG-PL", "C v D",
+                             "1", "U4.5", "82.0", "orange", "+1.00", "1.260",
+                             "1.13", "1.13", "Unibet"]) + "\n")
+    monkeypatch.setattr(webapp, "_FROZEN", None)
+    f.teams = "C v D"
+    assert webapp.was_called(f)["mark"] == "no play"
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""

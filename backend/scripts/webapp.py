@@ -939,7 +939,7 @@ _LOGGED: dict | None = None
 
 
 def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
-           need: float, q: dict) -> None:
+           need: float, q: dict, bar: float | None = None) -> None:
     """Record what the card said, at the moment it said it.
 
     The retro record is what it is; the only way this stops being a
@@ -989,7 +989,7 @@ def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
             "# scripts/forward_settle.py. One row per fixture-lane, kept\n"
             "# from FIRST sight so a later re-render cannot re-price it.\n"
             "# stamped\tdate\tleague\tfixture\ttip\tlane\tclaim\tlabel"
-            "\tscore\tneeds\tconsensus\tbest\tbook\n")
+            "\tscore\tneeds\tconsensus\tbest\tbook\tbar\n")
     _LOGGED[key] = red
     with FORWARD.open("a") as fh:
         fh.write("\t".join([
@@ -997,7 +997,16 @@ def _stamp(f, best: int, lane: str, lab: str, sc, claim: float,
             key[0], f.code, f.teams, str(best), lane, f"{claim:.1f}",
             lab, ("" if sc is None else f"{sc:+.2f}"), f"{need:.3f}",
             q.get("consensus") or "", q.get("best") or "",
-            q.get("book") or ""]) + "\n")
+            q.get("book") or "",
+            # THE WATCH BAR, stamped since 14 Sep. was_called measured
+            # watch off `needs` while verdict() measures it off the claim
+            # band's bar, so a card could be a watch card live and an
+            # Athena lane frozen — a different lane, a different tag, and
+            # a different answer to whether it counts. The bar the live
+            # verdict used is now on the row, and the frozen call reads
+            # it; rows stamped before this fall back to `needs`, which is
+            # what they were called under anyway.
+            ("" if bar is None else f"{bar:.3f}")]) + "\n")
 
 
 def _label_of(f, best: int, full: bool = False, force: bool = False):
@@ -1212,10 +1221,14 @@ def frozen() -> dict:
                     score = float(p[8])
                 except ValueError:
                     score = None
+                try:
+                    bar = float(p[13]) if len(p) > 13 and p[13] else need
+                except ValueError:
+                    bar = need
                 _FROZEN[key] = dict(d=p[1], code=p[2], fixture=p[3],
                                     tip=p[4], lane=p[5], label=p[7],
                                     score=score, need=need, best=best,
-                                    book=p[12])
+                                    book=p[12], bar=bar)
     return _FROZEN
 
 
@@ -1240,7 +1253,10 @@ def was_called(f) -> dict | None:
         strong = (not region_silent(r.get("code") or f.code)
                   and sc is not None and sc >= STRONG_SCORE)
         return dict(row=r, mark="strong" if strong else "normal")
-    if best >= need * (1 - WATCH_BAND):
+    # The WATCH test reads the band bar the live verdict used (stamped
+    # since 14 Sep), not the play bar — otherwise a card is a watch card
+    # before the whistle and an Athena lane after it.
+    if best >= (r.get("bar") or need) * (1 - WATCH_BAND):
         return dict(row=r, mark="watch")
     return dict(row=r, mark="no play")
 
@@ -1609,7 +1625,7 @@ def _guard(f, best: int) -> str:
                 f'<b>{odds:.2f}</b></div>')
     if odds is not None:
         _stamp(f, best, v["lane"], lab, sc, v["claim"], need,
-               quotes().get((f.teams, v["lane"])) or {})
+               quotes().get((f.teams, v["lane"])) or {}, v["bar"])
     return badge + line
 
 
