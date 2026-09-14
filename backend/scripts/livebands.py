@@ -396,7 +396,7 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
             lab, src = label(hit, n, SEED[lane][band], MIN_N, "global")
             rows.append(dict(league=GLOBAL, lane=lane, band=band, n=n, hit=hit,
                              said=(c / n) if n else None, label=lab, source=src))
-    for code in sorted(k[0] for k in tally if k[0] != GLOBAL):
+    for code in sorted({k[0] for k in tally if k[0] != GLOBAL}):   # a SET: the generator repeated a code per key
         for lane in LANES:
             for band in BANDS:
                 if (code, lane, band) not in tally:
