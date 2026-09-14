@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 83.1%
+## CURRENT CONFIRMED HITRATE: 83.2%
 
     lane                        Tip 1              Tip 2
-    all matches            360 / 433  83.1%    247 / 346  71.4%
-    played lanes  >+1%     153 / 179  85.5%    246 / 342  71.9%
+    all matches            361 / 434  83.2%    248 / 347  71.5%
+    played lanes  >+1%     154 / 180  85.6%    247 / 343  72.0%
     placed bets            113 / 141  80.1%    ROI +2.9%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 399 / 521   ·   76.6%**   ·   **Tip 1 — 153 / 179   ·   85.5%**   ·   **Tip 2 — 246 / 342   ·   71.9%**
+**Playable — 401 / 523   ·   76.7%**   ·   **Tip 1 — 154 / 180   ·   85.6%**   ·   **Tip 2 — 247 / 343   ·   72.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (89.3 +0.9)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -607,7 +607,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 13-09 23:30 <b>Chicago v New England</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>— under +1%</td><td>✅ O2.25 61.8% +2.0%<br>buy≥1.45 (+0.1% margin) · floor −13.2</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.1% +3.3% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 13-09 23:30 <b>Novorizontino v Cuiabá</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>— under +1%</td><td>✅ O1.75 66.7% +1.4%<br>buy≥1.63 (+0.5% margin) · floor −8.3</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 69.8% +2.9% · buy≥1.50 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 14-09 00:30 <b>Vancouver v Austin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>— under +1%</td><td>❌ <b>Vancouver O1.5</b> 56.5% +4.8%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 77.2% +16.5% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+12' 1-0 <b>Audax Italiano v O'Higgins</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (93.0 +6.6)</td><td>U4.25 87.2% +1.7%<br>buy≥1.23 (+6.3% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here: as good as landed</i></td><td>U3.75 73.4% +3.2%<br>buy≥1.28 (+0.9% margin) · floor −4.6 · <i>room for 2</i> · <i>from here: as good as landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 14-09 01:00 <b>Audax Italiano v O'Higgins</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (93.0 +6.6)</td><td>U4.25 87.2% +1.7%<br>buy≥1.23 (+6.3% margin)</td><td>✅ U3.75 73.4% +3.2%<br>buy≥1.28 (+0.9% margin) · floor −4.6</td></tr></table>
 <table align="left"><tr><th align="left">🟢 14-09 18:30 <b>Como v Parma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.1 capped)</td><td>— under +1%</td><td><b>Parma U1.5</b> 74.7% +8.9%<br>buy≥1.40 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.8% +19.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 14-09 18:30 <b>Torino v Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.1 capped)</td><td>— under +1%</td><td><b>Roma O1.5</b> 54.5% +20.2%<br>buy≥1.89 (+2.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.1% +5.3% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 14-09 19:00 <b>Bodø/Glimt v Sandefjord</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eliteserien (80.8 −0.5)</td><td>O1.5 84.8% +3.8%<br>buy≥1.28 (+8.8% margin)</td><td><b>Bodø/Glimt O1.5</b> 67.2% +17.8%<br>buy≥1.54 (+3.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 85.5% +25.6% · buy≥1.23 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -643,7 +643,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+12' 1-0 <b>Audax Italiano v O'Higgins</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (93.0 +6.6)</td><td>U4.25 87.2% +1.7%<br>buy≥1.23 (+6.3% margin) · <i>room for 3 · half from the 3rd</i> · <i>from here: as good as landed</i></td><td>U3.75 73.4% +3.2%<br>buy≥1.28 (+0.9% margin) · floor −4.6 · <i>room for 2</i> · <i>from here: as good as landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 14-09 03:15 <b>Cúcuta v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (84.3 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.18 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 74.1% +2.4% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 14-09 18:30 <b>Como v Parma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.1 capped)</td><td>U4.25 86.0% <b>−2.6%</b><br>buy≥1.20 (+5.4% margin)</td><td><b>Parma U1.5</b> 74.7% +8.9%<br>buy≥1.40 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.8% +19.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 14-09 18:30 <b>Torino v Roma</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.1 capped)</td><td>O1.5 72.0% <b>+0.0%</b><br>buy≥1.27 (+0.8% margin)</td><td><b>Roma O1.5</b> 54.5% +20.2%<br>buy≥1.89 (+2.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.1% +5.3% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -683,7 +682,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 360 / 433   ·   83.1%**   ·   **Tip 2 — 247 / 346   ·   71.4%**
+**Tip 1 — 361 / 434   ·   83.2%**   ·   **Tip 2 — 248 / 347   ·   71.5%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1297,6 +1296,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 13-09 23:30 <b>Fortaleza v Ceará</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 81.4% <b>+0.1%</b><br>buy≥1.34 (+3.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 13-09 23:30 <b>Novorizontino v Cuiabá</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>O1.0 88.5% <b>−0.8%</b><br>buy≥1.22 (+6.1% margin)</td><td>✅ O1.75 66.7% +1.4%<br>buy≥1.63 (+0.5% margin) · floor −8.3</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 69.8% +2.9% · buy≥1.50 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 14-09 00:30 <b>Vancouver v Austin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (79.3 −0.0)</td><td>U4.25 80.8% <b>+0.9%</b><br>buy≥1.34 (+6.1% margin)</td><td>❌ <b>Vancouver O1.5</b> 56.5% +4.8%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 77.2% +16.5% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 14-09 01:00 <b>Audax Italiano v O'Higgins</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (93.0 +6.6)</td><td>U4.25 87.2% +1.7%<br>buy≥1.23 (+6.3% margin)</td><td>✅ U3.75 73.4% +3.2%<br>buy≥1.28 (+0.9% margin) · floor −4.6</td></tr></table>
 
 <br clear="all">
 
