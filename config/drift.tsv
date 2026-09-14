@@ -1,0 +1,26 @@
+# What the frozen rules measure today, against what the code says.
+# Written by scripts/drift.py in the two-day refresh. REPORT ONLY:
+# nothing here changes a rule — a rule the record is judged against
+# must not move on its own, or an improvement cannot be told from a
+# ruler that shifted. A flag is an invitation to look, not a verdict.
+# thresholds: label 2 points, side 2 points, bar 0.02, floor 200 cards
+# written	2026-09-14
+# check	subject	n	measured	code_says	delta	flag
+label	green+	577	92.20	92.10	0.10	0
+label	green	9286	88.23	88.00	0.23	0
+label	orange	15032	83.83	82.90	0.93	0
+label	pink	5624	78.75	78.30	0.45	0
+label	super red	267	74.16	77.05	-2.89	1
+label	red	1431	75.96	75.70	0.26	0
+side	claim 70-76: over vs under	1662	76.52	75.20	1.33	0
+side	claim 76-80: over vs under	5545	79.48	77.77	1.71	0
+side	claim 80-85: over vs under	14821	82.49	84.16	-1.67	0
+side	claim 85-90: over vs under	9129	89.61	87.87	1.75	0
+ladder	green+ over green	9863	92.20	88.23	3.97	0
+ladder	green over orange	24318	88.23	83.83	4.40	0
+ladder	orange over pink	20656	83.83	78.75	5.08	0
+bar	85+ at 1.14	631	0.77	0.77	0.00	0
+bar	80–85 at 1.18	1994	-1.87	-1.62	-0.09	1
+bar	75–80 at 1.31	791	0.79	3.00	-0.04	1
+strong	star at +6.34 vs the rest	69	81.16	75.76	5.40	0
+strong	star ROI vs the rest	69	4.42	0.60	3.83	0

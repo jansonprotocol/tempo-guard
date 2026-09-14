@@ -931,13 +931,24 @@ REPO = "jansonprotocol/tempo-guard"
 # from the bar and no reachable book is likely to beat it.
 WATCH_BAND = 0.05
 
-# STRONG: a play that also carries a top-quartile confluence score, in
-# Europe where the score means anything. Measured on the 1,008 bets the
-# bar fires on: strong grades 81.0% and +8.87% (+9.91 / +7.83 across the
-# two windows) while everything else grades 72.8% and -0.67%. So the
-# split is not cosmetic — one half carries the entire return and the
-# other has no measured edge at all.
-STRONG_SCORE = 0.71
+# STRONG: a play that also carries a high confluence score, in Europe
+# where the score means anything.
+#
+# THE BAR MOVED ON 14 SEP, from 0.71 to 6.34 (the bettor, off a fresh-
+# session review). At 0.71 the star was worse than no star: on the
+# rebuilt bank's priced plays at closing prices, strong landed 75.4% for
+# -1.9% against normal's 76.2% and +1.5%, and this session's played
+# cards read 75.0% against 81.0%. The registered replay's 81.0% and
+# +8.87% has not reproduced since the bank was rebuilt, which the
+# hypotheses table has carried as an open row since 2 Sep.
+#
+# The score does separate, higher up. On the same priced plays the
+# gradient is monotone — +0.71 75.6% / -1.7%, +2.00 76.0% / -1.3%,
+# +3.80 77.0% / -0.4%, +5.00 78.6% / +1.6%, +6.34 81.2% / +4.4% on 69
+# cards — so the bar is set where the return is, not at a quartile. It
+# is the same 6.34 the old super-green label used, and it makes STRONG
+# rare: about one play in fourteen.
+STRONG_SCORE = 6.34
 
 FORWARD = ROOT / "config" / "forward_log.tsv"
 _LOGGED: dict | None = None

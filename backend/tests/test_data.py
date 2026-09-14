@@ -1420,6 +1420,36 @@ def test_a_middling_over_is_no_longer_red():
     assert all(T(p, "O") == T(p, "U") for p in (70.0, 75.9, 76.0, 79.9, 83.0))
 
 
+def test_drift_reports_and_changes_nothing():
+    """The bettor, 14 Sep: a drift report in the two-day refresh. It must
+    measure the frozen rules and touch none of them."""
+    import pathlib
+    from scripts import drift, guard_slices as GS, webapp
+    before = (webapp.SAYS.copy(), dict(webapp.BAND_BAR), webapp.STRONG_SCORE)
+    rows = drift.measure()
+    assert (webapp.SAYS, webapp.BAND_BAR, webapp.STRONG_SCORE) == \
+        (before[0], before[1], before[2])              # nothing moved
+    checks = {r["check"] for r in rows}
+    assert checks == {"label", "side", "ladder", "bar", "strong"}
+    assert all(isinstance(r["flag"], int) and r["n"] >= 0 for r in rows)
+    # the ladder is a ladder and the star earns its badge, on today's bank
+    for r in rows:
+        if r["check"] == "ladder":
+            assert not r["flag"], r["subject"]
+        if r["check"] == "strong":
+            assert not r["flag"], r["subject"]
+    # the source writes no rule file
+    src = pathlib.Path(drift.__file__).read_text()
+    assert "REPORT ONLY" in src and "webapp.SAYS[" not in src
+
+
+def test_the_star_is_set_where_the_return_is():
+    """The bettor, 14 Sep: move the strong bar to 6.34. It was 0.71, where
+    the star landed under the cards without one."""
+    from scripts import webapp
+    assert webapp.STRONG_SCORE == 6.34
+
+
 def test_live_tag_words_are_searchable():
     """The bettor's ask, 12 Sep: "live unsafe", "live safe", "declined"
     find cards on the bar, on the board and in the bank."""

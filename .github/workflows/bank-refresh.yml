@@ -14,6 +14,14 @@
 #                             board's settled cards (a lane and its
 #                             strikes landing under 77 on 15+ cards is
 #                             declined, and released again at 77)
+#   scripts/drift.py          the FROZEN rules measured against the bank —
+#                             label rates, the tier's side-blindness, the
+#                             colour ladder's order, each band bar's ROI,
+#                             the strong bar. Report only: it changes
+#                             nothing, it says when a constant has gone
+#                             stale (both the Over clause and the strong
+#                             bar sat wrong for weeks before a person read
+#                             them)
 #   scripts/board.py          render README + app + live.json, then verify
 #
 # The engine is not touched: no re-pricing, no recomputed guard slices,
@@ -57,9 +65,11 @@ jobs:
             cd backend
             python scripts/ingest_board.py
             python scripts/livebands.py
+            python scripts/drift.py
             python scripts/board.py
             cd ..
-            git add -A data/ config/live_bands.tsv config/forward_log.tsv \
+            git add -A data/ config/live_bands.tsv config/drift.tsv \
+                       config/forward_log.tsv \
                        config/reads_cache.json README.md web/
             if git diff --cached --quiet; then
               echo "nothing changed"; exit 0
