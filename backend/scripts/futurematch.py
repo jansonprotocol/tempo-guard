@@ -16,6 +16,8 @@ half-way:
         Input rows:  kickoff<TAB>CODE<TAB>League name<TAB>Home v Away
         A fixture the engine abstains on is still added, with the reason
         printed in its Tip 1 cell — an abstention is an answer.
+        Pulls the odds feed before rendering, so the slate arrives with
+        prices on it; --no-quotes skips that for an offline run.
 
     python scripts/futurematch.py --reprice [--revive]
         Re-run every pending, not-yet-live row through the CURRENT engine
@@ -34,6 +36,8 @@ half-way:
 
 What this command writes, precisely:
     config/fixtures.tsv        the new or re-priced rows
+    config/odds_quotes.tsv     the market on every pending lane, refreshed
+                               from the feed unless --no-quotes
     README.md                  via board.main(): header, playable block,
                                pending and completed cards
     web/index.html             every tab, tiles, hero — same render
@@ -169,6 +173,35 @@ def reprice(revive: bool = False) -> None:
     print(f"{changed} pending rows re-priced on the current engine")
 
 
+def pull_quotes() -> None:
+    """Ask the odds feed for prices before rendering what was just added.
+
+    THE BETTOR, 15 Sep: "always pull the odds through the api, that's what
+    it's there for. All uefa and laliga matches have always odds
+    available." He was right and the board was proving it: a slate went up
+    with every card reading "nothing quoted yet", because quotes were only
+    ever refreshed when somebody remembered to run the command by hand. A
+    card with no price cannot be a PLAY — the verdict has nothing to clear
+    its bar with — so an unpulled slate does not look like a stale board,
+    it looks like a board with no bets on it. Six plays appeared on this
+    one the moment the feed was asked.
+
+    One call, fourteen credits, every pending lane on the board. It is
+    deliberately best-effort: no key, no network, or a feed that answers
+    badly leaves config/odds_quotes.tsv exactly as it was (odds_api writes
+    the whole file or none of it) and the slate still lands.
+    """
+    try:
+        from scripts import odds_api
+        if not odds_api._key():
+            print("no ODDS_API_KEY — slate added unquoted", file=sys.stderr)
+            return
+        print(f"quotes: {odds_api.write_quotes()} lanes priced from the feed")
+    except Exception as exc:                      # noqa: BLE001 — never block a slate
+        print(f"quotes failed ({type(exc).__name__}: {exc}) — "
+              "slate added on the prices already on file", file=sys.stderr)
+
+
 def main() -> None:
     args = [a for a in sys.argv[1:]]
     if "--reprice" in args:
@@ -178,6 +211,8 @@ def main() -> None:
     else:
         print(__doc__)
         return
+    if "--no-quotes" not in args:
+        pull_quotes()
     from scripts import board
     board.main()
 

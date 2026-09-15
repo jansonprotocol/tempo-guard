@@ -1,0 +1,87 @@
+# Every two hours: ask the odds feed what the market is offering on every
+# pending lane, re-render, and commit so the site shows live prices.
+#
+# WHY THIS EXISTS (the bettor, 15 Sep: "always pull the odds through the
+# api, that's what it's there for"). Nothing pulled them. Every refresh of
+# config/odds_quotes.tsv in this repository's history was a human running
+# the command beside a slate push, so the file went stale the moment a
+# slate was added without one — and a stale quotes file does not look
+# stale. A card with no price cannot be a PLAY, because the verdict has
+# nothing to clear its bar with, so an unpulled board reads as a board
+# with no bets on it rather than as a board missing its prices. On 15 Sep
+# the file was two days old and six plays were hiding behind it.
+#
+# The price is also the single biggest lever this project has measured:
+# taking the market MAXIMUM instead of the market average was worth +3.58
+# points of ROI over 8,071 ladder lanes. A lever that large cannot hang on
+# somebody remembering.
+#
+# COST. One pass is 14 credits — the feed charges per LEAGUE, not per
+# match, and one call returns every upcoming fixture in a competition.
+# Twelve passes a day is 168, which the key carries for months. Kickoffs
+# cluster in the evening but prices move all day, so this runs on a flat
+# two-hour cron rather than trying to be clever about when.
+#
+# SAFETY. odds_api writes the whole quotes file or none of it (it renames
+# a temp file into place), and main() returns early when ODDS_API_KEY is
+# absent, so a missing secret leaves the prices on file untouched rather
+# than blanking every card. This job checks for the secret itself and
+# FAILS instead, because a silently skipped price pull is the exact
+# failure this workflow was written to end.
+#
+# The render is a pure function of the files, so a refused push is
+# recovered by resetting onto main and pulling again.
+name: odds refresh
+
+on:
+  schedule:
+    - cron: "5 */2 * * *"      # :05 past every second hour, off the other jobs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  quotes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r backend/requirements.txt
+      - name: the key must exist, or say so out loud
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          if [ -z "$ODDS_API_KEY" ]; then
+            echo "::error::ODDS_API_KEY is not set as a repository secret."
+            echo "Without it odds_api does nothing and the board keeps whatever"
+            echo "prices are on file — which is the staleness this job exists to end."
+            exit 1
+          fi
+      - env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          for try in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cd backend
+            python scripts/odds_api.py --quotes
+            python scripts/board.py
+            cd ..
+            git add -A config/odds_quotes.tsv config/reads_cache.json README.md web/
+            if git diff --cached --quiet; then
+              echo "the market has not moved a printed lane"; exit 0
+            fi
+            git commit -q -m "odds refresh: $(date -u '+%Y-%m-%d %H:%M') UTC" \
+              -m "Market prices re-pulled for every pending lane and the board re-rendered, so a card's PLAY or watch reflects what is buyable now."
+            if git push origin HEAD:main; then
+              echo "pushed on try $try"; exit 0
+            fi
+            echo "push refused on try $try — resetting onto main and pulling again"
+          done
+          echo "could not push after 3 tries"; exit 1

@@ -1936,3 +1936,44 @@ def test_every_hitrate_on_a_card_has_something_that_refreshes_it():
     assert {"label", "ladder", "bar", "strong"} <= watched   # SAYS/LADDER/BAND_BAR/STRONG
     assert set(webapp.SAYS) >= set(webapp.SAYS_N)
     assert set(webapp.BAND_BAR) == {"85+", "80–85", "75–80"}
+
+
+def test_a_slate_arrives_with_prices_on_it():
+    """The bettor, 15 Sep: "always pull the odds through the api". A slate
+    used to land unquoted whenever nobody ran the command beside it, and a
+    card with no price cannot be a PLAY — the verdict has nothing to clear
+    its bar with — so the board read as having no bets rather than as
+    missing its prices."""
+    import inspect
+    from scripts import futurematch
+
+    src = inspect.getsource(futurematch.main)
+    assert "pull_quotes()" in src
+    assert '"--no-quotes" not in args' in src          # opt out, not opt in
+    # it runs BEFORE the render, or the render prices off the old file
+    assert src.index("pull_quotes()") < src.index("board.main()")
+
+    # and it can never block a slate: no key, no network, bad feed -> the
+    # fixtures still land on the board with whatever prices were on file
+    body = inspect.getsource(futurematch.pull_quotes)
+    assert "except Exception" in body and "_key()" in body
+
+
+def test_something_pulls_the_odds_without_being_asked():
+    """Every refresh of the quotes file in this repo's history was a human
+    running the command. That is the same failure as the bank nobody
+    rebuilt, and it hid six plays on 15 Sep."""
+    import pathlib
+    wf = pathlib.Path(__file__).resolve().parents[2] / ".github" / "workflows"
+    y = (wf / "odds-refresh.yml").read_text()
+    body = y[y.index("steps:"):]
+    ran = [ln.strip() for ln in body.splitlines() if "scripts/" in ln and "python" in ln]
+    assert ran == ["python scripts/odds_api.py --quotes", "python scripts/board.py"], ran
+    assert "cron:" in y and "ODDS_API_KEY" in y
+    # a missing secret must FAIL, not skip: odds_api exits 0 without a key,
+    # so a silent skip would rebuild exactly the staleness this job ends
+    assert "::error::ODDS_API_KEY is not set" in y and "exit 1" in y
+    # the key is a secret and is never written into the repo
+    assert "secrets.ODDS_API_KEY" in y
+    for path in ("config/odds_cache.json",):
+        assert path not in body, f"{path} is derived and gitignored"
