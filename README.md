@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 82.9%
 
     lane                        Tip 1              Tip 2
-    all matches            373 / 450  82.9%    255 / 361  70.6%
+    all matches            374 / 451  82.9%    255 / 361  70.6%
     played lanes  >+1%     159 / 189  84.1%    254 / 357  71.1%
     placed bets            113 / 143  79.0%    ROI +1.2%
 
@@ -663,7 +663,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 14-09 19:00 <b>Radomiak v Piast</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>U4.25 85.6% <b>+0.1%</b><br>buy≥1.27 (+7.1% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.3% +3.8% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 15-09 18:00 <b>Raków v Zagłębie</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>U4.25 86.2% <b>+0.7%</b><br>buy≥1.25 (+7.3% margin)</td><td>U3.75 72.2% +1.8%<br>buy≥1.29 (+0.8% margin) · floor −5.8</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 65.8% +5.0% · buy≥1.59 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 15-09 19:00 <b>Grasshoppers v Sion</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (80.8 +0.0)</td><td>O1.5 83.7% +2.9%<br>buy≥1.26 (+5.3% margin)</td><td><b>Sion O1.5</b> 56.6% +19.8%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.3% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 15-09 20:30 <b>Korona Kielce v Górnik</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>U4.25 85.3% <b>−0.2%</b><br>buy≥1.27 (+7.0% margin)</td><td>— none</td></tr></table>
@@ -698,7 +697,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 373 / 450   ·   82.9%**   ·   **Tip 2 — 255 / 361   ·   70.6%**
+**Tip 1 — 374 / 451   ·   82.9%**   ·   **Tip 2 — 255 / 361   ·   70.6%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.0 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.3 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1321,6 +1320,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-0 · 14-09 19:00 <b>Djurgården v GAIS</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (81.0 −3.6)</td><td>O1.5 82.1% +4.0%<br>buy≥1.31 (+7.7% margin)</td><td>❌ O2.25 60.8% +6.0%<br>buy≥1.52 (+3.3% margin) · floor −14.2</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 72.9% +18.1% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 14-09 19:00 <b>Sirius v Degerfors</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (81.0 −3.6)</td><td>O1.5 81.1% +3.0%<br>buy≥1.28 (+3.6% margin)</td><td>✅ <b>Sirius O1.5</b> 63.2% +18.7%<br>buy≥1.64 (+3.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 80.7% +25.9% · buy≥1.30 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 14-09 19:00 <b>Gaziantep v Fenerbahçe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (83.4 −1.4)</td><td>O1.5 81.1% +3.8%<br>buy≥1.34 (+8.6% margin)</td><td>❌ <b>Fenerbahçe O1.5</b> 58.1% +24.0%<br>buy≥1.77 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 77.7% +3.2% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 14-09 19:00 <b>Radomiak v Piast</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −7.1)</td><td>U4.25 85.6% <b>+0.1%</b><br>buy≥1.27 (+7.1% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 76.3% +3.8% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-3 · 14-09 19:45 <b>Rio Ave v Estrela Amadora</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga Portugal (83.7 −2.8)</td><td>U3.0 79.2% +7.7%<br>buy≥1.45 (+7.4% margin)</td><td>❌ U2.75 58.7% +9.2%<br>buy≥1.58 (+3.1% margin) · floor −16.3</td></tr></table>
 <table align="left"><tr><th align="left">❌ 6-1 · 14-09 20:00 <b>Jong FC Utrecht v Jong Ajax</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.2)</td><td>U4.25 81.8% +2.4%<br>buy≥1.29 (+3.1% margin)</td><td>❌ U3.75 65.0% +3.2%<br>buy≥1.41 (+0.4% margin) · floor −10.0</td></tr></table>
 <table align="left"><tr><th align="left">✅ 6-1 · 14-09 20:00 <b>Jong PSV v Jong AZ</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +2.2)</td><td>O1.5 84.1% +2.2%<br>buy≥1.23 (+4.9% margin)</td><td>❌ <b>Jong AZ O1.5</b> 57.6% +16.9%<br>buy≥1.79 (+3.0% margin) · team</td></tr></table>
