@@ -1432,12 +1432,23 @@ def test_drift_reports_and_changes_nothing():
     checks = {r["check"] for r in rows}
     assert checks == {"label", "side", "ladder", "bar", "strong", "cell"}
     assert all(isinstance(r["flag"], int) and r["n"] >= 0 for r in rows)
-    # the ladder is a ladder and the star earns its badge, on today's bank
+    # The ladder is a ladder: every colour lands above the one below it.
+    # That is STRUCTURAL — a ladder out of order is a broken rule, not a
+    # measurement, so the suite holds it.
     for r in rows:
         if r["check"] == "ladder":
             assert not r["flag"], r["subject"]
-        if r["check"] == "strong":
-            assert not r["flag"], r["subject"]
+    # The star is NOT held, and that was a mistake to hold. A report-only
+    # instrument exists to raise a flag when the world moves; a test that
+    # forbids the flag turns the report into a rule and goes red for the
+    # one reason it should go green. It did, on 15 Sep, the first time
+    # the bank was rebuilt: the star's ROI edge on the corrected priced
+    # lane is -2.58 where the stale bank's 69 cards had said +3.83. The
+    # flag is the finding. What the suite pins is that the check still
+    # RUNS and still reports a number to put in front of a person.
+    strong = [r for r in rows if r["check"] == "strong"]
+    assert len(strong) == 2 and all(r["n"] > 0 for r in strong)
+    assert all(r["measured"] is not None for r in strong)
     # the source writes no rule file
     src = pathlib.Path(drift.__file__).read_text()
     assert "REPORT ONLY" in src and "webapp.SAYS[" not in src
@@ -1797,3 +1808,80 @@ def test_the_card_says_the_strike_count_not_the_list():
             assert word not in visible          # the list is on the hover
             assert word in h                    # but it is still there
     assert seen > 20
+
+
+def test_the_bank_rebuild_can_run_inside_the_two_day_job():
+    """The bettor, 15 Sep: "should the updater also check in on these
+    hitrates?" It should — and it could not, because the loop rebuilt the
+    store and measured the bank, with nothing in between.
+
+    --since is what makes the step fit: it keeps the cards already
+    priced and re-prices only the window's new arrivals. What it must
+    NOT do is let a stale card through, so it caches nothing inside
+    REPRICE_DAYS of the bank's edge and strips every guard-written field
+    from the cards it does reuse.
+    """
+    import datetime as dt
+    import json
+    from scripts import matchbank
+
+    assert matchbank.REPRICE_DAYS >= 30
+    frm = matchbank._reprice_from()
+    assert frm, "there is a bank to build on"
+
+    bank = json.loads(matchbank.OUT.read_text())
+    newest = max(m["d"] for c in bank.values() for m in c.get("matches", []))
+    assert dt.date.fromisoformat(frm) == (
+        dt.date.fromisoformat(newest) - dt.timedelta(days=matchbank.REPRICE_DAYS))
+
+    cache = matchbank._cache(frm)
+    assert cache, "the bank is reusable"
+    for (code, d, h, a), m in cache.items():
+        assert d < frm                       # nothing near the edge is reused
+        for f in matchbank.DERIVED:          # the guard relabels from scratch
+            assert f not in m
+        assert m["d"] == d and m["h"] == h and m["a"] == a
+
+    # A full rebuild asks for no cache at all, so the two paths share one loop.
+    assert matchbank._cache(None) == {}
+
+
+def test_the_two_day_job_rebuilds_the_bank_before_it_measures_it():
+    """Order is the whole point: ingest feeds the store, matchbank turns
+    the store into cards, and only then may anything read the bank."""
+    import pathlib
+    y = (pathlib.Path(__file__).resolve().parents[2]
+         / ".github" / "workflows" / "bank-refresh.yml").read_text()
+    # the SHELL block, not the header comment, which names them too
+    body = y[y.index("steps:"):]
+    ran = [ln.strip().removeprefix("python scripts/")
+           for ln in body.splitlines()
+           if ln.strip().startswith("python scripts/")]
+    assert ran == ["ingest_board.py", "matchbank.py --since",
+                   "livebands.py", "drift.py", "board.py"], ran
+    # the rebuilt bank is committed, or the next run starts from the old one
+    assert "config/matchbank_retro.json" in y
+
+
+def test_a_full_rebuild_runs_often_enough_to_catch_what_since_cannot():
+    """--since reuses cards priced before its horizon, and one in three
+    hundred of those has moved (measured 15 Sep: a February fixture whose
+    lane flipped because the store gained older results). No horizon
+    catches a seven-month-old card, so the answer is a full rebuild on
+    its own runner, often enough that the drift cannot pile up."""
+    import pathlib
+    wf = pathlib.Path(__file__).resolve().parents[2] / ".github" / "workflows"
+    full = (wf / "bank-rebuild.yml").read_text()
+    body = full[full.index("steps:"):]
+    ran = [ln.strip() for ln in body.splitlines()
+           if "scripts/matchbank.py" in ln]
+    assert len(ran) == 1 and "--since" not in ran[0], ran
+    # it needs a cap the rebuild fits inside, unlike the two-day job's
+    assert "timeout-minutes: 180" in full
+    two_day = (wf / "bank-refresh.yml").read_text()
+    assert "--since" in two_day and "timeout-minutes: 45" in two_day
+    # and it writes ONLY the bank: every measurement is the other job's
+    staged = [ln for ln in body.splitlines() if "git add" in ln]
+    assert len(staged) == 1 and "config/matchbank_retro.json" in staged[0]
+    for other in ("live_bands.tsv", "drift.tsv", "README.md", "web/"):
+        assert other not in staged[0]

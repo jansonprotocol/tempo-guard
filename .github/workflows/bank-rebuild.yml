@@ -1,0 +1,65 @@
+# Once a week: price EVERY card in the bank again, from scratch.
+#
+# The two-day refresh runs scripts/matchbank.py --since, which keeps the
+# cards it already has and re-prices only the window's new arrivals. That
+# is what makes the step fit a short job — two minutes against fifty — and
+# it is right almost always. Almost.
+#
+# Measured, 15 Sep: re-price 300 random cards that --since would have
+# reused, and 299 come back identical. The one that does not is a League
+# One fixture from FEBRUARY whose lane moved from an over to an under,
+# because the store gained results dated before it and a card is priced
+# strictly as-of its own date. No re-price horizon can catch that — the
+# card is seven months old — so the answer is not a wider horizon, it is
+# a full rebuild often enough that the drift never accumulates. At one in
+# three hundred, a week is ample.
+#
+# This job cannot live in the two-day workflow: that one is capped at 45
+# minutes and a full rebuild is about 50-110, so it gets its own runner
+# and its own cap. It writes nothing but the bank — every measurement
+# downstream is left to the two-day job, which will read the rebuilt bank
+# on its next run.
+#
+# If the two other writers (the live sweep, the bank refresh) push first
+# the push is refused and the job rebuilds onto the newer main. The
+# rebuild is a pure function of the store, so a retry writes the same
+# thing.
+name: bank rebuild (full)
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"        # 03:00 UTC on Sundays, before the 06:00 refresh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r backend/requirements.txt
+      - run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          for try in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            (cd backend && python scripts/matchbank.py)
+            git add -A config/matchbank_retro.json
+            if git diff --cached --quiet; then
+              echo "nothing changed"; exit 0
+            fi
+            git commit -q -m "bank rebuilt in full: $(date -u '+%Y-%m-%d') [skip render]" \
+              -m "Every card priced again through the current engine, so the cards --since reuses cannot drift from what the store now says. The two-day refresh re-measures on the next run."
+            if git push origin HEAD:main; then
+              echo "pushed on try $try"; exit 0
+            fi
+            echo "push refused on try $try — rebuilding onto the newer main"
+          done
+          echo "could not push after 3 tries"; exit 1

@@ -12,7 +12,33 @@ Writes config/matchbank_retro.json; scripts/webapp.py merges it with the
 live board into web/matchbank.json at render time. Re-run this after big
 engine changes so the bank reflects the current build.
 
-Usage:  python scripts/matchbank.py
+Usage:  python scripts/matchbank.py              rebuild every card (52 min)
+        python scripts/matchbank.py --since      reprice only what is new
+
+WHY --since EXISTS (the bettor, 15 Sep: "should the updater also check
+in on these hitrates to keep it reflecting the correct number?"). It
+should, and it was not. The two-day refresh ingested the board's results
+into the STORE and then re-measured everything off the BANK — but
+nothing in the loop rebuilt the bank, so the bank's newest card stayed
+at 30 August while the board ran on to mid-September. Every bank-derived
+number was quietly frozen: the league badges, the baselines, the
+live-safety bands the decline rule reads, all six drift checks, and the
+per-market landing line on the card. livebands.py re-measured
+conscientiously every two days and computed the same answer each time.
+
+A full rebuild cannot go in the loop — 32,217 cards at 96ms of engine
+replay each is 52 minutes against a 30-minute job timeout. So --since
+keeps the cards it already has and prices only what the window gained:
+about 1,300 fixtures a fortnight, a little over two minutes.
+
+Two things are deliberately NOT cached. Cards dated inside REPRICE_DAYS
+of the bank's newest are always re-priced, because ingest_board backfills
+results into the store and a card's as-of history may have gained rows
+since it was priced. And guard() always runs over the WHOLE bank: it is
+3.3 seconds, its confluence walk is as-of across every card at once, and
+re-running it is what lets a label rule change reach cards already
+banked. So --since caches the expensive, as-of-stable part and recomputes
+everything cheap.
 """
 from __future__ import annotations
 
@@ -38,8 +64,32 @@ SKIP = {"COPA-L", "EC", "WC"}
 N = 800
 DAYS = 730
 
+REPRICE_DAYS = 30    # cards this near the bank's edge are always re-priced
+# What guard() writes onto a card. A reused card sheds them before the
+# guard runs again, so a rule change cannot leave a stale label behind.
+DERIVED = ("pk", "g", "cs", "st", "bp", "need", "v")
 
-def league_entries(code: str) -> tuple[list[str], list[dict]]:
+
+def _cache(reprice_from: str | None) -> dict:
+    """(code, date, home, away) -> a card already in the bank, reusable.
+
+    Empty when the bank is missing or a full rebuild was asked for, so
+    the caller's loop is the same either way.
+    """
+    if reprice_from is None or not OUT.exists():
+        return {}
+    bank = json.loads(OUT.read_text())
+    out = {}
+    for code, comp in bank.items():
+        for m in comp.get("matches", []):
+            if m.get("d", "") >= reprice_from:
+                continue                       # too near the edge to trust
+            out[(code, m["d"], m["h"], m["a"])] = {
+                k: v for k, v in m.items() if k not in DERIVED}
+    return out
+
+
+def league_entries(code: str, cache: dict | None = None) -> tuple[list[str], list[dict]]:
     df = store.load_results(code)
     if df is None or len(df) < 100:
         return [], []
@@ -52,6 +102,11 @@ def league_entries(code: str) -> tuple[list[str], list[dict]]:
     for _, r in rows.iterrows():
         d = r["date"].date()
         hg, ag = int(r["hg"]), int(r["ag"])
+        if cache:
+            got = cache.get((code, str(d), str(r["home"]), str(r["away"])))
+            if got is not None:
+                out.append(dict(got))
+                continue
         # One call through the live tip path, so the bank stores exactly
         # the three lanes a card would have shown — and each is graded,
         # which is what makes the bank cross-examinable (the bettor's
@@ -163,21 +218,50 @@ def guard(bank: dict) -> None:
         m.pop("_mk1", None)
 
 
+def _reprice_from() -> str | None:
+    """The date at and after which cards must be priced afresh: a month
+    back from the bank's newest card. None when there is no bank to
+    build on, which makes --since behave as a full rebuild."""
+    import datetime as dt
+    if not OUT.exists():
+        return None
+    bank = json.loads(OUT.read_text())
+    days = [m["d"] for c in bank.values() for m in c.get("matches", []) if m.get("d")]
+    if not days:
+        return None
+    return str(dt.date.fromisoformat(max(days)) - dt.timedelta(days=REPRICE_DAYS))
+
+
 def main() -> None:
+    since = "--since" in sys.argv
+    reprice_from = _reprice_from() if since else None
+    cache = _cache(reprice_from)
+    if since:
+        print(f"--since: {len(cache):,} cards reusable, everything from "
+              f"{reprice_from} priced afresh"
+              if cache else "--since: no bank to build on, pricing every card")
     bank = {}
+    kept = made = 0
     for code in sorted(store.available_leagues()):
         if code in SKIP:
             continue
         try:
-            teams, entries = league_entries(code)
+            teams, entries = league_entries(code, cache)
         except Exception as exc:
             print(f"{code}: FAILED {exc}", file=sys.stderr)
             continue
         if not entries:
             continue
+        k = sum(1 for e in entries
+                if (code, e["d"], e["h"], e["a"]) in cache)
+        kept += k
+        made += len(entries) - k
         bank[code] = dict(name=config.get(code).name or code,
                           teams=teams, matches=entries)
-        print(f"{code}: {len(entries)} matches, {len(teams)} teams")
+        print(f"{code}: {len(entries)} matches, {len(teams)} teams"
+              + (f" ({len(entries) - k} priced)" if since else ""))
+    if since:
+        print(f"reused {kept:,} cards, priced {made:,}")
     guard(bank)
     priced = sum(1 for b in bank.values() for m in b["matches"] if "v" in m)
     print(f"guard: labels on every card, {priced} with a closing-price verdict")

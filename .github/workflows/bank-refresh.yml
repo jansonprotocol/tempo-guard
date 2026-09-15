@@ -2,9 +2,22 @@
 # results bank, re-measure the live-safety bands on the board's own
 # record, re-render, and commit to main so the site deploys.
 #
-# The bettor's ask, 12 Sep. Three commands the operator used to run by
+# The bettor's ask, 12 Sep. The commands the operator used to run by
 # hand, in the order they depend on each other:
 #   scripts/ingest_board.py   completed board cards -> the store (idempotent)
+#   scripts/matchbank.py      the store replayed into CARDS -> the bank.
+#                             --since, because a full rebuild is 52 minutes
+#                             against this job's 30-minute cap: the cards
+#                             already banked are kept, everything inside a
+#                             month of the bank's edge is priced afresh, and
+#                             the guard relabels all 32,000 either way. About
+#                             two minutes. WITHOUT THIS STEP the loop was a
+#                             circle: ingest_board fed the STORE, and every
+#                             measurement below reads the BANK, which nothing
+#                             rebuilt — so the bank sat at 30 Aug while the
+#                             board ran on to mid-September, and livebands
+#                             re-measured the same frozen answer every two
+#                             days (the bettor caught it, 15 Sep)
 #   scripts/livebands.py      the live tag's bands, measured on the bank
 #                             per league (50 cards or more) and for the
 #                             whole bank, red cards out, labelled by hit
@@ -24,18 +37,25 @@
 #                             them)
 #   scripts/board.py          render README + app + live.json, then verify
 #
-# The engine is not touched: no re-pricing, no recomputed guard slices,
-# no label rates. What can change is which unstaked cards are OFFERED for
-# a live buy and where they file — and, since 12 Sep, which cards are IN
+# THE ENGINE'S RULES ARE NOT TOUCHED. config/guard_slices.tsv and
+# config/league_hitrates.tsv are engine inputs and nothing here writes
+# them; no label rate, tier cut, band bar or strong bar moves, which is
+# what drift.py exists to keep honest. The bank IS re-priced, and always
+# was — matchbank replays fixtures through the CURRENT engine, so a card
+# banked today is priced by today's build. That is the bank's whole
+# meaning and the reason it is rebuilt rather than appended to.
+#
+# What can change on a run is which unstaked cards are OFFERED for a
+# live buy and where they file — and, since 12 Sep, which cards are IN
 # THE RECORD: an unstaked card whose band is unsafe is declined and out
 # of every displayed hit rate, board and bank, so a band flipping here
 # moves the session bar, the baselines and the retrosim table.
 #
 # The commit subject carries no "[skip render]" on purpose: this is one
 # that should deploy. If the live sweep pushes first the push is refused;
-# the job resets onto main and runs the three commands again — all of
-# them are reproducible from the files, so a retry writes the same thing
-# onto the newer board.
+# the job resets onto main and runs the commands again — all of them are
+# reproducible from the files, so a retry writes the same thing onto the
+# newer board.
 name: bank refresh
 
 on:
@@ -49,7 +69,7 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -64,11 +84,13 @@ jobs:
             git reset --hard origin/main
             cd backend
             python scripts/ingest_board.py
+            python scripts/matchbank.py --since
             python scripts/livebands.py
             python scripts/drift.py
             python scripts/board.py
             cd ..
             git add -A data/ config/live_bands.tsv config/drift.tsv \
+                       config/matchbank_retro.json \
                        config/forward_log.tsv \
                        config/reads_cache.json README.md web/
             if git diff --cached --quiet; then
