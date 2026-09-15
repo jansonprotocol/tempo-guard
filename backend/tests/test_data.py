@@ -1885,3 +1885,54 @@ def test_a_full_rebuild_runs_often_enough_to_catch_what_since_cannot():
     assert len(staged) == 1 and "config/matchbank_retro.json" in staged[0]
     for other in ("live_bands.tsv", "drift.tsv", "README.md", "web/"):
         assert other not in staged[0]
+
+
+def test_the_strike_ladder_on_the_card_is_measured_not_typed():
+    """The bettor, 15 Sep: "does it recheck all hitrates that are
+    represented on the cards?" This one did not — it was typed on 13 Sep
+    and had drifted by two days. It is now read off the board."""
+    from scripts import board, webapp
+    rungs = webapp.strike_ladder()
+    assert rungs and all(c >= webapp.LADDER_MIN_N for _, c, _ in rungs)
+    assert [k for k, _, _ in rungs] == sorted(k for k, _, _ in rungs)
+
+    # it counts exactly what every other board rate counts
+    want = {}
+    for f in board.load():
+        if not f.settled or not webapp.counts(f):
+            continue
+        mark = f.status.lstrip()[:1]
+        if mark in ("✅", "❌", "◦"):
+            want.setdefault(len(webapp.strikes(f)), []).append(mark != "❌")
+    for k, c, h in rungs:
+        assert c == len(want[k])
+        assert abs(h - sum(want[k]) / c * 100) < 1e-9
+
+    # and the hover quotes the measurement, not a literal
+    f = next(x for x in board.load() if webapp.strikes(x))
+    tip = webapp._strikes_html(f)
+    for k, c, h in rungs:
+        assert f"{h:.1f}% on {c}" in tip
+    assert "84.3%, 1 83.3%" not in tip          # the old typed ladder is gone
+
+
+def test_every_hitrate_on_a_card_has_something_that_refreshes_it():
+    """An audit, not a behaviour: each rate a card can print is either
+    recomputed by the two-day job or is a REGISTERED CONSTANT that
+    drift.py watches. Nothing may sit in between — a number that is
+    neither refreshed nor watched is one nobody will ever notice go
+    stale, which is how the bank reached sixteen days old."""
+    from scripts import drift, webapp
+
+    # recomputed from the bank or the board on every refresh
+    from scripts import bankrates, cellrates, livebands
+    for fn in (bankrates.display_rates, bankrates.baselines,
+               cellrates.table, livebands.bands, webapp.strike_ladder):
+        assert callable(fn)
+    assert bankrates.display_rates() and cellrates.table()
+
+    # registered constants, each one named by a drift check
+    watched = {r["check"] for r in drift.measure()}
+    assert {"label", "ladder", "bar", "strong"} <= watched   # SAYS/LADDER/BAND_BAR/STRONG
+    assert set(webapp.SAYS) >= set(webapp.SAYS_N)
+    assert set(webapp.BAND_BAR) == {"85+", "80–85", "75–80"}

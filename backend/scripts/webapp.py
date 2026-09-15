@@ -20,6 +20,7 @@ import datetime as dt
 import html
 import re
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -1441,18 +1442,53 @@ def strikes(f) -> list[str]:
     return out
 
 
+LADDER_MIN_N = 20      # cards before a rung of the strike ladder may be quoted
+
+
+@lru_cache(maxsize=1)
+def strike_ladder() -> list[tuple[int, int, float]]:
+    """(strikes, cards, hit rate) down the board's settled counted cards.
+
+    MEASURED, not typed. The rest of the hover's numbers are the finding
+    of 13 Sep and carry that date; this is the ladder the reader is being
+    asked to act on, so it says what the board says today. It was typed
+    once and had already drifted by two days — 84.3 / 83.3 / 76.1 against
+    a board reading 83.9 / 82.8 / 77.8 — which is small, and exactly the
+    kind of small that a number nobody recomputes keeps doing.
+
+    Declined cards are out, the same rule as every other rate here, which
+    is also why the 3-strike rung empties as combos are declined.
+    """
+    acc: dict[int, list[int]] = {}
+    for f in board.load():
+        if not f.settled or not counts(f):
+            continue
+        mark = f.status.lstrip()[:1]
+        if mark not in ("✅", "❌", "◦"):
+            continue
+        a = acc.setdefault(len(strikes(f)), [0, 0])
+        a[0] += 1
+        a[1] += mark != "❌"
+    return [(k, v[0], v[1] / v[0] * 100) for k, v in sorted(acc.items())
+            if v[0] >= LADDER_MIN_N]
+
+
 def _strikes_html(f) -> str:
     st = strikes(f)
     if not st:
         return ""
     n = len(st)
-    tip = ("Strikes: the marks the session's losses share. A confluence score "
-           "under zero (77.7% on 184 against 89.0 at +4 and up); a priced play or "
-           "watch card rather than an Athena lane (77.9 / 79.7 against 83.8); and "
-           "an OVER lane on a card with a score under zero (69.0% on 42 against "
-           "85.5 with a positive score). By count: 0 strikes 84.3%, 1 83.3%, 2 "
-           "76.1%, 3 64.0% (session #6, 13 Sep). Information only — the mark "
-           "files nothing and counts nothing.")
+    rungs = strike_ladder()
+    ladder = (", ".join(f"{k} {'strike' if k == 1 else 'strikes'} {h:.1f}% on {c}"
+                        for k, c, h in rungs)
+              if rungs else "not enough settled cards to say yet")
+    tip = ("Strikes: the marks the session's losses share. When the profile was "
+           "found (13 Sep): a confluence score under zero landed 77.7% on 184 "
+           "against 89.0 at +4 and up; a priced play or watch card rather than "
+           "an Athena lane 77.9 / 79.7 against 83.8; an OVER lane on a card with "
+           "a score under zero 69.0% on 42 against 85.5 with a positive score. "
+           f"ON THE BOARD NOW, declined cards out: {ladder}. Information only — "
+           "the mark files nothing and counts nothing.")
     dec = strike_declined(f)
     if dec:
         tip += (" THIS COMBO IS DECLINED: on the board's own record it sits under "
