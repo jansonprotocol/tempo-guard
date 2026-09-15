@@ -1458,9 +1458,15 @@ def _strikes_html(f) -> str:
         tip += (" THIS COMBO IS DECLINED: on the board's own record it sits under "
                 "77%, so the card files under Declined and leaves the record "
                 "(re-measured every two days; it comes back at 77).")
+    # The COUNT on the card, the list on the hover (the bettor, 15 Sep:
+    # "the cards now become VERY cluttered"). Spelling all three out ran
+    # "⚠ 3 strikes · score under 0 · priced play · over lane" across the
+    # whole pill row and pushed the meta line onto a second line on a
+    # phone. The number is the part that ranks the card; which three they
+    # are is a question you ask of one card, not of a screenful.
+    tip = f"{' · '.join(st)}. {tip}"
     return (f'<span class="strikes s{n}{" sd" if dec else ""}" title="{html.escape(tip)}">'
-            f'⚠ {n} strike{"s" if n > 1 else ""} · {" · ".join(st)}'
-            f'{" · declined" if dec else ""}</span>')
+            f'⚠ {n} strike{"s" if n > 1 else ""}</span>')
 
 
 def _livetag_html(f) -> str:
@@ -1499,7 +1505,7 @@ def _livetag_html(f) -> str:
             tipn = to.replace(" ", "")
             fr = live_bands()[("flip", f"{tag} {tipn}")]
             fb = live_bands()[("flipbank", f"{tag} {tipn}")]
-            word += f" · flipped → {to}"
+            word += f" → {to}"
             tip += (f" FLIPPED: on {tag} priced plays that also print a {to}, "
                     + (f"{to} landed {fr['hit']:.1f}% to tip 1's {fr['said']:.1f}% "
                        f"on the same {fr['n']} board cards in the last three weeks "
@@ -1521,7 +1527,7 @@ def _livetag_html(f) -> str:
         nocount = (f'<span class="nocount" title="Declined: {why}. Swept and graded, '
                    'but in no hit rate — not the tiles, not the baselines, not a '
                    'league badge, not the bank (the bettor\'s rule, 12 Sep).">'
-                   '⛔ not in the record</span>')
+                   '⛔ declined</span>')
     return f'<div class="livebar">{pill}{nocount}{_strikes_html(f)}</div>'
 
 
@@ -1677,16 +1683,47 @@ def _past_kick(f) -> bool:
     return bool(f.settled or odds_api.started(f.kickoff))
 
 
-def _lanebar(f, cell: str, starred_label: str | None) -> str:
+def _cellbar(f, cell: str) -> str:
+    """What this league's side has landed in this claim band — one line.
+
+    Information only (scripts/cellrates.py has the whole argument): it
+    moves no bar, no colour and no hit rate. It sits where the starred
+    lane's price bar used to, because on a card with a verdict that bar
+    was the SAME two numbers the verdict line above already gave — "PLAY
+    Tip 1 U4.5 · needs 1.27, Unibet pays 1.34" over "PASS 1.34 · needs
+    1.27". One line of the card was being spent restating the line above
+    it; it now carries something the card could not say before.
+    """
+    from scripts import cellrates
+    txt = cellrates.line(f.code, cell)
+    if not txt:
+        return ""
+    c = cellrates.cell(f.code, cell)
+    # Deliberately NOT the green/red of a PASS or DECLINE: this line is
+    # history, and dressing it in the verdict's colours would make a
+    # -1.4 point gap look like an instruction. A tint, nothing louder.
+    cls = "up" if c["gap"] >= 1 else "dn" if c["gap"] <= -1 else ""
+    return (f'<div class="lanebar cellbar {cls}" '
+            f'title="{html.escape(cellrates.tip(f.code, cell, f.league))}">'
+            f'{html.escape(txt)}</div>')
+
+
+def _lanebar(f, cell: str, starred_label: str | None, terse: bool = False) -> str:
     """PASS or DECLINE for ONE lane, whether or not it is the star.
 
     The bettor's point: a card whose starred lane fails on price is not
     the same as a card with nothing on it, and the reader should be able
     to see which lanes cleared without doing the arithmetic per lane.
+
+    `terse` means the verdict line above already states this lane's price
+    and its bar, so repeating them here says nothing — the lane shows
+    what the league's band has landed instead.
     """
     need, _hit, solid = _needs(cell, starred_label)
     if need is None or _past_kick(f):
         return ""
+    if terse:
+        return _cellbar(f, cell)
     lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane)) if lane else None
     soft = "" if solid else (' <span class="dim" title="This bar comes from '
@@ -1903,11 +1940,15 @@ def _card(f, kind: str, reads: dict) -> str:
         # means "read this first", never "this is the better bet" — the
         # buy≥ bracket decides that.
         best = _star(f)
-    star = ('<span class="best-tag" title="The lane to read first on this '
+    # The star is a MARK, not a sentence (the bettor, 15 Sep: minimise).
+    # "★ read first" sat on the same line as the rung, the claim, the
+    # edge and the buy bracket, and was the only one of the five that
+    # said nothing a symbol could not.
+    star = ('<span class="best-tag" title="Read this lane first on this '
             'card — not a claim that it is the better bet; the buy≥ '
-            'bracket decides that">★ read first</span>')
+            'bracket decides that">★</span>')
 
-    def lane(which, cell, lab=None, noplay=False):
+    def lane(which, cell, lab=None, noplay=False, terse=False):
         if cell.strip() in ("", "—", "— none"):
             return ""
         pl = " pl" if (not f.settled and f.lane(which)) else ""
@@ -1956,7 +1997,7 @@ def _card(f, kind: str, reads: dict) -> str:
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
                 f"</span> {_fmt(cell, f.teams, quoted=not past)}{tail}"
                 f"{star if which == best else ''}"
-                f"{_lanebar(f, cell, lab)}{live}</div>")
+                f"{_lanebar(f, cell, lab, terse)}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -1999,7 +2040,14 @@ def _card(f, kind: str, reads: dict) -> str:
     # the board called, and a "no play" pill under a line reading
     # "was PLAY" is the card arguing with itself.
     mark = not past
-    face = lane(seq[0], cells[seq[0]], lab, noplay=mark and not playing)
+    # The face lane takes no "no play" pill when a verdict line sits above
+    # it: that line already says the call in words, and the pill under the
+    # quotes made the card read "no play ... no play" three lines apart
+    # (the bettor, 15 Sep). The lanes behind the fold keep theirs — they
+    # have no verdict of their own and the mark is the only thing telling
+    # them apart from an instruction.
+    face = lane(seq[0], cells[seq[0]], lab, terse=bool(v),
+                noplay=mark and not playing and not v)
     rest = "".join(lane(w, cells[w], None, noplay=mark) for w in seq[1:])
     # Which lane the card starred, for the "line taken" flag: live before
     # kickoff, frozen after it, so a completed card reads the same as it
@@ -3148,6 +3196,11 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .lanebar.yes {{ color:#8fe3a8; }}
 .lanebar.no {{ color:#e08b7a; }}
 .lanebar.dimv {{ color:var(--dim); }}
+.cellbar {{ color:var(--dim); font-size:10px; letter-spacing:.05em;
+  margin-top:4px; padding-left:7px; border-left:2px solid var(--edge);
+  text-transform:uppercase; }}
+.cellbar.up {{ border-left-color:#3f6b4d; }}
+.cellbar.dn {{ border-left-color:#7a4038; }}
 .verdict.yes {{ color:#8fe3a8; }}
 .verdict.yes b {{ color:#b8f0c8; }}
 .verdict.no {{ color:#e08b7a; }}

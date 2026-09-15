@@ -32,6 +32,8 @@ Five checks:
     bar        each claim band's ROI at its bar, and where the best bar
                sits now
     strong     the star's cards against the rest, at the current bar
+    cell       each league's overs and unders against what they claimed,
+               at a threshold set wide because the gap does not persist
 
 Reads the bank only (config/matchbank_retro.json, red cards kept in so a
 declined group can still be seen). Writes config/drift.tsv, committed by
@@ -52,6 +54,19 @@ SAYS_AT = 2.0        # points between a label's rate and its SAYS before it flag
 SIDE_AT = 2.0        # points between overs and unders in a claim band
 BAR_AT = 0.02        # how far the best bar may sit from the set one
 MIN_N = 200          # a check needs this many cards to speak
+
+# The league x side cell. Its threshold is DELIBERATELY far out, and the
+# reason is measured (15 Sep): a cell's gap against its claim does not
+# carry from one period to the next. Split the bank in half by date and
+# correlate each cell's gap across the two halves and r = +0.20, on a
+# spread of about 3 points either side — Norwegian overs ran -8.0 then
+# +0.8, Swiss unders -1.6 then -10.4. A flag at 3 or 4 points would fire
+# on a dozen cells a fortnight and every one of them would be noise. So
+# the check reports the wide ones and only FLAGS a cell that is further
+# out than the swing can explain.
+CELL_AT = 8.0        # points of gap before a market cell flags
+CELL_SHOW = 4.0      # points of gap before it is worth printing at all
+CELL_MIN_N = 150     # kept cards in the cell before it may speak
 
 
 def _side(cell: str | None) -> str:
@@ -188,10 +203,41 @@ def check_strong(cards) -> list[dict]:
                  flag=int(ns >= 50 and (_roi(s) or 0) <= (_roi(o) or 0)))]
 
 
+def check_cells(cards) -> list[dict]:
+    """Each league's market against what its cards claimed.
+
+    Reads scripts/cellrates, NOT the `cards` list, on purpose: that is the
+    same table the board prints on the card, so a number the bettor reads
+    while buying and a number this report flags can never disagree.
+
+    What this check is FOR is narrow. It is not a decline rule and it must
+    not become one — see CELL_AT above for why, and scripts/cellrates for
+    the whole measurement. It is here to catch a cell that has gone
+    somewhere the ordinary swing cannot reach: a league that changed its
+    scoring, a feed that started grading a rung wrong, a market the engine
+    has quietly stopped modelling. Everything narrower than that is noise
+    wearing a number.
+    """
+    from scripts import cellrates
+    rows = []
+    for key, r in cellrates.table().items():
+        if len(key) != 2 or r["n"] < CELL_MIN_N:
+            continue                      # the whole market, not a band
+        code, side = key
+        gap = r["hit"] - r["says"]
+        if abs(gap) < CELL_SHOW:
+            continue
+        word = "overs" if side == "O" else "unders"
+        rows.append(dict(check="cell", subject=f"{code} {word}", n=r["n"],
+                         measured=r["hit"], code_says=r["says"], delta=gap,
+                         flag=int(abs(gap) > CELL_AT)))
+    return sorted(rows, key=lambda r: r["delta"])
+
+
 def measure() -> list[dict]:
     cards = _cards()
     return (check_labels(cards) + check_sides(cards) + check_ladder(cards)
-            + check_bars(cards) + check_strong(cards))
+            + check_bars(cards) + check_strong(cards) + check_cells(cards))
 
 
 def write(rows: list[dict], today) -> None:

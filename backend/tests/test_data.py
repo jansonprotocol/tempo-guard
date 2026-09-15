@@ -1430,7 +1430,7 @@ def test_drift_reports_and_changes_nothing():
     assert (webapp.SAYS, webapp.BAND_BAR, webapp.STRONG_SCORE) == \
         (before[0], before[1], before[2])              # nothing moved
     checks = {r["check"] for r in rows}
-    assert checks == {"label", "side", "ladder", "bar", "strong"}
+    assert checks == {"label", "side", "ladder", "bar", "strong", "cell"}
     assert all(isinstance(r["flag"], int) and r["n"] >= 0 for r in rows)
     # the ladder is a ladder and the star earns its badge, on today's bank
     for r in rows:
@@ -1724,3 +1724,76 @@ def test_store_save_drops_the_same_match_written_a_day_apart(tmp_path, monkeypat
     assert len(got) == 3
     assert sorted(got["date"].dt.strftime("%Y-%m-%d")) == ["2026-09-07", "2026-09-09", "2026-09-20"]
     assert got[got["date"] == "2026-09-09"]["hg"].tolist() == [1]
+
+
+def test_the_cell_line_reads_only_and_never_prices():
+    """The bettor, 15 Sep: put what the market ACTUALLY lands on the card.
+
+    The measurement behind it says the number may inform and must not
+    price — a cell's gap against its claim does not carry from one period
+    to the next (r = +0.20 across the two halves of the bank), so nothing
+    in the pricing path may read this module.
+    """
+    import pathlib
+    from scripts import cellrates, webapp
+
+    # It answers on a thick cell, and stays silent on a thin one rather
+    # than speaking from a dozen cards.
+    got = cellrates.cell("NED-ED", "U4.25 82.4% +2.4% · buy≥1.27")
+    assert got and got["source"] == "band" and got["n"] >= cellrates.MIN_CELL
+    assert cellrates.cell("NED-ED", "DNB1 74.0%") is None          # no side
+    assert cellrates.cell("NOWHERE", "U3.5 82.0%") is None         # no cards
+
+    # Its bands REFINE the price bar's: every one of them lies entirely
+    # inside a single BAND_BAR band, so a card can never sit in one band
+    # for its bar and a contradicting one for its history.
+    for lo, hi, name in cellrates.BANDS:
+        inside = {webapp.claim_band(p) for p in
+                  (lo, (lo + hi) / 2, hi - 0.01) if p >= 0}
+        assert len(inside) == 1, f"{name} straddles {inside}"
+
+    # Declined cards are out of it, exactly as they are out of every other
+    # rate on the board.
+    src = pathlib.Path(cellrates.__file__).read_text()
+    assert "br.counts(" in src
+
+    # NOTHING in the pricing path may read it. play_bar, claim_band,
+    # band_bar and the verdict are the price; cellrates is a sentence.
+    ws = pathlib.Path(webapp.__file__).read_text()
+    body = ws[ws.index("def play_bar("):ws.index("def not_red(")]
+    assert "cellrates" not in body
+    for name in ("claim_band", "band_bar", "_value_of"):
+        i = ws.index(f"def {name}(")
+        assert "cellrates" not in ws[i:i + 1200]
+
+
+def test_the_cell_check_flags_only_what_the_swing_cannot_explain():
+    """The threshold is wide ON PURPOSE. Gaps swing about 3 points between
+    halves of the bank, so a 3- or 4-point flag would fire on noise every
+    fortnight — and the direction of such a flag was measured backwards."""
+    from scripts import drift
+    assert drift.CELL_AT >= 8.0 and drift.CELL_MIN_N >= 150
+    rows = [r for r in drift.measure() if r["check"] == "cell"]
+    for r in rows:
+        assert r["n"] >= drift.CELL_MIN_N
+        assert abs(r["delta"]) >= drift.CELL_SHOW      # nothing trivial printed
+        assert r["flag"] == int(abs(r["delta"]) > drift.CELL_AT)
+
+
+def test_the_card_says_the_strike_count_not_the_list():
+    """The bettor, 15 Sep: "the cards now become VERY cluttered". The pill
+    carries the number; the three words go on the hover."""
+    from scripts import board, webapp
+    seen = 0
+    for f in board.load():
+        h = webapp._strikes_html(f)
+        if not h:
+            continue
+        seen += 1
+        st = webapp.strikes(f)
+        visible = h[h.index(">", h.index("title=")) + 1:]
+        assert "strike" in visible
+        for word in st:
+            assert word not in visible          # the list is on the hover
+            assert word in h                    # but it is still there
+    assert seen > 20
