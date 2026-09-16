@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            372 / 458  81.2%    252 / 371  67.9%
     played lanes  >+1%     157 / 197  79.7%    251 / 369  68.0%
-    placed bets            114 / 146  78.1%    ROI -0.2%
+    placed bets            117 / 149  78.5%    ROI +0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -1367,7 +1367,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 114 / 146  ·  ROI -0.2%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 117 / 149  ·  ROI +0.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -1523,6 +1523,9 @@ that premium the book is keeping the insurance money.
 | — open | Botafogo v Grêmio | U3.5 | 1.35 | — | Unibet (NL) — pre-kickoff, struck 16 Sep 00:0x CEST for Thursday 00:30, at a 1.20 stake. NOT the board's play: a WATCH card and the first PINK one of the session (U3.0 struck as U3.5, 79.6%, +4.3% edge — below the ladder's 80 cut), tagged live safe, one strike (watch card); the confluence score is −2.6 but it is silent outside Europe and files no strike. Needs 1.43 — value 1.47 less 3%, floored at the 75–80 band's 1.31 — and 1.35 is eight cents short, 5.6% under the bar; 1xBet's 1.39 is the best anywhere and misses it too. Logged as taken, not as a board play. Against it: Brasileirão unders claiming 75–80 have landed 82.8% on 58 bank cards, +5.3 above claim, and 1.35 breaks even at 74.1% — the thinnest cell quoted on a slip so far |
 | — open | Celtic v Ferencváros | U4.5 | 1.24 | — | TOTO — pre-kickoff, struck 16 Sep 00:0x CEST for Thursday 21:00, at a 1.15 stake. The card's PLAY lane (green, 85–90 band, U4.25 struck as U4.5, 86.6%, +2.9% edge), tagged live safe, one strike (priced play). Needs 1.19 — value 1.23 less 3%, floored at the band's 1.14 — and 1.24 clears it; the feed's best is 1xBet 1.25, so TOTO is a cent off the market. Break-even 80.6% against a card claiming 86.6, and Europa League unders claiming 85–90 have landed 86.5% on 155 bank cards. FIRST BET STRUCK ON A LANE THE ODDS PULL SURFACED: this card read no play with nothing quoted until the feed was asked on 15 Sep |
 | — open | Málaga v Villarreal | U4.5 | 1.20 | — | TOTO — pre-kickoff, struck 16 Sep 00:0x CEST for Thursday 21:30, at a 1.15 stake. The card's PLAY lane (orange, 80–85 band, U4.25 struck as U4.5, 84.8%), tagged live safe, TWO strikes (score under 0, priced play) — the combo the board keeps at 77.8%. Note the edge prints −2.1%: the lane clears on PRICE, not on edge, because 1.20 beats the 1.18 bar the 80–85 band sets. Break-even 83.3% against a claim of 84.8, the thinnest margin on any position this session; the feed's best is 1xBet 1.22. LaLiga unders claiming 80–85 have landed 88.4% on 215 bank cards, +3.6 above claim. Also surfaced by the 15 Sep odds pull |
+| ✅ | AIK v Mjällby | U4.5 | 1.27 | 1.27x | TOTO — in-play, struck 16 Sep 19:44 CEST around 44' at 1-1, at a 1.15 stake. NOT the board's play: a WATCH card (orange, 80–85 band, U4.25 struck as U4.5, 83.7%, +0.0% edge against a 1.27 bar no pre-match book reached), tagged live safe, one strike (watch card), score +8.05. The board's from-here line at 1-1 44' said 78%, fair 1.29; 1.27 is a shade under it. Allsvenskan unders claiming 80–85 have landed 86.9% on 199 bank cards. Outside the board's rule; logged as taken. Won 1-1 |
+| ✅ | Atlético Madrid v Osasuna | U4.5 | 1.26 | 1.26x | TOTO — in-play, struck 16 Sep 20:31 CEST around 70' at 3-0, at a 1.15 stake. NOT the board's play: a WATCH card (orange, 80–85 band, U4.25 struck as U4.5, 84.9%, −2.0% edge, buy≥1.23), tagged live safe, one strike (watch card), score +2.84. The board's from-here line at 3-0 70' said 85%, fair 1.18; 1.26 is seven points of price above it — the best buy of the three. THE RUNG EARNED ITS KEEP: it finished 4-0, so U4.5 won outright where the card's own U4.25 would have half-pushed. LaLiga unders claiming 80–85 have landed 89.7% on 203 bank cards. Won 4-0 |
+| ✅ | Anderlecht v Lyon | U4.5 | 1.36 | 1.36x | TOTO — in-play, struck 16 Sep 21:40 CEST around 39' at 0-2, at a 1.15 stake. NOT the board's play: a WATCH card (orange, 80–85 band, U4.25 struck as U4.5, 84.9%, +1.1% edge, buy≥1.25), tagged live safe, TWO strikes (score under 0, watch card) — the combo the bank keeps at 84.7% on 688. The board's from-here line at 0-2 39' said 75%, fair 1.33; 1.36 is above it. Europa League unders claiming 80–85 have landed 88.1% on 118 bank cards. Won 1-2 |
 
 <!-- HYPOTHESES:START -->
 
