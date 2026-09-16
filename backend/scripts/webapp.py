@@ -1855,9 +1855,12 @@ def _profile_html(f) -> str:
 
     The bettor was typing the same pair of searches into Ask Athena for
     every card he looked at: pick the league, then "orange, strike 1,
-    tip 1 <83", read the TIP 1 and FINAL PICK · ORANGE tiles, then run it
-    again without the claim band to see which filter was carrying the
-    number. That is a question about one card, so the card answers it.
+    tip 1 <83", then run it again without the claim band to see which
+    filter was carrying the number. That is a question about one card,
+    so the card answers it — and answers it twice, here and bank-wide,
+    because a weak line in one league is a different thing from a weak
+    profile everywhere and the league number alone cannot tell them
+    apart.
 
     Information only: no bar, no colour, no verdict and no hit rate moves
     because of this.
@@ -1867,7 +1870,8 @@ def _profile_html(f) -> str:
                          _claim(f.tip1))
     # Nothing in the profile reaches the floor: the card says nothing
     # rather than printing four counts that cannot be read as rates.
-    if not any(r[k][1] >= cardgrid.MIN_N for r in rows for k in ("t1", "fp")):
+    if not any(r[k][1] >= cardgrid.MIN_N for r in rows
+               for k in ("here", "all")):
         return ""
 
     def num(hit, n):
@@ -1883,21 +1887,32 @@ def _profile_html(f) -> str:
 
     cells = ""
     for r in rows:
-        cells += (f'<div class="ph">{html.escape(r["lab"])}</div>'
-                  f'<div class="pc"><span class="pl">tip 1</span>'
-                  f'{num(*r["t1"])}</div>'
-                  f'<div class="pc"><span class="pl">final pick</span>'
-                  f'{num(*r["fp"])}</div>')
-    tip = (f"What cards like this one have landed in the {f.league}, read "
-           f"off the bank — the same two searches the Ask Athena box "
-           f"answers, and the same tiles: tip 1's own record, and the "
-           f"record of the lane the card starred. The first line is the "
-           f"whole profile (colour, strikes, claim band), the second "
-           f"drops the claim band and keeps the rest, so the pair says "
-           f"whether the band is carrying the number or the profile is. "
-           f"Declined cards are out, as they are in the box. Information "
-           f"only — nothing here prices anything. A rate under "
-           f"{cardgrid.MIN_N} cards is dimmed.")
+        # The final pick rides along on the hover rather than the face:
+        # inside a colour-filtered slice it is the same lane as tip 1
+        # unless a gated DNB took the star, so it was one number printed
+        # twice where the bank-wide column says something new.
+        fh, fn = r["fp"]
+        fp = (f" · the starred lane here: {fh / fn * 100:.1f}% on {fn}"
+              if fn >= cardgrid.MIN_N else "")
+        cells += (f'<div class="ph" title="{html.escape(r["lab"] + fp)}">'
+                  f'{html.escape(r["lab"])}</div>'
+                  f'<div class="pc"><span class="pl">here</span>'
+                  f'{num(*r["here"])}</div>'
+                  f'<div class="pc"><span class="pl">all leagues</span>'
+                  f'{num(*r["all"])}</div>')
+    tip = (f"What cards like this one have landed, read off the bank — "
+           f"the same searches the Ask Athena box answers, and tip 1's "
+           f"record in both columns. DOWN: the first line is the whole "
+           f"profile (colour, strikes, claim band as a ceiling), the "
+           f"second drops the claim band and keeps the rest, so the pair "
+           f"says whether the band is carrying the number or the profile "
+           f"is. ACROSS: “here” is the {f.league}, “all "
+           f"leagues” is the same profile bank-wide — a line that is "
+           f"weak here and strong everywhere is this league, and one "
+           f"that is weak in both is the profile. Declined cards are "
+           f"out, as they are in the box. Information only — nothing "
+           f"here prices anything. A cell under {cardgrid.MIN_N} cards "
+           f"prints its count and no rate.")
     return (f'<div class="pgrid" title="{html.escape(tip)}">{cells}</div>')
 
 

@@ -2565,8 +2565,8 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
     """The profile grid on a card is the Ask Athena search, precomputed.
 
     Two filtered lines — the card's colour, its strike count and its
-    claim band, then the same without the band — and two numbers on
-    each, tip 1's record and the starred lane's. It has to be the SAME
+    claim band, then the same without the band — measured twice, in the
+    card's own league and across every league. It has to be the SAME
     population the search box would return, or the card is quietly
     answering a different question than the one it names.
     """
@@ -2581,30 +2581,43 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
     assert "<" not in wide["lab"], wide["lab"]
 
     # The wide row contains the tight one: same filters minus the band.
-    for k in ("t1", "fp"):
+    for k in ("here", "all", "fp"):
         assert tight[k][1] <= wide[k][1], (k, tight, wide)
         assert tight[k][0] <= wide[k][0], (k, tight, wide)
+    # And the league is inside the bank-wide population, on both rows.
+    for r in got:
+        assert r["here"][1] <= r["all"][1], r
+        assert r["here"][0] <= r["all"][0], r
 
-    # Re-derived by hand off the bank, the long way round.
-    want = {"t1": [0, 0], "fp": [0, 0]}
-    for m in br.bank()[lg]["matches"]:
-        if (m.get("g") or "") != lab or not br.counts(m, lg):
-            continue
-        if len(br.strikes(m, lg)) != nst:
-            continue
-        c = br._claim(m.get("tip"))
-        if c is None or c >= 83:
-            continue
-        for k, mk in (("t1", m.get("mark")),
-                      ("fp", m.get("m3") if m.get("pk") == 3 else m.get("mark"))):
-            h = br._hit(mk)
-            if h is not None:
-                want[k][1] += 1
-                want[k][0] += h
-    assert (tight["t1"], tight["fp"]) == (tuple(want["t1"]), tuple(want["fp"]))
+    # Re-derived by hand off the bank, the long way round: the league
+    # column, and the same measurement over every league for the other.
+    want = {"here": [0, 0], "all": [0, 0], "fp": [0, 0]}
+    for code, comp in br.bank().items():
+        for m in comp["matches"]:
+            if (m.get("g") or "") != lab or not br.counts(m, code):
+                continue
+            if len(br.strikes(m, code)) != nst:
+                continue
+            c = br._claim(m.get("tip"))
+            if c is None or c >= 83:
+                continue
+            h1 = br._hit(m.get("mark"))
+            if h1 is not None:
+                want["all"][1] += 1
+                want["all"][0] += h1
+                if code == lg:
+                    want["here"][1] += 1
+                    want["here"][0] += h1
+            if code == lg:
+                hs = br._hit(m.get("m3") if m.get("pk") == 3 else m.get("mark"))
+                if hs is not None:
+                    want["fp"][1] += 1
+                    want["fp"][0] += hs
+    for k in ("here", "all", "fp"):
+        assert tight[k] == tuple(want[k]), (k, tight[k], want[k])
 
     # Declined cards are out, the same rule the box uses by default.
-    counted = {id(m) for m in br.bank()[lg]["matches"] if br.counts(m, lg)}
+    counted = [m for m in br.bank()[lg]["matches"] if br.counts(m, lg)]
     assert len(counted) < len(br.bank()[lg]["matches"]), \
         "nothing is declined in this league, so the rule is untested here"
 
@@ -2616,19 +2629,26 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
         rows = cardgrid.rows(f.code, webapp.label_any(f),
                              len(webapp.strikes(f)), webapp._claim(f.tip1))
         thick = any(r[k][1] >= cardgrid.MIN_N for r in rows
-                    for k in ("t1", "fp"))
+                    for k in ("here", "all"))
         html = webapp._profile_html(f)
         assert bool(html) == thick, (f.teams, rows)
         if not html:
             continue
         n += 1
+        # The final pick left the face for the hover, but no card lost it.
+        assert "final pick" not in html, f.teams
         for r in rows:
-            for k in ("t1", "fp"):
+            for k in ("here", "all"):
                 hit, cnt = r[k]
+                if not cnt:
+                    # No card of this profile here at all: a dash, and no
+                    # "0/0" to be mistaken for a measurement.
+                    assert "—" in html, (f.teams, r, k)
+                    continue
                 if cnt >= cardgrid.MIN_N:
                     assert f"{hit / cnt * 100:.1f}%" in html, (f.teams, r, k)
                 else:
                     assert "too few" in html, (f.teams, r, k)
                 assert f"{hit}/{cnt}" in html, (f.teams, r, k)
         assert html in app, f"{f.teams} grid is not on the page"
-    assert n > 200, n
+    assert n > 300, n
