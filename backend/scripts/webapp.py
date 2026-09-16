@@ -1866,8 +1866,14 @@ def _profile_html(f) -> str:
     because of this.
     """
     from scripts import cardgrid
+    # A declined card is measured against DECLINED cards. Its own colour
+    # is out of the record, so the counted pool had nothing for it and
+    # 103 cards on the board carried no grid (the bettor: "some show
+    # nothing"). Like against like — never the record's number under a
+    # declined card, and never a declined number under a playable one.
+    out = is_declined(f)
     rows = cardgrid.rows(f.code, label_any(f), len(strikes(f)),
-                         _claim(f.tip1))
+                         _claim(f.tip1), declined=out)
     # Nothing in the profile reaches the floor: the card says nothing
     # rather than printing four counts that cannot be read as rates.
     if not any(r[k][1] >= cardgrid.MIN_N for r in rows
@@ -1895,11 +1901,18 @@ def _profile_html(f) -> str:
         fp = (f" · the starred lane here: {fh / fn * 100:.1f}% on {fn}"
               if fn >= cardgrid.MIN_N else "")
         cells += (f'<div class="ph" title="{html.escape(r["lab"] + fp)}">'
-                  f'{html.escape(r["lab"])}</div>'
+                  f'{"⛔ " if out else ""}{html.escape(r["lab"])}</div>'
                   f'<div class="pc"><span class="pl">here</span>'
                   f'{num(*r["here"])}</div>'
                   f'<div class="pc"><span class="pl">all leagues</span>'
                   f'{num(*r["all"])}</div>')
+    pool = ("THE DECLINED ROWS OF THE BANK, because this card is one — "
+            "cards of this profile that the board refused. In no hit rate "
+            "anywhere, and never mixed with the record: a declined card is "
+            "measured against declined cards and a playable one against "
+            "the record."
+            if out else
+            "Declined cards are out, as they are in the box.")
     tip = (f"What cards like this one have landed, read off the bank — "
            f"the same searches the Ask Athena box answers, and tip 1's "
            f"record in both columns. DOWN: the first line is the whole "
@@ -1909,11 +1922,11 @@ def _profile_html(f) -> str:
            f"is. ACROSS: “here” is the {f.league}, “all "
            f"leagues” is the same profile bank-wide — a line that is "
            f"weak here and strong everywhere is this league, and one "
-           f"that is weak in both is the profile. Declined cards are "
-           f"out, as they are in the box. Information only — nothing "
-           f"here prices anything. A cell under {cardgrid.MIN_N} cards "
-           f"prints its count and no rate.")
-    return (f'<div class="pgrid" title="{html.escape(tip)}">{cells}</div>')
+           f"that is weak in both is the profile. {pool} Information "
+           f"only — nothing here prices anything. A cell under "
+           f"{cardgrid.MIN_N} cards prints its count and no rate.")
+    return (f'<div class="pgrid{" pout" if out else ""}" '
+            f'title="{html.escape(tip)}">{cells}</div>')
 
 
 def _lanebar(f, cell: str, starred_label: str | None, terse: bool = False) -> str:
@@ -3472,6 +3485,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   text-transform:uppercase; margin-right:4px; }}
 .pgrid .pv {{ color:#cfe6ff; font-weight:600; }}
 .pgrid .pn {{ color:var(--dim); font-size:9px; }}
+/* A declined card reads the declined pool. Tinted, never the record's
+   colour: these numbers are in no hit rate anywhere. */
+.pgrid.pout .pv {{ color:#e0a99a; }}
+.pgrid.pout .ph {{ color:#b08476; }}
 .verdict.yes {{ color:#8fe3a8; }}
 .verdict.yes b {{ color:#b8f0c8; }}
 .verdict.no {{ color:#e08b7a; }}

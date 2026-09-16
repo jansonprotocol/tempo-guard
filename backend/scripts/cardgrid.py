@@ -37,10 +37,29 @@ THE CLAIM BAND IS A CEILING, NOT A BUCKET — "tip 1 <83" for a card
 claiming 82.3, exactly as he types it. A bucket (82–83) would be a
 different question and a much thinner sample.
 
-DECLINED CARDS ARE OUT, the same rule the Ask Athena tiles use by
-default, so the number on the card is the number he would get by typing
-the search himself. That is the whole point of precomputing it, and it
-means a declined card has no grid: its own colour is out of the record.
+DECLINED CARDS ARE OUT of the counted pool, the same rule the Ask Athena
+tiles use by default, so the number on a playable card is the number he
+would get by typing the search himself.
+
+A DECLINED CARD READS ITS OWN POOL. The first shipping gave it nothing —
+a red card's colour is out of the record, so every cell came back empty
+and a hundred and three cards on the board carried no grid at all (the
+bettor: "some show nothing"). But "what have cards like this one landed"
+has an answer for a red card too; it is simply an answer drawn from the
+declined rows, which is the mode both search bars already have. So a
+declined card is measured against declined cards, marked ⛔ on the face
+so it can never be read as the record. Like against like, always: a
+counted card never draws on a declined one and a declined card never
+borrows the record's number.
+
+THE LABEL IS NORMALISED ONTO THE CLAIM LADDER. The forward log froze
+"super green" on thirteen cards stamped before 12 Sep, when the ladder
+(guard_slices.LADDER) replaced the tier vocabulary — and the bank, which
+is relabelled on every read, has no such colour. Those cards matched
+nothing and showed nothing. Any label the bank does not carry is now
+re-read off the card's own claim, exactly as bankrates.relabel does for
+a bank row, so the two vocabularies can never silently miss each other
+again.
 
 This module PRICES NOTHING. No bar, no colour, no verdict, no hit rate
 moves because of it — it reports what the record holds for a profile.
@@ -56,6 +75,10 @@ MIN_N = 20      # cards before a cell may quote a percentage
 
 ALL = "*"       # the index key for "every league", beside the real codes
 
+# The colours the bank stores. Anything else is an older vocabulary and
+# gets re-read off the claim ladder.
+KNOWN = ("green+", "green", "orange", "pink", "red", "super red", "released")
+
 
 def band_ceiling(claim: float) -> int:
     """The "<83" a card claiming 82.3 sits under. Whole percents, the way
@@ -63,10 +86,32 @@ def band_ceiling(claim: float) -> int:
     return int(math.floor(claim)) + 1
 
 
+def ladder_label(label: str | None, claim: float | None) -> str | None:
+    """The card's colour in the vocabulary the BANK uses.
+
+    A red, super red or released card keeps its label — that is the tier
+    and the score, not a rung. Everything else the bank does not know is
+    re-read off the claim ladder, which is where "super green" (the
+    pre-12-Sep name for the top tier) comes back as the rung its claim
+    actually sits on.
+    """
+    if not label or label in KNOWN:
+        return label
+    if label.endswith("red") or claim is None:
+        return label
+    from scripts.guard_slices import LADDER
+    for name, floor in LADDER:
+        if claim >= floor:
+            return name
+    return "pink"
+
+
 @lru_cache(maxsize=1)
 def _index() -> dict:
-    """(code, label, strikes) -> [(tip 1 claim, tip 1 hit, final pick hit)],
-    with ALL in place of the code for the bank-wide population.
+    """(pool, code, label, strikes) -> [(tip 1 claim, tip 1 hit, final
+    pick hit)], with ALL in place of the code for the bank-wide
+    population and `pool` "in" for the counted rows, "out" for the
+    declined ones.
 
     A list rather than a table of counts, because the claim ceiling is a
     per-card number: there is no fixed set of bands to pre-total. The
@@ -87,7 +132,7 @@ def _index() -> dict:
     for code, comp in br.bank().items():
         for m in comp.get("matches", []):
             lab = m.get("g") or ""
-            if not lab or not br.counts(m, code):
+            if not lab:
                 continue
             claim = br._claim(m.get("tip"))
             if claim is None:
@@ -97,9 +142,10 @@ def _index() -> dict:
             if t1 is None and star is None:
                 continue
             row = (claim, t1, star)
+            pool = "in" if br.counts(m, code) else "out"
             nst = len(br.strikes(m, code))
-            out.setdefault((code, lab, nst), []).append(row)
-            out.setdefault((ALL, lab, nst), []).append(row)
+            out.setdefault((pool, code, lab, nst), []).append(row)
+            out.setdefault((pool, ALL, lab, nst), []).append(row)
     return out
 
 
@@ -118,13 +164,19 @@ def _tally(rows, ceiling: float | None) -> dict:
 
 
 def rows(code: str, label: str | None, nstrikes: int,
-         claim: float | None) -> list[dict]:
+         claim: float | None, declined: bool = False) -> list[dict]:
     """The two filtered lines for one card, tight first. [] when the
-    card's profile holds nothing the record counts."""
+    card's profile holds nothing at all.
+
+    `declined` picks the pool: a declined card is measured against
+    declined cards and a counted one against the record, never across.
+    """
+    label = ladder_label(label, claim)
     if not label or claim is None:
         return []
-    here = _index().get((code, label, nstrikes))
-    everywhere = _index().get((ALL, label, nstrikes))
+    pool = "out" if declined else "in"
+    here = _index().get((pool, code, label, nstrikes))
+    everywhere = _index().get((pool, ALL, label, nstrikes))
     if not here and not everywhere:
         return []
     cap = band_ceiling(claim)

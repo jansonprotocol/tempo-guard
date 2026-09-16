@@ -2627,7 +2627,8 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
     n = 0
     for f in board.load():
         rows = cardgrid.rows(f.code, webapp.label_any(f),
-                             len(webapp.strikes(f)), webapp._claim(f.tip1))
+                             len(webapp.strikes(f)), webapp._claim(f.tip1),
+                             declined=webapp.is_declined(f))
         thick = any(r[k][1] >= cardgrid.MIN_N for r in rows
                     for k in ("here", "all"))
         html = webapp._profile_html(f)
@@ -2652,3 +2653,79 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
                 assert f"{hit}/{cnt}" in html, (f.teams, r, k)
         assert html in app, f"{f.teams} grid is not on the page"
     assert n > 300, n
+
+
+def test_a_declined_card_reads_the_declined_pool_and_never_the_record():
+    """Like against like, and nothing shows nothing without a reason.
+
+    The first shipping measured every card against the COUNTED rows, so
+    a red card — whose own colour is out of the record — got four empty
+    cells and no grid at all: 103 of the 684 board cards (the bettor:
+    "some show nothing"). A declined card reads the declined rows now,
+    marked ⛔ on the face. The two pools must never mix in either
+    direction.
+    """
+    from scripts import bankrates as br
+    from scripts import board, cardgrid, webapp
+
+    # A declined profile has an answer, and it is drawn from declined
+    # rows only. Re-derived here the long way round.
+    lg, lab, nst, cap = "ITA-SA", "super red", 2, 73
+    got = cardgrid.rows(lg, lab, nst, 72.0, declined=True)
+    assert got, "the declined pool has nothing for a super red card"
+    want = {"here": [0, 0], "all": [0, 0]}
+    for code, comp in br.bank().items():
+        for m in comp["matches"]:
+            if (m.get("g") or "") != lab or br.counts(m, code):
+                continue
+            if len(br.strikes(m, code)) != nst:
+                continue
+            c = br._claim(m.get("tip"))
+            if c is None or c >= cap:
+                continue
+            h = br._hit(m.get("mark"))
+            if h is None:
+                continue
+            want["all"][1] += 1
+            want["all"][0] += h
+            if code == lg:
+                want["here"][1] += 1
+                want["here"][0] += h
+    assert (got[0]["here"], got[0]["all"]) == (tuple(want["here"]),
+                                               tuple(want["all"]))
+
+    # The same query on the counted pool is a DIFFERENT population, and
+    # for a red colour an empty one — that is the rule, not a bug.
+    assert cardgrid.rows(lg, lab, nst, 72.0, declined=False) == []
+
+    # The legacy colour resolves onto the ladder. "super green" was the
+    # top tier before 12 Sep and the forward log froze it on thirteen
+    # cards; the bank has no such label, so they matched nothing.
+    assert cardgrid.ladder_label("super green", 84.9) == "orange"
+    assert cardgrid.ladder_label("super green", 91.0) == "green+"
+    for keep in ("red", "super red", "released", "orange"):
+        assert cardgrid.ladder_label(keep, 84.9) == keep
+
+    # On the page: a declined card's grid is marked and tinted, a
+    # counted card's is not, and every card that still shows nothing has
+    # a reason — no tip at all, or a profile the bank has never seen.
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    blank = 0
+    for f in board.load():
+        h = webapp._profile_html(f)
+        if not h:
+            # Only two reasons are allowed: the engine published no tip
+            # to profile, or the bank holds fewer than MIN_N cards of
+            # this profile in any cell.
+            blank += 1
+            rs = cardgrid.rows(f.code, webapp.label_any(f),
+                               len(webapp.strikes(f)), webapp._claim(f.tip1),
+                               declined=webapp.is_declined(f))
+            assert webapp._claim(f.tip1) is None or not any(
+                r[k][1] >= cardgrid.MIN_N for r in rs
+                for k in ("here", "all")), f.teams
+            continue
+        assert ("pout" in h) == webapp.is_declined(f), f.teams
+        assert ("⛔" in h) == webapp.is_declined(f), f.teams
+        assert h in app, f"{f.teams} grid is not on the page"
+    assert blank < 40, f"{blank} cards show no grid"
