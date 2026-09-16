@@ -205,7 +205,22 @@ def guard(bank: dict) -> None:
                        r["says_pick"] * 100, r["mk"])
         m["pk"], m["g"] = r["_pk"], lab
         if cs is not None:
-            m["cs"] = round(cs, 1)
+            # THREE PLACES, not one. The label and the STRONG flag are
+            # decided on the RAW score — as the board decides them — but
+            # only the rounded number was stored, so a card sitting at
+            # 6.3 or -13.0 in the record could be either side of the cut
+            # and nothing kept said which. Ten cards could not be
+            # re-derived from the bank's own record, which is how the
+            # audit of 16 Sep found this. Rounding is for display; a
+            # record has to reproduce the decision it describes.
+            # Six, not three: at three places one card in 32,302 still
+            # sat exactly ON the super-red cut (-12.99) with a raw value
+            # a ten-thousandth above it. Both outcomes there are declined
+            # so nothing behaves differently — the point is only that the
+            # record reproduces the decision, because an audit that
+            # cannot re-derive the bank from the bank has nothing to
+            # check the bank against.
+            m["cs"] = round(cs, 6)
         m["st"] = int(cs is not None and cs >= STRONG_SCORE and CF.region(r["code"]) == "Europe")
         lane = r["mk"] if dnb else bought(r["mk"])
         row = retro_odds.find(r["code"], m["d"], m["h"], m["a"])

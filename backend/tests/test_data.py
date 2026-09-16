@@ -2457,3 +2457,63 @@ def test_the_bank_prices_a_card_the_way_the_board_would():
             if checked > 4000:
                 return
     assert checked > 500
+
+
+def test_every_bank_card_re_derives_from_the_boards_own_functions():
+    """The standing audit. The bettor, 16 Sep: "does the bank now behave
+    as close as it can to how athena would behave in futurematch modes?"
+
+    Four things the bank stores are decisions the board also makes — the
+    starred lane, the guard label, the STRONG flag and the price bar — and
+    each is re-derived here with the BOARD's own function on the bank's
+    own cells. Every one must agree, on every card.
+
+    Two faults were found by asking this question rather than answering
+    it: the bar was band_bar alone where the board uses the whole
+    play_bar (1,727 cards, 19% of the priced ones), and the confluence
+    score was STORED at one decimal while the label and STRONG were
+    DECIDED on the raw value, so ten cards could not be re-derived from
+    the bank's own record. An audit that cannot rebuild the bank from the
+    bank has nothing to check it against.
+    """
+    import collections
+    from scripts import bankrates as br, guard_slices as GS, webapp
+    from scripts.confluence import region
+    from scripts.webapp import DNB_GATE, STRONG_SCORE, _claim, _is_dnb, _rung
+
+    bad = collections.Counter()
+    first = {}
+    n = 0
+    for code, comp in br.bank().items():
+        for m in comp.get("matches", []):
+            tip = m.get("tip")
+            if not tip or not m.get("g"):
+                continue
+            n += 1
+            p1, p3 = _claim(tip), _claim(m.get("t3") or "")
+            want_pk = 3 if (_is_dnb(m.get("t3") or "") and p3 is not None
+                            and p1 is not None and p3 - p1 > DNB_GATE) else 1
+            cell = (m.get("t3") if m.get("pk") == 3 else tip) or ""
+            c, e = _claim(cell), webapp._edge(cell)
+            side = _rung(cell)[:1] if _rung(cell)[:1] in ("O", "U") else ""
+            dnb = m.get("pk") == 3 and _is_dnb(m.get("t3") or "")
+            cs = m.get("cs")
+            checks = {
+                "star": m.get("pk") == want_pk,
+                "label": m["g"] == GS.label(code, GS.tier_of(c, e, side, dnb),
+                                            cs, dnb, c, _rung(cell)),
+                "strong": int(m.get("st") or 0) == int(
+                    cs is not None and cs >= STRONG_SCORE
+                    and region(code) == "Europe"),
+            }
+            if m.get("bp") and m.get("need") and c is not None:
+                want = webapp.play_bar(
+                    c, cell, measured=(webapp.SAYS["released"] * 100
+                                       if m["g"] == "released" else None))[0]
+                checks["bar"] = abs(m["need"] - round(want, 2)) <= 0.005
+            for k, ok in checks.items():
+                if not ok:
+                    bad[k] += 1
+                    first.setdefault(k, (code, m.get("d"), m.get("h"), m.get("a")))
+    assert n > 20000, n
+    assert not bad, (dict(bad), first)
