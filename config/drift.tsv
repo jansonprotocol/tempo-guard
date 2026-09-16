@@ -23,17 +23,19 @@ ladder	orange over pink	20769	83.75	78.69	5.06	0
 bar	85+ at 1.14	611	0.42	0.42	0.00	0
 bar	80–85 at 1.18	1956	-2.11	-1.79	-0.09	1
 bar	75–80 at 1.31	768	0.63	2.71	-0.04	1
-strong	star at +6.34 vs the rest	227	79.74	78.80	0.93	0
-strong	star ROI vs the rest	227	-2.97	-0.45	-2.52	1
+strong	star at +6.34 vs the rest	84	66.67	74.53	-7.86	1
+strong	star ROI vs the rest	84	-15.06	-2.30	-12.76	1
 cell	SUI-SL unders	193	78.24	83.31	-5.07	0
 cell	SCO-L2 unders	164	85.37	81.30	4.07	0
-cell	NED-ED overs	272	88.24	84.15	4.09	0
 cell	CRO-1L unders	268	90.30	86.15	4.15	0
-cell	GRE-SL overs	237	84.39	80.18	4.21	0
+cell	ESP-LL unders	410	85.37	81.20	4.16	0
 cell	ALG-L1 unders	155	90.97	86.53	4.44	0
 cell	SCO-L1 unders	233	89.70	85.20	4.50	0
 cell	IRL-PD unders	230	89.57	84.79	4.78	0
 cell	UCL overs	268	84.70	79.92	4.78	0
 cell	COL-PA unders	401	91.02	85.89	5.13	0
-cell	ESP-LL overs	190	83.68	78.40	5.28	0
+cell	NED-ED overs	247	89.47	84.33	5.14	0
+cell	BEL-PL overs	218	84.40	78.94	5.47	0
+cell	GRE-SL overs	205	86.34	80.73	5.61	0
+cell	ESP-LL overs	171	85.38	78.70	6.68	0
 cell	MAR-BP unders	171	95.32	86.02	9.30	1

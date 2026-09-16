@@ -175,7 +175,7 @@ def guard(bank: dict) -> None:
     import datetime as dt
     from scripts import confluence as CF, guard_slices as GS, retro_odds
     from scripts.odds_api import bought
-    from scripts.webapp import DNB_GATE, STRONG_SCORE, band_bar
+    from scripts.webapp import DNB_GATE, SAYS, STRONG_SCORE, play_bar
 
     rows = []
     for code, comp in bank.items():
@@ -211,7 +211,21 @@ def guard(bank: dict) -> None:
         row = retro_odds.find(r["code"], m["d"], m["h"], m["a"])
         bp = retro_odds.price(row, lane) if row else None
         if bp:
-            need = band_bar(r["says_pick"] * 100)     # the claim band's bar (12 Sep)
+            # THE BOARD'S BAR, not a piece of it. This read band_bar alone
+            # — the claim band's floor — while the board has required
+            # max(band bar, printed buy>= less VALUE_BAND) since 12 Sep.
+            # The value half was added to the board and never here, so the
+            # bank called PLAY on 1,727 cards the board would have refused
+            # on price: 19% of every priced card in it. Everything reads
+            # that verdict — bankrates.lane, and through it the live tag,
+            # the strikes, the combos and every rate — so the bank was
+            # describing a board that never existed (the bettor, 16 Sep:
+            # "the bank needs to reflect how athena on futurematches would
+            # have behaved, otherwise all following research is in vain").
+            cell = (m.get("t3") if r["_pk"] == 3 else m.get("tip")) or ""
+            need = play_bar(r["says_pick"] * 100, cell,
+                            measured=(SAYS["released"] * 100
+                                      if lab == "released" else None))[0]
             m["bp"], m["need"] = round(bp, 2), round(need, 2)
             m["v"] = "no play" if lab.endswith("red") or bp < need else \
                 ("strong" if m["st"] else "normal")

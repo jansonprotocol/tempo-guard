@@ -2401,3 +2401,59 @@ def test_the_strike_combos_are_led_by_the_bank():
     for key, b in boardrows.items():
         assert livebands.combo(key[0], key[1].split(" + ")) == b["label"] \
             or key[1] == "clean"
+
+
+def test_the_bank_prices_a_card_the_way_the_board_would():
+    """The bettor, 16 Sep: "the bank needs to reflect how athena on
+    futurematches would have behaved, otherwise all following research and
+    edits are in vain."
+
+    matchbank.guard used band_bar ALONE where the board has required
+    max(band bar, printed buy>= less VALUE_BAND) since 12 Sep. The value
+    half never reached the bank, so it called PLAY on 1,727 cards the
+    board would have refused on price — 19% of every priced card it held.
+    bankrates.lane reads that verdict, and through it the live tag, the
+    strikes, the combos and every bank rate, so the bank was describing a
+    board that never existed.
+    """
+    import inspect
+    from scripts import matchbank, webapp
+
+    src = inspect.getsource(matchbank.guard)
+    assert "play_bar(" in src, "the bank must use the board's whole bar"
+    assert "band_bar(" not in src, "band_bar alone is only half of it"
+    assert 'SAYS["released"]' in src, "and a released card prices off its measured rate"
+
+    # the two agree card for card, on the bank's own cells
+    from scripts import bankrates as br
+    checked = 0
+    for code, comp in list(br.bank().items()):
+        for m in comp.get("matches", []):
+            if not m.get("bp") or not m.get("need"):
+                continue
+            cell = (m.get("t3") if m.get("pk") == 3 else m.get("tip")) or ""
+            claim = br._claim(cell)
+            if claim is None:
+                continue
+            want = webapp.play_bar(
+                claim, cell,
+                measured=(webapp.SAYS["released"] * 100
+                          if m.get("g") == "released" else None))[0]
+            assert abs(m["need"] - round(want, 2)) < 0.005, (code, m["h"], m["need"], want)
+            # The verdict is decided on the UNROUNDED price and bar, and
+            # only the rounded pair is stored — so a card can read "1.31
+            # against needs 1.31 · no play" because the raw price was
+            # 1.305. The BOARD does exactly the same, comparing the raw
+            # quote to the raw bar and printing both to two places, so
+            # this is shared behaviour and not a divergence. It does mean
+            # a tie cannot be re-derived from what is stored, so the
+            # verdict is only checked away from the boundary.
+            red = (m.get("g") or "").endswith("red")
+            if abs(m["bp"] - want) > 0.01:
+                want_v = "no play" if red or m["bp"] < want else \
+                    ("strong" if m.get("st") else "normal")
+                assert m.get("v") == want_v, (code, m["h"], m.get("v"), want_v)
+            checked += 1
+            if checked > 4000:
+                return
+    assert checked > 500
