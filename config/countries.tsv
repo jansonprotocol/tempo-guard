@@ -1,45 +1,57 @@
-# League-code prefix -> country, for the app's search box only.
+# League-code prefix -> country and flag, for the app's search box and
+# the Ask Athena league menu.
 # Typed by hand like the nickname file is: a country name is culture,
 # not data — the engine never reads this, and nothing derives from it.
 # The prefix is the part of a league code before the dash; codes with no
 # dash (MLS) are listed whole.
-# prefix	country
-ALG	Algeria
-ARG	Argentina
-AUT	Austria
-BEL	Belgium
-BRA	Brazil
-CHI	Chile
-CHN	China
-COL	Colombia
-CRO	Croatia
-DEN	Denmark
-ECU	Ecuador
-EGY	Egypt
-ENG	England
-ESP	Spain
-FRA	France
-GER	Germany
-IRL	Ireland
-ITA	Italy
-JPN	Japan
-MAR	Morocco
-MEX	Mexico
-MLS	United States
-NED	Netherlands
-NGA	Nigeria
-NOR	Norway
-PAR	Paraguay
-PER	Peru
-POL	Poland
-POR	Portugal
-RSA	South Africa
-SAU	Saudi Arabia
-SCO	Scotland
-SUI	Switzerland
-SWE	Sweden
-TUR	Turkey
-UKR	Ukraine
-UCL	Europe
-UEL	Europe
-UECL	Europe
+# The flag is the emoji the menu prints in front of the country. England
+# and Scotland get their subdivision flags rather than one shared 🇬🇧,
+# because the menu lists both and a shared flag would make two rows look
+# like the same country. UEFA competitions fly the European flag; the
+# continental cups that are nobody's league fly a globe.
+# prefix	country	flag
+ALG	Algeria	🇩🇿
+ARG	Argentina	🇦🇷
+AUT	Austria	🇦🇹
+BEL	Belgium	🇧🇪
+BRA	Brazil	🇧🇷
+CHI	Chile	🇨🇱
+CHN	China	🇨🇳
+COL	Colombia	🇨🇴
+COPA	South America	🌎
+CRO	Croatia	🇭🇷
+CZE	Czechia	🇨🇿
+DEN	Denmark	🇩🇰
+ECU	Ecuador	🇪🇨
+EGY	Egypt	🇪🇬
+ENG	England	🏴󠁧󠁢󠁥󠁮󠁧󠁿
+ESP	Spain	🇪🇸
+FIN	Finland	🇫🇮
+FRA	France	🇫🇷
+GER	Germany	🇩🇪
+GRE	Greece	🇬🇷
+IRL	Ireland	🇮🇪
+ITA	Italy	🇮🇹
+JPN	Japan	🇯🇵
+MAR	Morocco	🇲🇦
+MEX	Mexico	🇲🇽
+MLS	United States	🇺🇸
+NED	Netherlands	🇳🇱
+NGA	Nigeria	🇳🇬
+NOR	Norway	🇳🇴
+PAR	Paraguay	🇵🇾
+PER	Peru	🇵🇪
+POL	Poland	🇵🇱
+POR	Portugal	🇵🇹
+ROU	Romania	🇷🇴
+RSA	South Africa	🇿🇦
+RUS	Russia	🇷🇺
+SAU	Saudi Arabia	🇸🇦
+SCO	Scotland	🏴󠁧󠁢󠁳󠁣󠁴󠁿
+SUI	Switzerland	🇨🇭
+SWE	Sweden	🇸🇪
+TUR	Turkey	🇹🇷
+UKR	Ukraine	🇺🇦
+UCL	Europe	🇪🇺
+UEL	Europe	🇪🇺
+UECL	Europe	🇪🇺

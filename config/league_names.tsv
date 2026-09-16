@@ -1,0 +1,77 @@
+# League code -> the league's own name, for the Ask Athena menu.
+# Typed by hand, culture and not data, exactly like countries.tsv: the
+# engine never reads this and nothing derives from it.
+#
+# The name here carries NO country, because the menu already prints one:
+# the row reads "🇫🇷 France - Ligue 1", so a stored "French Ligue 1"
+# would say France twice. That is the whole reason this file exists next
+# to the names in config/leagues.json — those are engine-side labels
+# ("German 2. Bundesliga") and seven of the leagues on the board have no
+# name there at all, which is why the menu was showing raw codes like
+# NED-D2 beside written-out names.
+#
+# A code missing from this file is not an error: the menu falls back to
+# the bank's own name for it, so a new competition appears the day it is
+# priced and can be written out here afterwards.
+# code	name
+ALG-L1	Ligue 1
+ARG-CLP	Copa de la Liga Profesional
+ARG-PD	Primera División
+AUT-BL	Bundesliga
+BEL-PL	Pro League
+BRA-SA	Brasileirão
+BRA-SB	Brasileirão Série B
+CHI-PD	Primera División
+CHN-SL	Super League
+COL-PA	Primera A
+COPA-L	Copa Libertadores
+CRO-1L	HNL
+CZE-FL	First League
+DEN-SL	Superliga
+EGY-PL	Premier League
+ENG-CH	Championship
+ENG-L1	League One
+ENG-L2	League Two
+ENG-NL	National League
+ENG-PL	Premier League
+ESP-L2	LaLiga 2
+ESP-LL	LaLiga
+FIN-VL	Veikkausliiga
+FRA-L1	Ligue 1
+FRA-L2	Ligue 2
+GER-B2	2. Bundesliga
+GER-BL	Bundesliga
+GRE-SL	Super League
+IRL-PD	Premier Division
+ITA-SA	Serie A
+ITA-SB	Serie B
+JPN-J1	J1 League
+MAR-BP	Botola Pro
+MEX-LMX	Liga MX
+MLS	Major League Soccer
+NED-D2	Eerste Divisie
+NED-ED	Eredivisie
+NGA-PL	Professional Football League
+NOR-EL	Eliteserien
+PAR-D1	Primera División
+PER-L1	Liga 1
+POL-EK	Ekstraklasa
+POR-PL	Liga Portugal
+ROU-L1	Liga I
+RSA-PL	Premiership
+RUS-PL	Premier League
+SAU-PL	Pro League
+SCO-CH	Championship
+SCO-L1	League One
+SCO-L2	League Two
+SCO-PL	Premiership
+SUI-SL	Super League
+SWE-AL	Allsvenskan
+TUR-SL	Süper Lig
+UCL	Champions League
+UCL-Q	Champions League qualifying
+UECL	Conference League
+UECL-Q	Conference League qualifying
+UEL	Europa League
+UEL-Q	Europa League qualifying
+UKR-PL	Premier League

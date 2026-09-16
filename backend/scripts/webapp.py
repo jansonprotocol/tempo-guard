@@ -510,9 +510,8 @@ def _fold(s: str) -> str:
 _COUNTRIES: dict | None = None
 
 
-def _country(code: str) -> str:
-    """The country behind a league code, for the search box. Typed in
-    config/countries.tsv — culture, not data; the engine never reads it."""
+def _load_countries() -> dict:
+    """prefix -> (country, flag), from config/countries.tsv."""
     global _COUNTRIES
     if _COUNTRIES is None:
         _COUNTRIES = {}
@@ -521,9 +520,62 @@ def _country(code: str) -> str:
             for ln in path.read_text().splitlines():
                 if ln.startswith("#") or "\t" not in ln:
                     continue
-                pre, name = ln.split("\t", 1)
-                _COUNTRIES[pre.strip()] = name.strip()
-    return _COUNTRIES.get(code.split("-")[0], "")
+                cols = [c.strip() for c in ln.split("\t")]
+                # The flag column arrived later than the country one, so
+                # a two-column row still reads — the menu just prints no
+                # flag in front of it rather than the file failing.
+                _COUNTRIES[cols[0]] = (cols[1],
+                                       cols[2] if len(cols) > 2 else "")
+    return _COUNTRIES
+
+
+def _country(code: str) -> str:
+    """The country behind a league code, for the search box. Typed in
+    config/countries.tsv — culture, not data; the engine never reads it."""
+    return _load_countries().get(code.split("-")[0], ("", ""))[0]
+
+
+def _flag(code: str) -> str:
+    """The country's flag emoji, for the Ask Athena league menu."""
+    return _load_countries().get(code.split("-")[0], ("", ""))[1]
+
+
+_LEAGUE_NAMES: dict | None = None
+
+
+def _league_name(code: str) -> str:
+    """The league's own name with no country in it ("Ligue 1", not
+    "French Ligue 1"), for the menu row that already prints a country.
+    Typed in config/league_names.tsv; "" when the code is not listed,
+    and the caller falls back to whatever name the bank carries."""
+    global _LEAGUE_NAMES
+    if _LEAGUE_NAMES is None:
+        _LEAGUE_NAMES = {}
+        path = ROOT / "config" / "league_names.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or "\t" not in ln:
+                    continue
+                cd, name = ln.split("\t", 1)
+                _LEAGUE_NAMES[cd.strip()] = name.strip()
+    return _LEAGUE_NAMES.get(code, "")
+
+
+def _league_label(code: str) -> tuple[str, str]:
+    """(sort key, printed label) for one league code in the menu.
+
+    The menu used to be whatever name each competition happened to carry
+    — seven leagues with no name at all showed their raw code (NED-D2,
+    SAU-PL) next to written-out ones, and the order was alphabetical by
+    that mixture, so Dutch, English and German leagues sat under D, E
+    and G. It sorts by COUNTRY now, and prints the country in full with
+    its flag: "🇳🇱 Netherlands - Eredivisie".
+    """
+    country, flag = _load_countries().get(code.split("-")[0], ("", ""))
+    name = _league_name(code)
+    if not country or not name:
+        return ("￿" + code, "")   # caller falls back to the bank name
+    return (f"{country}\t{name}", f"{flag} {country} - {name}".strip())
 
 
 def _haystack(f) -> str:
@@ -2953,6 +3005,29 @@ def main() -> None:
             dst["teams"] += bank[q]["teams"]
             dst["matches"] += bank[q]["matches"]
             del bank[q]
+
+    # Seven competitions reached the bank with no name of their own —
+    # config/leagues.json has no entry for five of them and an empty
+    # name for two — so matchbank.py fell back to the code and the cards
+    # carried "NED-D2" where their neighbours carried "Dutch Eredivisie".
+    # The typed table fills those in. Only the ones that print a code:
+    # a league that already has a name keeps it.
+    for _c, _comp in bank.items():
+        if _comp["name"] == _c and _league_name(_c):
+            _comp["name"] = f"{_country(_c)} {_league_name(_c)}".strip()
+
+    # The league menu, in the order it is printed: by country first, then
+    # by the league's name inside that country, so the four Scottish
+    # divisions sit together under Scotland instead of scattering across
+    # C, L and P. Built here, after the -Q merge, so the menu lists
+    # exactly the competitions the bank can answer for. A code with no
+    # typed country or name falls to the end carrying whatever name the
+    # bank has — a new competition is listed the day it is priced, and
+    # writing it into config/league_names.tsv only moves it into place.
+    _menu = sorted(((_league_label(c), c) for c in bank),
+                   key=lambda x: (x[0][0], x[1]))
+    lgmenu_js = _json.dumps([[c, lab or bank[c]["name"]]
+                             for (_k, lab), c in _menu])
     # Canonical keys: one club, one identity, every spelling aliased to
     # it. Three signals decide which spellings are the same club: the
     # engine's canonical form, the Club Elo identity (one external name
@@ -3895,6 +3970,9 @@ function route() {{
 // plain substring match, so partial words keep working.
 const LEAGUES = new Set({leagues_js});
 const COUNTRY = {countries_js};
+// [code, "🇳🇱 Netherlands - Eredivisie"], already in the order the menu
+// prints: country first, then the league inside it.
+const LGMENU = {lgmenu_js};
 
 // Typed accents are folded away too, so "brasileirão" and
 // "brasileirao" are the same search — the card carries both spellings.
@@ -4380,11 +4458,19 @@ function refreshLeagues() {{
   const keep = sel.value;
   const D = document.getElementById("ask-d").value;
   sel.innerHTML = '<option value="">League…</option>';
-  for (const [code, comp] of Object.entries(BANK).sort(
-      (x, y) => x[1].name.localeCompare(y[1].name))) {{
+  // LGMENU carries the order and the written-out labels; anything the
+  // bank holds that the menu does not know about is appended under its
+  // own name, so a competition can never go missing from the list
+  // because nobody has typed its country yet.
+  const seen = new Set(LGMENU.map(r => r[0]));
+  const rows = LGMENU.concat(
+    Object.keys(BANK).filter(c => !seen.has(c)).sort()
+      .map(c => [c, BANK[c].name]));
+  for (const [code, label] of rows) {{
+    if (!BANK[code]) continue;
     if (D && !DATES[code].has(D)) continue;
     const o = document.createElement("option");
-    o.value = code; o.textContent = comp.name; sel.appendChild(o);
+    o.value = code; o.textContent = label; sel.appendChild(o);
   }}
   sel.value = keep;
 }}

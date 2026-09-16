@@ -2517,3 +2517,45 @@ def test_every_bank_card_re_derives_from_the_boards_own_functions():
                     first.setdefault(k, (code, m.get("d"), m.get("h"), m.get("a")))
     assert n > 20000, n
     assert not bad, (dict(bad), first)
+
+
+def test_every_league_in_the_menu_is_written_out_with_its_country():
+    """The Ask Athena league menu names leagues, never codes.
+
+    It used to print whatever name each competition happened to carry,
+    and seven of them carry none — config/leagues.json has no entry for
+    five and an empty name for two — so the menu mixed "NED-D2" and
+    "SAU-PL" in among "Norwegian Eliteserien". It reads from the typed
+    tables now: config/countries.tsv for the country and its flag,
+    config/league_names.tsv for the league's own name, sorted by
+    country. This holds the three properties that made it worth doing —
+    every league the bank can answer for is in the menu, none of them
+    shows a raw code, and the order is by country.
+    """
+    import json
+    import re
+    from scripts import webapp
+
+    page = (webapp.ROOT / "web" / "index.html").read_text()
+    rows = json.loads(re.search(r"const LGMENU = (\[.*?\]\]);",
+                                page, re.S).group(1))
+    bank = json.loads(
+        (webapp.ROOT / "web" / "matchbank.json").read_text())["comps"]
+
+    assert {c for c, _ in rows} == set(bank), (
+        "the menu and the bank disagree on which leagues exist: "
+        f"{set(bank) ^ {c for c, _ in rows}}")
+
+    for code, label in rows:
+        assert code not in label, f"{code} shows its code in the menu"
+        country = webapp._country(code)
+        assert country and country in label, (code, label)
+        assert webapp._flag(code) and label.startswith(webapp._flag(code)), \
+            f"{code} has no flag in front of it: {label!r}"
+
+    order = [webapp._country(c) for c, _ in rows]
+    assert order == sorted(order), "the menu is not sorted by country"
+
+    # And the cards below it: no competition still prints its code.
+    codes = [c for c, comp in bank.items() if comp["name"] == c]
+    assert not codes, f"bank cards still name these by code: {codes}"
