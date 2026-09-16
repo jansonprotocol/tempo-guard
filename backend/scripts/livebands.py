@@ -338,8 +338,17 @@ def release_study() -> list[dict]:
     cards: list[dict] = []
     for code, comp in _br.bank().items():
         for m in comp.get("matches", []):
-            if (m.get("g") or "") != "red" or not m.get("d"):
-                continue                      # super red is not a candidate
+            # "red" OR "released": the candidate population is every card
+            # the TIER refuses, whatever the label ended up as. Filtering
+            # on "red" alone made the rule EAT ITSELF — the moment the
+            # bank was rebuilt the released cards were labelled
+            # "released", dropped out of their own measurement, and the
+            # next refresh would have written the table without them and
+            # revoked the release two days later. Not because they
+            # stopped landing: because they had been believed.
+            # Super red is still never a candidate.
+            if (m.get("g") or "") not in ("red", "released") or not m.get("d"):
+                continue
             got = _br._hit(m.get("mark"))
             claim = _br._claim(m.get("tip"))
             if got is None or claim is None or claim >= floor:

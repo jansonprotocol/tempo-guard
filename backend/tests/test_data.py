@@ -2144,3 +2144,31 @@ def test_the_release_is_re_measured_by_the_two_day_job():
     wf = (pathlib.Path(livebands.__file__).resolve().parents[2]
           / ".github" / "workflows" / "bank-refresh.yml").read_text()
     assert "scripts/livebands.py" in wf
+
+
+def test_the_release_study_can_read_its_own_output_back():
+    """The rule must not eat itself.
+
+    release_study's candidates are the cards the TIER refuses. It first
+    filtered on the LABEL "red" — so the moment the bank was rebuilt and
+    those cards were labelled "released", they dropped out of the very
+    measurement that justifies them. The next refresh would have written
+    the table without them and revoked the release two days later, not
+    because they stopped landing but because they had been believed.
+    (The bettor found it by asking what the released rate was, 16 Sep.)
+    """
+    from scripts import livebands
+    rows = {r["lane"]: r for r in livebands.release_study()}
+    live = livebands.released_rungs()
+    assert live, "something is released right now"
+    for rung in live:
+        assert rung in rows, f"{rung} is released but the study cannot see it"
+        r = rows[rung]
+        assert r["n"] >= livebands.RELEASE_MIN_N, (rung, r["n"])
+        assert r["label"] == "released", (rung, r["label"])
+
+    # the population is label-independent by construction
+    import inspect
+    src = inspect.getsource(livebands.release_study)
+    assert '("red", "released")' in src
+    assert "super red" not in src.split("if (m.get")[1][:200]  # still excluded
