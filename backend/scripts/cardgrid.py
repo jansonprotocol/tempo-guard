@@ -70,6 +70,7 @@ import math
 from functools import lru_cache
 
 from scripts import bankrates as br
+from scripts import cellrates
 
 MIN_N = 20      # cards before a cell may quote a percentage
 
@@ -108,8 +109,8 @@ def ladder_label(label: str | None, claim: float | None) -> str | None:
 
 @lru_cache(maxsize=1)
 def _index() -> dict:
-    """(pool, code, label, strikes) -> [(tip 1 claim, tip 1 hit, final
-    pick hit)], with ALL in place of the code for the bank-wide
+    """(pool, code, label, strikes, side) -> [(tip 1 claim, tip 1 hit,
+    final pick hit)], with ALL in place of the code for the bank-wide
     population and `pool` "in" for the counted rows, "out" for the
     declined ones.
 
@@ -124,8 +125,8 @@ def _index() -> dict:
     recount under one league's rules.
 
     A row with no tip 1 claim is left out entirely rather than counted in
-    the wide row only: the two rows have to be the same population minus
-    one filter, or the comparison the grid exists for is not a
+    the wide row only: the rungs have to be the same population minus one
+    filter each, or the comparison the grid exists for is not a
     comparison.
     """
     out: dict = {}
@@ -144,8 +145,9 @@ def _index() -> dict:
             row = (claim, t1, star)
             pool = "in" if br.counts(m, code) else "out"
             nst = len(br.strikes(m, code))
-            out.setdefault((pool, code, lab, nst), []).append(row)
-            out.setdefault((pool, ALL, lab, nst), []).append(row)
+            side = cellrates.side_of(m.get("tip"))
+            for cd in (code, ALL):
+                out.setdefault((pool, cd, lab, nst, side), []).append(row)
     return out
 
 
@@ -163,10 +165,33 @@ def _tally(rows, ceiling: float | None) -> dict:
     return {"t1": (hh, hn), "fp": (fh, fn)}
 
 
-def rows(code: str, label: str | None, nstrikes: int,
-         claim: float | None, declined: bool = False) -> list[dict]:
-    """The two filtered lines for one card, tight first. [] when the
-    card's profile holds nothing at all.
+def rows(code: str, label: str | None, nstrikes: int, claim: float | None,
+         side: str = "", declined: bool = False) -> list[dict]:
+    """The card's profile, one rung per line, tightest first.
+
+    THE LADDER DROPS ONE FILTER PER STEP, which is the whole design: a
+    line is only worth reading against the line under it, and that is
+    only a reading if exactly one thing changed.
+
+        orange · 1 strike · under · tip 1 <82     the card, entire
+        orange · 1 strike · under                 without the claim band
+        orange · 1 strike                         without the side either
+
+    The band goes first because it is the thinnest filter and the one he
+    was researching; the side goes second because it is worth less —
+    measured 16 Sep, dropping it moves the bank-wide number by a point or
+    more on 204 of 657 board cards and by three or more on 60, against
+    the band's 309 of 712 cells at three or more.
+
+    A tip 1 that is not a totals lane has no side, and the bank holds no
+    such row at all, so those cards get the two-rung ladder.
+
+    ADJACENT RUNGS THAT TALLY THE SAME ARE COLLAPSED. If the claim band
+    cuts nothing — a card claiming 84.9 whose colour already ends at 85 —
+    the two lines are one population printed twice, which is the fault
+    the second column had before it became the bank-wide one. The looser
+    label survives, because the looser label is the one that describes
+    the population honestly.
 
     `declined` picks the pool: a declined card is measured against
     declined cards and a counted one against the record, never across.
@@ -175,19 +200,36 @@ def rows(code: str, label: str | None, nstrikes: int,
     if not label or claim is None:
         return []
     pool = "out" if declined else "in"
-    here = _index().get((pool, code, label, nstrikes))
-    everywhere = _index().get((pool, ALL, label, nstrikes))
-    if not here and not everywhere:
-        return []
+    idx = _index()
+
+    def get(cd, sd):
+        if sd is not None:
+            return idx.get((pool, cd, label, nstrikes, sd), [])
+        return [r for s in ("O", "U", "")
+                for r in idx.get((pool, cd, label, nstrikes, s), [])]
+
     cap = band_ceiling(claim)
     st = f"{nstrikes} strike{'s' if nstrikes != 1 else ''}" if nstrikes \
         else "no strikes"
-    out = []
-    for lab, ceiling in ((f"{label} · {st} · tip 1 <{cap}", float(cap)),
-                         (f"{label} · {st}", None)):
-        h = _tally(here or [], ceiling)
-        a = _tally(everywhere or [], ceiling)
+    word = {"O": "over", "U": "under"}.get(side, "")
+    base = f"{label} · {st}"
+    # (label, side to filter on, claim ceiling) — one filter dropped per
+    # rung, tightest first.
+    rungs = [(f"{base} · {word} · tip 1 <{cap}", side, float(cap)),
+             (f"{base} · {word}", side, None)] if word else []
+    rungs += [(f"{base} · tip 1 <{cap}", None, float(cap))] if not word else []
+    rungs += [(base, None, None)]
+
+    out: list[dict] = []
+    for lab, sd, ceiling in rungs:
+        h = _tally(get(code, sd), ceiling)
+        a = _tally(get(ALL, sd), ceiling)
         if not h["t1"][1] and not a["t1"][1]:
             continue
-        out.append(dict(lab=lab, here=h["t1"], all=a["t1"], fp=h["fp"]))
+        row = dict(lab=lab, here=h["t1"], all=a["t1"], fp=h["fp"])
+        # Same population as the rung above it: that filter cut nothing,
+        # so the tighter line goes and the looser label stays.
+        if out and (out[-1]["here"], out[-1]["all"]) == (row["here"], row["all"]):
+            out.pop()
+        out.append(row)
     return out

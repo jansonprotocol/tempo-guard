@@ -1871,9 +1871,11 @@ def _profile_html(f) -> str:
     # 103 cards on the board carried no grid (the bettor: "some show
     # nothing"). Like against like — never the record's number under a
     # declined card, and never a declined number under a playable one.
+    from scripts import cellrates
     out = is_declined(f)
     rows = cardgrid.rows(f.code, label_any(f), len(strikes(f)),
-                         _claim(f.tip1), declined=out)
+                         _claim(f.tip1), side=cellrates.side_of(f.tip1),
+                         declined=out)
     # Nothing in the profile reaches the floor: the card says nothing
     # rather than printing four counts that cannot be read as rates.
     if not any(r[k][1] >= cardgrid.MIN_N for r in rows
@@ -1919,7 +1921,11 @@ def _profile_html(f) -> str:
            f"profile (colour, strikes, claim band as a ceiling), the "
            f"second drops the claim band and keeps the rest, so the pair "
            f"says whether the band is carrying the number or the profile "
-           f"is. ACROSS: “here” is the {f.league}, “all "
+           f"is. Each line drops exactly ONE filter from the line above "
+           f"it — the claim band first, then the over/under side — so "
+           f"every step down says what that one filter was worth. A step "
+           f"that would tally the same population twice is not printed. "
+           f"ACROSS: “here” is the {f.league}, “all "
            f"leagues” is the same profile bank-wide — a line that is "
            f"weak here and strong everywhere is this league, and one "
            f"that is weak in both is the profile. {pool} Information "

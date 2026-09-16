@@ -2571,7 +2571,7 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
     answering a different question than the one it names.
     """
     from scripts import bankrates as br
-    from scripts import board, cardgrid, webapp
+    from scripts import board, cardgrid, cellrates, webapp
 
     lg, lab, nst, claim = "NED-ED", "orange", 1, 82.3
     got = cardgrid.rows(lg, lab, nst, claim)
@@ -2628,9 +2628,20 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
     for f in board.load():
         rows = cardgrid.rows(f.code, webapp.label_any(f),
                              len(webapp.strikes(f)), webapp._claim(f.tip1),
+                             side=cellrates.side_of(f.tip1),
                              declined=webapp.is_declined(f))
         thick = any(r[k][1] >= cardgrid.MIN_N for r in rows
                     for k in ("here", "all"))
+        # The ladder: each line is the one below it plus one filter, and
+        # no two adjacent lines may tally the same population — that is
+        # one number printed twice, which is what the grid keeps being
+        # fixed for.
+        for a, b in zip(rows, rows[1:]):
+            for k in ("here", "all"):
+                assert a[k][1] <= b[k][1], (f.teams, k, rows)
+                assert a[k][0] <= b[k][0], (f.teams, k, rows)
+            assert (a["here"], a["all"]) != (b["here"], b["all"]), \
+                (f.teams, rows)
         html = webapp._profile_html(f)
         assert bool(html) == thick, (f.teams, rows)
         if not html:
@@ -2666,7 +2677,7 @@ def test_a_declined_card_reads_the_declined_pool_and_never_the_record():
     direction.
     """
     from scripts import bankrates as br
-    from scripts import board, cardgrid, webapp
+    from scripts import board, cardgrid, cellrates, webapp
 
     # A declined profile has an answer, and it is drawn from declined
     # rows only. Re-derived here the long way round.
@@ -2720,6 +2731,7 @@ def test_a_declined_card_reads_the_declined_pool_and_never_the_record():
             blank += 1
             rs = cardgrid.rows(f.code, webapp.label_any(f),
                                len(webapp.strikes(f)), webapp._claim(f.tip1),
+                               side=cellrates.side_of(f.tip1),
                                declined=webapp.is_declined(f))
             assert webapp._claim(f.tip1) is None or not any(
                 r[k][1] >= cardgrid.MIN_N for r in rs
@@ -2729,3 +2741,64 @@ def test_a_declined_card_reads_the_declined_pool_and_never_the_record():
         assert ("⛔" in h) == webapp.is_declined(f), f.teams
         assert h in app, f"{f.teams} grid is not on the page"
     assert blank < 40, f"{blank} cards show no grid"
+
+
+def test_the_side_rung_says_what_the_over_under_split_is_worth():
+    """The grid names the card's side, and the line under it drops it.
+
+    The bettor, 16 Sep, looking at a pink two-strike UNDER that read 83%
+    against a profile which is 91% overs by volume: "is it maybe wise to
+    also specify on under or over". It is — the split is real. Measured
+    on the bank the same day: orange with one strike lands 79.7% on 443
+    overs against 84.7% on 2,567 unders, and orange with two strikes
+    goes the other way, 83.6 against 79.7. So the side gets its own
+    rung, dropped one step down, exactly as the claim band is.
+    """
+    from scripts import bankrates as br
+    from scripts import cardgrid, cellrates
+
+    lg, lab, nst, claim = "NED-D2", "orange", 1, 81.8
+    got = cardgrid.rows(lg, lab, nst, claim, side="U")
+    assert [r["lab"] for r in got] == [
+        "orange · 1 strike · under · tip 1 <82",
+        "orange · 1 strike · under",
+        "orange · 1 strike",
+    ], [r["lab"] for r in got]
+
+    # The middle rung, re-derived by hand: everything but the band.
+    want = [0, 0]
+    for code, comp in br.bank().items():
+        for m in comp["matches"]:
+            if (m.get("g") or "") != lab or not br.counts(m, code):
+                continue
+            if len(br.strikes(m, code)) != nst:
+                continue
+            if cellrates.side_of(m.get("tip")) != "U":
+                continue
+            if br._claim(m.get("tip")) is None:
+                continue
+            h = br._hit(m.get("mark"))
+            if h is not None:
+                want[1] += 1
+                want[0] += h
+    assert got[1]["all"] == tuple(want), (got[1]["all"], want)
+
+    # Dropping the side widens the population and moves the number.
+    assert got[2]["all"][1] > got[1]["all"][1]
+    assert got[2]["all"] != got[1]["all"]
+
+    # A rung that would tally the same population as the one under it is
+    # not printed. Turkish orange, no strikes, claiming 84.9: the colour
+    # already ends at 85, so "<85" cuts nothing and the band rung goes.
+    coll = cardgrid.rows("TUR-SL", "orange", 0, 84.9, side="U")
+    assert [r["lab"] for r in coll] == ["orange · no strikes · under",
+                                        "orange · no strikes"], \
+        [r["lab"] for r in coll]
+
+    # A tip 1 that is not a totals lane has no side, and the bank holds
+    # no such row, so those cards keep the two-rung ladder.
+    assert cellrates.side_of("DNB1 78.0% +1.0%") == ""
+    plain = cardgrid.rows(lg, lab, nst, claim, side="")
+    assert [r["lab"] for r in plain] == ["orange · 1 strike · tip 1 <82",
+                                         "orange · 1 strike"], \
+        [r["lab"] for r in plain]
