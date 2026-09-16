@@ -1220,19 +1220,29 @@ def test_unsafe_priced_plays_flip_to_tip_3_not_tip_2(monkeypatch):
 
 def test_filter_counters_cannot_see_a_declined_card():
     """The Completed filter counters read data-g* off each card; a declined
-    card carries none, only data-nc, so "unsafe" typed in the bar counts
-    the priced plays and not the cards that are out of the record."""
+    card carries none, so "unsafe" typed in the bar counts the priced
+    plays and not the cards that are out of the record.
+
+    Since 16 Sep a declined card DOES keep its grades, under a d-prefix,
+    so they can be asked for by name. That does not weaken this rule and
+    the prefix is why: the counters name gf/g1/g2/g3 and no number of
+    d-prefixed keys can answer to those.
+    """
+    import re
     from scripts import board, webapp
     fx = [f for f in board.load() if f.settled]
     out = [f for f in fx if webapp.is_declined(f)]
     kept = [f for f in fx if not webapp.is_declined(f)]
     assert out and kept
     for f in out[:30]:
-        assert webapp._gradekeys(f) == ' data-nc="1"'
-    assert any("g1=" in webapp._gradekeys(f) for f in kept)
+        keys = webapp._gradekeys(f)
+        assert 'data-nc="1"' in keys
+        assert not re.search(r"data-g[f123]=", keys)     # invisible to the record
+    assert any("data-g1=" in webapp._gradekeys(f) for f in kept)
     assert all("nc" not in webapp._gradekeys(f) for f in kept[:60])
+    # and a pass counts ONE population, never both
     src = __import__("pathlib").Path(webapp.__file__).read_text()
-    assert "if (c.dataset.nc) {{ left++; continue; }}" in src
+    assert "if (!!c.dataset.nc !== dmode) {{ left++; continue; }}" in src
 
 
 def test_a_bare_tag_word_is_exact_on_the_bar():
@@ -1977,3 +1987,91 @@ def test_something_pulls_the_odds_without_being_asked():
     assert "secrets.ODDS_API_KEY" in y
     for path in ("config/odds_cache.json",):
         assert path not in body, f"{path} is derived and gitignored"
+
+
+def test_declined_cards_keep_their_grades_under_a_name_the_record_cannot_read():
+    """The bettor, 16 Sep: "declined is removed from all hitrates, which by
+    design is good. But I would still like to be able to research it."
+
+    Before this a declined card carried data-nc and NOTHING else, so
+    "declined" was the one query the filter could not answer: it returned
+    the right cards over four dashes. The grades are kept now, under a
+    d-prefix, and the prefix IS the safety — recount() reads gf/g1/g2/g3
+    and can no more see dgf/dg1 than a key that is not there.
+    """
+    import re
+    from scripts import board, webapp
+
+    dec = cnt = 0
+    for f in board.load():
+        if not f.settled:
+            continue
+        keys = webapp._gradekeys(f)
+        if webapp.is_declined(f):
+            dec += 1
+            assert 'data-nc="1"' in keys
+            assert not re.search(r"data-g[f123]=", keys), f.teams
+            if any(x in f.status for x in ("✅", "❌", "◦")):
+                assert re.search(r"data-dg[f1]=", keys), f.teams
+        else:
+            cnt += 1
+            assert "data-nc" not in keys
+            assert "data-dg" not in keys, f.teams
+    assert dec > 50 and cnt > 200
+
+    # THE RENDERED PAGE, not just the source: this change was once lost
+    # between the two, shipping a board with the old behaviour under a
+    # commit message describing the new one.
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    assert "function wantsDeclined(" in app
+    cards = re.findall(r'<details class="card done"[^>]*>', app)
+    gone = [c for c in cards if 'data-nc="1"' in c]
+    kept = [c for c in cards if 'data-nc="1"' not in c]
+    assert gone and kept
+    assert all(not re.search(r'data-g[f123]="', c) for c in gone)
+    assert all("data-dg" not in c for c in kept)
+
+    def rate(cs, key):
+        h = n = 0
+        for c in cs:
+            m = re.search(rf'data-{key}="([01])"', c)
+            if m:
+                n += 1
+                h += m.group(1) == "1"
+        return (h / n * 100) if n else None
+    # the two populations really differ — the guard is not refusing at random
+    assert rate(gone, "dgf") < rate(kept, "gf")
+
+
+def test_only_a_query_naming_declined_switches_the_counters():
+    """The mode is opt-in by name and cannot be reached by accident — not
+    by typo tolerance, and not by a phrase that means the opposite."""
+    import shutil
+    import subprocess
+    import tempfile
+    from pathlib import Path
+    from scripts import webapp
+
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    js = app[app.index("function wantsDeclined("):app.index("function recount()")]
+    node = shutil.which("node")
+    cases = [("declined", 1), ("Declined,", 1), ("declined, serie a", 1),
+             ("no count", 1), ("not in the record", 1),
+             ("", 0), ("serie a", 0), ("live unsafe", 0), ("green", 0),
+             ("not declined", 0), ("no declined", 0), ("exclude declined", 0),
+             ("undeclined", 0), ("declines", 0)]
+    if node:                          # the render's own check skips it too
+        prog = js + "\nconst r=[" + ",".join(
+            f"(wantsDeclined({q!r})?1:0)" for q, _ in cases) + "];console.log(r.join(''))"
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "wd.js"
+            p.write_text(prog)
+            got = subprocess.run([node, str(p)], capture_output=True, text=True,
+                                 timeout=30).stdout.strip()
+        assert got == "".join(str(w) for _, w in cases), got
+
+    # both counters consult it, and neither mixes the two populations
+    for fn in ("function recount()", "function askFilter()"):
+        body = app[app.index(fn):app.index(fn) + 2200]
+        assert "wantsDeclined" in body, fn
+        assert "!== dmode" in body, fn

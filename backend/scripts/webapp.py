@@ -720,15 +720,24 @@ def _gradekeys(f) -> str:
     # A DECLINED card — red, or an unstaked card tagged live unsafe —
     # carries no grade keys at all, so the counters cannot see it (the
     # bettor's rule, 12 Sep: out of every hit rate, the filter counters
-    # included). It carries data-nc instead, so the caption can say how
-    # many cards on screen were left out rather than silently shrink.
-    if is_declined(f):
-        return ' data-nc="1"'
+    # included). It carries data-nc so the caption can say how many cards
+    # on screen were left out rather than silently shrink.
     def mark(which):
         src = f.status if which == 1 else (f.tip2 if which == 2 else f.tip3)
         m = src.lstrip()[:1]
         return m if m in ("✅", "❌", "◦") else None
 
+    # A declined card KEEPS its grades, under a d-prefix the ordinary
+    # counters cannot read (the bettor, 16 Sep: "declined is removed from
+    # all hitrates, which by design is good, but I would still like to be
+    # able to research it"). Before this it carried data-nc and nothing
+    # else, so "declined" was the one query the filter could not answer —
+    # it returned the right cards over four dashes. The prefix is the
+    # whole safety mechanism: recount() names gf/g1/g2/g3 and can no more
+    # see dgf/dg1 than a key that is not there, so the record cannot be
+    # contaminated by a rate shown only when asked for by name.
+    dec = is_declined(f)
+    pre = "d" if dec else ""
     out = []
     for which, key in ((1, "g1"), (2, "g2"), (3, "g3")):
         cell = f.tip1 if which == 1 else (f.tip2 if which == 2 else f.tip3)
@@ -736,11 +745,13 @@ def _gradekeys(f) -> str:
             continue
         m = mark(which)
         if m:
-            out.append(f'{key}="{0 if m == "❌" else 1}"')
+            out.append(f'{pre}{key}="{0 if m == "❌" else 1}"')
     pick = 1 if f.lane(1) else (3 if f.tip3.strip() else 1)
     m = mark(pick)
     if m:
-        out.append(f'gf="{0 if m == "❌" else 1}"')
+        out.append(f'{pre}gf="{0 if m == "❌" else 1}"')
+    if dec:
+        out.insert(0, 'nc="1"')
     return (" data-" + " data-".join(out)) if out else ""
 
 
@@ -3093,6 +3104,12 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .fc .l {{ color:var(--dim); font-size:10px; text-transform:uppercase;
   letter-spacing:.1em; margin-top:1px; }}
 .fc .s {{ color:var(--dim); font-size:11px; }}
+/* Declined mode: the counters are reading the cards the guard REFUSED,
+   which are in no hit rate on this page. It must be impossible to
+   mistake for the record, so it does not borrow the record's colours. */
+.fcounts.dmode .fc {{ border-color:#8a3a2e; background:rgba(138,58,46,.12); }}
+.fcounts.dmode .fc .v {{ color:#f0a08e; }}
+.fcap {{ color:var(--dim); font-size:11px; margin:6px 0 0; }}
 .fcap {{ font-size:11px; margin:-8px 0 12px; }}
 .fxopen {{ background:none; border:0; padding:0; font:inherit; color:inherit;
   cursor:pointer; text-align:left; border-bottom:1px dotted #55607a; }}
@@ -3420,6 +3437,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <input id="ask-q" class="askq" oninput="askFilter()" style="display:none"
    placeholder="narrow these results — league, country, lane, hit/miss, tip 2 none… commas narrow">
   <div class="fcounts" id="ask-counts" style="display:none"></div>
+  <p class="fcap" id="ask-cap" style="display:none"></p>
   <div id="ask-out"></div>
  </div>
  <div class="tabs">
@@ -3967,17 +3985,38 @@ function applyFilter(q) {{
 // The filter bar's own scoreboard: every settled card carries its four
 // grades, so whatever the filter leaves on screen — one league, one
 // team, one rung — gets counted live. No filter means the whole run.
+// Did this query ask for the declined cards BY NAME? Only then do the
+// counters read them, and only ever on their own (the bettor, 16 Sep:
+// "declined is removed from all hitrates, which by design is good, but I
+// would still like to be able to research it"). The test is on the raw
+// text rather than the parsed terms: a reader who types "declined" means
+// it, and no amount of typo tolerance should turn another word into this
+// mode by accident. Phrases that mean the opposite are refused, so the
+// wording cannot be read backwards.
+function wantsDeclined(raw) {{
+  const s = " " + (raw || "").toLowerCase().replace(/[^a-z ]+/g, " ") + " ";
+  if (/ (not|non|un|exclude|without|no) declined /.test(s)) return false;
+  return / declined /.test(s) || / no count /.test(s)
+      || / not in the record /.test(s);
+}}
+
 function recount() {{
   const box = document.getElementById("fcounts");
   if (!box) return;
+  const qel = document.getElementById("q");
+  const dmode = wantsDeclined(qel ? qel.value : "");
   const t = {{gf: [0, 0], g1: [0, 0], g2: [0, 0], g3: [0, 0]}};
-  let left = 0;                       // declined cards on screen, not counted
+  let left = 0;         // the OTHER population on screen, named in the caption
   for (const c of document.querySelectorAll(".card.done")) {{
     if (c.style.display === "none" || c.closest("#ask-out")
         || c.closest("#fxbox")) continue;
-    if (c.dataset.nc) {{ left++; continue; }}
+    // In declined mode the two populations swap places: the declined
+    // cards are counted off their d-prefixed grades and everything else
+    // is set aside. Never both at once — a mixed number would be neither
+    // the record nor the thing being researched.
+    if (!!c.dataset.nc !== dmode) {{ left++; continue; }}
     for (const k of ["gf", "g1", "g2", "g3"]) {{
-      const v = c.dataset[k];
+      const v = c.dataset[dmode ? "d" + k : k];
       if (v === undefined) continue;
       t[k][1]++; t[k][0] += (v === "1") ? 1 : 0;
     }}
@@ -4017,14 +4056,19 @@ function recount() {{
   }}
   box.style.display = "";
   box.style.gridTemplateColumns = "repeat(4,1fr)";
+  box.classList.toggle("dmode", dmode);
   box.innerHTML = cell("final pick", "gf") + cell("tip 1", "g1") +
                   cell("tip 2", "g2") + cell("tip 3", "g3");
-  const skipped = left ? " · " + left + " declined card" + (left > 1 ? "s" : "")
-    + " on screen not counted" : "";
+  const word = dmode ? "counted" : "declined";
+  const skipped = left ? " · " + left + " " + word + " card"
+    + (left > 1 ? "s" : "") + " on screen not counted" : "";
   if (cap) cap.textContent = t.g1[1] + t.g2[1] + t.g3[1] === 0
-    ? "no counted matches in this filter" + skipped
-    : "every graded lane on screen, playable or not — the tiles above "
-      + "keep the playable standard" + skipped;
+    ? "no " + (dmode ? "declined" : "counted") + " matches in this filter" + skipped
+    : (dmode
+        ? "⛔ THE DECLINED CARDS, which are in NO hit rate on this board — "
+          + "what the guard refused, counted here because you asked for it"
+        : "every graded lane on screen, playable or not — the tiles above "
+          + "keep the playable standard") + skipped;
 }}
 
 // THE CLOCK KEEPS RUNNING between sweeps (the bettor, 8 Sep). Every
@@ -4446,9 +4490,19 @@ function askCard(m, comp, note, open) {{
   // row, bank or board, from the same predicate the page's other rates
   // use. It is not a bug that the tile count is smaller than the card
   // count.
+  // ...but it KEEPS them under a d-prefix, so "declined" can be asked as
+  // a question (the bettor, 16 Sep). askFilter reads g1/g2/g3 and the
+  // four tiles; it cannot see dg1 or dgo any more than a key that is not
+  // there. Only a query naming declined rows switches to those, so the
+  // record is never mixed with the rate it excludes.
   const out = (m.g || "").endsWith("red") || !!m.nc;
+  const dp = out ? "d" : "";
+  // Stated, not inferred: a declined row says so even with no graded
+  // lane to carry a prefix, so the counter never guesses which
+  // population a row belongs to.
+  if (out) g += ' data-nc="1"';
   for (const [k, key] of [["mark", "g1"], ["m2", "g2"], ["m3", "g3"]])
-    if (!out && gm(k) !== null) g += " data-" + key + '="' + gm(k) + '"';
+    if (gm(k) !== null) g += " data-" + dp + key + '="' + gm(k) + '"';
   // The guard on a past card: its label as a badge, and where a closing
   // price exists the verdict line a live card shows. The FINAL PICK tiles
   // (the bettor's, 7 Sep) count the STARRED lane's mark (pk: tip 1, or a
@@ -4464,7 +4518,7 @@ function askCard(m, comp, note, open) {{
     // unstaked card tagged live unsafe) has no final-pick tile either —
     // it was counting 276 unsafe Série A rows under "final pick · orange"
     // while tip 1 showed the 3 that count (the bettor, 13 Sep).
-    if (!out && tile && star !== null) g += " data-" + tile + '="' + star + '"';
+    if (tile && star !== null) g += " data-" + dp + tile + '="' + star + '"';
     body = '<div class="guard g-' + m.g.replaceAll(" ", "-").replaceAll("+", "-plus") + '">' + m.g
       + (m.st ? " · ★ strong" : "") + "</div>"
       + (m.v ? '<div class="verdict ' + (m.v === "no play" ? "no" : m.v === "strong" ? "strong" : "yes") + '">'
@@ -4503,17 +4557,22 @@ function askCard(m, comp, note, open) {{
 function askFilter() {{
   const q = document.getElementById("ask-q");
   const terms = qterms(q ? q.value : "");
+  const dmode = wantsDeclined(q ? q.value : "");
   const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0],
              ggp: [0, 0], gg: [0, 0], go: [0, 0], gp: [0, 0]}};
-  let shown = 0;
+  let shown = 0, left = 0;
   for (const c of document.querySelectorAll("#ask-out .card")) {{
     const hay = c.dataset.t || "";
     const vis = terms.every(x => termOk(x, c, hay, undefined));
     c.style.display = vis ? "" : "none";
     if (!vis) continue;
     shown++;
+    // The bank's copy of the board's rule: normally the declined rows
+    // count toward nothing, and a query naming them counts THEM and sets
+    // the rest aside. Never the two together.
+    if (!!c.dataset.nc !== dmode) {{ left++; continue; }}
     for (const k of ["g1", "g2", "g3", "ggp", "gg", "go", "gp"]) {{
-      const v = c.dataset[k];
+      const v = c.dataset[dmode ? "d" + k : k];
       if (v === undefined) continue;
       t[k][1]++; t[k][0] += v === "1" ? 1 : 0;
     }}
@@ -4534,10 +4593,24 @@ function askFilter() {{
   // orange and pink cards — the bettor's tiles (7 Sep), replacing the
   // NORMAL / STRONG pair. Declined cards (red, super red, live unsafe)
   // carry no data-g* and so have no tile: they count toward nothing.
+  box.classList.toggle("dmode", dmode);
   box.innerHTML = cell("tip 1", "g1") + cell("tip 2", "g2") +
     cell("tip 3", "g3") + cell("final pick · green+", "ggp") +
     cell("final pick · green", "gg") + cell("final pick · orange", "go") +
     cell("final pick · pink", "gp");
+  const acap = document.getElementById("ask-cap");
+  if (acap) {{
+    acap.textContent = dmode
+      ? "⛔ THE DECLINED ROWS OF THE BANK — red, super red, and unstaked "
+        + "cards tagged live unsafe. In no hit rate anywhere; counted here "
+        + "because you asked for them by name"
+        + (left ? " · " + left + " counted row" + (left > 1 ? "s" : "")
+                  + " on screen not counted" : "")
+      : (left ? left + " declined row" + (left > 1 ? "s" : "")
+                + " on screen not counted — type “declined” to read them"
+              : "");
+    acap.style.display = acap.textContent ? "" : "none";
+  }}
 }}
 async function askAthena() {{
   await ensureBank();
