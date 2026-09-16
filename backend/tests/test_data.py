@@ -2286,3 +2286,40 @@ def test_the_bank_knows_its_strikes_and_declines_on_them():
                 dec += 1
                 assert not br.counts(m, code)      # declined means out
     assert all(seen[k] for k in (0, 1, 2)) and dec > 100
+
+
+def test_a_bare_lane_word_is_exact_on_both_bars():
+    """"priced" is a substring of "unpriced", which the bank writes on
+    every card no closing price reached — so "priced" alone matched 461
+    of 464 Swiss rows and looked like a full league of priced plays (the
+    bettor, 16 Sep). Same disease as "safe" inside "unsafe", same cure:
+    the bare word rewrites to an unambiguous token."""
+    import json
+    import re
+    from scripts import board, webapp
+
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    i = app.index("function qterms(")
+    q = app[i:app.index("\n}", i)]
+    assert '"priced" || flat === "watch" || flat === "athena"' in q
+    assert 'return "lane " + flat' in q
+    assert "lane priced" not in "unpriced"          # the point of the token
+
+    # BOTH haystacks carry it, from the same lane function
+    hs = [webapp._haystack(f) for f in board.load()]
+    assert any("lane priced" in h for h in hs)
+    assert any("lane athena" in h for h in hs)
+    assert "if (m.ln) bits.push(\"lane \" + m.ln," in app
+
+    web = json.loads((webapp.ROOT / "web" / "matchbank.json").read_text())
+    rows = [m for c in web["comps"].values() for m in c.get("matches", [])]
+    lanes = {m.get("ln") for m in rows}
+    assert {"priced", "watch", "athena"} <= lanes, lanes
+
+    # and the bank's lane agrees with bankrates, which is what counts() reads
+    from scripts import bankrates as br
+    for code, comp in list(br.bank().items())[:6]:
+        for m in comp.get("matches", [])[:40]:
+            ln = br.lane(m)
+            if ln:
+                assert ln in ("priced", "watch", "athena")

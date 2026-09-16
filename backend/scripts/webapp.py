@@ -611,7 +611,8 @@ def _haystack(f) -> str:
         lane = record_lane(f)
         bits += [f"live {tag}", f"tag {tag}", f"live tag {tag}",
                  {"athena": "athena lane live watch", "watch": "watch lane",
-                  "priced": "priced play"}[lane], f"{tag} {lane}"]
+                  "priced": "priced play"}[lane], f"{tag} {lane}",
+                 f"lane {lane}"]
         to = record_flip(f)
         if to:
             bits += ["flipped", "live unsafe flipped", f"flipped {to}",
@@ -3028,6 +3029,13 @@ def main() -> None:
                 m["sk"] = len(st)
                 if st:
                     m["skw"] = st
+                # The LANE, which the bank could not be asked about at
+                # all: askHay knew "verdict play" and "unpriced" and had
+                # no word for priced / watch / athena, the three the
+                # board bar takes. Same function the board reads.
+                ln = _br.lane(m)
+                if ln:
+                    m["ln"] = ln
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
 
     # The headline number is what a reader FOLLOWING THE STAR actually
@@ -3948,6 +3956,14 @@ function qterms(q) {{
       // "tag safe" is not inside "tag unsafe".
       if (flat === "safe" || flat === "unsafe" || flat === "cautious")
         return "tag " + flat;
+      // The same cure, for the same disease: "priced" is a substring of
+      // "unpriced", which the bank writes on every card no closing price
+      // reached — so "priced" alone matched 461 of 464 Swiss rows (the
+      // bettor, 16 Sep). Both haystacks carry "lane priced" / "lane
+      // watch" / "lane athena", and "lane priced" is not inside
+      // "unpriced".
+      if (flat === "priced" || flat === "watch" || flat === "athena")
+        return "lane " + flat;
       return parseCmp(flat) || s;
     }});
 }}
@@ -4512,6 +4528,11 @@ function askHay(m, comp) {{
     bits.push("verdict " + m.v);
     bits.push(m.v === "no play" ? "verdict no play" : "verdict play");
   }} else if (m.g) bits.push("unpriced");
+  // the lane in the board bar's own words, so "priced" reads the bank
+  // the way it reads the session
+  if (m.ln) bits.push("lane " + m.ln,
+    m.ln === "priced" ? "priced play" : m.ln === "watch" ? "watch lane"
+                                      : "athena lane");
   const rung = /(?:^|[^A-Za-z])([OU])(\d+(?:\.\d+)?)/.exec(m.tip);
   if (rung) {{
     const side = rung[1] === "O" ? "over" : "under";
