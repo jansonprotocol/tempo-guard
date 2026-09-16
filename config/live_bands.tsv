@@ -5,7 +5,7 @@
 # 'league'), else the whole bank's row (league '*', source 'global'), else
 # the seed. A league row under the floor is written as 'thin' and not read.
 # Thresholds: safe >= 79, cautious >= 77, else unsafe.
-# written	2026-09-15
+# written	2026-09-16
 # The 'flip' rows: priced plays with that tag that also print that lane,
 # paired on the board's last 21 days — n cards where tip 1 graded and
 # that lane won or lost (a push on the lane is no bet), hit = THAT lane,
@@ -317,15 +317,18 @@ flip	flip	cautious tip3	26	80.8	80.8	hold	bank
 flipbank	flip	cautious tip2	675	60.3	77.5	hold	bank
 flip	flip	cautious tip2	37	73.0	73.0	hold	bank
 flipbank	flip	safe tip3	610	79.8	79.5	hold	bank
-flip	flip	safe tip3	31	77.4	77.4	hold	bank
+flip	flip	safe tip3	33	78.8	75.8	hold	bank
 flipbank	flip	safe tip2	1296	67.3	81.9	hold	bank
-flip	flip	safe tip2	64	54.7	78.1	hold	board
-combo	athena	clean	256	83.6	84.2	keep	measured
+flip	flip	safe tip2	66	54.5	77.3	hold	board
+combo	athena	clean	261	83.5	84.2	keep	measured
 combo	athena	score under 0	40	82.5	82.8	keep	measured
-combo	athena	score under 0 + over lane	18	72.2	82.2	decline	measured
-combo	priced	priced play	72	79.2	81.7	keep	measured
+combo	athena	score under 0 + over lane	19	73.7	81.9	decline	measured
+combo	priced	priced play	73	78.1	81.8	keep	measured
 combo	priced	score under 0 + priced play	45	77.8	78.7	keep	measured
-combo	priced	score under 0 + priced play + over lane	21	71.4	81.2	decline	measured
+combo	priced	score under 0 + priced play + over lane	22	72.7	81.3	decline	measured
 combo	watch	score under 0 + watch card	15	60.0	80.8	decline	measured
 combo	watch	score under 0 + watch card + over lane	10	40.0	82.7	decline	seed
-combo	watch	watch card	47	89.4	83.1	keep	measured
+combo	watch	watch card	48	89.6	83.1	keep	measured
+release	O1.5	under 75	241	80.9	72.7	released	halves 78.6/83.5
+release	U2.75	under 75	2	0.0	64.1	declined	too few
+release	U3.0	under 75	239	72.8	74.1	declined	halves 73.5/72.2

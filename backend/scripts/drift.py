@@ -23,7 +23,7 @@ a ruler that shifted. So each check prints what it measures, what the
 code says, and a flag when the two have parted; moving a constant stays
 a decision someone makes, with the number in front of them.
 
-Five checks:
+Six checks:
 
     label      each label's measured rate against its registered SAYS
     side       overs against unders inside each claim band — this is
@@ -74,6 +74,15 @@ def _side(cell: str | None) -> str:
     return m.group(1) if m else ""
 
 
+def _rung(cell: str | None) -> str:
+    """The rung, which the label needs since 16 Sep: a red card on a
+    RELEASED rung below the selector's floor is not red. Without it this
+    report would label a card one way and the board another, and a
+    watchdog that disagrees with what it watches is worse than none."""
+    m = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", (cell or "").replace("*", ""))
+    return m.group(1) if m else ""
+
+
 def _cards() -> list[dict]:
     """Every graded bank card, with what the rules read off it."""
     from scripts import bankrates as br, guard_slices as GS
@@ -89,7 +98,8 @@ def _cards() -> list[dict]:
             tier = GS.tier_of(c, e, _side(cell), dnb)
             out.append(dict(code=code, claim=c, edge=e, side=_side(cell),
                             hit=bool(got), score=m.get("cs"), dnb=dnb,
-                            label=GS.label(code, tier, m.get("cs"), dnb, c),
+                            label=GS.label(code, tier, m.get("cs"), dnb, c,
+                                           _rung(cell)),
                             v=m.get("v"), bp=m.get("bp"), st=m.get("st")))
     return out
 

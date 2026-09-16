@@ -288,6 +288,120 @@ def combo_study() -> list[dict]:
     return rows
 
 
+# ── RELEASE: the cards the tier refuses that the record says it should not ──
+#
+# The bettor, 16 Sep, after typing "declined, tip 1 <75" into the new
+# filter and getting 11 of 12: "if there are cards that are hitting above
+# 77% inside a certain profile, we need to get them back in."
+#
+# The tier calls a card red below a 76% claim. On one rung that refusal is
+# measurably wrong. market_select.MIN_WIN_PROB is 0.75, so the selector
+# only ever returns a rung that clears 75% — and when nothing does, it
+# falls through to the safest buyable line instead. Those fall-through
+# cards are a different population from the ones the tier was cut for, and
+# on the O1.5 rung they land far above what they claim: 241 bank cards at
+# 80.9% against a claim near 73, +5.53% at closing prices.
+#
+# It is NOT the consensus cap, though the cap makes it worse (in those
+# seven leagues a raw 78.0% is published as 72.1% against an actual
+# 81.0%). Remove the two leagues that produced the observation and the
+# cap effect vanishes; this one gets stronger. And it is not a fitted
+# window: every claim cut from 68 to 75 clears both halves of the bank,
+# breaking only at 76 where the 75-76 pile-up begins.
+#
+# SUPER RED IS NOT RELEASED, and that is the guard rail this rule earns
+# its keep by. Inside the very same profile a super-red card lands 75.8%
+# in the first half and returns -2.38%, against red's 78.3% and +5.53%.
+# The confluence score is doing real work at the bottom, so a card the
+# score condemns stays condemned.
+#
+# Measured on the BANK, both halves by date, and re-measured every two
+# days like every other rule here. A profile that stops clearing 77 goes
+# back to declined by itself, with no one's permission.
+RELEASE_AT = 77.0        # both halves must land at or above this
+RELEASE_MIN_N = 120      # and the profile needs this many bank cards
+
+
+def release_study() -> list[dict]:
+    """One row per rung for the sub-floor cards the tier calls red.
+
+    Red only — super red is never a candidate. Split in half by date, and
+    a profile is released only when BOTH halves clear RELEASE_AT, because
+    putting a refused card back on a playable board is a larger claim
+    than taking a playable one off.
+    """
+    import re as _re
+    from scripts import bankrates as _br
+    from app.engine import market_select as _ms
+    rung_re = _re.compile(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)")
+    floor = _ms.MIN_WIN_PROB * 100
+    cards: list[dict] = []
+    for code, comp in _br.bank().items():
+        for m in comp.get("matches", []):
+            if (m.get("g") or "") != "red" or not m.get("d"):
+                continue                      # super red is not a candidate
+            got = _br._hit(m.get("mark"))
+            claim = _br._claim(m.get("tip"))
+            if got is None or claim is None or claim >= floor:
+                continue
+            rm = rung_re.search((m.get("tip") or "").replace("*", ""))
+            if not rm:
+                continue
+            cards.append(dict(rung=rm.group(1), hit=bool(got), d=m["d"],
+                              claim=claim))
+    cards.sort(key=lambda x: x["d"])
+    cut = cards[len(cards) // 2]["d"] if cards else ""
+    rows = []
+    for rung in sorted({c["rung"] for c in cards}):
+        g = [c for c in cards if c["rung"] == rung]
+        a = [c for c in g if c["d"] < cut]
+        b = [c for c in g if c["d"] >= cut]
+        n = len(g)
+        hit = sum(c["hit"] for c in g) / n * 100 if n else None
+        ha = sum(c["hit"] for c in a) / len(a) * 100 if a else None
+        hb = sum(c["hit"] for c in b) / len(b) * 100 if b else None
+        ok = (n >= RELEASE_MIN_N and ha is not None and hb is not None
+              and ha >= RELEASE_AT and hb >= RELEASE_AT)
+        rows.append(dict(league="release", lane=rung,
+                         band=f"under {floor:.0f}", n=n, hit=hit,
+                         said=(sum(c["claim"] for c in g) / n) if n else None,
+                         label="released" if ok else "declined",
+                         source=f"halves {ha:.1f}/{hb:.1f}" if ha and hb
+                                else "too few"))
+    return rows
+
+
+_RELEASED: frozenset | None = None
+
+
+def released_rungs() -> frozenset:
+    """The rungs currently released, read once.
+
+    CACHED, and it matters: label() is the gate every card goes through,
+    and a bank rebuild calls it 32,000 times. Re-reading live_bands.tsv
+    per card turned a 3-second relabel into a file-system benchmark.
+    """
+    global _RELEASED
+    if _RELEASED is None:
+        rows = read() or {}
+        _RELEASED = frozenset(
+            lane for (lg, lane, _band), r in rows.items()
+            if lg == "release" and r.get("label") == "released")
+    return _RELEASED
+
+
+def released(rung: str | None, claim: float | None) -> bool:
+    """Is this card one the record has put back on the board?
+
+    Read by guard_slices.label, which is the ONE gate the board and the
+    bank both label through, so a released card reads the same on either.
+    """
+    from app.engine import market_select as _ms
+    if not rung or claim is None or claim >= _ms.MIN_WIN_PROB * 100:
+        return False
+    return rung in released_rungs()
+
+
 def flip_study(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
     """Six rows, lane "flip", band "<tag> tip2" / "<tag> tip3": n paired
     cards in the window (priced plays with that tag where tip 1 graded and
@@ -494,6 +608,16 @@ def main() -> None:
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
         print(f"  {r['lane']:7} {r['band']:44} n={r['n']:3}  hit {hit}  -> {r['label']:8} ({r['source']})")
     rows += combos
+    rel = release_study()
+    print(f"the RELEASE profiles — cards the tier calls red below the selector's own "
+          f"floor, super red never a candidate (both halves must clear "
+          f"{RELEASE_AT:.0f} on {RELEASE_MIN_N}+):")
+    for r in rel:
+        hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
+        said = "  —  " if r["said"] is None else f"{r['said']:4.1f}%"
+        print(f"  {r['lane']:7} {r['band']:10} n={r['n']:4}  hit {hit}  claim {said}"
+              f"  -> {r['label']:8} ({r['source']})")
+    rows += rel
     if not dry:
         write(rows, days, today)
         print(f"written: {OUT.relative_to(ROOT)}")

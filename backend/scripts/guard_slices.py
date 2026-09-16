@@ -181,14 +181,28 @@ LADDER = (("green+", 90.0), ("green", 85.0), ("orange", 80.0), ("pink", 0.0))
 
 
 def label(code: str, tier: str, sc: float | None, is_dnb: bool,
-          p: float | None = None) -> str:
+          p: float | None = None, rung: str | None = None) -> str:
     """The label: red or super red from the tier and the score (outside
     Europe the score is silent — it measured -0.06 there — so no card
     gets super red off it); every other card by its claim band, `p` in
-    percent. Without a claim the tier stands, as it did before 12 Sep."""
+    percent. Without a claim the tier stands, as it did before 12 Sep.
+
+    RELEASED (16 Sep) is a red card the record has taken back. The tier
+    refuses a claim under 76; on a rung where the cards below the
+    selector's own 0.75 floor are measured landing above 77 in BOTH
+    halves of the bank, that refusal is wrong and the card returns to a
+    playable lane. The profile is measured by scripts/livebands.py and
+    re-measured every two days, so it revokes itself the moment it stops
+    clearing. SUPER RED is never released: inside the very same profile
+    a score-condemned card lands 75.8% in the first half and returns
+    -2.38%, so the order of these two branches is the rule.
+    """
     if tier == "red":
         if region(code) == "Europe" and sc is not None and sc <= SUPER_RED:
             return "super red"
+        from scripts import livebands
+        if livebands.released(rung, p):
+            return "released"
         return "red"
     if p is None:
         return tier

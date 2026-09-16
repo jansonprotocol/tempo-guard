@@ -2075,3 +2075,72 @@ def test_only_a_query_naming_declined_switches_the_counters():
         body = app[app.index(fn):app.index(fn) + 2200]
         assert "wantsDeclined" in body, fn
         assert "!== dmode" in body, fn
+
+
+def test_a_released_card_is_measured_back_in_and_revokes_itself():
+    """The bettor, 16 Sep: "if there are cards that are hitting above 77%
+    inside a certain profile, we need to get them back in."
+
+    The tier calls a card red below a 76% claim. On the O1.5 rung the
+    cards that fall below market_select's own 0.75 floor land 80.9% on
+    241 bank cards — both halves over 77 — so they come back. Everything
+    about this rule is measured and re-measured; nothing here is typed.
+    """
+    from scripts import guard_slices as GS, livebands, webapp
+    from app.engine import market_select as MS
+
+    # the bar is higher for letting a card IN than for keeping it out
+    assert livebands.RELEASE_AT >= webapp.DECLINE_AT if hasattr(webapp, "DECLINE_AT") \
+        else livebands.RELEASE_AT >= 77.0
+    assert livebands.RELEASE_MIN_N >= 120
+
+    rows = [r for r in livebands.release_study()]
+    assert rows, "the study runs"
+    for r in rows:
+        if r["label"] == "released":
+            assert r["n"] >= livebands.RELEASE_MIN_N
+            a, b = (float(x) for x in r["source"].split()[1].split("/"))
+            assert a >= livebands.RELEASE_AT and b >= livebands.RELEASE_AT
+
+    # SUPER RED IS NEVER RELEASED — it lands 75.8% in the first half of
+    # the same profile and returns -2.38%, so the branch order is the rule
+    assert GS.label("ITA-SA", "red", -20.0, False, 72.0, "O1.5") == "super red"
+    # a rung that fails the measurement stays red at the same claim
+    assert GS.label("ITA-SA", "red", None, False, 72.0, "U3.0") == "red"
+    # above the selector's floor the tier stands
+    assert GS.label("ITA-SA", "red", None, False,
+                    MS.MIN_WIN_PROB * 100 + 0.5, "O1.5") == "red"
+    # and with no rung to check, nothing is released
+    assert GS.label("ITA-SA", "red", None, False, 72.0) == "red"
+
+    # a released card is back in the record and can reach a lane
+    assert "released" in webapp.SAYS and "released" in webapp.SAYS_N
+    assert not "released".endswith("red")        # the whole veto reads this
+
+    # it prices off the profile's MEASURED rate, not the claim the release
+    # exists because the record distrusts
+    cell = "O1.5 67.5% +0.0% · buy≥1.48"
+    plain = webapp.play_bar(67.5, cell)[0]
+    rel = webapp.play_bar(67.5, cell, measured=webapp.SAYS["released"] * 100)[0]
+    assert rel < plain - 0.15, (rel, plain)
+    assert abs(rel - max(webapp.BAND_BAR["80–85"],
+                         (1 / webapp.SAYS["released"]) * (1 - webapp.VALUE_BAND))) < 1e-9
+
+
+def test_the_release_is_re_measured_by_the_two_day_job():
+    """It must be able to revoke itself. The profile is written to
+    config/live_bands.tsv by the same command that measures the bands and
+    the strike combos, which the refresh runs every two days."""
+    import pathlib
+    from scripts import livebands
+    rows = livebands.read() or {}
+    rel = {k: v for k, v in rows.items() if k[0] == "release"}
+    assert rel, "the release rows are on the written table"
+    assert any(v["label"] == "released" for v in rel.values())
+    assert any(v["label"] == "declined" for v in rel.values()), \
+        "and the rule says no to something, or it is not a rule"
+    src = pathlib.Path(livebands.__file__).read_text()
+    assert "rows += rel" in src              # written, not just printed
+    wf = (pathlib.Path(livebands.__file__).resolve().parents[2]
+          / ".github" / "workflows" / "bank-refresh.yml").read_text()
+    assert "scripts/livebands.py" in wf

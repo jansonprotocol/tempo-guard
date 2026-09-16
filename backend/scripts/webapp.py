@@ -840,9 +840,16 @@ _SLICES = None
 # cards rather than the 78.0% the mixed group read. Red is still never
 # played, so this number labels rather than prices.
 SAYS = {"green+": 0.921, "green": 0.880, "orange": 0.829, "pink": 0.783,
-        "red": 0.757, "super red": 0.7705, "super green": 0.8956}
+        "red": 0.757, "super red": 0.7705, "super green": 0.8956,
+        # RELEASED (16 Sep): a red card the record took back. Measured on
+        # the 241 bank cards of the released profile — cards the tier
+        # refuses below the selector's own 0.75 floor, on a rung whose
+        # sub-floor cards land above 77 in BOTH halves. It sits between
+        # pink and orange, which is where 80.9% belongs; it is NOT the
+        # red rate, because these are precisely the cards red got wrong.
+        "released": 0.809}
 SAYS_N = {"green+": 572, "green": 8521, "orange": 11791, "pink": 2560,
-          "red": 1698}
+          "red": 1698, "released": 241}
 
 
 def _gclass(lab: str) -> str:
@@ -914,11 +921,25 @@ def _value_of(cell: str) -> float | None:
     return float(m.group(1)) if m else None
 
 
-def play_bar(p: float, cell: str) -> tuple[float, float]:
+def play_bar(p: float, cell: str, measured: float | None = None) -> tuple[float, float]:
     """(the price PLAY needs, the band bar): the engine's value less
-    VALUE_BAND, floored at the claim band's bar."""
-    bar = band_bar(p)
-    val = _value_of(cell)
+    VALUE_BAND, floored at the claim band's bar.
+
+    `measured` replaces the claim for BOTH the band and the value, and
+    only a RELEASED card passes it. Pricing such a card off its printed
+    claim would refuse it for the very reason the tier just stopped
+    refusing it: a 67.5% claim asks 1.48 where the profile lands 80.9%
+    and closes at 1.31, so the card would be freed from Declined and then
+    priced out of every lane anyway — released in name and nowhere else.
+
+    The profile's own rate is used flat, not scaled by the card's claim,
+    because inside this pocket the claim is measured to carry no
+    information at all: 70-71 lands 82.9%, 72-73 lands 85.5%, 73-74 lands
+    80.2%. It is not a gradient to ride, it is a number to stop reading.
+    """
+    q = p if measured is None else measured
+    bar = band_bar(q)
+    val = (1.0 / (measured / 100.0)) if measured is not None else _value_of(cell)
     return (max(bar, val * (1 - VALUE_BAND)) if val else bar), bar
 
 
@@ -1071,7 +1092,7 @@ def _label_of(f, best: int, full: bool = False, force: bool = False):
     if _SLICES and " v " in f.teams:
         h, a = [t.strip() for t in f.teams.split(" v ")]
         sc = guard_slices.score(f.code, h, a, _rung(cell), p / 100.0, _SLICES)
-    lab = guard_slices.label(f.code, tier, sc, dnb, p)
+    lab = guard_slices.label(f.code, tier, sc, dnb, p, _rung(cell))
     return (lab, sc, cell, p) if full else lab
 
 
@@ -1160,7 +1181,12 @@ def verdict(f, best: int) -> dict | None:
     hit = SAYS[lab]
     # The bar: the engine's value less VALUE_BAND, floored at the claim
     # band's bar (BAND_BAR). The label still decides red and strong.
-    need, bar = play_bar(p, cell)
+    # A RELEASED card prices off its profile's measured rate instead of
+    # its printed claim — see play_bar; the claim is the thing the
+    # release exists because the record does not believe.
+    need, bar = play_bar(p, cell,
+                         measured=(SAYS["released"] * 100
+                                   if lab == "released" else None))
     lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane))
     try:
@@ -1713,6 +1739,9 @@ def _needs(cell: str, starred_label: str | None) -> tuple:
     """
     c = _claim(cell)
     if starred_label and c is not None:
+        if starred_label == "released":
+            return (play_bar(c, cell, measured=SAYS["released"] * 100)[0],
+                    SAYS["released"], True)
         return play_bar(c, cell)[0], SAYS[starred_label], True
     if c is None:
         return None, None, False
@@ -3237,6 +3266,11 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .g-green {{ color:#7fc79a; border-color:#27523a; }}
 .g-orange {{ color:#d9b46a; border-color:#5b4a24; }}
 .g-pink {{ color:#e9a3c9; border-color:#6b2f57; background:rgba(107,47,87,.14); }}
+/* RELEASED — a card the tier refused and the record took back. Its own
+   colour on purpose: it is not red any more, and it is not a rung of the
+   claim ladder either, because its claim is exactly the thing measured
+   to be understated. */
+.g-released {{ color:#7fd3c7; border-color:#2b6e66; background:rgba(43,110,102,.16); }}
 .g-red {{ color:#e08b7a; border-color:#6b3129; }}
 .g-super-red {{ color:#f0a08e; border-color:#8a3a2e;
   background:rgba(138,58,46,.18); font-weight:600; }}

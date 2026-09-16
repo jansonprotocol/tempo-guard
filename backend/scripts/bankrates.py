@@ -56,7 +56,7 @@ def relabel(m: dict) -> str:
     until the next rebuild; this reads the same colour off it that a
     rebuilt bank would write."""
     g = m.get("g") or ""
-    if not g or g.endswith("red"):
+    if not g or g.endswith("red") or g == "released":
         return g
     from scripts.guard_slices import LADDER
     c = _claim(m.get("t3") if m.get("pk") == 3 else m.get("tip"))
