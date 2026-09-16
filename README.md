@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 82.8%
+## CURRENT CONFIRMED HITRATE: 82.9%
 
     lane                        Tip 1              Tip 2
-    all matches            376 / 454  82.8%    256 / 361  70.9%
+    all matches            377 / 455  82.9%    256 / 361  70.9%
     played lanes  >+1%     160 / 191  83.8%    255 / 359  71.0%
     placed bets            113 / 144  78.5%    ROI +0.4%
 
@@ -637,7 +637,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-3 · 15-09 21:30 <b>Elche v Real Madrid</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.4 −2.7)</td><td>O1.5 76.3% +1.9%<br>buy≥1.32 (+1.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">❌ 6-0 · 16-09 00:30 <b>Londrina v Ponte Preta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 84.5% +3.1%<br>buy≥1.30 (+5.1% margin)</td><td>❌ U2.75 65.8% +4.3%<br>buy≥1.43 (+3.6% margin) · floor −9.2</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 70.0% +3.5% · buy≥1.50 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 16-09 02:00 <b>CRB v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>— under +1%</td><td>✅ O1.75 69.2% +3.9%<br>buy≥1.61 (+3.9% margin) · floor −5.8</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 70.7% +4.2% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 62' 0-0 <b>Puebla v Toluca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.8 capped)</td><td>— under +1%</td><td><b>Toluca O0.5</b> 82.3% +12.7%<br>buy≥1.32 (+8.6% margin) · team · <i>needs 1 more</i> · <i>from here 45% · fair 2.21</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 64' 0-0 <b>Puebla v Toluca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.8 capped)</td><td>— under +1%</td><td><b>Toluca O0.5</b> 82.3% +12.7%<br>buy≥1.32 (+8.6% margin) · team · <i>needs 1 more</i> · <i>from here 43% · fair 2.34</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 16-09 18:45 <b>Ararat-Armenia v Sparta Prague</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>U3.75 69.4% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.6</td></tr></table>
 <table align="left"><tr><th align="left">🟢 16-09 18:45 <b>Omonia Nicosia v Celta Vigo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>U3.75 69.3% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.7</td></tr></table>
 <table align="left"><tr><th align="left">🟢 16-09 19:00 <b>AIK v Mjällby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (79.8 −2.0)</td><td>— under +1%</td><td><b>AIK O0.5</b> 83.1% +6.1%<br>buy≥1.30 (+8.4% margin) · team</td></tr></table>
@@ -672,8 +672,7 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔵 15-09 19:00 <b>Grasshoppers v Sion</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (82.3 +0.5)</td><td>O1.5 83.7% +2.9%<br>buy≥1.26 (+5.3% margin)</td><td><b>Sion O1.5</b> 56.6% +19.8%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.3% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+5' 1-2 <b>Boyacá Chicó v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (84.2 capped)</td><td>U3.0 79.4% <b>+0.0%</b><br>buy≥1.30 (+1.2% margin) · <i>push as it stands</i> · <i>from here 94% · fair 1.06</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 67.0% +2.8% · buy≥1.57 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 62' 0-0 <b>Puebla v Toluca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.8 capped)</td><td>U4.25 83.4% <b>−0.7%</b><br>buy≥1.28 (+5.5% margin) · <i>room for 4 · half from the 4th</i> · <i>from here: as good as landed</i></td><td><b>Toluca O0.5</b> 82.3% +12.7%<br>buy≥1.32 (+8.6% margin) · team · <i>needs 1 more</i> · <i>from here 45% · fair 2.21</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 64' 0-0 <b>Puebla v Toluca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.8 capped)</td><td>U4.25 83.4% <b>−0.7%</b><br>buy≥1.28 (+5.5% margin) · <i>room for 4 · half from the 4th</i> · <i>from here: as good as landed</i></td><td><b>Toluca O0.5</b> 82.3% +12.7%<br>buy≥1.32 (+8.6% margin) · team · <i>needs 1 more</i> · <i>from here 43% · fair 2.34</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 18:45 <b>Ararat-Armenia v Sparta Prague</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>U3.75 69.4% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.6</td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 18:45 <b>Omonia Nicosia v Celta Vigo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>U3.75 69.3% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.7</td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 19:00 <b>AIK v Mjällby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (79.8 −2.0)</td><td>U4.25 83.7% <b>+0.0%</b><br>buy≥1.27 (+5.2% margin)</td><td><b>AIK O0.5</b> 83.1% +6.1%<br>buy≥1.30 (+8.4% margin) · team</td></tr></table>
@@ -711,7 +710,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 376 / 454   ·   82.8%**   ·   **Tip 2 — 256 / 361   ·   70.9%**
+**Tip 1 — 377 / 455   ·   82.9%**   ·   **Tip 2 — 256 / 361   ·   70.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (84.2 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1362,6 +1361,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 6-0 · 16-09 00:30 <b>Londrina v Ponte Preta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 84.5% +3.1%<br>buy≥1.30 (+5.1% margin)</td><td>❌ U2.75 65.8% +4.3%<br>buy≥1.43 (+3.6% margin) · floor −9.2</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 70.0% +3.5% · buy≥1.50 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-3 · 16-09 00:30 <b>Náutico v Operário-PR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>O1.0 88.5% <b>−0.7%</b><br>buy≥1.23 (+6.1% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 16-09 02:00 <b>CRB v Sport Recife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>O1.0 88.5% <b>−0.8%</b><br>buy≥1.20 (+6.1% margin)</td><td>✅ O1.75 69.2% +3.9%<br>buy≥1.61 (+3.9% margin) · floor −5.8</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 70.7% +4.2% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 16-09 02:30 <b>Boyacá Chicó v Alianza Valledupar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (84.2 capped)</td><td>U3.0 79.4% <b>+0.0%</b><br>buy≥1.30 (+1.2% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 67.0% +2.8% · buy≥1.57 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
