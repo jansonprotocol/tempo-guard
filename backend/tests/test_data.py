@@ -1348,8 +1348,18 @@ def test_strikes_mark_the_loss_profile():
         if webapp.region_silent(f.code):
             assert "score silent" in hay and "score under 0" not in st
     assert seen == {0, 1, 2, 3}
+    # the BANK bar takes the same words: the count, and each strike by
+    # name, so "strikes 2" and "strike over lane" read Ask Athena the way
+    # they read the session (the bettor, 16 Sep)
     src = __import__("pathlib").Path(webapp.__file__).read_text()
-    assert 'bits.push("strikes " + m.sk)' in src
+    assert '"strikes " + m.sk' in src
+    assert 'bits.push("strike " + w, w)' in src
+    import json
+    web = json.loads((webapp.ROOT / "web" / "matchbank.json").read_text())
+    rows = [m for c in web["comps"].values() for m in c.get("matches", [])]
+    assert all("sk" in m for m in rows)
+    assert {m["sk"] for m in rows} >= {0, 1, 2}
+    assert any(m.get("skw") for m in rows)
 
 
 def test_declined_strike_combos(monkeypatch):
@@ -2179,3 +2189,100 @@ def test_the_release_study_can_read_its_own_output_back():
     src = inspect.getsource(livebands.release_study)
     assert '("red", "released")' in src
     assert "super red" not in src.split("if (m.get")[1][:200]  # still excluded
+
+
+def test_typo_tolerance_is_a_fallback_not_a_second_search():
+    """The bettor, 16 Sep: "europa league in the session search bar also
+    gives champions league."
+
+    "europa" is a real word on the Europa League cards AND one letter
+    from "europe", the country field every UEFA card carries — so the
+    near pass handed back 18 Champions League cards alongside the 20 real
+    ones. It bites while the phrase is still being typed. A term that
+    matches something EXACTLY anywhere on screen is now matched exactly
+    everywhere, and the near pass only runs for a term nothing answers to.
+    """
+    import json
+    import re
+    import shutil
+    import subprocess
+    import tempfile
+    from pathlib import Path
+    from scripts import webapp
+
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    assert "function exactAnywhere(" in app
+    node = shutil.which("node")
+    if not node:
+        return
+    js = ""
+    for frag in ("function near(", "function nearIn(", "function exactAnywhere("):
+        i = app.index(frag)
+        js += app[i:app.index("\n}", i) + 2] + "\n"
+    cards = re.findall(
+        r'<details class="card [^>]*data-t="([^"]*)"[^>]*data-lg="([^"]*)"', app)
+    pool = [{"dataset": {"t": t, "lg": lg}} for t, lg in cards]
+    prog = js + "const pool = " + json.dumps(pool) + ";\n" + """
+    function hits(q, useExact) {
+      const exact = useExact ? exactAnywhere([q], pool) : new Set();
+      return pool.filter(c => {
+        const hay = c.dataset.t;
+        if (hay.includes(q)) return true;
+        if (exact.has(q)) return false;
+        return q.length >= 5 && /^[a-z0-9. ]+$/.test(q) && nearIn(q, hay);
+      }).map(c => c.dataset.lg);
+    }
+    const before = hits("europa", false), after = hits("europa", true);
+    console.log(JSON.stringify({
+      before: before.length, after: after.length,
+      strayBefore: before.filter(l => l.includes("champions")).length,
+      strayAfter: after.filter(l => l.includes("champions")).length}));
+    """
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "t.js"
+        p.write_text(prog)
+        got = json.loads(subprocess.run([node, str(p)], capture_output=True,
+                                        text=True, timeout=60).stdout)
+    assert got["strayBefore"] > 0, "the bug needs to be reproducible or this pins nothing"
+    assert got["strayAfter"] == 0, got
+    assert got["after"] == got["before"] - got["strayBefore"]
+
+
+def test_the_bank_knows_its_strikes_and_declines_on_them():
+    """The bettor, 16 Sep: "is the bank updated/synced with what strikes
+    they would have, and whether those would be declined?"
+
+    It was not. The bank had every input — cs, the lane, the starred
+    cell — and no function to read them with, so bankrates.counts never
+    checked the strike combos and the two surfaces disagreed about which
+    cards were in the record. The web file computed a strike count of its
+    own, inline, which never applied the region rule.
+    """
+    import inspect
+    from scripts import bankrates as br, webapp
+
+    # ONE definition: the web file reads the same function counts() does
+    src = inspect.getsource(webapp)
+    assert "_br.strikes(m, code)" in src
+    assert "m[\"sk\"] = len(st)" in src
+
+    # the score is silent outside Europe, on the bank as on the board
+    body = inspect.getsource(br.strikes)
+    assert 'region(code or "") == "Europe"' in body
+
+    # and counts() now refuses a declined combo, like the board's
+    assert "strike_declined" in inspect.getsource(br.counts)
+
+    seen = {0: 0, 1: 0, 2: 0, 3: 0}
+    dec = 0
+    for code, comp in br.bank().items():
+        for m in comp.get("matches", []):
+            if br._hit(m.get("mark")) is None:
+                continue
+            st = br.strikes(m, code)
+            assert len(st) <= 3 and len(set(st)) == len(st)
+            seen[len(st)] += 1
+            if br.strike_declined(m, code):
+                dec += 1
+                assert not br.counts(m, code)      # declined means out
+    assert all(seen[k] for k in (0, 1, 2)) and dec > 100

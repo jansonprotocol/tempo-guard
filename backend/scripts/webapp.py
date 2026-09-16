@@ -3017,11 +3017,17 @@ def main() -> None:
                 fl = _br.flip(m, code)
                 if fl:
                     m["fl"] = fl
-                # the strikes on a bank row: score under zero, priced or watch
-                sc = m.get("cs")
-                _cell = m.get("t3") if m.get("pk") == 3 else m.get("tip")
-                m["sk"] = (int(sc is not None and sc < 0) + int(_br.lane(m) in ("priced", "watch"))
-                           + int(sc is not None and sc < 0 and (_cell or "").lstrip("*").startswith("O")))
+                # The strikes on a bank row — ONE definition, the same
+                # function the bank's own counts() reads (bankrates.strikes).
+                # This was computed inline here and it drifted: the inline
+                # copy never applied the region rule, so a Brazilian card
+                # with a negative score filed a strike the board would not
+                # have given it, and the two surfaces disagreed about the
+                # strike count they both displayed.
+                st = _br.strikes(m, code)
+                m["sk"] = len(st)
+                if st:
+                    m["skw"] = st
         comp["matches"] = sorted(keep, key=lambda x: x["d"])
 
     # The headline number is what a reader FOLLOWING THE STAR actually
@@ -4002,15 +4008,39 @@ function nearIn(t, hay) {{
   }}
   return false;
 }}
-function termOk(t, el, hay, lg) {{
+// Typo tolerance is a FALLBACK, not a second search running alongside
+// the first. "europa" is a real word on the Europa League cards, and it
+// is also one letter from "europe" — the country every UEFA card
+// carries — so the fuzzy pass handed back the Champions League as well
+// (the bettor, 16 Sep: "europa league in the session search bar also
+// gives champions league"). A term that matches something EXACTLY
+// anywhere on screen is therefore matched exactly everywhere; the near
+// pass only runs for a term nothing answers to, which is the only case
+// it was written for.
+function exactAnywhere(terms, cards) {{
+  const out = new Set();
+  for (const t of terms) {{
+    if (typeof t !== "string") continue;
+    for (const c of cards) {{
+      if ((c.dataset.t || "").includes(t)) {{ out.add(t); break; }}
+    }}
+  }}
+  return out;
+}}
+
+function termOk(t, el, hay, lg, exact) {{
   if (typeof t !== "string") return cmpOk(el, t);
   if (LEAGUES.has(t) && lg !== undefined) return lg === t;
   if (hay.includes(t)) return true;
+  if (exact && exact.has(t)) return false;      // it answers to something else
   return t.length >= 5 && /^[a-z0-9. ]+$/.test(t) && nearIn(t, hay);
 }}
 
 function applyFilter(q) {{
   const terms = qterms(q);
+  const pool = [...document.querySelectorAll(".card,#t-bets tr[data-t]")]
+    .filter(c => !c.closest("#ask-out") && !c.closest("#fxbox"));
+  const exact = exactAnywhere(terms, pool);
   for (const c of document.querySelectorAll(".card,#t-bets tr[data-t]")) {{
     // Ask Athena renders bank cards with the same class into #ask-out,
     // and it has a search bar of its own. The two bars are separate
@@ -4023,7 +4053,7 @@ function applyFilter(q) {{
     if (c.closest("#ask-out") || c.closest("#fxbox")) continue;
     const hay = c.dataset.t || "";
     const lg = c.dataset.lg;
-    c.style.display = terms.every(t => termOk(t, c, hay, lg)) ? "" : "none";
+    c.style.display = terms.every(t => termOk(t, c, hay, lg, exact)) ? "" : "none";
   }}
   recount();
 }}
@@ -4471,7 +4501,11 @@ function askHay(m, comp) {{
   // same vocabulary the board bar takes ("live unsafe", "declined").
   if (m.lt) bits.push("live " + m.lt, "tag " + m.lt, "live tag " + m.lt);
   if (m.fl) bits.push("flipped", "live unsafe flipped", "flipped " + m.fl, "flipped to " + m.fl);
-  if (m.sk !== undefined) bits.push("strikes " + m.sk);
+  if (m.sk !== undefined) bits.push("strikes " + m.sk,
+                                    m.sk === 1 ? "1 strike" : m.sk + " strikes");
+  // the strikes BY NAME as well, the same words the board bar takes, so
+  // "strike over lane" reads the bank the way it reads the session
+  for (const w of (m.skw || [])) bits.push("strike " + w, w);
   if (m.cs !== undefined) bits.push(m.cs < 0 ? "score negative" : "score positive"); else bits.push("score silent");
   bits.push((m.g || "").endsWith("red") || m.nc ? "declined" : "counted");
   if (m.v) {{
@@ -4607,9 +4641,11 @@ function askFilter() {{
   const t = {{g1: [0, 0], g2: [0, 0], g3: [0, 0],
              ggp: [0, 0], gg: [0, 0], go: [0, 0], gp: [0, 0]}};
   let shown = 0, left = 0;
-  for (const c of document.querySelectorAll("#ask-out .card")) {{
+  const apool = [...document.querySelectorAll("#ask-out .card")];
+  const aexact = exactAnywhere(terms, apool);
+  for (const c of apool) {{
     const hay = c.dataset.t || "";
-    const vis = terms.every(x => termOk(x, c, hay, undefined));
+    const vis = terms.every(x => termOk(x, c, hay, undefined, aexact));
     c.style.display = vis ? "" : "none";
     if (!vis) continue;
     shown++;

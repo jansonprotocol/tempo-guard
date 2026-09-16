@@ -127,14 +127,57 @@ def flip(m: dict, code: str | None = None) -> str | None:
     return livebands.flip(lane(m), tag(m, code), bool(m.get("t2")), bool(m.get("t3")))
 
 
+def strikes(m: dict, code: str | None = None) -> list[str]:
+    """The strikes on a BANK card, in the same words the board uses.
+
+    The bank carries every input the board reads: `cs` is the confluence
+    score, `v` gives the lane, and the starred cell gives the side. It
+    simply had no function to read them with — so until 16 Sep the bank
+    knew nothing about strikes, could not be asked about them, and its
+    counts() disagreed with the board's about which cards were declined
+    (the bettor: "is the bank synced with what strikes they would have?").
+
+    The score is silent outside Europe, where it measured -0.06, exactly
+    as on the board — so a Brazilian card files no score strike however
+    low its number.
+    """
+    from scripts.confluence import region
+    out = []
+    sc = m.get("cs") if region(code or "") == "Europe" else None
+    if sc is not None and sc < 0:
+        out.append("score under 0")
+    ln = lane(m)
+    if ln in ("priced", "watch"):
+        out.append("priced play" if ln == "priced" else "watch card")
+    cell = (m.get("t3") if m.get("pk") == 3 else m.get("tip")) or ""
+    if sc is not None and sc < 0 and cell.lstrip("✅❌◦ *").startswith("O"):
+        out.append("over lane")
+    return out
+
+
+def strike_declined(m: dict, code: str | None = None) -> bool:
+    """Declined by its strike combo — the bank's copy of the board's
+    rule, read from the same livebands table."""
+    ln = lane(m)
+    return bool(ln) and livebands.combo(ln, strikes(m, code)) == "decline"
+
+
 def counts(m: dict, code: str | None = None) -> bool:
     """The one predicate, the bank's copy of webapp.counts: a labelled
     red card does not count, and neither does an unstaked card — Athena
-    lane or watch — tagged live unsafe. A priced play counts whatever
-    its tag says, and an unlabelled card always did."""
+    lane or watch — tagged live unsafe, nor one whose STRIKE COMBO is
+    declined. A priced play counts whatever its tag says, and an
+    unlabelled card always did.
+
+    The strike clause was missing until 16 Sep, so for three days the
+    bank and the board disagreed about which cards were in the record —
+    the board declined a combo and the bank went on counting it.
+    """
     if not not_red(m):
         return False
-    return not (lane(m) in ("athena", "watch") and tag(m, code) == "unsafe")
+    if lane(m) in ("athena", "watch") and tag(m, code) == "unsafe":
+        return False
+    return not strike_declined(m, code)
 
 
 def _claim(cell: str | None) -> float | None:
