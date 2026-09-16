@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 82.6%
+## CURRENT CONFIRMED HITRATE: 82.7%
 
     lane                        Tip 1              Tip 2
-    all matches            376 / 455  82.6%    258 / 365  70.7%
-    played lanes  >+1%     161 / 194  83.0%    257 / 363  70.8%
+    all matches            377 / 456  82.7%    259 / 366  70.8%
+    played lanes  >+1%     161 / 194  83.0%    258 / 364  70.9%
     placed bets            113 / 145  77.9%    ROI -0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 418 / 557   ·   75.0%**   ·   **Tip 1 — 161 / 194   ·   83.0%**   ·   **Tip 2 — 257 / 363   ·   70.8%**
+**Playable — 419 / 558   ·   75.1%**   ·   **Tip 1 — 161 / 194   ·   83.0%**   ·   **Tip 2 — 258 / 364   ·   70.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.7)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -641,8 +641,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 1-4 · 16-09 18:45 <b>Ararat-Armenia v Sparta Prague</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.3 −0.5)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>❌ U3.75 69.4% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.6</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 16-09 18:45 <b>Omonia Nicosia v Celta Vigo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.3 −0.5)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>✅ U3.75 69.3% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 16-09 19:00 <b>AIK v Mjällby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.5 −0.6)</td><td>— under +1%</td><td>✅ <b>AIK O0.5</b> 83.1% +6.1%<br>buy≥1.30 (+8.4% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 4-0 <b>Atlético Madrid v Osasuna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>— under +1%</td><td><b>Atlético Madrid O0.5</b> 83.8% +4.7%<br>buy≥1.30 (+8.9% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.8% +12.2% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 0-1 <b>Deportivo La Coruña v Sevilla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>O1.5 75.5% +1.1%<br>buy≥1.34 (+1.0% margin) · <i>needs 1 more</i> · <i>from here 7% · fair 15.33</i></td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 4-0 · 16-09 19:00 <b>Atlético Madrid v Osasuna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>— under +1%</td><td>✅ <b>Atlético Madrid O0.5</b> 83.8% +4.7%<br>buy≥1.30 (+8.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.8% +12.2% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 0-1 · 16-09 19:00 <b>Deportivo La Coruña v Sevilla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>O1.5 75.5% +1.1%<br>buy≥1.34 (+1.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🟢 16-09 19:00 <b>Lugano v St. Gallen</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (80.0 −0.5)</td><td>O1.5 83.3% +2.5%<br>buy≥1.26 (+5.2% margin)</td><td><b>Lugano O1.5</b> 57.9% +7.9%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 80.2% +5.1% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 16-09 19:00 <b>Thun v Servette</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (80.0 −0.5)</td><td>U4.25 83.8% +3.1%<br>buy≥1.26 (+5.3% margin)</td><td>U3.75 69.7% +6.0%<br>buy≥1.38 (+3.9% margin) · floor −5.3</td></tr></table>
 <table align="left"><tr><th align="left">🟢 16-09 21:00 <b>AC Milan v Benfica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.3 −0.5)</td><td>U4.25 85.4% +1.7%<br>buy≥1.25 (+5.1% margin)</td><td>U3.75 70.2% +2.4%<br>buy≥1.33 (+0.7% margin) · floor −11.8</td></tr></table>
@@ -671,8 +671,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 4-0 <b>Atlético Madrid v Osasuna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.23 (+5.8% margin) · <i>half safe</i> · <i>from here 93% · fair 1.07</i></td><td><b>Atlético Madrid O0.5</b> 83.8% +4.7%<br>buy≥1.30 (+8.9% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.8% +12.2% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 0-1 <b>Deportivo La Coruña v Sevilla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>O1.5 75.5% +1.1%<br>buy≥1.34 (+1.0% margin) · <i>needs 1 more</i> · <i>from here 7% · fair 15.33</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 19:00 <b>Lugano v St. Gallen</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (80.0 −0.5)</td><td>O1.5 83.3% +2.5%<br>buy≥1.26 (+5.2% margin)</td><td><b>Lugano O1.5</b> 57.9% +7.9%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 80.2% +5.1% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 19:00 <b>Thun v Servette</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (80.0 −0.5)</td><td>U4.25 83.8% +3.1%<br>buy≥1.26 (+5.3% margin)</td><td>U3.75 69.7% +6.0%<br>buy≥1.38 (+3.9% margin) · floor −5.3</td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 21:00 <b>AC Milan v Benfica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.3 −0.5)</td><td>U4.25 85.4% +1.7%<br>buy≥1.25 (+5.1% margin)</td><td>U3.75 70.2% +2.4%<br>buy≥1.33 (+0.7% margin) · floor −11.8</td></tr></table>
@@ -705,7 +703,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 376 / 455   ·   82.6%**   ·   **Tip 2 — 258 / 365   ·   70.7%**
+**Tip 1 — 377 / 456   ·   82.7%**   ·   **Tip 2 — 259 / 366   ·   70.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1362,6 +1360,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 1-4 · 16-09 18:45 <b>Ararat-Armenia v Sparta Prague</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.3 −0.5)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>❌ U3.75 69.4% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.6</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 16-09 18:45 <b>Omonia Nicosia v Celta Vigo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.3 −0.5)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>✅ U3.75 69.3% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 16-09 19:00 <b>AIK v Mjällby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Allsvenskan (83.5 −0.6)</td><td>U4.25 83.7% <b>+0.0%</b><br>buy≥1.27 (+5.2% margin)</td><td>✅ <b>AIK O0.5</b> 83.1% +6.1%<br>buy≥1.30 (+8.4% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 4-0 · 16-09 19:00 <b>Atlético Madrid v Osasuna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.23 (+5.8% margin)</td><td>✅ <b>Atlético Madrid O0.5</b> 83.8% +4.7%<br>buy≥1.30 (+8.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.8% +12.2% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 0-1 · 16-09 19:00 <b>Deportivo La Coruña v Sevilla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (79.9 −4.2)</td><td>O1.5 75.5% +1.1%<br>buy≥1.34 (+1.0% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
