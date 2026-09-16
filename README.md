@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 81.2%
+## CURRENT CONFIRMED HITRATE: 81.3%
 
     lane                        Tip 1              Tip 2
-    all matches            372 / 458  81.2%    252 / 371  67.9%
-    played lanes  >+1%     157 / 197  79.7%    251 / 369  68.0%
+    all matches            373 / 459  81.3%    253 / 372  68.0%
+    played lanes  >+1%     158 / 198  79.8%    252 / 370  68.1%
     placed bets            117 / 149  78.5%    ROI +0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 408 / 566   ·   72.1%**   ·   **Tip 1 — 157 / 197   ·   79.7%**   ·   **Tip 2 — 251 / 369   ·   68.0%**
+**Playable — 410 / 568   ·   72.2%**   ·   **Tip 1 — 158 / 198   ·   79.8%**   ·   **Tip 2 — 252 / 370   ·   68.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.7)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -650,7 +650,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 16-09 21:00 <b>Olympiacos v Jagiellonia Bialystok</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>— under +1%</td><td>✅ O2.25 56.6% +2.1%<br>buy≥1.57 (−0.3% margin) · floor −25.4</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 16-09 21:00 <b>Anderlecht v Lyon</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>U4.25 84.9% +1.1%<br>buy≥1.25 (+4.8% margin)</td><td>✅ U3.75 69.3% +1.6%<br>buy≥1.34 (+0.6% margin) · floor −12.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 16-09 21:00 <b>Leverkusen v NK Celje</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>O1.5 85.0% +7.1%<br>buy≥1.27 (+8.2% margin)</td><td>❌ O2.25 68.2% +13.7%<br>buy≥1.39 (+3.8% margin) · floor −13.8</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 7-2 <b>Barcelona v Racing Santander</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>O1.5 84.7% +10.3%<br>buy≥1.29 (+9.1% margin) · <i>✓ landed</i></td><td><b>Barcelona O1.5</b> 69.8% +27.5%<br>buy≥1.49 (+3.9% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 81.8% +8.2% · buy≥1.28 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 7-2 · 16-09 21:30 <b>Barcelona v Racing Santander</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>O1.5 84.7% +10.3%<br>buy≥1.29 (+9.1% margin)</td><td>✅ <b>Barcelona O1.5</b> 69.8% +27.5%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 81.8% +8.2% · buy≥1.28 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 16-09 21:30 <b>Levante v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>O1.5 76.5% +2.2%<br>buy≥1.32 (+1.0% margin)</td><td><b>Levante O0.5</b> 82.6% +3.5%<br>buy≥1.27 (+5.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.7% +4.0% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 17-09 00:30 <b>Botafogo v Grêmio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (76.4 −4.9)</td><td>U3.0 79.6% +4.3%<br>buy≥1.47 (+9.4% margin)</td><td>U2.75 59.2% +5.3%<br>buy≥1.57 (+3.1% margin) · floor −15.8</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 68.8% +4.2% · buy≥1.53 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 17-09 01:15 <b>Once Caldas v Tolima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.0 capped)</td><td>— under +1%</td><td><b>Once Caldas O0.5</b> 79.9% +4.3%<br>buy≥1.31 (+4.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.0% +4.2% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -713,7 +713,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 16-09 19:00 <b>Lugano v St. Gallen</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (82.3 +0.5)</td><td>O1.5 83.3% +2.5%<br>buy≥1.26 (+5.2% margin)</td><td><b>Lugano O1.5</b> 57.9% +7.9%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 80.2% +5.1% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 19:00 <b>Thun v Servette</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (82.3 +0.5)</td><td>U4.25 83.8% +3.1%<br>buy≥1.26 (+5.3% margin)</td><td>U3.75 69.7% +6.0%<br>buy≥1.38 (+3.9% margin) · floor −5.3</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 7-2 <b>Barcelona v Racing Santander</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>O1.5 84.7% +10.3%<br>buy≥1.29 (+9.1% margin) · <i>✓ landed</i></td><td><b>Barcelona O1.5</b> 69.8% +27.5%<br>buy≥1.49 (+3.9% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 81.8% +8.2% · buy≥1.28 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-09 21:30 <b>Levante v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>O1.5 76.5% +2.2%<br>buy≥1.32 (+1.0% margin)</td><td><b>Levante O0.5</b> 82.6% +3.5%<br>buy≥1.27 (+5.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.7% +4.0% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-09 00:30 <b>Botafogo v Grêmio</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (76.4 −4.9)</td><td>U3.0 79.6% +4.3%<br>buy≥1.47 (+9.4% margin)</td><td>U2.75 59.2% +5.3%<br>buy≥1.57 (+3.1% margin) · floor −15.8</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 68.8% +4.2% · buy≥1.53 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-09 01:15 <b>Once Caldas v Tolima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td><b>Once Caldas O0.5</b> 79.9% +4.3%<br>buy≥1.31 (+4.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.0% +4.2% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -789,7 +788,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 372 / 458   ·   81.2%**   ·   **Tip 2 — 252 / 371   ·   67.9%**
+**Tip 1 — 373 / 459   ·   81.3%**   ·   **Tip 2 — 253 / 372   ·   68.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1455,6 +1454,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-0 · 16-09 21:00 <b>Leverkusen v NK Celje</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>O1.5 85.0% +7.1%<br>buy≥1.27 (+8.2% margin)</td><td>❌ O2.25 68.2% +13.7%<br>buy≥1.39 (+3.8% margin) · floor −13.8</td></tr></table>
 <table align="left"><tr><th align="left">⚪ 0-0 (no tip) · 16-09 21:00 <b>SK Sturm Graz v Rennes</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">⚪ 1-0 (no tip) · 16-09 21:00 <b>Sunderland AFC v AZ Alkmaar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">✅ 7-2 · 16-09 21:30 <b>Barcelona v Racing Santander</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>O1.5 84.7% +10.3%<br>buy≥1.29 (+9.1% margin)</td><td>✅ <b>Barcelona O1.5</b> 69.8% +27.5%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 81.8% +8.2% · buy≥1.28 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
