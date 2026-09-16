@@ -1849,6 +1849,58 @@ def _cellbar(f, cell: str) -> str:
             f'{html.escape(txt)}</div>')
 
 
+def _profile_html(f) -> str:
+    """The card's own profile in the bank — two filtered lines, two
+    numbers each (scripts/cardgrid.py has the whole argument).
+
+    The bettor was typing the same pair of searches into Ask Athena for
+    every card he looked at: pick the league, then "orange, strike 1,
+    tip 1 <83", read the TIP 1 and FINAL PICK · ORANGE tiles, then run it
+    again without the claim band to see which filter was carrying the
+    number. That is a question about one card, so the card answers it.
+
+    Information only: no bar, no colour, no verdict and no hit rate moves
+    because of this.
+    """
+    from scripts import cardgrid
+    rows = cardgrid.rows(f.code, label_any(f), len(strikes(f)),
+                         _claim(f.tip1))
+    # Nothing in the profile reaches the floor: the card says nothing
+    # rather than printing four counts that cannot be read as rates.
+    if not any(r[k][1] >= cardgrid.MIN_N for r in rows for k in ("t1", "fp")):
+        return ""
+
+    def num(hit, n):
+        # Under the floor the cell prints its COUNT and no percentage.
+        # "75% on 3/4" is not a hit rate, and on the face of a card it
+        # reads as one — the same mistake the strike ladder's floor
+        # exists to stop. The raw pair is still there to be read.
+        if not n:
+            return '<span class="pv dim">—</span>'
+        v = (f'{hit / n * 100:.1f}%' if n >= cardgrid.MIN_N
+             else '<span class="dim">too few</span>')
+        return f'<span class="pv">{v}</span> <span class="pn">{hit}/{n}</span>'
+
+    cells = ""
+    for r in rows:
+        cells += (f'<div class="ph">{html.escape(r["lab"])}</div>'
+                  f'<div class="pc"><span class="pl">tip 1</span>'
+                  f'{num(*r["t1"])}</div>'
+                  f'<div class="pc"><span class="pl">final pick</span>'
+                  f'{num(*r["fp"])}</div>')
+    tip = (f"What cards like this one have landed in the {f.league}, read "
+           f"off the bank — the same two searches the Ask Athena box "
+           f"answers, and the same tiles: tip 1's own record, and the "
+           f"record of the lane the card starred. The first line is the "
+           f"whole profile (colour, strikes, claim band), the second "
+           f"drops the claim band and keeps the rest, so the pair says "
+           f"whether the band is carrying the number or the profile is. "
+           f"Declined cards are out, as they are in the box. Information "
+           f"only — nothing here prices anything. A rate under "
+           f"{cardgrid.MIN_N} cards is dimmed.")
+    return (f'<div class="pgrid" title="{html.escape(tip)}">{cells}</div>')
+
+
 def _lanebar(f, cell: str, starred_label: str | None, terse: bool = False) -> str:
     """PASS or DECLINE for ONE lane, whether or not it is the star.
 
@@ -2208,7 +2260,7 @@ def _card(f, kind: str, reads: dict) -> str:
            f'{_livetag_html(f)}'
            f'{_taken(f, pick)}'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{_guard(f, best)}{face}")
+           f"{_guard(f, best)}{face}{_profile_html(f)}")
     body = rest + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
@@ -3389,6 +3441,22 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   text-transform:uppercase; }}
 .cellbar.up {{ border-left-color:#3f6b4d; }}
 .cellbar.dn {{ border-left-color:#7a4038; }}
+/* The card's own profile in the bank: two filtered lines, two numbers
+   each. Small on purpose — it is history under the card, never an
+   instruction, and the card was already full (the bettor, 15 Sep:
+   "minimise"). Each line's filters head it; the two numbers sit in one
+   row under that. */
+.pgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:2px 8px;
+  margin-top:8px; padding-top:7px; border-top:1px solid var(--edge);
+  cursor:help; }}
+.pgrid .ph {{ grid-column:1 / -1; font-size:9px; color:var(--dim);
+  letter-spacing:.06em; text-transform:uppercase; margin-top:3px; }}
+.pgrid .ph:first-child {{ margin-top:0; }}
+.pgrid .pc {{ font-size:11px; white-space:nowrap; }}
+.pgrid .pl {{ color:var(--dim); font-size:9px; letter-spacing:.05em;
+  text-transform:uppercase; margin-right:4px; }}
+.pgrid .pv {{ color:#cfe6ff; font-weight:600; }}
+.pgrid .pn {{ color:var(--dim); font-size:9px; }}
 .verdict.yes {{ color:#8fe3a8; }}
 .verdict.yes b {{ color:#b8f0c8; }}
 .verdict.no {{ color:#e08b7a; }}

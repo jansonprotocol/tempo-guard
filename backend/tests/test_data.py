@@ -2559,3 +2559,76 @@ def test_every_league_in_the_menu_is_written_out_with_its_country():
     # And the cards below it: no competition still prints its code.
     codes = [c for c, comp in bank.items() if comp["name"] == c]
     assert not codes, f"bank cards still name these by code: {codes}"
+
+
+def test_the_card_grid_is_the_search_the_bettor_was_typing():
+    """The profile grid on a card is the Ask Athena search, precomputed.
+
+    Two filtered lines — the card's colour, its strike count and its
+    claim band, then the same without the band — and two numbers on
+    each, tip 1's record and the starred lane's. It has to be the SAME
+    population the search box would return, or the card is quietly
+    answering a different question than the one it names.
+    """
+    from scripts import bankrates as br
+    from scripts import board, cardgrid, webapp
+
+    lg, lab, nst, claim = "NED-ED", "orange", 1, 82.3
+    got = cardgrid.rows(lg, lab, nst, claim)
+    assert len(got) == 2, got
+    tight, wide = got
+    assert "tip 1 <83" in tight["lab"], tight["lab"]
+    assert "<" not in wide["lab"], wide["lab"]
+
+    # The wide row contains the tight one: same filters minus the band.
+    for k in ("t1", "fp"):
+        assert tight[k][1] <= wide[k][1], (k, tight, wide)
+        assert tight[k][0] <= wide[k][0], (k, tight, wide)
+
+    # Re-derived by hand off the bank, the long way round.
+    want = {"t1": [0, 0], "fp": [0, 0]}
+    for m in br.bank()[lg]["matches"]:
+        if (m.get("g") or "") != lab or not br.counts(m, lg):
+            continue
+        if len(br.strikes(m, lg)) != nst:
+            continue
+        c = br._claim(m.get("tip"))
+        if c is None or c >= 83:
+            continue
+        for k, mk in (("t1", m.get("mark")),
+                      ("fp", m.get("m3") if m.get("pk") == 3 else m.get("mark"))):
+            h = br._hit(mk)
+            if h is not None:
+                want[k][1] += 1
+                want[k][0] += h
+    assert (tight["t1"], tight["fp"]) == (tuple(want["t1"]), tuple(want["fp"]))
+
+    # Declined cards are out, the same rule the box uses by default.
+    counted = {id(m) for m in br.bank()[lg]["matches"] if br.counts(m, lg)}
+    assert len(counted) < len(br.bank()[lg]["matches"]), \
+        "nothing is declined in this league, so the rule is untested here"
+
+    # And on the page: every grid re-derives from the card it sits on,
+    # and no cell prints a percentage under the floor.
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    n = 0
+    for f in board.load():
+        rows = cardgrid.rows(f.code, webapp.label_any(f),
+                             len(webapp.strikes(f)), webapp._claim(f.tip1))
+        thick = any(r[k][1] >= cardgrid.MIN_N for r in rows
+                    for k in ("t1", "fp"))
+        html = webapp._profile_html(f)
+        assert bool(html) == thick, (f.teams, rows)
+        if not html:
+            continue
+        n += 1
+        for r in rows:
+            for k in ("t1", "fp"):
+                hit, cnt = r[k]
+                if cnt >= cardgrid.MIN_N:
+                    assert f"{hit / cnt * 100:.1f}%" in html, (f.teams, r, k)
+                else:
+                    assert "too few" in html, (f.teams, r, k)
+                assert f"{hit}/{cnt}" in html, (f.teams, r, k)
+        assert html in app, f"{f.teams} grid is not on the page"
+    assert n > 200, n
