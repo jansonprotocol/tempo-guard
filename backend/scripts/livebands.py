@@ -137,8 +137,35 @@ FLIP_SEED = {k: ("flipped" if k == ("unsafe", "tip3") else "hold") for k in FLIP
 # watch + score under 0 69.2 on 13, watch + score under 0 + over 44.4 on
 # 9, Athena + score under 0 + over 76.5 on 17). The measurement keeps
 # only the red cards out, so a declined combo can come back.
+#
+# THE BANK LEADS, SINCE 16 SEP, and this is the third time the same
+# lesson has been paid for. The bands moved off the board onto the bank
+# on 12 Sep because the board-global read came out INVERTED; the flip
+# moved on 13 Sep because "unsafe · flipped" stood on 15 and 23 board
+# cards against 302 and 417 in the bank. The combos were left measuring
+# the board's ~460 settled cards at a floor of FIFTEEN, and all four
+# declines turned out to rest on 10 to 22 cards each while the bank said
+# keep on every one of them:
+#
+#   athena  score<0 + over lane      board 73.7% on 19   bank 81.5% on 2357
+#   watch   score<0 + watch card     board 60.0% on 15   bank 84.7% on  688
+#   watch   score<0 + watch + over   board 40.0% on 10   bank 86.9% on  360
+#   priced  score<0 + priced + over  board 72.7% on 22   bank 77.2% on  569
+#
+# Forty percent on ten matches against 86.9% on three hundred and sixty.
+# The bank's two halves agree with each other and with its newest cards,
+# so this was never a regime the board was catching early — it was ten
+# matches. The bettor's rule for the whole project settles it: the bank
+# has to reflect how Athena would have behaved on future matches, or
+# every measurement taken from it is describing a board that never
+# existed.
+#
+# So the bank sets the label and the board overrides it only at
+# COMBO_MIN_BOARD cards, exactly as the flip works. The seed survives
+# only for a checkout with no bank at all.
 DECLINE_AT = 77.0
 COMBO_MIN_N = MIN_N
+COMBO_MIN_BOARD = MIN_LEAGUE    # the board overrides the bank's combo only at this many
 COMBO_SEED = {
     ("priced", "score under 0 + priced play + over lane"): "decline",
     ("watch", "score under 0 + watch card"): "decline",
@@ -242,10 +269,16 @@ def _flip_pairs_bank() -> dict[tuple[str, str], list]:
     return pair
 
 
-def combo_label(hit_pct: float | None, n: int, seed: str) -> tuple[str, str]:
-    """(label, source): "decline" under DECLINE_AT on COMBO_MIN_N cards or
-    more, "keep" at or above it, the seed under the floor."""
-    if hit_pct is None or n < COMBO_MIN_N:
+def combo_label(hit_pct: float | None, n: int, seed: str,
+                floor: int | None = None) -> tuple[str, str]:
+    """(label, source): "decline" under DECLINE_AT on `floor` cards or
+    more, "keep" at or above it, the seed under the floor.
+
+    `floor` defaults to COMBO_MIN_N, which is what the BANK is held to.
+    The board is held to COMBO_MIN_BOARD instead — a much higher bar,
+    because the board only gets to overrule the bank when it has enough
+    cards to be worth hearing."""
+    if hit_pct is None or n < (COMBO_MIN_N if floor is None else floor):
         return seed, "seed"
     return ("decline" if hit_pct < DECLINE_AT else "keep"), "measured"
 
@@ -256,6 +289,28 @@ def combo(lane: str | None, strikes: list[str]) -> str:
         return "keep"
     row = bands().get(("combo", lane, " + ".join(strikes)))
     return row["label"] if row else "keep"
+
+
+def _combo_bank() -> dict:
+    """(lane, combo) -> [n, hits] over the whole bank, red cards out —
+    the same not_red rule the board's own study uses, so a declined
+    combo can still come back."""
+    from scripts import bankrates as _br
+    tally: dict[tuple[str, str], list] = {}
+    for code, comp in _br.bank().items():
+        for m in comp.get("matches", []):
+            got = _br._hit(m.get("mark"))
+            if got is None or not _br.not_red(m):
+                continue
+            ln = _br.lane(m)
+            if ln is None:
+                continue
+            key = (ln, " + ".join(_br.strikes(m, code)) or "clean")
+            t = tally.setdefault(key, [0, 0, 0.0])
+            t[0] += 1
+            t[1] += bool(got)
+            t[2] += _br._claim(m.get("tip")) or 0.0
+    return tally
 
 
 def combo_study() -> list[dict]:
@@ -278,11 +333,25 @@ def combo_study() -> list[dict]:
         t[0] += 1
         t[1] += f.status[:1] != "❌"
         t[2] += c
+    # THE BANK SETS THE LABEL, the board overrides only at the floor —
+    # see COMBO_MIN_BOARD for the four declines that stood on ten to
+    # twenty-two cards each.
+    bank = _combo_bank()
     rows = []
-    for (lane, band) in sorted(set(tally) | set(COMBO_SEED)):
+    for (lane, band) in sorted(set(tally) | set(bank) | set(COMBO_SEED)):
+        seed = COMBO_SEED.get((lane, band), "keep")
+        bn, bh, bc = bank.get((lane, band), (0, 0, 0.0))
+        bhit = (bh / bn * 100) if bn else None
+        blab, bsrc = combo_label(bhit, bn, seed)
+        bsrc = "bank" if bsrc == "measured" else bsrc
+        rows.append(dict(league="combobank", lane=lane, band=band, n=bn, hit=bhit,
+                         said=(bc / bn) if bn else None, label=blab, source=bsrc))
         n, h, c = tally.get((lane, band), (0, 0, 0.0))
         hit = (h / n * 100) if n else None
-        lab, src = combo_label(hit, n, COMBO_SEED.get((lane, band), "keep"))
+        lab, src = combo_label(hit, n, blab, COMBO_MIN_BOARD)
+        src = "board" if src == "measured" else bsrc
+        if src != "board":
+            lab = blab
         rows.append(dict(league="combo", lane=lane, band=band, n=n, hit=hit,
                          said=(c / n) if n else None, label=lab, source=src))
     return rows
@@ -611,8 +680,9 @@ def main() -> None:
         print(f"  {who} {r['band']:14} n={r['n']:4}  lane {hit}  tip 1 {t1}  -> {r['label']:8} ({r['source']})")
     rows += flips
     combos = combo_study()
-    print(f"the strike combos on the board's settled cards, red out (decline under "
-          f"{DECLINE_AT:.0f} on {COMBO_MIN_N}+):")
+    print(f"the strike combos — the BANK first, red out, the board overriding "
+          f"only at {COMBO_MIN_BOARD}+ cards (decline under {DECLINE_AT:.0f} "
+          f"on {COMBO_MIN_N}+):")
     for r in combos:
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
         print(f"  {r['lane']:7} {r['band']:44} n={r['n']:3}  hit {hit}  -> {r['label']:8} ({r['source']})")

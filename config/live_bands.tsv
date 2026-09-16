@@ -322,23 +322,32 @@ flipbank	flip	unsafe tip3	351	75.2	71.5	hold	bank
 flip	flip	unsafe tip3	10	70.0	50.0	hold	bank
 flipbank	flip	unsafe tip2	575	67.1	75.1	hold	bank
 flip	flip	unsafe tip2	13	84.6	61.5	hold	bank
-flipbank	flip	cautious tip3	365	70.4	80.3	hold	bank
-flip	flip	cautious tip3	26	80.8	80.8	hold	bank
-flipbank	flip	cautious tip2	689	60.4	77.4	hold	bank
-flip	flip	cautious tip2	37	73.0	73.0	hold	bank
-flipbank	flip	safe tip3	642	79.4	79.0	hold	bank
-flip	flip	safe tip3	33	78.8	75.8	hold	bank
-flipbank	flip	safe tip2	1313	67.5	81.7	hold	bank
-flip	flip	safe tip2	66	54.5	77.3	hold	board
-combo	athena	clean	261	83.5	84.2	keep	measured
-combo	athena	score under 0	40	82.5	82.8	keep	measured
-combo	athena	score under 0 + over lane	19	73.7	81.9	decline	measured
-combo	priced	priced play	73	78.1	81.8	keep	measured
-combo	priced	score under 0 + priced play	45	77.8	78.7	keep	measured
-combo	priced	score under 0 + priced play + over lane	22	72.7	81.3	decline	measured
-combo	watch	score under 0 + watch card	15	60.0	80.8	decline	measured
-combo	watch	score under 0 + watch card + over lane	10	40.0	82.7	decline	seed
-combo	watch	watch card	48	89.6	83.1	keep	measured
+flipbank	flip	cautious tip3	433	71.1	79.4	hold	bank
+flip	flip	cautious tip3	29	79.3	79.3	hold	bank
+flipbank	flip	cautious tip2	744	61.3	77.4	hold	bank
+flip	flip	cautious tip2	41	73.2	73.2	hold	bank
+flipbank	flip	safe tip3	574	80.0	79.4	hold	bank
+flip	flip	safe tip3	30	80.0	76.7	hold	bank
+flipbank	flip	safe tip2	1258	67.2	81.9	hold	bank
+flip	flip	safe tip2	62	53.2	77.4	hold	board
+combobank	athena	clean	19442	85.2	84.0	keep	bank
+combo	athena	clean	262	83.6	84.2	keep	board
+combobank	athena	score under 0	3480	83.9	82.5	keep	bank
+combo	athena	score under 0	40	82.5	82.8	keep	bank
+combobank	athena	score under 0 + over lane	2357	81.5	79.6	keep	bank
+combo	athena	score under 0 + over lane	19	73.7	81.9	keep	bank
+combobank	priced	priced play	1640	80.1	82.9	keep	bank
+combo	priced	priced play	73	78.1	81.8	keep	board
+combobank	priced	score under 0 + priced play	825	77.1	81.2	keep	bank
+combo	priced	score under 0 + priced play	45	77.8	78.7	keep	bank
+combobank	priced	score under 0 + priced play + over lane	569	77.2	79.9	keep	bank
+combo	priced	score under 0 + priced play + over lane	22	72.7	81.3	keep	bank
+combobank	watch	score under 0 + watch card	688	84.7	81.6	keep	bank
+combo	watch	score under 0 + watch card	15	60.0	80.8	keep	bank
+combobank	watch	score under 0 + watch card + over lane	360	86.9	79.6	keep	bank
+combo	watch	score under 0 + watch card + over lane	10	40.0	82.7	keep	bank
+combobank	watch	watch card	1458	84.6	83.2	keep	bank
+combo	watch	watch card	50	88.0	83.2	keep	board
 release	O1.5	under 75	241	80.9	72.7	released	halves 78.6/83.5
 release	U2.75	under 75	2	0.0	64.1	declined	too few
 release	U3.0	under 75	239	72.8	74.1	declined	halves 73.5/72.2

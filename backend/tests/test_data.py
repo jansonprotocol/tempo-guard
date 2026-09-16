@@ -2274,7 +2274,6 @@ def test_the_bank_knows_its_strikes_and_declines_on_them():
     assert "strike_declined" in inspect.getsource(br.counts)
 
     seen = {0: 0, 1: 0, 2: 0, 3: 0}
-    dec = 0
     for code, comp in br.bank().items():
         for m in comp.get("matches", []):
             if br._hit(m.get("mark")) is None:
@@ -2283,9 +2282,40 @@ def test_the_bank_knows_its_strikes_and_declines_on_them():
             assert len(st) <= 3 and len(set(st)) == len(st)
             seen[len(st)] += 1
             if br.strike_declined(m, code):
-                dec += 1
                 assert not br.counts(m, code)      # declined means out
-    assert all(seen[k] for k in (0, 1, 2)) and dec > 100
+    assert all(seen[k] for k in (0, 1, 2))
+
+    # The invariant is the WIRING, not how many cards are declined today —
+    # since 16 Sep the bank leads the combos and every one of them keeps,
+    # so a count-based assertion here was measuring the weather. Force a
+    # decline and check it reaches counts().
+    import collections
+    from scripts import livebands
+    victim = code = None
+    for c, comp in br.bank().items():
+        for m in comp.get("matches", []):
+            # it needs STRIKES: combo() answers "keep" for a clean card
+            # without consulting the table at all
+            if br._hit(m.get("mark")) is not None and br.lane(m) \
+                    and br.strikes(m, c):
+                victim, code = m, c
+                break
+        if victim:
+            break
+    assert victim is not None
+    key = (br.lane(victim), " + ".join(br.strikes(victim, code)))
+    saved = livebands._BANDS
+    try:
+        livebands._BANDS = collections.defaultdict(
+            lambda: {"label": "keep", "n": 0, "hit": None, "said": None,
+                     "source": "test"})
+        livebands._BANDS[("combo", key[0], key[1])] = {
+            "label": "decline", "n": 999, "hit": 50.0, "said": None,
+            "source": "test"}
+        assert br.strike_declined(victim, code)
+        assert not br.counts(victim, code)
+    finally:
+        livebands._BANDS = saved
 
 
 def test_a_bare_lane_word_is_exact_on_both_bars():
@@ -2323,3 +2353,51 @@ def test_a_bare_lane_word_is_exact_on_both_bars():
             ln = br.lane(m)
             if ln:
                 assert ln in ("priced", "watch", "athena")
+
+
+def test_the_strike_combos_are_led_by_the_bank():
+    """The bettor, 16 Sep: "the bank needs to reflect how athena on future
+    matches would have behaved, otherwise all following research and edits
+    are in vain."
+
+    The combos were the last rule still measured on the board's ~460
+    settled cards, at a floor of fifteen — and all four declines rested on
+    10 to 22 cards each while the bank said keep on every one, by margins
+    up to 47 points. This is the third time the same correction has been
+    made: the bands moved to the bank on 12 Sep, the flip on 13 Sep.
+    """
+    from scripts import livebands
+
+    assert livebands.COMBO_MIN_BOARD >= livebands.MIN_LEAGUE
+    assert livebands.COMBO_MIN_BOARD > livebands.COMBO_MIN_N
+
+    rows = livebands.combo_study()
+    bankrows = {(r["lane"], r["band"]): r for r in rows if r["league"] == "combobank"}
+    boardrows = {(r["lane"], r["band"]): r for r in rows if r["league"] == "combo"}
+    assert bankrows and boardrows
+    assert set(bankrows) == set(boardrows)
+
+    for key, b in boardrows.items():
+        bank = bankrows[key]
+        # the board may only speak for itself at the floor; otherwise the
+        # label it publishes IS the bank's
+        if b["source"] == "board":
+            assert b["n"] >= livebands.COMBO_MIN_BOARD, key
+        else:
+            assert b["label"] == bank["label"], key
+        # the bank is measured on a serious sample or it defers to the seed
+        if bank["source"] == "bank":
+            assert bank["n"] >= livebands.COMBO_MIN_N
+
+    # and the four the bettor seeded are no longer declined on that seed
+    # alone: each is now answered by thousands of bank cards
+    for key in livebands.COMBO_SEED:
+        bank = bankrows.get(key)
+        assert bank is not None and bank["n"] >= 300, (key, bank)
+        assert bank["source"] == "bank", key
+
+    # the written table is what combo() reads, and it agrees
+    livebands._BANDS = None
+    for key, b in boardrows.items():
+        assert livebands.combo(key[0], key[1].split(" + ")) == b["label"] \
+            or key[1] == "clean"
