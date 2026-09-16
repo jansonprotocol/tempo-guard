@@ -146,8 +146,15 @@ def _index() -> dict:
             pool = "in" if br.counts(m, code) else "out"
             nst = len(br.strikes(m, code))
             side = cellrates.side_of(m.get("tip"))
+            lab = ladder_label(lab, claim)
             for cd in (code, ALL):
                 out.setdefault((pool, cd, lab, nst, side), []).append(row)
+                # The two rungs BELOW the profile, for a league too thin
+                # to answer inside it: the colour on its own, and the
+                # whole record. Keyed here rather than summed at query
+                # time so a widening costs a dict lookup like any other.
+                out.setdefault((pool, cd, lab, None, None), []).append(row)
+                out.setdefault((pool, cd, None, None, None), []).append(row)
     return out
 
 
@@ -186,6 +193,20 @@ def rows(code: str, label: str | None, nstrikes: int, claim: float | None,
     A tip 1 that is not a totals lane has no side, and the bank holds no
     such row at all, so those cards get the two-rung ladder.
 
+    THE LADDER KEEPS GOING WHEN THE LEAGUE CANNOT ANSWER INSIDE THE
+    PROFILE. On 218 of 684 board cards no rung reached MIN_N in the
+    league column — HamKam v Molde is orange with one strike on an over,
+    and the Eliteserien has never had one — so the card printed two
+    dashes and a count and the whole left-hand column said nothing (the
+    bettor: "when a card doesn't have anything replace it with an
+    alternate search that can say something more useful but still within
+    its profile"). Two more rungs are appended, one at a time, only
+    while nothing has reached the floor: the colour on its own, and then
+    the whole record. They are the SAME LADDER continued — each still
+    drops exactly one filter, so the nesting and the reading hold — and
+    they rescue 121 and 66 of those cards. The last 31 are leagues the
+    bank barely holds at all, and there the card says so.
+
     ADJACENT RUNGS THAT TALLY THE SAME ARE COLLAPSED. If the claim band
     cuts nothing — a card claiming 84.9 whose colour already ends at 85 —
     the two lines are one population printed twice, which is the fault
@@ -202,31 +223,53 @@ def rows(code: str, label: str | None, nstrikes: int, claim: float | None,
     pool = "out" if declined else "in"
     idx = _index()
 
-    def get(cd, sd):
+    # Each rung is a population, named by the filters that survive into
+    # it: `sd` None means "either side", `colour` None means "any
+    # colour", `nst` None means "any number of strikes".
+    def pop(cd, sd, colour, nst):
         if sd is not None:
-            return idx.get((pool, cd, label, nstrikes, sd), [])
+            return idx.get((pool, cd, colour, nst, sd), [])
+        if nst is None:
+            return idx.get((pool, cd, colour, None, None), [])
         return [r for s in ("O", "U", "")
-                for r in idx.get((pool, cd, label, nstrikes, s), [])]
+                for r in idx.get((pool, cd, colour, nst, s), [])]
 
     cap = band_ceiling(claim)
     st = f"{nstrikes} strike{'s' if nstrikes != 1 else ''}" if nstrikes \
         else "no strikes"
     word = {"O": "over", "U": "under"}.get(side, "")
     base = f"{label} · {st}"
-    # (label, side to filter on, claim ceiling) — one filter dropped per
-    # rung, tightest first.
-    rungs = [(f"{base} · {word} · tip 1 <{cap}", side, float(cap)),
-             (f"{base} · {word}", side, None)] if word else []
-    rungs += [(f"{base} · tip 1 <{cap}", None, float(cap))] if not word else []
-    rungs += [(base, None, None)]
+    # (label, side, colour, strikes, claim ceiling) — one filter dropped
+    # per rung, tightest first.
+    rungs = [(f"{base} · {word} · tip 1 <{cap}", side, label, nstrikes, float(cap)),
+             (f"{base} · {word}", side, label, nstrikes, None)] if word else \
+            [(f"{base} · tip 1 <{cap}", None, label, nstrikes, float(cap))]
+    rungs += [(base, None, label, nstrikes, None)]
+    # The rescue rungs, below the card's own profile. Only reached while
+    # the league column has said nothing at all.
+    WIDENINGS = 2
+    rungs += [(f"{label} · any strikes", None, label, None, None),
+              ("every graded card", None, None, None, None)]
 
     out: list[dict] = []
-    for lab, sd, ceiling in rungs:
-        h = _tally(get(code, sd), ceiling)
-        a = _tally(get(ALL, sd), ceiling)
+    for i, (lab, sd, colour, nst, ceiling) in enumerate(rungs):
+        widening = i >= len(rungs) - WIDENINGS
+        if widening:
+            # Stop as soon as the league column can answer...
+            if any(r["here"][1] >= MIN_N for r in out):
+                break
+            # ...and never widen a profile the pool does not hold at all.
+            # A super red card asked of the COUNTED pool has no rung —
+            # its colour is never counted — and widening there would walk
+            # all the way down to "every graded card" and answer a
+            # question nobody asked with a number belonging to no card.
+            if not any(not r["wide"] for r in out):
+                break
+        h = _tally(pop(code, sd, colour, nst), ceiling)
+        a = _tally(pop(ALL, sd, colour, nst), ceiling)
         if not h["t1"][1] and not a["t1"][1]:
             continue
-        row = dict(lab=lab, here=h["t1"], all=a["t1"], fp=h["fp"])
+        row = dict(lab=lab, here=h["t1"], all=a["t1"], fp=h["fp"], wide=widening)
         # Same population as the rung above it: that filter cut nothing,
         # so the tighter line goes and the looser label stays.
         if out and (out[-1]["here"], out[-1]["all"]) == (row["here"], row["all"]):

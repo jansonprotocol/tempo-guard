@@ -1902,8 +1902,13 @@ def _profile_html(f) -> str:
         fh, fn = r["fp"]
         fp = (f" · the starred lane here: {fh / fn * 100:.1f}% on {fn}"
               if fn >= cardgrid.MIN_N else "")
-        cells += (f'<div class="ph" title="{html.escape(r["lab"] + fp)}">'
-                  f'{"⛔ " if out else ""}{html.escape(r["lab"])}</div>'
+        # A widening is a rescue, not the card's profile: the league had
+        # nothing to say inside it, so the ladder kept going. Marked, so
+        # it is never read as "cards like this one".
+        cells += (f'<div class="ph{" pw" if r["wide"] else ""}" '
+                  f'title="{html.escape(r["lab"] + fp)}">'
+                  f'{"⛔ " if out else ""}{"↓ " if r["wide"] else ""}'
+                  f'{html.escape(r["lab"])}</div>'
                   f'<div class="pc"><span class="pl">here</span>'
                   f'{num(*r["here"])}</div>'
                   f'<div class="pc"><span class="pl">all leagues</span>'
@@ -1925,6 +1930,12 @@ def _profile_html(f) -> str:
            f"it — the claim band first, then the over/under side — so "
            f"every step down says what that one filter was worth. A step "
            f"that would tally the same population twice is not printed. "
+           f"A line marked ↓ is a WIDENING: the league had nothing to "
+           f"say anywhere inside this card's profile, so the ladder kept "
+           f"going below it — the colour on its own, then the whole "
+           f"record — until the left column could answer. It is not "
+           f"“cards like this one”; it is the nearest thing "
+           f"this league has. "
            f"ACROSS: “here” is the {f.league}, “all "
            f"leagues” is the same profile bank-wide — a line that is "
            f"weak here and strong everywhere is this league, and one "
@@ -3495,6 +3506,10 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
    colour: these numbers are in no hit rate anywhere. */
 .pgrid.pout .pv {{ color:#e0a99a; }}
 .pgrid.pout .ph {{ color:#b08476; }}
+/* A widening: below the card's own profile, reached only because the
+   league had nothing inside it. Set apart so it is never read as the
+   profile's own number. */
+.pgrid .ph.pw {{ font-style:italic; opacity:.75; }}
 .verdict.yes {{ color:#8fe3a8; }}
 .verdict.yes b {{ color:#b8f0c8; }}
 .verdict.no {{ color:#e08b7a; }}

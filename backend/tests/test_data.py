@@ -2802,3 +2802,59 @@ def test_the_side_rung_says_what_the_over_under_split_is_worth():
     assert [r["lab"] for r in plain] == ["orange · 1 strike · tip 1 <82",
                                          "orange · 1 strike"], \
         [r["lab"] for r in plain]
+
+
+def test_the_ladder_keeps_going_when_the_league_cannot_answer():
+    """A silent left-hand column is replaced, not left as three dashes.
+
+    HamKam v Molde is orange, one strike, on an over, and the
+    Eliteserien has never had one — so the league column read "— / — /
+    too few 14/18" and said nothing at all. That happened on 218 of the
+    684 board cards (the bettor: "when a card doesn't have anything
+    replace it with an alternate search that can say something more
+    useful but still within its profile"). The ladder keeps going below
+    the profile now, one filter at a time, until the league can answer.
+    """
+    from scripts import board, cardgrid, cellrates, webapp
+
+    got = cardgrid.rows("NOR-EL", "orange", 1, 83.0, side="O")
+    assert [r["lab"] for r in got][-1] == "orange · any strikes"
+    assert [r["wide"] for r in got] == [False, False, False, True]
+    assert got[-1]["here"][1] >= cardgrid.MIN_N, got[-1]
+
+    # It stops the moment the league can answer: a league thick inside
+    # its own profile is never widened.
+    tight = cardgrid.rows("NED-D2", "orange", 1, 81.8, side="U")
+    assert not any(r["wide"] for r in tight), tight
+
+    # And it NEVER widens a profile the pool does not hold. A super red
+    # card asked of the counted pool has no rung at all — its colour is
+    # never counted — and walking down to "every graded card" there
+    # would answer with a number belonging to no card.
+    assert cardgrid.rows("ITA-SA", "super red", 2, 72.0, declined=False) == []
+
+    # A widening is still a rung: it nests, and it is marked on the page
+    # so it can never be read as the card's own profile.
+    n = wide = 0
+    for f in board.load():
+        rs = cardgrid.rows(f.code, webapp.label_any(f), len(webapp.strikes(f)),
+                           webapp._claim(f.tip1), side=cellrates.side_of(f.tip1),
+                           declined=webapp.is_declined(f))
+        if not rs:
+            continue
+        n += 1
+        ws = [r for r in rs if r["wide"]]
+        if not ws:
+            continue
+        wide += 1
+        # Widenings come last, at most two of them, and only where every
+        # rung above them left the league column short.
+        assert rs[-len(ws):] == ws, f.teams
+        assert len(ws) <= 2, f.teams
+        assert all(r["here"][1] < cardgrid.MIN_N
+                   for r in rs[:len(rs) - len(ws)]), f.teams
+        html = webapp._profile_html(f)
+        if html:
+            assert "↓" in html, f.teams
+    assert 150 < wide < 300, wide
+    assert n > 600, n
