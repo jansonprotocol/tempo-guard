@@ -2122,9 +2122,16 @@ def test_a_released_card_is_measured_back_in_and_revokes_itself():
     cell = "O1.5 67.5% +0.0% · buy≥1.48"
     plain = webapp.play_bar(67.5, cell)[0]
     rel = webapp.play_bar(67.5, cell, measured=webapp.SAYS["released"] * 100)[0]
-    assert rel < plain - 0.15, (rel, plain)
+    assert rel < plain, (rel, plain)
+    # THE BAR MUST SIT ABOVE BREAK-EVEN. A measured rate is bare
+    # break-even, so it takes the registered margin BEFORE the value band
+    # comes off; without that the bar was 1.199 against a 1.236
+    # break-even and PLAY meant -2.9% EV.
+    be = 1 / webapp.SAYS["released"]
+    assert rel > be, (rel, be)
     assert abs(rel - max(webapp.BAND_BAR["80–85"],
-                         (1 / webapp.SAYS["released"]) * (1 - webapp.VALUE_BAND))) < 1e-9
+                         be * (1 + webapp.DECLINE_MARGIN)
+                         * (1 - webapp.VALUE_BAND))) < 1e-9
 
 
 def test_the_release_is_re_measured_by_the_two_day_job():

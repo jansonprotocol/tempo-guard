@@ -928,9 +928,11 @@ def play_bar(p: float, cell: str, measured: float | None = None) -> tuple[float,
     `measured` replaces the claim for BOTH the band and the value, and
     only a RELEASED card passes it. Pricing such a card off its printed
     claim would refuse it for the very reason the tier just stopped
-    refusing it: a 67.5% claim asks 1.48 where the profile lands 80.9%
-    and closes at 1.31, so the card would be freed from Declined and then
-    priced out of every lane anyway — released in name and nowhere else.
+    refusing it. The effect is modest, not dramatic: on the first card
+    the rule released, a 67.5% claim asked 1.31 and the measured rate
+    asks 1.27. The release's real work is getting the card OUT of
+    Declined so it can be a lane at all and counts in the record; the
+    repricing is four cents, not a transformation.
 
     The profile's own rate is used flat, not scaled by the card's claim,
     because inside this pocket the claim is measured to carry no
@@ -939,7 +941,17 @@ def play_bar(p: float, cell: str, measured: float | None = None) -> tuple[float,
     """
     q = p if measured is None else measured
     bar = band_bar(q)
-    val = (1.0 / (measured / 100.0)) if measured is not None else _value_of(cell)
+    # The printed buy>= already sits ABOVE break-even — that is what the
+    # engine's margin is for — so taking VALUE_BAND off it still leaves a
+    # bar worth taking. A measured rate is bare break-even and nothing
+    # more, so it needs the same margin put on before the band comes off,
+    # or the bar lands UNDER the break-even it was derived from. Shipped
+    # that way for one commit: 1/0.809 = 1.236 less 3% = 1.199, which is
+    # -2.9% EV, and it called PLAY on a price that loses money. The
+    # bettor caught it on the first card the rule ever released ("but buy
+    # from is 1.33").
+    val = (1.0 / (measured / 100.0)) * (1 + DECLINE_MARGIN) \
+        if measured is not None else _value_of(cell)
     return (max(bar, val * (1 - VALUE_BAND)) if val else bar), bar
 
 
