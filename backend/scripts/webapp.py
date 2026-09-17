@@ -1849,6 +1849,13 @@ def _cellbar(f, cell: str) -> str:
             f'{html.escape(txt)}</div>')
 
 
+# How many lines of the profile grid the card FACE carries. Anything
+# above this is dropped from the TOP — the tightest rungs, which on
+# a card that needed a widening are the ones whose league cell was
+# empty anyway — and listed on the hover instead.
+PROFILE_ROWS = 3
+
+
 def _profile_html(f) -> str:
     """The card's own profile in the bank — two filtered lines, two
     numbers each (scripts/cardgrid.py has the whole argument).
@@ -1881,6 +1888,18 @@ def _profile_html(f) -> str:
     if not any(r[k][1] >= cardgrid.MIN_N for r in rows
                for k in ("here", "all")):
         return ""
+    # THREE LINES ON THE FACE, AND THEY ARE THE LOOSEST THREE (the
+    # bettor, 17 Sep: "when the searches roll over 1 or 2 times extra,
+    # drop the first rows to keep it at max 3"). A card only ever gets a
+    # fourth or fifth line because the ladder had to widen, and it only
+    # widens when NO rung reached the floor in the league column — so the
+    # rungs being dropped are precisely the ones whose left-hand cell
+    # said nothing. Sarpsborg 08 v KFUM Oslo was printing "too few 1/1"
+    # three times above the one line that could answer.
+    # What the dropped rungs still had was their BANK-WIDE cell, so they
+    # go to the hover rather than the bin: the card's exact claim band is
+    # still readable, it is just no longer taking a line to say it.
+    cut, rows = rows[:-PROFILE_ROWS], rows[-PROFILE_ROWS:]
 
     def num(hit, n):
         # Under the floor the cell prints its COUNT and no percentage.
@@ -1913,6 +1932,17 @@ def _profile_html(f) -> str:
                   f'{num(*r["here"])}</div>'
                   f'<div class="pc"><span class="pl">all leagues</span>'
                   f'{num(*r["all"])}</div>')
+    dropped = ""
+    if cut:
+        bits = []
+        for r in cut:
+            h, n = r["all"]
+            bits.append(f"{r['lab']} — {h / n * 100:.1f}% on {n} bank-wide"
+                        if n >= cardgrid.MIN_N
+                        else f"{r['lab']} — too few")
+        dropped = (" TIGHTER RUNGS, kept off the face because the card holds "
+                   "three lines and their league cell was empty: "
+                   + "; ".join(bits) + ".")
     pool = ("THE DECLINED ROWS OF THE BANK, because this card is one — "
             "cards of this profile that the board refused. In no hit rate "
             "anywhere, and never mixed with the record: a declined card is "
@@ -1941,7 +1971,7 @@ def _profile_html(f) -> str:
            f"weak here and strong everywhere is this league, and one "
            f"that is weak in both is the profile. {pool} Information "
            f"only — nothing here prices anything. A cell under "
-           f"{cardgrid.MIN_N} cards prints its count and no rate.")
+           f"{cardgrid.MIN_N} cards prints its count and no rate.{dropped}")
     return (f'<div class="pgrid{" pout" if out else ""}" '
             f'title="{html.escape(tip)}">{cells}</div>')
 

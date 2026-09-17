@@ -2649,7 +2649,11 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
         n += 1
         # The final pick left the face for the hover, but no card lost it.
         assert "final pick" not in html, f.teams
-        for r in rows:
+        # Only the rungs that reached the FACE are checked against it: the
+        # card holds PROFILE_ROWS lines and drops the tightest, which
+        # test_the_profile_grid_holds_three_lines_and_drops_the_tightest
+        # holds on its own.
+        for r in rows[-webapp.PROFILE_ROWS:]:
             for k in ("here", "all"):
                 hit, cnt = r[k]
                 if not cnt:
@@ -2858,3 +2862,58 @@ def test_the_ladder_keeps_going_when_the_league_cannot_answer():
             assert "↓" in html, f.teams
     assert 150 < wide < 300, wide
     assert n > 600, n
+
+
+def test_the_profile_grid_holds_three_lines_and_drops_the_tightest():
+    """The card face carries at most three rungs, and they are the
+    LOOSEST three.
+
+    A card only ever grows a fourth or fifth rung because the ladder had
+    to widen, and it only widens when NO rung reached the floor in the
+    league column — so the rungs that get dropped are exactly the ones
+    whose left-hand cell said nothing. Sarpsborg 08 v KFUM Oslo was
+    printing "too few 1/1" three times above the one line that could
+    answer (the bettor, 17 Sep: "drop the first rows to keep it at max 3
+    rows presented on the card").
+
+    Nothing measured is lost: the dropped rungs keep their bank-wide
+    number and it moves to the hover.
+    """
+    import re
+
+    from scripts import board, cardgrid, cellrates, webapp
+
+    faces = 0
+    trimmed = 0
+    for f in board.load():
+        html = webapp._profile_html(f)
+        if not html:
+            continue
+        faces += 1
+        full = cardgrid.rows(f.code, webapp.label_any(f), len(webapp.strikes(f)),
+                             webapp._claim(f.tip1),
+                             side=cellrates.side_of(f.tip1),
+                             declined=webapp.is_declined(f))
+        shown = html.count('class="ph')
+        assert shown <= webapp.PROFILE_ROWS, (f.teams, shown)
+        assert shown == min(len(full), webapp.PROFILE_ROWS), (f.teams, shown,
+                                                              len(full))
+        # The three on the face are the LAST three of the ladder, in order.
+        labels = [re.sub(r"<[^>]+>", "", m) for m in
+                  re.findall(r'<div class="ph[^"]*"[^>]*>(.*?)</div>', html)]
+        want = [r["lab"] for r in full[-webapp.PROFILE_ROWS:]]
+        got = [l.replace("⛔ ", "").replace("↓ ", "") for l in labels]
+        assert got == [webapp.html.escape(w) for w in want], (f.teams, got, want)
+        if len(full) <= webapp.PROFILE_ROWS:
+            assert "TIGHTER RUNGS" not in html, f.teams
+            continue
+        trimmed += 1
+        # Every dropped rung is named on the hover, and every one of them
+        # had an empty league cell — that is why it was safe to drop.
+        title = re.search(r'class="pgrid[^"]*" title="([^"]*)"', html).group(1)
+        assert "TIGHTER RUNGS" in title, f.teams
+        for r in full[:-webapp.PROFILE_ROWS]:
+            assert webapp.html.escape(r["lab"]) in title, (f.teams, r["lab"])
+            assert r["here"][1] < cardgrid.MIN_N, (f.teams, r)
+    assert faces > 600, faces
+    assert trimmed > 30, trimmed
