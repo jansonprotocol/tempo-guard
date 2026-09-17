@@ -12,13 +12,13 @@
 # CEST, the same 4% after the day's four losses. 1.13 from 17 Sep 22:59
 # CEST — observed off the slip, not announced.
 #
-# ONE THING THE 4% RULE IS NOT DOING ANY MORE, recorded because the
-# column alone hides it: on 17 Sep the balance was 6.83 and six singles
-# went on at 1.13 each — 6.78, or 99% of the roll, at 16.5% a leg. The
-# stake has stayed near 1.15 while the bankroll fell, so a figure that
-# was 4% on 11 Sep is four times that now. Flagged to the bettor before
-# the slip was placed; it is his call and the number is here so the
-# record does not read as though nobody noticed.
+# THE BANKROLL IS NOT VISIBLE FROM A SLIP, and nothing here should try
+# to infer it. On 17 Sep this file briefly carried a note reading six
+# singles at 1.13 against a balance of 6.83 as "99% of the roll" — the
+# 6.83 was one book's wallet, and the bankroll is held across two
+# accounts. The reading was wrong and the note is gone. What a screenshot
+# shows is the balance AT THAT BOOK; the stake column records what was
+# staked, and that is the whole of what this file knows.
 #
 # CONVENTION: a position struck AFTER kickoff must carry the words
 # "in-play" in its note. The board reads that word to badge the card and
