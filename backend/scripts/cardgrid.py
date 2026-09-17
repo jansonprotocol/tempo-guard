@@ -147,14 +147,20 @@ def _index() -> dict:
             nst = len(br.strikes(m, code))
             side = cellrates.side_of(m.get("tip"))
             lab = ladder_label(lab, claim)
+            # One key per population the ladder can ask for. Six shapes,
+            # written once here rather than unioned at query time: the
+            # card's own profile, then each way of loosening it.
+            #   (colour, strikes, side)  the profile
+            #   (colour, strikes, -)     either side
+            #   (colour, -, -)           the colour alone
+            #   (-, strikes, -)          this many strikes, any colour
+            #   (-, -, side)             this side, any colour
+            #   (-, -, -)                everything
             for cd in (code, ALL):
-                out.setdefault((pool, cd, lab, nst, side), []).append(row)
-                # The two rungs BELOW the profile, for a league too thin
-                # to answer inside it: the colour on its own, and the
-                # whole record. Keyed here rather than summed at query
-                # time so a widening costs a dict lookup like any other.
-                out.setdefault((pool, cd, lab, None, None), []).append(row)
-                out.setdefault((pool, cd, None, None, None), []).append(row)
+                for k in ((lab, nst, side), (lab, nst, None), (lab, None, None),
+                          (None, nst, None), (None, None, side),
+                          (None, None, None)):
+                    out.setdefault((pool, cd) + k, []).append(row)
     return out
 
 
@@ -222,54 +228,53 @@ def rows(code: str, label: str | None, nstrikes: int, claim: float | None,
         return []
     pool = "out" if declined else "in"
     idx = _index()
-
-    # Each rung is a population, named by the filters that survive into
-    # it: `sd` None means "either side", `colour` None means "any
-    # colour", `nst` None means "any number of strikes".
-    def pop(cd, sd, colour, nst):
-        if sd is not None:
-            return idx.get((pool, cd, colour, nst, sd), [])
-        if nst is None:
-            return idx.get((pool, cd, colour, None, None), [])
-        return [r for s in ("O", "U", "")
-                for r in idx.get((pool, cd, colour, nst, s), [])]
+    def pop(colour, nst, sd):
+        return idx.get((pool, code, colour, nst, sd), []), \
+               idx.get((pool, ALL, colour, nst, sd), [])
 
     cap = band_ceiling(claim)
     st = f"{nstrikes} strike{'s' if nstrikes != 1 else ''}" if nstrikes \
         else "no strikes"
     word = {"O": "over", "U": "under"}.get(side, "")
     base = f"{label} · {st}"
-    # (label, side, colour, strikes, claim ceiling) — one filter dropped
-    # per rung, tightest first.
-    rungs = [(f"{base} · {word} · tip 1 <{cap}", side, label, nstrikes, float(cap)),
-             (f"{base} · {word}", side, label, nstrikes, None)] if word else \
-            [(f"{base} · tip 1 <{cap}", None, label, nstrikes, float(cap))]
-    rungs += [(base, None, label, nstrikes, None)]
-    # The rescue rungs, below the card's own profile. Only reached while
-    # the league column has said nothing at all.
-    WIDENINGS = 2
-    rungs += [(f"{label} · any strikes", None, label, None, None),
-              ("every graded card", None, None, None, None)]
+    # (label, colour, strikes, side, claim ceiling), tightest first. The
+    # first four are the CHAIN — each drops exactly one filter from the
+    # one above, so a line reads against its neighbour. The last three
+    # are SLICES, not chain steps: they cross the profile rather than
+    # loosen it, and they exist because a chain from four filters can
+    # only be five rungs long, which is not enough to fill three lines
+    # in a league the bank holds thinly.
+    rungs = ([(f"{base} · {word} · tip 1 <{cap}", label, nstrikes, side, float(cap)),
+              (f"{base} · {word}", label, nstrikes, side, None)] if word else
+             [(f"{base} · tip 1 <{cap}", label, nstrikes, None, float(cap))])
+    rungs += [(base, label, nstrikes, None, None),
+              (f"{label} · any strikes", label, None, None, None)]
+    CHAIN = len(rungs)
+    if word:
+        rungs.append((f"{word} · any colour", None, None, side, None))
+    rungs.append((f"{st} · any colour", None, nstrikes, None, None))
+    rungs.append(("every graded card", None, None, None, None))
 
     out: list[dict] = []
-    for i, (lab, sd, colour, nst, ceiling) in enumerate(rungs):
-        widening = i >= len(rungs) - WIDENINGS
-        if widening:
-            # Stop as soon as the league column can answer...
-            if any(r["here"][1] >= MIN_N for r in out):
-                break
-            # ...and never widen a profile the pool does not hold at all.
-            # A super red card asked of the COUNTED pool has no rung —
-            # its colour is never counted — and widening there would walk
-            # all the way down to "every graded card" and answer a
-            # question nobody asked with a number belonging to no card.
-            if not any(not r["wide"] for r in out):
-                break
-        h = _tally(pop(code, sd, colour, nst), ceiling)
-        a = _tally(pop(ALL, sd, colour, nst), ceiling)
+    for i, (lab, colour, nst, sd, ceiling) in enumerate(rungs):
+        # Keep going until THREE rungs have a league cell thick enough to
+        # quote (the bettor, 17 Sep: "let the search roll over till 3 are
+        # filled"). Rung 4 and beyond are only reached because the ones
+        # above it came back empty, so nothing is being skipped over.
+        if i >= CHAIN and sum(1 for r in out if r["here"][1] >= MIN_N) >= 3:
+            break
+        if i >= CHAIN and not any(not r["wide"] for r in out):
+            break
+        here, everywhere = pop(colour, nst, sd)
+        h, a = _tally(here, ceiling), _tally(everywhere, ceiling)
         if not h["t1"][1] and not a["t1"][1]:
             continue
-        row = dict(lab=lab, here=h["t1"], all=a["t1"], fp=h["fp"], wide=widening)
+        # ↓ marks a SLICE, not a chain step: "orange · any strikes" is
+        # the chain dropping one more filter and reads against the line
+        # above it, while "under · any colour" crosses the profile and
+        # does not.
+        row = dict(lab=lab, here=h["t1"], all=a["t1"], fp=h["fp"],
+                   wide=i >= CHAIN)
         # Same population as the rung above it: that filter cut nothing,
         # so the tighter line goes and the looser label stays.
         if out and (out[-1]["here"], out[-1]["all"]) == (row["here"], row["all"]):

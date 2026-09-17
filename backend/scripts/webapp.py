@@ -1899,7 +1899,26 @@ def _profile_html(f) -> str:
     # What the dropped rungs still had was their BANK-WIDE cell, so they
     # go to the hover rather than the bin: the card's exact claim band is
     # still readable, it is just no longer taking a line to say it.
-    cut, rows = rows[:-PROFILE_ROWS], rows[-PROFILE_ROWS:]
+    # WHICH three: the TIGHTEST rungs whose league cell is thick enough
+    # to quote (the bettor, 17 Sep: "let the search roll over till 3 are
+    # filled"). Tightest, not widest — on a card whose own profile has a
+    # thick cell that profile IS the answer and must not be traded for
+    # something looser. A rung the league cannot fill is stepped over
+    # rather than printed, which is how a thin middle rung stops costing
+    # a line.
+    # Where the league cannot fill three anywhere, the filled ones are
+    # padded from the tight end, so the card still shows its own profile
+    # instead of three ways of saying "the whole league".
+    keep = [i for i, r in enumerate(rows) if r["here"][1] >= cardgrid.MIN_N]
+    keep = keep[:PROFILE_ROWS]
+    for i in range(len(rows)):
+        if len(keep) >= PROFILE_ROWS:
+            break
+        if i not in keep:
+            keep.append(i)
+    keep = sorted(keep)
+    cut = [r for i, r in enumerate(rows) if i not in keep]
+    rows = [rows[i] for i in keep]
 
     def num(hit, n):
         # Under the floor the cell prints its COUNT and no percentage.

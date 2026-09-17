@@ -2575,8 +2575,8 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
 
     lg, lab, nst, claim = "NED-ED", "orange", 1, 82.3
     got = cardgrid.rows(lg, lab, nst, claim)
-    assert len(got) == 2, got
-    tight, wide = got
+    assert len(got) >= 2, got
+    tight, wide = got[0], got[1]
     assert "tip 1 <83" in tight["lab"], tight["lab"]
     assert "<" not in wide["lab"], wide["lab"]
 
@@ -2636,10 +2636,21 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
         # no two adjacent lines may tally the same population — that is
         # one number printed twice, which is what the grid keeps being
         # fixed for.
-        for a, b in zip(rows, rows[1:]):
+        # Nesting holds down the CHAIN — the rungs that loosen the card's
+        # own profile one filter at a time. It does NOT hold across the
+        # slices that follow: "under · any colour" and "1 strike · any
+        # colour" cross the profile rather than widen it, and neither
+        # contains the other. Every rung is inside the terminal one.
+        chain = [r for r in rows if not r["wide"]]
+        for a, b in zip(chain, chain[1:]):
             for k in ("here", "all"):
-                assert a[k][1] <= b[k][1], (f.teams, k, rows)
-                assert a[k][0] <= b[k][0], (f.teams, k, rows)
+                assert a[k][1] <= b[k][1], (f.teams, k, chain)
+                assert a[k][0] <= b[k][0], (f.teams, k, chain)
+        if rows and rows[-1]["lab"] == "every graded card":
+            for r in rows:
+                for k in ("here", "all"):
+                    assert r[k][1] <= rows[-1][k][1], (f.teams, k, r)
+        for a, b in zip(rows, rows[1:]):
             assert (a["here"], a["all"]) != (b["here"], b["all"]), \
                 (f.teams, rows)
         html = webapp._profile_html(f)
@@ -2653,19 +2664,11 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
         # card holds PROFILE_ROWS lines and drops the tightest, which
         # test_the_profile_grid_holds_three_lines_and_drops_the_tightest
         # holds on its own.
-        for r in rows[-webapp.PROFILE_ROWS:]:
-            for k in ("here", "all"):
-                hit, cnt = r[k]
-                if not cnt:
-                    # No card of this profile here at all: a dash, and no
-                    # "0/0" to be mistaken for a measurement.
-                    assert "—" in html, (f.teams, r, k)
-                    continue
-                if cnt >= cardgrid.MIN_N:
-                    assert f"{hit / cnt * 100:.1f}%" in html, (f.teams, r, k)
-                else:
-                    assert "too few" in html, (f.teams, r, k)
-                assert f"{hit}/{cnt}" in html, (f.teams, r, k)
+        # Which rungs reach the face, and that each cell prints its count
+        # and its floor correctly, is held by
+        # test_the_profile_grid_holds_three_lines_and_drops_the_tightest.
+        # What this test holds is that the page carries what the renderer
+        # produced, unaltered.
         assert html in app, f"{f.teams} grid is not on the page"
     assert n > 300, n
 
@@ -2763,10 +2766,14 @@ def test_the_side_rung_says_what_the_over_under_split_is_worth():
 
     lg, lab, nst, claim = "NED-D2", "orange", 1, 81.8
     got = cardgrid.rows(lg, lab, nst, claim, side="U")
-    assert [r["lab"] for r in got] == [
+    # The CHAIN, tightest first: band, then side, then strikes, then
+    # colour. Slices may follow it where the league is too thin to fill
+    # three lines out of the chain alone.
+    assert [r["lab"] for r in got][:4] == [
         "orange · 1 strike · under · tip 1 <82",
         "orange · 1 strike · under",
         "orange · 1 strike",
+        "orange · any strikes",
     ], [r["lab"] for r in got]
 
     # The middle rung, re-derived by hand: everything but the band.
@@ -2795,17 +2802,18 @@ def test_the_side_rung_says_what_the_over_under_split_is_worth():
     # not printed. Turkish orange, no strikes, claiming 84.9: the colour
     # already ends at 85, so "<85" cuts nothing and the band rung goes.
     coll = cardgrid.rows("TUR-SL", "orange", 0, 84.9, side="U")
-    assert [r["lab"] for r in coll] == ["orange · no strikes · under",
-                                        "orange · no strikes"], \
+    assert [r["lab"] for r in coll][:2] == ["orange · no strikes · under",
+                                            "orange · no strikes"], \
         [r["lab"] for r in coll]
 
     # A tip 1 that is not a totals lane has no side, and the bank holds
     # no such row, so those cards keep the two-rung ladder.
     assert cellrates.side_of("DNB1 78.0% +1.0%") == ""
     plain = cardgrid.rows(lg, lab, nst, claim, side="")
-    assert [r["lab"] for r in plain] == ["orange · 1 strike · tip 1 <82",
-                                         "orange · 1 strike"], \
+    assert [r["lab"] for r in plain][:2] == ["orange · 1 strike · tip 1 <82",
+                                             "orange · 1 strike"], \
         [r["lab"] for r in plain]
+    assert not any("under" in r["lab"] or "over" in r["lab"] for r in plain)
 
 
 def test_the_ladder_keeps_going_when_the_league_cannot_answer():
@@ -2822,14 +2830,23 @@ def test_the_ladder_keeps_going_when_the_league_cannot_answer():
     from scripts import board, cardgrid, cellrates, webapp
 
     got = cardgrid.rows("NOR-EL", "orange", 1, 83.0, side="O")
-    assert [r["lab"] for r in got][-1] == "orange · any strikes"
-    assert [r["wide"] for r in got] == [False, False, False, True]
-    assert got[-1]["here"][1] >= cardgrid.MIN_N, got[-1]
+    # The chain comes first and the slices follow it, in one order.
+    assert [r["lab"] for r in got][:4] == [
+        "orange · 1 strike · over · tip 1 <84",
+        "orange · 1 strike · over",
+        "orange · 1 strike",
+        "orange · any strikes",
+    ], [r["lab"] for r in got]
+    assert [r["wide"] for r in got][:3] == [False, False, False]
+    assert got[-1]["lab"] == "every graded card"
+    # It rolled far enough that THREE league cells can be quoted.
+    assert sum(1 for r in got if r["here"][1] >= cardgrid.MIN_N) >= 3, got
 
     # It stops the moment the league can answer: a league thick inside
     # its own profile is never widened.
     tight = cardgrid.rows("NED-D2", "orange", 1, 81.8, side="U")
     assert not any(r["wide"] for r in tight), tight
+    assert sum(1 for r in tight if r["here"][1] >= cardgrid.MIN_N) >= 3, tight
 
     # And it NEVER widens a profile the pool does not hold. A super red
     # card asked of the counted pool has no rung at all — its colour is
@@ -2854,9 +2871,11 @@ def test_the_ladder_keeps_going_when_the_league_cannot_answer():
         # Widenings come last, at most two of them, and only where every
         # rung above them left the league column short.
         assert rs[-len(ws):] == ws, f.teams
-        assert len(ws) <= 2, f.teams
-        assert all(r["here"][1] < cardgrid.MIN_N
-                   for r in rs[:len(rs) - len(ws)]), f.teams
+        # A slice only exists because the CHAIN could not fill three
+        # league cells on its own.
+        chain = rs[:len(rs) - len(ws)]
+        assert sum(1 for r in chain if r["here"][1] >= cardgrid.MIN_N) < 3, \
+            (f.teams, [(r["lab"], r["here"]) for r in chain])
         html = webapp._profile_html(f)
         if html:
             assert "↓" in html, f.teams
@@ -2898,12 +2917,33 @@ def test_the_profile_grid_holds_three_lines_and_drops_the_tightest():
         assert shown <= webapp.PROFILE_ROWS, (f.teams, shown)
         assert shown == min(len(full), webapp.PROFILE_ROWS), (f.teams, shown,
                                                               len(full))
-        # The three on the face are the LAST three of the ladder, in order.
+        # The three on the face are the TIGHTEST rungs the league can
+        # fill, padded from the tight end where it cannot fill three.
         labels = [re.sub(r"<[^>]+>", "", m) for m in
                   re.findall(r'<div class="ph[^"]*"[^>]*>(.*?)</div>', html)]
-        want = [r["lab"] for r in full[-webapp.PROFILE_ROWS:]]
+        keep = [i for i, r in enumerate(full)
+                if r["here"][1] >= cardgrid.MIN_N][:webapp.PROFILE_ROWS]
+        for i in range(len(full)):
+            if len(keep) >= webapp.PROFILE_ROWS:
+                break
+            if i not in keep:
+                keep.append(i)
+        want = [full[i]["lab"] for i in sorted(keep)]
         got = [l.replace("⛔ ", "").replace("↓ ", "") for l in labels]
         assert got == [webapp.html.escape(w) for w in want], (f.teams, got, want)
+        # Each shown cell prints its raw count, and quotes a percentage
+        # only above the floor.
+        for i in keep:
+            for k in ("here", "all"):
+                hit, cnt = full[i][k]
+                if not cnt:
+                    assert "—" in html, (f.teams, full[i]["lab"], k)
+                    continue
+                if cnt >= cardgrid.MIN_N:
+                    assert f"{hit / cnt * 100:.1f}%" in html, (f.teams, k)
+                else:
+                    assert "too few" in html, (f.teams, k)
+                assert f"{hit}/{cnt}" in html, (f.teams, k)
         if len(full) <= webapp.PROFILE_ROWS:
             assert "TIGHTER RUNGS" not in html, f.teams
             continue
@@ -2912,8 +2952,9 @@ def test_the_profile_grid_holds_three_lines_and_drops_the_tightest():
         # had an empty league cell — that is why it was safe to drop.
         title = re.search(r'class="pgrid[^"]*" title="([^"]*)"', html).group(1)
         assert "TIGHTER RUNGS" in title, f.teams
-        for r in full[:-webapp.PROFILE_ROWS]:
+        for i, r in enumerate(full):
+            if i in keep:
+                continue
             assert webapp.html.escape(r["lab"]) in title, (f.teams, r["lab"])
-            assert r["here"][1] < cardgrid.MIN_N, (f.teams, r)
     assert faces > 600, faces
     assert trimmed > 30, trimmed
