@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 81.2%
 
     lane                        Tip 1              Tip 2
-    all matches            380 / 468  81.2%    258 / 379  68.1%
+    all matches            381 / 469  81.2%    258 / 379  68.1%
     played lanes  >+1%     163 / 204  79.9%    257 / 377  68.2%
     placed bets            122 / 156  78.2%    ROI -0.3%
 
@@ -751,7 +751,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 17-09 19:00 <b>Biskra v Belouizdad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>U3.0 85.4% +2.6%<br>buy≥1.29 (+6.0% margin)</td><td><b>Biskra U1.5</b> 75.4% +14.5%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-09 21:00 <b>Temouchent v Kabylie</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-2 <b>Atlético Bucaramanga v Independiente Medellín</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin) · <i>half safe</i> · <i>from here 93% · fair 1.07</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 13:35 <b>Zhejiang Professional v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +1.4)</td><td>O1.5 83.9% +2.0%<br>buy≥1.23 (+5.0% margin)</td><td><b>Wuhan Three Towns O0.5</b> 80.5% +7.6%<br>buy≥1.31 (+5.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.3% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 17:00 <b>El Biar v JS Saoura</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 17:00 <b>USM Khenchela v ES Ben Aknoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>U3.0 83.4% <b>+0.6%</b><br>buy≥1.33 (+5.5% margin)</td><td>— none</td></tr></table>
@@ -854,7 +853,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 380 / 468   ·   81.2%**   ·   **Tip 2 — 258 / 379   ·   68.1%**
+**Tip 1 — 381 / 469   ·   81.2%**   ·   **Tip 2 — 258 / 379   ·   68.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1537,6 +1536,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">⚪ 1-2 (no tip) · 17-09 21:00 <b>Lillestrøm v Torreense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">⚪ 1-2 (no tip) · 17-09 21:00 <b>Real Sociedad v Bournemouth</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-3 · 17-09 21:30 <b>Málaga v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>U4.25 84.8% <b>−2.1%</b><br>buy≥1.21 (+5.8% margin)</td><td>❌ U3.75 74.2% +1.9%<br>buy≥1.27 (+0.9% margin) · floor −0.8</td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-2 · 18-09 01:00 <b>Atlético Bucaramanga v Independiente Medellín</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
