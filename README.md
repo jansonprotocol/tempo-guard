@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 81.2%
+## CURRENT CONFIRMED HITRATE: 81.3%
 
     lane                        Tip 1              Tip 2
-    all matches            381 / 469  81.2%    258 / 379  68.1%
-    played lanes  >+1%     163 / 204  79.9%    257 / 377  68.2%
+    all matches            382 / 470  81.3%    259 / 380  68.2%
+    played lanes  >+1%     164 / 205  80.0%    258 / 378  68.3%
     placed bets            122 / 156  78.2%    ROI -0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 420 / 581   ·   72.3%**   ·   **Tip 1 — 163 / 204   ·   79.9%**   ·   **Tip 2 — 257 / 377   ·   68.2%**
+**Playable — 422 / 583   ·   72.4%**   ·   **Tip 1 — 164 / 205   ·   80.0%**   ·   **Tip 2 — 258 / 378   ·   68.3%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.0 +1.7)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -662,7 +662,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-3 · 17-09 21:00 <b>Viktoria Plzeň v Union Saint-Gilloise</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>U4.25 85.5% +1.7%<br>buy≥1.25 (+5.1% margin)</td><td>✅ U3.75 70.3% +2.5%<br>buy≥1.32 (+0.7% margin) · floor −11.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 5-0 · 17-09 21:00 <b>Juventus v NEC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>O1.5 82.6% +4.7%<br>buy≥1.29 (+6.4% margin)</td><td>✅ O2.25 64.0% +9.4%<br>buy≥1.47 (+3.5% margin) · floor −18.0</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-3 · 17-09 21:30 <b>Málaga v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>— under +1%</td><td>❌ U3.75 74.2% +1.9%<br>buy≥1.27 (+0.9% margin) · floor −0.8</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 4-0 <b>Zhejiang Professional v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +1.4)</td><td>O1.5 83.9% +2.0%<br>buy≥1.23 (+5.0% margin) · <i>✓ landed</i></td><td><b>Wuhan Three Towns O0.5</b> 80.5% +7.6%<br>buy≥1.31 (+5.9% margin) · team · <i>needs 1 more</i> · <i>from here 4% · fair 25.17</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.3% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 4-1 · 18-09 13:35 <b>Zhejiang Professional v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +1.4)</td><td>O1.5 83.9% +2.0%<br>buy≥1.23 (+5.0% margin)</td><td>✅ <b>Wuhan Three Towns O0.5</b> 80.5% +7.6%<br>buy≥1.31 (+5.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.3% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 18-09 18:00 <b>Widzew Lodz v Wieczysta Krakow</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.9 −6.3)</td><td>— under +1%</td><td>U3.75 73.3% +2.9%<br>buy≥1.29 (+1.8% margin) · floor −4.7</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 69.4% +8.6% · buy≥1.51 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 18-09 18:30 <b>Greuther Furth v Magdeburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (81.5 −0.9)</td><td>O1.5 81.7% +1.3%<br>buy≥1.28 (+4.6% margin)</td><td>O2.25 60.2% +2.0%<br>buy≥1.48 (+0.0% margin) · floor −14.8</td></tr></table>
 <table align="left"><tr><th align="left">🟢 18-09 18:30 <b>Wolfsburg v Darmstadt</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (81.5 −0.9)</td><td>— under +1%</td><td><b>Wolfsburg O1.5</b> 61.1% +12.1%<br>buy≥1.69 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.6% +18.2% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -751,7 +751,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 17-09 19:00 <b>Biskra v Belouizdad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>U3.0 85.4% +2.6%<br>buy≥1.29 (+6.0% margin)</td><td><b>Biskra U1.5</b> 75.4% +14.5%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-09 21:00 <b>Temouchent v Kabylie</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 4-0 <b>Zhejiang Professional v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +1.4)</td><td>O1.5 83.9% +2.0%<br>buy≥1.23 (+5.0% margin) · <i>✓ landed</i></td><td><b>Wuhan Three Towns O0.5</b> 80.5% +7.6%<br>buy≥1.31 (+5.9% margin) · team · <i>needs 1 more</i> · <i>from here 4% · fair 25.17</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.3% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 17:00 <b>El Biar v JS Saoura</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 17:00 <b>USM Khenchela v ES Ben Aknoun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>U3.0 83.4% <b>+0.6%</b><br>buy≥1.33 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 18:00 <b>Widzew Lodz v Wieczysta Krakow</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.9 −6.3)</td><td>U4.25 86.2% <b>+0.5%</b><br>buy≥1.24 (+7.2% margin)</td><td>U3.75 73.3% +2.9%<br>buy≥1.29 (+1.8% margin) · floor −4.7</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 69.4% +8.6% · buy≥1.51 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -853,7 +852,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 381 / 469   ·   81.2%**   ·   **Tip 2 — 258 / 379   ·   68.1%**
+**Tip 1 — 382 / 470   ·   81.3%**   ·   **Tip 2 — 259 / 380   ·   68.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1537,6 +1536,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">⚪ 1-2 (no tip) · 17-09 21:00 <b>Real Sociedad v Bournemouth</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA Europa League (85.4 +0.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-3 · 17-09 21:30 <b>Málaga v Villarreal</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>U4.25 84.8% <b>−2.1%</b><br>buy≥1.21 (+5.8% margin)</td><td>❌ U3.75 74.2% +1.9%<br>buy≥1.27 (+0.9% margin) · floor −0.8</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 18-09 01:00 <b>Atlético Bucaramanga v Independiente Medellín</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 4-1 · 18-09 13:35 <b>Zhejiang Professional v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +1.4)</td><td>O1.5 83.9% +2.0%<br>buy≥1.23 (+5.0% margin)</td><td>✅ <b>Wuhan Three Towns O0.5</b> 80.5% +7.6%<br>buy≥1.31 (+5.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.3% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
