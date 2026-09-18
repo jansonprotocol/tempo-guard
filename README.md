@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 81.7%
 
     lane                        Tip 1              Tip 2
-    all matches            402 / 492  81.7%    272 / 399  68.2%
+    all matches            403 / 493  81.7%    272 / 399  68.2%
     played lanes  >+1%     176 / 218  80.7%    271 / 397  68.3%
     placed bets            127 / 161  78.9%    ROI +0.5%
 
@@ -790,7 +790,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 18-09 18:00 <b>Widzew Lodz v Wieczysta Krakow</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.9 −6.3)</td><td>U4.25 86.2% <b>+0.5%</b><br>buy≥1.24 (+7.2% margin)</td><td>U3.75 73.3% +2.9%<br>buy≥1.29 (+1.8% margin) · floor −4.7</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 69.4% +8.6% · buy≥1.51 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 20:00 <b>MC Alger v Rouissat</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 20:30 <b>Wisla v Slask Wroclaw</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.9 −6.3)</td><td>U4.25 84.3% <b>−1.3%</b><br>buy≥1.29 (+6.8% margin)</td><td><b>Wisla O0.5</b> 83.3% +4.6%<br>buy≥1.32 (+10.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.7% +13.9% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 1-3 <b>RCD Espanyol v Elche</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.23 (+5.8% margin) · <i>half safe</i> · <i>from here 93% · fair 1.07</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 67.9% +5.7% · buy≥1.55 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-09 22:00 <b>ASO Chlef v MC Oran</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.0 −3.0)</td><td>U3.0 85.1% +2.3%<br>buy≥1.30 (+5.9% margin)</td><td>U2.75 66.8% +3.3%<br>buy≥1.37 (+0.5% margin) · floor −8.2</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-1 <b>Alianza Atlético v Comerciantes Unidos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 78.0% +3.9%<br>buy≥1.40 (+9.1% margin) · <i>✓ landed</i></td><td><b>Comerciantes Unidos O0.5</b> 79.0% +15.7%<br>buy≥1.38 (+9.3% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.6% +2.6% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 19-09 00:30 <b>Vila Nova v América Mineiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>O1.0 88.5% <b>−0.7%</b><br>buy≥1.22 (+6.1% margin)</td><td><b>Vila Nova O0.5</b> 80.3% +4.2%<br>buy≥1.31 (+5.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 75.6% +9.4% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -899,7 +898,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 402 / 492   ·   81.7%**   ·   **Tip 2 — 272 / 399   ·   68.2%**
+**Tip 1 — 403 / 493   ·   81.7%**   ·   **Tip 2 — 272 / 399   ·   68.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.9 −4.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1614,6 +1613,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 18-09 20:45 <b>Gent v Standard</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (86.2 −0.4)</td><td>O1.5 76.7% <b>+0.4%</b><br>buy≥1.32 (+1.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 18-09 21:00 <b>Brentford FC v Chelsea FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.1 +1.0)</td><td>U4.25 81.9% <b>+0.0%</b><br>buy≥1.28 (+2.9% margin)</td><td>✅ <b>Brentford FC O0.5</b> 82.5% +4.4%<br>buy≥1.29 (+6.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 77.0% +2.1% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 18-09 21:00 <b>Bristol City v Watford</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (79.2 −4.4)</td><td>U3.0 77.7% +3.6%<br>buy≥1.49 (+7.3% margin)</td><td>✅ <b>Watford U1.5</b> 74.5% +5.8%<br>buy≥1.40 (+4.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.3% +15.0% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-3 · 18-09 21:00 <b>RCD Espanyol v Elche</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.9 −3.0)</td><td>U4.25 84.9% <b>−2.0%</b><br>buy≥1.23 (+5.8% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 67.9% +5.7% · buy≥1.55 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
