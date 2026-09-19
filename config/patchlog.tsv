@@ -180,3 +180,4 @@
 2026-09-19	board	config/ladder_rates.tsv: how often every totals rung lands, per league, over three seasons — plus how often the rung Athena gave landed, and the difference
 2026-09-19	board	The live ladder becomes one bright box: the holding folded in, two rungs not three, longest price first, and the two gold lines above it gone
 2026-09-19	board	Fix: a card at half time lost its live ladder to the first poll — the box's inputs were written only for cards with a running minute
+2026-09-19	ledger	config/bets.tsv has no representation for a COMBINATION bet: a double is logged as two half-stake legs and graded independently, which mis-scores a split result and understates a full win
