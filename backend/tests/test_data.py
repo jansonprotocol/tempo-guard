@@ -2961,3 +2961,157 @@ def test_the_profile_grid_holds_three_lines_and_drops_the_tightest():
             assert webapp.html.escape(r["lab"]) in title, (f.teams, r["lab"])
     assert faces > 600, faces
     assert trimmed > 30, trimmed
+
+
+def test_the_second_half_is_longer_than_forty_five_minutes():
+    """STOPPAGE spread across the whole second half, not two minutes
+    tacked on at the 90th. Fitted 19 Sep on 9,990 second-half
+    observations from the board's live log: the old clock read 1.29x the
+    goals it should at 76-85' and 2.16x past 85'.
+
+    The invariant that matters is that the REPAIR IS LATE-ONLY. Half
+    time still has the whole second half to come, so the 7 Sep
+    calibration the module is pinned to cannot move; the share drains to
+    nothing at the last kick instead of at the whistle; and it never
+    goes up as the match goes on.
+    """
+    from scripts import fromhere as F
+
+    assert F.STOPPAGE > 2
+    # half time: the whole of the second half's goals are still to come
+    assert abs(F.remaining_share(45, True) - F.SHARE) < 1e-9
+    # and the first half is untouched by the change
+    assert abs(F.remaining_share(0, False) - 1.0) < 1e-9
+    # it drains at the last kick, not at the 90th
+    assert F.remaining_share(90, True) > 0.05
+    assert F.remaining_share(90 + F.STOPPAGE, True) == 0.0
+    assert F.remaining_share(120, True) == 0.0
+    # never rises as the clock runs
+    seq = ([F.remaining_share(m, False) for m in range(0, 45)] +
+           [F.remaining_share(m, True) for m in range(45, 100)])
+    assert all(a >= b for a, b in zip(seq, seq[1:])), seq
+    # the page computes it the same way, off the same constants
+    from scripts import webapp
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    assert f"const SHARE = {F.SHARE}, STOPPAGE = {F.STOPPAGE};" in app
+    assert "const half = 45 + STOPPAGE;" in app
+
+
+def test_the_ladder_offers_the_rungs_the_match_made_interesting():
+    """`fromhere.ladder()`: the OTHER rungs worth a price on a running
+    match (the bettor, 19 Sep — the advisor "only tracks the tip 1
+    lane").
+
+    The rule is a price window and nothing else, so the test is that the
+    window alone produces the moves he named by hand: a stalled goalless
+    match offers the over, a match that has outrun the card's under
+    offers the under with room, a card whose over has landed offers the
+    unders, and a lane that is already a coin flip is left alone.
+    """
+    from scripts import fromhere as F
+    card = "U3.5 84.0% +1.2% · buy≥1.25"
+
+    def rungs(status, cell=card):
+        return {r["rung"]: r for r in F.ladder(cell, "A v B", status)}
+
+    # STALLED AND GOALLESS late on: the under pays nothing, the over is
+    # the only thing left with a price on it.
+    late = rungs("LIVE 70' 0-0")
+    assert "O0.5" in late and late["O0.5"]["how"] == "flip"
+    assert all(r[0] == "O" for r in late)
+    # THE MATCH HAS OUTRUN THE CARD at 2-1: the under with room is there,
+    # and it is named as room rather than as a tighter bet.
+    gone = rungs("LIVE 55' 2-1")
+    assert gone["U4.5"]["how"] == "more room"
+    # A GOAL EACH: the tighter under and the over both live.
+    even = rungs("LIVE 75' 1-1")
+    assert even["U2.5"]["how"] == "tighter"
+    # THE CARD'S OWN LANE LANDED and it has nothing more to say; the
+    # ladder still does, on the other side.
+    landed = rungs("LIVE 55' 2-0", "O1.75 78.0% +4.0% · buy≥1.35")
+    assert any(r["how"] == "flip" and r["rung"][0] == "U"
+               for r in landed.values())
+
+    # EVERY ROW, EVERYWHERE: inside the window, shortest first, capped,
+    # never the card's own bet under another name, never U1.5.
+    seen = set()
+    for cell in (card, "U4.25 86.0% −1.0% · buy≥1.19",
+                 "O1.5 80.0% +3.0% · buy≥1.30", "U3.0 82.0% +0.5% · buy≥1.33"):
+        own = F.turns_on(cell.split()[0])
+        for minute in range(10, 95, 5):
+            for score in ("0-0", "1-0", "1-1", "2-1", "2-2", "3-1"):
+                rows = F.ladder(cell, "A v B", f"LIVE {minute}' {score}")
+                assert len(rows) <= F.ROWS
+                assert [r["fair"] for r in rows] == \
+                    sorted(r["fair"] for r in rows)
+                for r in rows:
+                    seen.add(r["rung"])
+                    assert F.SHORT <= r["fair"] <= F.LONG, (cell, minute, r)
+                    assert abs(r["p"] * r["fair"] - 1) < 1e-9
+                    assert r["rung"] != "U1.5"
+                    # the same bet spelled differently is still his own bet
+                    assert not (r["rung"][0] == cell[0]
+                                and F.turns_on(r["rung"]) == own), (cell, r)
+                    assert r["how"] in ("tighter", "more room", "flip")
+                    assert (r["how"] == "flip") == (r["rung"][0] != cell[0])
+    assert seen and seen <= set(F.LADDER) - {"U1.5"}
+
+    # SILENT where it has no business speaking: a team total prices one
+    # team's goals, a result lane is not a total at all, and a match that
+    # is not running has no "from here".
+    assert F.ladder("**A O1.5** 57.3% +12.5% (team) · buy≥1.80", "A v B",
+                    "LIVE 60' 1-0") == []
+    assert F.ladder("DNB1 78.7% +11.1% · buy≥1.33", "A v B", "LIVE 42' 2-0") == []
+    assert F.ladder(card, "A v B", "") == []
+
+
+def test_the_page_carries_the_ladder_and_can_rebuild_it():
+    """The ladder is on the face of every running card, and the page
+    holds the inputs to rebuild it between sweeps — the SET moves with
+    the clock, not just the numbers, so the page re-runs the selection
+    rather than re-printing it."""
+    import json as _json
+    from scripts import board, webapp
+    from scripts import fromhere as F
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    # the rungs and the window come from the module, never a second copy
+    assert f"const LADDER = {_json.dumps(list(F.LADDER))}" in app
+    assert f"SHORT = {F.SHORT}, LONG = {F.LONG}" in app
+    assert f"ALT_ROWS = {F.ROWS}" in app
+    assert "function ladderNow(" in app and "turnsOn(rung)" in app
+
+    live = [f for f in board.load() if f.status and not f.settled
+            and "HT" not in f.status]
+    shown = 0
+    for f in live:
+        cells = (f.tip1, f.tip2, f.tip3)
+        # ONE CARD, ONE LADDER: a card with two match totals priced the
+        # same match twice and would otherwise print the same rungs twice.
+        owner = F.ladder_cell(cells, f.teams, f.status)
+        assert sum(bool(webapp._also_html(f, c)) for c in cells) <= 1, f.teams
+        for cell in cells:
+            rows = F.ladder(cell, f.teams, f.status) if cell == owner else []
+            if not rows:
+                continue
+            shown += 1
+            html = webapp._also_html(f, cell)
+            st = F._state(cell, f.teams, f.status)
+            # the inputs the rebuild needs, all of them
+            for k, v in (("mu", f'{st["mu"]:.4f}'), ("goals", st["goals"]),
+                         ("own", st["k"]), ("side", st["market"][0]),
+                         ("min", st["minute"])):
+                assert f'data-{k}="{v}"' in html, (f.teams, k)
+            for r in rows:
+                assert f'<b>{r["rung"]}</b>' in html
+                assert f'{r["fair"]:.2f}' in html
+            # it never claims to be a play
+            assert "NONE of these is a play" in webapp.html.unescape(html)
+    # The board is not always running a match, so the rendering is also
+    # exercised on a made-up one — the test must not quietly become a
+    # no-op on a quiet afternoon.
+    made = board.Fixture("2026-09-19 20:00", "NED-ED", "Eredivisie",
+                         "A v B", "U3.5 84.0% +1.2% · buy≥1.25", "— none",
+                         "🔴 LIVE 55' 1-1", "")
+    html = webapp._also_html(made, made.tip1)
+    assert 'class="also"' in html and 'data-side="U"' in html
+    assert shown >= 0

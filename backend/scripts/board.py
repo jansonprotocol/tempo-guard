@@ -175,8 +175,14 @@ def _live(f, cell: str) -> str:
     s = liveline.progress(cell, f.teams, f.status)
     from scripts import fromhere
     fh = fromhere.line(cell, f.teams, f.status)
+    # One card, one ladder: it says something about the match, not about
+    # the lane it happens to hang under.
+    also = (fromhere.also(cell, f.teams, f.status)
+            if cell == fromhere.ladder_cell((f.tip1, f.tip2, f.tip3),
+                                            f.teams, f.status) else "")
     out = f" · <i>{s}</i>" if s else ""
-    return out + (f" · <i>{fh}</i>" if fh else "")
+    out += f" · <i>{fh}</i>" if fh else ""
+    return out + (f"<br><i>{also}</i>" if also else "")
 
 
 def _cell(raw: str) -> str:

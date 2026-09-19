@@ -2168,6 +2168,21 @@ def _live_json(fixtures) -> None:
                     if r and when and "HT" not in f.status:
                         lane["fr"] = dict(mu=round(r["mu"], 4), needs=r["needs"],
                                           under=1 if r["under"] else 0)
+                # The rest of the ladder, and the inputs that let the page
+                # rebuild it as the clock runs. One card, one ladder — it
+                # is a statement about the match, not about this lane.
+                alt = (fromhere.ladder(cell, f.teams, f.status)
+                       if cell == fromhere.ladder_cell(
+                           (f.tip1, f.tip2, f.tip3), f.teams, f.status)
+                       else [])
+                if alt:
+                    lane["alt"] = [dict(r=x["rung"], h=x["how"],
+                                        p=round(x["p"], 4)) for x in alt]
+                    st = fromhere._state(cell, f.teams, f.status)
+                    if st and when and "HT" not in f.status:
+                        lane["al"] = dict(mu=round(st["mu"], 4),
+                                          goals=st["goals"], own=st["k"],
+                                          side=st["market"][0])
                 if lane:
                     lanes[str(which)] = lane
             entry["lanes"] = lanes
@@ -2175,6 +2190,47 @@ def _live_json(fixtures) -> None:
     import json as _json
     (OUT.parent / "live.json").write_text(
         _json.dumps(dict(at=now, cards=cards), ensure_ascii=False))
+
+
+def _also_row(r: dict) -> str:
+    return (f'<span class="alt"><b>{html.escape(r["rung"])}</b> '
+            f'<i>{html.escape(r["how"])}</i> {r["p"] * 100:.0f}% · fair '
+            f'{r["fair"]:.2f}</span>')
+
+
+def _also_html(f, cell: str) -> str:
+    """The ladder under a running lane: the other rungs worth a price.
+
+    The inputs ride along in data attributes exactly as the from-here
+    line's do, because the SET ITSELF moves with the clock — a rung
+    drops out of the window as the minutes go and another comes in, and
+    a page read three minutes after a sweep should show the ladder the
+    match is actually at.
+    """
+    from scripts import fromhere
+    if cell != fromhere.ladder_cell((f.tip1, f.tip2, f.tip3), f.teams,
+                                    f.status):
+        return ""                       # one card, one ladder
+    rows = fromhere.ladder(cell, f.teams, f.status)
+    if not rows:
+        return ""
+    st = fromhere._state(cell, f.teams, f.status)
+    attrs = ""
+    if st and "HT" not in f.status:
+        attrs = (f' data-mu="{st["mu"]:.4f}" data-goals="{st["goals"]}"'
+                 f' data-own="{st["k"]}" data-side="{st["market"][0]}"'
+                 f' data-min="{st["minute"]}"'
+                 f' data-half="{2 if st["second"] else 1}"'
+                 f' data-at="{int(__import__("time").time())}"')
+    return (f'<div class="also"{attrs} title="The other rungs this match '
+            f'has made worth a price, off the same expected goals as the '
+            f'lane above. Shortest price first. NONE of these is a play '
+            f'and none of them moves a hit rate — the fair number is what '
+            f'an in-play price has to beat. Rungs shorter than '
+            f'{fromhere.SHORT:.2f} or longer than {fromhere.LONG:.2f} are '
+            f'left out: nothing to win, or a different bet.">'
+            f'<span class="alsoh">also live</span>'
+            f'{"".join(_also_row(r) for r in rows)}</div>')
 
 
 def _card(f, kind: str, reads: dict) -> str:
@@ -2275,6 +2331,12 @@ def _card(f, kind: str, reads: dict) -> str:
                          f'time: unders read within two points, overs are '
                          f'exact with a goal in and conservative at 0-0.">'
                          f'{html.escape(fh)}</div>')
+            # THE REST OF THE LADDER. The card's lane goes safe, or dies,
+            # or lands, and the match keeps running — these are the other
+            # rungs the same expected goals make worth a price right now.
+            # None of them is a play; the number is what a price has to
+            # beat (scripts/fromhere.py).
+            live += _also_html(f, cell)
         tail = " <span class=\"dim\">· result lane</span>" if which == 3 else ""
         if noplay:
             tail += ('<span class="noplay" title="Shown for the record. '
@@ -3174,6 +3236,9 @@ def main() -> None:
                    key=lambda x: (x[0][0], x[1]))
     lgmenu_js = _json.dumps([[c, lab or bank[c]["name"]]
                              for (_k, lab), c in _menu])
+    # The rungs the in-play ladder may offer, so the page rebuilds the
+    # same list the server did rather than carrying its own copy.
+    ladder_js = _json.dumps(list(fromhere.LADDER))
     # Canonical keys: one club, one identity, every spelling aliased to
     # it. Three signals decide which spellings are the same club: the
     # engine's canonical form, the Club Elo identity (one external name
@@ -3581,6 +3646,17 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .prog.gone {{ color:#e07a6a; }}
 .from {{ margin-top:3px; font-size:11px; letter-spacing:.04em;
   color:var(--gold); cursor:help; }}
+/* The ladder: the other rungs this running match has made worth a
+   price. Dim, not gold — the card's own lane is the gold one, and none
+   of these is a play. */
+.also {{ margin-top:4px; font-size:11px; letter-spacing:.04em;
+  color:var(--dim); cursor:help; display:flex; flex-wrap:wrap; gap:3px 8px;
+  align-items:baseline; }}
+.also .alsoh {{ color:var(--dim); opacity:.7; text-transform:uppercase;
+  font-size:9.5px; letter-spacing:.1em; }}
+.also .alt {{ white-space:nowrap; }}
+.also .alt b {{ color:var(--tx); font-weight:600; }}
+.also .alt i {{ font-style:normal; opacity:.65; }}
 .tie {{ margin-top:8px; font-size:12px; color:var(--tx);
   background:#111622; border-radius:7px; padding:8px 10px; }}
 summary {{ cursor:pointer; list-style:none; }}
@@ -3636,7 +3712,7 @@ td.pos {{ color:var(--green); }} td.neg {{ color:#e07a6a; }}
   .verdict {{ font-size:11px; }}
   .verdict.strong {{ padding:2px 6px; }}
   .meta, .kw {{ font-size:11px; }}
-  .prog, .from {{ font-size:10px; }}
+  .prog, .from, .also {{ font-size:10px; }}
   .taken, .livetag {{ font-size:10px; padding:1px 6px; }}
 }}
 .pagebanner {{ width:100%; max-height:260px; object-fit:cover;
@@ -4430,8 +4506,41 @@ function poisCdf(k, lam) {{
 }}
 function remainingShare(minute, second) {{
   if (!second) return (45 - Math.min(minute, 45)) / 45 * (1 - SHARE) + SHARE;
-  const left = minute >= 90 ? Math.max(90 + STOPPAGE - minute, 0) : 90 - minute;
-  return SHARE * Math.min(left, 45) / 45;
+  const half = 45 + STOPPAGE;
+  return SHARE * Math.min(Math.max(90 + STOPPAGE - minute, 0), half) / half;
+}}
+// THE REST OF THE LADDER, rebuilt on the same arithmetic the server
+// used. The SET moves, not just the numbers: a rung leaves the price
+// window as the minutes go and another arrives, so the line has to be
+// rebuilt rather than re-numbered.
+const LADDER = {ladder_js}, SHORT = {fromhere.SHORT}, LONG = {fromhere.LONG},
+      ALT_ROWS = {fromhere.ROWS};
+function turnsOn(rung) {{
+  const l = parseFloat(rung.slice(1));
+  return (rung[0] === "U" || l === Math.floor(l)) ? Math.floor(l) : Math.floor(l) + 1;
+}}
+function altRow(rung, how, p) {{
+  return '<span class="alt"><b>' + rung + '</b> <i>' + how + '</i> ' +
+         Math.round(p * 100) + '% · fair ' + (1 / p).toFixed(2) + '</span>';
+}}
+function ladderNow(mu, goals, ownK, side, minute, second) {{
+  const lam = mu * remainingShare(minute, second), out = [];
+  for (const rung of LADDER) {{
+    const k = turnsOn(rung);
+    if (rung[0] === side && k === ownK) continue;
+    const need = k - goals;
+    const p = rung[0] === "U" ? (need >= 0 ? poisCdf(need, lam) : 0)
+                              : (need <= 0 ? 1 : 1 - poisCdf(need - 1, lam));
+    if (p <= 0 || p >= 1) continue;
+    const fair = 1 / p;
+    if (fair < SHORT || fair > LONG) continue;
+    const line = parseFloat(rung.slice(1)), own = ownK;
+    const how = rung[0] !== side ? "flip"
+      : ((rung[0] === "U") === (k > own) ? "more room" : "tighter");
+    out.push({{rung: rung, p: p, fair: fair, how: how}});
+  }}
+  out.sort((a, b) => a.fair - b.fair);
+  return out.slice(0, ALT_ROWS);
 }}
 function tickClocks() {{
   const now = Date.now() / 1000;
@@ -4452,6 +4561,15 @@ function tickClocks() {{
     if (p <= 0) continue;
     el.textContent = p >= 0.995 ? "from here: as good as landed"
       : "from here " + Math.round(p * 100) + "% · fair " + (1 / p).toFixed(2);
+  }}
+  for (const el of document.querySelectorAll(".also[data-mu]")) {{
+    const base = +el.dataset.min, half = +el.dataset.half, at = +el.dataset.at;
+    const minute = Math.min(base + Math.floor(Math.max(now - at, 0) / 60), 90 + STOPPAGE);
+    const rows = ladderNow(+el.dataset.mu, +el.dataset.goals, +el.dataset.own,
+                           el.dataset.side, minute, half === 2);
+    if (!rows.length) {{ el.remove(); continue; }}
+    el.innerHTML = '<span class="alsoh">also live</span>' +
+      rows.map(r => altRow(r.rung, r.how, r.p)).join("");
   }}
 }}
 tickClocks(); setInterval(tickClocks, 15000);
@@ -4498,7 +4616,7 @@ async function pollLive() {{
       if (c.settled) {{
         live.textContent = c.head || c.status;
         live.classList.remove("live"); delete live.dataset.min;
-        for (const el of card.querySelectorAll(".prog, .from")) el.remove();
+        for (const el of card.querySelectorAll(".prog, .from, .also")) el.remove();
         continue;
       }}
       live.textContent = "🔴 " + c.status;
@@ -4523,6 +4641,17 @@ async function pollLive() {{
             from.dataset.min = c.min; from.dataset.half = c.half; from.dataset.at = data.at;
           }} else {{ delete from.dataset.mu; }}
         }} else if (from) from.remove();
+        let also = lane.querySelector(".also");
+        if (L.alt && L.alt.length) {{
+          if (!also) {{ also = document.createElement("div"); also.className = "also"; lane.appendChild(also); }}
+          also.innerHTML = '<span class="alsoh">also live</span>' +
+            L.alt.map(a => altRow(a.r, a.h, a.p)).join("");
+          if (L.al) {{
+            also.dataset.mu = L.al.mu; also.dataset.goals = L.al.goals;
+            also.dataset.own = L.al.own; also.dataset.side = L.al.side;
+            also.dataset.min = c.min; also.dataset.half = c.half; also.dataset.at = data.at;
+          }} else {{ delete also.dataset.mu; }}
+        }} else if (also) also.remove();
       }}
     }}
   }}

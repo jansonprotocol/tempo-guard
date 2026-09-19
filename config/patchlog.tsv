@@ -175,3 +175,5 @@
 2026-08-24	engine	TEAM_RATE_FLOOR 0.95 and the winner's-curse haircut moved into buy_from — hand rules become code
 2026-08-24	engine	VENUE_BLEND swept and closed: a validated dead knob at 0.35
 2026-08-24	board	Playable bar raised to +1% edge; playable block moved above pending; three-lane header tracker
+2026-09-19	board	The live buy-in advisor reads the whole totals ladder, not just the card's own lane: the rungs whose fair price sits between 1.25 and 3.00, shortest first, rebuilt on the page as the clock runs
+2026-09-19	board	The from-here clock: a second half runs 45+7 minutes, fitted on 9,990 live-log observations — the late read was a third to half a goal short past the 76th
