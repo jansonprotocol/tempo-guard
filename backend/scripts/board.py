@@ -169,20 +169,31 @@ def _html(s: str) -> str:
 
 
 def _live(f, cell: str) -> str:
-    """The lane's state at the current score — empty unless in play."""
-    from scripts import liveline
+    """The lane's state at the current score — empty unless in play.
+
+    THE LIVE LADDER, on one lane per card: the holding, then the rungs
+    the match has made worth a price instead. The same content the app's
+    box carries and from the same functions, because the README and the
+    page are rendered together precisely so they cannot disagree. A lane
+    the ladder does not cover keeps the plain state line.
+    """
+    from scripts import fromhere, liveline
     if f.settled or not f.status:
         return ""
-    s = liveline.progress(cell, f.teams, f.status)
-    from scripts import fromhere
-    fh = fromhere.line(cell, f.teams, f.status)
-    # One card, one ladder: it says something about the match, not about
-    # the lane it happens to hang under.
-    also = (fromhere.also(cell, f.teams, f.status)
-            if cell == fromhere.ladder_cell((f.tip1, f.tip2, f.tip3),
-                                            f.teams, f.status) else "")
-    out = f" · <i>{s}</i>" if s else ""
-    out += f" · <i>{fh}</i>" if fh else ""
+    box = cell == fromhere.ladder_cell((f.tip1, f.tip2, f.tip3),
+                                       f.teams, f.status)
+    if not box:
+        s = liveline.progress(cell, f.teams, f.status)
+        return f" · <i>{s}</i>" if s else ""
+    h = fromhere.holding(cell, f.teams, f.status)
+    out = ""
+    if h:
+        worth = ("" if h["fair"] is None or h["p"] <= 0 else
+                 " · as good as landed" if h["p"] >= 0.995 else
+                 f' · {h["p"] * 100:.0f}% · fair {h["fair"]:.2f}')
+        out = (f'<br><i>{h["rung"]} holding'
+               f'{" · " + h["prog"] if h["prog"] else ""}{worth}</i>')
+    also = fromhere.also(cell, f.teams, f.status)
     return out + (f"<br><i>{also}</i>" if also else "")
 
 

@@ -2156,35 +2156,32 @@ def _live_json(fixtures) -> None:
             for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
                 if cell.strip() in ("", "—", "— none"):
                     continue
-                s = liveline.progress(cell, f.teams, f.status)
                 lane = {}
-                if s:
+                # THE BOX goes on one lane per card. Any other running
+                # lane keeps the plain state line, because nothing else
+                # on the card would say what the score has done to it.
+                box = cell == fromhere.ladder_cell(
+                    (f.tip1, f.tip2, f.tip3), f.teams, f.status)
+                s = liveline.progress(cell, f.teams, f.status)
+                if s and not box:
                     lane["prog"] = s
                     lane["cls"] = ("gone" if s.startswith("✗") or "gone" in s
                                    else "won" if s.startswith("✓") else "")
-                fh = fromhere.line(cell, f.teams, f.status)
-                r = fromhere.read(cell, f.teams, f.status) if fh else None
-                if fh:
-                    lane["from"] = fh
-                    if r and when and "HT" not in f.status:
-                        lane["fr"] = dict(mu=round(r["mu"], 4), needs=r["needs"],
-                                          under=1 if r["under"] else 0)
-                # The rest of the ladder, and the inputs that let the page
-                # rebuild it as the clock runs. One card, one ladder — it
-                # is a statement about the match, not about this lane.
-                alt = (fromhere.ladder(cell, f.teams, f.status)
-                       if cell == fromhere.ladder_cell(
-                           (f.tip1, f.tip2, f.tip3), f.teams, f.status)
-                       else [])
-                if alt:
+                if box:
+                    alt = fromhere.ladder(cell, f.teams, f.status)
                     lane["alt"] = [dict(r=x["rung"], h=x["how"],
                                         p=round(x["p"], 4)) for x in alt]
+                    h = fromhere.holding(cell, f.teams, f.status)
+                    if h:
+                        lane["hold"] = dict(r=h["rung"], p=round(h["p"], 4),
+                                            g=h["prog"])
                     st = fromhere._state(cell, f.teams, f.status)
                     if st and when and "HT" not in f.status:
                         rt, rhere, rn = ladderrates.rates_for(f.code)
                         lane["al"] = dict(mu=round(st["mu"], 4),
                                           goals=st["goals"], own=st["k"],
                                           side=st["market"][0],
+                                          line=st["market"],
                                           rates=rt, rhere=1 if rhere else 0,
                                           rn=rn)
                 if lane:
@@ -2225,50 +2222,80 @@ def _lrate_row(own: str, rungs, rates: dict, here: bool, n: int) -> str:
         f'{" <i>tip 1</i>" if r == own else ""}' for r in show)
     where = "in this league" if here else "across every league"
     return (f'<span class="lrate">lands {where}: {body} '
-            f'<span class="ln">{n:,} matches · {ladderrates.SEASONS} '
+            f'<span class="ln">— {n:,} matches · {ladderrates.SEASONS} '
             f'seasons</span></span>')
 
 
-def _also_html(f, cell: str) -> str:
-    """The ladder under a running lane: the other rungs worth a price.
+def _hold_row(h: dict) -> str:
+    """The card's own rung, leading the box: what the score has left it
+    and what it is worth from here."""
+    if not h:
+        return ""
+    cls = ""
+    if h["prog"].startswith("✗") or "gone" in h["prog"]:
+        cls = " gone"
+    elif h["prog"].startswith("✓"):
+        cls = " won"
+    worth = ("" if h["fair"] is None or h["p"] >= 0.995 or h["p"] <= 0
+             else f' · {h["p"] * 100:.0f}% · fair {h["fair"]:.2f}')
+    if h["p"] >= 0.995:
+        worth = " · as good as landed"
+    return (f'<span class="alt hold{cls}"><b>{html.escape(h["rung"])}</b> '
+            f'<i>holding</i>'
+            f'{" · " + html.escape(h["prog"]) if h["prog"] else ""}'
+            f'{worth}</span>')
 
-    The inputs ride along in data attributes exactly as the from-here
-    line's do, because the SET ITSELF moves with the clock — a rung
-    drops out of the window as the minutes go and another comes in, and
-    a page read three minutes after a sweep should show the ladder the
-    match is actually at.
+
+def _also_html(f, cell: str) -> str:
+    """THE LIVE BOX: the card's own rung, the rungs worth a price
+    instead, and how often any of them lands here at all.
+
+    The inputs ride along in data attributes, because the SET ITSELF
+    moves with the clock — a rung drops out of the price window as the
+    minutes go and another comes in, and a page read three minutes after
+    a sweep should show the ladder the match is actually at.
+
+    It renders on ONE lane per card, and it renders even when the price
+    window is empty: the holding and the rung record are still worth the
+    box, and a running lane carrying nothing at all is exactly what this
+    replaced.
     """
     from scripts import fromhere
     if cell != fromhere.ladder_cell((f.tip1, f.tip2, f.tip3), f.teams,
                                     f.status):
-        return ""                       # one card, one ladder
-    rows = fromhere.ladder(cell, f.teams, f.status)
-    if not rows:
-        return ""
+        return ""                       # one card, one box
     st = fromhere._state(cell, f.teams, f.status)
+    if st is None:
+        return ""
+    rows = fromhere.ladder(cell, f.teams, f.status)
+    hold = fromhere.holding(cell, f.teams, f.status)
     own = (f'U{st["k"]}.5' if st["market"][0] == "U" else f'O{st["k"] - 1}.5')
     rates, here, rn = ladderrates.rates_for(f.code)
     attrs = ""
-    if st and "HT" not in f.status:
+    if "HT" not in f.status:
         # The rung record rides along with the ladder's own inputs: the
         # SET of rungs on the line moves with the clock, so the page
-        # needs every rung's rate to hand, not just today's three.
+        # needs every rung's rate to hand, not just today's two.
         attrs = (f' data-mu="{st["mu"]:.4f}" data-goals="{st["goals"]}"'
                  f' data-own="{st["k"]}" data-side="{st["market"][0]}"'
+                 f' data-line="{html.escape(st["market"])}"'
                  f' data-min="{st["minute"]}"'
                  f' data-half="{2 if st["second"] else 1}"'
                  f' data-at="{int(__import__("time").time())}"'
+                 + (f' data-prog="{html.escape(hold["prog"])}"' if hold else "")
                  + (f" data-rates='{_json.dumps(rates)}' "
                     f'data-rhere="{1 if here else 0}" data-rn="{rn}"'
                     if rates else ""))
-    return (f'<div class="also"{attrs} title="The other rungs this match '
-            f'has made worth a price, off the same expected goals as the '
-            f'lane above. Shortest price first. NONE of these is a play '
-            f'and none of them moves a hit rate — the fair number is what '
-            f'an in-play price has to beat. Rungs shorter than '
+    return (f'<div class="also"{attrs} title="Your rung first, then the '
+            f'rungs this match has made worth a price instead — all off '
+            f'the same expected goals, longest price first. NONE of them '
+            f'is a play and none moves a hit rate: the fair number is '
+            f'what an in-play price has to beat. Rungs shorter than '
             f'{fromhere.SHORT:.2f} or longer than {fromhere.LONG:.2f} are '
-            f'left out: nothing to win, or a different bet.">'
-            f'<span class="alsoh">also live</span>'
+            f'left out — nothing to win, or a different bet. The last '
+            f'line is how often each rung lands here at all.">'
+            f'<span class="alsoh">live ladder</span>'
+            f'{_hold_row(hold)}'
             f'{"".join(_also_row(r) for r in rows)}'
             f'{_lrate_row(own, [r["rung"] for r in rows], rates, here, rn)}'
             f'</div>')
@@ -2339,45 +2366,26 @@ def _card(f, kind: str, reads: dict) -> str:
         if which == best:
             pl += " best"
         # While the match runs, say what the score has done to this lane.
+        # THE LIVE BOX IS THE WHOLE OF IT on the lane that carries the
+        # ladder: the holding, the rungs worth a price, the rung record.
+        # It used to be two loose gold lines above the box saying
+        # something about the one rung the box never quotes (the bettor,
+        # 19 Sep: "this text in yellow can go, the new live viewer is
+        # the main live advisor"), so they moved inside it.
+        #
+        # A lane the box does not cover — a team total, a result lane —
+        # keeps the plain state line, because nothing else on the card
+        # would say what the score has done to it.
         live = ""
         if not f.settled and f.status:
-            from scripts import liveline
-            s = liveline.progress(cell, f.teams, f.status)
-            if s:
-                cls = ("gone" if s.startswith("✗") or "gone" in s
-                       else "won" if s.startswith("✓") else "")
-                live = (f'<div class="prog {cls}">{html.escape(s)}</div>')
-            # And what the lane is worth from here: the card's own mu
-            # against the clock, for holding an in-play price against
-            # (scripts/fromhere.py — a read, not a verdict).
-            from scripts import fromhere
-            fh = fromhere.line(cell, f.teams, f.status)
-            if fh:
-                # The read's inputs ride along so the page can move it
-                # with the clock between sweeps: expected goals, the goals
-                # the lane still allows or needs, its side, and when it
-                # was rendered. The score only changes on a sweep.
-                r = fromhere.read(cell, f.teams, f.status) or {}
-                when = fromhere.minute_of(f.status)
-                attrs = ""
-                if r and when and "HT" not in f.status:
-                    attrs = (f' data-mu="{r["mu"]:.4f}" data-needs="{r["needs"]}"'
-                             f' data-under="{1 if r["under"] else 0}"'
-                             f' data-min="{when[0]}" data-half="{2 if when[1] else 1}"'
-                             f' data-at="{int(__import__("time").time())}"')
-                live += (f'<div class="from"{attrs} title="What this lane is '
-                         f'worth now, from the card\'s own expected goals and '
-                         f'the minute. Hold an in-play price against the fair '
-                         f'number: buy above it, not below. Measured at half '
-                         f'time: unders read within two points, overs are '
-                         f'exact with a goal in and conservative at 0-0.">'
-                         f'{html.escape(fh)}</div>')
-            # THE REST OF THE LADDER. The card's lane goes safe, or dies,
-            # or lands, and the match keeps running — these are the other
-            # rungs the same expected goals make worth a price right now.
-            # None of them is a play; the number is what a price has to
-            # beat (scripts/fromhere.py).
-            live += _also_html(f, cell)
+            live = _also_html(f, cell)
+            if not live:
+                from scripts import liveline
+                s = liveline.progress(cell, f.teams, f.status)
+                if s:
+                    cls = ("gone" if s.startswith("✗") or "gone" in s
+                           else "won" if s.startswith("✓") else "")
+                    live = f'<div class="prog {cls}">{html.escape(s)}</div>'
         tail = " <span class=\"dim\">· result lane</span>" if which == 3 else ""
         if noplay:
             tail += ('<span class="noplay" title="Shown for the record. '
@@ -3713,24 +3721,36 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
   color:var(--gold); }}
 .prog.won {{ color:var(--green); }}
 .prog.gone {{ color:#e07a6a; }}
-.from {{ margin-top:3px; font-size:11px; letter-spacing:.04em;
-  color:var(--gold); cursor:help; }}
-/* The ladder: the other rungs this running match has made worth a
-   price. Dim, not gold — the card's own lane is the gold one, and none
-   of these is a play. */
-.also {{ margin-top:4px; font-size:11px; letter-spacing:.04em;
-  color:var(--dim); cursor:help; display:flex; flex-wrap:wrap; gap:3px 8px;
-  align-items:baseline; }}
-.also .alsoh {{ color:var(--dim); opacity:.7; text-transform:uppercase;
-  font-size:9.5px; letter-spacing:.1em; }}
+/* THE LIVE LADDER BOX. It is the card's live advisor and it replaced
+   two loose gold lines above it, so it is a panel rather than a
+   whisper (the bettor, 19 Sep: "make this brighter in the box so it
+   tracks more attention"). Its own surface, its own accent, full text
+   colour — nothing on a running card should read louder. */
+.also {{ margin-top:7px; font-size:11.5px; letter-spacing:.03em;
+  color:var(--tx); cursor:help; display:flex; flex-wrap:wrap; gap:4px 10px;
+  align-items:baseline; background:#141c2b; border:1px solid #27354d;
+  border-left:3px solid var(--gold); border-radius:7px; padding:7px 9px; }}
+.also .alsoh {{ flex-basis:100%; color:var(--gold); text-transform:uppercase;
+  font-size:9.5px; letter-spacing:.14em; font-weight:600; opacity:.85; }}
 .also .alt {{ white-space:nowrap; }}
+.also .alt b {{ color:#fff; font-weight:700; }}
+.also .alt i {{ font-style:normal; color:var(--dim); }}
+/* The holding: the card's own rung, which the ladder never quotes. It
+   leads the box and takes the whole first line, because it is the one
+   rung the reader may already be on. */
+.also .hold {{ flex-basis:100%; color:var(--gold); white-space:normal; }}
+.also .hold b, .also .hold i {{ color:var(--gold); }}
+.also .hold i {{ opacity:.7; }}
+.also .hold.won, .also .hold.won b, .also .hold.won i {{ color:var(--green); }}
+.also .hold.gone, .also .hold.gone b, .also .hold.gone i {{ color:#e07a6a; }}
 /* The rung record: how often each rung lands here at all. Its own line
-   under the ladder, dimmer still — it is the background the live read
-   is measured against, not a read of its own. */
-.also .lrate {{ flex-basis:100%; opacity:.8; }}
+   at the foot, dimmer — it is the background the live read is measured
+   against, not a read of its own. */
+.also .lrate {{ flex-basis:100%; color:var(--dim); font-size:10.5px;
+  border-top:1px solid #222e44; padding-top:5px; margin-top:1px; }}
 .also .lrate b {{ color:var(--tx); font-weight:600; }}
 .also .lrate i {{ font-style:normal; opacity:.6; }}
-.also .lrate .ln {{ opacity:.55; }}
+.also .lrate .ln {{ opacity:.6; }}
 .also .alt b {{ color:var(--tx); font-weight:600; }}
 .also .alt i {{ font-style:normal; opacity:.65; }}
 .tie {{ margin-top:8px; font-size:12px; color:var(--tx);
@@ -3788,7 +3808,7 @@ td.pos {{ color:var(--green); }} td.neg {{ color:#e07a6a; }}
   .verdict {{ font-size:11px; }}
   .verdict.strong {{ padding:2px 6px; }}
   .meta, .kw {{ font-size:11px; }}
-  .prog, .from, .also {{ font-size:10px; }}
+  .prog, .also {{ font-size:10px; }}
   .taken, .livetag {{ font-size:10px; padding:1px 6px; }}
 }}
 .pagebanner {{ width:100%; max-height:260px; object-fit:cover;
@@ -4615,7 +4635,35 @@ function lrateRow(own, rungs, el) {{
   const where = el.dataset.rhere === "1" ? "in this league" : "across every league";
   const n = (+el.dataset.rn || 0).toLocaleString("en-US");
   return '<span class="lrate">lands ' + where + ': ' + body +
-         ' <span class="ln">' + n + ' matches · ' + LSEASONS + ' seasons</span></span>';
+         ' <span class="ln">— ' + n + ' matches · ' + LSEASONS + ' seasons</span></span>';
+}}
+// The box, rebuilt whole: the holding, the rungs still worth a price,
+// the rung record. All three move with the clock — the holding's fair
+// number drifts, and the SET of rungs under it changes as the window
+// lets one go and takes another.
+function holdRow(el, minute, second) {{
+  const k = +el.dataset.own, side = el.dataset.side;
+  const lam = +el.dataset.mu * remainingShare(minute, second);
+  const need = k - (+el.dataset.goals);
+  const p = side === "U" ? (need >= 0 ? poisCdf(need, lam) : 0)
+                         : (need <= 0 ? 1 : 1 - poisCdf(need - 1, lam));
+  const prog = el.dataset.prog || "";
+  let cls = "";
+  if (prog.startsWith("✗") || prog.indexOf("gone") >= 0) cls = " gone";
+  else if (prog.startsWith("✓")) cls = " won";
+  let worth = "";
+  if (p >= 0.995) worth = " · as good as landed";
+  else if (p > 0) worth = " · " + Math.round(p * 100) + "% · fair " + (1 / p).toFixed(2);
+  return '<span class="alt hold' + cls + '"><b>' + (el.dataset.line || "") +
+         '</b> <i>holding</i>' + (prog ? " · " + prog : "") + worth + '</span>';
+}}
+function alsoBox(el, minute, second) {{
+  const k = +el.dataset.own, side = el.dataset.side;
+  const own = side === "U" ? "U" + k + ".5" : "O" + (k - 1) + ".5";
+  const rows = ladderNow(+el.dataset.mu, +el.dataset.goals, k, side, minute, second);
+  return '<span class="alsoh">live ladder</span>' + holdRow(el, minute, second) +
+         rows.map(r => altRow(r.rung, r.how, r.p)).join("") +
+         lrateRow(own, rows.map(r => r.rung), el);
 }}
 function ladderNow(mu, goals, ownK, side, minute, second) {{
   const lam = mu * remainingShare(minute, second), out = [];
@@ -4645,28 +4693,10 @@ function tickClocks() {{
     const shown = m > cap ? cap + "'+" + (m - cap) + "'" : m + "'";
     el.textContent = "🔴 LIVE " + shown + " " + el.dataset.goals;
   }}
-  for (const el of document.querySelectorAll(".from[data-mu]")) {{
-    const base = +el.dataset.min, half = +el.dataset.half, at = +el.dataset.at;
-    const minute = Math.min(base + Math.floor(Math.max(now - at, 0) / 60), 90 + STOPPAGE);
-    const rem = +el.dataset.mu * remainingShare(minute, half === 2);
-    const needs = +el.dataset.needs, under = el.dataset.under === "1";
-    let p = under ? poisCdf(needs, rem)
-                  : (needs <= 0 ? 1 : 1 - poisCdf(needs - 1, rem));
-    if (p <= 0) continue;
-    el.textContent = p >= 0.995 ? "from here: as good as landed"
-      : "from here " + Math.round(p * 100) + "% · fair " + (1 / p).toFixed(2);
-  }}
   for (const el of document.querySelectorAll(".also[data-mu]")) {{
     const base = +el.dataset.min, half = +el.dataset.half, at = +el.dataset.at;
     const minute = Math.min(base + Math.floor(Math.max(now - at, 0) / 60), 90 + STOPPAGE);
-    const rows = ladderNow(+el.dataset.mu, +el.dataset.goals, +el.dataset.own,
-                           el.dataset.side, minute, half === 2);
-    if (!rows.length) {{ el.remove(); continue; }}
-    const side = el.dataset.side, k = +el.dataset.own;
-    const own = side === "U" ? "U" + k + ".5" : "O" + (k - 1) + ".5";
-    el.innerHTML = '<span class="alsoh">also live</span>' +
-      rows.map(r => altRow(r.rung, r.how, r.p)).join("") +
-      lrateRow(own, rows.map(r => r.rung), el);
+    el.innerHTML = alsoBox(el, minute, half === 2);
   }}
 }}
 tickClocks(); setInterval(tickClocks, 15000);
@@ -4713,7 +4743,7 @@ async function pollLive() {{
       if (c.settled) {{
         live.textContent = c.head || c.status;
         live.classList.remove("live"); delete live.dataset.min;
-        for (const el of card.querySelectorAll(".prog, .from, .also")) el.remove();
+        for (const el of card.querySelectorAll(".prog, .also")) el.remove();
         continue;
       }}
       live.textContent = "🔴 " + c.status;
@@ -4725,39 +4755,28 @@ async function pollLive() {{
         const which = (lane.querySelector(".which") || {{}}).textContent || "";
         const m = which.match(/Tip (\d)/); if (!m) continue;
         const L = (c.lanes || {{}})[m[1]] || {{}};
-        let prog = lane.querySelector(".prog"), from = lane.querySelector(".from");
+        let prog = lane.querySelector(".prog");
         if (L.prog) {{
           if (!prog) {{ prog = document.createElement("div"); lane.appendChild(prog); }}
           prog.className = "prog " + (L.cls || ""); prog.textContent = L.prog;
         }} else if (prog) prog.remove();
-        if (L.from) {{
-          if (!from) {{ from = document.createElement("div"); from.className = "from"; lane.appendChild(from); }}
-          from.textContent = L.from;
-          if (L.fr) {{
-            from.dataset.mu = L.fr.mu; from.dataset.needs = L.fr.needs; from.dataset.under = L.fr.under;
-            from.dataset.min = c.min; from.dataset.half = c.half; from.dataset.at = data.at;
-          }} else {{ delete from.dataset.mu; }}
-        }} else if (from) from.remove();
         let also = lane.querySelector(".also");
-        if (L.alt && L.alt.length) {{
+        if (L.al) {{
           if (!also) {{ also = document.createElement("div"); also.className = "also"; lane.appendChild(also); }}
-          // The inputs go on FIRST: the rung-record row is built from
-          // them, so an innerHTML written before them would print the
-          // ladder with no record under it until the next tick.
-          let own = "";
-          if (L.al) {{
-            also.dataset.mu = L.al.mu; also.dataset.goals = L.al.goals;
-            also.dataset.own = L.al.own; also.dataset.side = L.al.side;
-            also.dataset.min = c.min; also.dataset.half = c.half; also.dataset.at = data.at;
-            if (L.al.rates) {{
-              also.dataset.rates = JSON.stringify(L.al.rates);
-              also.dataset.rhere = L.al.rhere; also.dataset.rn = L.al.rn;
-            }}
-            own = L.al.side === "U" ? "U" + L.al.own + ".5" : "O" + (L.al.own - 1) + ".5";
-          }} else {{ delete also.dataset.mu; }}
-          also.innerHTML = '<span class="alsoh">also live</span>' +
-            L.alt.map(a => altRow(a.r, a.h, a.p)).join("") +
-            (own ? lrateRow(own, L.alt.map(a => a.r), also) : "");
+          // The inputs go on FIRST: the holding and the rung-record rows
+          // are built from them, so an innerHTML written before them
+          // would print a box with its two ends missing until the next
+          // tick.
+          also.dataset.mu = L.al.mu; also.dataset.goals = L.al.goals;
+          also.dataset.own = L.al.own; also.dataset.side = L.al.side;
+          also.dataset.line = L.al.line || "";
+          also.dataset.min = c.min; also.dataset.half = c.half; also.dataset.at = data.at;
+          also.dataset.prog = L.hold ? (L.hold.g || "") : "";
+          if (L.al.rates) {{
+            also.dataset.rates = JSON.stringify(L.al.rates);
+            also.dataset.rhere = L.al.rhere; also.dataset.rn = L.al.rn;
+          }}
+          also.innerHTML = alsoBox(also, c.min, c.half === 2);
         }} else if (also) also.remove();
       }}
     }}

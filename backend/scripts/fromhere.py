@@ -92,7 +92,15 @@ LADDER = ("O0.5", "O1.5", "O2.5", "O3.5", "O4.5",
           "U2.5", "U3.5", "U4.5", "U5.5")
 SHORT = 1.25           # shorter than this and there is nothing to win
 LONG = 3.00            # longer than this it is a different bet, not a rung
-ROWS = 3               # rungs on the face at once
+# Two rungs, longest price first (the bettor, 19 Sep: "keep it at max
+# 1-2 with best value at the time"). Three filled the box and the two
+# that survive are the ones worth looking at: every rung here is priced
+# off the same mu, so none of them is better VALUE than another in the
+# sense of beating its own fair price — what differs is the price on
+# offer, and he said which end of the window he wants ("around 1.50 and
+# everything above 1.75"). Longest first is that, and with two slots the
+# short safe rescue still shows whenever it is one of only two.
+ROWS = 2
 
 _MIN = re.compile(r"LIVE\s+(?:(?P<ht>HT)|(?P<m>\d+)'(?:\+\d+')?)")
 _CLAIM = re.compile(r"(\d+(?:\.\d+)?)%")
@@ -266,10 +274,11 @@ def ladder(cell: str, teams: str, status: str) -> list[dict]:
     A TEAM TOTAL GETS NOTHING. Its mu is one team's goals, and a match
     ladder priced off it would be arithmetic about the wrong football.
 
-    Returns at most ROWS rungs, shortest price first — the safest thing
-    on the list is the first thing read. This PRICES NOTHING: no bar, no
-    colour, no verdict moves, and none of these rungs is a play. It is
-    what a price would have to beat.
+    Returns at most ROWS rungs, LONGEST PRICE FIRST — the window has
+    already thrown out everything not worth a bet, so what is left is
+    ordered by what it pays. This PRICES NOTHING: no bar, no colour, no
+    verdict moves, and none of these rungs is a play. It is what a price
+    would have to beat.
     """
     st = _state(cell, teams, status)
     if st is None or st["team"]:
@@ -295,8 +304,35 @@ def ladder(cell: str, teams: str, status: str) -> list[dict]:
         else:
             how = "tighter"
         out.append(dict(rung=rung, p=p, fair=fair, how=how))
-    out.sort(key=lambda r: r["fair"])
+    out.sort(key=lambda r: -r["fair"])
     return out[:ROWS]
+
+
+def holding(cell: str, teams: str, status: str) -> Optional[dict]:
+    """The card's OWN rung inside the ladder box: what it is, where the
+    score has left it, and what it is worth from here.
+
+    WHY IT MOVED IN HERE (the bettor, 19 Sep, of the two gold lines the
+    card used to carry under its lane: "this text in yellow can go, the
+    new live viewer is the main live advisor"). The state and the
+    from-here read were two loose lines saying something about a lane
+    the box deliberately never quotes — the ladder skips the card's own
+    rung so it does not print one number twice. Dropping them outright
+    would have left the lane he may actually be holding as the only rung
+    on the card with no live number at all, so they are one line inside
+    the box instead of two outside it.
+
+    `prog` is liveline's word for the score — "room for 2", "needs 1
+    more", "✓ landed" — and it only changes when a sweep brings a goal;
+    `p` and `fair` move with the clock like everything else here.
+    """
+    r = read(cell, teams, status)
+    if r is None:
+        return None
+    st = _state(cell, teams, status)
+    return dict(rung=st["market"], p=r["p"],
+                fair=r["fair"] if r["p"] > 0 else None,
+                prog=liveline.progress(cell, teams, status))
 
 
 def ladder_cell(cells, teams: str, status: str) -> Optional[str]:
@@ -306,9 +342,14 @@ def ladder_cell(cells, teams: str, status: str) -> Optional[str]:
     hangs under: a card whose tip 1 and tip 2 are both match totals
     priced the same match twice, and printed the same three rungs twice
     under each. One card, one ladder.
+
+    A match total qualifies even when the price window comes back empty
+    — the box still has the holding and the rung record to carry, and a
+    running lane with nothing under it at all is what this replaced.
     """
     for c in cells:
-        if ladder(c, teams, status):
+        st = _state(c, teams, status)
+        if st and not st["team"]:
             return c
     return None
 

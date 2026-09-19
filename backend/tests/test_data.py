@@ -3042,8 +3042,12 @@ def test_the_ladder_offers_the_rungs_the_match_made_interesting():
             for score in ("0-0", "1-0", "1-1", "2-1", "2-2", "3-1"):
                 rows = F.ladder(cell, "A v B", f"LIVE {minute}' {score}")
                 assert len(rows) <= F.ROWS
+                # LONGEST PRICE FIRST: the window has already thrown out
+                # everything not worth a bet, so what is left is ordered
+                # by what it pays (the bettor, 19 Sep: "max 1-2 with
+                # best value at the time").
                 assert [r["fair"] for r in rows] == \
-                    sorted(r["fair"] for r in rows)
+                    sorted((r["fair"] for r in rows), reverse=True)
                 for r in rows:
                     seen.add(r["rung"])
                     assert F.SHORT <= r["fair"] <= F.LONG, (cell, minute, r)
@@ -3105,7 +3109,7 @@ def test_the_page_carries_the_ladder_and_can_rebuild_it():
                 assert f'<b>{r["rung"]}</b>' in html
                 assert f'{r["fair"]:.2f}' in html
             # it never claims to be a play
-            assert "NONE of these is a play" in webapp.html.unescape(html)
+            assert "NONE of them is a play" in webapp.html.unescape(html)
     # The board is not always running a match, so the rendering is also
     # exercised on a made-up one — the test must not quietly become a
     # no-op on a quiet afternoon.
