@@ -2869,9 +2869,18 @@ def test_the_ladder_keeps_going_when_the_league_cannot_answer():
         "orange · any strikes",
     ], [r["lab"] for r in got]
     assert [r["wide"] for r in got][:3] == [False, False, False]
-    assert got[-1]["lab"] == "every graded card"
-    # It rolled far enough that THREE league cells can be quoted.
+    # It rolled PAST the chain into the slices, and far enough that
+    # THREE league cells can be quoted.
+    assert got[-1]["wide"], got
     assert sum(1 for r in got if r["here"][1] >= cardgrid.MIN_N) >= 3, got
+    # And it stopped at the first rung that made three possible, rather
+    # than running to the end of the ladder. How FAR it has to roll is a
+    # property of the bank, not of the code — on 19 Sep a rebuild gave
+    # the Eliteserien enough cards to answer one rung earlier than it
+    # had the day before, which is the ladder working, not a change in
+    # it. So the test pins the stopping RULE and never the rung it
+    # happens to stop on.
+    assert sum(1 for r in got[:-1] if r["here"][1] >= cardgrid.MIN_N) < 3, got
 
     # It stops the moment the league can answer: a league thick inside
     # its own profile is never widened.
