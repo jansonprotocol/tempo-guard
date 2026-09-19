@@ -2175,8 +2175,17 @@ def _live_json(fixtures) -> None:
                     if h:
                         lane["hold"] = dict(r=h["rung"], p=round(h["p"], 4),
                                             g=h["prog"])
+                    # The box's inputs, ALWAYS — they are what the page
+                    # rebuilds it from, and none of them depends on the
+                    # clock. Half time used to drop them, and the poller
+                    # read a box with no inputs as a box to delete: the
+                    # server rendered the ladder, the first poll wiped
+                    # it, and an HT card showed nothing at all (the
+                    # bettor, 19 Sep: "some show nothing"). The minute
+                    # rides separately in `min`, which half time really
+                    # does not have.
                     st = fromhere._state(cell, f.teams, f.status)
-                    if st and when and "HT" not in f.status:
+                    if st:
                         rt, rhere, rn = ladderrates.rates_for(f.code)
                         lane["al"] = dict(mu=round(st["mu"], 4),
                                           goals=st["goals"], own=st["k"],
@@ -2271,21 +2280,23 @@ def _also_html(f, cell: str) -> str:
     hold = fromhere.holding(cell, f.teams, f.status)
     own = (f'U{st["k"]}.5' if st["market"][0] == "U" else f'O{st["k"] - 1}.5')
     rates, here, rn = ladderrates.rates_for(f.code)
-    attrs = ""
+    # WHAT THE BOX IS MADE OF rides along, so the page can rebuild it:
+    # the rung, the side, the score, every rung's landing rate. None of
+    # that depends on the clock.
+    attrs = (f' data-goals="{st["goals"]}" data-own="{st["k"]}"'
+             f' data-side="{st["market"][0]}"'
+             f' data-line="{html.escape(st["market"])}"'
+             + (f' data-prog="{html.escape(hold["prog"])}"' if hold else "")
+             + (f" data-rates='{_json.dumps(rates)}' "
+                f'data-rhere="{1 if here else 0}" data-rn="{rn}"'
+                if rates else ""))
+    # THE CLOCK ONLY WHERE THERE IS ONE. Half time does not tick, so it
+    # gets no mu and no stamp — which is also what keeps tickClocks off
+    # it, since that selects on data-mu.
     if "HT" not in f.status:
-        # The rung record rides along with the ladder's own inputs: the
-        # SET of rungs on the line moves with the clock, so the page
-        # needs every rung's rate to hand, not just today's two.
-        attrs = (f' data-mu="{st["mu"]:.4f}" data-goals="{st["goals"]}"'
-                 f' data-own="{st["k"]}" data-side="{st["market"][0]}"'
-                 f' data-line="{html.escape(st["market"])}"'
-                 f' data-min="{st["minute"]}"'
-                 f' data-half="{2 if st["second"] else 1}"'
-                 f' data-at="{int(__import__("time").time())}"'
-                 + (f' data-prog="{html.escape(hold["prog"])}"' if hold else "")
-                 + (f" data-rates='{_json.dumps(rates)}' "
-                    f'data-rhere="{1 if here else 0}" data-rn="{rn}"'
-                    if rates else ""))
+        attrs += (f' data-mu="{st["mu"]:.4f}" data-min="{st["minute"]}"'
+                  f' data-half="{2 if st["second"] else 1}"'
+                  f' data-at="{int(__import__("time").time())}"')
     return (f'<div class="also"{attrs} title="Your rung first, then the '
             f'rungs this match has made worth a price instead — all off '
             f'the same expected goals, longest price first. NONE of them '
@@ -4641,29 +4652,42 @@ function lrateRow(own, rungs, el) {{
 // the rung record. All three move with the clock — the holding's fair
 // number drifts, and the SET of rungs under it changes as the window
 // lets one go and takes another.
-function holdRow(el, minute, second) {{
-  const k = +el.dataset.own, side = el.dataset.side;
-  const lam = +el.dataset.mu * remainingShare(minute, second);
-  const need = k - (+el.dataset.goals);
-  const p = side === "U" ? (need >= 0 ? poisCdf(need, lam) : 0)
-                         : (need <= 0 ? 1 : 1 - poisCdf(need - 1, lam));
-  const prog = el.dataset.prog || "";
+function holdRow(line, prog, p) {{
+  prog = prog || "";
   let cls = "";
   if (prog.startsWith("✗") || prog.indexOf("gone") >= 0) cls = " gone";
   else if (prog.startsWith("✓")) cls = " won";
   let worth = "";
   if (p >= 0.995) worth = " · as good as landed";
   else if (p > 0) worth = " · " + Math.round(p * 100) + "% · fair " + (1 / p).toFixed(2);
-  return '<span class="alt hold' + cls + '"><b>' + (el.dataset.line || "") +
+  return '<span class="alt hold' + cls + '"><b>' + (line || "") +
          '</b> <i>holding</i>' + (prog ? " · " + prog : "") + worth + '</span>';
 }}
+function ownRung(el) {{
+  const k = +el.dataset.own;
+  return el.dataset.side === "U" ? "U" + k + ".5" : "O" + (k - 1) + ".5";
+}}
+// Rebuilt AGAINST THE CLOCK, for a card with a minute running.
 function alsoBox(el, minute, second) {{
-  const k = +el.dataset.own, side = el.dataset.side;
-  const own = side === "U" ? "U" + k + ".5" : "O" + (k - 1) + ".5";
-  const rows = ladderNow(+el.dataset.mu, +el.dataset.goals, k, side, minute, second);
-  return '<span class="alsoh">live ladder</span>' + holdRow(el, minute, second) +
+  const k = +el.dataset.own, side = el.dataset.side, goals = +el.dataset.goals;
+  const lam = +el.dataset.mu * remainingShare(minute, second);
+  const need = k - goals;
+  const hp = side === "U" ? (need >= 0 ? poisCdf(need, lam) : 0)
+                          : (need <= 0 ? 1 : 1 - poisCdf(need - 1, lam));
+  const rows = ladderNow(+el.dataset.mu, goals, k, side, minute, second);
+  return '<span class="alsoh">live ladder</span>' +
+         holdRow(el.dataset.line, el.dataset.prog, hp) +
          rows.map(r => altRow(r.rung, r.how, r.p)).join("") +
-         lrateRow(own, rows.map(r => r.rung), el);
+         lrateRow(ownRung(el), rows.map(r => r.rung), el);
+}}
+// Rebuilt from the SERVER'S OWN numbers, for a card with no clock to
+// count — half time. There is nothing to recompute there: the minute is
+// not moving, so the server's box is the current box.
+function alsoBoxStatic(el, hold, alt) {{
+  return '<span class="alsoh">live ladder</span>' +
+         (hold ? holdRow(el.dataset.line, hold.g, hold.p) : "") +
+         alt.map(a => altRow(a.r, a.h, a.p)).join("") +
+         lrateRow(ownRung(el), alt.map(a => a.r), el);
 }}
 function ladderNow(mu, goals, ownK, side, minute, second) {{
   const lam = mu * remainingShare(minute, second), out = [];
@@ -4767,16 +4791,25 @@ async function pollLive() {{
           // are built from them, so an innerHTML written before them
           // would print a box with its two ends missing until the next
           // tick.
-          also.dataset.mu = L.al.mu; also.dataset.goals = L.al.goals;
-          also.dataset.own = L.al.own; also.dataset.side = L.al.side;
-          also.dataset.line = L.al.line || "";
-          also.dataset.min = c.min; also.dataset.half = c.half; also.dataset.at = data.at;
+          also.dataset.goals = L.al.goals; also.dataset.own = L.al.own;
+          also.dataset.side = L.al.side; also.dataset.line = L.al.line || "";
           also.dataset.prog = L.hold ? (L.hold.g || "") : "";
           if (L.al.rates) {{
             also.dataset.rates = JSON.stringify(L.al.rates);
             also.dataset.rhere = L.al.rhere; also.dataset.rn = L.al.rn;
           }}
-          also.innerHTML = alsoBox(also, c.min, c.half === 2);
+          // A CARD WITH NO MINUTE STILL HAS A BOX. Half time carries no
+          // clock, and this used to read that as a box to delete — the
+          // deploy rendered the ladder and the first poll wiped it, so
+          // an HT card showed nothing at all.
+          if (c.min !== undefined) {{
+            also.dataset.mu = L.al.mu; also.dataset.min = c.min;
+            also.dataset.half = c.half; also.dataset.at = data.at;
+            also.innerHTML = alsoBox(also, c.min, c.half === 2);
+          }} else {{
+            delete also.dataset.mu;          // and so tickClocks leaves it alone
+            also.innerHTML = alsoBoxStatic(also, L.hold, L.alt || []);
+          }}
         }} else if (also) also.remove();
       }}
     }}

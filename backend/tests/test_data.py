@@ -3248,3 +3248,60 @@ def test_the_card_and_the_bar_print_the_rung_record():
     for rung in R.RUNGS:                 # every rung, not just today's
         assert f'"{rung}"' in h, rung
     assert "function lrateRow(" in app and "data-rates" in app
+
+
+def test_half_time_keeps_its_live_box():
+    """A card at half time renders the box and MUST keep it (the bettor,
+    19 Sep: "some show nothing").
+
+    The bug this pins: the box's inputs were written to live.json only
+    when the card had a running minute, and the poller reads a box with
+    no inputs as a box to delete. So the deploy rendered the ladder, the
+    first poll wiped it, and an HT card ended up with nothing under its
+    lane at all — worse than before the box existed, because the state
+    line it replaced had gone too.
+
+    The rule is the separation: what the box is MADE OF never depends on
+    the clock, and only the clock does.
+    """
+    import json as _json
+    from scripts import board, webapp
+    from scripts import fromhere as F
+
+    live = _json.loads((webapp.OUT.parent / "live.json").read_text())
+    for f in board.load():
+        if f.settled or not f.status or f.teams not in live["cards"]:
+            continue
+        card = live["cards"][f.teams]
+        if card.get("settled"):
+            continue
+        owner = F.ladder_cell((f.tip1, f.tip2, f.tip3), f.teams, f.status)
+        for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
+            lane = (card.get("lanes") or {}).get(str(which))
+            if cell != owner:
+                continue
+            assert lane and lane.get("al"), (f.teams, f.status)
+            for k in ("mu", "goals", "own", "side", "line", "rates"):
+                assert k in lane["al"], (f.teams, k)
+            # half time carries no minute — and that is the ONLY thing
+            # it is allowed to be missing
+            if "HT" in f.status:
+                assert "min" not in card, f.teams
+
+    # The rendered box says the same: everything but the clock, always.
+    ht = board.Fixture("2026-09-19 20:00", "NED-ED", "Eredivisie",
+                       "A v B", "U3.5 84.0% +1.2% · buy≥1.25", "— none",
+                       "🔴 LIVE HT 1-0", "")
+    run = board.Fixture("2026-09-19 20:00", "NED-ED", "Eredivisie",
+                        "A v B", "U3.5 84.0% +1.2% · buy≥1.25", "— none",
+                        "🔴 LIVE 55' 1-0", "")
+    hh, rh = (webapp._also_html(x, x.tip1) for x in (ht, run))
+    assert 'class="also"' in hh and 'class="alt hold' in hh
+    for k in ("own", "side", "line", "rates", "prog"):
+        assert f"data-{k}=" in hh, k
+    # no clock at half time, which is also what keeps the ticker off it
+    assert "data-mu=" not in hh and "data-min=" not in hh
+    assert "data-mu=" in rh and "data-min=" in rh
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+    assert 'querySelectorAll(".also[data-mu]")' in app
+    assert "function alsoBoxStatic(" in app
