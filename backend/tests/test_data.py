@@ -3115,3 +3115,132 @@ def test_the_page_carries_the_ladder_and_can_rebuild_it():
     html = webapp._also_html(made, made.tip1)
     assert 'class="also"' in html and 'data-side="U"' in html
     assert shown >= 0
+
+
+def test_the_ladder_rate_table_holds_every_rung_for_every_league():
+    """config/ladder_rates.tsv: how often each rung LANDS, per league —
+    the record the advisor's rungs had nowhere to look up (the bettor,
+    19 Sep).
+
+    The contract is that both columns ask the SAME question of two
+    populations, so the difference between them means something. The
+    trap they must avoid is the one the first cut fell into: a pooled
+    base is not a control for cards that are not spread across leagues
+    the way matches are.
+    """
+    import pathlib
+    from scripts import ladder_rates as W
+    from scripts import ladderrates as R
+
+    t = R.table()
+    assert t, "config/ladder_rates.tsv is missing — run scripts/ladder_rates.py"
+    # DISPLAY ONLY, and provably so: the writer owns a file of its own,
+    # and nothing inside the engine has ever heard of either module.
+    assert W.OUT.name == "ladder_rates.tsv"
+    eng = pathlib.Path(W.__file__).resolve().parents[1] / "app"
+    for py in eng.rglob("*.py"):
+        body = py.read_text()
+        assert "ladder_rates" not in body and "ladderrates" not in body, py
+
+    codes = {c for c, _r in t}
+    assert W.ALL in codes and len(codes) > 40, len(codes)
+    for code in codes:
+        # every league answers for every rung, or for none of them
+        have = [r for r in W.RUNGS if (code, r) in t]
+        assert have == W.RUNGS, (code, have)
+        # a rung's base rate only ever goes UP as the line rises for
+        # unders and DOWN as it rises for overs — if it does not, the
+        # cells are not the same population
+        us = [t[(code, f"U{i}.5")]["base"] for i in range(7)]
+        os_ = [t[(code, f"O{i}.5")]["base"] for i in range(6)]
+        assert us == sorted(us), (code, us)
+        assert os_ == sorted(os_, reverse=True), (code, os_)
+        for i in range(6):
+            # "under 2.5" and "over 2.5" are the same match seen from
+            # two sides and have to sum to the whole of it
+            u = t[(code, f"U{i}.5")]["base"]
+            o = t[(code, f"O{i}.5")]["base"]
+            assert abs(u + o - 100) < 0.11, (code, i, u, o)
+        for rung in W.RUNGS:
+            row = t[(code, rung)]
+            assert row["base_n"] > 0
+            if row["given_n"]:
+                assert row["given"] is not None and row["tip"] is not None
+            else:
+                assert row["given"] is None and row["tip"] is None
+
+    # THE MATCHED CONTROL. On a league row the tip is just given minus
+    # base; on the every-league row it is scored card by card, and the
+    # two must NOT agree — if they did, the confounding the matching
+    # exists to remove would not be there and the column would be lying
+    # about what it did.
+    for rung in W.RUNGS:
+        row = t[(W.ALL, rung)]
+        if row["given_n"] < W.MIN_N:
+            continue
+        pooled = row["given"] - row["base"]
+        assert abs(pooled - row["tip"]) > 0.5, (rung, pooled, row["tip"])
+    for code in codes - {W.ALL}:
+        for rung in W.RUNGS:
+            row = t[(code, rung)]
+            if not row["given_n"]:
+                continue
+            assert abs(row["given"] - row["base"] - row["tip"]) < 0.11, \
+                (code, rung, row)
+
+    # THE FALLBACK: a league too thin to answer is answered by the
+    # every-league row, and is told so.
+    thin = [c for c in codes if t[(c, "U3.5")]["base_n"] < W.MIN_N]
+    for code in thin:
+        c = R.cell(code, "U3.5")
+        assert c and not c["here"] and c["base"] == t[(W.ALL, "U3.5")]["base"]
+    fat = next(c for c in codes - {W.ALL}
+               if t[(c, "U3.5")]["base_n"] >= W.MIN_N)
+    assert R.cell(fat, "U3.5")["here"]
+    # one flag and one count for a whole card, never a rung at a time
+    rates, here, n = R.rates_for(fat)
+    assert set(rates) == set(W.RUNGS) and here and n >= W.MIN_N
+
+
+def test_the_card_and_the_bar_print_the_rung_record():
+    """The rung record on the face: one row under the ladder for the
+    card's own rung and every rung the advisor offers, and one bar for
+    the whole bank split by the rung actually given.
+
+    The bar is the answer to "instead of how often the tip 1 under/over
+    hits, show how often the actual given ladder rung hits" — so the
+    test is that it splits, that the split is not flat, and that it
+    never prints the pooled base beside the matched tip, which would
+    read as a contradiction.
+    """
+    from scripts import board, webapp
+    from scripts import ladderrates as R
+    app = (webapp.ROOT / "web" / "index.html").read_text()
+
+    rows = R.given_rows()
+    assert len(rows) >= 3, rows
+    assert max(r["given"] for r in rows) - min(r["given"] for r in rows) > 5
+    for r in rows:
+        assert f'{r["given"]:.1f}%' in app, r["rung"]
+        assert f'rung alone {r["matched"]:.1f}' in app, r["rung"]
+        assert f'tip {r["tip"]:+.1f}' in app, r["rung"]
+        # the matched control is what is shown, never the pooled base
+        assert abs(r["matched"] - r["base"]) > 0.4, r
+        assert abs(r["given"] - r["tip"] - r["matched"]) < 0.06
+
+    # The card row: the own rung is named, every offered rung is there,
+    # and the page holds every rung's rate so it can rebuild the row as
+    # the ladder moves.
+    from scripts import fromhere as F
+    made = board.Fixture("2026-09-19 20:00", "NED-ED", "Eredivisie",
+                         "A v B", "U3.5 84.0% +1.2% · buy≥1.25", "— none",
+                         "🔴 LIVE 55' 1-1", "")
+    h = webapp._also_html(made, made.tip1)
+    rates, here, n = R.rates_for("NED-ED")
+    assert 'class="lrate"' in h and "<i>tip 1</i>" in h
+    assert f'<b>U3.5</b> {rates["U3.5"]:.0f}%' in h
+    for r in F.ladder(made.tip1, made.teams, made.status):
+        assert f'<b>{r["rung"]}</b> {rates[r["rung"]]:.0f}%' in h, r
+    for rung in R.RUNGS:                 # every rung, not just today's
+        assert f'"{rung}"' in h, rung
+    assert "function lrateRow(" in app and "data-rates" in app

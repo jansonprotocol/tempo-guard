@@ -28,6 +28,7 @@ ARCHIVED pipe-table logs), and the bet line from the ledger.
 from __future__ import annotations
 
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -728,7 +729,34 @@ def verify(quiet: bool = False) -> None:
               f"{len(done)} completed, {len(set(bets))} bets)")
 
 
+def _refresh_ladder_rates() -> None:
+    """Keep config/ladder_rates.tsv current without paying for it every
+    sweep (the bettor's ask, 19 Sep: "that also keeps updating").
+
+    Recomputing it reads every league's stored results — about seven
+    seconds — and the live loop renders every few minutes, so it is
+    refreshed when it is a day old and left alone otherwise. A rung's
+    rate over three seasons does not move in an afternoon; the one thing
+    that must never happen is it going stale for weeks, and a day is
+    well inside the noise the file's own header measures.
+    """
+    from scripts import ladder_rates
+    out = ladder_rates.OUT
+    try:
+        fresh = (out.exists() and
+                 time.time() - out.stat().st_mtime < 24 * 3600)
+    except OSError:
+        fresh = False
+    if fresh:
+        return
+    n = ladder_rates.write()
+    from scripts import ladderrates
+    ladderrates.table.cache_clear()
+    print(f"ladder rates refreshed: {n} cells")
+
+
 def main() -> None:
+    _refresh_ladder_rates()
     text = README.read_text()
     new = rewrite(text)
     if "--check" in sys.argv:

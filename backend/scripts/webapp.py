@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import datetime as dt
 import html
+import json as _json
 import re
 import sys
 from functools import lru_cache
@@ -25,7 +26,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts import board, fromhere, headline, ledger, odds_api
+from scripts import board, fromhere, headline, ladderrates, ledger, odds_api
 from scripts.league_badges import rates
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -2180,9 +2181,12 @@ def _live_json(fixtures) -> None:
                                         p=round(x["p"], 4)) for x in alt]
                     st = fromhere._state(cell, f.teams, f.status)
                     if st and when and "HT" not in f.status:
+                        rt, rhere, rn = ladderrates.rates_for(f.code)
                         lane["al"] = dict(mu=round(st["mu"], 4),
                                           goals=st["goals"], own=st["k"],
-                                          side=st["market"][0])
+                                          side=st["market"][0],
+                                          rates=rt, rhere=1 if rhere else 0,
+                                          rn=rn)
                 if lane:
                     lanes[str(which)] = lane
             entry["lanes"] = lanes
@@ -2196,6 +2200,33 @@ def _also_row(r: dict) -> str:
     return (f'<span class="alt"><b>{html.escape(r["rung"])}</b> '
             f'<i>{html.escape(r["how"])}</i> {r["p"] * 100:.0f}% · fair '
             f'{r["fair"]:.2f}</span>')
+
+
+def _lrate_row(own: str, rungs, rates: dict, here: bool, n: int) -> str:
+    """The rung record line (the bettor, 19 Sep: "a 1 row hitrate count
+    of the new/or tip 1 rung that advisor now has").
+
+    HOW OFTEN THE RUNG LANDS AT ALL, in this league, over its last three
+    seasons — the card's own rung first, then each one the advisor is
+    offering. It is the base rate, so it is the thing the live read and
+    the claim are both measured AGAINST: a 45% fair-priced O1.5 in a
+    league whose matches clear O1.5 84% of the time is a statement about
+    this match, not about the rung.
+
+    It is not a claim, not a price and not a hit rate of Athena's: those
+    live on the card already. A league too thin to answer falls back to
+    every league and says so.
+    """
+    show = [r for r in dict.fromkeys([own] + list(rungs)) if r in rates]
+    if not show:
+        return ""
+    body = " · ".join(
+        f'<b>{html.escape(r)}</b> {rates[r]:.0f}%'
+        f'{" <i>tip 1</i>" if r == own else ""}' for r in show)
+    where = "in this league" if here else "across every league"
+    return (f'<span class="lrate">lands {where}: {body} '
+            f'<span class="ln">{n:,} matches · {ladderrates.SEASONS} '
+            f'seasons</span></span>')
 
 
 def _also_html(f, cell: str) -> str:
@@ -2215,13 +2246,21 @@ def _also_html(f, cell: str) -> str:
     if not rows:
         return ""
     st = fromhere._state(cell, f.teams, f.status)
+    own = (f'U{st["k"]}.5' if st["market"][0] == "U" else f'O{st["k"] - 1}.5')
+    rates, here, rn = ladderrates.rates_for(f.code)
     attrs = ""
     if st and "HT" not in f.status:
+        # The rung record rides along with the ladder's own inputs: the
+        # SET of rungs on the line moves with the clock, so the page
+        # needs every rung's rate to hand, not just today's three.
         attrs = (f' data-mu="{st["mu"]:.4f}" data-goals="{st["goals"]}"'
                  f' data-own="{st["k"]}" data-side="{st["market"][0]}"'
                  f' data-min="{st["minute"]}"'
                  f' data-half="{2 if st["second"] else 1}"'
-                 f' data-at="{int(__import__("time").time())}"')
+                 f' data-at="{int(__import__("time").time())}"'
+                 + (f" data-rates='{_json.dumps(rates)}' "
+                    f'data-rhere="{1 if here else 0}" data-rn="{rn}"'
+                    if rates else ""))
     return (f'<div class="also"{attrs} title="The other rungs this match '
             f'has made worth a price, off the same expected goals as the '
             f'lane above. Shortest price first. NONE of these is a play '
@@ -2230,7 +2269,9 @@ def _also_html(f, cell: str) -> str:
             f'{fromhere.SHORT:.2f} or longer than {fromhere.LONG:.2f} are '
             f'left out: nothing to win, or a different bet.">'
             f'<span class="alsoh">also live</span>'
-            f'{"".join(_also_row(r) for r in rows)}</div>')
+            f'{"".join(_also_row(r) for r in rows)}'
+            f'{_lrate_row(own, [r["rung"] for r in rows], rates, here, rn)}'
+            f'</div>')
 
 
 def _card(f, kind: str, reads: dict) -> str:
@@ -2868,6 +2909,34 @@ def main() -> None:
           'lanes, graded on this session\'s completed cards · declined '
           'cards excluded (red, super red, live unsafe, a declined strike '
           'combo)</span></div>')
+
+    # THE RUNG ACTUALLY GIVEN (the bettor, 19 Sep: "instead of how often
+    # the tip 1 under/over hits, show how often the actual given ladder
+    # rung hits"). The bar above pools four different bets into "tip 1",
+    # and they do not land alike — there is an eight-point spread across
+    # them. Each rung is shown against what that rung lands anyway in
+    # the same leagues, because a rung that lands 87% in a league where
+    # everything lands 86% is the LEAGUE landing, not the tip. That
+    # control is matched card by card; see scripts/ladder_rates.py.
+    grows = ladderrates.given_rows()
+    rungbar = ""
+    if grows:
+        rungbar = (
+            '<div class="basebar">The whole bank, by the rung actually '
+            'given: '
+            + " · ".join(
+                f'{r["rung"]} <b>{r["given"]:.1f}%</b>'
+                f'<span class="dim"> of {r["given_n"]:,}'
+                f' · rung alone {r["matched"]:.1f}'
+                f' · tip {r["tip"]:+.1f}</span>'
+                for r in grows)
+            + ' <span class="dim">— every graded tip 1 that was a match '
+              'total, re-settled from the final score, declined cards '
+              'out. <b>rung alone</b> is how often that rung lands in '
+              'the same leagues with nobody picking; <b>tip</b> is the '
+              'difference, which is what the selection is worth. Three '
+              f'seasons of matches behind the rung, and it is a '
+              f'three-point number — context, never a price.</span></div>')
 
     # NORMAL and STRONG: the record of the cards the board itself marked
     # PLAY, by kind, from the forward log — stamped at first sight, so a
@@ -3655,6 +3724,13 @@ h3 {{ font-size:15px; margin:14px 0 8px; }}
 .also .alsoh {{ color:var(--dim); opacity:.7; text-transform:uppercase;
   font-size:9.5px; letter-spacing:.1em; }}
 .also .alt {{ white-space:nowrap; }}
+/* The rung record: how often each rung lands here at all. Its own line
+   under the ladder, dimmer still — it is the background the live read
+   is measured against, not a read of its own. */
+.also .lrate {{ flex-basis:100%; opacity:.8; }}
+.also .lrate b {{ color:var(--tx); font-weight:600; }}
+.also .lrate i {{ font-style:normal; opacity:.6; }}
+.also .lrate .ln {{ opacity:.55; }}
 .also .alt b {{ color:var(--tx); font-weight:600; }}
 .also .alt i {{ font-style:normal; opacity:.65; }}
 .tie {{ margin-top:8px; font-size:12px; color:var(--tx);
@@ -3797,6 +3873,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  </div>
  {basebar}
  {sessbar}
+ {rungbar}
  <div class="session">SESSION #{SESSION_NO} · {SESSION_START} – {session_end}{
     f" · longest hit streak <b>{best_streak}</b>" if best_streak else ""}</div>
  <div class="tiles">{tiles}</div>
@@ -4523,6 +4600,23 @@ function altRow(rung, how, p) {{
   return '<span class="alt"><b>' + rung + '</b> <i>' + how + '</i> ' +
          Math.round(p * 100) + '% · fair ' + (1 / p).toFixed(2) + '</span>';
 }}
+// The rung record, rebuilt with the ladder: how often each rung on the
+// line lands in this league at all. Every rung's rate is carried, not
+// just the three on screen, because the three change as the clock runs.
+const LSEASONS = {ladderrates.SEASONS};
+function lrateRow(own, rungs, el) {{
+  let rates = null;
+  try {{ rates = JSON.parse(el.dataset.rates || "null"); }} catch (e) {{}}
+  if (!rates) return "";
+  const show = [own].concat(rungs).filter((r, i, a) => a.indexOf(r) === i && r in rates);
+  if (!show.length) return "";
+  const body = show.map(r => '<b>' + r + '</b> ' + Math.round(rates[r]) + '%' +
+                             (r === own ? ' <i>tip 1</i>' : '')).join(" · ");
+  const where = el.dataset.rhere === "1" ? "in this league" : "across every league";
+  const n = (+el.dataset.rn || 0).toLocaleString("en-US");
+  return '<span class="lrate">lands ' + where + ': ' + body +
+         ' <span class="ln">' + n + ' matches · ' + LSEASONS + ' seasons</span></span>';
+}}
 function ladderNow(mu, goals, ownK, side, minute, second) {{
   const lam = mu * remainingShare(minute, second), out = [];
   for (const rung of LADDER) {{
@@ -4568,8 +4662,11 @@ function tickClocks() {{
     const rows = ladderNow(+el.dataset.mu, +el.dataset.goals, +el.dataset.own,
                            el.dataset.side, minute, half === 2);
     if (!rows.length) {{ el.remove(); continue; }}
+    const side = el.dataset.side, k = +el.dataset.own;
+    const own = side === "U" ? "U" + k + ".5" : "O" + (k - 1) + ".5";
     el.innerHTML = '<span class="alsoh">also live</span>' +
-      rows.map(r => altRow(r.rung, r.how, r.p)).join("");
+      rows.map(r => altRow(r.rung, r.how, r.p)).join("") +
+      lrateRow(own, rows.map(r => r.rung), el);
   }}
 }}
 tickClocks(); setInterval(tickClocks, 15000);
@@ -4644,13 +4741,23 @@ async function pollLive() {{
         let also = lane.querySelector(".also");
         if (L.alt && L.alt.length) {{
           if (!also) {{ also = document.createElement("div"); also.className = "also"; lane.appendChild(also); }}
-          also.innerHTML = '<span class="alsoh">also live</span>' +
-            L.alt.map(a => altRow(a.r, a.h, a.p)).join("");
+          // The inputs go on FIRST: the rung-record row is built from
+          // them, so an innerHTML written before them would print the
+          // ladder with no record under it until the next tick.
+          let own = "";
           if (L.al) {{
             also.dataset.mu = L.al.mu; also.dataset.goals = L.al.goals;
             also.dataset.own = L.al.own; also.dataset.side = L.al.side;
             also.dataset.min = c.min; also.dataset.half = c.half; also.dataset.at = data.at;
+            if (L.al.rates) {{
+              also.dataset.rates = JSON.stringify(L.al.rates);
+              also.dataset.rhere = L.al.rhere; also.dataset.rn = L.al.rn;
+            }}
+            own = L.al.side === "U" ? "U" + L.al.own + ".5" : "O" + (L.al.own - 1) + ".5";
           }} else {{ delete also.dataset.mu; }}
+          also.innerHTML = '<span class="alsoh">also live</span>' +
+            L.alt.map(a => altRow(a.r, a.h, a.p)).join("") +
+            (own ? lrateRow(own, L.alt.map(a => a.r), also) : "");
         }} else if (also) also.remove();
       }}
     }}
