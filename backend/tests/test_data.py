@@ -2396,11 +2396,42 @@ def test_the_strike_combos_are_led_by_the_bank():
         assert bank is not None and bank["n"] >= 300, (key, bank)
         assert bank["source"] == "bank", key
 
-    # the written table is what combo() reads, and it agrees
+    # THE WRITTEN TABLE IS WHAT combo() READS, and it agrees with it.
+    # That is the reader's contract and it holds always.
     livebands._BANDS = None
+    written = {}
+    for ln in livebands.OUT.read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        p = ln.split("\t")
+        if len(p) >= 8 and p[0] == "combo":
+            written[(p[1], p[2])] = (p[6], p[7], int(p[3]))
+    assert written
+    for key, (label, _src, _n) in written.items():
+        assert livebands.combo(key[0], key[1].split(" + ")) == label \
+            or key[1] == "clean", key
+
+    # A FRESH STUDY MAY OUTGROW THE FROZEN TABLE, and that is not a
+    # fault. config/live_bands.tsv is written by hand (scripts/livebands.py)
+    # and the board keeps settling cards underneath it, so a cell whose
+    # BOARD sample has since crossed COMBO_MIN_BOARD starts speaking for
+    # itself and can say something the bank-led row did not. On 19 Sep
+    # "priced · score under 0 + priced play" did exactly that — 45 board
+    # cards became 50, and a decline led by 308 bank cards at 73.7 became
+    # a keep on 50 board cards at 77.8.
+    #
+    # What must NOT happen is a label moving with no such cause: that
+    # would mean the table and the code have genuinely parted. So every
+    # disagreement has to be explained by the source changing, and a
+    # regeneration is a human's call, never a side effect of a render.
     for key, b in boardrows.items():
-        assert livebands.combo(key[0], key[1].split(" + ")) == b["label"] \
-            or key[1] == "clean"
+        if key not in written or key[1] == "clean":
+            continue
+        label, src, _n = written[key]
+        if b["label"] == label:
+            continue
+        assert b["source"] != src, (key, label, src, b["label"], b["source"])
+        assert b["n"] >= livebands.COMBO_MIN_BOARD, key
 
 
 def test_the_bank_prices_a_card_the_way_the_board_would():
