@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 81.9%
 
     lane                        Tip 1              Tip 2
-    all matches            483 / 590  81.9%    321 / 476  67.4%
+    all matches            484 / 591  81.9%    321 / 476  67.4%
     played lanes  >+1%     208 / 256  81.2%    320 / 474  67.5%
     placed bets            144 / 180  80.0%    ROI +1.9%
 
@@ -871,7 +871,6 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔵 19-09 20:00 <b>ES Sétif v CS Constantine</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (88.2 −2.9)</td><td>U3.0 87.8% +5.0%<br>buy≥1.29 (+10.0% margin)</td><td><b>ES Sétif U1.5</b> 72.6% +11.7%<br>buy≥1.43 (+4.1% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 2-2 <b>América v Guadalajara</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 81.7% <b>−2.4%</b><br>buy≥1.31 (+5.1% margin)<br><i>U4.25 holding · half safe · 80% · fair 1.25</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 20-09 10:00 <b>Gamba Osaka v Vissel Kobe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +1.9)</td><td>U4.25 87.3% <b>−0.8%</b><br>buy≥1.19 (+3.1% margin)</td><td>O1.75 73.8% +1.0%<br>buy≥1.44 (+0.9% margin) · floor −8.2</td></tr></table>
 <table align="left"><tr><th align="left">🔵 20-09 10:00 <b>FC Machida Zelvia v Kashiwa Reysol</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +1.9)</td><td>U4.25 82.9% <b>−5.2%</b><br>buy≥1.25 (+1.3% margin)</td><td>O1.75 78.8% +6.0%<br>buy≥1.37 (+4.4% margin) · floor −3.2</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.0% +3.5% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 20-09 12:15 <b>Feyenoord Rotterdam v Utrecht</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eredivisie (86.9 +1.0)</td><td>O1.5 83.1% +1.1%<br>buy≥1.25 (+3.9% margin)</td><td><b>Feyenoord Rotterdam O1.5</b> 64.3% +14.5%<br>buy≥1.61 (+3.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 77.2% +18.7% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -962,7 +961,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 483 / 590   ·   81.9%**   ·   **Tip 2 — 321 / 476   ·   67.4%**
+**Tip 1 — 484 / 591   ·   81.9%**   ·   **Tip 2 — 321 / 476   ·   67.4%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1810,6 +1809,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 3-0 · 20-09 03:30 <b>Nashville SC v Chicago Fire</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (81.5 +1.7)</td><td>O1.5 80.5% <b>−1.0%</b><br>buy≥1.27 (+6.1% margin)</td><td>✅ <b>Nashville SC O1.5</b> 62.1% +10.3%<br>buy≥1.66 (+3.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.7% +4.5% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-3 · 20-09 03:30 <b>Real Salt Lake v Vancouver Whitecaps</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (81.5 +1.7)</td><td>O1.5 80.7% <b>−0.8%</b><br>buy≥1.30 (+6.1% margin)</td><td>✅ <b>Vancouver Whitecaps O0.5</b> 81.6% +8.1%<br>buy≥1.34 (+9.7% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 20-09 04:30 <b>Portland Timbers v Atlanta United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (81.5 +1.7)</td><td>O1.5 80.6% <b>−0.9%</b><br>buy≥1.28 (+6.1% margin)</td><td>❌ <b>Portland Timbers O1.5</b> 67.0% +15.2%<br>buy≥1.55 (+3.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 79.0% +18.6% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-2 · 20-09 05:15 <b>América v Guadalajara</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 81.7% <b>−2.4%</b><br>buy≥1.31 (+5.1% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
