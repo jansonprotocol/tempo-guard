@@ -585,7 +585,7 @@ def _league_label(code: str) -> tuple[str, str]:
     and G. It sorts by COUNTRY now, and prints the country in full with
     its flag: "🇳🇱 Netherlands - Eredivisie".
     """
-    country, flag = _load_countries().get(code.split("-")[0], ("", ""))
+    country, flag = _place(code)
     name = _league_name(code)
     if not country or not name:
         return ("￿" + code, "")   # caller falls back to the bank name
@@ -3339,16 +3339,8 @@ def main() -> None:
     # carried "NED-D2" where their neighbours carried "Dutch Eredivisie".
     # The typed table fills those in. Only the ones that print a code:
     # a league that already has a name keeps it.
-    # The six international codes are the other case: they DO have a name in
-    # config/leagues.json — "CONCACAF internationals" — and it is a perfectly
-    # good engine-side label that says nothing the menu needs, because the
-    # menu prints a country column of its own and "CONCACAF" is not a place a
-    # visitor searches for. So a typed name wins outright for those, which is
-    # what config/league_names.tsv is for.
     for _c, _comp in bank.items():
-        if not _league_name(_c):
-            continue
-        if _comp["name"] == _c or _c.startswith("INT-"):
+        if _comp["name"] == _c and _league_name(_c):
             _comp["name"] = f"{_country(_c)} {_league_name(_c)}".strip()
 
     # The league menu, in the order it is printed: by country first, then

@@ -406,6 +406,13 @@ def release_study() -> list[dict]:
     floor = _ms.MIN_WIN_PROB * 100
     cards: list[dict] = []
     for code, comp in _br.bank().items():
+        # The population is the one the rule is APPLIED to, and since
+        # 20 Sep an international card is never released (see released()),
+        # so its cards are not evidence for or against anybody's release.
+        # Leaving them in pooled a 75.6% set with an 81.7% one and revoked
+        # a live release on the strength of CONCACAF and the AFC.
+        if code.startswith("INT-"):
+            continue
         for m in comp.get("matches", []):
             # "red" OR "released": the candidate population is every card
             # the TIER refuses, whatever the label ended up as. Filtering
@@ -468,14 +475,32 @@ def released_rungs() -> frozenset:
     return _RELEASED
 
 
-def released(rung: str | None, claim: float | None) -> bool:
+def released(rung: str | None, claim: float | None,
+             code: str | None = None) -> bool:
     """Is this card one the record has put back on the board?
 
     Read by guard_slices.label, which is the ONE gate the board and the
     bank both label through, so a released card reads the same on either.
+
+    AN INTERNATIONAL CARD IS NEVER RELEASED (20 Sep). The release profile
+    is pooled across the whole bank, and the international set walked in
+    with 217 sub-floor O1.5 cards — 150 CONCACAF, 67 AFC, the two weakest
+    confederations — landing 75.6% against the club population's 81.7%.
+    Pooled they read 78.8% with a 75.5% first half, which fails the rule
+    and would have revoked a live release for every club card on the
+    board. Split, the club profile is untouched: 81.7%, halves 79.2/84.3.
+    That is the same Simpson's trap the ladder-rate table had to be
+    rescued from, arriving this time inside a live-safety rule, and the
+    honest answer to it is that a population measured at 75.6% does not
+    get to put refused cards back on a playable board — neither its own,
+    nor anybody else's. An international release needs its own profile
+    and its own measurement; until there is one, the tier's refusal
+    stands.
     """
     from app.engine import market_select as _ms
     if not rung or claim is None or claim >= _ms.MIN_WIN_PROB * 100:
+        return False
+    if code and code.startswith("INT-"):
         return False
     return rung in released_rungs()
 

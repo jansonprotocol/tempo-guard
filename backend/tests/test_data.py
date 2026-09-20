@@ -1884,11 +1884,22 @@ def test_the_two_day_job_rebuilds_the_bank_before_it_measures_it():
          / ".github" / "workflows" / "bank-refresh.yml").read_text()
     # the SHELL block, not the header comment, which names them too
     body = y[y.index("steps:"):]
-    ran = [ln.strip().removeprefix("python scripts/")
+    ran = [ln.strip().removeprefix("python scripts/").split()[0]
            for ln in body.splitlines()
            if ln.strip().startswith("python scripts/")]
-    assert ran == ["ingest_board.py", "matchbank.py --since",
-                   "livebands.py", "drift.py", "board.py"], ran
+    # Written as an ORDER rather than an exact list, which is what the
+    # docstring always claimed. The exact list broke the day a second
+    # store-feeding step was added (internationals.py, 20 Sep) even though
+    # it went in the right place — a test that fails on a correct change is
+    # pinning the wrong thing.
+    feeds = ["ingest_board.py", "internationals.py"]
+    reads = ["livebands.py", "drift.py", "board.py"]
+    assert "matchbank.py" in ran, ran
+    cut = ran.index("matchbank.py")
+    assert set(ran[:cut]) <= set(feeds), ran
+    assert "ingest_board.py" in ran[:cut], ran
+    assert ran[cut + 1:] == reads, ran
+    assert "--since" in body[body.index("matchbank.py"):][:40], "not incremental"
     # the rebuilt bank is committed, or the next run starts from the old one
     assert "config/matchbank_retro.json" in y
 
@@ -2243,10 +2254,14 @@ def test_typo_tolerance_is_a_fallback_not_a_second_search():
       }).map(c => c.dataset.lg);
     }
     const before = hits("europa", false), after = hits("europa", true);
+    const real = pool.filter(c => c.dataset.t.includes("europa"));
     console.log(JSON.stringify({
-      before: before.length, after: after.length,
+      before: before.length, after: after.length, real: real.length,
       strayBefore: before.filter(l => l.includes("champions")).length,
-      strayAfter: after.filter(l => l.includes("champions")).length}));
+      strayAfter: after.filter(l => l.includes("champions")).length,
+      strayLeagues: [...new Set(before.filter(
+        l => !pool.some(c => c.dataset.lg === l
+                             && c.dataset.t.includes("europa"))))]}));
     """
     with tempfile.TemporaryDirectory() as d:
         p = Path(d) / "t.js"
@@ -2255,7 +2270,16 @@ def test_typo_tolerance_is_a_fallback_not_a_second_search():
                                         text=True, timeout=60).stdout)
     assert got["strayBefore"] > 0, "the bug needs to be reproducible or this pins nothing"
     assert got["strayAfter"] == 0, got
-    assert got["after"] == got["before"] - got["strayBefore"]
+    # What survives is exactly what carries the term, and nothing else. This
+    # used to be written as after == before - strayBefore, which was the same
+    # statement only while the Champions League was the ONLY thing on the
+    # board whose country field read "europe". The international set (20 Sep)
+    # added a second — 26 INT-UEFA cards, also one letter away — and the near
+    # pass swept those up too, exactly as it swept up the cups. The filter
+    # handled it; the arithmetic did not.
+    assert got["after"] == got["real"], got
+    assert got["before"] > got["after"], got
+    assert len(got["strayLeagues"]) >= 2, got
 
 
 def test_the_bank_knows_its_strikes_and_declines_on_them():

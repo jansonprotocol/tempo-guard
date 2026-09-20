@@ -201,7 +201,7 @@ def label(code: str, tier: str, sc: float | None, is_dnb: bool,
         if region(code) == "Europe" and sc is not None and sc <= SUPER_RED:
             return "super red"
         from scripts import livebands
-        if livebands.released(rung, p):
+        if livebands.released(rung, p, code):
             return "released"
         return "red"
     if p is None:
