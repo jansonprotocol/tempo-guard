@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 81.4%
 
     lane                        Tip 1              Tip 2
-    all matches            515 / 633  81.4%    339 / 514  66.0%
+    all matches            516 / 634  81.4%    339 / 514  66.0%
     played lanes  >+1%     222 / 275  80.7%    337 / 510  66.1%
     placed bets            154 / 193  79.8%    ROI +2.1%
 
@@ -870,7 +870,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 20-09 17:30 <b>Jagiellonia Białystok v Legia Warszawa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.3 −6.4)</td><td>U4.25 85.2% <b>−0.4%</b><br>buy≥1.27 (+7.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 74.7% +2.3% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 65' 3-1 <b>Viborg v Nordsjælland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Superliga (82.2 −0.9)</td><td>U4.25 85.0% +4.2%<br>buy≥1.29 (+9.1% margin)<br><i>U4.25 holding · half safe · 38% · fair 2.60</i><br><i>also live: O4.5 flip 62% fair 1.62 · U5.5 more room 75% fair 1.33</i></td><td>U3.75 71.0% +7.1%<br>buy≥1.35 (+4.0% margin) · floor −4.0 · <i>half gone</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE 66' 1-0 <b>Juventus v Atalanta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie A (88.0 capped)</td><td>U4.25 85.9% <b>−2.8%</b><br>buy≥1.20 (+5.4% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · 99% · fair 1.01</i><br><i>also live: O1.5 flip 60% fair 1.68 · U2.5 tighter 77% fair 1.30</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 1X 74.4% +6.3% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-1 <b>Deportivo La Coruña v Real Betis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (82.3 −2.8)</td><td>O1.5 77.1% +2.8%<br>buy≥1.31 (+1.4% margin)<br><i>O1.5 holding · needs 1 more · 79% · fair 1.26</i><br><i>also live: O2.5 tighter 47% fair 2.15 · U2.5 flip 53% fair 1.87</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.2% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -905,7 +904,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 515 / 633   ·   81.4%**   ·   **Tip 2 — 339 / 514   ·   66.0%**
+**Tip 1 — 516 / 634   ·   81.4%**   ·   **Tip 2 — 339 / 514   ·   66.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1810,6 +1809,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-2 · 20-09 17:15 <b>Mantova v Pisa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Serie B (79.9 +1.4)</td><td>O1.5 74.1% +2.4%<br>buy≥1.36 (+0.9% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 75.2% +7.5% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 20-09 17:30 <b>Fulham v Manchester United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.5 +1.2)</td><td>U4.25 84.5% +2.7%<br>buy≥1.26 (+4.9% margin)</td><td>✅ U3.75 68.9% +3.7%<br>buy≥1.39 (+3.8% margin) · floor −6.1</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 20-09 17:30 <b>Schalke 04 v Elversberg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Bundesliga (86.0 +0.3)</td><td>O1.5 82.7% <b>+0.0%</b><br>buy≥1.26 (+4.0% margin)</td><td>❌ <b>Elversberg O0.5</b> 80.3% +5.6%<br>buy≥1.31 (+5.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 77.8% +3.1% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-3 · 20-09 17:30 <b>Jagiellonia Białystok v Legia Warszawa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.3 −6.4)</td><td>U4.25 85.2% <b>−0.4%</b><br>buy≥1.27 (+7.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 74.7% +2.3% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
