@@ -2427,11 +2427,22 @@ def test_the_strike_combos_are_led_by_the_bank():
     for key, b in boardrows.items():
         if key not in written or key[1] == "clean":
             continue
-        label, src, _n = written[key]
+        label, src, n = written[key]
         if b["label"] == label:
             continue
-        assert b["source"] != src, (key, label, src, b["label"], b["source"])
-        assert b["n"] >= livebands.COMBO_MIN_BOARD, key
+        # A verdict may move for exactly two reasons, and both are the
+        # cell being ANSWERED DIFFERENTLY rather than the code changing
+        # its mind: the source changed (a board sample crossed
+        # COMBO_MIN_BOARD and the cell began speaking for itself), or
+        # the sample changed (more cards settled under it — on 19 Sep
+        # "priced · priced play" flipped keep to decline on its own
+        # board rows growing, source unchanged).
+        #
+        # What must NEVER happen is a label moving on the SAME source
+        # and the SAME count. That would mean the table and the code
+        # had genuinely parted, which is the fault worth catching.
+        assert b["source"] != src or b["n"] != n, \
+            (key, label, src, n, b["label"], b["source"], b["n"])
 
 
 def test_the_bank_prices_a_card_the_way_the_board_would():
@@ -3287,7 +3298,16 @@ def test_the_card_and_the_bar_print_the_rung_record():
         assert f'<b>{r["rung"]}</b> {rates[r["rung"]]:.0f}%' in h, r
     for rung in R.RUNGS:                 # every rung, not just today's
         assert f'"{rung}"' in h, rung
-    assert "function lrateRow(" in app and "data-rates" in app
+    # The rebuilder is always in the page; the DATA only rides along on
+    # a card that is actually running, so an empty board at 4am carries
+    # the function and no attributes. Assert each where it belongs.
+    assert "function lrateRow(" in app
+    live = [f for f in board.load() if f.status and not f.settled
+            and "LIVE" in f.status]
+    assert ("data-rates" in app) == bool(
+        [f for f in live
+         if F.ladder_cell((f.tip1, f.tip2, f.tip3), f.teams, f.status)
+         and "HT" not in f.status]), len(live)
 
 
 def test_half_time_keeps_its_live_box():
