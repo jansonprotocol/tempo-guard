@@ -2914,20 +2914,36 @@ def main() -> None:
     def sc(name, h, n, extra=""):
         v = f"<b>{h / n * 100:.1f}%</b>" if n else "<b>—</b>"
         return f'{name} {v}<span class="dim"> {h}/{n}{extra}</span>'
+    # THE THREE BARS ARE FIGURES, NOT PROSE (the bettor, 20 Sep: "a bit
+    # cluttered ... more clear and tight, less over explained"). Each one
+    # carries a short label, the numbers, and nothing else; every
+    # sentence of scope and caveat moved to the hover, which is where
+    # the cards have kept their long text since 15 Sep. Between them the
+    # three bars were 1,201 characters of running text at the top of the
+    # page before a single card.
+    def sc(name, h, n, said=None):
+        v = f"<b>{h / n * 100:.1f}</b>" if n else "<b>—</b>"
+        tail = f'<span class="dim">{h}/{n}</span>' if n else ""
+        claim = f'<span class="dim">({said:.1f})</span>' if said else ""
+        # ONE SPAN PER FIGURE so a group never breaks across lines: the
+        # flex gap is the separator, which is why there is no middot.
+        return (f'<span class="bc">{name} {v} {tail} {claim}</span>'
+                .replace("  ", " ").replace(" </span>", "</span>"))
     sessbar = (
-        f'<div class="basebar">Session #{SESSION_NO} — hit vs claimed: '
-        + " · ".join([
-            sc("final pick", fh, fn,
-               (f" · claims {sum(fsays)/len(fsays):.1f}" if fsays else "")),
-            sc("tip 1", pb1, pq1, claims(1)),
-            sc("tip 2", pb2, pq2, claims(2)),
-            sc("tip 3", h3, n3, claims(3) + (f" · {hs3} hindsight" if hs3 else "")
-               + " · probation"),
+        f'<div class="basebar" title="Every PLAYABLE lane of this '
+        f'session, graded on the cards that have finished. The ★ lane '
+        f'first, then each family. The bracket is what those lanes '
+        f'CLAIMED on average, so a low number reads as what it promised '
+        f'rather than as failure. Declined cards are excluded — red, '
+        f'super red, live unsafe, a declined strike combo.">'
+        f'<span class="bl">SESSION #{SESSION_NO}</span>'
+        + "".join([
+            sc("★ pick", fh, fn, sum(fsays) / len(fsays) if fsays else None),
+            sc("tip 1", pb1, pq1, sum(says[1]) / len(says[1]) if says[1] else None),
+            sc("tip 2", pb2, pq2, sum(says[2]) / len(says[2]) if says[2] else None),
+            sc("tip 3", h3, n3, sum(says[3]) / len(says[3]) if says[3] else None),
         ])
-        + ' <span class="dim">— the ★ lane, then each family\'s PLAYABLE '
-          'lanes, graded on this session\'s completed cards · declined '
-          'cards excluded (red, super red, live unsafe, a declined strike '
-          'combo)</span></div>')
+        + '<span class="blk">hit · n · (claimed)</span></div>')
 
     # THE RUNG ACTUALLY GIVEN (the bettor, 19 Sep: "instead of how often
     # the tip 1 under/over hits, show how often the actual given ladder
@@ -2941,21 +2957,20 @@ def main() -> None:
     rungbar = ""
     if grows:
         rungbar = (
-            '<div class="basebar">The whole bank, by the rung actually '
-            'given: '
-            + " · ".join(
-                f'{r["rung"]} <b>{r["given"]:.1f}%</b>'
-                f'<span class="dim"> of {r["given_n"]:,}'
-                f' · rung alone {r["matched"]:.1f}'
-                f' · tip {r["tip"]:+.1f}</span>'
+            '<div class="basebar" title="Every graded tip 1 that was a '
+            'match total, split by the rung actually given and re-settled '
+            'from the final score, declined cards out. RUNG is how often '
+            'that rung lands in the same leagues with nobody picking — '
+            'three seasons of matches behind it — and the last figure is '
+            'the difference, which is what the selection itself is worth. '
+            'A three-point number: context, never a price.">'
+            '<span class="bl">BY RUNG GIVEN</span>'
+            + "".join(
+                f'<span class="bc">{r["rung"]} <b>{r["given"]:.1f}</b> '
+                f'<span class="dim">of {r["given_n"]:,}</span> '
+                f'<span class="tipd">{r["tip"]:+.1f}</span></span>'
                 for r in grows)
-            + ' <span class="dim">— every graded tip 1 that was a match '
-              'total, re-settled from the final score, declined cards '
-              'out. <b>rung alone</b> is how often that rung lands in '
-              'the same leagues with nobody picking; <b>tip</b> is the '
-              'difference, which is what the selection is worth. Three '
-              f'seasons of matches behind the rung, and it is a '
-              f'three-point number — context, never a price.</span></div>')
+            + '<span class="blk">hit · n · vs the rung alone</span></div>')
 
     # NORMAL and STRONG: the record of the cards the board itself marked
     # PLAY, by kind, from the forward log — stamped at first sight, so a
@@ -3033,17 +3048,20 @@ def main() -> None:
     if base:
         def cell(name, key):
             hit, said = base[key]
-            claim = (f'<span class="dim"> vs {said:.1f} said</span>'
-                     if said else "")
-            return f"{name} <b>{hit:.1f}%</b>{claim}"
-        cells = " · ".join(
-            cell(n, k) for n, k in (("final pick", "fp"), ("tip 1", "t1"),
+            claim = (f'<span class="dim">({said:.1f})</span>' if said else "")
+            return f'<span class="bc">{name} <b>{hit:.1f}</b> {claim}</span>'.replace(" </span>", "</span>")
+        cells = "".join(
+            cell(n, k) for n, k in (("★ pick", "fp"), ("tip 1", "t1"),
                                     ("tip 2", "t2"), ("tip 3", "t3"))
             if k in base)
-        basebar = (f'<div class="basebar">Baselines — hit vs said: {cells} '
-                   f'<span class="dim">— every tip replayed over each '
-                   f'league’s last 300 matches, averaged · declined '
-                   f'cards excluded (red, super red, live unsafe)</span></div>')
+        basebar = (
+            '<div class="basebar" title="Every tip replayed over each '
+            'league\'s last 300 matches and averaged — what the build '
+            'does on history, not on this session. The bracket is what '
+            'those tips said. Declined cards excluded: red, super red, '
+            'live unsafe.">'
+            '<span class="bl">BASELINES</span>' + cells
+            + '<span class="blk">hit · (said)</span></div>')
 
     # A bet's fixture, so a row can be filtered by league, country and
     # lane kind exactly like a card is.
@@ -3567,10 +3585,27 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 #ask-out .grid {{ max-height:70vh; overflow-y:auto; }}
 #ask-counts {{ grid-template-columns:repeat(7,1fr); }}
 @media (max-width:640px) {{ #ask-counts {{ grid-template-columns:repeat(4,1fr); }} }}
+/* THE THREE HEADLINE BARS: a label, the figures, and a legend. Every
+   sentence of scope moved to the hover on 20 Sep — they carried 1,201
+   characters of prose between them, above the first card. */
 .basebar {{ background:var(--card); border:1px solid var(--edge);
-  border-radius:8px; padding:7px 12px; margin:8px 0; font-size:12px; }}
-.basebar b {{ color:var(--gold); }}
+  border-radius:8px; padding:8px 12px; margin:8px 0; font-size:12.5px;
+  cursor:help; display:flex; flex-wrap:wrap; gap:3px 14px;
+  align-items:baseline; }}
+.basebar b {{ color:var(--gold); font-weight:700; }}
 .basebar .dim {{ font-size:11px; }}
+.basebar .bl {{ flex-basis:100%; color:var(--dim); text-transform:uppercase;
+  font-size:9.5px; letter-spacing:.14em; font-weight:600; }}
+/* the legend closes the row, so the units are said once instead of
+   after every figure */
+.basebar .blk {{ margin-left:auto; color:var(--dim); opacity:.6;
+  font-size:10px; letter-spacing:.02em; white-space:nowrap; }}
+.basebar .tipd {{ color:var(--green); font-weight:600; }}
+.basebar .bc {{ white-space:nowrap; }}
+@media (max-width:640px) {{
+  .basebar {{ gap:2px 10px; font-size:11.5px; }}
+  .basebar .blk {{ flex-basis:100%; margin-left:0; }}
+}}
 .ask {{ background:var(--card); border:1px solid var(--edge);
   border-radius:10px; padding:12px 14px; margin:0 0 12px; font-size:13px; }}
 .askrow {{ display:grid; gap:8px; margin-top:10px;

@@ -3126,6 +3126,7 @@ def test_the_page_carries_the_ladder_and_can_rebuild_it():
     the clock, not just the numbers, so the page re-runs the selection
     rather than re-printing it."""
     import json as _json
+    import re
     from scripts import board, webapp
     from scripts import fromhere as F
     app = (webapp.ROOT / "web" / "index.html").read_text()
@@ -3268,6 +3269,7 @@ def test_the_card_and_the_bar_print_the_rung_record():
     never prints the pooled base beside the matched tip, which would
     read as a contradiction.
     """
+    import re
     from scripts import board, webapp
     from scripts import ladderrates as R
     app = (webapp.ROOT / "web" / "index.html").read_text()
@@ -3276,12 +3278,23 @@ def test_the_card_and_the_bar_print_the_rung_record():
     assert len(rows) >= 3, rows
     assert max(r["given"] for r in rows) - min(r["given"] for r in rows) > 5
     for r in rows:
-        assert f'{r["given"]:.1f}%' in app, r["rung"]
-        assert f'rung alone {r["matched"]:.1f}' in app, r["rung"]
-        assert f'tip {r["tip"]:+.1f}' in app, r["rung"]
-        # the matched control is what is shown, never the pooled base
+        # The bar carries the rate, the sample and the TIP. It was
+        # tightened on 20 Sep — the words moved to the hover — so the
+        # test pins the figures and the hover, never the sentence.
+        assert f'{r["rung"]} <b>{r["given"]:.1f}</b>' in app, r["rung"]
+        assert f'of {r["given_n"]:,}' in app, r["rung"]
+        assert f'{r["tip"]:+.1f}' in app, r["rung"]
+        # The MATCHED control is what the tip is measured against, and
+        # the pooled base is never printed beside it — the two differ,
+        # which is the whole reason the matching exists.
         assert abs(r["matched"] - r["base"]) > 0.4, r
         assert abs(r["given"] - r["tip"] - r["matched"]) < 0.06
+        assert f'rung alone {r["base"]:.1f}' not in app, r["rung"]
+    # the scope that used to be printed now lives on the hover
+    bar = re.search(r'<div class="basebar"[^>]*title="([^"]*)"[^>]*>'
+                    r'<span class="bl">BY RUNG GIVEN', app)
+    assert bar and "declined cards out" in bar.group(1)
+    assert "never a price" in bar.group(1)
 
     # The card row: the own rung is named, every offered rung is there,
     # and the page holds every rung's rate so it can rebuild the row as
