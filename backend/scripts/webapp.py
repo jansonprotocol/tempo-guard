@@ -530,15 +530,28 @@ def _load_countries() -> dict:
     return _COUNTRIES
 
 
+def _place(code: str) -> tuple[str, str]:
+    """(country, flag) for a league code.
+
+    The WHOLE code is tried before its prefix. Every club code answers on
+    the prefix as it always has — ENG-PL and ENG-CH are both England — but
+    the six international codes share the prefix INT and are six different
+    parts of the world, so INT-UEFA has to be able to say Europe while
+    INT-CONMEBOL says South America. A code with no row of its own falls
+    through to the prefix exactly as before."""
+    c = _load_countries()
+    return c.get(code) or c.get(code.split("-")[0], ("", ""))
+
+
 def _country(code: str) -> str:
     """The country behind a league code, for the search box. Typed in
     config/countries.tsv — culture, not data; the engine never reads it."""
-    return _load_countries().get(code.split("-")[0], ("", ""))[0]
+    return _place(code)[0]
 
 
 def _flag(code: str) -> str:
     """The country's flag emoji, for the Ask Athena league menu."""
-    return _load_countries().get(code.split("-")[0], ("", ""))[1]
+    return _place(code)[1]
 
 
 _LEAGUE_NAMES: dict | None = None
@@ -3326,8 +3339,16 @@ def main() -> None:
     # carried "NED-D2" where their neighbours carried "Dutch Eredivisie".
     # The typed table fills those in. Only the ones that print a code:
     # a league that already has a name keeps it.
+    # The six international codes are the other case: they DO have a name in
+    # config/leagues.json — "CONCACAF internationals" — and it is a perfectly
+    # good engine-side label that says nothing the menu needs, because the
+    # menu prints a country column of its own and "CONCACAF" is not a place a
+    # visitor searches for. So a typed name wins outright for those, which is
+    # what config/league_names.tsv is for.
     for _c, _comp in bank.items():
-        if _comp["name"] == _c and _league_name(_c):
+        if not _league_name(_c):
+            continue
+        if _comp["name"] == _c or _c.startswith("INT-"):
             _comp["name"] = f"{_country(_c)} {_league_name(_c)}".strip()
 
     # The league menu, in the order it is printed: by country first, then

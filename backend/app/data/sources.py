@@ -365,6 +365,43 @@ LEAGUES: dict[str, LeagueSource] = {
         "copa-libertadores/{season}_copal.txt",
         calendar_year=True, international=True,
     ),
+    # ── National teams ────────────────────────────────────────────────────
+    # One code per confederation, plus friendlies. Fetched and stored by
+    # scripts/internationals.py, whose header carries the measurement that
+    # chose this shape — briefly: confederations differ from each other as
+    # much as club leagues do (sd 0.312 goals against 0.295), so a single
+    # pooled international code would have been a Simpson's-paradox trap,
+    # and friendlies are 37% of the pool and belong to no confederation.
+    #
+    # espn_code is left unset on purpose. Each of these is fed by SEVERAL
+    # slugs — INT-UEFA alone merges uefa.nations, fifa.worldq.uefa, uefa.euroq
+    # and uefa.euro — which the one-slug-per-league loader cannot express, and
+    # the international slugs answer to dates=<year> rather than the span form
+    # every club fetch uses. The slug lists live in scripts/internationals.py.
+    "INT-UEFA": LeagueSource(
+        "INT-UEFA", "UEFA internationals", "", "",
+        calendar_year=True, international=True, provider="espn",
+    ),
+    "INT-CONCACAF": LeagueSource(
+        "INT-CONCACAF", "CONCACAF internationals", "", "",
+        calendar_year=True, international=True, provider="espn",
+    ),
+    "INT-CAF": LeagueSource(
+        "INT-CAF", "CAF internationals", "", "",
+        calendar_year=True, international=True, provider="espn",
+    ),
+    "INT-AFC": LeagueSource(
+        "INT-AFC", "AFC internationals", "", "",
+        calendar_year=True, international=True, provider="espn",
+    ),
+    "INT-CONMEBOL": LeagueSource(
+        "INT-CONMEBOL", "CONMEBOL internationals", "", "",
+        calendar_year=True, international=True, provider="espn",
+    ),
+    "INT-FR": LeagueSource(
+        "INT-FR", "International friendlies", "", "",
+        calendar_year=True, international=True, provider="espn",
+    ),
     # ── football-data.co.uk only ──────────────────────────────────────────
     # Competitions openfootball does not publish. These have no git mirror, so
     # they are fetched live and depend on network access at load time.

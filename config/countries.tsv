@@ -55,3 +55,13 @@ UKR	Ukraine	🇺🇦
 UCL	Europe	🇪🇺
 UEL	Europe	🇪🇺
 UECL	Europe	🇪🇺
+# National teams. These six share the prefix INT and are six different
+# parts of the world, so each is listed WHOLE — scripts/webapp.py tries the
+# full code before the prefix for exactly this. INT-FR is friendlies, which
+# belong to no confederation and fly no flag but the game's own.
+INT-UEFA	Europe	🇪🇺
+INT-CONCACAF	North America	🌎
+INT-CONMEBOL	South America	🌎
+INT-CAF	Africa	🌍
+INT-AFC	Asia	🌏
+INT-FR	International	⚽

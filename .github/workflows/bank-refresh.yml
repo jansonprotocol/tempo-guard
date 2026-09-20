@@ -84,6 +84,13 @@ jobs:
             git reset --hard origin/main
             cd backend
             python scripts/ingest_board.py
+            # National-team results come from ESPN directly rather than from
+            # the board, because a confederation code is fed by several slugs
+            # and nothing else fetches them. --since 2026 re-asks only the
+            # current year, which is a handful of requests, not the 15-season
+            # history.
+            python scripts/internationals.py --write --since 2026 || \
+              echo "international refresh failed, continuing"
             python scripts/matchbank.py --since
             python scripts/livebands.py
             python scripts/drift.py

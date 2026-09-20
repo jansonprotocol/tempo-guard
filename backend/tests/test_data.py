@@ -528,10 +528,20 @@ def test_espn_sourced_leagues_declare_a_slug():
     """
     from app.data import sources
 
+    from scripts.internationals import SETS
+
     espn = [s for s in sources.LEAGUES.values() if s.provider == "espn"]
     assert espn, "expected at least the leagues rescued from dead feeds"
     for s in espn:
-        assert s.espn_code, s.code
+        # The international codes are fed by SEVERAL slugs each — INT-UEFA
+        # merges four — which the single espn_code field cannot hold, so
+        # theirs live in scripts/internationals.py. The invariant is the same
+        # one either way: an ESPN league must say somewhere which slugs it
+        # reads, or an empty league is indistinguishable from a broken one.
+        if s.code.startswith("INT-"):
+            assert SETS.get(s.code) and SETS[s.code][1], s.code
+        else:
+            assert s.espn_code, s.code
         assert not s.repo and not s.path, f"{s.code} should not keep a git path"
 
 
@@ -3378,3 +3388,66 @@ def test_half_time_keeps_its_live_box():
     app = (webapp.ROOT / "web" / "index.html").read_text()
     assert 'querySelectorAll(".also[data-mu]")' in app
     assert "function alsoBoxStatic(" in app
+
+
+def test_the_international_set_is_wired_end_to_end():
+    """National-team football, built 20 Sep on the bettor's instruction
+    ("Build it. Make accessible in bank search and available for
+    futurematch") after the 20 Sep measurement said it was worth building.
+
+    Six confederation codes, not one pooled set, because confederations
+    differ from each other as much as club leagues do — sd 0.312 goals
+    against 0.295 — so a single bar would have been the Simpson's-paradox
+    trap config/ladder_rates.tsv had to be rescued from.
+
+    The invariant is that every stage a card passes through knows about
+    them: the store has the results, the two ENGINE inputs have their rows,
+    leagues.json has measured norms rather than the dataclass defaults, and
+    the fixture actually prices. A code missing from any one of those looks
+    merely quiet rather than broken, which is the failure this guards.
+    """
+    import json
+    from datetime import date
+    from pathlib import Path
+
+    from app.data import config, sources, store
+    from scripts.internationals import SETS
+    from scripts.two_tips import tips
+
+    root = Path(__file__).resolve().parents[2]
+    codes = set(SETS)
+    assert len(codes) == 6, sorted(codes)
+
+    hit = {ln.split("\t")[0] for ln in
+           (root / "config" / "league_hitrates.tsv").read_text().splitlines()}
+    slices = {ln.split("\t")[0] for ln in
+              (root / "config" / "guard_slices.tsv").read_text().splitlines()}
+    countries = (root / "config" / "countries.tsv").read_text()
+    names = (root / "config" / "league_names.tsv").read_text()
+    leagues = json.loads((root / "config" / "leagues.json").read_text())
+
+    for code in sorted(codes):
+        assert code in sources.LEAGUES, code
+        assert sources.LEAGUES[code].international, code
+        df = store.load_results(code)
+        assert len(df) >= 400, (code, len(df))
+        assert code in hit, f"{code} has no league_hitrates row"
+        assert code in slices, f"{code} has no guard_slices row"
+        assert f"{code}\t" in countries, f"{code} is not in countries.tsv"
+        assert f"{code}\t" in names, f"{code} is not in league_names.tsv"
+
+        cfg = config.get(code)
+        # Measured, not defaulted: LeagueConfig ships 2.70/1.65/2.70/0.45 and
+        # a league still carrying those never had its norms taken.
+        assert (cfg.goal_mean, cfg.goal_std) != (2.70, 1.65), code
+        assert (cfg.mu_mean, cfg.mu_std) != (2.70, 0.45), code
+        # Season stage measures how far into a campaign a fixture falls, as
+        # matches played over matches expected. A national side plays seven
+        # one year and twelve the next, so that ratio does not exist here.
+        assert cfg.use_season_stage is False, code
+
+    # And it prices. Netherlands v Germany is the fixture the bettor sent on
+    # 19 Sep asking whether the board had anything for it; it now does.
+    t = tips("INT-UEFA", "Netherlands", "Germany", date(2026, 9, 24))
+    assert t and t["t1"], "the Nations League card does not price"
+    assert 1.5 < t["mu"] < 6.0, t["mu"]

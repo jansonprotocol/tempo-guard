@@ -7,23 +7,11 @@
 # unmatched	Pumas v Atlético San Luis	MEX-LMX	2026-09-27	Atlante FC v Monterrey | Tijuana v Atlas | Cruz Azul v Toluca | Guadalajara v Querétaro
 # unmatched	Real Oviedo v Sporting Gijón	ESP-L2	2026-09-27	AD Ceuta FC v Real Sociedad B | Granada CF v Andorra CF | Celta Fortuna v Sabadell FC | Tenerife v Cádiz CF
 # unmatched	Levante v Athletic Club	ESP-LL	2026-10-21	
-Lech Poznań v Radomiak Radom	1	U4.5	1.32	1.40	Pinnacle	1.27	12
-Lech Poznań v Radomiak Radom	3	DNB1	1.20	1.22	Winamax (FR)	1.19	18
-Marseille v Paris Saint-Germain	1	O1.5	1.07	1.11	1xBet	1.06	13
-AC Milan v Lecce	1	U3.5	1.52	1.64	1xBet	1.52	15
-AC Milan v Lecce	3	1X	1.03	1.07	GTbets	1.03	19
-Valencia v Real Sociedad	1	U4.5	1.08	1.13	1xBet	1.08	13
-Valencia v Real Sociedad	2	U3.75	1.31	1.36	1xBet	1.31	13
-Leganés v Granada	1	U3.5	1.16	1.25	BetOnline.ag	1.16	14
-Corinthians v Fluminense	1	U3.5	1.15	1.19	1xBet	1.16	16
-Vitória v Cruzeiro	1	U3.5	1.34	1.39	1xBet	1.32	16
-Goiás v Avaí	1	U3.5	1.14	1.16	Unibet (NL)	1.16	11
-Goiás v Avaí	2	U2.75	1.51	1.56	Unibet (NL)	1.56	11
-Porto v Benfica	1	O1.5	1.25	1.31	Pinnacle	1.22	12
-Porto v Benfica	2	O2.25	1.88	1.96	Pinnacle	1.80	12
-Porto v Benfica	3	12	1.30	1.37	Pinnacle	1.24	18
-Flamengo v RB Bragantino	1	O1.5	1.14	1.27	Pinnacle	1.14	16
-Flamengo v RB Bragantino	3	DNB1	1.17	1.20	Winamax (FR)	1.17	22
+Porto v Benfica	1	O1.5	1.24	1.30	Pinnacle	1.22	12
+Porto v Benfica	2	O2.25	1.85	1.93	Pinnacle	1.81	12
+Porto v Benfica	3	12	1.30	1.37	Pinnacle	1.26	18
+Flamengo v RB Bragantino	1	O1.5	1.13	1.27	Pinnacle	1.13	16
+Flamengo v RB Bragantino	3	DNB1	1.17	1.19	Winamax (FR)	1.17	22
 Londrina v Fortaleza	1	U3.5	1.16	1.28	Pinnacle	1.16	11
 Londrina v Fortaleza	2	U2.75	1.55	1.79	Pinnacle	1.55	11
 Athletico v Bahia	1	U4.5	1.08	1.12	Pinnacle	1.06	14
@@ -39,17 +27,17 @@ Cuiabá v Náutico	2	O1.75	1.34	1.70	Coolbet	1.34	10
 Seattle v Salt Lake	1	U4.5	1.17	1.21	1xBet	1.19	14
 Seattle v Salt Lake	2	U3.75	1.50	1.54	1xBet	1.52	14
 Girona v Albacete	1	U4.5	1.14	1.23	1xBet	1.14	12
-Girona v Albacete	3	DNB1	1.28	1.32	Winamax (FR)	1.26	17
-Novorizontino v São Bernardo	1	O1.0	1.02	1.02	Pinnacle		1
+Girona v Albacete	3	DNB1	1.30	1.32	Winamax (FR)	1.26	17
+Novorizontino v São Bernardo	1	O1.0	1.01	1.01	Pinnacle		1
 Novorizontino v São Bernardo	3	DNB1	1.28	1.35	LeoVegas (SE)	1.34	12
 Vila Nova v Londrina	2	O1.75	1.27	1.27	Unibet (NL)	1.27	3
 Vila Nova v Londrina	3	DNB1	1.33	1.34	LeoVegas (SE)	1.33	3
 Atlante v Monterrey	1	U4.5	1.15	1.17	Unibet (NL)	1.17	12
 Tijuana v Atlas	1	U4.5	1.05	1.05	Unibet (SE)	1.05	3
 Tijuana v Atlas	3	DNB1	1.65	1.65	LeoVegas (SE)	1.65	4
-Ceuta v Real Sociedad B	1	U3.5	1.32	1.39	1xBet		11
+Ceuta v Real Sociedad B	1	U3.5	1.32	1.43	1xBet		11
 Granada v FC Andorra	1	U4.5	1.05	1.05	Unibet (SE)	1.05	3
-Tenerife v Cádiz	1	U3.5	1.17	1.29	Pinnacle	1.18	11
+Tenerife v Cádiz	1	U3.5	1.18	1.28	Pinnacle	1.18	12
 Náutico v Sport Recife	2	O1.75	1.21	1.21	Unibet (SE)	1.21	3
 Operário-PR v Ceará	1	O1.0	1.02	1.02	Unibet (SE)	1.02	2
 Operário-PR v Ceará	2	O1.75	1.34	1.34	Unibet (SE)	1.34	3
@@ -89,14 +77,14 @@ Vancouver Whitecaps v DC United	1	U4.5	1.35	1.39	1xBet	1.36	12
 Vancouver Whitecaps v DC United	2	U3.75	1.87	1.92	1xBet	1.88	12
 Vancouver Whitecaps v DC United	3	DNB1	1.13	1.17	Winamax (FR)	1.13	18
 Real Valladolid v Córdoba	1	U3.5	1.29	1.35	Pinnacle	1.29	11
-Real Valladolid v Córdoba	3	12	1.26	1.31	Pinnacle	1.29	15
+Real Valladolid v Córdoba	3	12	1.27	1.31	Pinnacle	1.29	16
 Criciúma v Avaí	1	U3.5	1.21	1.21	Unibet (NL)	1.21	3
 Criciúma v Avaí	2	U2.75	1.66	1.66	Unibet (NL)	1.66	3
-Mallorca v Almería	1	U4.5	1.07	1.10	1xBet	1.07	10
-Burgos v Eldense	1	U3.5	1.21	1.37	Pinnacle	1.19	8
-Burgos v Eldense	3	DNB1	1.43	1.44	Codere (IT)	1.39	10
-Eibar v Las Palmas	1	U3.5	1.22	1.34	Pinnacle	1.24	8
-Eibar v Las Palmas	3	12	1.30	1.35	Pinnacle	1.30	10
+Mallorca v Almería	1	U4.5	1.07	1.12	1xBet	1.07	11
+Burgos v Eldense	1	U3.5	1.20	1.36	Pinnacle	1.19	9
+Burgos v Eldense	3	DNB1	1.43	1.45	Winamax (FR)	1.39	13
+Eibar v Las Palmas	1	U3.5	1.22	1.35	Pinnacle	1.24	9
+Eibar v Las Palmas	3	12	1.30	1.38	1xBet	1.30	13
 CRB v Cuiabá	1	O1.0	1.01	1.01	Unibet (NL)	1.01	2
 CRB v Cuiabá	2	O1.75	1.31	1.31	Unibet (NL)	1.31	3
 Fortaleza v Athletic Club	1	O1.0	1.02	1.02	Unibet (NL)	1.02	2

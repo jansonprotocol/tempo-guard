@@ -62,6 +62,24 @@ SLUGS = dict(ESPN, **{
 })
 
 
+def slugs_for(code: str) -> tuple[str, ...]:
+    """Every ESPN slug that can be holding this code's fixtures.
+
+    One for a club competition, as it always was. FOUR for INT-UEFA — a
+    Nations League night, a World Cup qualifying night and a Euro qualifying
+    night are three different slugs and one board code, so grading has to ask
+    all of them or a whole international round sits pending and has to be
+    hand-set the way Algeria is. The lists live in scripts/internationals.py
+    beside the fetch that built the history, so there is one place to add a
+    competition.
+    """
+    if code.startswith("INT-"):
+        from scripts.internationals import SETS
+        return SETS.get(code, ("", ()))[1]
+    slug = SLUGS.get(code)
+    return (slug,) if slug else ()
+
+
 def _get(url: str):
     # One retry after a short pause: on a busy Saturday ESPN drops the odd
     # request, and a single failed fetch used to silently blank a whole
@@ -89,19 +107,25 @@ def board_day(code: str, day: str) -> list[dict]:
     neighbouring days are asked for too and the answers merged; a fixture
     is then found by its clubs, whichever bucket ESPN filed it in.
     """
-    slug = SLUGS.get(code)
-    if not slug:
+    slugs = slugs_for(code)
+    if not slugs:
         return []
     d0 = datetime.strptime(day, "%Y-%m-%d").date()
     out, seen = [], set()
-    for off in (-1, 0, 1):
-        d = (d0 + timedelta(days=off)).strftime("%Y%m%d")
-        data = _get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/"
-                    f"{slug}/scoreboard?dates={d}")
-        for ev in (data or {}).get("events", []):
-            if ev["id"] not in seen:
-                seen.add(ev["id"])
-                out.append(ev)
+    for slug in slugs:
+        for off in (-1, 0, 1):
+            d = (d0 + timedelta(days=off)).strftime("%Y%m%d")
+            data = _get(f"https://site.api.espn.com/apis/site/v2/sports/soccer/"
+                        f"{slug}/scoreboard?dates={d}")
+            for ev in (data or {}).get("events", []):
+                if ev["id"] not in seen:
+                    seen.add(ev["id"])
+                    # Which slug served it, so a match that goes to extra
+                    # time can be asked for its 90-minute timeline without
+                    # guessing — an international code has four slugs and
+                    # only one of them holds any given tie.
+                    ev["_slug"] = slug
+                    out.append(ev)
     return out
 
 
@@ -540,7 +564,7 @@ def main() -> None:
             # back off the scoreline before grading.
             note = ""
             if in_et:
-                reg = regulation(SLUGS[f.code], ev)
+                reg = regulation(ev.get("_slug") or SLUGS.get(f.code, ""), ev)
                 if reg is None:
                     # no timeline yet — leave it visibly live instead
                     status = f"LIVE {detail} {hg}-{ag}"
@@ -558,7 +582,7 @@ def main() -> None:
                 note = " (90'; to extra time)"
                 hg, ag = reg
             elif "AET" in detail or "PEN" in detail or "ET" == detail:
-                reg = regulation(SLUGS[f.code], ev)
+                reg = regulation(ev.get("_slug") or SLUGS.get(f.code, ""), ev)
                 if reg is None:
                     missing.append(f"{f.teams} (finished AET, no timeline)")
                     continue

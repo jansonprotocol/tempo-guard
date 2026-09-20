@@ -153,7 +153,8 @@ def _stats(competitor: dict) -> dict:
 
 
 def fetch_season(espn_code: str, year: int, league_code: str,
-                 country: str = "", calendar_year: bool = True) -> pd.DataFrame:
+                 country: str = "", calendar_year: bool = True,
+                 span: str | None = None) -> pd.DataFrame:
     """
     One season of a competition, finished matches only.
 
@@ -163,12 +164,18 @@ def fetch_season(espn_code: str, year: int, league_code: str,
     the front half of the next — the rows all exist and every season label is
     wrong, which is worse than missing data because nothing looks broken.
 
+    `span` overrides the dates parameter outright. Club competitions answer to
+    a YYYYMMDD-YYYYMMDD range; the international ones do NOT — every national
+    slug returns HTTP 400 for a range and wants the bare year instead, so
+    scripts/internationals.py passes span=str(year). Left None, nothing about
+    the sixty club leagues changes.
+
     Unplayed fixtures are dropped rather than stored with null scores: the
     store holds results, and a fixture row with no score is what made
     openfootball's Série B file look complete when it was not.
     """
-    span = (f"{year}0101-{year}1231" if calendar_year
-            else f"{year}0701-{year + 1}0630")
+    span = span or (f"{year}0101-{year}1231" if calendar_year
+                    else f"{year}0701-{year + 1}0630")
     r = requests.get(
         SCOREBOARD.format(code=espn_code),
         params={"dates": span, "limit": LIMIT},
