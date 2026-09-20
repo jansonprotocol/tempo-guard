@@ -3475,3 +3475,56 @@ def test_the_international_set_is_wired_end_to_end():
     t = tips("INT-UEFA", "Netherlands", "Germany", date(2026, 9, 24))
     assert t and t["t1"], "the Nations League card does not price"
     assert 1.5 < t["mu"] < 6.0, t["mu"]
+
+
+def test_the_sweep_still_runs_without_requests():
+    """20 Sep, and it cost the board an evening.
+
+    scripts/sweep.py talks to ESPN through urllib.request and never
+    `requests`, because it is the one job the live board depends on and it
+    runs on a CI box that installs backend/requirements.txt and nothing
+    else — where `requests` was not listed at all. Teaching sweep about the
+    international slugs added `from scripts.internationals import SETS`,
+    internationals imported app.data.espn at module level, espn imports
+    requests, and every pass in the runner died with ModuleNotFoundError.
+
+    The failure was quiet in the worst way. It landed AFTER the per-match
+    logging and BEFORE the board write, so config/live_log.tsv kept growing
+    and the bot kept committing, while config/fixtures.tsv froze at 19:21.
+    Porto v Benfica kicked off at 19:30 and the page showed it running with
+    no minute on it for three quarters of an hour.
+
+    So: the sweep's import chain must survive `requests` being missing.
+    Run in a subprocess with the module poisoned, because once pytest has
+    imported it a monkeypatch cannot un-import what sweep already holds.
+    """
+    import subprocess
+    import sys
+    import textwrap
+    from pathlib import Path
+
+    backend = Path(__file__).resolve().parents[1]
+    prog = textwrap.dedent("""
+        import sys
+        class Block:
+            def find_module(self, name, path=None):
+                return self if name == "requests" else None
+            def load_module(self, name):
+                raise ImportError("no requests here")
+        sys.meta_path.insert(0, Block())
+        sys.path.insert(0, %r)
+        from scripts.sweep import slugs_for, SLUGS
+        assert slugs_for("INT-UEFA")[0] == "uefa.nations", slugs_for("INT-UEFA")
+        assert slugs_for("NED-ED") == ("ned.1",), slugs_for("NED-ED")
+        assert slugs_for("NOPE-X") == ()
+        print("ok")
+    """) % str(backend)
+    r = subprocess.run([sys.executable, "-c", prog], capture_output=True,
+                       text=True, timeout=120)
+    assert r.returncode == 0, r.stderr[-2000:]
+    assert "ok" in r.stdout
+
+    # And the dependency espn.py really does need is declared, so nothing
+    # else is running on a package that only happens to be installed.
+    req = (backend / "requirements.txt").read_text()
+    assert "requests" in req

@@ -5,6 +5,12 @@ pandas>=2.0
 pyarrow>=14.0
 rapidfuzz>=3.0
 pydantic>=2.0
+# app/data/espn.py has imported this since the ESPN fallback was added and it
+# was never declared — it happened to be present wherever espn.py ran. It is
+# declared now, but NOT so that scripts/sweep.py may rely on it: the sweep
+# still speaks urllib.request on purpose, so that the one job the live board
+# depends on keeps the shortest dependency chain on the box.
+requests>=2.31
 
 # Development
 pytest>=7.0

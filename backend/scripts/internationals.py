@@ -60,11 +60,19 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pandas as pd
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.data import espn, store
+# NOTHING HEAVY AT MODULE LEVEL, and this is not tidiness — it is a bug fix.
+# scripts/sweep.py imports SETS to know which slugs a confederation code
+# answers on, and sweep.py is deliberately dependency-light: it talks to ESPN
+# through urllib.request, never requests, so it runs on a CI box that installed
+# only backend/requirements.txt. Importing pandas and app.data.espn up here
+# dragged `requests` into that import chain, and `requests` is not in
+# requirements.txt — so on 20 Sep every sweep pass in the runner died with
+# ModuleNotFoundError after it had already appended config/live_log.tsv and
+# before it wrote config/fixtures.tsv. The board froze mid-evening with a live
+# Porto v Benfica showing no minute while the minutes kept being logged.
+# SETS is a plain dict and must stay importable on its own.
 
 SINCE, UNTIL = 2012, 2026
 
@@ -87,7 +95,7 @@ SETS: dict[str, tuple[str, tuple[str, ...]]] = {
 }
 
 
-def season(code: str, year: int, slugs) -> pd.DataFrame:
+def season(code: str, year: int, slugs):
     """One calendar year of one code: every slug that feeds it, concatenated
     and de-duplicated on (date, home, away).
 
@@ -96,6 +104,10 @@ def season(code: str, year: int, slugs) -> pd.DataFrame:
     distort every rolling feature computed from it — the same reason
     store.save drops duplicates on the way in.
     """
+    import pandas as pd
+
+    from app.data import espn
+
     frames = []
     for slug in slugs:
         try:
@@ -119,6 +131,8 @@ def season(code: str, year: int, slugs) -> pd.DataFrame:
 
 def build(code: str, write: bool, since: int, until: int) -> tuple[int, int]:
     """(matches, seasons written) for one code."""
+    from app.data import store
+
     name, slugs = SETS[code]
     total, wrote = 0, 0
     for year in range(since, until + 1):
@@ -157,6 +171,7 @@ def norms(code: str) -> dict | None:
     """The four scoring norms for one code, measured from the store."""
     import statistics
 
+    from app.data import store
     from app.predict import build_request
 
     df = store.load_results(code)
@@ -242,6 +257,8 @@ def slate(days: int, codes: list[str]) -> None:
     from datetime import datetime, timedelta, timezone
 
     import requests
+
+    from app.data import espn
 
     now = datetime.now(timezone.utc)
     until = now + timedelta(days=days)
