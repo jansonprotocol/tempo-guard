@@ -102,6 +102,76 @@ def _get(path: str, **params) -> tuple[object, dict]:
         return json.load(r), dict(r.headers)
 
 
+# NATIONAL TEAMS: one board code, SEVERAL feed keys — the same shape the
+# ESPN sweep has (scripts/sweep.slugs_for), for the same reason. INT-UEFA
+# is a Nations League night, a World Cup qualifying night and a Euro
+# qualifying night, and the feed files each under its own key, active
+# only while that competition is being played. On 21 Sep the six
+# international codes were not in SPORT at all, so the feed was never
+# asked and the 26 UEFA cards on the board went unquoted (the bettor:
+# "odds refresh worked, but it didn't find the uefa matches").
+#
+# Read off the feed's own /sports listing, 21 Sep. What it does NOT carry
+# is as important: no CONCACAF Nations League or qualifiers, no CAF or
+# AFC qualifiers, and no friendlies key at all — so INT-CONCACAF prices
+# only in Gold Cup summers, INT-CAF only during an AFCON, and INT-AFC and
+# INT-FR never. A card in those codes with no quote is an absence, not a
+# name miss, and is reported as such.
+INTL: dict[str, tuple[str, ...]] = {
+    "INT-UEFA": ("soccer_uefa_nations_league",
+                 "soccer_fifa_world_cup_qualifiers_europe",
+                 "soccer_uefa_euro_qualification",
+                 "soccer_uefa_european_championship"),
+    "INT-CONMEBOL": ("soccer_fifa_world_cup_qualifiers_south_america",
+                     "soccer_conmebol_copa_america"),
+    "INT-CONCACAF": ("soccer_concacaf_gold_cup",),
+    "INT-CAF": ("soccer_africa_cup_of_nations",),
+    "INT-AFC": (),
+    "INT-FR": (),
+}
+
+_ACTIVE: set | None = None
+
+
+def _active_sports() -> set:
+    """The feed keys currently in season, from /sports — which the feed
+    does not count against the quota, so it is asked once per run and a
+    key that is out of season never spends the two credits an odds call
+    costs. Empty (never None) when the feed cannot be reached, which
+    makes every international code look dormant for that run rather than
+    guessing at what might be on."""
+    global _ACTIVE
+    if _ACTIVE is None:
+        data, _hdr = _get("/sports/", all="true")
+        _ACTIVE = {s["key"] for s in (data or []) if s.get("active")}
+    return _ACTIVE
+
+
+def sports_for(code: str) -> tuple[str, ...]:
+    """Every feed key worth asking for this code right now: the club
+    key as always, or the international keys the feed says are active."""
+    if code in SPORT:
+        return (SPORT[code],)
+    keys = INTL.get(code)
+    if not keys:
+        return ()
+    active = _active_sports()
+    return tuple(k for k in keys if k in active)
+
+
+def carried(code: str) -> bool:
+    """Is there a feed key to ask for this competition RIGHT NOW?
+
+    A club league always. An international code only while one of its
+    keys is in season: the Gold Cup key exists in the feed but is dormant
+    in a September qualifying window, and a CONCACAF card then has no
+    quote because nothing was asked, not because a name failed to match.
+    The first draft answered True for the dormant key and printed all
+    sixteen CONCACAF cards as "unmatched — feed that day: nothing", which
+    is exactly the name-miss alarm this flag exists to keep honest."""
+    return bool(sports_for(code))
+
+
 def _cache() -> dict:
     try:
         return json.loads(CACHE.read_text())
@@ -115,28 +185,34 @@ def fetch_league(code: str, force: bool = False) -> list:
     One call per league, cached. cost = 2 credits (h2h + totals, one region)
     regardless of how many fixtures come back.
     """
-    sport = SPORT.get(code)
-    if not sport:
-        return []
-    c = _cache()
-    hit = c.get(sport)
-    if hit and not force and (time.time() - hit["at"]) < FRESH_MIN * 60:
-        return hit["events"]
-    data, hdr = _get(f"/sports/{sport}/odds/", regions=REGIONS,
-                     markets="h2h,totals", oddsFormat="decimal")
-    if data is None:
-        return hit["events"] if hit else []
-    c[sport] = {"at": time.time(), "events": data,
-                "left": hdr.get("x-requests-remaining")}
-    # Rename into place: the cache is a 2.6 MB file rewritten after every
-    # league, and a crash mid-write would leave unparseable JSON that
-    # _cache() reads as EMPTY — the next run would then refetch all 26
-    # leagues and spend the month's credits repairing a file it could
-    # simply have kept.
-    tmp = CACHE.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(c))
-    tmp.replace(CACHE)
-    return data
+    events: list = []
+    # One key for a club league; for a national-team code, every key the
+    # feed says is active this window. The cache stays keyed by FEED KEY,
+    # so a code that spans several keys merges from several cache rows
+    # and a key shared by nothing else is fetched exactly once.
+    for sport in sports_for(code):
+        c = _cache()
+        hit = c.get(sport)
+        if hit and not force and (time.time() - hit["at"]) < FRESH_MIN * 60:
+            events += hit["events"]
+            continue
+        data, hdr = _get(f"/sports/{sport}/odds/", regions=REGIONS,
+                         markets="h2h,totals", oddsFormat="decimal")
+        if data is None:
+            events += hit["events"] if hit else []
+            continue
+        c[sport] = {"at": time.time(), "events": data,
+                    "left": hdr.get("x-requests-remaining")}
+        # Rename into place: the cache is a 2.6 MB file rewritten after
+        # every league, and a crash mid-write would leave unparseable JSON
+        # that _cache() reads as EMPTY — the next run would then refetch
+        # all 26 leagues and spend the month's credits repairing a file it
+        # could simply have kept.
+        tmp = CACHE.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(c))
+        tmp.replace(CACHE)
+        events += data
+    return events
 
 
 def find(code: str, teams: str, day: str) -> dict | None:
@@ -390,7 +466,7 @@ def write_quotes() -> int:
             # (QPR v Cardiff, 2 Sep: 1.43 on a 1.27 bar, unseen). So it is
             # named, with the feed's own fixtures that day beside it, so
             # the nickname that fixes it can be typed at once.
-            if f.code in SPORT:
+            if carried(f.code):
                 near = [f'{e["home_team"]} v {e["away_team"]}'
                         for e in fetch_league(f.code)
                         if e.get("commence_time", "")[:10] in
@@ -466,8 +542,8 @@ def main() -> None:
     if "--leagues" in args:
         from scripts.board import load
         codes = sorted({f.code for f in load()})
-        have = [c for c in codes if c in SPORT]
-        miss = [c for c in codes if c not in SPORT]
+        have = [c for c in codes if carried(c)]
+        miss = [c for c in codes if not carried(c)]
         print(f"{len(have)} of {len(codes)} board competitions map to the API")
         print("  mapped :", ", ".join(have))
         print("  no feed:", ", ".join(miss))

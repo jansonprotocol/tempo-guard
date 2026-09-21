@@ -3696,3 +3696,48 @@ def test_ingest_board_reads_the_alias_table_and_finds_a_promoted_club():
     # 3. what has no rows anywhere stays unresolved — never a guess
     df, ns = names("ALG-L1")
     assert _resolve("ALG-L1", df, ns, "Temouchent") is None
+
+
+def test_the_odds_feed_is_asked_for_national_teams_by_every_key_in_season():
+    """The bettor, 21 Sep: "odds refresh worked, but it didn't find the
+    uefa matches." The six international codes were not in odds_api.SPORT,
+    so the feed was never asked. They map to SEVERAL feed keys each — the
+    ESPN sweep's shape — filtered to the ones the feed says are active,
+    from its free /sports listing, so a key out of season costs nothing.
+    No network here: the active set is pinned by hand.
+    """
+    from scripts import odds_api as oa
+
+    monkey = oa._ACTIVE
+    try:
+        oa._ACTIVE = {"soccer_uefa_nations_league", "soccer_epl",
+                      "soccer_fifa_world_cup_qualifiers_south_america"}
+        # a club league is unchanged: its one key, active or not
+        assert oa.sports_for("ENG-PL") == ("soccer_epl",)
+        assert oa.sports_for("DEN-SL") == ("soccer_denmark_superliga",)
+        # a national code asks only the keys in season, in table order
+        assert oa.sports_for("INT-UEFA") == ("soccer_uefa_nations_league",)
+        assert oa.sports_for("INT-CONMEBOL") == ("soccer_fifa_world_cup_qualifiers_south_america",)
+        assert oa.sports_for("INT-CAF") == ()          # AFCON not on
+        # the feed carries no friendlies and no AFC key at all
+        assert oa.sports_for("INT-FR") == () and oa.sports_for("INT-AFC") == ()
+        assert oa.sports_for("NOPE-X") == ()
+        # carried() is about THIS WINDOW: a dormant international key is
+        # not carried, so an unquoted CONCACAF card in September is an
+        # absence, never the "unmatched" name-miss alarm (the first draft
+        # raised it on sixteen cards at once); a club league always is
+        assert oa.carried("INT-UEFA") and oa.carried("ENG-PL")
+        assert not oa.carried("INT-CAF") and not oa.carried("INT-CONCACAF")
+        assert not oa.carried("INT-FR") and not oa.carried("ALG-L1")
+        # the cache is keyed by feed key, so a multi-key code merges rows
+        oa._ACTIVE = {"soccer_uefa_nations_league", "soccer_fifa_world_cup_qualifiers_europe"}
+        assert oa.sports_for("INT-UEFA") == ("soccer_uefa_nations_league",
+                                             "soccer_fifa_world_cup_qualifiers_europe")
+    finally:
+        oa._ACTIVE = monkey
+    # every key in the table is one the feed listed on 21 Sep
+    listed = {"soccer_uefa_nations_league", "soccer_fifa_world_cup_qualifiers_europe",
+              "soccer_uefa_euro_qualification", "soccer_uefa_european_championship",
+              "soccer_fifa_world_cup_qualifiers_south_america", "soccer_conmebol_copa_america",
+              "soccer_concacaf_gold_cup", "soccer_africa_cup_of_nations"}
+    assert {k for ks in oa.INTL.values() for k in ks} <= listed

@@ -4,14 +4,38 @@
 # the cards fall back to the engine's own buy>= bar.
 # fixture	which	lane	consensus	best	book	unibet_nl	books
 # unmatched	Randers v Brøndby	DEN-SL	2026-09-23	
+# unmatched	Albania v Belarus	INT-UEFA	2026-09-26	Armenia v Latvia | Georgia v Northern Ireland | Italy v Belgium | Poland v Bosnia & Herzegovina
 # unmatched	Levante v Athletic Club	ESP-LL	2026-10-21	
-Criciúma v Operário-PR	1	U3.5	1.19	1.31	Pinnacle	1.21	11
+Criciúma v Operário-PR	1	U3.5	1.18	1.31	Pinnacle	1.18	11
 Cuiabá v Náutico	1	O1.0	1.03	1.11	Coolbet	1.02	8
 Cuiabá v Náutico	2	O1.75	1.34	1.70	Coolbet	1.34	10
 Seattle v Salt Lake	1	U4.5	1.17	1.21	1xBet	1.19	15
 Seattle v Salt Lake	2	U3.75	1.50	1.53	1xBet	1.52	15
+Andorra v Malta	1	U3.5	1.09	1.10	1xBet		5
+Andorra v Malta	2	U2.75	1.39	1.39	Betsson		5
+Austria v Israel	1	O1.5	1.13	1.15	1xBet		5
+Austria v Israel	3	DNB1	1.19	1.21	Winamax (DE)		10
+Kosovo v Republic of Ireland	1	U4.5	1.05	1.05	1xBet		2
+Kosovo v Republic of Ireland	2	U3.75	1.19	1.21	1xBet		3
+Liechtenstein v Lithuania	1	U3.5	1.20	1.25	1xBet		5
+Netherlands v Germany	1	O1.5	1.15	1.25	Pinnacle		6
+Netherlands v Germany	2	O2.25	1.53	1.83	Pinnacle		6
+Norway v Denmark	1	O1.5	1.21	1.29	Pinnacle		5
+Norway v Denmark	2	O2.25	1.74	1.93	Pinnacle		5
+Portugal v Wales	1	O1.5	1.15	1.27	Pinnacle		6
+Serbia v Greece	1	U4.5	1.05	1.11	Pinnacle		5
+Armenia v Latvia	1	U3.5	1.28	1.32	1xBet		5
+Georgia v Northern Ireland	1	U4.5	1.06	1.08	1xBet		4
+Georgia v Northern Ireland	2	U3.75	1.26	1.29	1xBet		4
 Girona v Albacete	1	U4.5	1.14	1.24	1xBet	1.14	13
 Girona v Albacete	3	DNB1	1.28	1.30	Winamax (FR)	1.26	18
+Hungary v Ukraine	1	O1.5	1.30	1.33	1xBet		5
+Italy v Belgium	1	O1.5	1.24	1.32	Pinnacle		6
+Montenegro v Cyprus	1	U4.5	1.07	1.09	1xBet		4
+Poland v Bosnia-Herzegovina	1	O1.5	1.26	1.29	1xBet		5
+Poland v Bosnia-Herzegovina	2	O2.25	1.90	1.94	1xBet		5
+Sweden v Romania	1	O1.5	1.16	1.18	Betsson		5
+Türkiye v France	1	O1.5	1.13	1.14	Betsson		6
 Novorizontino v São Bernardo	1	O1.0	1.01	1.01	Pinnacle		1
 Novorizontino v São Bernardo	3	DNB1	1.28	1.32	LeoVegas (SE)	1.31	14
 Vila Nova v Londrina	1	O1.0	1.02	1.02	Pinnacle	1.01	7
@@ -21,8 +45,24 @@ Atlante v Monterrey	1	U4.5	1.14	1.17	Unibet (NL)	1.17	13
 Tijuana v Atlas	1	U4.5	1.08	1.11	Pinnacle	1.06	13
 Tijuana v Atlas	3	DNB1	1.52	1.57	LeoVegas (SE)	1.56	16
 Ceuta v Real Sociedad B	1	U3.5	1.33	1.43	1xBet		12
+Slovenia v Scotland	1	U4.5	1.03	1.05	1xBet		4
+Slovenia v Scotland	2	U3.75	1.19	1.22	1xBet		5
 Granada v FC Andorra	1	U4.5	1.05	1.08	Pinnacle	1.05	11
+Bulgaria v Luxembourg	1	U3.5	1.19	1.20	1xBet		3
+Bulgaria v Luxembourg	2	U2.75	1.60	1.62	William Hill		3
+Faroe Islands v Kazakhstan	1	U4.5	1.03	1.05	1xBet		4
+Faroe Islands v Kazakhstan	2	U3.75	1.18	1.20	1xBet		4
+Faroe Islands v Kazakhstan	3	DNB1	1.90	1.91	William Hill		5
+Iceland v Estonia	1	U4.5	1.08	1.11	1xBet		5
+Iceland v Estonia	3	DNB1	1.17	1.19	Winamax (FR)		9
+San Marino v Finland	1	U3.5	1.53	1.62	1xBet		5
 Tenerife v Cádiz	1	U3.5	1.15	1.22	1xBet	1.18	13
+Czechia v Croatia	1	O1.5	1.25	1.26	Pinnacle		4
+England v Spain	1	O1.5	1.28	1.28	Pinnacle		4
+England v Spain	2	O2.25	1.90	1.91	Pinnacle		4
+North Macedonia v Switzerland	1	O1.5	1.20	1.23	1xBet		3
+Slovakia v Moldova	1	U4.5	1.08	1.13	1xBet		3
+Slovakia v Moldova	3	DNB1	1.13	1.15	PMU (FR)		7
 Náutico v Sport Recife	2	O1.75	1.21	1.21	Unibet (SE)	1.21	3
 Operário-PR v Ceará	1	O1.0	1.02	1.02	Unibet (SE)	1.02	2
 Operário-PR v Ceará	2	O1.75	1.34	1.34	Unibet (SE)	1.34	3

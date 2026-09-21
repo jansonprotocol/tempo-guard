@@ -80,3 +80,12 @@ Atletico-MG	CA Mineiro
 Atlético Mineiro	CA Mineiro
 Clube Atlético Mineiro	CA Mineiro
 Galo	CA Mineiro
+# National teams: the odds feed and ESPN keep the older English names
+# while the board (FIFA/UEFA usage since 2022) says Türkiye and Czechia.
+Turkey	Türkiye
+Czech Republic	Czechia
+Bosnia & Herzegovina	Bosnia-Herzegovina
+Bosnia and Herzegovina	Bosnia-Herzegovina
+Ivory Coast	Côte d'Ivoire
+South Korea	Korea Republic
+Iran	IR Iran
