@@ -7,37 +7,37 @@
 # written	2026-09-21
 # check	subject	n	measured	code_says	delta	flag
 label	green+	623	92.78	92.10	0.68	0
-label	green	9296	88.21	88.00	0.21	0
-label	orange	15627	83.61	82.90	0.71	0
+label	green	9306	88.19	88.00	0.19	0
+label	orange	15635	83.61	82.90	0.71	0
 label	released	242	81.82	80.90	0.92	0
-label	pink	6477	78.43	78.30	0.13	0
-label	super red	246	73.98	77.05	-3.07	1
-label	red	1665	74.71	75.70	-0.99	0
-side	claim 70-76: over vs under	1969	76.58	75.18	1.40	0
-side	claim 76-80: over vs under	6343	79.10	77.37	1.73	0
-side	claim 80-85: over vs under	15320	82.27	83.86	-1.59	0
-side	claim 85-90: over vs under	9071	89.68	87.76	1.92	0
-ladder	green+ over green	9919	92.78	88.21	4.57	0
-ladder	green over orange	24923	88.21	83.61	4.60	0
-ladder	orange over pink	22104	83.61	78.43	5.18	0
+label	pink	6483	78.42	78.30	0.12	0
+label	super red	247	74.09	77.05	-2.96	1
+label	red	1663	74.74	75.70	-0.96	0
+side	claim 70-76: over vs under	1968	76.60	75.23	1.37	0
+side	claim 76-80: over vs under	6348	79.12	77.36	1.76	0
+side	claim 80-85: over vs under	15328	82.28	83.85	-1.58	0
+side	claim 85-90: over vs under	9080	89.70	87.73	1.97	0
+ladder	green+ over green	9929	92.78	88.19	4.59	0
+ladder	green over orange	24941	88.19	83.61	4.58	0
+ladder	orange over pink	22118	83.61	78.42	5.19	0
 bar	85+ at 1.14	603	0.38	0.38	0.00	0
-bar	80–85 at 1.18	1925	-2.07	-1.81	-0.09	1
+bar	80–85 at 1.18	1925	-2.07	-1.82	-0.09	1
 bar	75–80 at 1.31	753	0.49	2.78	-0.04	1
 strong	star at +6.34 vs the rest	77	68.83	74.41	-5.58	1
 strong	star ROI vs the rest	77	-13.16	-2.46	-10.70	1
 cell	SUI-SL unders	196	77.55	83.30	-5.75	0
 cell	SCO-L2 unders	164	85.37	81.30	4.07	0
 cell	CRO-1L unders	268	90.30	86.15	4.15	0
+cell	TUR-SL unders	449	88.42	84.10	4.31	0
 cell	ESP-LL unders	405	85.68	81.24	4.44	0
-cell	BEL-PL unders	267	89.51	85.04	4.47	0
 cell	SCO-L1 unders	233	89.70	85.20	4.50	0
-cell	TUR-SL unders	448	88.62	84.11	4.51	0
+cell	BEL-PL unders	269	89.59	85.02	4.57	0
+cell	COL-PA unders	406	90.64	85.90	4.75	0
+cell	NED-ED overs	240	89.17	84.40	4.77	0
 cell	IRL-PD unders	230	89.57	84.79	4.78	0
 cell	UCL overs	268	84.70	79.92	4.78	0
-cell	COL-PA unders	403	91.07	85.89	5.17	0
-cell	BRA-SA unders	330	87.58	81.86	5.72	0
-cell	BEL-PL overs	203	85.22	78.90	6.32	0
+cell	BRA-SA unders	331	87.61	81.86	5.75	0
 cell	GRE-SL overs	195	87.18	80.83	6.35	0
+cell	BEL-PL overs	204	85.29	78.88	6.41	0
 cell	ESP-LL overs	168	86.31	78.79	7.52	0
-cell	NED-ED overs	202	92.08	84.48	7.60	0
 cell	MAR-BP unders	171	95.32	86.02	9.30	1

@@ -23,12 +23,12 @@ bank	A	live unsafe · watch	0		14271	85.0	thin
 bank	A	live unsafe · priced	492	71.5	14271	85.0	separates
 bank	A	strike combo	70	77.1	14271	85.0	separates
 bank	B	tier red	938	74.2	14521	84.7	separates
-bank	B	live unsafe · athena	1290	73.4	14521	84.7	separates
+bank	B	live unsafe · athena	1291	73.4	14521	84.7	separates
 bank	B	live unsafe · watch	0		14521	84.7	thin
 bank	B	live unsafe · priced	321	71.0	14521	84.7	separates
 bank	B	strike combo	68	79.4	14521	84.7	separates
 bank	all	tier red	1910	74.7	28792	84.9	separates
-bank	all	live unsafe · athena	2545	75.1	28792	84.9	separates
+bank	all	live unsafe · athena	2546	75.1	28792	84.9	separates
 bank	all	live unsafe · watch	0		28792	84.9	thin
 bank	all	live unsafe · priced	813	71.3	28792	84.9	separates
 bank	all	strike combo	138	78.3	28792	84.9	separates
