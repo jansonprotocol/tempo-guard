@@ -1793,6 +1793,36 @@ def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
     r = livebands.band_row("priced", 3.0, "INT-UEFA")
     assert r["source"] == livebands.NO_RECORD and r["n"] == 6
     assert livebands.band_row("priced", 3.0, "TUR-SL")["source"] == "pooled"
+
+    # THE FAMILY ROW (the bettor, 21 Sep: "couldn't we bundle some more
+    # with each other, so the read is more precise?"): between a league's
+    # own row and the fallbacks sits every INT-* code pooled under "INT",
+    # read only where the league's own row is thin, at the same floor
+    monkeypatch.setattr(livebands, "_BANDS", None)
+    rows = [dict(league="*", lane=l, band=b, n=400, hit=82.0, said=84.0, label="safe", source="global")
+            for l in livebands.LANES for b in livebands.BANDS]
+    rows += [
+        dict(league="INT-CAF", lane="athena", band="+1 up", n=12, hit=50.0, said=80.0, label="safe", source="thin"),
+        dict(league="INT", lane="athena", band="+1 up", n=140, hit=75.0, said=80.0, label="unsafe", source="family"),
+        dict(league="INT-UEFA", lane="athena", band="+1 up", n=281, hit=82.6, said=80.2, label="safe", source="league"),
+        dict(league="INT", lane="priced", band="+1 up", n=20, hit=60.0, said=80.0, label="cautious", source="thin"),
+        dict(league="INT", lane="priced", band=livebands.ALL, n=70, hit=78.0, said=80.0, label="cautious", source="family"),
+        dict(league="INT-UEFA", lane="priced", band=livebands.ALL, n=8, hit=50.0, said=80.0, label="cautious", source="thin"),
+    ]
+    livebands.write(rows, 21, dt.date(2026, 9, 21))
+    assert livebands.family("INT-CAF") == "INT" and livebands.family("ENG-PL") is None
+    assert webapp.live_tag("athena", 3.0, "INT-CAF") == "unsafe"       # thin league: the family speaks
+    assert livebands.band_row("athena", 3.0, "INT-CAF")["source"] == "family"
+    assert webapp.live_tag("athena", 3.0, "INT-UEFA") == "safe"        # its own row wins over the family
+    assert webapp.live_tag("athena", 3.0, "SUI-SL") == "safe"          # no family: the whole bank
+    assert webapp.live_tag("priced", 3.0, "INT-UEFA") == "cautious"    # priced: league pooled thin ->
+    assert livebands.band_row("priced", 3.0, "INT-UEFA")["source"] == "family"   # family band thin -> family pooled
+    assert livebands.band_row("priced", 3.0, "INT-UEFA")["n"] == 70
+    assert livebands.band_row("priced", 3.0, "ENG-L1")["source"] == livebands.NO_RECORD
+    # measure() tallies the family from the same cards as the leagues
+    src = __import__("pathlib").Path(livebands.__file__).read_text()
+    assert "keys.append((fam, lane, b))" in src and "keys.append((fam, lane, ALL))" in src
+    monkeypatch.setattr(livebands, "_BANDS", None)
     # measure() writes the pooled row from the same tally as the bands
     src = __import__("pathlib").Path(livebands.__file__).read_text()
     assert 'keys.append((code, lane, ALL))' in src

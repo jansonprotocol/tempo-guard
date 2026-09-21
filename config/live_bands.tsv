@@ -7,6 +7,9 @@
 # A PRICED play never reads the whole bank's row: its league's own band,
 # else the league's pooled priced row (band 'all', source 'pooled') at
 # 50 cards, else 'cautious' until the league has that record.
+# Between a league's own rows and those fallbacks sits the FAMILY row:
+# every INT-* code pooled under league 'INT' (source 'family'), read only
+# where the league's own row is thin, at the same floor.
 # Thresholds: safe >= 79, cautious >= 77, else unsafe.
 # written	2026-09-21
 # The 'flip' rows: priced plays with that tag that also print that lane,
@@ -179,6 +182,10 @@ GRE-SL	priced	+1 up	42	66.7	78.5	unsafe	thin
 GRE-SL	priced	−1..+1	5	80.0	73.9	unsafe	thin
 GRE-SL	priced	−4..−1	5	80.0	72.7	unsafe	thin
 GRE-SL	priced	all	52	69.2	77.5	unsafe	pooled
+INT	athena	+1 up	1148	79.4	80.1	safe	family
+INT	athena	−1..+1	88	77.3	77.4	cautious	family
+INT	athena	−4..−1	41	78.0	80.9	safe	thin
+INT	athena	−4 down	187	83.4	79.5	safe	family
 INT-AFC	athena	+1 up	90	94.4	84.2	safe	league
 INT-CAF	athena	+1 up	226	76.1	81.5	unsafe	league
 INT-CAF	athena	−1..+1	20	65.0	79.6	safe	thin
@@ -345,18 +352,18 @@ UKR-PL	athena	+1 up	269	81.4	81.2	safe	league
 UKR-PL	athena	−1..+1	28	82.1	77.7	safe	thin
 UKR-PL	athena	−4..−1	2	50.0	84.3	safe	thin
 UKR-PL	athena	−4 down	108	90.7	84.3	safe	league
-flipbank	flip	unsafe tip3	142	74.6	72.5	hold	bank
-flip	flip	unsafe tip3	10	90.0	80.0	hold	bank
-flipbank	flip	unsafe tip2	220	65.5	72.7	hold	bank
-flip	flip	unsafe tip2	15	86.7	86.7	hold	bank
-flipbank	flip	cautious tip3	396	78.0	71.5	flipped	bank
-flip	flip	cautious tip3	80	73.8	75.0	hold	board
-flipbank	flip	cautious tip2	725	65.5	74.1	hold	bank
-flip	flip	cautious tip2	138	59.4	73.9	hold	board
-flipbank	flip	safe tip3	91	80.2	73.6	flipped	bank
-flip	flip	safe tip3	10	60.0	70.0	flipped	bank
-flipbank	flip	safe tip2	119	75.6	78.2	hold	bank
-flip	flip	safe tip2	16	50.0	68.8	hold	bank
+flipbank	flip	unsafe tip3	356	76.7	71.6	flipped	bank
+flip	flip	unsafe tip3	31	80.6	64.5	flipped	bank
+flipbank	flip	unsafe tip2	631	65.6	71.5	hold	bank
+flip	flip	unsafe tip2	47	59.6	72.3	hold	bank
+flipbank	flip	cautious tip3	119	75.6	70.6	flipped	bank
+flip	flip	cautious tip3	52	71.2	80.8	hold	board
+flipbank	flip	cautious tip2	250	64.4	78.4	hold	bank
+flip	flip	cautious tip2	95	63.2	75.8	hold	board
+flipbank	flip	safe tip3	154	81.2	74.0	flipped	bank
+flip	flip	safe tip3	17	70.6	76.5	flipped	bank
+flipbank	flip	safe tip2	183	73.2	78.1	hold	bank
+flip	flip	safe tip2	27	55.6	74.1	hold	bank
 combobank	athena	clean	22020	84.6	83.5	keep	bank
 combo	athena	clean	323	83.6	83.9	keep	board
 combobank	athena	score under 0	4210	83.5	82.2	keep	bank

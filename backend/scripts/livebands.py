@@ -70,6 +70,24 @@ BANDS = ("+1 up", "−1..+1", "−4..−1", "−4 down")
 LANES = ("athena", "watch", "priced")
 ALL = "all"                      # the band column of a league's POOLED priced row
 NO_RECORD = "no league record"   # the source of a priced tag no league row can give
+# THE FAMILY ROW (the bettor, 21 Sep: "most also have a low N number ...
+# couldn't we bundle some more with each other, so the read is more
+# precise?"). The six international codes hold 41-102 counted bank cards
+# each and will take seasons to reach the 50-card floor one by one, so
+# between a league's own row and the whole bank's sits one more: every
+# INT-* code pooled, written under league "INT" with source "family". It
+# is read only where the league's own row is thin, and hands back the
+# moment the league reaches the floor itself. The verdict on whether the
+# set is any good is NOT made here — that is the replay, on thousands of
+# fixtures per code, and per continent on purpose (see hypotheses.tsv).
+FAMILIES = {"INT": "INT-"}       # family -> code prefix
+
+
+def family(code: str | None) -> str | None:
+    for fam, prefix in FAMILIES.items():
+        if code and code.startswith(prefix):
+            return fam
+    return None
 
 # THE SEED (the bettor's hand bands, 12 Sep). Whether a card the board did
 # not stake — an Athena lane, or a watch card — is one to buy into in
@@ -247,16 +265,27 @@ def band_row(lane: str, edge: float, code: str | None = None) -> dict:
         row = bands().get((code, lane, b))
         if row and row["source"] == "league":
             return row
+        fam = family(code)
         if lane == "priced":
             # No whole-bank fallback on a priced play: the league's pooled
-            # record, or cautious until it has one (see the SEED note).
+            # record, then the family's band and pooled rows, or cautious
+            # until one of them exists (see the SEED note).
             pooled = bands().get((code, lane, ALL))
             if pooled and pooled["source"] == "pooled":
                 return pooled
+            if fam:
+                for key in ((fam, lane, b), (fam, lane, ALL)):
+                    frow = bands().get(key)
+                    if frow and frow["source"] == "family":
+                        return frow
             return dict(n=pooled["n"] if pooled else 0,
                         hit=pooled["hit"] if pooled else None,
                         said=pooled["said"] if pooled else None,
                         label="cautious", source=NO_RECORD)
+        if fam:
+            frow = bands().get((fam, lane, b))
+            if frow and frow["source"] == "family":
+                return frow
     return bands()[(lane, b)]
 
 
@@ -653,6 +682,11 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
             keys = [(GLOBAL, lane, b), (code, lane, b)]
             if lane == "priced":
                 keys.append((code, lane, ALL))
+            fam = family(code)
+            if fam:
+                keys.append((fam, lane, b))
+                if lane == "priced":
+                    keys.append((fam, lane, ALL))
             for key in keys:
                 t = tally.setdefault(key, [0, 0, 0.0])
                 t[0] += 1
@@ -667,6 +701,9 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
             rows.append(dict(league=GLOBAL, lane=lane, band=band, n=n, hit=hit,
                              said=(c / n) if n else None, label=lab, source=src))
     for code in sorted({k[0] for k in tally if k[0] != GLOBAL}):   # a SET: the generator repeated a code per key
+        # a family's rows are labelled "family" where a league's are
+        # "league"/"pooled"; band_row reads each by that word
+        is_fam = code in FAMILIES
         for lane in LANES:
             for band in BANDS:
                 if (code, lane, band) not in tally:
@@ -675,7 +712,8 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
                 hit = h / n * 100
                 glob = next(r for r in rows if r["league"] == GLOBAL
                             and r["lane"] == lane and r["band"] == band)
-                lab, src = label(hit, n, glob["label"], MIN_LEAGUE, "league")
+                lab, src = label(hit, n, glob["label"], MIN_LEAGUE,
+                                 "family" if is_fam else "league")
                 if src == "seed":
                     lab, src = glob["label"], "thin"     # written, not read
                 rows.append(dict(league=code, lane=lane, band=band, n=n, hit=hit,
@@ -687,7 +725,8 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
         if (code, "priced", ALL) in tally:
             n, h, c = tally[(code, "priced", ALL)]
             hit = h / n * 100
-            lab, src = label(hit, n, "cautious", MIN_LEAGUE, "pooled")
+            lab, src = label(hit, n, "cautious", MIN_LEAGUE,
+                             "family" if is_fam else "pooled")
             if src == "seed":
                 lab, src = "cautious", "thin"
             rows.append(dict(league=code, lane="priced", band=ALL, n=n, hit=hit,
@@ -706,6 +745,9 @@ def write(rows: list[dict], days: int, today: dt.date) -> None:
         "# A PRICED play never reads the whole bank's row: its league's own band,",
         f"# else the league's pooled priced row (band '{ALL}', source 'pooled') at",
         f"# {MIN_LEAGUE} cards, else 'cautious' until the league has that record.",
+        "# Between a league's own rows and those fallbacks sits the FAMILY row:",
+        "# every INT-* code pooled under league 'INT' (source 'family'), read only",
+        "# where the league's own row is thin, at the same floor.",
         f"# Thresholds: safe >= {SAFE_AT:.0f}, cautious >= {CAUTIOUS_AT:.0f}, else unsafe.",
         f"# written\t{today.isoformat()}",
         "# The 'flip' rows: priced plays with that tag that also print that lane,",
@@ -757,8 +799,14 @@ def main() -> None:
             continue
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
         print(f"  {r['lane']:6} {r['band']:8} n={r['n']:5}  hit {hit}  -> {r['label']:8} ({r['source']})")
-    lg = [r for r in rows if r["league"] != GLOBAL and r["band"] != ALL]
-    pooled = [r for r in rows if r["band"] == ALL]
+    lg = [r for r in rows if r["league"] != GLOBAL and r["band"] != ALL
+          and r["league"] not in FAMILIES]
+    for fam in FAMILIES:
+        fr = [r for r in rows if r["league"] == fam]
+        print(f"  family {fam}: " + " | ".join(
+            f"{r['lane']} {r['band']} {r['label']} ({r['hit']:.0f} on {r['n']}, {r['source']})"
+            for r in fr))
+    pooled = [r for r in rows if r["band"] == ALL and r["league"] not in FAMILIES]
     print(f"  pooled priced rows: {len(pooled)} leagues, "
           f"{sum(1 for r in pooled if r['source'] == 'pooled')} at the floor — "
           + ", ".join(f"{r['league']} {r['label']} ({r['hit']:.0f} on {r['n']})"

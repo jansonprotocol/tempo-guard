@@ -1652,6 +1652,11 @@ def _livetag_html(f) -> str:
                f"cards across every edge band, red cards out (safe at 79, cautious "
                f"at 77); this band alone is under the {_lb.MIN_LEAGUE}-card floor."
                if row["source"] == "pooled" else
+               f"Across the whole international set this landed {row['hit']:.1f}% on "
+               f"{row['n']} bank cards, red cards out (safe at 79, cautious at 77); "
+               f"this league's own row is under the {_lb.MIN_LEAGUE}-card floor and "
+               f"takes over the moment it reaches it."
+               if row["source"] == "family" else
                f"This league has no priced record yet ({row['n']} bank cards, "
                f"{_lb.MIN_LEAGUE} needed), so the tag is cautious by default; the "
                f"two-day refresh makes it unsafe the moment the league's own priced "
@@ -4155,10 +4160,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  half-loss as a miss — the same rule the stated probability is computed
  with, so the gap compares like with like.</p>
  <div class="wrap"><table id="retro" class="sortable">
- <tr><th data-sort="t">League</th><th data-sort="n">Hit</th>
- <th data-sort="n">Playable hit</th>
- <th data-sort="n">Gap</th><th data-sort="n">Buy from</th>
- <th data-sort="n">n</th></tr>
+ <tr><th data-sort="t">League</th><th data-sort="n" title="the BANK: every counted card since the bank begins, declined out — n is this count">Hit</th>
+ <th data-sort="n" title="the REPLAY: up to 800 fixtures priced as-of, narrowed to lanes above +1% — the bracketed count is that subset, and it is a different and usually larger pool than n">Playable hit</th>
+ <th data-sort="n" title="the bank: hit minus claim">Gap</th><th data-sort="n" title="the engine's own file: the average buy-from a card printed">Buy from</th>
+ <th data-sort="n" title="the bank's counted cards behind Hit and Gap — not the replay's">n</th></tr>
  {_hitrates_rows()}</table></div>
 </section>
 
