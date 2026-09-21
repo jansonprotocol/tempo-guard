@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 81.2%
+## CURRENT CONFIRMED HITRATE: 81.0%
 
     lane                        Tip 1              Tip 2
-    all matches            534 / 658  81.2%    348 / 531  65.5%
-    played lanes  >+1%     232 / 286  81.1%    346 / 526  65.8%
+    all matches            534 / 659  81.0%    348 / 532  65.4%
+    played lanes  >+1%     232 / 286  81.1%    346 / 527  65.7%
     placed bets            160 / 204  78.4%    ROI +0.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 578 / 812   ·   71.2%**   ·   **Tip 1 — 232 / 286   ·   81.1%**   ·   **Tip 2 — 346 / 526   ·   65.8%**
+**Playable — 578 / 813   ·   71.1%**   ·   **Tip 1 — 232 / 286   ·   81.1%**   ·   **Tip 2 — 346 / 527   ·   65.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.9)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -863,7 +863,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 4-0 · 20-09 22:30 <b>Juan Pablo II v Moquegua</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>U3.0 76.1% +3.6%<br>buy≥1.56 (+8.5% margin)</td><td>✅ <b>Moquegua U1.5</b> 75.0% +3.4%<br>buy≥1.39 (+4.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 72.7% +5.6% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 20-09 23:30 <b>Flamengo v RB Bragantino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>O1.5 77.6% +5.8%<br>buy≥1.40 (+8.9% margin)</td><td>✅ <b>RB Bragantino U1.5</b> 75.4% +3.7%<br>buy≥1.43 (+8.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 77.6% +12.6% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 21-09 01:00 <b>Inter Miami v San Diego</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (81.5 +2.1)</td><td>— under +1%</td><td>✅ <b>Inter Miami O1.5</b> 69.8% +18.0%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 80.4% +20.2% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-3 <b>Toluca v Santos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>— under +1%</td><td><b>Santos U1.5</b> 74.3% +9.1%<br>buy≥1.40 (+4.2% margin) · team · <i>✗ gone</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 77.3% +15.4% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 21-09 02:00 <b>Toluca v Santos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>— under +1%</td><td>❌ <b>Santos U1.5</b> 74.3% +9.1%<br>buy≥1.40 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 77.3% +15.4% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 21-09 06:00 <b>New Caledonia v Solomon Islands</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (72.4 −1.8)</td><td>U3.0 77.7% +6.5%<br>buy≥1.52 (+9.4% margin)</td><td>U2.75 57.0% +7.9%<br>buy≥1.62 (+2.9% margin) · floor −18.0</td></tr></table>
 <table align="left"><tr><th align="left">🟢 21-09 09:00 <b>Fiji v Vanuatu</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (72.4 −1.8)</td><td>— under +1%</td><td><b>Fiji O1.5</b> 56.4% +10.0%<br>buy≥1.83 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.5% +13.7% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 21-09 17:00 <b>Dominica v Anguilla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (72.4 −1.8)</td><td>— under +1%</td><td><b>Dominica O0.5</b> 81.0% +6.2%<br>buy≥1.36 (+10.3% margin) · team</td></tr></table>
@@ -968,7 +968,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-3 <b>Toluca v Santos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.3% <b>−0.9%</b><br>buy≥1.25 (+5.5% margin)<br><i>U4.25 holding · ✗ gone</i></td><td><b>Santos U1.5</b> 74.3% +9.1%<br>buy≥1.40 (+4.2% margin) · team · <i>✗ gone</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 77.3% +15.4% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 2-0 <b>Llaneros v Atl. Nacional</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.1 capped)</td><td>U4.25 86.0% <b>−5.2%</b><br>buy≥1.20 (+5.4% margin)<br><i>U4.25 holding · room for 2 · half from the 2nd · 80% · fair 1.24</i><br><i>also live: O3.5 flip 45% fair 2.23 · U3.5 tighter 55% fair 1.81</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 21-09 04:00 <b>Querétaro v León</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 21-09 06:00 <b>New Caledonia v Solomon Islands</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (72.4 −1.8)</td><td>U3.0 77.7% +6.5%<br>buy≥1.52 (+9.4% margin)</td><td>U2.75 57.0% +7.9%<br>buy≥1.62 (+2.9% margin) · floor −18.0</td></tr></table>
@@ -1107,7 +1106,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 534 / 658   ·   81.2%**   ·   **Tip 2 — 348 / 531   ·   65.5%**
+**Tip 1 — 534 / 659   ·   81.0%**   ·   **Tip 2 — 348 / 532   ·   65.4%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.9)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2046,6 +2045,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 21-09 00:30 <b>Athletico v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.8% <b>−6.1%</b><br>buy≥1.22 (+6.8% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 21-09 01:00 <b>Inter Miami v San Diego</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (81.5 +2.1)</td><td>O1.5 80.5% <b>−1.0%</b><br>buy≥1.27 (+6.1% margin)</td><td>✅ <b>Inter Miami O1.5</b> 69.8% +18.0%<br>buy≥1.49 (+3.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 80.4% +20.2% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 21-09 01:10 <b>Tolima v América</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.1 capped)</td><td>U4.25 85.9% <b>−5.3%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 21-09 02:00 <b>Toluca v Santos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.3% <b>−0.9%</b><br>buy≥1.25 (+5.5% margin)</td><td>❌ <b>Santos U1.5</b> 74.3% +9.1%<br>buy≥1.40 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 77.3% +15.4% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 21-09 02:00 <b>Pachuca v Tijuana</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
