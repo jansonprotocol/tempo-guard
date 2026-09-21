@@ -47,19 +47,35 @@ jobs:
       - run: |
           git config user.name  "tempo-guard bot"
           git config user.email "noreply@anthropic.com"
-          for try in 1 2 3; do
-            git fetch origin main
-            git reset --hard origin/main
-            (cd backend && python scripts/matchbank.py)
-            git add -A config/matchbank_retro.json
-            if git diff --cached --quiet; then
-              echo "nothing changed"; exit 0
-            fi
-            git commit -q -m "bank rebuilt in full: $(date -u '+%Y-%m-%d') [skip render]" \
-              -m "Every card priced again through the current engine, so the cards --since reuses cannot drift from what the store now says. The two-day refresh re-measures on the next run."
+          git fetch origin main
+          git reset --hard origin/main
+          (cd backend && python scripts/matchbank.py)
+          git add -A config/matchbank_retro.json
+          if git diff --cached --quiet; then
+            echo "nothing changed"; exit 0
+          fi
+          git commit -q -m "bank rebuilt in full: $(date -u '+%Y-%m-%d') [skip render]" \
+            -m "Every card priced again through the current engine, so the cards --since reuses cannot drift from what the store now says. The two-day refresh re-measures on the next run."
+          # REBASE ON REFUSAL, NEVER REBUILD. The rebuild is an hour; the
+          # live sweep pushes every ninety seconds while football is on, so
+          # the first push of a Sunday-morning rebuild loses the race almost
+          # every time — and on 20 Sep this job rebuilt three times over 70
+          # minutes and gave up. The bank is a pure function of the store,
+          # so the commit is simply replayed onto the newer main: the only
+          # file it touches is its own, and where the two-day refresh moved
+          # that same file in between, the full rebuild wins (it supersedes
+          # a --since re-price). Ten quick tries beat three slow ones.
+          for try in 1 2 3 4 5 6 7 8 9 10; do
             if git push origin HEAD:main; then
               echo "pushed on try $try"; exit 0
             fi
-            echo "push refused on try $try — rebuilding onto the newer main"
+            echo "push refused on try $try — rebasing onto the newer main"
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git checkout --theirs -- config/matchbank_retro.json
+              git add config/matchbank_retro.json
+              GIT_EDITOR=true git rebase --continue
+            fi
+            sleep 5
           done
-          echo "could not push after 3 tries"; exit 1
+          echo "could not push after 10 tries"; exit 1

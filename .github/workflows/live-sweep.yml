@@ -100,10 +100,21 @@ jobs:
           DEADLINE=$(( ${{ steps.gate.outputs.start }} + LEAD_BUDGET_MIN*60 ))
           cd backend
           pass=0
+          fails=0
           while [ "$(date +%s)" -lt "$DEADLINE" ]; do
             pass=$((pass+1))
             echo "::group::pass $pass"
-            python scripts/sweep.py || echo "sweep failed, continuing"
+            # A failed pass is LOUD and COUNTED. On 20 Sep every pass died
+            # on an import error for 45 minutes while this line said
+            # "continuing" and the run stayed green: the board froze with
+            # a live match on it and nothing looked wrong. The pass still
+            # continues — ESPN drops the odd request — but the failure is
+            # annotated with its cause, and a run whose passes ALL failed
+            # exits red at the end.
+            if ! python scripts/sweep.py 2>&1 | tee /tmp/sweep.out; then
+              fails=$((fails+1))
+              echo "::warning::sweep pass $pass failed — $(grep -E 'Error|Traceback' /tmp/sweep.out | tail -1)"
+            fi
             cd ..
             git add -A config/fixtures.tsv README.md web/ \
                        config/forward_log.tsv config/reads_cache.json \
@@ -159,7 +170,11 @@ jobs:
             fi
             sleep "$SWEEP_EVERY"
           done
-          echo "loop over after $pass passes"
+          echo "loop over after $pass passes ($fails failed)"
+          if [ "$fails" -gt 0 ] && [ "$fails" -eq "$pass" ]; then
+            echo "::error::every one of $pass sweep passes failed — the board was not updated by this run"
+            exit 1
+          fi
 
       # Hand over. Whatever happened above, if the board still has a
       # fixture coming, start the next run now: it will sleep for the

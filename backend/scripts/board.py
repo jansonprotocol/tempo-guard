@@ -483,8 +483,13 @@ def liveline_score(status: str):
     return liveline.score_of(status)
 
 
-def verify(quiet: bool = False) -> None:
+def verify(quiet: bool = False, allow_stale: bool = False) -> None:
     """Every fixture, on every surface, every time.
+
+    `allow_stale` turns check 11 — an unswept card hours past kickoff —
+    into a printed warning instead of a failure. Only the bank refresh
+    passes it (python scripts/board.py --allow-stale); the sweep and the
+    slate commands keep the strict form.
 
     The board has gone wrong twice in ways a human eye missed: a derived
     block silently kept a stale copy of the data, and a generated script
@@ -715,9 +720,20 @@ def verify(quiet: bool = False) -> None:
         if ko < stale_cutoff and not liveline_score(f.status):
             rotting.append(f"{f.teams} (kicked off {f.kickoff})")
     if rotting:
-        bad.append("these kicked off over four hours ago and carry no "
-                   "result — run scripts/sweep.py:\n    "
-                   + "\n    ".join(rotting))
+        msg = ("these kicked off over four hours ago and carry no "
+               "result — run scripts/sweep.py:\n    "
+               + "\n    ".join(rotting))
+        # --allow-stale (21 Sep): the two-day bank refresh is not a sweep.
+        # A Polish, Swiss or Algerian card waiting for a hand-set score —
+        # ESPN carries none of those three — made this check fail the
+        # render, and the refresh job died on it three runs in a row
+        # (15, 17, 19 Sep) with the bank, the bands and the drift it had
+        # just measured left uncommitted. The card is still named, loudly;
+        # it just no longer takes the bank down with it.
+        if allow_stale:
+            print("BOARD VERIFY — allowed to render stale:\n  " + msg)
+        else:
+            bad.append(msg)
 
     if bad:
         raise SystemExit("BOARD VERIFY FAILED\n  " + "\n  ".join(bad))
@@ -768,6 +784,7 @@ def _refresh_ladder_rates() -> None:
 
 def main() -> None:
     _refresh_ladder_rates()
+    allow_stale = "--allow-stale" in sys.argv
     text = README.read_text()
     new = rewrite(text)
     if "--check" in sys.argv:
@@ -775,7 +792,7 @@ def main() -> None:
             print("Board is STALE. Run: python scripts/board.py")
             sys.exit(1)
         print("board matches fixtures.tsv")
-        verify()
+        verify(allow_stale=allow_stale)
         return
     if new == text:
         # The README can be current while the app is not — they are
@@ -784,7 +801,7 @@ def main() -> None:
         print("board already current")
         from scripts import webapp
         webapp.main()
-        verify()
+        verify(allow_stale=allow_stale)
         return
     README.write_text(new)
     f = load()
@@ -794,7 +811,7 @@ def main() -> None:
     # what keeps the page and the README incapable of disagreeing.
     from scripts import webapp
     webapp.main()
-    verify()
+    verify(allow_stale=allow_stale)
 
 
 if __name__ == "__main__":

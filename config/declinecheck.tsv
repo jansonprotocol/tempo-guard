@@ -1,0 +1,34 @@
+# How each rule that files a card under Declined is doing: the cards it
+# declined against the cards it kept. Written by scripts/declinecheck.py
+# on the two-day bank refresh; report only, nothing reads it back.
+# BOARD rows are the board's own settled cards (last 21 days, and all);
+# BANK rows are the bank in two halves by date and pooled.
+# verdict: separates = declined landed 2+ under kept; BACKWARDS = 2+ over;
+# thin = under 15 declined cards, not judged.
+# written	2026-09-21
+# source	window	rule	n	hit	kept_n	kept	verdict
+board	21d	tier red	118	78.0	573	81.8	separates
+board	21d	live unsafe · athena	30	80.0	573	81.8	no separation
+board	21d	live unsafe · watch	0		573	81.8	thin
+board	21d	live unsafe · priced	170	76.5	573	81.8	separates
+board	21d	strike combo	20	85.0	573	81.8	BACKWARDS
+board	all	tier red	118	78.0	573	81.8	separates
+board	all	live unsafe · athena	30	80.0	573	81.8	no separation
+board	all	live unsafe · watch	0		573	81.8	thin
+board	all	live unsafe · priced	170	76.5	573	81.8	separates
+board	all	strike combo	20	85.0	573	81.8	BACKWARDS
+bank	A	tier red	963	75.1	14340	84.9	separates
+bank	A	live unsafe · athena	1015	77.3	14340	84.9	separates
+bank	A	live unsafe · watch	0		14340	84.9	thin
+bank	A	live unsafe · priced	555	72.1	14340	84.9	separates
+bank	A	strike combo	78	80.8	14340	84.9	separates
+bank	B	tier red	944	74.3	14953	84.4	separates
+bank	B	live unsafe · athena	844	73.7	14953	84.4	separates
+bank	B	live unsafe · watch	0		14953	84.4	thin
+bank	B	live unsafe · priced	381	72.2	14953	84.4	separates
+bank	B	strike combo	79	78.5	14953	84.4	separates
+bank	all	tier red	1907	74.7	29293	84.7	separates
+bank	all	live unsafe · athena	1859	75.7	29293	84.7	separates
+bank	all	live unsafe · watch	0		29293	84.7	thin
+bank	all	live unsafe · priced	936	72.1	29293	84.7	separates
+bank	all	strike combo	157	79.6	29293	84.7	separates

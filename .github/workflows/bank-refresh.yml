@@ -92,10 +92,22 @@ jobs:
             python scripts/internationals.py --write --since 2026 || echo "international refresh failed, continuing"
             python scripts/matchbank.py --since
             python scripts/livebands.py
+            # The verdict per declining rule — tier red, live unsafe on each
+            # lane (priced included since 21 Sep), strike combo — on the
+            # board's own settled cards first, the bank beside it. Report
+            # only; livebands above is what moves the bands.
+            python scripts/declinecheck.py
             python scripts/drift.py
-            python scripts/board.py
+            # --allow-stale: a Polish or Algerian card waiting for a hand-set
+            # score is a sweep matter, not a bank matter. Without the flag
+            # board.verify refused the render and this job died on it on
+            # 15, 17 and 19 Sep — three refreshes that never committed the
+            # bands and the bank they had just measured.
+            python scripts/board.py --allow-stale
             cd ..
             git add -A data/ config/live_bands.tsv config/drift.tsv \
+                       config/declinecheck.tsv \
+                       config/ladder_rates.tsv \
                        config/matchbank_retro.json \
                        config/forward_log.tsv \
                        config/reads_cache.json README.md web/

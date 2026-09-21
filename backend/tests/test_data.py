@@ -1905,7 +1905,9 @@ def test_the_two_day_job_rebuilds_the_bank_before_it_measures_it():
     # it went in the right place — a test that fails on a correct change is
     # pinning the wrong thing.
     feeds = ["ingest_board.py", "internationals.py"]
-    reads = ["livebands.py", "drift.py", "board.py"]
+    # declinecheck reads the bands livebands just wrote, so it sits after
+    # it; board.py renders last, from everything the others wrote
+    reads = ["livebands.py", "declinecheck.py", "drift.py", "board.py"]
     assert "matchbank.py" in ran, ran
     cut = ran.index("matchbank.py")
     assert set(ran[:cut]) <= set(feeds), ran
@@ -1934,10 +1936,14 @@ def test_a_full_rebuild_runs_often_enough_to_catch_what_since_cannot():
     two_day = (wf / "bank-refresh.yml").read_text()
     assert "--since" in two_day and "timeout-minutes: 45" in two_day
     # and it writes ONLY the bank: every measurement is the other job's
+    # Two lines since 21 Sep — the second re-stages the bank after a
+    # conflict on it during the rebase-on-refusal — and both may stage
+    # the bank and nothing else. The invariant is WHAT is staged, not how
+    # many times.
     staged = [ln for ln in body.splitlines() if "git add" in ln]
-    assert len(staged) == 1 and "config/matchbank_retro.json" in staged[0]
+    assert staged and all("config/matchbank_retro.json" in ln for ln in staged), staged
     for other in ("live_bands.tsv", "drift.tsv", "README.md", "web/"):
-        assert other not in staged[0]
+        assert all(other not in ln for ln in staged), other
 
 
 def test_the_strike_ladder_on_the_card_is_measured_not_typed():
@@ -3540,3 +3546,98 @@ def test_the_sweep_still_runs_without_requests():
     # else is running on a package that only happens to be installed.
     req = (backend / "requirements.txt").read_text()
     assert "requests" in req
+
+
+def test_the_two_day_job_judges_every_declining_rule_on_the_board_first():
+    """The bettor, 21 Sep: "every 2 days run and check on the rules for
+    cards that pass or decline — which board it goes to — depending on
+    how the sample batch is now running. Mostly weighed by real completed
+    futurematch cards and maybe supported by bank data."
+
+    scripts/declinecheck.py is that check. It has to read the declined
+    reason through the SAME predicates the board and the bank file cards
+    by, cover every rule including the priced lane (21 Sep), put the
+    board's own settled cards first, and be run by the refresh job after
+    livebands has rewritten the bands it depends on.
+    """
+    import pathlib
+    from scripts import declinecheck as dc
+
+    rs = dc.rows()
+    got = {(r["source"], r["window"], r["rule"]) for r in rs}
+    for src, win in (("board", f"{dc.DAYS}d"), ("board", "all"),
+                     ("bank", "A"), ("bank", "B"), ("bank", "all")):
+        for rule in dc.REASONS:
+            assert (src, win, rule) in got, (src, win, rule)
+    assert "live unsafe · priced" in dc.REASONS
+    assert all(r["verdict"] in ("separates", "no separation", "BACKWARDS", "thin")
+               for r in rs)
+    # a rule is never judged on a handful
+    assert all(r["verdict"] == "thin" for r in rs if r["n"] < 15)
+    # the board column exists and is the board, not the bank
+    board_all = [r for r in rs if r["source"] == "board" and r["window"] == "all"]
+    assert board_all and all(r["kept_n"] < 5000 for r in board_all)
+    # one predicate: a priced+unsafe bank card reads as that reason
+    from scripts import bankrates, livebands
+    monkey = livebands._BANDS
+    livebands._BANDS = {(l, b): dict(label=lab, n=0, hit=None, said=None, source="seed")
+                        for l, bs in livebands.SEED.items() for b, lab in bs.items()}
+    try:
+        pl = {"g": "green", "tip": "U4.25 84.0% **−5.0%** · buy≥1.22 (+6.1% margin)",
+              "v": "normal", "bp": 1.30, "need": 1.22}
+        assert dc._bank_reason(pl, "NED-ED") == "live unsafe · priced"
+        assert dc._bank_reason(dict(pl, g="red"), "NED-ED") == "tier red"
+        assert dc._bank_reason(dict(pl, tip="U4.25 84.0% **+3.0%** · buy≥1.22"), "NED-ED") is None
+    finally:
+        livebands._BANDS = monkey
+
+    root = pathlib.Path(__file__).resolve().parents[2]
+    y = (root / ".github" / "workflows" / "bank-refresh.yml").read_text()
+    body = y[y.index("steps:"):]
+    ran = [ln.strip() for ln in body.splitlines() if ln.strip().startswith("python scripts/")]
+    names = [r.removeprefix("python scripts/").split()[0] for r in ran]
+    assert names.index("declinecheck.py") > names.index("livebands.py")
+    assert "config/declinecheck.tsv" in y, "the verdicts are committed, or nobody reads them"
+    assert (root / "config" / "declinecheck.tsv").exists()
+
+
+def test_the_updaters_fail_loudly_and_do_not_die_on_a_hand_set_card():
+    """Three things the 20-21 Sep audit of the workflows found and fixed.
+
+    1. bank-refresh died on 15, 17 and 19 Sep at BOARD VERIFY FAILED
+       because a Polish or Algerian card was waiting for a hand-set score
+       — a sweep matter that took the bank, the bands and the drift down
+       with it, uncommitted. The refresh renders with --allow-stale; the
+       sweep and the slate commands keep the strict form.
+    2. bank-rebuild lost the push race to the live sweep three times on
+       20 Sep and REBUILT (an hour each) instead of rebasing. It rebases.
+    3. live-sweep said "sweep failed, continuing" for 45 minutes on 20 Sep
+       while every pass died on an import error and the run stayed green.
+       A failed pass is annotated and counted, and a run whose passes all
+       failed exits red.
+    """
+    import inspect
+    import pathlib
+    from scripts import board
+
+    assert "allow_stale" in inspect.signature(board.verify).parameters
+    src = inspect.getsource(board.main)
+    assert '"--allow-stale" in sys.argv' in src
+    assert src.count("verify(allow_stale=allow_stale)") == 3, "every verify call honours the flag"
+
+    wf = pathlib.Path(__file__).resolve().parents[2] / ".github" / "workflows"
+    refresh = (wf / "bank-refresh.yml").read_text()
+    sweep = (wf / "live-sweep.yml").read_text()
+    rebuild = (wf / "bank-rebuild.yml").read_text()
+    assert "python scripts/board.py --allow-stale" in refresh
+    assert "--allow-stale" not in sweep, "the sweep must still refuse a rotting board"
+
+    body = rebuild[rebuild.index("steps:"):]
+    assert body.count("scripts/matchbank.py") == 1, "one rebuild, then rebase — never a second hour"
+    assert "git rebase origin/main" in body
+    assert "config/matchbank_retro.json" in body[body.index("git rebase"):], \
+        "a conflict on its own file is resolved, not abandoned"
+
+    assert 'echo "sweep failed, continuing"' not in sweep
+    assert "fails=$((fails+1))" in sweep and "::warning::sweep pass" in sweep
+    assert '"$fails" -eq "$pass"' in sweep and "exit 1" in sweep[sweep.index('"$fails" -eq "$pass"'):]
