@@ -18,15 +18,21 @@
   "than misfiring. Where the store's name FOLD has since moved that",
   "target to another spelling, the alias follows the fold one step.",
   "",
-  "Deliberately NOT listed: 'Le Mans FC' (FRA-L1) and 'SV 07 Elversberg'",
-  "(GER-BL) have no rows in the store under any spelling — newly promoted,",
-  "so that is a data gap rather than a naming one. 'N.N.' (COPA-L) is the",
+  "Deliberately NOT listed: 'Le Mans FC' (FRA-L1) has no rows in the store",
+  "under any spelling — newly promoted, a data gap rather than a naming one.",
+  "A promoted club that DOES have rows in its old division's store (SV 07",
+  "Elversberg in GER-B2) needs no alias: scripts/ingest_board.py resolves",
+  "it there by exact spelling, since 21 Sep. 'N.N.' (COPA-L) is the feed's",
+  "placeholder for an undecided team and must stay unresolved.",
   "feed's placeholder for an undecided team and must stay unresolved."
  ],
  "ENG-PL": {
   "Manchester United FC": "Man United",
   "Manchester City FC": "Man City",
-  "Nottingham Forest FC": "Nott'm Forest"
+  "Nottingham Forest FC": "Nott'm Forest",
+  "Manchester City": "Man City",
+  "Man United": "Manchester United FC",
+  "Nott'm Forest": "Nottingham Forest"
  },
  "ENG-CH": {
   "Queens Park Rangers FC": "QPR",
@@ -41,7 +47,8 @@
   "Olympique Lyonnais": "Lyon",
   "Stade Brestois 29": "Brest",
   "Stade Rennais FC 1901": "Rennes",
-  "PSG": "Paris SG"
+  "PSG": "Paris Saint-Germain",
+  "Paris SG": "Paris Saint-Germain"
  },
  "GER-BL": {
   "Borussia Mönchengladbach": "M'gladbach",
@@ -49,7 +56,8 @@
   "Hamburger SV": "Hamburg"
  },
  "ITA-SA": {
-  "FC Internazionale Milano": "Inter"
+  "FC Internazionale Milano": "Inter",
+  "Inter": "FC Internazionale Milano"
  },
  "NED-ED": {
   "GA Eagles": "Go Ahead Eagles",
@@ -57,7 +65,8 @@
   "PSV": "PSV Eindhoven",
   "NEC": "Nijmegen",
   "NEC Nijmegen": "Nijmegen",
-  "Fortuna Sittard": "For Sittard"
+  "Fortuna Sittard": "For Sittard",
+  "PSV Eindhoven": "PSV"
  },
  "POR-PL": {
   "Sporting Clube de Braga": "Sp Braga",
@@ -78,12 +87,15 @@
   "Inter de Bogota": "Internacional de Bogotá",
   "Atl. Nacional": "Atlético Nacional",
   "Dep. Cali": "Deportivo Cali",
-  "Junior Barranquilla": "Atlético Junior"
+  "Junior Barranquilla": "Atlético Junior",
+  "Junior": "Atlético Junior"
  },
  "MLS": {
   "LA Galaxy": "Los Angeles Galaxy",
   "NY Red Bulls": "New York Red Bulls",
-  "LAFC": "Los Angeles FC"
+  "LAFC": "Los Angeles FC",
+  "Sporting Kansas City": "Kansas City Wizards",
+  "Sporting KC": "Kansas City Wizards"
  },
  "JPN-J1": {
   "Machida Z": "Machida Zelvia",
@@ -98,7 +110,9 @@
   "AGF": "Aarhus",
   "OB": "Odense",
   "København": "FC Copenhagen",
-  "Kobenhavn": "FC Copenhagen"
+  "Kobenhavn": "FC Copenhagen",
+  "FC København": "FC Copenhagen",
+  "FC Kobenhavn": "FC Copenhagen"
  },
  "SWE-AL": {
   "VSK": "Vasteras SK",
@@ -110,9 +124,9 @@
   "Amed": "Amedspor"
  },
  "ESP-L2": {
-  "Sporting": "Sp Gijon",
-  "Sporting Gijón": "Sp Gijon",
-  "Sporting Gijon": "Sp Gijon",
+  "Sporting": "Sporting Gijón",
+  "Sporting Gijón": "Sporting Gijón",
+  "Sporting Gijon": "Sporting Gijón",
   "Málaga": "Malaga",
   "Deportivo": "La Coruna",
   "Deportivo La Coruña": "La Coruna",
@@ -122,7 +136,8 @@
   "Dep. A Coruna": "La Coruna",
   "Dep. A Coruña": "La Coruna",
   "Deportivo A Coruña": "La Coruna",
-  "Deportivo A Coruna": "La Coruna"
+  "Deportivo A Coruna": "La Coruna",
+  "Sp Gijon": "Sporting Gijón"
  },
  "PER-L1": {
   "Cienciano": "Cienciano del Cusco"

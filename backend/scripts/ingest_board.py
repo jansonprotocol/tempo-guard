@@ -59,6 +59,48 @@ def _already_stored(have, date, home, away, hg, ag) -> bool:
 SKIP_PREFIX = ("UCL", "UEL", "UECL")
 
 
+def _resolve(code: str, df, names: list[str], team: str):
+    """The store's name for a board team, or None — never a guess.
+
+    Three steps, each stricter than a fuzzy match:
+
+    1. THE ALIAS TABLE FIRST, as the engine itself reads it. Until 21 Sep
+       this script called the raw resolver and never opened
+       config/team_aliases.json, so "AGF", "København", "LA Galaxy",
+       "Urawa Reds", "Atl. Nacional" and a dozen more that the table had
+       mapped for weeks still came back unresolved here — 68 completed
+       board fixtures that never reached the bank. features._aliased is
+       the one reader, with its exact-membership guard, so a stale line
+       degrades to the resolver rather than misfiring.
+    2. The league's own resolver on that name.
+    3. A PROMOTED CLUB, by its own spelling only. A club up from the
+       second division has no rows in this league's store until a
+       provider adds them, but it has rows in its old division's store
+       under the store's own name for it — Elversberg is in GER-B2 and
+       not in GER-BL. If the board name matches a sibling division of the
+       same country EXACTLY (accent-insensitive or canonical, never
+       fuzzy), that spelling is the store's and using it creates no new
+       identity; it is the same club one division up. Fuzzy is refused
+       across divisions on purpose: the failure this guards against is
+       Yokohama F. Marinos resolving onto Yokohama FC.
+    """
+    from app.data.features import _aliased, _canonical, _norm_accent
+    got = _match_team(_aliased(code, df, team), names)
+    if got is not None:
+        return got
+    country = code.split("-")[0]
+    for sib in store.available_leagues():
+        if sib == code or sib.split("-")[0] != country:
+            continue
+        sdf = store.load_results(sib)
+        if sdf is None or sdf.empty:
+            continue
+        for n in sorted(set(sdf["home"]) | set(sdf["away"])):
+            if _norm_accent(n) == _norm_accent(team) or _canonical(n) == _canonical(team):
+                return n
+    return None
+
+
 def main() -> None:
     stored = set(store.available_leagues())
     added: dict[str, int] = {}
@@ -80,7 +122,7 @@ def main() -> None:
         h, a = teams.split(" v ", 1)
         df = store.load_results(code)
         names = sorted(set(df["home"]) | set(df["away"]))
-        rh, ra = _match_team(h, names), _match_team(a, names)
+        rh, ra = _resolve(code, df, names, h), _resolve(code, df, names, a)
         if rh is None or ra is None:
             skipped.append(f"{code}: {teams} — "
                            f"{'home' if rh is None else 'away'} unresolved")

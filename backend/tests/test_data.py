@@ -3641,3 +3641,58 @@ def test_the_updaters_fail_loudly_and_do_not_die_on_a_hand_set_card():
     assert 'echo "sweep failed, continuing"' not in sweep
     assert "fails=$((fails+1))" in sweep and "::warning::sweep pass" in sweep
     assert '"$fails" -eq "$pass"' in sweep and "exit 1" in sweep[sweep.index('"$fails" -eq "$pass"'):]
+
+
+def test_ingest_board_reads_the_alias_table_and_finds_a_promoted_club():
+    """21 Sep: 68 completed board fixtures were being skipped by
+    scripts/ingest_board.py as "name unresolved", so they never reached
+    the bank — and most of them were names config/team_aliases.json had
+    mapped for weeks. The script called the raw resolver and never opened
+    the table. It reads the table now, through the same features._aliased
+    the engine uses, and resolves a promoted club by the exact spelling
+    its old division's store already carries.
+    """
+    from app.data import store
+    from scripts.ingest_board import _resolve
+
+    def names(code):
+        df = store.load_results(code)
+        return df, sorted(set(df["home"]) | set(df["away"]))
+
+    # 1. the alias table: board names the raw resolver cannot bridge
+    for code, board, want in (("DEN-SL", "AGF", "Aarhus"),
+                              ("DEN-SL", "FC København", "FC Copenhagen"),
+                              ("MLS", "LA Galaxy", "Los Angeles Galaxy"),
+                              ("MLS", "Sporting Kansas City", "Kansas City Wizards"),
+                              ("ENG-PL", "Nott'm Forest", "Nottingham Forest"),
+                              ("ENG-PL", "Man United", "Manchester United FC"),
+                              ("ITA-SA", "Inter", "FC Internazionale Milano"),
+                              ("FRA-L1", "PSG", "Paris Saint-Germain"),
+                              ("NED-ED", "PSV Eindhoven", "PSV"),
+                              ("ESP-L2", "Sp Gijon", "Sporting Gijón"),
+                              ("ESP-L2", "Celta Fortuna", "Celta B"),
+                              ("COL-PA", "Junior Barranquilla", "Atlético Junior"),
+                              ("BRA-SA", "Athletico-PR", "CA Paranaense"),
+                              ("JPN-J1", "Urawa Reds", "Urawa Red Diamonds")):
+        df, ns = names(code)
+        assert want in ns, (code, want, "not in the store — the alias would be stale")
+        assert _resolve(code, df, ns, board) == want, (code, board)
+
+    # 2. a promoted club: in GER-B2's store, not in GER-BL's, resolved by
+    #    its exact spelling — and only exact: a near-miss across divisions
+    #    must still come back None
+    #    The first ingest with this resolver wrote Elversberg's Bundesliga
+    #    results INTO the GER-BL store, so the club is in there now and the
+    #    test cannot assume its absence. It takes it out again — the name
+    #    list and the frame are both arguments — so the fallback is what
+    #    is being exercised, whatever the store holds today.
+    df, ns = names("GER-BL")
+    ns2 = [n for n in ns if n != "Elversberg"]
+    df2 = df[(df["home"] != "Elversberg") & (df["away"] != "Elversberg")]
+    assert "Elversberg" not in ns2
+    assert _resolve("GER-BL", df2, ns2, "Elversberg") == "Elversberg"
+    assert _resolve("GER-BL", df2, ns2, "Elversburg") is None
+
+    # 3. what has no rows anywhere stays unresolved — never a guess
+    df, ns = names("ALG-L1")
+    assert _resolve("ALG-L1", df, ns, "Temouchent") is None
