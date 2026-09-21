@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 81.1%
 
     lane                        Tip 1              Tip 2
-    all matches            535 / 660  81.1%    348 / 532  65.4%
+    all matches            536 / 661  81.1%    348 / 532  65.4%
     played lanes  >+1%     232 / 286  81.1%    346 / 527  65.7%
     placed bets            160 / 204  78.4%    ROI +0.7%
 
@@ -968,7 +968,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+5' 1-1 <b>Querétaro v León</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)<br><i>U4.25 holding · room for 2 · half from the 2nd · as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 21-09 06:00 <b>New Caledonia v Solomon Islands</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (72.4 −1.8)</td><td>U3.0 77.7% +6.5%<br>buy≥1.52 (+9.4% margin)</td><td>U2.75 57.0% +7.9%<br>buy≥1.62 (+2.9% margin) · floor −18.0</td></tr></table>
 <table align="left"><tr><th align="left">🔵 21-09 09:00 <b>Fiji v Vanuatu</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (72.4 −1.8)</td><td>U4.25 76.7% <b>−9.4%</b><br>buy≥1.22 (+5.7% margin)</td><td><b>Fiji O1.5</b> 56.4% +10.0%<br>buy≥1.83 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.5% +13.7% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 21-09 17:00 <b>Dominica v Anguilla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (72.4 −1.8)</td><td>U4.25 76.8% <b>−9.3%</b><br>buy≥1.24 (+5.8% margin)</td><td><b>Dominica O0.5</b> 81.0% +6.2%<br>buy≥1.36 (+10.3% margin) · team</td></tr></table>
@@ -1105,7 +1104,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 535 / 660   ·   81.1%**   ·   **Tip 2 — 348 / 532   ·   65.4%**
+**Tip 1 — 536 / 661   ·   81.1%**   ·   **Tip 2 — 348 / 532   ·   65.4%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.9)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2047,6 +2046,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 2-3 · 21-09 02:00 <b>Toluca v Santos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.3% <b>−0.9%</b><br>buy≥1.25 (+5.5% margin)</td><td>❌ <b>Santos U1.5</b> 74.3% +9.1%<br>buy≥1.40 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 77.3% +15.4% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 21-09 02:00 <b>Pachuca v Tijuana</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 21-09 03:15 <b>Llaneros v Atl. Nacional</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.1 capped)</td><td>U4.25 86.0% <b>−5.2%</b><br>buy≥1.20 (+5.4% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 21-09 04:00 <b>Querétaro v León</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.6 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
