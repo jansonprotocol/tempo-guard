@@ -784,7 +784,7 @@ def _gradekeys(f) -> str:
     """
     if not f.settled:
         return ""
-    # A DECLINED card — red, or an unstaked card tagged live unsafe —
+    # A DECLINED card — red, or a card tagged live unsafe on any lane —
     # carries no grade keys at all, so the counters cannot see it (the
     # bettor's rule, 12 Sep: out of every hit rate, the filter counters
     # included). It carries data-nc so the caption can say how many cards
@@ -1481,13 +1481,19 @@ def strike_declined(f) -> bool:
 
 def is_declined(f) -> bool:
     """Is this a Declined card: a red or super-red label (the tier saying
-    avoid); an UNSTAKED card — Athena lane or watch — tagged live unsafe;
-    or, since 13 Sep, any card whose strike combo is declined — that one
-    reaches priced plays too."""
+    avoid); a card on any lane tagged live unsafe; or, since 13 Sep, any
+    card whose strike combo is declined.
+
+    The unsafe clause covered only the UNSTAKED lanes — Athena and watch —
+    from 12 to 21 Sep; a priced play kept its place whatever its tag said.
+    The 21 Sep profile study found those to be the single weakest slice of
+    the playable board (73.1% on 193, −4.0% at closing, both halves of the
+    bank under 75), and the bettor moved them: "Start declining Priced +
+    Unsafe." bankrates.counts carries the same rule and the numbers."""
     lab = label_any(f)
     if lab and lab.endswith("red"):
         return True
-    if record_lane(f) in ("athena", "watch") and record_tag(f) == "unsafe":
+    if record_lane(f) in ("athena", "watch", "priced") and record_tag(f) == "unsafe":
         return True
     return strike_declined(f)
 
@@ -1647,10 +1653,13 @@ def _livetag_html(f) -> str:
                "Not measured yet; the bettor's seed label of 12 Sep stands.")
         tip = (f"Live {tag}: {who}, printed edge {e:+.1f}% ({edge_band(e)}). {how} "
                "A label for buying into this card in play"
-               + (", and an unsafe one on an unstaked card files it under "
-                  "Declined and out of the record." if lane != "priced" else
-                  "; a priced play keeps its file and its place in the record "
-                  "whatever the tag says."))
+               + (", and an unsafe one files the card under Declined and out "
+                  "of the record." if lane != "priced" else
+                  ". On a priced play — the book paying more than Athena asked — "
+                  "the tag says whether, in this league, the book has been "
+                  "winning that argument: unsafe files it under Declined "
+                  "(since 21 Sep: 193 such cards landed 73.1%, −4.0% at closing); "
+                  "cautious and safe keep their place."))
         word = f"live {tag}"
         to = record_flip(f)
         if to:
@@ -2730,9 +2739,10 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "log. A card the board declined never appears here."),
         ("⛔ Declined", "two kinds, one rule. A red or super-red label is "
          "the tier saying avoid: never played at any price. A card tagged "
-         "LIVE UNSAFE is the bettor keeping an unstaked card out of live "
-         "buys too — an Athena lane or a watch card whose edge band is "
-         "landing under 77 in the last three weeks. Either way the card "
+         "LIVE UNSAFE is one whose lane and edge band have been landing "
+         "under 77 — an Athena lane, a watch card, or since 21 Sep a "
+         "priced play, where unsafe means the book paid more than Athena "
+         "asked and in this league the book has been right. Either way the card "
          "counts toward NO hit rate — not the tiles, not the baselines, "
          "not a league badge, not the bank (the bettor's rule, 12 Sep). "
          "Both are swept and graded."),
@@ -2864,7 +2874,8 @@ def main() -> None:
     # Since 12 Sep Declined also holds every unstaked card tagged LIVE
     # UNSAFE — an Athena lane at −4 or worse, a watch card above +1 — and
     # since the same evening a Declined card is OUT OF THE RECORD like a
-    # red one (is_declined is the predicate behind counts).
+    # red one (is_declined is the predicate behind counts). Since 21 Sep
+    # an unsafe PRICED play files here too; is_declined says why.
     declined = [f for f in pending if f not in playable and f not in watch
                 and f not in running and is_declined(f)]
     waiting = [f for f in pending if f not in playable and f not in watch
@@ -4106,9 +4117,9 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <p class="dim"><b>Hit</b> grades every Tip 1 the league produced,
  filter or no filter — <b>except declined cards</b>: red and super-red
  cards, which the tier forbids at any price (the bettor's rule, 7 Sep),
- and since 12 Sep the unstaked cards tagged <b>live unsafe</b> — an
- Athena lane or a watch card whose edge band is landing under 77 on the
- board's last three weeks. They count toward no rate here or anywhere
+ and since 12 Sep the cards tagged <b>live unsafe</b> — an Athena lane
+ or a watch card whose edge band is landing under 77, and since 21 Sep a
+ priced play whose league has been siding with the book. They count toward no rate here or anywhere
  and stay in the bank for analysis. <b>Playable hit</b> is the same replay narrowed to
  the lanes the board actually offers (edge above +1%) — the number the
  Playable tab lives on, with that subset's tip count in brackets. This

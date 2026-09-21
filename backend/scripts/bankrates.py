@@ -164,18 +164,30 @@ def strike_declined(m: dict, code: str | None = None) -> bool:
 
 def counts(m: dict, code: str | None = None) -> bool:
     """The one predicate, the bank's copy of webapp.counts: a labelled
-    red card does not count, and neither does an unstaked card — Athena
-    lane or watch — tagged live unsafe, nor one whose STRIKE COMBO is
-    declined. A priced play counts whatever its tag says, and an
-    unlabelled card always did.
+    red card does not count, and neither does a card on ANY lane tagged
+    live unsafe, nor one whose STRIKE COMBO is declined. An unlabelled
+    card always counts.
 
     The strike clause was missing until 16 Sep, so for three days the
     bank and the board disagreed about which cards were in the record —
     the board declined a combo and the bank went on counting it.
+
+    THE PRICED LANE JOINED THE UNSAFE RULE ON 21 SEP. From 12 Sep a
+    priced play counted whatever its tag said (the bettor: "this one
+    doesn't have a live tag" — the board's own stake, so the tag was
+    information). The profile study of 21 Sep measured what that kept
+    on the playable board: 193 priced plays tagged unsafe, landing 73.1%
+    (74.7 in the first half of the bank, 65.7 in the second) against
+    83.4 for the rest of the board, claiming 82.4 and returning −4.0% at
+    their closing price. A priced play is a card the book paid MORE for
+    than Athena asked, and the tag records whether, in that league, the
+    book has been winning that argument; unsafe means it has. The
+    bettor, 21 Sep: "Start declining Priced + Unsafe." Cautious and safe
+    priced plays are untouched — 77.5 and 78.2 on 120 and 78.
     """
     if not not_red(m):
         return False
-    if lane(m) in ("athena", "watch") and tag(m, code) == "unsafe":
+    if lane(m) in ("athena", "watch", "priced") and tag(m, code) == "unsafe":
         return False
     return not strike_declined(m, code)
 

@@ -1142,10 +1142,18 @@ def test_declined_cards_count_toward_no_hit_rate():
         # a card the price missed by more than the band is an Athena lane: in
         a = dict(w, bp=1.05)
         assert bankrates.lane(a) == "athena" and bankrates.counts(a)
-        # a priced play is never declined by its tag
+        # a priced play tagged unsafe is out (21 Sep — until then it was
+        # "never declined by its tag"; the profile study found the unsafe
+        # ones landing 73.1% on 193 against 83.4 for the rest of the
+        # playable board, and the bettor moved them)
         pl = {"g": "green", "tip": deep, "v": "normal", "bp": 1.30, "need": 1.22}
         assert bankrates.lane(pl) == "priced" and bankrates.tag(pl) == "unsafe"
-        assert bankrates.counts(pl)
+        assert not bankrates.counts(pl)
+        # ... but a priced play whose band the seed calls cautious keeps
+        # its place: only unsafe files a priced play under Declined
+        pc = dict(pl, tip=high)
+        assert bankrates.lane(pc) == "priced" and bankrates.tag(pc) == "cautious"
+        assert bankrates.counts(pc)
         # red stays red whatever the price
         assert bankrates.lane({"g": "red", "tip": high, "v": "no play", "bp": 1.3, "need": 1.2}) is None
     finally:
@@ -1166,14 +1174,18 @@ def test_declined_cards_count_toward_no_hit_rate():
     # and had the declined been in, the count would be larger by their number
     n_red = sum(1 for f in red if f.status[:1] in ("✅", "❌", "◦"))
     assert n_red > 0, "no settled red card on the board to test against"
-    # a priced play is in the record whatever its tag says
+    # a priced play is in the record unless tagged unsafe (21 Sep: the
+    # unsafe ones landed 73.1% on 193 bank cards against 83.4 for the rest
+    # of the playable board, so they file under Declined like any other
+    # unsafe card; cautious and safe priced plays keep their place)
     for f in keep:
         if webapp.record_lane(f) == "priced":
-            assert webapp.counts(f)
+            assert webapp.counts(f) and webapp.record_tag(f) != "unsafe"
     for f in out:
         assert not webapp.counts(f)
         if f not in red:
-            assert (webapp.record_lane(f) in ("athena", "watch") and webapp.record_tag(f) == "unsafe") \
+            assert (webapp.record_lane(f) in ("athena", "watch", "priced")
+                    and webapp.record_tag(f) == "unsafe") \
                 or webapp.strike_declined(f)
     # the measurement behind the tag keeps only the red cards out, or an
     # unsafe band could never come back

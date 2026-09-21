@@ -78,9 +78,15 @@ LANES = ("athena", "watch", "priced")
 # own PLAYs (the bettor, 12 Sep: "this one doesn't have a live tag") — is
 # seeded from the bank's priced plays by edge band, 76.9% above +1, 73.0%
 # around zero, 66.0% and 73.3% in the negative bands, all under claim.
-# INFORMATION ONLY on that lane: a priced play is the board's stake and
-# files under Playable or Running whatever its tag says, and it stays in
-# the record.
+# From 12 to 21 Sep the tag was INFORMATION ONLY on that lane: a priced
+# play was the board's stake and filed under Playable whatever its tag
+# said. The 21 Sep profile study (scripts/profile_study.py) measured the
+# cost — unsafe priced plays landed 73.1% on 193 against 83.4 for the
+# rest of the playable board, −4.0% at closing, both halves under 75 —
+# and the bettor moved them: an unsafe priced play files under Declined
+# like any other unsafe card (webapp.is_declined, bankrates.counts).
+# The MEASUREMENT here is unchanged and still keeps only red out, so a
+# priced band that recovers comes back by itself.
 SEED = {
     "athena": {"+1 up": "safe", "−1..+1": "safe", "−4..−1": "safe",
                "−4 down": "unsafe"},
