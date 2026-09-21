@@ -184,6 +184,12 @@ def counts(m: dict, code: str | None = None) -> bool:
     book has been winning that argument; unsafe means it has. The
     bettor, 21 Sep: "Start declining Priced + Unsafe." Cautious and safe
     priced plays are untouched — 77.5 and 78.2 on 120 and 78.
+
+    Later that day the tag itself changed on this lane: a priced play
+    reads its league's own record (band row, else pooled row) and is
+    cautious where the league has none, never the whole bank's row —
+    which had declined all 18 priced cards on the board at once. The
+    predicate here is unchanged; livebands.band_row carries the order.
     """
     if not not_red(m):
         return False

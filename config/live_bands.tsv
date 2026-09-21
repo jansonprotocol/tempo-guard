@@ -4,6 +4,9 @@
 # reads the league's own row where it has 50 cards or more (source
 # 'league'), else the whole bank's row (league '*', source 'global'), else
 # the seed. A league row under the floor is written as 'thin' and not read.
+# A PRICED play never reads the whole bank's row: its league's own band,
+# else the league's pooled priced row (band 'all', source 'pooled') at
+# 50 cards, else 'cautious' until the league has that record.
 # Thresholds: safe >= 79, cautious >= 77, else unsafe.
 # written	2026-09-21
 # The 'flip' rows: priced plays with that tag that also print that lane,
@@ -14,14 +17,14 @@
 # settled cards, red out; 'decline' under 77% on 15+ cards, else
 # 'keep', the seed under the floor. A declined combo files under Declined.
 # league	lane	band	n	hit	said	label	source
-*	athena	+1 up	14518	83.6	82.7	safe	global
-*	athena	−1..+1	7162	83.8	83.2	safe	global
-*	athena	−4..−1	3640	86.1	84.4	safe	global
-*	athena	−4 down	3452	88.7	83.6	safe	global
+*	athena	+1 up	14531	83.5	82.7	safe	global
+*	athena	−1..+1	7172	83.8	83.2	safe	global
+*	athena	−4..−1	3638	86.1	84.4	safe	global
+*	athena	−4 down	3455	88.7	83.6	safe	global
 *	watch	+1 up	1150	82.7	82.2	safe	global
 *	watch	−1..+1	473	85.6	81.5	safe	global
 *	watch	−4..−1	285	86.3	84.5	safe	global
-*	watch	−4 down	242	81.0	84.0	safe	global
+*	watch	−4 down	241	80.9	84.0	safe	global
 *	priced	+1 up	777	74.3	81.3	unsafe	global
 *	priced	−1..+1	321	73.8	79.6	unsafe	global
 *	priced	−4..−1	144	75.7	83.8	unsafe	global
@@ -40,8 +43,8 @@ AUT-BL	athena	+1 up	175	79.4	79.9	safe	league
 AUT-BL	athena	−1..+1	17	94.1	76.8	safe	thin
 AUT-BL	athena	−4..−1	140	86.4	82.7	safe	league
 AUT-BL	athena	−4 down	8	100.0	82.6	safe	thin
-BEL-PL	athena	+1 up	168	86.9	81.5	safe	league
-BEL-PL	athena	−1..+1	139	89.2	82.9	safe	league
+BEL-PL	athena	+1 up	169	87.0	81.5	safe	league
+BEL-PL	athena	−1..+1	141	89.4	82.9	safe	league
 BEL-PL	athena	−4..−1	6	50.0	76.0	safe	thin
 BEL-PL	watch	+1 up	89	89.9	83.6	safe	league
 BEL-PL	watch	−1..+1	73	87.7	83.0	safe	league
@@ -49,11 +52,12 @@ BEL-PL	watch	−4..−1	5	100.0	76.3	safe	thin
 BEL-PL	priced	+1 up	70	75.7	82.7	unsafe	league
 BEL-PL	priced	−1..+1	34	73.5	81.6	unsafe	thin
 BEL-PL	priced	−4..−1	4	75.0	76.3	unsafe	thin
+BEL-PL	priced	all	108	75.0	82.1	unsafe	pooled
 BRA-SA	athena	+1 up	385	76.9	79.3	unsafe	league
 BRA-SA	athena	−1..+1	57	84.2	77.4	safe	league
-BRA-SA	athena	−4 down	273	88.3	82.8	safe	league
-BRA-SB	athena	+1 up	186	82.3	84.8	safe	league
-BRA-SB	athena	−1..+1	570	88.8	87.1	safe	league
+BRA-SA	athena	−4 down	274	88.3	82.8	safe	league
+BRA-SB	athena	+1 up	186	82.3	84.9	safe	league
+BRA-SB	athena	−1..+1	574	88.7	87.1	safe	league
 BRA-SB	athena	−4..−1	4	75.0	86.9	safe	thin
 CHI-PD	athena	+1 up	102	84.3	83.2	safe	league
 CHI-PD	athena	−1..+1	299	85.3	86.6	safe	league
@@ -61,8 +65,8 @@ CHI-PD	athena	−4..−1	68	80.9	84.8	safe	league
 CHN-SL	athena	+1 up	350	83.4	83.1	safe	league
 CHN-SL	athena	−1..+1	109	78.9	81.6	cautious	league
 CHN-SL	athena	−4..−1	2	50.0	77.5	safe	thin
-COL-PA	athena	−1..+1	392	76.5	80.6	unsafe	league
-COL-PA	athena	−4 down	403	91.1	85.9	safe	league
+COL-PA	athena	−1..+1	389	76.6	80.6	unsafe	league
+COL-PA	athena	−4 down	406	90.6	85.9	safe	league
 CRO-1L	athena	+1 up	2	50.0	81.2	safe	thin
 CRO-1L	athena	−1..+1	131	87.8	85.5	safe	league
 CRO-1L	athena	−4..−1	136	89.0	86.4	safe	league
@@ -71,8 +75,8 @@ CZE-FL	athena	+1 up	270	85.2	85.5	safe	league
 CZE-FL	athena	−1..+1	167	84.4	85.9	safe	league
 CZE-FL	athena	−4..−1	87	82.8	83.3	safe	league
 CZE-FL	athena	−4 down	20	95.0	81.7	safe	thin
-DEN-SL	athena	+1 up	449	82.0	83.6	safe	league
-DEN-SL	athena	−1..+1	102	87.3	81.0	safe	league
+DEN-SL	athena	+1 up	453	81.9	83.6	safe	league
+DEN-SL	athena	−1..+1	104	87.5	81.0	safe	league
 DEN-SL	athena	−4..−1	5	60.0	78.4	safe	thin
 EGY-PL	athena	+1 up	234	82.5	82.2	safe	league
 EGY-PL	athena	−1..+1	27	70.4	79.2	safe	thin
@@ -87,6 +91,7 @@ ENG-CH	watch	−4 down	51	84.3	83.6	safe	league
 ENG-CH	priced	+1 up	38	86.8	79.4	unsafe	thin
 ENG-CH	priced	−1..+1	2	50.0	72.4	unsafe	thin
 ENG-CH	priced	−4 down	13	76.9	83.5	unsafe	thin
+ENG-CH	priced	all	53	83.0	80.1	safe	pooled
 ENG-L1	athena	+1 up	339	79.4	77.7	safe	league
 ENG-L1	athena	−1..+1	10	80.0	73.2	safe	thin
 ENG-L1	athena	−4 down	299	86.0	83.1	safe	league
@@ -96,7 +101,7 @@ ENG-L2	athena	−4..−1	158	90.5	85.2	safe	league
 ENG-NL	athena	+1 up	581	85.4	82.9	safe	league
 ENG-NL	athena	−1..+1	162	84.6	81.3	safe	league
 ENG-NL	athena	−4..−1	5	60.0	76.1	safe	thin
-ENG-PL	athena	+1 up	281	87.2	84.3	safe	league
+ENG-PL	athena	+1 up	282	87.2	84.3	safe	league
 ENG-PL	athena	−1..+1	56	89.3	81.4	safe	league
 ENG-PL	athena	−4..−1	6	33.3	78.9	safe	thin
 ENG-PL	watch	+1 up	177	83.1	83.7	safe	league
@@ -105,15 +110,17 @@ ENG-PL	watch	−4..−1	3	100.0	78.5	safe	thin
 ENG-PL	priced	+1 up	132	77.3	83.3	cautious	league
 ENG-PL	priced	−1..+1	59	74.6	81.1	unsafe	league
 ENG-PL	priced	−4..−1	1	0.0	78.4	unsafe	thin
+ENG-PL	priced	all	192	76.0	82.6	unsafe	pooled
 ESP-L2	athena	+1 up	3	33.3	76.7	safe	thin
 ESP-L2	athena	−1..+1	175	80.6	78.0	safe	league
-ESP-L2	athena	−4 down	339	89.7	84.2	safe	league
+ESP-L2	athena	−4 down	338	89.6	84.2	safe	league
 ESP-L2	watch	+1 up	1	100.0	85.1	safe	thin
 ESP-L2	watch	−1..+1	62	83.9	79.1	safe	league
-ESP-L2	watch	−4 down	90	78.9	84.3	cautious	league
+ESP-L2	watch	−4 down	89	78.7	84.3	cautious	league
 ESP-L2	priced	+1 up	1	100.0	72.7	unsafe	thin
 ESP-L2	priced	−1..+1	55	69.1	77.5	unsafe	league
 ESP-L2	priced	−4 down	51	68.6	84.3	unsafe	league
+ESP-L2	priced	all	107	69.2	80.7	unsafe	pooled
 ESP-LL	athena	+1 up	384	82.8	79.1	safe	league
 ESP-LL	athena	−1..+1	3	100.0	73.6	safe	thin
 ESP-LL	athena	−4..−1	142	93.7	84.8	safe	league
@@ -122,18 +129,20 @@ ESP-LL	watch	−4..−1	35	82.9	84.8	safe	thin
 ESP-LL	priced	+1 up	35	74.3	78.6	unsafe	thin
 ESP-LL	priced	−1..+1	4	50.0	73.6	unsafe	thin
 ESP-LL	priced	−4..−1	15	73.3	83.2	unsafe	thin
+ESP-LL	priced	all	54	72.2	79.5	unsafe	pooled
 FIN-VL	athena	+1 up	163	83.4	83.6	safe	league
 FIN-VL	athena	−1..+1	139	82.7	83.9	safe	league
 FIN-VL	athena	−4..−1	50	86.0	81.9	safe	league
-FRA-L1	athena	+1 up	189	82.0	80.7	safe	league
-FRA-L1	athena	−1..+1	46	84.8	80.7	safe	thin
-FRA-L1	athena	−4..−1	98	89.8	83.3	safe	league
+FRA-L1	athena	+1 up	190	81.6	80.7	safe	league
+FRA-L1	athena	−1..+1	45	84.4	80.7	safe	thin
+FRA-L1	athena	−4..−1	99	89.9	83.3	safe	league
 FRA-L1	watch	+1 up	63	82.5	81.1	safe	league
 FRA-L1	watch	−1..+1	31	93.5	80.7	safe	thin
 FRA-L1	watch	−4..−1	59	79.7	83.3	safe	league
 FRA-L1	priced	+1 up	49	67.3	79.7	unsafe	thin
 FRA-L1	priced	−1..+1	29	82.8	79.3	unsafe	thin
 FRA-L1	priced	−4..−1	25	72.0	83.3	unsafe	thin
+FRA-L1	priced	all	103	72.8	80.5	unsafe	pooled
 FRA-L2	athena	+1 up	135	74.1	79.9	unsafe	league
 FRA-L2	athena	−1..+1	8	75.0	78.3	safe	thin
 FRA-L2	athena	−4 down	294	90.8	84.0	safe	league
@@ -143,6 +152,7 @@ FRA-L2	watch	−4 down	98	80.6	84.0	safe	league
 FRA-L2	priced	+1 up	22	59.1	80.5	unsafe	thin
 FRA-L2	priced	−1..+1	1	100.0	78.4	unsafe	thin
 FRA-L2	priced	−4 down	37	73.0	84.0	unsafe	thin
+FRA-L2	priced	all	60	68.3	82.6	unsafe	pooled
 GER-B2	athena	+1 up	208	83.2	83.4	safe	league
 GER-B2	athena	−1..+1	101	86.1	81.1	safe	league
 GER-B2	athena	−4..−1	7	71.4	78.9	safe	thin
@@ -151,7 +161,8 @@ GER-B2	watch	−1..+1	61	85.2	81.1	safe	league
 GER-B2	watch	−4..−1	1	100.0	79.2	safe	thin
 GER-B2	priced	+1 up	54	77.8	83.4	cautious	league
 GER-B2	priced	−1..+1	16	81.2	80.9	unsafe	thin
-GER-BL	athena	+1 up	289	89.3	83.4	safe	league
+GER-B2	priced	all	70	78.6	82.8	cautious	pooled
+GER-BL	athena	+1 up	292	89.0	83.4	safe	league
 GER-BL	athena	−1..+1	68	85.3	80.4	safe	league
 GER-BL	athena	−4..−1	6	66.7	81.5	safe	thin
 GER-BL	watch	+1 up	115	81.7	83.2	safe	league
@@ -159,6 +170,7 @@ GER-BL	watch	−1..+1	42	88.1	81.5	safe	thin
 GER-BL	watch	−4..−1	1	100.0	80.6	safe	thin
 GER-BL	priced	+1 up	72	72.2	83.3	unsafe	league
 GER-BL	priced	−1..+1	20	85.0	82.5	unsafe	thin
+GER-BL	priced	all	92	75.0	83.1	unsafe	pooled
 GRE-SL	athena	+1 up	184	82.1	78.7	safe	league
 GRE-SL	athena	−4..−1	3	100.0	72.4	safe	thin
 GRE-SL	athena	−4 down	146	91.1	82.1	safe	league
@@ -166,6 +178,7 @@ GRE-SL	watch	+1 up	27	74.1	78.2	safe	thin
 GRE-SL	priced	+1 up	42	66.7	78.5	unsafe	thin
 GRE-SL	priced	−1..+1	5	80.0	73.9	unsafe	thin
 GRE-SL	priced	−4..−1	5	80.0	72.7	unsafe	thin
+GRE-SL	priced	all	52	69.2	77.5	unsafe	pooled
 INT-AFC	athena	+1 up	90	94.4	84.2	safe	league
 INT-CAF	athena	+1 up	226	76.1	81.5	unsafe	league
 INT-CAF	athena	−1..+1	20	65.0	79.6	safe	thin
@@ -195,6 +208,7 @@ ITA-SA	watch	−4 down	3	100.0	84.0	safe	thin
 ITA-SA	priced	+1 up	2	100.0	81.0	unsafe	thin
 ITA-SA	priced	−1..+1	28	78.6	74.0	unsafe	thin
 ITA-SA	priced	−4..−1	71	78.9	85.9	cautious	league
+ITA-SA	priced	all	101	79.2	82.5	safe	pooled
 ITA-SB	athena	+1 up	305	80.3	78.5	safe	league
 ITA-SB	athena	−1..+1	114	78.9	77.0	cautious	league
 ITA-SB	athena	−4..−1	9	44.4	76.2	safe	thin
@@ -202,20 +216,21 @@ ITA-SB	watch	+1 up	53	83.0	77.7	safe	league
 ITA-SB	watch	−1..+1	12	75.0	76.7	safe	thin
 ITA-SB	priced	+1 up	64	79.7	75.7	safe	league
 ITA-SB	priced	−1..+1	3	33.3	77.3	unsafe	thin
+ITA-SB	priced	all	67	77.6	75.8	cautious	pooled
 JPN-J1	athena	+1 up	311	90.4	89.6	safe	league
-JPN-J1	athena	−1..+1	259	88.0	88.5	safe	league
-JPN-J1	athena	−4..−1	141	87.2	86.3	safe	league
+JPN-J1	athena	−1..+1	260	88.1	88.5	safe	league
+JPN-J1	athena	−4..−1	142	87.3	86.3	safe	league
 JPN-J1	athena	−4 down	25	72.0	83.4	safe	thin
 MAR-BP	athena	+1 up	2	100.0	76.5	safe	thin
 MAR-BP	athena	−1..+1	215	76.7	81.1	unsafe	league
 MAR-BP	athena	−4 down	171	95.3	86.0	safe	league
 MEX-LMX	athena	+1 up	7	100.0	85.5	safe	thin
 MEX-LMX	athena	−1..+1	172	80.8	80.7	safe	league
-MEX-LMX	athena	−4..−1	465	81.5	82.9	safe	league
+MEX-LMX	athena	−4..−1	466	81.5	82.9	safe	league
 MEX-LMX	athena	−4 down	13	92.3	81.1	safe	thin
-MLS	athena	+1 up	121	82.6	81.2	safe	league
-MLS	athena	−1..+1	419	79.7	80.4	safe	league
-MLS	athena	−4..−1	260	78.8	80.5	cautious	league
+MLS	athena	+1 up	122	83.6	81.2	safe	league
+MLS	athena	−1..+1	425	79.8	80.4	safe	league
+MLS	athena	−4..−1	253	78.7	80.5	cautious	league
 NED-D2	athena	+1 up	544	84.4	83.1	safe	league
 NED-D2	athena	−1..+1	217	77.0	81.3	unsafe	league
 NED-D2	athena	−4..−1	11	63.6	79.5	safe	thin
@@ -227,6 +242,7 @@ NED-ED	watch	−1..+1	33	90.9	81.2	safe	thin
 NED-ED	watch	−4..−1	4	50.0	80.3	safe	thin
 NED-ED	priced	+1 up	85	80.0	83.3	safe	league
 NED-ED	priced	−1..+1	22	72.7	81.5	unsafe	thin
+NED-ED	priced	all	107	78.5	82.9	cautious	pooled
 NGA-PL	athena	+1 up	287	88.5	86.3	safe	league
 NGA-PL	athena	−1..+1	91	90.1	84.9	safe	league
 NGA-PL	athena	−4..−1	181	94.5	91.5	safe	league
@@ -243,7 +259,7 @@ PER-L1	athena	−4 down	256	84.0	81.0	safe	league
 POL-EK	athena	+1 up	151	80.1	79.4	safe	league
 POL-EK	athena	−1..+1	353	87.8	85.9	safe	league
 POL-EK	athena	−4..−1	80	87.5	84.8	safe	league
-POR-PL	athena	+1 up	319	84.0	79.9	safe	league
+POR-PL	athena	+1 up	321	83.8	79.8	safe	league
 POR-PL	athena	−1..+1	2	100.0	75.1	safe	thin
 POR-PL	athena	−4..−1	90	90.0	84.1	safe	league
 POR-PL	watch	+1 up	38	71.1	78.5	safe	thin
@@ -252,6 +268,7 @@ POR-PL	watch	−4..−1	23	95.7	84.1	safe	thin
 POR-PL	priced	+1 up	44	68.2	78.6	unsafe	thin
 POR-PL	priced	−1..+1	1	100.0	76.1	unsafe	thin
 POR-PL	priced	−4..−1	13	84.6	82.3	unsafe	thin
+POR-PL	priced	all	58	72.4	79.4	unsafe	pooled
 ROU-L1	athena	+1 up	207	78.7	80.3	cautious	league
 ROU-L1	athena	−1..+1	1	100.0	87.1	safe	thin
 ROU-L1	athena	−4..−1	377	88.9	86.8	safe	league
@@ -284,6 +301,7 @@ SCO-PL	watch	−1..+1	69	79.7	83.4	safe	league
 SCO-PL	watch	−4..−1	2	100.0	76.4	safe	thin
 SCO-PL	priced	+1 up	23	69.6	80.3	unsafe	thin
 SCO-PL	priced	−1..+1	27	66.7	80.6	unsafe	thin
+SCO-PL	priced	all	50	68.0	80.5	unsafe	pooled
 SUI-SL	athena	+1 up	280	81.8	82.3	safe	league
 SUI-SL	athena	−1..+1	179	80.4	82.3	safe	league
 SUI-SL	athena	−4..−1	5	100.0	77.0	safe	thin
@@ -291,14 +309,15 @@ SWE-AL	athena	+1 up	187	79.7	80.4	safe	league
 SWE-AL	athena	−1..+1	135	82.2	81.2	safe	league
 SWE-AL	athena	−4..−1	116	86.2	83.4	safe	league
 TUR-SL	athena	+1 up	260	86.9	84.1	safe	league
-TUR-SL	athena	−1..+1	140	91.4	84.0	safe	league
-TUR-SL	athena	−4..−1	48	87.5	81.6	safe	thin
+TUR-SL	athena	−1..+1	139	91.4	84.0	safe	league
+TUR-SL	athena	−4..−1	50	86.0	81.7	safe	league
 TUR-SL	watch	+1 up	73	83.6	84.2	safe	league
 TUR-SL	watch	−1..+1	32	90.6	84.0	safe	thin
 TUR-SL	watch	−4..−1	13	84.6	82.1	safe	thin
 TUR-SL	priced	+1 up	44	61.4	84.0	unsafe	thin
 TUR-SL	priced	−1..+1	15	66.7	84.0	unsafe	thin
 TUR-SL	priced	−4..−1	10	60.0	82.2	unsafe	thin
+TUR-SL	priced	all	69	62.3	83.7	unsafe	pooled
 UCL	athena	+1 up	100	85.0	83.7	safe	league
 UCL	athena	−1..+1	74	74.3	81.6	unsafe	league
 UCL	athena	−4..−1	124	83.1	79.0	safe	league
@@ -326,31 +345,31 @@ UKR-PL	athena	+1 up	269	81.4	81.2	safe	league
 UKR-PL	athena	−1..+1	28	82.1	77.7	safe	thin
 UKR-PL	athena	−4..−1	2	50.0	84.3	safe	thin
 UKR-PL	athena	−4 down	108	90.7	84.3	safe	league
-flipbank	flip	unsafe tip3	434	77.6	71.9	flipped	bank
-flip	flip	unsafe tip3	84	77.4	73.8	hold	board
-flipbank	flip	unsafe tip2	721	65.9	72.3	hold	bank
-flip	flip	unsafe tip2	138	59.4	73.2	hold	board
-flipbank	flip	cautious tip3	104	75.0	71.2	hold	bank
-flip	flip	cautious tip3	6	50.0	100.0	hold	bank
-flipbank	flip	cautious tip2	224	64.3	78.6	hold	bank
-flip	flip	cautious tip2	15	86.7	93.3	hold	bank
+flipbank	flip	unsafe tip3	142	74.6	72.5	hold	bank
+flip	flip	unsafe tip3	10	90.0	80.0	hold	bank
+flipbank	flip	unsafe tip2	220	65.5	72.7	hold	bank
+flip	flip	unsafe tip2	15	86.7	86.7	hold	bank
+flipbank	flip	cautious tip3	396	78.0	71.5	flipped	bank
+flip	flip	cautious tip3	80	73.8	75.0	hold	board
+flipbank	flip	cautious tip2	725	65.5	74.1	hold	bank
+flip	flip	cautious tip2	138	59.4	73.9	hold	board
 flipbank	flip	safe tip3	91	80.2	73.6	flipped	bank
 flip	flip	safe tip3	10	60.0	70.0	flipped	bank
 flipbank	flip	safe tip2	119	75.6	78.2	hold	bank
 flip	flip	safe tip2	16	50.0	68.8	hold	bank
-combobank	athena	clean	22002	84.6	83.5	keep	bank
+combobank	athena	clean	22020	84.6	83.5	keep	bank
 combo	athena	clean	323	83.6	83.9	keep	board
-combobank	athena	score under 0	4208	83.6	82.2	keep	bank
+combobank	athena	score under 0	4210	83.5	82.2	keep	bank
 combo	athena	score under 0	49	79.6	82.5	keep	bank
-combobank	athena	score under 0 + over lane	2562	82.0	79.7	keep	bank
+combobank	athena	score under 0 + over lane	2566	82.0	79.7	keep	bank
 combo	athena	score under 0 + over lane	30	80.0	82.1	keep	bank
-combobank	priced	priced play	666	73.7	82.5	decline	bank
+combobank	priced	priced play	668	73.7	82.5	decline	bank
 combo	priced	priced play	103	75.7	82.0	decline	board
-combobank	priced	score under 0 + priced play	294	74.5	81.9	decline	bank
+combobank	priced	score under 0 + priced play	292	74.7	81.9	decline	bank
 combo	priced	score under 0 + priced play	61	77.0	79.5	keep	board
 combobank	priced	score under 0 + priced play + over lane	383	74.2	78.6	decline	bank
 combo	priced	score under 0 + priced play + over lane	42	81.0	80.8	decline	bank
-combobank	watch	score under 0 + watch card	507	81.5	82.0	keep	bank
+combobank	watch	score under 0 + watch card	506	81.4	82.0	keep	bank
 combo	watch	score under 0 + watch card	45	80.0	81.2	keep	bank
 combobank	watch	score under 0 + watch card + over lane	383	85.6	80.0	keep	bank
 combo	watch	score under 0 + watch card + over lane	25	68.0	81.1	keep	bank

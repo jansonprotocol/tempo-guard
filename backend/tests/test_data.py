@@ -1407,10 +1407,16 @@ def test_declined_strike_combos(monkeypatch):
     # a measured table releases a seeded combo and declines an unseeded one
     livebands._BANDS[("combo", "athena", "score under 0 + over lane")] = dict(
         n=40, hit=80.0, said=83.0, label="keep", source="measured")
-    livebands._BANDS[("combo", "priced", "priced play")] = dict(
+    livebands._BANDS[("combo", "priced", "score under 0 + priced play")] = dict(
         n=60, hit=70.0, said=83.0, label="decline", source="measured")
     assert C("athena", ["score under 0", "over lane"]) == "keep"
-    assert C("priced", ["priced play"]) == "decline"
+    assert C("priced", ["score under 0", "priced play"]) == "decline"
+    # but the BARE priced play is the lane, not a combination: its verdict
+    # is the live tag's, league by league (the bettor, 21 Sep), and the
+    # board-wide row — decline at 75.7 on 103 that morning — is not read
+    livebands._BANDS[("combo", "priced", "priced play")] = dict(
+        n=103, hit=75.7, said=82.0, label="decline", source="board")
+    assert C("priced", ["priced play"]) == "keep"
     monkeypatch.setattr(livebands, "_BANDS", None)
 
 
@@ -1755,6 +1761,59 @@ def test_live_tag_reads_the_measured_table(tmp_path, monkeypatch):
     assert webapp.live_bands()[("watch", "+1 up")]["n"] == 400
     assert livebands.band_row("athena", 3.0, "ITA-SB")["source"] == "league"
     assert livebands.band_row("athena", 3.0, "SUI-SL")["source"] == "global"
+    monkeypatch.setattr(livebands, "_BANDS", None)
+
+    # THE PRICED LANE NEVER READS THE WHOLE BANK (the bettor, 21 Sep:
+    # "cautious where the league has no priced record or enough record;
+    # the updater should bring them to unsafe whenever there is sufficient
+    # data"). The whole-bank priced rows say unsafe in every band, and on
+    # the morning the feed first priced the UEFA set that declined all 18
+    # priced cards on the board. Now: the league's own band row, else its
+    # POOLED priced row (band "all") at the floor, else cautious.
+    rows = [dict(league="*", lane=l, band=b, n=400, hit=72.0, said=84.0, label="unsafe", source="global")
+            for l in livebands.LANES for b in livebands.BANDS]
+    rows.append(dict(league="TUR-SL", lane="priced", band="+1 up", n=44, hit=61.4, said=84.0,
+                     label="unsafe", source="thin"))
+    rows.append(dict(league="TUR-SL", lane="priced", band=livebands.ALL, n=69, hit=62.3, said=83.5,
+                     label="unsafe", source="pooled"))
+    rows.append(dict(league="NED-ED", lane="priced", band="+1 up", n=85, hit=80.0, said=83.3,
+                     label="safe", source="league"))
+    rows.append(dict(league="NED-ED", lane="priced", band=livebands.ALL, n=107, hit=78.5, said=83.0,
+                     label="cautious", source="pooled"))
+    rows.append(dict(league="INT-UEFA", lane="priced", band=livebands.ALL, n=6, hit=50.0, said=80.0,
+                     label="cautious", source="thin"))
+    livebands.write(rows, 21, dt.date(2026, 9, 21))
+    assert webapp.live_tag("priced", 3.0) == "unsafe"                 # no league: the whole bank still
+    assert webapp.live_tag("priced", 3.0, "NED-ED") == "safe"         # its own band speaks
+    assert webapp.live_tag("priced", -2.0, "NED-ED") == "cautious"    # band thin: the pooled row
+    assert webapp.live_tag("priced", 3.0, "TUR-SL") == "unsafe"       # measured on its own 69, truly
+    assert webapp.live_tag("priced", 3.0, "INT-UEFA") == "cautious"   # six cards: no record yet
+    assert webapp.live_tag("priced", -6.0, "NOWHERE") == "cautious"   # never priced: no record
+    assert webapp.live_tag("athena", -6.0, "NOWHERE") == "unsafe"     # the other lanes still fall through
+    r = livebands.band_row("priced", 3.0, "INT-UEFA")
+    assert r["source"] == livebands.NO_RECORD and r["n"] == 6
+    assert livebands.band_row("priced", 3.0, "TUR-SL")["source"] == "pooled"
+    # measure() writes the pooled row from the same tally as the bands
+    src = __import__("pathlib").Path(livebands.__file__).read_text()
+    assert 'keys.append((code, lane, ALL))' in src
+    monkeypatch.setattr(livebands, "_BANDS", None)
+
+    # and the bare "priced play" combo — the lane itself, measured board-
+    # wide — no longer declines behind the tag's back: it flipped to
+    # decline at 75.7 on 103 with the 08:01 refresh of 21 Sep and took all
+    # 18 priced cards with it whatever their league said. A priced play
+    # with a real strike beside it still reads its combo row.
+    monkeypatch.setattr(livebands, "_BANDS", None)
+    rows = [dict(league="*", lane=l, band=b, n=400, hit=82.0, said=84.0, label="safe", source="global")
+            for l in livebands.LANES for b in livebands.BANDS]
+    rows.append(dict(league="combo", lane="priced", band="priced play", n=103, hit=75.7,
+                     said=82.0, label="decline", source="board"))
+    rows.append(dict(league="combo", lane="priced", band="score under 0 + priced play + over lane",
+                     n=42, hit=71.0, said=80.8, label="decline", source="board"))
+    livebands.write(rows, 21, dt.date(2026, 9, 21))
+    assert livebands.combo("priced", ["priced play"]) == "keep"
+    assert livebands.combo("priced", ["score under 0", "priced play", "over lane"]) == "decline"
+    assert livebands.combo("watch", []) == "keep"
     monkeypatch.setattr(livebands, "_BANDS", None)
 
 
@@ -2459,9 +2518,12 @@ def test_the_strike_combos_are_led_by_the_bank():
         if len(p) >= 8 and p[0] == "combo":
             written[(p[1], p[2])] = (p[6], p[7], int(p[3]))
     assert written
+    # (two rows are written for the record and not read: "clean", which is
+    # no combo, and the bare "priced play", which is the priced lane itself
+    # and answers to the live tag's league record since 21 Sep)
     for key, (label, _src, _n) in written.items():
         assert livebands.combo(key[0], key[1].split(" + ")) == label \
-            or key[1] == "clean", key
+            or key[1] == "clean" or key == ("priced", "priced play"), key
 
     # A FRESH STUDY MAY OUTGROW THE FROZEN TABLE, and that is not a
     # fault. config/live_bands.tsv is written by hand (scripts/livebands.py)
@@ -3577,16 +3639,22 @@ def test_the_two_day_job_judges_every_declining_rule_on_the_board_first():
     # the board column exists and is the board, not the bank
     board_all = [r for r in rs if r["source"] == "board" and r["window"] == "all"]
     assert board_all and all(r["kept_n"] < 5000 for r in board_all)
-    # one predicate: a priced+unsafe bank card reads as that reason
+    # one predicate: a priced+unsafe bank card reads as that reason — and
+    # since the same afternoon "unsafe" on a priced play is the LEAGUE's
+    # own record (its pooled priced row here), never the whole bank's;
+    # a league without one is cautious and reads as no reason at all
     from scripts import bankrates, livebands
     monkey = livebands._BANDS
     livebands._BANDS = {(l, b): dict(label=lab, n=0, hit=None, said=None, source="seed")
                         for l, bs in livebands.SEED.items() for b, lab in bs.items()}
+    livebands._BANDS[("TUR-SL", "priced", livebands.ALL)] = dict(
+        label="unsafe", n=69, hit=62.3, said=83.5, source="pooled")
     try:
         pl = {"g": "green", "tip": "U4.25 84.0% **−5.0%** · buy≥1.22 (+6.1% margin)",
               "v": "normal", "bp": 1.30, "need": 1.22}
-        assert dc._bank_reason(pl, "NED-ED") == "live unsafe · priced"
-        assert dc._bank_reason(dict(pl, g="red"), "NED-ED") == "tier red"
+        assert dc._bank_reason(pl, "TUR-SL") == "live unsafe · priced"
+        assert dc._bank_reason(pl, "NED-ED") is None                      # no league record: cautious
+        assert dc._bank_reason(dict(pl, g="red"), "TUR-SL") == "tier red"
         assert dc._bank_reason(dict(pl, tip="U4.25 84.0% **+3.0%** · buy≥1.22"), "NED-ED") is None
     finally:
         livebands._BANDS = monkey

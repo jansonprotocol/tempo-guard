@@ -1489,7 +1489,9 @@ def is_declined(f) -> bool:
     The 21 Sep profile study found those to be the single weakest slice of
     the playable board (73.1% on 193, −4.0% at closing, both halves of the
     bank under 75), and the bettor moved them: "Start declining Priced +
-    Unsafe." bankrates.counts carries the same rule and the numbers."""
+    Unsafe." bankrates.counts carries the same rule and the numbers. What
+    "unsafe" means on a priced play narrowed the same day: the league's
+    own priced record (livebands.band_row), cautious where it has none."""
     lab = label_any(f)
     if lab and lab.endswith("red"):
         return True
@@ -1646,6 +1648,15 @@ def _livetag_html(f) -> str:
         how = (f"In this league this band landed {row['hit']:.1f}% on {row['n']} bank "
                f"cards, red cards out (safe at 79, cautious at 77)."
                if row["source"] == "league" else
+               f"In this league priced plays landed {row['hit']:.1f}% on {row['n']} bank "
+               f"cards across every edge band, red cards out (safe at 79, cautious "
+               f"at 77); this band alone is under the {_lb.MIN_LEAGUE}-card floor."
+               if row["source"] == "pooled" else
+               f"This league has no priced record yet ({row['n']} bank cards, "
+               f"{_lb.MIN_LEAGUE} needed), so the tag is cautious by default; the "
+               f"two-day refresh makes it unsafe the moment the league's own priced "
+               f"plays measure under 77."
+               if row["source"] == _lb.NO_RECORD else
                f"Across the bank this band landed {row['hit']:.1f}% on {row['n']:,} cards, "
                f"red cards out (safe at 79, cautious at 77); this league has too few "
                f"cards in it to speak for itself."

@@ -68,6 +68,8 @@ DAYS = 21               # rolling window, in days, for the flip study on the boa
 GLOBAL = "*"            # the league column of a whole-bank row
 BANDS = ("+1 up", "−1..+1", "−4..−1", "−4 down")
 LANES = ("athena", "watch", "priced")
+ALL = "all"                      # the band column of a league's POOLED priced row
+NO_RECORD = "no league record"   # the source of a priced tag no league row can give
 
 # THE SEED (the bettor's hand bands, 12 Sep). Whether a card the board did
 # not stake — an Athena lane, or a watch card — is one to buy into in
@@ -87,6 +89,23 @@ LANES = ("athena", "watch", "priced")
 # like any other unsafe card (webapp.is_declined, bankrates.counts).
 # The MEASUREMENT here is unchanged and still keeps only red out, so a
 # priced band that recovers comes back by itself.
+#
+# THE PRICED LANE DOES NOT INHERIT THE WHOLE BANK'S ROW (21 Sep, later
+# the same day). The whole-bank priced rows land 71-76 in every band, so
+# the rule above declined every priced card in every league without a
+# priced row of its own — 18 of 18 on the board that morning, the six
+# UEFA singles among them, in a set the feed had priced for one morning
+# and the bank had never seen priced. The bettor: "cautious where the
+# league has no priced record or enough record. The updater should bring
+# them to unsafe whenever there is sufficient data on those cards and
+# it's truly measured." So on a priced play the tag reads, in order: the
+# league's own band row at MIN_LEAGUE cards; the league's POOLED priced
+# row (band "all", every edge band together) at MIN_LEAGUE cards; else
+# "cautious" with source NO_RECORD. The pooled row is what makes the
+# promise real: a league that has argued with the book 50 times and lost
+# — Turkey at 62 on 69, France at 71 on 103 — is unsafe on its own record
+# even where no single band reaches the floor. Athena and watch lanes
+# keep the whole-bank fallback: those bands are 82-89 across the bank.
 SEED = {
     "athena": {"+1 up": "safe", "−1..+1": "safe", "−4..−1": "safe",
                "−4 down": "unsafe"},
@@ -228,6 +247,16 @@ def band_row(lane: str, edge: float, code: str | None = None) -> dict:
         row = bands().get((code, lane, b))
         if row and row["source"] == "league":
             return row
+        if lane == "priced":
+            # No whole-bank fallback on a priced play: the league's pooled
+            # record, or cautious until it has one (see the SEED note).
+            pooled = bands().get((code, lane, ALL))
+            if pooled and pooled["source"] == "pooled":
+                return pooled
+            return dict(n=pooled["n"] if pooled else 0,
+                        hit=pooled["hit"] if pooled else None,
+                        said=pooled["said"] if pooled else None,
+                        label="cautious", source=NO_RECORD)
     return bands()[(lane, b)]
 
 
@@ -290,8 +319,23 @@ def combo_label(hit_pct: float | None, n: int, seed: str,
 
 
 def combo(lane: str | None, strikes: list[str]) -> str:
-    """"decline" or "keep" for a card's lane and strikes."""
+    """"decline" or "keep" for a card's lane and strikes.
+
+    A bare "priced play" is not a strike COMBINATION — it is the priced
+    lane itself, every priced card with nothing else against it — and
+    its verdict belongs to the live tag, which since 21 Sep reads the
+    league's own priced record (band_row) and is cautious where the
+    league has none. The board-wide row is still measured and written
+    (combo · priced · "priced play": it fell from keep at 77.0 on 100 to
+    decline at 75.7 on 103 with the 08:01 refresh of 21 Sep, which is
+    what declined the six UEFA singles that morning, tag or no tag), but
+    it is not read: one population, one verdict, and the bettor asked
+    for that verdict league by league. A priced play WITH a strike —
+    score under 0, an over lane — is a combination and still reads its
+    row here."""
     if not lane or not strikes:
+        return "keep"
+    if strikes == ["priced play"]:
         return "keep"
     row = bands().get(("combo", lane, " + ".join(strikes)))
     return row["label"] if row else "keep"
@@ -606,7 +650,10 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
             if got is None or e is None or c is None:
                 continue
             b = edge_band(e)
-            for key in ((GLOBAL, lane, b), (code, lane, b)):
+            keys = [(GLOBAL, lane, b), (code, lane, b)]
+            if lane == "priced":
+                keys.append((code, lane, ALL))
+            for key in keys:
                 t = tally.setdefault(key, [0, 0, 0.0])
                 t[0] += 1
                 t[1] += got
@@ -633,6 +680,18 @@ def measure(days: int = DAYS, today: dt.date | None = None) -> list[dict]:
                     lab, src = glob["label"], "thin"     # written, not read
                 rows.append(dict(league=code, lane=lane, band=band, n=n, hit=hit,
                                  said=c / n, label=lab, source=src))
+        # The league's pooled priced row, every edge band together: the
+        # fallback a priced play reads when its own band is under the
+        # floor. Measured at MIN_LEAGUE like a band row; "thin" below it,
+        # written for the record and read only for its count.
+        if (code, "priced", ALL) in tally:
+            n, h, c = tally[(code, "priced", ALL)]
+            hit = h / n * 100
+            lab, src = label(hit, n, "cautious", MIN_LEAGUE, "pooled")
+            if src == "seed":
+                lab, src = "cautious", "thin"
+            rows.append(dict(league=code, lane="priced", band=ALL, n=n, hit=hit,
+                             said=c / n, label=lab, source=src))
     return rows
 
 
@@ -644,6 +703,9 @@ def write(rows: list[dict], days: int, today: dt.date) -> None:
         f"# reads the league's own row where it has {MIN_LEAGUE} cards or more (source",
         "# 'league'), else the whole bank's row (league '*', source 'global'), else",
         "# the seed. A league row under the floor is written as 'thin' and not read.",
+        "# A PRICED play never reads the whole bank's row: its league's own band,",
+        f"# else the league's pooled priced row (band '{ALL}', source 'pooled') at",
+        f"# {MIN_LEAGUE} cards, else 'cautious' until the league has that record.",
         f"# Thresholds: safe >= {SAFE_AT:.0f}, cautious >= {CAUTIOUS_AT:.0f}, else unsafe.",
         f"# written\t{today.isoformat()}",
         "# The 'flip' rows: priced plays with that tag that also print that lane,",
@@ -695,7 +757,12 @@ def main() -> None:
             continue
         hit = "   —  " if r["hit"] is None else f"{r['hit']:5.1f}%"
         print(f"  {r['lane']:6} {r['band']:8} n={r['n']:5}  hit {hit}  -> {r['label']:8} ({r['source']})")
-    lg = [r for r in rows if r["league"] != GLOBAL]
+    lg = [r for r in rows if r["league"] != GLOBAL and r["band"] != ALL]
+    pooled = [r for r in rows if r["band"] == ALL]
+    print(f"  pooled priced rows: {len(pooled)} leagues, "
+          f"{sum(1 for r in pooled if r['source'] == 'pooled')} at the floor — "
+          + ", ".join(f"{r['league']} {r['label']} ({r['hit']:.0f} on {r['n']})"
+                      for r in pooled if r["source"] == "pooled"))
     spoke = [r for r in lg if r["source"] == "league"]
     differs = [r for r in spoke if r["label"] != next(
         g["label"] for g in rows if g["league"] == GLOBAL and g["lane"] == r["lane"] and g["band"] == r["band"])]
