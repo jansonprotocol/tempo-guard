@@ -289,7 +289,11 @@ def slate(days: int, codes: list[str]) -> None:
                 h, a = sides.get("home"), sides.get("away")
                 if not h or not a:
                     continue
-                board = (ko + timedelta(hours=2)).strftime("%Y-%m-%d %H:%M")
+                # the board's own clock, not a pinned +2: Amsterdam leaves
+                # summer time on the last Sunday of October and a pinned
+                # offset would have put every November card an hour late
+                from zoneinfo import ZoneInfo
+                board = ko.astimezone(ZoneInfo("Europe/Amsterdam")).strftime("%Y-%m-%d %H:%M")
                 rows.append((board, code, name,
                              f"{h['team']['displayName']} v "
                              f"{a['team']['displayName']}"))

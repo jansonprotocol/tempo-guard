@@ -3869,7 +3869,8 @@ def test_the_board_fills_itself_from_the_feed(monkeypatch, tmp_path):
     y = (wf / "board-fill.yml").read_text()
     body = y[y.index("steps:"):]
     ran = [ln.strip() for ln in body.splitlines() if "scripts/" in ln and "python" in ln]
-    assert ran == ["python scripts/feedslate.py --write --allow-stale"], ran
+    assert ran == ["python scripts/feedslate.py --write --allow-stale",
+                   "python scripts/feedslate.py --clock || true"], ran
     assert "cron:" in y and "secrets.ODDS_API_KEY" in y and "exit 1" in y
     for path in ("config/fixtures.tsv", "config/forward_log.tsv", "config/odds_quotes.tsv"):
         assert path in body, path
@@ -3881,3 +3882,34 @@ def test_the_board_fills_itself_from_the_feed(monkeypatch, tmp_path):
     src = pathlib.Path(fs.__file__).read_text()
     assert "futurematch.add_slate(" in src and "futurematch.pull_quotes()" in src \
         and "board.main()" in src
+
+
+def test_every_kickoff_is_on_the_amsterdam_clock(monkeypatch):
+    """The bettor, 21 Sep: "make sure all kickoff times are synched to
+    Amsterdam local time." The board's clock is Dutch LOCAL time — summer
+    time until the last Sunday of October, then not — and three readers
+    already say so (livecheck.BOARD_TZ, odds_api.started, feedslate.AMS).
+    The one writer that pinned +2 instead, internationals --slate, would
+    have put every November card an hour late. Nothing in scripts/ may
+    pin an offset, and the daily job compares every pending card with
+    the feed's own stamp, converted the same way."""
+    import datetime as dt
+    import pathlib
+    from scripts import board, feedslate as fs, odds_api as oa
+
+    for py in pathlib.Path(fs.__file__).parent.glob("*.py"):
+        src = py.read_text()
+        assert "timedelta(hours=2)" not in src, py.name
+    assert str(fs.AMS) == "Europe/Amsterdam"
+    # winter and summer both convert through the zone, not an offset
+    assert fs._kickoff("2026-09-27T15:30:00Z").strftime("%H:%M") == "17:30"
+    assert fs._kickoff("2026-11-07T15:30:00Z").strftime("%H:%M") == "16:30"
+    # the clock check names a card that disagrees and passes one that agrees
+    fx = [board.Fixture("2026-09-27 17:30", "ENG-PL", "Premier League", "A v B",
+                        "U4.25 84.0% +2.0%", "", ""),
+          board.Fixture("2026-09-27 18:00", "ENG-PL", "Premier League", "C v D",
+                        "U4.25 84.0% +2.0%", "", "")]
+    monkeypatch.setattr(oa, "_ACTIVE", {"soccer_epl"})
+    monkeypatch.setattr(oa, "find", lambda code, teams, day:
+                        dict(commence_time="2026-09-27T15:30:00Z"))
+    assert fs.clock(fx) == [("ENG-PL", "C v D", "2026-09-27 18:00", "2026-09-27 17:30")]

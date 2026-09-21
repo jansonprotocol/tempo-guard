@@ -45,6 +45,8 @@ Usage:  python scripts/feedslate.py                 print the slate it would add
         python scripts/feedslate.py --write         add it to the board, quote, render
         python scripts/feedslate.py --days 10       widen the window
         python scripts/feedslate.py --only ENG-PL,MLS
+        python scripts/feedslate.py --clock         name every pending card whose
+                                                    kickoff is off the feed's
         (--allow-stale passes through to board.verify, as on the two-day job)
 """
 from __future__ import annotations
@@ -151,6 +153,33 @@ def build(days: int = DAYS, now: dt.datetime | None = None,
     return rows, skipped
 
 
+def clock(fixtures=None) -> list[tuple]:
+    """Every pending card whose kickoff disagrees with the feed's, on the
+    board's Amsterdam clock: (code, teams, board kickoff, feed kickoff).
+
+    The bettor, 21 Sep: "make sure all kickoff times are synched to
+    Amsterdam local time." Measured that day: 99 of 99 feed-carried cards
+    and 52 of 52 ESPN-carried ones agreed to the minute; the ten left
+    (Algeria, Morocco, Peru, one Danish match) have no source to check
+    against. A card that stops agreeing is either a typo in a hand slate
+    or a match the broadcaster moved — both worth a line in the daily
+    job's log. Nothing is rewritten here: the kickoff is the row's key
+    in the forward log and the live log, so a move is a hand-set."""
+    from scripts.board import load
+    out = []
+    for f in (fixtures if fixtures is not None else load()):
+        if f.settled or f.status or not oa.carried(f.code):
+            continue
+        day = f.kickoff.split(" ")[0]
+        ev = oa.find(f.code, f.teams, day)
+        if not ev:
+            continue
+        ko = _kickoff(ev["commence_time"]).strftime("%Y-%m-%d %H:%M")
+        if ko != f.kickoff:
+            out.append((f.code, f.teams, f.kickoff, ko))
+    return out
+
+
 def main() -> None:
     args = sys.argv[1:]
     days = int(args[args.index("--days") + 1]) if "--days" in args else DAYS
@@ -158,6 +187,13 @@ def main() -> None:
     if not oa._key():
         print("ODDS_API_KEY not set — the feed cannot be listed", file=sys.stderr)
         sys.exit(1)
+    if "--clock" in args:
+        off = clock()
+        for code, teams, ours, theirs in off:
+            print(f"::warning::kickoff differs from the feed — {code} {teams}: "
+                  f"board {ours}, feed {theirs} (Amsterdam)")
+        print(f"{len(off)} pending cards off the feed's clock", file=sys.stderr)
+        return
     rows, skipped = build(days, only=only)
     for r in rows:
         print("\t".join(r))

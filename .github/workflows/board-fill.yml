@@ -66,6 +66,9 @@ jobs:
             # --allow-stale: an unswept no-feed card hours past kickoff is
             # the sweep's problem, not a reason to leave the week unfilled
             python scripts/feedslate.py --write --allow-stale
+            # and say so if any pending card's kickoff has drifted from
+            # the feed's, on the Amsterdam clock — a moved match or a typo
+            python scripts/feedslate.py --clock || true
             cd ..
             git add -A config/fixtures.tsv config/odds_quotes.tsv config/reads_cache.json \
                        config/forward_log.tsv README.md web/
