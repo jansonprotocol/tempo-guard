@@ -73,7 +73,11 @@ jobs:
             python scripts/odds_api.py --quotes
             python scripts/board.py
             cd ..
-            git add -A config/odds_quotes.tsv config/reads_cache.json README.md web/
+            # forward_log.tsv too: the render stamps a card's first-sight
+            # call (lane, bar, price) there, and until 21 Sep this job threw
+            # that stamp away with its checkout — the card was then "called"
+            # at whatever the sweep saw at kickoff instead.
+            git add -A config/odds_quotes.tsv config/reads_cache.json config/forward_log.tsv README.md web/
             if git diff --cached --quiet; then
               echo "the market has not moved a printed lane"; exit 0
             fi

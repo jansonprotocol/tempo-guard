@@ -3809,3 +3809,75 @@ def test_the_odds_feed_is_asked_for_national_teams_by_every_key_in_season():
               "soccer_fifa_world_cup_qualifiers_south_america", "soccer_conmebol_copa_america",
               "soccer_concacaf_gold_cup", "soccer_africa_cup_of_nations"}
     assert {k for ks in oa.INTL.values() for k in ks} <= listed
+
+
+def test_the_board_fills_itself_from_the_feed(monkeypatch, tmp_path):
+    """The bettor, 21 Sep, watching the Playable tab fill after an odds
+    refresh: "is it now automatically whenever odds refresh pulls matches
+    from its refresh it also grades it automatically?" It was not — every
+    card still arrived through a typed slate. The feed's league listing
+    IS a fixture list, so scripts/feedslate.py turns it into one: next
+    week's fixtures the board lacks, in every league the engine and the
+    feed both carry, names resolved against the store or refused, and
+    the rest handed to futurematch like a typed slate. No network here:
+    the feed and the board are pinned by hand.
+    """
+    import datetime as dt
+    from app.data import store
+    from scripts import board, feedslate as fs, odds_api as oa
+
+    names = sorted(set(store.load_results("ENG-PL")["home"]))
+    a, b, c = names[0], names[1], names[2]          # the store's own spellings
+    calls = []
+
+    def feed(code, force=False):
+        calls.append(code)
+        return [
+            # already on the board (same clubs, same day) — never twice
+            dict(commence_time="2026-09-26T14:00:00Z", home_team=a, away_team=b),
+            # new, inside the window: lands, on the Amsterdam clock
+            dict(commence_time="2026-09-27T15:30:00Z", home_team=b, away_team=c),
+            # a name the store cannot resolve: refused, named, never guessed
+            dict(commence_time="2026-09-27T15:30:00Z", home_team="Nowhere Rovers", away_team=a),
+            # beyond the window, and already played
+            dict(commence_time="2026-10-15T19:00:00Z", home_team=c, away_team=a),
+            dict(commence_time="2026-09-20T14:00:00Z", home_team=a, away_team=c),
+            # the same fixture listed twice by the feed
+            dict(commence_time="2026-09-27T15:30:00Z", home_team=b, away_team=c),
+        ]
+
+    monkeypatch.setattr(oa, "fetch_league", feed)
+    monkeypatch.setattr(oa, "_ACTIVE", {"soccer_epl"})
+    monkeypatch.setattr(fs, "roster", lambda: ["ENG-PL", "INT-CAF", "INT-FR"])
+    monkeypatch.setattr(board, "load", lambda: [
+        board.Fixture("2026-09-26 16:00", "ENG-PL", "Premier League", f"{a} v {b}",
+                      "U4.25 84.0% +2.0% · buy≥1.20", "", "")])
+    now = dt.datetime(2026, 9, 21, 9, 0, tzinfo=dt.timezone.utc)
+    rows, skipped = fs.build(days=7, now=now)
+    assert rows == [("2026-09-27 17:30", "ENG-PL", "Premier League", f"{b} v {c}")], rows
+    assert skipped == [("ENG-PL", f"Nowhere Rovers v {a}", "home name unresolved")]
+    # a dormant national-team key and a code with no key are never asked
+    assert calls == ["ENG-PL"]
+    # --only narrows, and a league outside it costs nothing
+    calls.clear()
+    assert fs.build(days=7, now=now, only=["INT-CAF"]) == ([], []) and calls == []
+
+    # the daily job: lists, fills through the slate path, commits the
+    # board and its first-sight stamps, and fails loudly without the key
+    import pathlib
+    wf = pathlib.Path(__file__).resolve().parents[2] / ".github" / "workflows"
+    y = (wf / "board-fill.yml").read_text()
+    body = y[y.index("steps:"):]
+    ran = [ln.strip() for ln in body.splitlines() if "scripts/" in ln and "python" in ln]
+    assert ran == ["python scripts/feedslate.py --write --allow-stale"], ran
+    assert "cron:" in y and "secrets.ODDS_API_KEY" in y and "exit 1" in y
+    for path in ("config/fixtures.tsv", "config/forward_log.tsv", "config/odds_quotes.tsv"):
+        assert path in body, path
+    assert "config/odds_cache.json" not in body
+    # and the price refresh keeps the stamps it makes, which it threw away
+    # with its checkout until 21 Sep
+    assert "config/forward_log.tsv" in (wf / "odds-refresh.yml").read_text()
+    # the script's --write is the typed slate's own path, not a second one
+    src = pathlib.Path(fs.__file__).read_text()
+    assert "futurematch.add_slate(" in src and "futurematch.pull_quotes()" in src \
+        and "board.main()" in src

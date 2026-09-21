@@ -37,7 +37,9 @@
  "ENG-CH": {
   "Queens Park Rangers FC": "QPR",
   "West Bromwich Albion FC": "West Brom",
-  "Wolverhampton Wanderers FC": "Wolves"
+  "Wolverhampton Wanderers FC": "Wolves",
+  "Peterborough United": "Peterboro",
+  "Peterborough": "Peterboro"
  },
  "ESP-LL": {
   "Athletic Club": "Ath Bilbao",
@@ -169,5 +171,13 @@
   "Athletico-PR": "CA Paranaense",
   "Athletico Paranaense": "CA Paranaense",
   "Athletico": "CA Paranaense"
+ },
+ "ENG-L1": {
+  "Peterborough United": "Peterboro",
+  "Peterborough": "Peterboro"
+ },
+ "ENG-L2": {
+  "Peterborough United": "Peterboro",
+  "Peterborough": "Peterboro"
  }
 }

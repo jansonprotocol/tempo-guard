@@ -1,0 +1,83 @@
+# Once a day: put next week's fixtures on the board from the odds feed.
+#
+# WHY THIS EXISTS (the bettor, 21 Sep, watching the Playable tab fill
+# after an odds refresh: "is it now automatically whenever odds refresh
+# pulls matches from its refresh it also grades it automatically?"). It
+# was not. Every card on the board had arrived through a slate somebody
+# typed from screenshots — the one step of the loop still done by hand,
+# while pricing (odds-refresh) and grading (live-sweep) ran themselves.
+# The feed's answer to one league call is a fixture list, so the listing
+# the refresh already pays for is the slate. "make this."
+#
+# scripts/feedslate.py lists every league the engine has a store for and
+# the feed has a live key for, keeps the fixtures kicking off in the next
+# seven days that the board does not already carry (same league, same
+# two clubs, within a day), refuses any name the engine cannot resolve
+# against its own store (printed, never guessed), and hands the rest to
+# futurematch — the same path a typed slate takes: priced through the
+# current engine, quoted from the feed, rendered and verified. The
+# leagues the feed lacks (Algeria, Colombia, Morocco, Peru, the Dutch
+# second division, the friendlies, CAF and AFC) still come in by hand.
+#
+# COST. About forty leagues at two credits each when the 90-minute cache
+# is cold, once a day — under a hundred credits, a tenth of what the
+# two-hourly price refresh spends.
+#
+# A refused push is recovered by resetting onto main and filling again:
+# the fill is a pure function of the feed and the board, and the dedupe
+# means a second pass adds nothing a first pass already landed.
+name: board fill (from the feed)
+
+on:
+  schedule:
+    - cron: "15 5 * * *"       # 05:15 UTC daily, before the 06:00 two-day refresh
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r backend/requirements.txt
+      - name: the key must exist, or say so out loud
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          if [ -z "$ODDS_API_KEY" ]; then
+            echo "::error::ODDS_API_KEY is not set as a repository secret — the feed cannot be listed."
+            exit 1
+          fi
+      - env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          for try in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            cd backend
+            # --allow-stale: an unswept no-feed card hours past kickoff is
+            # the sweep's problem, not a reason to leave the week unfilled
+            python scripts/feedslate.py --write --allow-stale
+            cd ..
+            git add -A config/fixtures.tsv config/odds_quotes.tsv config/reads_cache.json \
+                       config/forward_log.tsv README.md web/
+            if git diff --cached --quiet; then
+              echo "nothing to add — the board already has the week"; exit 0
+            fi
+            n=$(git diff --cached --numstat config/fixtures.tsv | cut -f1)
+            git commit -q -m "board fill: $(date -u '+%Y-%m-%d') — ${n:-0} cards from the feed" \
+              -m "Next week's fixtures in every league the engine and the feed both carry, priced through the current engine and quoted, as a typed slate would be."
+            if git push origin HEAD:main; then
+              echo "pushed on try $try"; exit 0
+            fi
+            echo "push refused on try $try — resetting onto main and filling again"
+          done
+          echo "could not push after 3 tries"; exit 1
