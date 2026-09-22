@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 81.1%
 
     lane                        Tip 1              Tip 2
-    all matches            558 / 688  81.1%    365 / 552  66.1%
-    played lanes  >+1%     252 / 312  80.8%    363 / 547  66.4%
+    all matches            559 / 689  81.1%    366 / 553  66.2%
+    played lanes  >+1%     252 / 312  80.8%    364 / 548  66.4%
     placed bets            160 / 204  78.4%    ROI +0.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 615 / 859   ·   71.6%**   ·   **Tip 1 — 252 / 312   ·   80.8%**   ·   **Tip 2 — 363 / 547   ·   66.4%**
+**Playable — 616 / 860   ·   71.6%**   ·   **Tip 1 — 252 / 312   ·   80.8%**   ·   **Tip 2 — 364 / 548   ·   66.4%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -869,7 +869,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-0 · 21-09 17:00 <b>Dominica v Anguilla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>— under +1%</td><td>✅ <b>Dominica O0.5</b> 81.0% +6.2%<br>buy≥1.36 (+10.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 21-09 19:30 <b>Aldosivi Mar del Plata v Atlético Tucuman</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (87.9 −0.2)</td><td>U3.0 86.5% +1.5%<br>buy≥1.24 (+3.9% margin)</td><td>✅ <b>Aldosivi Mar del Plata U1.5</b> 75.4% +8.2%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 22-09 02:15 <b>Lanus v Estudiantes</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (87.9 −0.2)</td><td>U3.0 86.3% +1.3%<br>buy≥1.24 (+3.8% margin)</td><td>❌ <b>Lanus U1.5</b> 75.4% +8.2%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 3-0 <b>Cuiabá v Náutico</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>— under +1%</td><td>O1.75 66.9% +1.6%<br>buy≥1.63 (+0.5% margin) · floor −8.1 · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 · 22-09 02:30 <b>Cuiabá v Náutico</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>— under +1%</td><td>✅ O1.75 66.9% +1.6%<br>buy≥1.63 (+0.5% margin) · floor −8.1</td></tr></table>
 <table align="left"><tr><th align="left">🟢 22-09 18:00 <b>Biskra v Saoura</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (86.2 −3.8)</td><td>U3.0 87.4% +4.7%<br>buy≥1.30 (+9.9% margin)</td><td><b>Biskra U1.5</b> 75.4% +14.3%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 23-09 01:00 <b>Ind. Medellín v Jaguares</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.6 capped)</td><td>— under +1%</td><td><b>Ind. Medellín O0.5</b> 80.1% +4.5%<br>buy≥1.31 (+5.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.0% +6.7% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 23-09 18:00 <b>Azerbaijan v Tajikistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>— under +1%</td><td>U3.75 73.5% +2.3%<br>buy≥1.32 (+4.5% margin) · floor −1.5</td></tr></table>
@@ -995,7 +995,6 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔵 22-09 00:30 <b>Criciúma v Operário-PR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 81.8% <b>+0.4%</b><br>buy≥1.34 (+3.3% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 3-0 <b>Cuiabá v Náutico</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>O1.0 88.5% <b>−0.8%</b><br>buy≥1.22 (+6.1% margin)<br><i>O1.0 holding · ✓ landed · as good as landed</i></td><td>O1.75 66.9% +1.6%<br>buy≥1.63 (+0.5% margin) · floor −8.1 · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 22-09 18:00 <b>Biskra v Saoura</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (86.2 −3.8)</td><td>U3.0 87.4% +4.7%<br>buy≥1.30 (+9.9% margin)</td><td><b>Biskra U1.5</b> 75.4% +14.3%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 23-09 01:00 <b>Ind. Medellín v Jaguares</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.6 capped)</td><td>U4.25 85.9% <b>−5.3%</b><br>buy≥1.18 (+5.4% margin)</td><td><b>Ind. Medellín O0.5</b> 80.1% +4.5%<br>buy≥1.31 (+5.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.0% +6.7% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 23-09 03:00 <b>Santa Fe v Dep. Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.6 capped)</td><td>U4.25 85.9% <b>−5.3%</b><br>buy≥1.17 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -1155,7 +1154,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 558 / 688   ·   81.1%**   ·   **Tip 2 — 365 / 552   ·   66.1%**
+**Tip 1 — 559 / 689   ·   81.1%**   ·   **Tip 2 — 366 / 553   ·   66.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.6 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2104,6 +2103,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-0 · 21-09 19:30 <b>Aldosivi Mar del Plata v Atlético Tucuman</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (87.9 −0.2)</td><td>U3.0 86.5% +1.5%<br>buy≥1.24 (+3.9% margin)</td><td>✅ <b>Aldosivi Mar del Plata U1.5</b> 75.4% +8.2%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">◦ 0-1 · 22-09 00:00 <b>Barracas Central v Independiente Rivadavia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (87.9 −0.2)</td><td>O1.0 87.4% <b>+0.4%</b><br>buy≥1.26 (+4.6% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 22-09 02:15 <b>Lanus v Estudiantes</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (87.9 −0.2)</td><td>U3.0 86.3% +1.3%<br>buy≥1.24 (+3.8% margin)</td><td>❌ <b>Lanus U1.5</b> 75.4% +8.2%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 · 22-09 02:30 <b>Cuiabá v Náutico</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>O1.0 88.5% <b>−0.8%</b><br>buy≥1.22 (+6.1% margin)</td><td>✅ O1.75 66.9% +1.6%<br>buy≥1.63 (+0.5% margin) · floor −8.1</td></tr></table>
 
 <br clear="all">
 
