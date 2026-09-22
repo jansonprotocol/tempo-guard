@@ -71,7 +71,12 @@ jobs:
             git reset --hard origin/main
             cd backend
             python scripts/odds_api.py --quotes
-            python scripts/board.py
+            # --allow-stale: a card the sweep has not graded hours after
+            # kickoff is the sweep's failure and is printed as such; it
+            # must not stop the prices. Criciúma v Operário-PR, 22 Sep:
+            # ESPN never listed it, the sweep could not grade it, and
+            # every price refresh from 07:39 died on the verify.
+            python scripts/board.py --allow-stale
             cd ..
             # forward_log.tsv too: the render stamps a card's first-sight
             # call (lane, bar, price) there, and until 21 Sep this job threw

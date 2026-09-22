@@ -2116,7 +2116,10 @@ def test_something_pulls_the_odds_without_being_asked():
     y = (wf / "odds-refresh.yml").read_text()
     body = y[y.index("steps:"):]
     ran = [ln.strip() for ln in body.splitlines() if "scripts/" in ln and "python" in ln]
-    assert ran == ["python scripts/odds_api.py --quotes", "python scripts/board.py"], ran
+    # --allow-stale since 22 Sep: an ungraded card hours after kickoff is
+    # the sweep's failure, printed, not a reason to stop the prices — the
+    # refresh died on it four times over that morning
+    assert ran == ["python scripts/odds_api.py --quotes", "python scripts/board.py --allow-stale"], ran
     assert "cron:" in y and "ODDS_API_KEY" in y
     # a missing secret must FAIL, not skip: odds_api exits 0 without a key,
     # so a silent skip would rebuild exactly the staleness this job ends
