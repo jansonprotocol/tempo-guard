@@ -950,7 +950,7 @@
 2026-09-23 01:00	COL-PA	Categoría Primera A	Ind. Medellín v Jaguares	U4.25 85.9% **−5.3%** · buy≥1.18 (+5.4% margin)	✅ **Ind. Medellín O0.5** 80.1% +4.5% (team) · buy≥1.31 (+5.1% margin)	✅ HIT — 2-1	✅ DNB1 71.0% +6.7% · buy≥1.48 · probation
 2026-09-23 03:00	COL-PA	Categoría Primera A	Santa Fe v Dep. Cali	U4.25 85.9% **−5.3%** · buy≥1.17 (+5.4% margin)	— none	✅ HIT — 0-1	
 2026-09-23 19:00	DEN-SL	Superliga	Randers v Brøndby	U4.25 82.6% +1.8% · buy≥1.30 (+5.1% margin)	**Brøndby O0.5** 81.5% +6.5% (team) · buy≥1.32 (+7.8% margin)		12 76.4% +2.1% · buy≥1.37 · probation
-2026-09-23 22:00	PER-L1	Liga 1	ADT v Cienciano	U4.25 81.1% **−5.9%** · buy≥1.24 (+6.5% margin)	**Cienciano O0.5** 80.3% +16.7% (team) · buy≥1.37 (+9.7% margin)	LIVE 22' 0-0	
+2026-09-23 22:00	PER-L1	Liga 1	ADT v Cienciano	U4.25 81.1% **−5.9%** · buy≥1.24 (+6.5% margin)	**Cienciano O0.5** 80.3% +16.7% (team) · buy≥1.37 (+9.7% margin)	LIVE 24' 0-0	
 2026-09-24 02:30	COL-PA	Categoría Primera A	América v Águilas Doradas	U4.25 86.1% **−5.2%** · buy≥1.20 (+5.4% margin)	**América O0.5** 77.9% +2.4% (team) · buy≥1.30 (+1.1% margin)		DNB1 71.8% +7.6% · buy≥1.46 · probation
 2026-09-24 03:30	MLS	MLS	Seattle v Salt Lake	U4.25 80.7% **+0.8%** · buy≥1.32 (+6.1% margin)	U3.75 65.7% +3.2% (floor −9.3) · buy≥1.40 (+0.4% margin)		
 2026-09-24 17:00	MAR-BP	Botola Pro	DHJ v CODM	— no tip: engine abstained (thin history or an unresolved name)	—		
@@ -1022,8 +1022,8 @@
 2026-09-21 17:00	INT-FR	International friendlies	Dominica v Anguilla	U4.25 76.8% **−9.3%** · buy≥1.24 (+5.8% margin)	✅ **Dominica O0.5** 81.0% +6.2% (team) · buy≥1.36 (+10.3% margin)	✅ HIT — 1-0	
 2026-09-23 18:00	INT-FR	International friendlies	Azerbaijan v Tajikistan	U4.25 76.7% **−9.4%** · buy≥1.22 (+5.7% margin)	✅ U3.75 73.5% +2.3% (floor −1.5) · buy≥1.32 (+4.5% margin)	✅ HIT — 1-0	
 2026-09-23 18:00	INT-FR	International friendlies	Gibraltar v Sao Tome and Principe	— no tip: engine abstained (thin history or an unresolved name)	—	FT 0-0 (no tip)	
-2026-09-23 21:00	INT-CONCACAF	CONCACAF internationals	Turks and Caicos Islands v Montserrat	U4.25 72.7% **−5.4%** · buy≥1.26 (+8.5% margin)	U3.75 72.8% +12.5% (floor −2.2) · buy≥1.43 (+12.1% margin)	LIVE 63' 0-1	1X 72.7% +7.3% · buy≥1.44 · probation
-2026-09-23 22:00	INT-CONCACAF	CONCACAF internationals	Bahamas v St. Martin	O1.5 72.9% **−9.9%** · buy≥1.28 (+8.6% margin)	**St. Martin O1.5** 74.3% +38.7% (team) · buy≥1.51 (+12.4% margin)	LIVE 20' 0-1	
+2026-09-23 21:00	INT-CONCACAF	CONCACAF internationals	Turks and Caicos Islands v Montserrat	U4.25 72.7% **−5.4%** · buy≥1.26 (+8.5% margin)	U3.75 72.8% +12.5% (floor −2.2) · buy≥1.43 (+12.1% margin)	LIVE 65' 0-1	1X 72.7% +7.3% · buy≥1.44 · probation
+2026-09-23 22:00	INT-CONCACAF	CONCACAF internationals	Bahamas v St. Martin	O1.5 72.9% **−9.9%** · buy≥1.28 (+8.6% margin)	**St. Martin O1.5** 74.3% +38.7% (team) · buy≥1.51 (+12.4% margin)	LIVE 22' 0-2	
 2026-09-24 01:00	INT-CONCACAF	CONCACAF internationals	Aruba v Antigua and Barbuda	U4.25 72.8% **−5.3%** · buy≥1.28 (+8.6% margin)	U3.75 71.3% +11.0% (floor −3.7) · buy≥1.45 (+11.7% margin)		DNB1 68.3% +10.9% · buy≥1.54 · probation
 2026-09-24 06:00	INT-FR	International friendlies	Solomon Islands v Vanuatu	U3.0 75.2% +4.1% · buy≥1.59 (+8.7% margin)	**Solomon Islands O0.5** 81.8% +6.9% (team) · buy≥1.35 (+10.5% margin)		DNB1 73.4% +7.5% · buy≥1.43 · probation
 2026-09-24 09:00	INT-FR	International friendlies	Papua New Guinea v New Caledonia	U3.0 77.1% +6.0% · buy≥1.37 (+9.2% margin)	**Papua New Guinea U1.5** 73.6% +20.0% (team) · buy≥1.47 (+8.0% margin)		
