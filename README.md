@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 81.3%
 
     lane                        Tip 1              Tip 2
-    all matches            565 / 695  81.3%    370 / 557  66.4%
-    played lanes  >+1%     252 / 312  80.8%    368 / 552  66.7%
+    all matches            566 / 696  81.3%    371 / 558  66.5%
+    played lanes  >+1%     252 / 312  80.8%    369 / 553  66.7%
     placed bets            160 / 204  78.4%    ROI +0.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 620 / 864   ·   71.8%**   ·   **Tip 1 — 252 / 312   ·   80.8%**   ·   **Tip 2 — 368 / 552   ·   66.7%**
+**Playable — 621 / 865   ·   71.8%**   ·   **Tip 1 — 252 / 312   ·   80.8%**   ·   **Tip 2 — 369 / 553   ·   66.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -879,7 +879,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-8 · 23-09 22:00 <b>Bahamas v St. Martin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>St. Martin O1.5</b> 74.3% +38.7%<br>buy≥1.51 (+12.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 24-09 01:00 <b>Aruba v Antigua and Barbuda</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td>✅ U3.75 71.3% +11.0%<br>buy≥1.45 (+11.7% margin) · floor −3.7</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 68.3% +10.9% · buy≥1.54 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 24-09 02:30 <b>América v Águilas Doradas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>— under +1%</td><td>✅ <b>América O0.5</b> 77.9% +2.4%<br>buy≥1.30 (+1.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 71.8% +7.6% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 2-0 <b>Seattle v Salt Lake</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>— under +1%</td><td>U3.75 65.7% +3.2%<br>buy≥1.40 (+0.4% margin) · floor −9.3 · <i>room for 1</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 24-09 03:30 <b>Seattle v Salt Lake</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>— under +1%</td><td>✅ U3.75 65.7% +3.2%<br>buy≥1.40 (+0.4% margin) · floor −9.3</td></tr></table>
 <table align="left"><tr><th align="left">🟢 24-09 06:00 <b>Solomon Islands v Vanuatu</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 75.2% +4.1%<br>buy≥1.59 (+8.7% margin)</td><td><b>Solomon Islands O0.5</b> 81.8% +6.9%<br>buy≥1.35 (+10.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.4% +7.5% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 24-09 09:00 <b>Papua New Guinea v New Caledonia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.1% +6.0%<br>buy≥1.37 (+9.2% margin)</td><td><b>Papua New Guinea U1.5</b> 73.6% +20.0%<br>buy≥1.47 (+8.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 24-09 11:30 <b>Palestine v New Zealand</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.6% +6.4%<br>buy≥1.49 (+9.4% margin)</td><td>U2.75 58.3% +9.2%<br>buy≥1.59 (+3.1% margin) · floor −16.7</td></tr></table>
@@ -1013,7 +1013,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 22-09 18:00 <b>Biskra v Saoura</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (86.2 −3.8)</td><td>U3.0 87.4% +4.7%<br>buy≥1.30 (+9.9% margin)</td><td><b>Biskra U1.5</b> 75.4% +14.3%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 23-09 19:00 <b>Randers v Brøndby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Superliga (81.5 −1.0)</td><td>U4.25 82.6% +1.8%<br>buy≥1.30 (+5.1% margin)</td><td><b>Brøndby O0.5</b> 81.5% +6.5%<br>buy≥1.32 (+7.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.4% +2.1% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 2-0 <b>Seattle v Salt Lake</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>U4.25 80.7% <b>+0.8%</b><br>buy≥1.32 (+6.1% margin)<br><i>U4.25 holding · room for 2 · half from the 2nd · as good as landed</i><br><i>also live: U2.5 tighter 80% fair 1.26</i></td><td>U3.75 65.7% +3.2%<br>buy≥1.40 (+0.4% margin) · floor −9.3 · <i>room for 1</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-09 06:00 <b>Solomon Islands v Vanuatu</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 75.2% +4.1%<br>buy≥1.59 (+8.7% margin)</td><td><b>Solomon Islands O0.5</b> 81.8% +6.9%<br>buy≥1.35 (+10.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.4% +7.5% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-09 09:00 <b>Papua New Guinea v New Caledonia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.1% +6.0%<br>buy≥1.37 (+9.2% margin)</td><td><b>Papua New Guinea U1.5</b> 73.6% +20.0%<br>buy≥1.47 (+8.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-09 11:30 <b>Palestine v New Zealand</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.6% +6.4%<br>buy≥1.49 (+9.4% margin)</td><td>U2.75 58.3% +9.2%<br>buy≥1.59 (+3.1% margin) · floor −16.7</td></tr></table>
@@ -1180,7 +1179,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 565 / 695   ·   81.3%**   ·   **Tip 2 — 370 / 557   ·   66.4%**
+**Tip 1 — 566 / 696   ·   81.3%**   ·   **Tip 2 — 371 / 558   ·   66.5%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2140,6 +2139,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-8 · 23-09 22:00 <b>Bahamas v St. Martin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>O1.5 72.9% <b>−9.9%</b><br>buy≥1.28 (+8.6% margin)</td><td>✅ <b>St. Martin O1.5</b> 74.3% +38.7%<br>buy≥1.51 (+12.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 24-09 01:00 <b>Aruba v Antigua and Barbuda</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>U4.25 72.8% <b>−5.3%</b><br>buy≥1.28 (+8.6% margin)</td><td>✅ U3.75 71.3% +11.0%<br>buy≥1.45 (+11.7% margin) · floor −3.7</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 68.3% +10.9% · buy≥1.54 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 24-09 02:30 <b>América v Águilas Doradas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.1% <b>−5.2%</b><br>buy≥1.20 (+5.4% margin)</td><td>✅ <b>América O0.5</b> 77.9% +2.4%<br>buy≥1.30 (+1.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 71.8% +7.6% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 24-09 03:30 <b>Seattle v Salt Lake</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>U4.25 80.7% <b>+0.8%</b><br>buy≥1.32 (+6.1% margin)</td><td>✅ U3.75 65.7% +3.2%<br>buy≥1.40 (+0.4% margin) · floor −9.3</td></tr></table>
 
 <br clear="all">
 
