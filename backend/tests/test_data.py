@@ -3946,3 +3946,50 @@ def test_every_kickoff_is_on_the_amsterdam_clock(monkeypatch):
     monkeypatch.setattr(oa, "find", lambda code, teams, day:
                         dict(commence_time="2026-09-27T15:30:00Z"))
     assert fs.clock(fx) == [("ENG-PL", "C v D", "2026-09-27 18:00", "2026-09-27 17:30")]
+
+
+def test_the_refusal_ledger_reads_tip_ones_grade_from_the_status_column():
+    """The bettor, 24 Sep, after Portugal v Wales was dropped on price and
+    finished 1-0: "rejecting the bet on value is also athena work." Every
+    rate this project publishes measures cards it PRICED; the refusals
+    left no trace but an absence. scripts/refusals.py measures them.
+
+    The trap it must not fall into is the one the first cut fell into:
+    TIP 1 CARRIES ITS MARK IN THE STATUS COLUMN while tips 2 and 3 carry
+    theirs on the cell. Reading all three off the cell joined 11 of 982
+    forward-log rows instead of 859, and 11 cards said the opposite of
+    what 859 say.
+    """
+    from scripts import board, refusals
+
+    g = refusals.grades()
+    assert g, "no settled card graded"
+    ones = [k for k in g if k[2] == "1"]
+    assert len(ones) > 100, f"tip 1 barely joined: {len(ones)}"
+    # every tip-1 grade equals that fixture's status mark, not a cell prefix
+    settled = {(f.kickoff.split(" ")[0], f.teams): f for f in board.load()
+               if f.settled}
+    for (day, teams, which), mark in g.items():
+        if which != "1":
+            continue
+        f = settled[(day, teams)]
+        assert mark == f.status[:1], (teams, mark, f.status[:1])
+        assert f.tip1[:1] not in ("✅", "❌", "◦"), "tip 1 cell carries no mark"
+
+    rs = refusals.rows()
+    assert len(rs) > 500, len(rs)
+    assert all(r["bought"] == (r["best"] >= r["bar"]) for r in rs)
+    # a refusal is a PRICE judgement, not a forecast: the cards Athena
+    # turned down land MORE often than the ones it bought, and still
+    # return less at the quote that was offered
+    bought = [r for r in rs if r["bought"]]
+    refused = [r for r in rs if not r["bought"]]
+    assert bought and refused
+    b_hit, _, b_roi, _ = refusals.score(bought)
+    r_hit, _, r_roi, _ = refusals.score(refused)
+    assert r_hit > b_hit, (r_hit, b_hit)
+    assert r_roi < b_roi, (r_roi, b_roi)
+    # a push returns the stake, the board's own convention
+    push = [dict(mark="◦", best=2.0)]
+    assert refusals.score(push)[2] == 0.0
+    assert refusals.score([])[3] == 0
