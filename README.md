@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 81.3%
 
     lane                        Tip 1              Tip 2
-    all matches            566 / 696  81.3%    371 / 558  66.5%
-    played lanes  >+1%     252 / 312  80.8%    369 / 553  66.7%
+    all matches            567 / 697  81.3%    372 / 559  66.5%
+    played lanes  >+1%     252 / 312  80.8%    370 / 554  66.8%
     placed bets            160 / 204  78.4%    ROI +0.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 621 / 865   ·   71.8%**   ·   **Tip 1 — 252 / 312   ·   80.8%**   ·   **Tip 2 — 369 / 553   ·   66.7%**
+**Playable — 622 / 866   ·   71.8%**   ·   **Tip 1 — 252 / 312   ·   80.8%**   ·   **Tip 2 — 370 / 554   ·   66.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -885,7 +885,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 2-2 · 24-09 11:30 <b>Palestine v New Zealand</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.6% +6.4%<br>buy≥1.49 (+9.4% margin)</td><td>❌ U2.75 58.3% +9.2%<br>buy≥1.59 (+3.1% margin) · floor −16.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 24-09 12:05 <b>Japan v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>O1.5 77.6% +2.3%<br>buy≥1.35 (+6.0% margin)</td><td>✅ <b>Japan O0.5</b> 82.5% +7.6%<br>buy≥1.34 (+10.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.9% +11.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 24-09 13:00 <b>South Korea v Ecuador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>O1.5 77.2% +1.8%<br>buy≥1.28 (+5.9% margin)</td><td>❌ <b>Ecuador O0.5</b> 81.7% +21.0%<br>buy≥1.35 (+10.4% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 3-0 <b>China v Maldives</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>— under +1%</td><td><b>China O0.5</b> 81.3% +6.4%<br>buy≥1.36 (+10.3% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.6% +8.7% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 · 24-09 13:35 <b>China v Maldives</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>— under +1%</td><td>✅ <b>China O0.5</b> 81.3% +6.4%<br>buy≥1.36 (+10.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.6% +8.7% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 24-09 16:00 <b>Uzbekistan v Iran</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>— under +1%</td><td><b>Iran U1.5</b> 74.6% +2.7%<br>buy≥1.41 (+5.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 24-09 18:00 <b>Andorra v Malta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>U3.0 80.0% +13.7%<br>buy≥1.45 (+8.8% margin)</td><td>U2.75 59.7% +15.8%<br>buy≥1.55 (+3.2% margin) · floor −15.3</td></tr></table>
 <table align="left"><tr><th align="left">🟢 24-09 20:45 <b>Austria v Israel</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>O1.5 81.1% +2.1%<br>buy≥1.25 (+5.7% margin)</td><td><b>Austria O1.5</b> 61.6% +15.3%<br>buy≥1.68 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 77.0% +19.9% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1013,7 +1013,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 22-09 18:00 <b>Biskra v Saoura</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (86.2 −3.8)</td><td>U3.0 87.4% +4.7%<br>buy≥1.30 (+9.9% margin)</td><td><b>Biskra U1.5</b> 75.4% +14.3%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 23-09 19:00 <b>Randers v Brøndby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Superliga (81.5 −1.0)</td><td>U4.25 82.6% +1.8%<br>buy≥1.30 (+5.1% margin)</td><td><b>Brøndby O0.5</b> 81.5% +6.5%<br>buy≥1.32 (+7.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.4% +2.1% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 3-0 <b>China v Maldives</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U4.25 76.8% <b>−9.4%</b><br>buy≥1.23 (+5.8% margin)<br><i>U4.25 holding · room for 1 · half from the 1st · 97% · fair 1.03</i><br><i>also live: U3.5 tighter 78% fair 1.28</i></td><td><b>China O0.5</b> 81.3% +6.4%<br>buy≥1.36 (+10.3% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.6% +8.7% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-09 16:00 <b>Uzbekistan v Iran</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U4.25 76.7% <b>−9.4%</b><br>buy≥1.22 (+5.7% margin)</td><td><b>Iran U1.5</b> 74.6% +2.7%<br>buy≥1.41 (+5.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-09 17:00 <b>DHJ v CODM</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Botola Pro (94.8 capped)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-09 18:00 <b>Andorra v Malta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>U3.0 80.0% +13.7%<br>buy≥1.45 (+8.8% margin)</td><td>U2.75 59.7% +15.8%<br>buy≥1.55 (+3.2% margin) · floor −15.3</td></tr></table>
@@ -1174,7 +1173,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 566 / 696   ·   81.3%**   ·   **Tip 2 — 371 / 558   ·   66.5%**
+**Tip 1 — 567 / 697   ·   81.3%**   ·   **Tip 2 — 372 / 559   ·   66.5%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2140,6 +2139,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 2-2 · 24-09 11:30 <b>Palestine v New Zealand</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.6% +6.4%<br>buy≥1.49 (+9.4% margin)</td><td>❌ U2.75 58.3% +9.2%<br>buy≥1.59 (+3.1% margin) · floor −16.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 24-09 12:05 <b>Japan v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>O1.5 77.6% +2.3%<br>buy≥1.35 (+6.0% margin)</td><td>✅ <b>Japan O0.5</b> 82.5% +7.6%<br>buy≥1.34 (+10.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.9% +11.0% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 24-09 13:00 <b>South Korea v Ecuador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>O1.5 77.2% +1.8%<br>buy≥1.28 (+5.9% margin)</td><td>❌ <b>Ecuador O0.5</b> 81.7% +21.0%<br>buy≥1.35 (+10.4% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-0 · 24-09 13:35 <b>China v Maldives</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U4.25 76.8% <b>−9.4%</b><br>buy≥1.23 (+5.8% margin)</td><td>✅ <b>China O0.5</b> 81.3% +6.4%<br>buy≥1.36 (+10.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.6% +8.7% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
