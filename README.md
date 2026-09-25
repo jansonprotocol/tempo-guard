@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 81.3%
 
     lane                        Tip 1              Tip 2
-    all matches            582 / 716  81.3%    383 / 575  66.6%
-    played lanes  >+1%     260 / 323  80.5%    381 / 570  66.8%
+    all matches            583 / 717  81.3%    384 / 576  66.7%
+    played lanes  >+1%     261 / 324  80.6%    382 / 571  66.9%
     placed bets            162 / 209  77.5%    ROI -0.7%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 641 / 893   ·   71.8%**   ·   **Tip 1 — 260 / 323   ·   80.5%**   ·   **Tip 2 — 381 / 570   ·   66.8%**
+**Playable — 643 / 895   ·   71.8%**   ·   **Tip 1 — 261 / 324   ·   80.6%**   ·   **Tip 2 — 382 / 571   ·   66.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -907,8 +907,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 0-0 · 25-09 20:45 <b>Poland v Bosnia-Herzegovina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>O1.5 81.2% +2.2%<br>buy≥1.27 (+5.7% margin)</td><td>❌ O2.25 62.2% +6.1%<br>buy≥1.49 (+3.4% margin) · floor −12.8</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 25-09 20:45 <b>Sweden v Romania</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>O1.5 81.3% +2.3%<br>buy≥1.28 (+5.8% margin)</td><td>✅ <b>Romania O0.5</b> 79.2% +13.7%<br>buy≥1.37 (+8.6% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 25-09 20:45 <b>Türkiye v France</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>O1.5 81.0% +2.0%<br>buy≥1.24 (+5.7% margin)</td><td>❌ <b>France O1.5</b> 56.6% +23.4%<br>buy≥1.82 (+2.9% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 3-2 <b>Dordrecht v Almere</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +0.4)</td><td>O1.5 83.1% +1.1%<br>buy≥1.25 (+4.1% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i><br><i>also live: U5.5 flip 79% fair 1.27</i></td><td><b>Almere O1.5</b> 62.0% +21.5%<br>buy≥1.67 (+3.4% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+1' 1-2 <b>Bermuda v Guadeloupe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td><b>Guadeloupe O1.5</b> 65.8% +30.2%<br>buy≥1.67 (+10.0% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-2 · 25-09 21:00 <b>Dordrecht v Almere</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +0.4)</td><td>O1.5 83.1% +1.1%<br>buy≥1.25 (+4.1% margin)</td><td>✅ <b>Almere O1.5</b> 62.0% +21.5%<br>buy≥1.67 (+3.4% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 90'+3' 1-2 <b>Bermuda v Guadeloupe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td><b>Guadeloupe O1.5</b> 65.8% +30.2%<br>buy≥1.67 (+10.0% margin) · team · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-09 23:00 <b>Grenada v Cuba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td><b>Grenada O0.5</b> 78.6% +6.1%<br>buy≥1.44 (+13.5% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-09 00:30 <b>Novorizontino v São Bernardo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>— under +1%</td><td><b>Novorizontino O1.5</b> 52.8% +14.4%<br>buy≥1.94 (+2.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.4% +6.9% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-09 01:30 <b>Vila Nova v Londrina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>— under +1%</td><td>O1.75 68.3% +3.1%<br>buy≥1.58 (+0.6% margin) · floor −6.7</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 72.7% +6.1% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1017,8 +1017,7 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 24-09 22:00 <b>Amal Tiznit v Ittihad Tanger</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Botola Pro (94.8 capped)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-09 20:45 <b>Galway United v Shelbourne Dublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.2 capped)</td><td>U4.25 84.8% <b>−4.8%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 74.0% +3.9% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 3-2 <b>Dordrecht v Almere</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +0.4)</td><td>O1.5 83.1% +1.1%<br>buy≥1.25 (+4.1% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i><br><i>also live: U5.5 flip 79% fair 1.27</i></td><td><b>Almere O1.5</b> 62.0% +21.5%<br>buy≥1.67 (+3.4% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+1' 1-2 <b>Bermuda v Guadeloupe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>O1.5 73.0% <b>−9.9%</b><br>buy≥1.29 (+8.6% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i></td><td><b>Guadeloupe O1.5</b> 65.8% +30.2%<br>buy≥1.67 (+10.0% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 90'+3' 1-2 <b>Bermuda v Guadeloupe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>O1.5 73.0% <b>−9.9%</b><br>buy≥1.29 (+8.6% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i></td><td><b>Guadeloupe O1.5</b> 65.8% +30.2%<br>buy≥1.67 (+10.0% margin) · team · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-09 23:00 <b>Grenada v Cuba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>O1.5 73.1% <b>−9.7%</b><br>buy≥1.31 (+8.7% margin)</td><td><b>Grenada O0.5</b> 78.6% +6.1%<br>buy≥1.44 (+13.5% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-09 00:30 <b>Novorizontino v São Bernardo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>O1.0 88.3% <b>−1.0%</b><br>buy≥1.16 (+6.0% margin)</td><td><b>Novorizontino O1.5</b> 52.8% +14.4%<br>buy≥1.94 (+2.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.4% +6.9% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-09 01:10 <b>Boyacá Chicó v Dep. Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
@@ -1154,7 +1153,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 582 / 716   ·   81.3%**   ·   **Tip 2 — 383 / 575   ·   66.6%**
+**Tip 1 — 583 / 717   ·   81.3%**   ·   **Tip 2 — 384 / 576   ·   66.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2148,6 +2147,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 0-0 · 25-09 20:45 <b>Poland v Bosnia-Herzegovina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>O1.5 81.2% +2.2%<br>buy≥1.27 (+5.7% margin)</td><td>❌ O2.25 62.2% +6.1%<br>buy≥1.49 (+3.4% margin) · floor −12.8</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 25-09 20:45 <b>Sweden v Romania</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>O1.5 81.3% +2.3%<br>buy≥1.28 (+5.8% margin)</td><td>✅ <b>Romania O0.5</b> 79.2% +13.7%<br>buy≥1.37 (+8.6% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 25-09 20:45 <b>Türkiye v France</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>O1.5 81.0% +2.0%<br>buy≥1.24 (+5.7% margin)</td><td>❌ <b>France O1.5</b> 56.6% +23.4%<br>buy≥1.82 (+2.9% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 3-2 · 25-09 21:00 <b>Dordrecht v Almere</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.3 +0.4)</td><td>O1.5 83.1% +1.1%<br>buy≥1.25 (+4.1% margin)</td><td>✅ <b>Almere O1.5</b> 62.0% +21.5%<br>buy≥1.67 (+3.4% margin) · team</td></tr></table>
 
 <br clear="all">
 
