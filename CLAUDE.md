@@ -12,23 +12,30 @@ the bet lost: "that was a bit drowning in the text. Whenever you see me
 taking a wrong lane, put that immediately on top and again on the bottom,
 also maybe bold with an alert symbol to make it catch my attention.")
 
-A WRONG LANE is any of these, and each is worth the alert on its own:
+WHEN IT APPLIES: in chat, when he sends a bet slip to be logged or
+checked. It is not a repo-wide alarm and not something to raise
+unprompted.
 
-- the bet is on the **opposite side** to the card (he buys an over, the
-  card prices an under, or the reverse);
-- the bet is a **lane Athena does not offer** — the rung he bought
-  prices at or below its own bar, or at a negative edge;
-- the bet is on a **card Athena does not select** — tip 1's edge is under
-  the +1% playable bar, so the board prices the fixture but never badges
-  it;
-- the **line differs** from the card's and settles differently at some
-  scoreline (U4.5 against the card's U4.25, U3.5 against U3.0). Name the
-  scoreline where they part, and say which way it cuts.
+WHAT A WRONG LANE IS, and it is only this: **the bet is on the OPPOSITE
+SIDE to the card.** He buys an over where the card prices an under, or
+the reverse. Georgia v Northern Ireland, 25 Sep, is the case that made
+the rule — the card was Under 4.25 and he bought Over 1.5. (He narrowed
+it himself, 25 Sep: "it's really about taking a completely wrong lane,
+the opposite like Ireland with over instead of under.")
 
-When one applies, the reply OPENS with it and CLOSES with it, bold, with
-an alert symbol. Same fixture, same sentence, top and bottom. Everything
-else goes between. When nothing applies, say so in one line up front, so
-the silence is legible as a check rather than an omission.
+WHAT IT IS NOT. None of these earns the alert; they belong in the body
+of the reply like any other observation:
+
+- a card whose edge is under the +1% playable bar — priced but not
+  selected;
+- a different LINE on the same side (U4.5 against the card's U4.25);
+- a price that sits under the buy-from bar.
+
+When a wrong lane is present, the reply OPENS with it and CLOSES with
+it, bold, with an alert symbol, same fixture and same sentence both
+times. Everything else goes between. When the slip is clean, say so in
+one line up front so the silence reads as a check rather than an
+omission.
 
 ## What he has asked not to be told
 
