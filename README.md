@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 81.5%
 
     lane                        Tip 1              Tip 2
-    all matches            577 / 708  81.5%    379 / 569  66.6%
+    all matches            578 / 709  81.5%    379 / 569  66.6%
     played lanes  >+1%     258 / 319  80.9%    377 / 564  66.8%
     placed bets            161 / 205  78.5%    ROI +0.8%
 
@@ -897,7 +897,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 3-2 · 25-09 02:00 <b>Dominican Republic v Nicaragua</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>Dominican Republic O1.5</b> 72.3% +23.1%<br>buy≥1.55 (+11.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 89.9% +32.5% · buy≥1.17 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 25-09 02:10 <b>Cayman Islands v Dominica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td>✅ U3.75 69.8% +9.5%<br>buy≥1.47 (+11.2% margin) · floor −5.2</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 25-09 02:20 <b>Haiti v Trinidad and Tobago</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>Haiti O0.5</b> 81.6% +9.1%<br>buy≥1.40 (+14.2% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 25' 2-0 <b>Costa Rica v Curaçao</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td>O2.25 66.5% +4.6%<br>buy≥1.50 (+10.3% margin) · floor −8.5 · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 27' 2-0 <b>Costa Rica v Curaçao</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>— under +1%</td><td>O2.25 66.5% +4.6%<br>buy≥1.50 (+10.3% margin) · floor −8.5 · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-09 12:00 <b>Australia v Brazil</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>O1.5 77.0% +1.6%<br>buy≥1.25 (+5.8% margin)</td><td><b>Brazil O1.5</b> 60.8% +32.7%<br>buy≥1.70 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.5% +3.0% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-09 16:00 <b>India v Panama</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.3% +6.2%<br>buy≥1.53 (+9.3% margin)</td><td>U2.75 56.3% +7.2%<br>buy≥1.64 (+2.9% margin) · floor −18.7</td></tr></table>
 <table align="left"><tr><th align="left">🟢 25-09 18:00 <b>Armenia v Latvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>U3.0 75.5% +9.2%<br>buy≥1.54 (+5.9% margin)</td><td>— none</td></tr></table>
@@ -1012,8 +1012,7 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔵 24-09 22:00 <b>Amal Tiznit v Ittihad Tanger</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Botola Pro (94.8 capped)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 1-1 <b>Atl. Nacional v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.2% <b>−5.1%</b><br>buy≥1.22 (+5.5% margin)<br><i>U4.25 holding · room for 2 · half from the 2nd · as good as landed</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 25' 2-0 <b>Costa Rica v Curaçao</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>O1.5 72.8% <b>−10.0%</b><br>buy≥1.27 (+8.6% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i><br><i>also live: U3.5 flip 42% fair 2.37 · O3.5 tighter 58% fair 1.73</i></td><td>O2.25 66.5% +4.6%<br>buy≥1.50 (+10.3% margin) · floor −8.5 · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 27' 2-0 <b>Costa Rica v Curaçao</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>O1.5 72.8% <b>−10.0%</b><br>buy≥1.27 (+8.6% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i><br><i>also live: U3.5 flip 44% fair 2.30 · O3.5 tighter 56% fair 1.77</i></td><td>O2.25 66.5% +4.6%<br>buy≥1.50 (+10.3% margin) · floor −8.5 · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-09 12:00 <b>Australia v Brazil</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>O1.5 77.0% +1.6%<br>buy≥1.25 (+5.8% margin)</td><td><b>Brazil O1.5</b> 60.8% +32.7%<br>buy≥1.70 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.5% +3.0% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-09 16:00 <b>India v Panama</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>International friendlies (74.0 −1.7)</td><td>U3.0 77.3% +6.2%<br>buy≥1.53 (+9.3% margin)</td><td>U2.75 56.3% +7.2%<br>buy≥1.64 (+2.9% margin) · floor −18.7</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-09 18:00 <b>Armenia v Latvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>UEFA internationals (81.6 +0.3)</td><td>U3.0 75.5% +9.2%<br>buy≥1.54 (+5.9% margin)</td><td>— none</td></tr></table>
@@ -1159,7 +1158,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 577 / 708   ·   81.5%**   ·   **Tip 2 — 379 / 569   ·   66.6%**
+**Tip 1 — 578 / 709   ·   81.5%**   ·   **Tip 2 — 379 / 569   ·   66.6%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.2 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2140,6 +2139,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 3-2 · 25-09 02:00 <b>Dominican Republic v Nicaragua</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>O1.5 72.6% <b>−10.2%</b><br>buy≥1.24 (+8.5% margin)</td><td>✅ <b>Dominican Republic O1.5</b> 72.3% +23.1%<br>buy≥1.55 (+11.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 89.9% +32.5% · buy≥1.17 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 25-09 02:10 <b>Cayman Islands v Dominica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>U4.25 72.9% <b>−5.2%</b><br>buy≥1.29 (+8.6% margin)</td><td>✅ U3.75 69.8% +9.5%<br>buy≥1.47 (+11.2% margin) · floor −5.2</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-2 · 25-09 02:20 <b>Haiti v Trinidad and Tobago</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>CONCACAF internationals (60.8 −11.2)</td><td>U4.25 73.5% <b>−4.6%</b><br>buy≥1.42 (+8.8% margin)</td><td>✅ <b>Haiti O0.5</b> 81.6% +9.1%<br>buy≥1.40 (+14.2% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 25-09 02:30 <b>Atl. Nacional v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.2% <b>−5.1%</b><br>buy≥1.22 (+5.5% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
