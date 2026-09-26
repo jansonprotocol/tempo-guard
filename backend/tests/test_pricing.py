@@ -213,5 +213,11 @@ def test_fixtures_tsv_is_well_formed():
     for f in board.load():
         assert len(f.kickoff) == 16 and f.kickoff[4] == "-", f.kickoff
         assert " v " in f.teams, f.teams
+        # board.OFF_MARK joined the vocabulary on 26 Sep: a fixture ESPN
+        # says was postponed, cancelled or abandoned produces no result at
+        # this kickoff, so it is neither settled nor rotting and the row
+        # is held under that mark until the fixture is re-dated.
         assert (f.status == "" or f.status.startswith(("✅", "❌", "◦", "LIVE"))
-                or f.status.startswith(("🔴", "FT"))), f.status
+                or f.status.startswith(("🔴", "FT", board.OFF_MARK))), f.status
+        if board.is_off(f.status):
+            assert not f.settled, f.teams

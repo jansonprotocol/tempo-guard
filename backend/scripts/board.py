@@ -42,6 +42,17 @@ FIXTURES = ROOT / "config" / "fixtures.tsv"
 
 MIN_EDGE = playable.MIN_EDGE
 
+# A fixture ESPN says was POSTPONED, CANCELLED or ABANDONED. It has no
+# result and never will at this kickoff, so it is neither settled nor
+# rotting — the row is held, marked, until the fixture is re-dated.
+# scripts/sweep.py writes the mark; check 11 below reads it.
+OFF_MARK = "PP"
+
+
+def is_off(status: str) -> bool:
+    return status.startswith(OFF_MARK)
+
+
 # The rendered region: from the playable heading to the placed-bets heading.
 # The placed-bets table keeps its own shape (different data), and the header
 # span at the top of the page is rendered separately by render_header. Two
@@ -718,6 +729,11 @@ def verify(quiet: bool = False, allow_stale: bool = False) -> None:
         except ValueError:
             continue
         if ko < stale_cutoff and not liveline_score(f.status):
+            if is_off(f.status):
+                # postponed, cancelled or abandoned: no result is coming
+                # at this kickoff, so it is not rotting. It still needs a
+                # human to re-date it, which the pending block shows.
+                continue
             rotting.append(f"{f.teams} (kicked off {f.kickoff})")
     if rotting:
         msg = ("these kicked off over four hours ago and carry no "

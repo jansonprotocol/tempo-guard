@@ -3993,3 +3993,38 @@ def test_the_refusal_ledger_reads_tip_ones_grade_from_the_status_column():
     push = [dict(mark="◦", best=2.0)]
     assert refusals.score(push)[2] == 0.0
     assert refusals.score([])[3] == 0
+
+
+def test_a_postponed_fixture_is_held_not_rotted():
+    """Six League One and League Two cards went off on one wet Saturday,
+    26 Sep. A fixture ESPN says was POSTPONED produces no result at that
+    kickoff ever, so leaving the row blank means it rots: four hours on,
+    board.verify stops the render and takes the odds refresh with it (the
+    bettor, 22 Sep: "odds refresh is dead"). The row is marked instead.
+
+    The mark must be all three things at once — not settled, not rotting,
+    and not a grade — or it breaks something downstream."""
+    from scripts import board, sweep
+
+    assert board.is_off(board.OFF_MARK + " Postponed")
+    assert not board.is_off("LIVE 45' 1-0") and not board.is_off("")
+    assert not board.is_off("✅ HIT — 2-0")
+    # the sweep writes it only for DECISIONS, never for a feed glitch
+    # under state "post", which must stay untouched so it is re-swept
+    assert "STATUS_POSTPONED" in sweep.OFF_NAMES
+    assert "STATUS_ABANDONED" in sweep.OFF_NAMES
+    for glitch in sweep.FINAL_NAMES:
+        assert glitch not in sweep.OFF_NAMES, glitch
+
+    off = board.Fixture("2026-09-26 16:00", "ENG-L2", "League Two",
+                        "A v B", "U4.25 80.0% +2.0% · buy≥1.20", "",
+                        board.OFF_MARK + " Postponed")
+    assert not off.settled, "a postponed card must never count as graded"
+    # and it carries no score, so nothing can grade it by accident
+    import re
+    assert not re.search(r"\d+-\d+", off.status)
+
+    # every postponed card on the real board is unsettled and pending
+    for f in board.load():
+        if board.is_off(f.status):
+            assert not f.settled, f.teams

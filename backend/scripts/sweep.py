@@ -44,7 +44,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts import liveline
-from scripts.board import FIXTURES, load
+from scripts.board import FIXTURES, OFF_MARK, load
 from scripts.live_scores import ESPN
 
 # Cup codes ESPN serves under their own slugs; the qualifiers share the
@@ -59,6 +59,16 @@ SLUGS = dict(ESPN, **{
     "UECL": "uefa.europa.conf", "NOR-EL": "nor.1",
     "SCO-PL": "sco.1", "GER-BL": "ger.1", "BEL-PL": "bel.1",
     "NED-ED": "ned.1", "ARG-PD": "arg.1", "MEX-LMX": "mex.1",
+    # The tiers below the two the board has always carried. Added 26 Sep,
+    # after the daily feed fill began putting League One and League Two on
+    # the board — those leagues are in the odds feed, so the fill takes
+    # them, but nothing here could grade them and twenty-one cards were
+    # heading for the four-hour rot that stops the render. ESPN carries
+    # them all; each slug below was confirmed against the scoreboard's own
+    # league name before being added.
+    "ENG-L1": "eng.3", "ENG-L2": "eng.4", "ENG-NL": "eng.5",
+    "IRL-PD": "irl.1",
+    "SCO-CH": "sco.2", "SCO-L1": "sco.3", "SCO-L2": "sco.4",
 })
 
 
@@ -224,6 +234,13 @@ def settle(cell: str, teams: str, hg: int, ag: int):
 FINAL_NAMES = ("STATUS_FULL_TIME", "STATUS_FINAL", "STATUS_FINAL_PEN",
                "STATUS_FINAL_AET", "STATUS_END_OF_EXTRATIME",
                "STATUS_FINAL_OT")
+
+# The ones that mean no result is coming AT THIS KICKOFF. Distinct from a
+# feed glitch under state "post", which must be left untouched to be
+# re-swept: these are decisions, not hiccups, and the row is marked so
+# board.verify stops counting it as rotting (see board.OFF_MARK).
+OFF_NAMES = ("STATUS_POSTPONED", "STATUS_CANCELED", "STATUS_CANCELLED",
+             "STATUS_ABANDONED")
 
 
 LIVE_LOG = FIXTURES.parent / "live_log.tsv"
@@ -555,6 +572,21 @@ def main() -> None:
             # graded a 0-0 miss while the second half was being played,
             # and a settled row is never re-swept. Leave it as it is
             # and say why; a real final has a name.
+            if name in OFF_NAMES:
+                # A DECISION, not a hiccup: this fixture produces no
+                # result at this kickoff, ever. Leaving the row blank
+                # means it rots, and four hours on board.verify stops
+                # the render and takes the odds refresh down with it
+                # (the bettor, 22 Sep: "odds refresh is dead"). Six
+                # League One and League Two cards went off on one wet
+                # Saturday, 26 Sep. So the row is MARKED — still
+                # unsettled, still no score, feeding no tally — and the
+                # board holds it until the fixture is re-dated.
+                off = f"{OFF_MARK} {(detail or name.removeprefix('STATUS_').title())}"
+                if off != f.status:
+                    _write_row(lines, f, f.tip2, off, f.tip3)
+                    changed.append(f"{f.teams}: {off}  [ESPN {name}]")
+                continue
             missing.append(f"{f.teams} (ESPN {name or 'no status'}, "
                            f"{detail or '—'}: not a final, left as is)")
             continue
