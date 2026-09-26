@@ -965,8 +965,8 @@
 2026-09-26 03:15	COL-PA	Categoría Primera A	Once Caldas v Bucaramanga	U4.25 86.0% **−5.3%** · buy≥1.20 (+5.4% margin)	— none	✅ HIT — 1-3	❌ DNB1 67.7% +3.5% · buy≥1.55 · probation
 2026-09-26 05:00	MEX-LMX	Liga MX	Tijuana v Atlas	U4.25 83.4% **−0.9%** · buy≥1.27 (+5.5% margin)	— none	❌ MISS — 2-3	❌ DNB1 69.4% +7.2% · buy≥1.51 · probation
 2026-09-26 14:00	ESP-L2	LaLiga 2	Ceuta v Real Sociedad B	U3.0 76.4% **+0.0%** · buy≥1.40 (+1.0% margin)	— none	❌ MISS — 3-1	
-2026-09-26 16:15	ESP-L2	LaLiga 2	Granada v FC Andorra	U4.25 84.3% **−5.2%** · buy≥1.20 (+5.4% margin)	— none	LIVE 84' 2-3	
-2026-09-26 16:30	NED-D2	Eerste Divisie	Heracles v Vitesse	O1.5 83.9% +1.8% · buy≥1.20 (+4.7% margin)	**Heracles O1.5** 62.8% +10.8% (team) · buy≥1.65 (+3.4% margin)	LIVE 72' 2-0	12 80.0% +2.6% · buy≥1.31 · probation
+2026-09-26 16:15	ESP-L2	LaLiga 2	Granada v FC Andorra	U4.25 84.3% **−5.2%** · buy≥1.20 (+5.4% margin)	— none	LIVE 86' 2-3	
+2026-09-26 16:30	NED-D2	Eerste Divisie	Heracles v Vitesse	O1.5 83.9% +1.8% · buy≥1.20 (+4.7% margin)	**Heracles O1.5** 62.8% +10.8% (team) · buy≥1.65 (+3.4% margin)	LIVE 74' 2-0	12 80.0% +2.6% · buy≥1.31 · probation
 2026-09-26 18:00	MAR-BP	Botola Pro	Union Touarga v FUS Rabat	U4.25 86.0% **−6.1%** · buy≥1.17 (+5.4% margin)	— none		12 72.5% +3.1% · buy≥1.45 · probation
 2026-09-26 18:30	ESP-L2	LaLiga 2	Tenerife v Cádiz	U3.0 76.4% **+0.0%** · buy≥1.33 (+1.0% margin)	**Cádiz U1.5** 75.4% +4.1% (team) · buy≥1.38 (+4.2% margin)		
 2026-09-26 18:30	ESP-L2	LaLiga 2	Celta Fortuna v Sabadell	— no tip: engine abstained (thin history or an unresolved name)	—		
@@ -1063,10 +1063,10 @@
 2026-09-26 03:00	INT-CONCACAF	CONCACAF internationals	Honduras v Suriname	U4.25 73.2% **−4.9%** · buy≥1.36 (+8.7% margin)	❌ U3.75 64.9% +4.5% (floor −10.1) · buy≥1.55 (+9.7% margin)	❌ MISS — 2-3	❌ DNB1 69.2% +11.9% · buy≥1.52 · probation
 2026-09-26 05:00	INT-CONCACAF	CONCACAF internationals	El Salvador v Martinique	U4.25 72.8% **−5.3%** · buy≥1.28 (+8.6% margin)	❌ U3.75 70.6% +10.3% (floor −4.4) · buy≥1.46 (+11.5% margin)	✅ HIT — 3-1	
 2026-09-26 15:00	INT-UEFA	UEFA internationals	Slovenia v Scotland	U4.25 81.0% **−1.7%** · buy≥1.25 (+5.7% margin)	✅ U3.75 70.7% +4.4% (floor −4.3) · buy≥1.36 (+3.9% margin)	✅ HIT — 0-0	
-2026-09-26 18:00	INT-UEFA	UEFA internationals	Bulgaria v Luxembourg	U3.0 76.6% +10.3% · buy≥1.52 (+6.8% margin)	U2.75 55.4% +11.5% (floor −19.6) · buy≥1.66 (+2.8% margin)		
-2026-09-26 18:00	INT-UEFA	UEFA internationals	Faroe Islands v Kazakhstan	U4.25 80.9% **−1.8%** · buy≥1.23 (+5.6% margin)	U3.75 72.3% +6.0% (floor −2.7) · buy≥1.33 (+4.0% margin)		DNB1 71.1% +14.0% · buy≥1.48 · probation
-2026-09-26 18:00	INT-UEFA	UEFA internationals	Iceland v Estonia	U4.25 81.0% **−1.7%** · buy≥1.25 (+5.7% margin)	**Iceland O0.5** 83.9% +10.8% (team) · buy≥1.31 (+9.8% margin)	LIVE 2' 0-0	DNB1 77.1% +20.0% · buy≥1.36 · probation
-2026-09-26 18:00	INT-UEFA	UEFA internationals	San Marino v Finland	U3.0 75.8% +9.5% · buy≥1.53 (+6.2% margin)	— none	LIVE 1' 0-0	
+2026-09-26 18:00	INT-UEFA	UEFA internationals	Bulgaria v Luxembourg	U3.0 76.6% +10.3% · buy≥1.52 (+6.8% margin)	U2.75 55.4% +11.5% (floor −19.6) · buy≥1.66 (+2.8% margin)	LIVE 2' 0-0	
+2026-09-26 18:00	INT-UEFA	UEFA internationals	Faroe Islands v Kazakhstan	U4.25 80.9% **−1.8%** · buy≥1.23 (+5.6% margin)	U3.75 72.3% +6.0% (floor −2.7) · buy≥1.33 (+4.0% margin)	LIVE 2' 0-0	DNB1 71.1% +14.0% · buy≥1.48 · probation
+2026-09-26 18:00	INT-UEFA	UEFA internationals	Iceland v Estonia	U4.25 81.0% **−1.7%** · buy≥1.25 (+5.7% margin)	**Iceland O0.5** 83.9% +10.8% (team) · buy≥1.31 (+9.8% margin)	LIVE 4' 0-0	DNB1 77.1% +20.0% · buy≥1.36 · probation
+2026-09-26 18:00	INT-UEFA	UEFA internationals	San Marino v Finland	U3.0 75.8% +9.5% · buy≥1.53 (+6.2% margin)	— none	LIVE 3' 0-0	
 2026-09-26 20:00	INT-FR	International friendlies	Mexico v Colombia	O1.5 77.0% +1.6% · buy≥1.25 (+5.8% margin)	O2.25 65.1% +14.2% (floor −9.9) · buy≥1.43 (+3.6% margin)		
 2026-09-26 20:45	INT-UEFA	UEFA internationals	Albania v Belarus	U3.0 75.4% +9.1% · buy≥1.54 (+5.8% margin)	**Belarus U1.5** 75.4% +8.6% (team) · buy≥1.40 (+5.9% margin)		DNB1 67.9% +10.8% · buy≥1.55 · probation
 2026-09-26 20:45	INT-UEFA	UEFA internationals	Czechia v Croatia	O1.5 80.9% +1.9% · buy≥1.22 (+5.7% margin)	**Croatia O1.5** 49.1% +15.9% (team) · buy≥2.08 (+2.1% margin)		
