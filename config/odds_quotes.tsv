@@ -5,82 +5,60 @@
 # fixture	which	lane	consensus	best	book	unibet_nl	books
 # unmatched	Levante v Athletic Club	ESP-LL	2026-10-21	
 # unmatched	Randers v Brøndby	DEN-SL	2026-10-23	
-Austin FC v San Diego FC	1	U4.5	1.17	1.19	Tipico	1.17	15
-Austin FC v San Diego FC	2	U3.75	1.47	1.55	Tipico	1.48	15
-Austin FC v San Diego FC	3	DNB1	2.12	2.21	Unibet (FR)	1.98	21
-FC Dallas v Los Angeles FC	1	O1.5	1.25	1.33	1xBet	1.22	15
-FC Dallas v Los Angeles FC	2	O2.25	1.85	2.04	1xBet	1.75	15
-Houston Dynamo v Sporting Kansas City	1	U4.5	1.16	1.19	Tipico	1.16	15
-Houston Dynamo v Sporting Kansas City	3	DNB1	1.33	1.38	Winamax (FR)	1.28	21
-Nashville SC v Toronto FC	1	O1.5	1.10	1.13	1xBet	1.11	15
-Nashville SC v Toronto FC	3	DNB1	1.19	1.23	Winamax (FR)	1.21	21
-Seattle Sounders v Minnesota United	1	U4.5	1.20	1.23	Tipico	1.20	14
-Seattle Sounders v Minnesota United	2	U3.75	1.54	1.62	Tipico	1.54	14
-Santos v Pachuca	1	U4.5	1.13	1.15	Tipico	1.13	13
-Tigres v Puebla	1	U4.5	1.10	1.12	GTbets	1.12	13
-Tigres v Puebla	3	DNB1	1.30	1.33	Betsson	1.27	16
-Real Salt Lake v New England Revolution	1	O1.5	1.13	1.29	Pinnacle	1.12	15
-Real Salt Lake v New England Revolution	3	12	1.25	1.29	1xBet	1.25	21
-LA Galaxy v Colorado Rapids	1	U4.5	1.17	1.21	1xBet	1.20	15
-LA Galaxy v Colorado Rapids	2	U3.75	1.48	1.56	Unibet (SE)	1.56	15
-San Jose Earthquakes v Portland Timbers	1	U4.5	1.36	1.43	Pinnacle	1.32	15
-Vancouver Whitecaps v DC United	1	U4.5	1.33	1.41	1xBet	1.31	15
-Vancouver Whitecaps v DC United	2	U3.75	1.82	1.96	1xBet	1.79	15
-Vancouver Whitecaps v DC United	3	DNB1	1.12	1.15	Winamax (DE)	1.12	21
 Real Valladolid v Córdoba	1	U3.5	1.33	1.41	1xBet	1.29	14
-Real Valladolid v Córdoba	3	12	1.27	1.35	Pinnacle	1.30	19
-Lithuania v Azerbaijan	1	U3.5	1.13	1.18	1xBet		5
-Lithuania v Azerbaijan	2	U2.75	1.49	1.55	1xBet		5
-Lithuania v Azerbaijan	3	DNB1	1.75	1.77	Nordic Bet		8
-Criciúma v Avaí	1	U3.5	1.22	1.36	Pinnacle	1.20	11
-Criciúma v Avaí	2	U2.75	1.71	1.97	Pinnacle	1.65	11
-Mallorca v Almería	1	U4.5	1.07	1.12	1xBet	1.07	14
-Denmark v Wales	1	O1.5	1.21	1.32	Pinnacle		6
-Denmark v Wales	2	O2.25	1.75	2.00	Pinnacle		6
-Serbia v Netherlands	1	O1.5	1.17	1.32	Pinnacle		6
-Austria v Kosovo	1	O1.5	1.24	1.27	1xBet		5
-Austria v Kosovo	3	DNB1	1.27	1.30	Betclic (FR)		9
-Gibraltar v Andorra	1	U3.5	1.06	1.09	1xBet		5
-Burgos v Eldense	1	U3.5	1.21	1.36	Pinnacle	1.18	14
-Burgos v Eldense	3	DNB1	1.47	1.50	Winamax (DE)	1.39	19
-Eibar v Las Palmas	1	U3.5	1.27	1.35	1xBet	1.23	14
-Eibar v Las Palmas	3	12	1.29	1.36	Pinnacle	1.30	19
+Real Valladolid v Córdoba	3	12	1.27	1.34	Pinnacle	1.30	19
+Lithuania v Azerbaijan	1	U3.5	1.13	1.16	1xBet		5
+Lithuania v Azerbaijan	2	U2.75	1.49	1.50	1xBet		5
+Lithuania v Azerbaijan	3	DNB1	1.66	1.73	PMU (FR)		9
+Criciúma v Avaí	1	U3.5	1.14	1.16	Unibet (NL)	1.16	11
+Criciúma v Avaí	2	U2.75	1.51	1.56	Unibet (NL)	1.56	11
+Mallorca v Almería	1	U4.5	1.07	1.10	1xBet	1.07	14
+Denmark v Wales	1	O1.5	1.17	1.34	Pinnacle		6
+Denmark v Wales	2	O2.25	1.62	2.07	Pinnacle		6
+Serbia v Netherlands	1	O1.5	1.16	1.29	Pinnacle		6
+Austria v Kosovo	1	O1.5	1.26	1.31	1xBet		5
+Austria v Kosovo	3	DNB1	1.30	1.33	Winamax (DE)		10
+Gibraltar v Andorra	1	U3.5	1.04	1.08	1xBet		4
+Burgos v Eldense	1	U3.5	1.19	1.31	Pinnacle	1.16	14
+Burgos v Eldense	3	DNB1	1.55	1.58	Winamax (FR)	1.49	19
+Eibar v Las Palmas	1	U3.5	1.30	1.37	1xBet	1.23	14
+Eibar v Las Palmas	3	12	1.26	1.34	Pinnacle	1.30	19
 Pumas v Atlético San Luis	1	U4.5	1.12	1.14	Coolbet	1.11	13
-Pumas v Atlético San Luis	3	DNB1	1.54	1.58	888sport	1.54	16
-Germany v Greece	1	O1.5	1.13	1.15	1xBet		6
+Pumas v Atlético San Luis	3	DNB1	1.56	1.59	Betclic (FR)	1.54	16
+Germany v Greece	1	O1.5	1.12	1.15	1xBet		6
 Norway v Portugal	1	O1.5	1.12	1.14	1xBet		6
-Norway v Portugal	2	O2.25	1.47	1.49	1xBet		6
-Norway v Portugal	3	DNB1	1.96	1.97	PMU (FR)		10
+Norway v Portugal	2	O2.25	1.46	1.47	1xBet		6
+Norway v Portugal	3	DNB1	1.88	1.92	Betclic (FR)		11
 Israel v Republic of Ireland	1	O1.5	1.31	1.35	1xBet		3
-Real Oviedo v Sporting Gijón	1	U3.5	1.14	1.20	1xBet	1.15	14
-CRB v Cuiabá	1	O1.0	1.02	1.03	Pinnacle	1.02	7
-CRB v Cuiabá	2	O1.75	1.32	1.34	Unibet (NL)	1.34	10
-Fortaleza v Athletic Club	1	O1.0	1.03	1.10	Coolbet	1.02	8
-Fortaleza v Athletic Club	2	O1.75	1.35	1.66	Coolbet	1.35	11
-Columbus Crew v Inter Miami	1	O1.5	1.07	1.10	Pinnacle	1.07	14
-Columbus Crew v Inter Miami	3	12	1.23	1.28	GTbets	1.23	21
-León v FC Juárez	1	U4.5	1.14	1.17	GTbets	1.16	13
+Real Oviedo v Sporting Gijón	1	U3.5	1.14	1.20	1xBet	1.14	14
+CRB v Cuiabá	1	O1.0	1.02	1.05	BetOnline.ag	1.02	8
+CRB v Cuiabá	2	O1.75	1.33	1.38	BetOnline.ag	1.34	10
+Fortaleza v Athletic Club	1	O1.0	1.02	1.05	BetOnline.ag	1.02	8
+Fortaleza v Athletic Club	2	O1.75	1.31	1.37	BetOnline.ag	1.34	11
+Columbus Crew v Inter Miami	1	O1.5	1.07	1.10	Pinnacle	1.05	14
+Columbus Crew v Inter Miami	3	12	1.23	1.27	1xBet	1.23	20
+León v FC Juárez	1	U4.5	1.16	1.19	Tipico	1.16	13
 León v FC Juárez	3	DNB1	1.29	1.31	PMU (FR)	1.31	16
-Necaxa v América	1	U4.5	1.12	1.14	GTbets	1.12	13
-Necaxa v América	3	12	1.24	1.29	GTbets	1.24	16
-Armenia v Montenegro	1	U4.5	1.04	1.07	1xBet		4
+Necaxa v América	1	U4.5	1.12	1.15	Coolbet	1.12	13
+Necaxa v América	3	12	1.24	1.29	GTbets	1.23	16
+Armenia v Montenegro	1	U4.5	1.03	1.07	1xBet		4
 Georgia v Ukraine	1	O1.5	1.33	1.37	1xBet		5
 Latvia v Cyprus	1	U4.5	1.03	1.07	1xBet		4
 Latvia v Cyprus	2	U3.75	1.18	1.23	1xBet		5
 Leganés v CD Castellón	1	U4.5	1.07	1.13	1xBet	1.07	13
 Leganés v CD Castellón	3	12	1.28	1.33	1xBet	1.30	18
 Belgium v France	1	O1.5	1.13	1.27	Pinnacle		6
-Belgium v France	2	O2.25	1.50	1.85	Pinnacle		6
+Belgium v France	2	O2.25	1.50	1.84	Pinnacle		6
 Northern Ireland v Hungary	1	U4.5	1.02	1.05	1xBet		3
 Romania v Bosnia & Herzegovina	1	O1.5	1.29	1.34	1xBet		5
 Romania v Bosnia & Herzegovina	2	O2.25	1.98	2.05	1xBet		5
 Sweden v Poland	1	O1.5	1.19	1.23	1xBet		5
 América Mineiro v Juventude	1	U3.5	1.18	1.30	Pinnacle	1.17	11
-Scotland v Switzerland	1	O1.5	1.26	1.36	1xBet		3
-Scotland v Switzerland	2	O2.25	1.91	2.12	1xBet		3
+Scotland v Switzerland	1	O1.5	1.31	1.36	1xBet		3
+Scotland v Switzerland	2	O2.25	2.05	2.12	1xBet		3
 Slovenia v North Macedonia	1	U4.5	1.07	1.07	1xBet		2
 Slovenia v North Macedonia	2	U3.75	1.20	1.24	1xBet		3
-Spain v Croatia	1	O1.5	1.13	1.24	Pinnacle		6
+Spain v Croatia	1	O1.5	1.14	1.24	Pinnacle		6
 Botafogo-SP v Ponte Preta	1	U3.5	1.40	1.44	Nordic Bet	1.40	10
 Botafogo-SP v Ponte Preta	2	U2.75	2.12	2.22	Nordic Bet	2.12	10
 Botafogo-SP v Ponte Preta	3	DNB1	1.11	1.12	Codere (IT)	1.11	13
@@ -90,26 +68,26 @@ Denmark v Portugal	2	O2.25	2.00	2.00	William Hill		1
 Germany v Serbia	1	O1.5	1.08	1.08	William Hill		1
 Germany v Serbia	3	DNB1	1.16	1.16	Winamax (FR)		4
 Wales v Norway	1	O1.5	1.19	1.19	William Hill		1
-Athletic Club (MG) v Sport Recife	1	O1.0	1.01	1.01	Unibet (NL)	1.01	2
-Athletic Club (MG) v Sport Recife	2	O1.75	1.31	1.31	Unibet (NL)	1.31	3
-Athletic Club (MG) v Sport Recife	3	12	1.32	1.32	Unibet (NL)	1.32	3
-Grêmio Novorizontino v Goiás	1	O1.0	1.01	1.03	Pinnacle	1.01	7
-Grêmio Novorizontino v Goiás	2	O1.75	1.31	1.35	1xBet	1.31	10
-Grêmio Novorizontino v Goiás	3	DNB1	1.32	1.35	LeoVegas (SE)	1.34	13
-Seattle Sounders FC v Sporting Kansas City	1	U4.5	1.34	1.43	1xBet	1.31	11
-Seattle Sounders FC v Sporting Kansas City	2	U3.75	1.85	2.00	1xBet	1.79	11
+Athletic Club (MG) v Sport Recife	1	O1.0	1.02	1.02	Coolbet	1.01	5
+Athletic Club (MG) v Sport Recife	2	O1.75	1.32	1.35	Nordic Bet	1.31	8
+Athletic Club (MG) v Sport Recife	3	12	1.32	1.33	BetOnline.ag	1.32	9
+Grêmio Novorizontino v Goiás	1	O1.0	1.02	1.03	Pinnacle	1.01	7
+Grêmio Novorizontino v Goiás	2	O1.75	1.31	1.36	William Hill	1.31	10
+Grêmio Novorizontino v Goiás	3	DNB1	1.33	1.35	LeoVegas (SE)	1.34	13
+Seattle Sounders FC v Sporting Kansas City	1	U4.5	1.34	1.40	1xBet	1.31	13
+Seattle Sounders FC v Sporting Kansas City	2	U3.75	1.85	1.94	1xBet	1.79	13
 CD Eldense v Oviedo	1	U3.5	1.16	1.16	Unibet (SE)	1.16	4
 Dundalk v Bohemians	1	O1.5	1.14	1.31	Coolbet	1.11	11
 Dundalk v Bohemians	3	12	1.23	1.27	Pinnacle	1.25	15
-Independiente v Instituto de Córdoba	1	O1.0	1.06	1.18	Pinnacle		6
-Sao Paulo v Santos	1	U4.5	1.05	1.13	Pinnacle	1.05	13
-Sao Paulo v Santos	2	O1.75	1.30	1.34	Unibet (SE)	1.34	14
-Sao Paulo v Santos	3	12	1.29	1.33	1xBet	1.29	20
+Independiente v Instituto de Córdoba	1	O1.0	1.06	1.18	Pinnacle		7
+Sao Paulo v Santos	1	U4.5	1.05	1.13	Pinnacle	1.05	14
+Sao Paulo v Santos	2	O1.75	1.30	1.34	Unibet (SE)	1.34	15
+Sao Paulo v Santos	3	12	1.29	1.33	1xBet	1.29	21
 Universidad de Concepción v Huachipato	1	U4.5	1.09	1.11	GTbets		6
 Universidad de Concepción v Huachipato	2	U3.75	1.34	1.36	GTbets		6
 Londrina v Criciuma	1	U3.5	1.19	1.19	Unibet (SE)	1.19	3
 Juventude v Operario PR	1	U3.5	1.17	1.17	Unibet (NL)	1.17	3
 Juventude v Operario PR	2	U2.75	1.57	1.57	Unibet (NL)	1.57	3
-Independiente Rivadavia v Gimnasia La Plata	1	O1.0	1.02	1.03	Pinnacle		5
-Independiente Rivadavia v Gimnasia La Plata	2	O1.75	1.29	1.30	Pinnacle		6
+Independiente Rivadavia v Gimnasia La Plata	1	O1.0	1.02	1.03	Pinnacle		6
+Independiente Rivadavia v Gimnasia La Plata	2	O1.75	1.28	1.30	Pinnacle		7
 Fortaleza v Nautico PE	2	O1.75	1.27	1.27	Unibet (NL)	1.27	3
