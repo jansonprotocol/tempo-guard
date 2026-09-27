@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 81.3%
+## CURRENT CONFIRMED HITRATE: 81.2%
 
     lane                        Tip 1              Tip 2
-    all matches            562 / 691  81.3%    367 / 557  65.9%
+    all matches            562 / 692  81.2%    367 / 557  65.9%
     played lanes  >+1%     243 / 299  81.3%    365 / 552  66.1%
     placed bets            169 / 218  77.5%    ROI -0.7%
 
@@ -971,7 +971,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-2 · 27-09 04:30 <b>LA Galaxy v Colorado Rapids</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>— under +1%</td><td>❌ U3.75 66.2% +3.7%<br>buy≥1.44 (+3.7% margin) · floor −8.8</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 27-09 04:30 <b>San Jose Earthquakes v Portland Timbers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>— under +1%</td><td>✅ <b>Portland Timbers O0.5</b> 80.7% +7.2%<br>buy≥1.36 (+9.5% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-3 · 27-09 04:30 <b>Vancouver Whitecaps v DC United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>— under +1%</td><td>❌ U3.75 63.6% +1.1%<br>buy≥1.44 (+0.3% margin) · floor −11.4</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 69.0% +8.9% · buy≥1.52 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 68' 1-0 <b>De Graafschap v Den Bosch</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.9 +0.5)</td><td>— under +1%</td><td><b>Den Bosch O0.5</b> 83.7% +10.8%<br>buy≥1.29 (+7.9% margin) · team · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 70' 1-0 <b>De Graafschap v Den Bosch</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.9 +0.5)</td><td>— under +1%</td><td><b>Den Bosch O0.5</b> 83.7% +10.8%<br>buy≥1.29 (+7.9% margin) · team · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-1 <b>Lithuania v Azerbaijan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>U3.0 77.1% +10.8%<br>buy≥1.51 (+7.3% margin)<br><i>U3.0 holding · next goal hurts · 61% · fair 1.65</i><br><i>also live: O3.5 flip 39% fair 2.54 · O2.5 flip 74% fair 1.35</i></td><td>U2.75 56.0% +12.1%<br>buy≥1.64 (+2.9% margin) · floor −19.0 · <i>next goal hurts</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.0% +13.9% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-09 16:00 <b>Criciúma v Avaí</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>U3.0 83.1% +1.7%<br>buy≥1.32 (+4.3% margin)</td><td>U2.75 63.9% +2.4%<br>buy≥1.42 (+0.3% margin) · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-09 17:00 <b>Moghreb Tetouan v RS Berkane</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Botola Pro (94.8 capped)</td><td>— under +1%</td><td><b>RS Berkane O0.5</b> 80.9% +17.4%<br>buy≥1.31 (+5.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 67.6% +28.8% · buy≥1.55 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1069,8 +1069,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 26-09 22:00 <b>Wydad AC v WS Temara</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Botola Pro (94.8 capped)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-09 22:00 <b>ADT v Cajamarca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>U4.25 81.0% <b>−5.8%</b><br>buy≥1.23 (+6.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>New York Red Bulls v St. Louis City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>O1.5 80.7% <b>−0.8%</b><br>buy≥1.29 (+6.1% margin)</td><td><b>St. Louis City O0.5</b> 80.0% +6.5%<br>buy≥1.37 (+9.3% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 3-1 <b>Real Valladolid v Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (84.9 capped)</td><td>U3.0 76.4% <b>+0.0%</b><br>buy≥1.43 (+1.0% margin)<br><i>U3.0 holding · ✗ gone</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 74.6% +2.4% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 68' 1-0 <b>De Graafschap v Den Bosch</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.9 +0.5)</td><td>O1.5 82.6% <b>+0.5%</b><br>buy≥1.26 (+3.7% margin)<br><i>O1.5 holding · needs 1 more · 63% · fair 1.59</i><br><i>also live: U2.5 flip 74% fair 1.35</i></td><td><b>Den Bosch O0.5</b> 83.7% +10.8%<br>buy≥1.29 (+7.9% margin) · team · <i>needs 1 more</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 70' 1-0 <b>De Graafschap v Den Bosch</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (84.9 +0.5)</td><td>O1.5 82.6% <b>+0.5%</b><br>buy≥1.26 (+3.7% margin)<br><i>O1.5 holding · needs 1 more · 60% · fair 1.66</i><br><i>also live: U2.5 flip 76% fair 1.31</i></td><td><b>Den Bosch O0.5</b> 83.7% +10.8%<br>buy≥1.29 (+7.9% margin) · team · <i>needs 1 more</i></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-1 <b>Lithuania v Azerbaijan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>U3.0 77.1% +10.8%<br>buy≥1.51 (+7.3% margin)<br><i>U3.0 holding · next goal hurts · 61% · fair 1.65</i><br><i>also live: O3.5 flip 39% fair 2.54 · O2.5 flip 74% fair 1.35</i></td><td>U2.75 56.0% +12.1%<br>buy≥1.64 (+2.9% margin) · floor −19.0 · <i>next goal hurts</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.0% +13.9% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-09 16:00 <b>Criciúma v Avaí</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>U3.0 83.1% +1.7%<br>buy≥1.32 (+4.3% margin)</td><td>U2.75 63.9% +2.4%<br>buy≥1.42 (+0.3% margin) · floor −11.1</td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-09 16:15 <b>Mallorca v Almería</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (84.9 capped)</td><td>U4.25 84.5% <b>−5.0%</b><br>buy≥1.23 (+5.5% margin)</td><td>— none</td></tr></table>
@@ -1173,7 +1172,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 562 / 691   ·   81.3%**   ·   **Tip 2 — 367 / 557   ·   65.9%**
+**Tip 1 — 562 / 692   ·   81.2%**   ·   **Tip 2 — 367 / 557   ·   65.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2242,6 +2241,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-2 · 27-09 04:30 <b>LA Galaxy v Colorado Rapids</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>U4.25 80.6% <b>+0.7%</b><br>buy≥1.31 (+6.1% margin)</td><td>❌ U3.75 66.2% +3.7%<br>buy≥1.44 (+3.7% margin) · floor −8.8</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 27-09 04:30 <b>San Jose Earthquakes v Portland Timbers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>U4.25 80.0% <b>+0.2%</b><br>buy≥1.36 (+5.9% margin)</td><td>✅ <b>Portland Timbers O0.5</b> 80.7% +7.2%<br>buy≥1.36 (+9.5% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-3 · 27-09 04:30 <b>Vancouver Whitecaps v DC United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>U4.25 80.7% <b>+0.8%</b><br>buy≥1.34 (+6.1% margin)</td><td>❌ U3.75 63.6% +1.1%<br>buy≥1.44 (+0.3% margin) · floor −11.4</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 69.0% +8.9% · buy≥1.52 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-1 · 27-09 14:00 <b>Real Valladolid v Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (84.9 capped)</td><td>U3.0 76.4% <b>+0.0%</b><br>buy≥1.43 (+1.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 74.6% +2.4% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
