@@ -61,6 +61,26 @@ of.") Nothing is refused on it, no rule changes, and it never argues
 against a bet he has already placed — it is recorded so the count grows
 and the measurement can be re-run with more bets behind it.
 
+AND IT IS WEAKLY SUPPORTED, WHICH THE ALERT MUST NOT HIDE. The same
+banding over all 946 settled cards that carry a first-sight quote does
+NOT reproduce it: over 0-3% returns +2.1% there, over 3-6% returns
++1.6%, and only over 6%+ is negative at -0.7%. So the -14.7% that
+prompted the 3% line lives in 36 of his own bets and nowhere else. The
+two populations are not measuring the same thing — his gap is the price
+he actually PAID against the bar, the card population's is the best EU
+book's price against the bar — but until the first replicates, the flag
+is a counter, not a finding. Say so whenever it fires.
+
+## The books he can actually reach
+
+"1xBet and Tonybet and often Unibet are the prices I most likely see
+and can find" (27 Sep). Pinnacle holds the best price on 36% of stamped
+cards and he cannot use it, so EVERY ROI computed from the feed's best
+price is optimistic for him. Measured: where the best price sat at a
+book he can reach, the cards return 5 to 10 points WORSE per band than
+where it sat somewhere he cannot. Quote feed-best ROI as what the
+market offered, never as what he would have got.
+
 ## What he has asked not to be told
 
 - **Bankroll.** "I hold bank roll on 2 accounts. So ignore my bankroll
