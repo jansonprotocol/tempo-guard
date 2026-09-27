@@ -953,7 +953,7 @@
 2026-09-23 22:00	PER-L1	Liga 1	ADT v Cienciano	U4.25 81.1% **−5.9%** · buy≥1.24 (+6.5% margin)	✅ **Cienciano O0.5** 80.3% +16.7% (team) · buy≥1.37 (+9.7% margin)	✅ HIT — 2-1	
 2026-09-24 02:30	COL-PA	Categoría Primera A	América v Águilas Doradas	U4.25 86.1% **−5.2%** · buy≥1.20 (+5.4% margin)	✅ **América O0.5** 77.9% +2.4% (team) · buy≥1.30 (+1.1% margin)	✅ HIT — 1-0	✅ DNB1 71.8% +7.6% · buy≥1.46 · probation
 2026-09-24 03:30	MLS	MLS	Seattle v Salt Lake	U4.25 80.7% **+0.8%** · buy≥1.32 (+6.1% margin)	✅ U3.75 65.7% +3.2% (floor −9.3) · buy≥1.40 (+0.4% margin)	✅ HIT — 2-0	
-2026-09-26 19:00	MAR-BP	Botola Pro	DHJ v CODM	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-09-26 19:00	MAR-BP	Botola Pro	DHJ v CODM	— no tip: engine abstained (thin history or an unresolved name)	—	FT 2-6 (no tip)	
 2026-09-24 22:00	MAR-BP	Botola Pro	Amal Tiznit v Ittihad Tanger	— no tip: engine abstained (thin history or an unresolved name)	—	FT 1-3 (no tip)	
 2026-09-25 02:30	COL-PA	Categoría Primera A	Atl. Nacional v Millonarios	U4.25 86.2% **−5.1%** · buy≥1.22 (+5.5% margin)	— none	✅ HIT — 1-1	
 2026-09-25 20:30	ESP-L2	LaLiga 2	Girona v Albacete	U4.25 84.4% **−5.1%** · buy≥1.22 (+5.4% margin)	— none	✅ HIT — 2-0	✅ DNB1 68.3% +5.6% · buy≥1.54 · probation
@@ -967,7 +967,7 @@
 2026-09-26 14:00	ESP-L2	LaLiga 2	Ceuta v Real Sociedad B	U3.0 76.4% **+0.0%** · buy≥1.40 (+1.0% margin)	— none	❌ MISS — 3-1	
 2026-09-26 16:15	ESP-L2	LaLiga 2	Granada v FC Andorra	U4.25 84.3% **−5.2%** · buy≥1.20 (+5.4% margin)	— none	❌ MISS — 2-3	
 2026-09-26 16:30	NED-D2	Eerste Divisie	Heracles v Vitesse	O1.5 83.9% +1.8% · buy≥1.20 (+4.7% margin)	✅ **Heracles O1.5** 62.8% +10.8% (team) · buy≥1.65 (+3.4% margin)	✅ HIT — 2-0	✅ 12 80.0% +2.6% · buy≥1.31 · probation
-2026-09-26 18:00	MAR-BP	Botola Pro	Union Touarga v FUS Rabat	U4.25 86.0% **−6.1%** · buy≥1.17 (+5.4% margin)	— none		12 72.5% +3.1% · buy≥1.45 · probation
+2026-09-26 18:00	MAR-BP	Botola Pro	Union Touarga v FUS Rabat	U4.25 86.0% **−6.1%** · buy≥1.17 (+5.4% margin)	— none	✅ HIT — 2-1	✅ 12 72.5% +3.1% · buy≥1.45 · probation
 2026-09-26 18:30	ESP-L2	LaLiga 2	Tenerife v Cádiz	U3.0 76.4% **+0.0%** · buy≥1.33 (+1.0% margin)	✅ **Cádiz U1.5** 75.4% +4.1% (team) · buy≥1.38 (+4.2% margin)	✅ HIT — 1-1	
 2026-09-26 18:30	ESP-L2	LaLiga 2	Celta Fortuna v Sabadell	— no tip: engine abstained (thin history or an unresolved name)	—	FT 1-1 (no tip)	
 2026-09-26 20:00	NED-D2	Eerste Divisie	Emmen v TOP Oss	O1.5 83.8% +1.7% · buy≥1.25 (+4.6% margin)	❌ **TOP Oss O0.5** 81.0% +8.1% (team) · buy≥1.31 (+5.8% margin)	❌ MISS — 1-0	
@@ -977,8 +977,7 @@
 2026-09-26 20:00	NED-D2	Eerste Divisie	Roda JC v RKC Waalwijk	O1.5 83.5% +1.4% · buy≥1.25 (+4.4% margin)	❌ O2.25 62.9% +2.2% (floor −12.1) · buy≥1.43 (+0.2% margin)	✅ HIT — 2-0	
 2026-09-26 21:30	BRA-SB	Brasileirão Série B	Náutico v Sport Recife	O1.0 88.5% **−0.8%** · buy≥1.21 (+6.1% margin)	✅ O1.75 67.8% +2.5% (floor −7.2) · buy≥1.60 (+0.5% margin)	✅ HIT — 3-1	
 2026-09-26 21:30	BRA-SB	Brasileirão Série B	Operário-PR v Ceará	O1.0 88.5% **−0.8%** · buy≥1.21 (+6.1% margin)	✅ O1.75 68.2% +3.0% (floor −6.8) · buy≥1.59 (+0.6% margin)	✅ HIT — 2-2	❌ 12 74.5% +2.9% · buy≥1.41 · probation
-2026-09-26 22:00	MAR-BP	Botola Pro	Wydad AC v WS Temara	— no tip: engine abstained (thin history or an unresolved name)	—		
-2026-09-26 22:00	PER-L1	Liga 1	ADT v Cajamarca	U4.25 81.0% **−5.8%** · buy≥1.23 (+6.5% margin)	— none		
+2026-09-26 22:00	MAR-BP	Botola Pro	Wydad AC v WS Temara	— no tip: engine abstained (thin history or an unresolved name)	—	FT 1-3 (no tip)	
 2026-09-26 23:10	COL-PA	Categoría Primera A	Deportivo Pereira v Inter de Bogotá	U3.0 79.4% **+0.0%** · buy≥1.33 (+1.2% margin)	— none	✅ HIT — 0-0	
 2026-09-26 23:30	BRA-SB	Brasileirão Série B	Goiás v Atlético-GO	U3.0 82.2% **+0.9%** · buy≥1.33 (+3.7% margin)	✅ U2.75 62.7% +1.2% (floor −12.3) · buy≥1.44 (+0.2% margin)	✅ HIT — 0-1	
 2026-09-27 01:00	MEX-LMX	Liga MX	Cruz Azul v Toluca	U4.25 83.3% **−1.0%** · buy≥1.24 (+5.4% margin)	— none	❌ MISS — 3-3	
@@ -987,7 +986,6 @@
 2026-09-27 01:30	MLS	MLS	Atlanta United v New York City	U4.25 80.8% **+0.9%** · buy≥1.34 (+6.1% margin)	❌ U3.75 64.2% +1.7% (floor −10.8) · buy≥1.43 (+0.3% margin)	✅ HIT — 2-2	
 2026-09-27 01:30	MLS	MLS	CF Montréal v FC Cincinnati	U4.25 80.7% **+0.9%** · buy≥1.33 (+6.1% margin)	✅ **FC Cincinnati O0.5** 81.1% +7.6% (team) · buy≥1.35 (+9.6% margin)	✅ HIT — 3-1	
 2026-09-27 01:30	MLS	MLS	Charlotte v Chicago Fire	O1.5 80.6% **−0.9%** · buy≥1.28 (+6.1% margin)	❌ **Charlotte O1.5** 61.9% +10.2% (team) · buy≥1.67 (+3.4% margin)	❌ MISS — 0-1	✅ 12 79.8% +4.4% · buy≥1.32 · probation
-2026-09-27 01:30	MLS	MLS	New York Red Bulls v St. Louis City	O1.5 80.7% **−0.8%** · buy≥1.29 (+6.1% margin)	**St. Louis City O0.5** 80.0% +6.5% (team) · buy≥1.37 (+9.3% margin)	PP Postponed	
 2026-09-27 01:30	MLS	MLS	Philadelphia Union v Orlando City	O1.5 80.4% **−1.0%** · buy≥1.26 (+6.0% margin)	✅ **Philadelphia Union O1.5** 58.5% +6.7% (team) · buy≥1.76 (+3.1% margin)	✅ HIT — 4-2	✅ 12 79.7% +4.4% · buy≥1.32 · probation
 2026-09-27 02:30	MLS	MLS	Austin FC v San Diego FC	U4.25 80.7% **+0.9%** · buy≥1.33 (+6.1% margin)	❌ U3.75 64.7% +2.1% (floor −10.3) · buy≥1.42 (+0.3% margin)	❌ MISS — 3-3	◦ DNB1 67.4% +7.2% · buy≥1.56 · probation
 2026-09-27 02:30	MLS	MLS	FC Dallas v Los Angeles FC	O1.5 80.6% **−0.9%** · buy≥1.28 (+6.1% margin)	❌ O2.25 61.7% +1.8% (floor −13.3) · buy≥1.45 (+0.1% margin)	❌ MISS — 1-0	
@@ -1005,13 +1003,13 @@
 2026-09-27 14:30	NED-D2	Eerste Divisie	De Graafschap v Den Bosch	O1.5 82.6% **+0.5%** · buy≥1.26 (+3.7% margin)	❌ **Den Bosch O0.5** 83.7% +10.8% (team) · buy≥1.29 (+7.9% margin)	❌ MISS — 1-0	
 2026-09-27 16:00	BRA-SB	Brasileirão Série B	Criciúma v Avaí	U3.0 83.1% +1.7% · buy≥1.32 (+4.3% margin)	❌ U2.75 63.9% +2.4% (floor −11.1) · buy≥1.42 (+0.3% margin)	✅ HIT — 3-0	
 2026-09-27 16:15	ESP-L2	LaLiga 2	Mallorca v Almería	U4.25 84.5% **−5.0%** · buy≥1.23 (+5.5% margin)	— none	✅ HIT — 0-1	
-2026-09-27 17:00	MAR-BP	Botola Pro	Moghreb Tetouan v RS Berkane	U4.25 86.0% **−6.1%** · buy≥1.17 (+5.4% margin)	**RS Berkane O0.5** 80.9% +17.4% (team) · buy≥1.31 (+5.6% margin)		DNB2 67.6% +28.8% · buy≥1.55 · probation
+2026-09-27 17:00	MAR-BP	Botola Pro	Moghreb Tetouan v RS Berkane	U4.25 86.0% **−6.1%** · buy≥1.17 (+5.4% margin)	❌ **RS Berkane O0.5** 80.9% +17.4% (team) · buy≥1.31 (+5.6% margin)	✅ HIT — 0-0	◦ DNB2 67.6% +28.8% · buy≥1.55 · probation
 2026-09-27 18:30	ESP-L2	LaLiga 2	Burgos v Eldense	U3.0 76.4% **+0.0%** · buy≥1.37 (+1.0% margin)	✅ **Eldense U1.5** 75.4% +4.1% (team) · buy≥1.38 (+4.2% margin)	✅ HIT — 1-0	✅ DNB1 70.6% +7.9% · buy≥1.49 · probation
 2026-09-27 18:30	ESP-L2	LaLiga 2	Eibar v Las Palmas	U3.0 76.4% **+0.0%** · buy≥1.40 (+1.0% margin)	— none	❌ MISS — 3-2	✅ 12 74.9% +2.7% · buy≥1.40 · probation
-2026-09-27 20:00	MEX-LMX	Liga MX	Pumas v Atlético San Luis	U4.25 83.2% **−1.1%** · buy≥1.23 (+5.4% margin)	— none	LIVE 54' 1-1	DNB1 67.4% +5.2% · buy≥1.56 · probation
+2026-09-27 20:00	MEX-LMX	Liga MX	Pumas v Atlético San Luis	U4.25 83.2% **−1.1%** · buy≥1.23 (+5.4% margin)	— none	LIVE 48' 0-1	DNB1 67.4% +5.2% · buy≥1.56 · probation
 2026-09-27 20:00	MAR-BP	Botola Pro	Maghreb de Fès v Renaissance Zemamra	— no tip: engine abstained (thin history or an unresolved name)	—		
-2026-09-27 21:00	ESP-L2	LaLiga 2	Real Oviedo v Sporting Gijón	U3.0 76.4% **+0.0%** · buy≥1.43 (+1.0% margin)	**Sporting Gijón U1.5** 75.4% +4.1% (team) · buy≥1.38 (+4.2% margin)	LIVE 13' 1-0	
-2026-09-27 21:00	BRA-SB	Brasileirão Série B	CRB v Cuiabá	O1.0 88.5% **−0.8%** · buy≥1.21 (+6.1% margin)	O1.75 68.4% +3.1% (floor −6.6) · buy≥1.58 (+0.6% margin)	LIVE 13' 1-0	
+2026-09-27 21:00	ESP-L2	LaLiga 2	Real Oviedo v Sporting Gijón	U3.0 76.4% **+0.0%** · buy≥1.43 (+1.0% margin)	**Sporting Gijón U1.5** 75.4% +4.1% (team) · buy≥1.38 (+4.2% margin)	LIVE 7' 0-0	
+2026-09-27 21:00	BRA-SB	Brasileirão Série B	CRB v Cuiabá	O1.0 88.5% **−0.8%** · buy≥1.21 (+6.1% margin)	O1.75 68.4% +3.1% (floor −6.6) · buy≥1.58 (+0.6% margin)	LIVE 8' 1-0	
 2026-09-27 22:00	MAR-BP	Botola Pro	KACM v Hassania Agadir	— no tip: engine abstained (thin history or an unresolved name)	—		
 2026-09-27 23:00	COL-PA	Categoría Primera A	Jaguares v Alianza Valledupar	U3.0 79.4% **+0.0%** · buy≥1.33 (+1.2% margin)	— none		DNB1 72.8% +8.6% · buy≥1.44 · probation
 2026-09-27 23:30	BRA-SB	Brasileirão Série B	Fortaleza v Athletic Club	O1.0 88.5% **−0.8%** · buy≥1.22 (+6.1% margin)	O1.75 66.5% +1.3% (floor −8.5) · buy≥1.64 (+0.5% margin)		
@@ -1078,15 +1076,8 @@
 2026-09-22 00:00	ARG-PD	Primera División	Barracas Central v Independiente Rivadavia	O1.0 87.4% **+0.4%** · buy≥1.26 (+4.6% margin)	— none	◦ PUSH — 0-1	
 2026-09-22 02:15	ARG-PD	Primera División	Lanus v Estudiantes	U3.0 86.3% +1.3% · buy≥1.24 (+3.8% margin)	❌ **Lanus U1.5** 75.4% +8.2% (team) · buy≥1.38 (+4.2% margin)	✅ HIT — 2-1	
 2026-09-25 20:45	IRL-PD	Premier Division	Galway United v Shelbourne Dublin	U4.25 84.8% **−4.8%** · buy≥1.19 (+5.4% margin)	— none	✅ HIT — 1-1	❌ 12 74.0% +3.9% · buy≥1.42 · probation
-2026-09-26 16:00	ENG-L1	League One	Bradford City v Barnsley	U4.25 83.1% **−4.5%** · buy≥1.22 (+6.1% margin)	— none	PP Postponed	DNB1 66.0% +7.9% · buy≥1.59 · probation
 2026-09-26 16:00	ENG-L1	League One	Cambridge United v Wimbledon	U3.0 78.9% +5.6% · buy≥1.48 (+8.4% margin)	✅ U2.75 58.2% +6.8% (floor −16.8) · buy≥1.59 (+3.1% margin)	✅ HIT — 1-1	◦ DNB1 71.2% +13.1% · buy≥1.48 · probation
-2026-09-26 16:00	ENG-L1	League One	Doncaster Rovers v Oxford United	O1.5 77.2% +3.7% · buy≥1.39 (+7.1% margin)	— none		
-2026-09-26 16:00	ENG-L1	League One	Huddersfield Town v Luton	O1.5 80.1% +6.5% · buy≥1.36 (+8.7% margin)	**Luton O1.5** 53.7% +20.5% (team) · buy≥1.91 (+2.6% margin)		12 77.9% +2.7% · buy≥1.35 · probation
-2026-09-26 16:00	ENG-L1	League One	Mansfield Town v Leyton Orient	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	**Leyton Orient U1.5** 73.8% +7.0% (team) · buy≥1.41 (+4.2% margin)	PP Postponed	DNB1 69.7% +11.6% · buy≥1.51 · probation
-2026-09-26 16:00	ENG-L1	League One	Milton Keynes Dons v Bromley FC	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.8% +1.5% (floor −0.2) · buy≥1.27 (+1.7% margin)	PP Postponed	DNB1 65.5% +7.4% · buy≥1.60 · probation
-2026-09-26 16:00	ENG-L1	League One	Notts County v Blackpool	U4.25 83.1% **−4.5%** · buy≥1.22 (+6.1% margin)	— none	PP Postponed	
 2026-09-26 16:00	ENG-L1	League One	Plymouth Argyle v Burton Albion	O1.5 77.4% +3.8% · buy≥1.39 (+7.2% margin)	❌ **Plymouth Argyle O0.5** 80.0% +4.1% (team) · buy≥1.36 (+8.7% margin)	❌ MISS — 0-1	❌ DNB1 70.2% +12.1% · buy≥1.50 · probation
-2026-09-26 16:00	ENG-L1	League One	Stevenage v Sheffield Wednesday	U3.0 79.9% +6.6% · buy≥1.45 (+8.7% margin)	**Sheffield Wednesday U1.5** 75.4% +8.6% (team) · buy≥1.40 (+5.5% margin)		
 2026-09-26 16:00	ENG-L1	League One	Stockport County FC v Peterborough United	O1.5 77.6% +4.0% · buy≥1.38 (+7.4% margin)	❌ **Stockport County FC O1.5** 60.9% +19.1% (team) · buy≥1.70 (+3.3% margin)	❌ MISS — 1-0	✅ DNB1 81.4% +23.3% · buy≥1.29 · probation
 2026-09-26 16:00	ENG-L1	League One	Wycombe Wanderers v Reading	U4.25 83.2% **−4.3%** · buy≥1.24 (+6.1% margin)	✅ **Wycombe Wanderers O0.5** 81.0% +5.0% (team) · buy≥1.35 (+8.9% margin)	✅ HIT — 2-2	◦ DNB1 70.3% +12.2% · buy≥1.49 · probation
 2026-09-26 16:00	ENG-L2	League Two	Bristol Rovers v Exeter City	U4.25 85.6% **−1.3%** · buy≥1.23 (+4.3% margin)	❌ O1.75 75.9% +1.6% (floor −2.1) · buy≥1.39 (+1.0% margin)	✅ HIT — 1-0	
@@ -1101,16 +1092,14 @@
 2026-09-26 18:30	ENG-L2	League Two	Oldham Athletic v Salford City	U4.25 86.6% **−0.3%** · buy≥1.23 (+5.0% margin)	— none	❌ MISS — 1-4	
 2026-09-27 18:00	INT-UEFA	Nations League & qualifiers	Denmark v Wales	O1.5 80.9% +1.9% · buy≥1.22 (+5.7% margin)	❌ O2.25 67.8% +11.7% (floor −7.2) · buy≥1.39 (+3.8% margin)	✅ HIT — 2-0	
 2026-09-27 18:00	INT-UEFA	Nations League & qualifiers	Serbia v Netherlands	O1.5 81.3% +2.3% · buy≥1.28 (+5.7% margin)	✅ **Netherlands O0.5** 79.9% +14.4% (team) · buy≥1.36 (+8.8% margin)	✅ HIT — 1-2	
-2026-09-27 20:45	INT-UEFA	Nations League & qualifiers	Germany v Greece	O1.5 81.2% +2.2% · buy≥1.27 (+5.7% margin)	**Germany O1.5** 60.9% +14.6% (team) · buy≥1.70 (+3.3% margin)	LIVE 28' 0-0	
-2026-09-27 20:45	INT-UEFA	Nations League & qualifiers	Norway v Portugal	O1.5 80.6% +1.6% · buy≥1.18 (+5.6% margin)	O2.25 73.4% +17.3% (floor −1.6) · buy≥1.30 (+4.1% margin)	LIVE 30' 0-1	DNB1 78.0% +20.9% · buy≥1.35 · probation
+2026-09-27 20:45	INT-UEFA	Nations League & qualifiers	Germany v Greece	O1.5 81.2% +2.2% · buy≥1.27 (+5.7% margin)	**Germany O1.5** 60.9% +14.6% (team) · buy≥1.70 (+3.3% margin)	LIVE 23' 0-0	
+2026-09-27 20:45	INT-UEFA	Nations League & qualifiers	Norway v Portugal	O1.5 80.6% +1.6% · buy≥1.18 (+5.6% margin)	O2.25 73.4% +17.3% (floor −1.6) · buy≥1.30 (+4.1% margin)	LIVE 24' 0-1	DNB1 78.0% +20.9% · buy≥1.35 · probation
 2026-09-28 03:00	MEX-LMX	Liga MX	León v FC Juárez	U4.25 83.2% **−1.0%** · buy≥1.24 (+5.4% margin)	**León O1.5** 57.9% +9.6% (team) · buy≥1.78 (+3.0% margin)		DNB1 79.2% +16.9% · buy≥1.33 · probation
 2026-09-28 05:00	MEX-LMX	Liga MX	Necaxa v América	U4.25 81.6% **−2.6%** · buy≥1.31 (+5.0% margin)	**América O1.5** 61.2% +26.6% (team) · buy≥1.69 (+3.3% margin)		12 78.5% +3.1% · buy≥1.34 · probation
-2026-09-26 13:30	ENG-L2	League Two	Crawley Town v Barnet	U4.25 84.2% **−2.7%** · buy≥1.25 (+3.2% margin)	**Barnet O0.5** 73.5% +4.1% (team) · buy≥1.42 (+4.1% margin)	PP Postponed	
-2026-09-26 16:00	ENG-L2	League Two	Port Vale v Northampton Town	U4.25 86.6% **−0.3%** · buy≥1.23 (+5.0% margin)	— none	PP Postponed	1X 73.7% +5.2% · buy≥1.42 · probation
 2026-09-27 15:00	INT-UEFA	Nations League & qualifiers	Lithuania v Azerbaijan	U3.0 77.1% +10.8% · buy≥1.51 (+7.3% margin)	✅ U2.75 56.0% +12.1% (floor −19.0) · buy≥1.64 (+2.9% margin)	✅ HIT — 1-1	◦ DNB1 71.0% +13.9% · buy≥1.48 · probation
 2026-09-27 18:00	INT-UEFA	Nations League & qualifiers	Austria v Kosovo	O1.5 81.2% +2.2% · buy≥1.27 (+5.7% margin)	✅ **Austria O0.5** 80.0% +7.0% (team) · buy≥1.36 (+8.8% margin)	✅ HIT — 3-1	✅ DNB1 72.8% +15.7% · buy≥1.44 · probation
 2026-09-27 18:00	INT-UEFA	Nations League & qualifiers	Gibraltar v Andorra	U3.0 81.2% +14.9% · buy≥1.38 (+9.1% margin)	✅ **Gibraltar U1.5** 75.4% +21.7% (team) · buy≥1.40 (+5.9% margin)	✅ HIT — 0-0	
-2026-09-27 20:45	INT-UEFA	Nations League & qualifiers	Israel v Republic of Ireland	O1.5 80.9% +1.9% · buy≥1.31 (+5.7% margin)	**Israel O0.5** 81.8% +8.8% (team) · buy≥1.34 (+9.3% margin)	LIVE 30' 0-3	
+2026-09-27 20:45	INT-UEFA	Nations League & qualifiers	Israel v Republic of Ireland	O1.5 80.9% +1.9% · buy≥1.31 (+5.7% margin)	**Israel O0.5** 81.8% +8.8% (team) · buy≥1.34 (+9.3% margin)	LIVE 24' 0-2	
 2026-09-28 18:00	INT-UEFA	Nations League & qualifiers	Armenia v Montenegro	U4.25 80.9% **−1.7%** · buy≥1.25 (+5.7% margin)	**Montenegro O0.5** 81.2% +15.7% (team) · buy≥1.34 (+9.1% margin)		
 2026-09-28 18:00	INT-UEFA	Nations League & qualifiers	Georgia v Ukraine	O1.5 80.1% +1.1% · buy≥1.32 (+5.4% margin)	**Ukraine O0.5** 80.0% +14.5% (team) · buy≥1.36 (+8.8% margin)		
 2026-09-28 18:00	INT-UEFA	Nations League & qualifiers	Latvia v Cyprus	U4.25 80.9% **−1.8%** · buy≥1.24 (+5.6% margin)	U3.75 71.8% +5.5% (floor −3.2) · buy≥1.34 (+4.0% margin)		
@@ -1151,26 +1140,17 @@
 2026-10-03 13:30	ENG-L2	League Two	Chesterfield FC v Tranmere Rovers	U4.25 89.8% +2.8% · buy≥1.19 (+5.7% margin)	**Tranmere Rovers U1.5** 75.4% +9.8% (team) · buy≥1.38 (+4.2% margin)		DNB1 65.3% +7.8% · buy≥1.61 · probation
 2026-10-03 14:00	ESP-L2	LaLiga 2	Albacete v SD Eibar	U4.25 84.3% **−5.2%** · buy≥1.20 (+5.4% margin)	— none		
 2026-10-03 16:00	BRA-SB	Brasileirão Série B	Avai v Ceará	O1.0 88.5% **−0.9%** · buy≥1.22 (+6.1% margin)	O1.75 66.8% +1.3% (floor −8.2) · buy≥1.63 (+0.5% margin)		
-2026-10-03 16:00	ENG-L1	League One	Barnsley v Milton Keynes Dons	U4.25 83.0% **−4.4%** · buy≥1.22 (+6.1% margin)	U3.75 74.2% +1.0% (floor −0.8) · buy≥1.27 (+1.2% margin)	PP Postponed	
 2026-10-03 16:00	ENG-L1	League One	Blackpool v Leicester City	O1.5 77.7% +4.1% · buy≥1.38 (+7.4% margin)	— none		
-2026-10-03 16:00	ENG-L1	League One	Bromley FC v Wycombe Wanderers	U4.25 83.2% **−4.3%** · buy≥1.24 (+6.1% margin)	— none	PP Postponed	
 2026-10-03 16:00	ENG-L1	League One	Burton Albion v Huddersfield Town	O1.5 75.0% +1.4% · buy≥1.36 (+1.9% margin)	— none		
 2026-10-03 16:00	ENG-L1	League One	Leyton Orient v Plymouth Argyle	O1.5 76.3% +2.7% · buy≥1.35 (+3.0% margin)	**Plymouth Argyle O0.5** 80.0% +10.6% (team) · buy≥1.36 (+8.7% margin)		
-2026-10-03 16:00	ENG-L1	League One	Luton v Doncaster Rovers	O1.5 78.2% +4.6% · buy≥1.38 (+7.9% margin)	**Luton O0.5** 78.9% +2.7% (team) · buy≥1.33 (+5.0% margin)	PP Postponed	
-2026-10-03 16:00	ENG-L1	League One	Peterborough United v Notts County	U4.25 83.0% **−4.4%** · buy≥1.21 (+6.1% margin)	U3.75 74.3% +1.1% (floor −0.7) · buy≥1.27 (+1.3% margin)	PP Postponed	
 2026-10-03 16:00	ENG-L1	League One	Reading v Bradford City	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.6% +1.4% (floor −0.4) · buy≥1.27 (+1.5% margin)		
-2026-10-03 16:00	ENG-L1	League One	Wigan Athletic v Mansfield Town	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.6% +1.4% (floor −0.4) · buy≥1.27 (+1.6% margin)	PP Postponed	
-2026-10-03 16:00	ENG-L1	League One	Wimbledon v Stevenage	U3.0 78.7% +5.6% · buy≥1.48 (+8.3% margin)	U2.75 58.1% +6.7% (floor −16.9) · buy≥1.59 (+3.0% margin)	PP Postponed	
 2026-10-03 16:00	ENG-L2	League Two	Accrington Stanley v Cheltenham Town	U4.25 88.7% +1.7% · buy≥1.20 (+5.5% margin)	U3.75 75.0% +2.6% (floor −3.0) · buy≥1.25 (+1.0% margin)		
-2026-10-03 16:00	ENG-L2	League Two	Colchester United v Port Vale	U4.25 84.7% **−2.3%** · buy≥1.24 (+3.6% margin)	O1.75 77.0% +2.8% (floor −1.0) · buy≥1.37 (+1.1% margin)	PP Postponed	
 2026-10-03 16:00	ENG-L2	League Two	Crewe Alexandra v Bristol Rovers	U4.25 86.7% **−0.3%** · buy≥1.23 (+5.0% margin)	— none		
 2026-10-03 16:00	ENG-L2	League Two	Exeter City v Rotherham United	U4.25 85.2% **−1.8%** · buy≥1.24 (+4.0% margin)	O1.75 76.4% +2.2% (floor −1.6) · buy≥1.38 (+1.0% margin)		
 2026-10-03 16:00	ENG-L2	League Two	Gillingham v Newport County	U4.25 88.4% +1.4% · buy≥1.20 (+5.4% margin)	U3.75 74.6% +2.1% (floor −3.4) · buy≥1.26 (+0.9% margin)		
 2026-10-03 16:00	ENG-L2	League Two	Grimsby Town v Shrewsbury Town	U4.25 86.9% **−0.1%** · buy≥1.22 (+5.1% margin)	**Shrewsbury Town U1.5** 73.9% +8.2% (team) · buy≥1.41 (+4.1% margin)		DNB1 75.8% +18.3% · buy≥1.39 · probation
-2026-10-03 16:00	ENG-L2	League Two	Northampton Town v Oldham Athletic	U4.25 86.9% **−0.1%** · buy≥1.22 (+5.1% margin)	— none	PP Postponed	
 2026-10-03 16:00	ENG-L2	League Two	Rochdale v Swindon Town	U4.25 90.0% +3.0% · buy≥1.20 (+5.8% margin)	U3.75 77.6% +5.1% (floor −0.4) · buy≥1.26 (+4.3% margin)		
 2026-10-03 16:00	ENG-L2	League Two	Salford City v Fleetwood Town	U4.25 87.5% **+0.5%** · buy≥1.22 (+5.2% margin)	— none		1X 73.6% +5.2% · buy≥1.43 · probation
-2026-10-03 16:00	ENG-L2	League Two	Walsall v Crawley Town	U4.25 88.5% +1.5% · buy≥1.20 (+5.4% margin)	U3.75 74.7% +2.3% (floor −3.3) · buy≥1.26 (+0.9% margin)	PP Postponed	
 2026-10-03 16:15	ESP-L2	LaLiga 2	Almería v Burgos CF	U4.25 84.3% **−5.2%** · buy≥1.19 (+5.4% margin)	— none		
 2026-10-03 18:30	ESP-L2	LaLiga 2	Cádiz CF v Leganés	U3.0 76.3% **+0.0%** · buy≥1.32 (+1.0% margin)	— none		
 2026-10-03 18:30	ESP-L2	LaLiga 2	Sabadell FC v Andorra CF	U4.25 84.3% **−5.1%** · buy≥1.21 (+5.4% margin)	— none		

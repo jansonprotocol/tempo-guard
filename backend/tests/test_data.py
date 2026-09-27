@@ -3040,11 +3040,31 @@ def test_the_ladder_keeps_going_when_the_league_cannot_answer():
     # happens to stop on.
     assert sum(1 for r in got[:-1] if r["here"][1] >= cardgrid.MIN_N) < 3, got
 
-    # It stops the moment the league can answer: a league thick inside
-    # its own profile is never widened.
-    tight = cardgrid.rows("NED-D2", "orange", 1, 81.8, side="U")
-    assert not any(r["wide"] for r in tight), tight
-    assert sum(1 for r in tight if r["here"][1] >= cardgrid.MIN_N) >= 3, tight
+    # It stops the moment the league can answer — and that is a RULE, not
+    # a fact about any one league. NED-D2 was pinned here as a league
+    # "thick inside its own profile" until the bank moved and it held
+    # NONE of that profile at all (orange + 1 strike + under: 0 cards,
+    # 27 Sep), at which point widening is the ladder working exactly as
+    # written rather than a fault. So the invariant is pinned instead,
+    # across every league the board carries: a widened row may only
+    # appear once the rows inside the card's own profile have failed to
+    # produce three answerable league cells, and the wide rows always
+    # come last.
+    from scripts.board import load
+
+    checked = 0
+    for lg in sorted({f.code for f in load()}):
+        rows = cardgrid.rows(lg, "orange", 1, 81.8, side="U")
+        if not rows:
+            continue
+        checked += 1
+        narrow = [r for r in rows if not r["wide"]]
+        assert rows[:len(narrow)] == narrow, (lg, [r["lab"] for r in rows])
+        if len(narrow) < len(rows):
+            answerable = sum(1 for r in narrow
+                             if r["here"][1] >= cardgrid.MIN_N)
+            assert answerable < 3, (lg, rows)
+    assert checked > 10, checked
 
     # And it NEVER widens a profile the pool does not hold. A super red
     # card asked of the counted pool has no rung at all — its colour is
