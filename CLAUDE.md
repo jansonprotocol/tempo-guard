@@ -37,6 +37,30 @@ times. Everything else goes between. When the slip is clean, say so in
 one line up front so the silence reads as a check rather than an
 omission.
 
+**MORE THAN 3% OVER THE BAR IS THE SECOND ALERT.** (25-27 Sep. Measured
+on 188 settled bets of this session that carry a stamped bar: bets
+bought UNDER the bar land 89.2% and return +11.4%, bets bought over or
+on it land 71.5% and return -5.7%. By band, every under band is
+positive and the leak is concentrated just past the bar — 0-3% over
+returns -4.6%, 3-6% over returns -14.7%. The session as a whole is level
+at +0.3%, so the whole of the profit comes from bets Athena called too
+short to buy.)
+
+So a leg priced MORE THAN 3% OVER the bar gets the same treatment as a
+wrong lane: named at the top and again at the bottom, bold, with the
+symbol. Both alerts can fire on one slip; name each once at each end.
+
+THE BAR MEANT HERE IS THE PLAY BAR — the card's printed buy-from less
+3%, which is `verdict["need"]` and the number config/forward_log.tsv
+stamps as `needs`. Not the printed buy-from itself; the two differ by
+exactly that 3% and confusing them moves a leg a whole band.
+
+THIS IS A FLAG, NOT A DECLINE. (The bettor, 27 Sep: "I find it too soon
+to really start declining them overall, but it's worth keeping track
+of.") Nothing is refused on it, no rule changes, and it never argues
+against a bet he has already placed — it is recorded so the count grows
+and the measurement can be re-run with more bets behind it.
+
 ## What he has asked not to be told
 
 - **Bankroll.** "I hold bank roll on 2 accounts. So ignore my bankroll
