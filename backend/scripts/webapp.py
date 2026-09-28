@@ -3220,7 +3220,11 @@ def main() -> None:
                  (-.03, 0.0, "0–3% under"), (0.0, .03, "0–3% over"),
                  (.03, .06, "3–6% over"), (.06, .10, "6–10% over"),
                  (.10, 99.0, "10%+ over"))
-    _cb = {n: [0, 0, 0.0] for _lo, _hi, n in BAR_BANDS}   # n, hits, P/L
+    # Kept three ways — every lane, overs, unders (the bettor, 28 Sep:
+    # "can we also split this on under and over") — by the side of the
+    # stamped lane. A result lane (DNB, double chance) is in "all" only.
+    _cb = {k: {n: [0, 0, 0.0] for _lo, _hi, n in BAR_BANDS}
+           for k in ("all", "o", "u")}             # n, hits, P/L
     _cseen: set = set()
     for (key, st) in _stamps.items():
         if not isinstance(key, tuple) or key in _cseen or key not in final:
@@ -3234,21 +3238,35 @@ def main() -> None:
             continue
         _cseen.add(key)
         gap = best / need - 1
+        side = {"O": "o", "U": "u"}.get(st[5][:1])
         for lo, hi, n in BAR_BANDS:
             if lo <= gap < hi:
-                a = _cb[n]
-                a[0] += 1
-                a[1] += got[1]
-                a[2] += got[0] * (best - 1) if got[0] > 0 else got[0]
+                for k in ("all", side):
+                    if not k:
+                        continue
+                    a = _cb[k][n]
+                    a[0] += 1
+                    a[1] += got[1]
+                    a[2] += got[0] * (best - 1) if got[0] > 0 else got[0]
                 break
     over3 = ' class="over3"'
-    cards_bands = "".join(
-        f"<tr{over3 if lo >= .03 else ''}><td>{n}</td>"
-        + (f"<td>{a[0]}</td><td>{a[1] / a[0] * 100:.1f}%</td>"
-           f"<td>{a[2] / a[0] * 100:+.1f}%</td></tr>" if a[0] else
-           "<td>0</td><td>—</td><td>—</td></tr>")
-        for lo, _hi, n in BAR_BANDS for a in (_cb[n],))
-    cards_bands_n = sum(a[0] for a in _cb.values())
+    _side_word = {"all": "", "o": " over", "u": " under"}
+
+    def _cards_tpl(k: str) -> str:
+        rows = "".join(
+            f"<tr{over3 if lo >= .03 else ''}><td>{n}</td>"
+            + (f"<td>{a[0]}</td><td>{a[1] / a[0] * 100:.1f}%</td>"
+               f"<td>{a[2] / a[0] * 100:+.1f}%</td></tr>" if a[0] else
+               "<td>0</td><td>—</td><td>—</td></tr>")
+            for lo, _hi, n in BAR_BANDS for a in (_cb[k][n],))
+        tot = sum(a[0] for a in _cb[k].values())
+        return (f'<template id="cardbands-{k}"><table class="bandtable"><tr>'
+                f"<th>band</th><th>cards</th><th>hit</th><th>ROI</th></tr>"
+                f"{rows}</table><div class=\"s\">{tot} settled"
+                f"{_side_word[k]} cards with a first-sight quote, at the "
+                "feed's BEST EU price — what the market offered, often at a "
+                "book you cannot reach, so optimistic for you</div></template>")
+    cards_bands_tpl = "".join(_cards_tpl(k) for k in ("all", "o", "u"))
 
     def _short(note: str, cap: int = 64) -> str:
         """The Found bets cell gets the book and the first clause; the
@@ -3298,6 +3316,7 @@ def main() -> None:
         gap = _bar_gap(b)
         if gap is not None and b["mark"] != "open":
             g += (f' data-gap="{gap:.4f}" data-r="{b["ret"].rstrip("x")}"'
+                  f' data-sd="{ {"O": "o", "U": "u"}.get(b["lane"][:1], "") }"'
                   f' data-st="{b["stake"]:.2f}"'
                   + (' data-ip="1"' if "in-play" in b["note"] else ""))
         # A taken bet is one lane, not three, so it carries a single
@@ -3749,6 +3768,10 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .gapbar b {{ color:var(--fg, inherit); font-variant-numeric:tabular-nums; }}
 .gapbar.over3 b {{ color:#e9a34a; }}
 .fc.bands {{ text-align:left; }}
+.sidebar {{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }}
+.sidebtn {{ background:transparent; color:var(--dim); border:1px solid var(--edge);
+  border-radius:14px; padding:4px 12px; font:inherit; font-size:12px; cursor:pointer; }}
+.sidebtn.on {{ color:#e9a34a; border-color:#e9a34a; }}
 .bandbtn {{ margin:0; }}
 .bandgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }}
 @media (max-width:700px) {{ .bandgrid {{ grid-template-columns:1fr; }} }}
@@ -4188,11 +4211,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   placeholder="filter — team, league, code, lane, tip 2 none… commas narrow: real madrid, team over">
  <div class="fcounts" id="fcounts"></div>
  <div class="fcap dim" id="fcap"></div>
- <template id="cardbands"><table class="bandtable"><tr><th>band</th>
-  <th>cards</th><th>hit</th><th>ROI</th></tr>{cards_bands}</table>
-  <div class="s">all {cards_bands_n} settled cards with a first-sight quote,
-  at the feed's BEST EU price — what the market offered, often at a book
-  you cannot reach, so optimistic for you</div></template>
+ {cards_bands_tpl}
  <details class="fhelp"><summary>what can I type in the filter?</summary>
   <div><b>anything on the card</b> — a team, a league, a country, a code,
   a rung (<code>o2.5</code>), a mark (<code>hit</code>, <code>miss</code>,
@@ -4802,11 +4821,13 @@ const BAR_BANDS = [[-9, -.05, "5%+ under"], [-.05, -.03, "3–5% under"],
   [.06, .10, "6–10% over"], [.10, 99, "10%+ over"]];
 function barBands() {{
   const pre = !!window._bandsPre;
+  const side = window._bandsSide || "all";
   const acc = BAR_BANDS.map(() => [0, 0, 0, 0]);   // n, hits, staked, P/L
   let tot = 0;
   for (const r of document.querySelectorAll("#t-bets tr[data-gap]")) {{
     if (r.style.display === "none") continue;
     if (pre && r.dataset.ip) continue;
+    if (side !== "all" && r.dataset.sd !== side) continue;
     const gap = parseFloat(r.dataset.gap), st = parseFloat(r.dataset.st),
           ret = parseFloat(r.dataset.r);
     const i = BAR_BANDS.findIndex(b => gap >= b[0] && gap < b[1]);
@@ -4823,11 +4844,17 @@ function barBands() {{
       + (a[2] ? (a[3] / a[2] * 100 >= 0 ? "+" : "")
                 + (a[3] / a[2] * 100).toFixed(1) + "%" : "—") + "</td></tr>";
   }}).join("");
-  const tpl = document.getElementById("cardbands");
-  return '<div class="bandgrid"><div><div class="l">your taken bets</div>'
+  const tpl = document.getElementById("cardbands-" + side);
+  const word = {{all: "", o: " over", u: " under"}}[side];
+  const pick = (k, label) => '<button class="sidebtn' + (side === k ? " on" : "")
+    + '" data-k="' + k + '" onclick="window._bandsSide=this.dataset.k;recount()">'
+    + label + "</button>";
+  return '<div class="sidebar">' + pick("all", "all lanes") + pick("o", "overs")
+    + pick("u", "unders") + "</div>"
+    + '<div class="bandgrid"><div><div class="l">your taken bets</div>'
     + '<table class="bandtable"><tr><th>band</th><th>bets</th><th>hit</th>'
     + "<th>ROI</th></tr>" + rows + "</table>"
-    + '<div class="s">' + tot + " settled bets in this filter on the card's "
+    + '<div class="s">' + tot + " settled" + word + " bets in this filter on the card's "
     + "own lane, at the price you PAID against the card's first-sight play "
     + "bar (buy-from less 3%). ROI on stake.</div>"
     + '<label class="s"><input type="checkbox"' + (pre ? " checked" : "")
