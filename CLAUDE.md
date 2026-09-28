@@ -109,7 +109,8 @@ market offered, never as what he would have got.
   inputs. Do not recompute them for display.
 - **No model identifiers** in commit messages, PR titles or bodies, code
   comments, or anything else pushed to the repository. Chat replies only.
-- Push every commit to **both** `main` and the working branch.
+- **Work directly in `main`.** (28 Sep: "always directly work in main".)
+  Check out `main`, commit there, push to `main`. No session branch.
 - PRE-ALFA 2: the engine and its rules are not touched while the run is
   live, except where he explicitly overrides it. Measure freely; changing
   a rule is his call.
