@@ -1007,10 +1007,10 @@
 2026-09-27 18:30	ESP-L2	LaLiga 2	Burgos v Eldense	U3.0 76.4% **+0.0%** · buy≥1.37 (+1.0% margin)	✅ **Eldense U1.5** 75.4% +4.1% (team) · buy≥1.38 (+4.2% margin)	✅ HIT — 1-0	✅ DNB1 70.6% +7.9% · buy≥1.49 · probation
 2026-09-27 18:30	ESP-L2	LaLiga 2	Eibar v Las Palmas	U3.0 76.4% **+0.0%** · buy≥1.40 (+1.0% margin)	— none	❌ MISS — 3-2	✅ 12 74.9% +2.7% · buy≥1.40 · probation
 2026-09-27 20:00	MEX-LMX	Liga MX	Pumas v Atlético San Luis	U4.25 83.2% **−1.1%** · buy≥1.23 (+5.4% margin)	— none	❌ MISS — 2-3	❌ DNB1 67.4% +5.2% · buy≥1.56 · probation
-2026-09-27 20:00	MAR-BP	Botola Pro	Maghreb de Fès v Renaissance Zemamra	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-09-27 20:00	MAR-BP	Botola Pro	Maghreb de Fès v Renaissance Zemamra	— no tip: engine abstained (thin history or an unresolved name)	—	FT 2-1 (no tip)	
 2026-09-27 21:00	ESP-L2	LaLiga 2	Real Oviedo v Sporting Gijón	U3.0 76.4% **+0.0%** · buy≥1.43 (+1.0% margin)	✅ **Sporting Gijón U1.5** 75.4% +4.1% (team) · buy≥1.38 (+4.2% margin)	✅ HIT — 2-0	
 2026-09-27 21:00	BRA-SB	Brasileirão Série B	CRB v Cuiabá	O1.0 88.5% **−0.8%** · buy≥1.21 (+6.1% margin)	✅ O1.75 68.4% +3.1% (floor −6.6) · buy≥1.58 (+0.6% margin)	✅ HIT — 3-0	
-2026-09-27 22:00	MAR-BP	Botola Pro	KACM v Hassania Agadir	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-09-27 22:00	MAR-BP	Botola Pro	KACM v Hassania Agadir	— no tip: engine abstained (thin history or an unresolved name)	—	FT 2-3 (no tip)	
 2026-09-27 23:00	COL-PA	Categoría Primera A	Jaguares v Alianza Valledupar	U3.0 79.4% **+0.0%** · buy≥1.33 (+1.2% margin)	— none	✅ HIT — 1-2	❌ DNB1 72.8% +8.6% · buy≥1.44 · probation
 2026-09-27 23:30	BRA-SB	Brasileirão Série B	Fortaleza v Athletic Club	O1.0 88.5% **−0.8%** · buy≥1.22 (+6.1% margin)	✅ O1.75 66.5% +1.3% (floor −8.5) · buy≥1.64 (+0.5% margin)	✅ HIT — 2-2	
 2026-09-28 01:00	MLS	MLS	Columbus Crew v Inter Miami	O1.5 80.5% **−1.0%** · buy≥1.27 (+6.1% margin)	❌ **Inter Miami O1.5** 60.1% +20.1% (team) · buy≥1.72 (+3.2% margin)	✅ HIT — 2-1	✅ 12 79.1% +3.8% · buy≥1.33 · probation
@@ -1162,3 +1162,129 @@
 2026-10-03 23:30	BRA-SB	Brasileirão Série B	Botafogo-SP v Vila Nova	O1.0 88.5% **−0.9%** · buy≥1.23 (+6.1% margin)	— none		
 2026-10-04 00:15	ARG-PD	Primera División	Argentinos Juniors v CA Tigre BA	O1.0 88.0% +1.0% · buy≥1.25 (+5.0% margin)	— none		
 2026-10-04 02:30	ARG-PD	Primera División	Atlético Huracán v Aldosivi Mar del Plata	U3.0 87.6% +2.5% · buy≥1.23 (+4.7% margin)	U2.75 70.5% +3.8% (floor −4.5) · buy≥1.35 (+3.9% margin)		
+2026-09-28 11:30	INT-FR	Friendlies	Turkmenistan v Palestine	U3.0 77.0% +5.9% · buy≥1.35 (+9.2% margin)	U2.75 65.8% +16.7% (floor −9.2) · buy≥1.43 (+3.6% margin)		
+2026-09-28 12:25	INT-FR	Friendlies	Japan v Venezuela	O1.5 77.4% +2.1% · buy≥1.37 (+5.9% margin)	**Japan O0.5** 81.6% +6.5% (team) · buy≥1.35 (+10.4% margin)		DNB1 75.9% +10.0% · buy≥1.38 · probation
+2026-09-28 13:00	INT-FR	Friendlies	South Korea v Uruguay	O1.5 77.7% +2.3% · buy≥1.36 (+6.0% margin)	**South Korea O0.5** 82.9% +7.8% (team) · buy≥1.34 (+10.7% margin)		DNB1 76.6% +10.6% · buy≥1.37 · probation
+2026-09-28 14:00	INT-FR	Friendlies	Tajikistan v Palestine	U3.0 76.9% +5.7% · buy≥1.54 (+9.2% margin)	U2.75 55.7% +6.7% (floor −19.3) · buy≥1.65 (+2.8% margin)		DNB1 70.9% +4.9% · buy≥1.48 · probation
+2026-09-28 20:45	INT-UEFA	Nations League & qualifiers	Türkiye v Italy	O1.5 81.1% +2.5% · buy≥1.26 (+5.7% margin)	**Italy O1.5** 56.3% +22.9% (team) · buy≥1.83 (+2.9% margin)		
+2026-09-28 21:00	INT-CONCACAF	Nations League & qualifiers	Guadeloupe v Barbados	O1.5 72.6% **−10.4%** · buy≥1.24 (+8.5% margin)	**Barbados O1.5** 55.2% +18.4% (team) · buy≥1.86 (+2.8% margin)		
+2026-09-28 23:00	INT-CONCACAF	Nations League & qualifiers	Cuba v Bonaire	U4.25 73.6% **−4.3%** · buy≥1.43 (+8.8% margin)	**Cuba O0.5** 78.9% +6.8% (team) · buy≥1.44 (+13.6% margin)		
+2026-09-29 00:00	INT-CONCACAF	Nations League & qualifiers	Suriname v Martinique	U4.25 73.4% **−4.5%** · buy≥1.40 (+8.7% margin)	**Suriname O0.5** 82.0% +10.0% (team) · buy≥1.39 (+14.3% margin)		
+2026-09-29 00:00	INT-FR	Friendlies	Kyrgyz Republic v Maldives	U3.0 76.7% +5.5% · buy≥1.55 (+9.1% margin)	U2.75 55.5% +6.4% (floor −19.5) · buy≥1.66 (+2.8% margin)		DNB1 69.2% +3.2% · buy≥1.52 · probation
+2026-09-29 02:00	INT-CONCACAF	Nations League & qualifiers	Jamaica v Honduras	U4.25 73.3% **−4.6%** · buy≥1.37 (+8.7% margin)	U3.75 63.8% +3.8% (floor −11.2) · buy≥1.57 (+9.4% margin)		DNB1 67.4% +10.7% · buy≥1.56 · probation
+2026-09-29 02:00	INT-CONCACAF	Nations League & qualifiers	St. Kitts and Nevis v Grenada	O1.5 72.9% **−10.1%** · buy≥1.28 (+8.6% margin)	**Grenada O0.5** 78.2% +11.0% (team) · buy≥1.45 (+13.4% margin)		
+2026-09-29 02:00	INT-CONCACAF	Nations League & qualifiers	St. Lucia v Bermuda	U4.25 73.4% **−4.5%** · buy≥1.39 (+8.7% margin)	**St. Lucia O0.5** 85.9% +13.9% (team) · buy≥1.34 (+15.1% margin)		
+2026-09-29 04:00	INT-CONCACAF	Nations League & qualifiers	Guatemala v El Salvador	U4.25 73.0% **−4.8%** · buy≥1.32 (+8.6% margin)	**El Salvador U1.5** 74.1% +10.9% (team) · buy≥1.52 (+12.4% margin)		DNB1 76.6% +19.9% · buy≥1.37 · probation
+2026-09-29 12:00	INT-FR	Friendlies	Australia v Brazil	O1.5 77.0% +1.7% · buy≥1.26 (+5.8% margin)	**Brazil O1.5** 61.7% +33.7% (team) · buy≥1.67 (+3.3% margin)		12 78.6% +3.2% · buy≥1.34 · probation
+2026-09-29 18:00	INT-FR	Friendlies	Russia v Iran	O1.5 77.5% +2.2% · buy≥1.34 (+6.0% margin)	**Russia O0.5** 81.6% +6.5% (team) · buy≥1.35 (+10.4% margin)		DNB1 75.9% +10.0% · buy≥1.38 · probation
+2026-09-29 20:45	INT-UEFA	Nations League & qualifiers	Czechia v England	O1.5 80.9% +2.3% · buy≥1.22 (+5.7% margin)	**England O1.5** 60.5% +27.0% (team) · buy≥1.71 (+3.2% margin)		
+2026-09-29 21:00	INT-CONCACAF	Nations League & qualifiers	British Virgin Islands v Turks and Caicos Islands	U3.0 73.7% +13.7% · buy≥1.59 (+12.3% margin)	U2.75 55.6% +17.8% (floor −19.4) · buy≥1.65 (+2.8% margin)		
+2026-09-29 22:00	INT-CONCACAF	Nations League & qualifiers	US Virgin Islands v Bahamas	U4.25 73.1% **−4.8%** · buy≥1.33 (+8.7% margin)	**US Virgin Islands O0.5** 86.1% +14.1% (team) · buy≥1.34 (+15.1% margin)		
+2026-09-29 23:00	INT-CONCACAF	Nations League & qualifiers	French Guiana v Sint Maarten	U4.25 73.5% **−4.4%** · buy≥1.40 (+8.7% margin)	**French Guiana O0.5** 85.0% +13.0% (team) · buy≥1.35 (+14.9% margin)		
+2026-09-30 01:00	INT-CONCACAF	Nations League & qualifiers	Anguilla v Aruba	U4.25 72.8% **−5.1%** · buy≥1.27 (+8.6% margin)	U3.75 71.4% +11.4% (floor −3.6) · buy≥1.45 (+11.7% margin)		
+2026-09-30 01:00	INT-FR	Friendlies	Argentina v Bolivia	O1.5 77.2% +1.8% · buy≥1.28 (+5.9% margin)	**Argentina O1.5** 80.3% +33.9% (team) · buy≥1.37 (+10.1% margin)		DNB1 92.2% +26.3% · buy≥1.14 · probation
+2026-09-30 02:00	INT-FR	Friendlies	United States v Chile	O1.5 76.9% +1.5% · buy≥1.23 (+5.8% margin)	**Chile O1.5** 59.7% +31.6% (team) · buy≥1.73 (+3.2% margin)		12 79.8% +4.4% · buy≥1.32 · probation
+2026-09-30 04:00	INT-CONCACAF	Nations League & qualifiers	Belize v St. Vincent and the Grenadines	O1.5 73.0% **−10.1%** · buy≥1.29 (+8.6% margin)	**Belize O0.5** 80.5% +8.5% (team) · buy≥1.42 (+13.9% margin)		
+2026-09-30 04:30	INT-FR	Friendlies	Mexico v Peru	O1.5 77.5% +2.2% · buy≥1.34 (+6.0% margin)	**Mexico O1.5** 60.6% +14.2% (team) · buy≥1.70 (+3.3% margin)		DNB1 82.0% +16.1% · buy≥1.28 · probation
+2026-09-30 06:00	INT-FR	Friendlies	Papua New Guinea v Solomon Islands	U3.0 77.6% +6.5% · buy≥1.49 (+9.4% margin)	U2.75 58.4% +9.3% (floor −16.6) · buy≥1.58 (+3.1% margin)		
+2026-09-30 09:00	INT-FR	Friendlies	Fiji v New Caledonia	O1.5 77.1% +1.7% · buy≥1.37 (+5.8% margin)	— none		
+2026-09-30 15:00	INT-FR	Friendlies	Seychelles v Sri Lanka	U3.0 77.0% +5.9% · buy≥1.34 (+9.2% margin)	**Seychelles U1.5** 75.4% +21.8% (team) · buy≥1.44 (+8.8% margin)		
+2026-09-30 16:00	INT-FR	Friendlies	Botswana v Mozambique	U3.0 77.4% +6.3% · buy≥1.45 (+9.3% margin)	U2.75 60.0% +11.0% (floor −15.0) · buy≥1.55 (+3.2% margin)		
+2026-09-30 18:00	INT-FR	Friendlies	Lithuania v Andorra	U3.0 76.9% +5.7% · buy≥1.31 (+9.2% margin)	**Lithuania U1.5** 75.1% +21.5% (team) · buy≥1.45 (+8.7% margin)		
+2026-09-30 20:00	INT-FR	Friendlies	Mauritius v Djibouti	U3.0 77.5% +6.4% · buy≥1.46 (+9.3% margin)	U2.75 59.4% +10.4% (floor −15.6) · buy≥1.56 (+3.2% margin)		
+2026-10-01 04:00	INT-FR	Friendlies	Cook Islands v Tahiti	— no tip: engine abstained (thin history or an unresolved name)	—		
+2026-10-01 16:00	INT-FR	Friendlies	Uzbekistan v Syria	U3.0 76.2% +5.0% · buy≥1.56 (+9.0% margin)	**Syria U1.5** 75.4% +3.5% (team) · buy≥1.40 (+5.4% margin)		DNB1 73.4% +7.5% · buy≥1.43 · probation
+2026-10-01 18:00	INT-UEFA	Nations League & qualifiers	Azerbaijan v Liechtenstein	U3.0 81.4% +14.5% · buy≥1.41 (+9.2% margin)	U2.75 62.2% +17.8% (floor −12.8) · buy≥1.50 (+3.4% margin)		DNB1 66.2% +9.8% · buy≥1.59 · probation
+2026-10-01 20:00	INT-FR	Friendlies	Maldives v Lebanon	U3.0 77.6% +6.4% · buy≥1.49 (+9.4% margin)	U2.75 58.4% +9.4% (floor −16.6) · buy≥1.58 (+3.1% margin)		
+2026-10-01 20:00	INT-FR	Friendlies	Panama v New Zealand	U4.25 76.7% **−9.4%** · buy≥1.22 (+5.7% margin)	U3.75 73.4% +2.3% (floor −1.6) · buy≥1.32 (+4.5% margin)		
+2026-10-01 20:45	INT-UEFA	Nations League & qualifiers	Israel v Kosovo	O1.5 81.4% +2.7% · buy≥1.29 (+5.8% margin)	**Kosovo O0.5** 81.5% +15.7% (team) · buy≥1.34 (+9.2% margin)		
+2026-10-01 20:45	INT-UEFA	Nations League & qualifiers	Malta v Gibraltar	U3.0 79.9% +13.1% · buy≥1.45 (+8.8% margin)	U2.75 59.6% +15.1% (floor −15.4) · buy≥1.56 (+3.2% margin)		DNB1 70.3% +13.9% · buy≥1.49 · probation
+2026-10-01 20:45	INT-UEFA	Nations League & qualifiers	Republic of Ireland v Austria	O1.5 81.3% +2.7% · buy≥1.29 (+5.8% margin)	**Austria O0.5** 79.0% +13.2% (team) · buy≥1.37 (+8.5% margin)		
+2026-10-01 21:00	INT-CONCACAF	Nations League & qualifiers	British Virgin Islands v Montserrat	U4.25 72.6% **−5.2%** · buy≥1.25 (+8.5% margin)	U3.75 73.4% +13.4% (floor −1.6) · buy≥1.42 (+12.2% margin)		
+2026-10-01 22:00	INT-CONCACAF	Nations League & qualifiers	US Virgin Islands v St. Martin	O1.5 72.9% **−10.1%** · buy≥1.28 (+8.6% margin)	**St. Martin O1.5** 71.0% +34.3% (team) · buy≥1.57 (+11.6% margin)		
+2026-10-01 23:00	INT-CONCACAF	Nations League & qualifiers	Dominica v Guyana	O1.5 73.1% **−9.9%** · buy≥1.31 (+8.7% margin)	**Guyana O1.5** 63.6% +26.8% (team) · buy≥1.72 (+9.3% margin)		
+2026-10-02 00:00	INT-CONCACAF	Nations League & qualifiers	Curaçao v Trinidad and Tobago	O1.5 73.0% **−10.0%** · buy≥1.29 (+8.6% margin)	**Curaçao O0.5** 83.0% +10.9% (team) · buy≥1.38 (+14.5% margin)		
+2026-10-02 01:00	INT-CONCACAF	Nations League & qualifiers	Anguilla v Antigua and Barbuda	U4.25 72.6% **−5.2%** · buy≥1.25 (+8.5% margin)	U3.75 73.4% +13.4% (floor −1.6) · buy≥1.42 (+12.2% margin)		
+2026-10-02 02:00	INT-CONCACAF	Nations League & qualifiers	Cayman Islands v Puerto Rico	U4.25 73.2% **−4.6%** · buy≥1.36 (+8.7% margin)	**Puerto Rico O0.5** 82.8% +15.6% (team) · buy≥1.38 (+14.4% margin)		
+2026-10-02 02:00	INT-CONCACAF	Nations League & qualifiers	Dominican Republic v Haiti	O2.25 73.8% +11.6% · buy≥1.37 (+12.3% margin)	**Dominican Republic O1.5** 66.8% +17.6% (team) · buy≥1.65 (+10.4% margin)		
+2026-10-02 04:00	INT-CONCACAF	Nations League & qualifiers	Nicaragua v Costa Rica	U4.25 73.3% **−4.5%** · buy≥1.38 (+8.7% margin)	**Costa Rica O0.5** 80.7% +13.5% (team) · buy≥1.41 (+14.0% margin)		
+2026-10-02 13:00	INT-FR	Friendlies	South Korea v Venezuela	O1.5 77.6% +2.3% · buy≥1.35 (+6.0% margin)	**South Korea O0.5** 82.9% +7.8% (team) · buy≥1.34 (+10.7% margin)		DNB1 75.1% +9.1% · buy≥1.40 · probation
+2026-10-02 13:35	INT-FR	Friendlies	China v Turkmenistan	U3.0 75.3% +4.2% · buy≥1.59 (+8.7% margin)	**China O0.5** 81.6% +6.5% (team) · buy≥1.35 (+10.4% margin)		DNB1 75.9% +10.0% · buy≥1.38 · probation
+2026-10-02 16:00	INT-UEFA	Nations League & qualifiers	Kazakhstan v Moldova	U4.25 80.7% **−2.3%** · buy≥1.21 (+5.6% margin)	**Kazakhstan O0.5** 80.9% +8.2% (team) · buy≥1.35 (+9.0% margin)		DNB1 70.9% +14.5% · buy≥1.48 · probation
+2026-10-02 17:00	INT-FR	Friendlies	Mauritius v Sri Lanka	U3.0 77.1% +6.0% · buy≥1.37 (+9.2% margin)	**Mauritius U1.5** 75.4% +21.8% (team) · buy≥1.44 (+8.8% margin)		
+2026-10-02 18:00	INT-UEFA	Nations League & qualifiers	Cyprus v Armenia	U4.25 80.9% **−2.2%** · buy≥1.24 (+5.7% margin)	**Cyprus O0.5** 84.2% +11.5% (team) · buy≥1.30 (+9.9% margin)		DNB1 76.2% +19.8% · buy≥1.38 · probation
+2026-10-02 18:00	INT-UEFA	Nations League & qualifiers	Latvia v Montenegro	U4.25 80.8% **−2.2%** · buy≥1.23 (+5.6% margin)	U3.75 72.5% +5.7% (floor −2.5) · buy≥1.33 (+4.1% margin)		
+2026-10-02 20:00	INT-FR	Friendlies	Congo DR v Uganda	U3.0 77.3% +6.2% · buy≥1.42 (+9.3% margin)	U2.75 61.6% +12.5% (floor −13.4) · buy≥1.51 (+3.3% margin)		DNB1 68.3% +2.4% · buy≥1.54 · probation
+2026-10-02 20:45	INT-UEFA	Nations League & qualifiers	Belgium v Türkiye	O1.5 80.9% +2.2% · buy≥1.22 (+5.7% margin)	**Belgium O1.5** 61.1% +15.5% (team) · buy≥1.69 (+3.3% margin)		DNB1 77.9% +21.5% · buy≥1.35 · probation
+2026-10-02 20:45	INT-UEFA	Nations League & qualifiers	Bosnia-Herzegovina v Sweden	O1.5 80.8% +2.2% · buy≥1.31 (+5.6% margin)	**Bosnia-Herzegovina O0.5** 82.3% +9.6% (team) · buy≥1.33 (+9.4% margin)		
+2026-10-02 20:45	INT-UEFA	Nations League & qualifiers	Faroe Islands v Slovakia	U4.25 81.0% **−2.0%** · buy≥1.26 (+5.7% margin)	U3.75 69.6% +2.8% (floor −5.4) · buy≥1.33 (+0.7% margin)		
+2026-10-02 20:45	INT-UEFA	Nations League & qualifiers	France v Italy	O1.5 80.8% +2.1% · buy≥1.20 (+5.6% margin)	**France O1.5** 60.6% +15.0% (team) · buy≥1.70 (+3.2% margin)		
+2026-10-02 20:45	INT-UEFA	Nations League & qualifiers	Hungary v Georgia	U4.25 81.2% **−1.8%** · buy≥1.29 (+5.7% margin)	**Hungary O0.5** 81.0% +8.3% (team) · buy≥1.35 (+9.1% margin)		
+2026-10-02 20:45	INT-UEFA	Nations League & qualifiers	Poland v Romania	O1.5 81.4% +2.7% · buy≥1.29 (+5.8% margin)	**Poland O0.5** 81.7% +9.0% (team) · buy≥1.34 (+9.2% margin)		
+2026-10-02 20:45	INT-UEFA	Nations League & qualifiers	Ukraine v Northern Ireland	U4.25 81.0% **−2.0%** · buy≥1.26 (+5.7% margin)	U3.75 69.7% +2.9% (floor −5.3) · buy≥1.33 (+0.7% margin)		
+2026-10-02 21:00	INT-CONCACAF	Nations League & qualifiers	St. Lucia v Guadeloupe	O1.5 73.1% **−9.9%** · buy≥1.30 (+8.6% margin)	**Guadeloupe O1.5** 57.9% +21.1% (team) · buy≥1.82 (+5.2% margin)		
+2026-10-02 23:00	INT-CONCACAF	Nations League & qualifiers	St. Kitts and Nevis v Cuba	O1.5 73.0% **−10.0%** · buy≥1.29 (+8.6% margin)	**St. Kitts and Nevis O0.5** 80.3% +8.3% (team) · buy≥1.42 (+13.9% margin)		
+2026-10-03 00:00	INT-CONCACAF	Nations League & qualifiers	Suriname v Guatemala	U4.25 73.5% **−4.4%** · buy≥1.42 (+8.8% margin)	**Suriname O0.5** 80.8% +8.8% (team) · buy≥1.41 (+14.0% margin)		
+2026-10-03 00:30	BRA-SB	Brasileirão Série B	São Bernardo v Clube de Regatas Brasil	O1.0 88.5% **−0.8%** · buy≥1.23 (+6.1% margin)	— none		
+2026-10-03 02:00	INT-CONCACAF	Nations League & qualifiers	Barbados v Bermuda	O1.5 72.8% **−10.2%** · buy≥1.27 (+8.6% margin)	**Barbados O1.5** 71.6% +22.3% (team) · buy≥1.56 (+11.7% margin)		DNB1 81.6% +24.9% · buy≥1.29 · probation
+2026-10-03 02:00	INT-CONCACAF	Nations League & qualifiers	Bonaire v Grenada	U4.25 73.5% **−4.4%** · buy≥1.42 (+8.8% margin)	U3.75 61.1% +1.0% (floor −13.9) · buy≥1.57 (+5.1% margin)		
+2026-10-03 02:00	INT-CONCACAF	Nations League & qualifiers	Martinique v Honduras	U4.25 73.1% **−4.8%** · buy≥1.34 (+8.7% margin)	U3.75 66.3% +6.3% (floor −8.7) · buy≥1.53 (+10.2% margin)		
+2026-10-03 02:00	INT-FR	Friendlies	Colombia v Paraguay	O1.5 77.4% +2.0% · buy≥1.31 (+5.9% margin)	**Colombia O1.5** 57.5% +11.1% (team) · buy≥1.79 (+3.0% margin)		DNB1 76.8% +10.8% · buy≥1.37 · probation
+2026-10-03 04:00	INT-CONCACAF	Nations League & qualifiers	El Salvador v Jamaica	U4.25 73.1% **−4.8%** · buy≥1.33 (+8.6% margin)	U3.75 67.3% +7.3% (floor −7.7) · buy≥1.51 (+10.5% margin)		
+2026-10-03 15:00	INT-UEFA	Nations League & qualifiers	Finland v Albania	U4.25 81.0% **−2.1%** · buy≥1.25 (+5.7% margin)	U3.75 70.2% +3.4% (floor −4.8) · buy≥1.33 (+0.7% margin)		
+2026-10-03 16:00	ENG-L1	League One	Barnsley v Milton Keynes Dons	U4.25 83.0% **−4.5%** · buy≥1.22 (+6.1% margin)	— none		
+2026-10-03 16:00	ENG-L1	League One	Bromley FC v Wycombe Wanderers	U4.25 83.2% **−4.3%** · buy≥1.24 (+6.1% margin)	— none		
+2026-10-03 16:00	ENG-L1	League One	Luton v Doncaster Rovers	O1.5 78.2% +4.6% · buy≥1.38 (+7.9% margin)	**Luton O0.5** 78.9% +2.7% (team) · buy≥1.33 (+5.0% margin)		
+2026-10-03 16:00	ENG-L1	League One	Peterborough United v Notts County	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.9% +1.6% (floor −0.1) · buy≥1.27 (+1.8% margin)		
+2026-10-03 16:00	ENG-L1	League One	Wigan Athletic v Mansfield Town	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.6% +1.4% (floor −0.4) · buy≥1.27 (+1.6% margin)		
+2026-10-03 16:00	ENG-L1	League One	Wimbledon v Stevenage	U3.0 79.6% +6.4% · buy≥1.46 (+8.6% margin)	**Wimbledon U1.5** 73.6% +15.3% (team) · buy≥1.41 (+4.1% margin)		
+2026-10-03 16:00	ENG-L2	League Two	Colchester United v Port Vale	U4.25 84.4% **−2.6%** · buy≥1.24 (+3.4% margin)	O1.75 77.3% +3.1% (floor −0.7) · buy≥1.36 (+1.1% margin)		
+2026-10-03 16:00	ENG-L2	League Two	Northampton Town v Oldham Athletic	U4.25 87.5% **+0.5%** · buy≥1.22 (+5.2% margin)	— none		
+2026-10-03 16:00	ENG-L2	League Two	Walsall v Crawley Town	U4.25 88.0% **+1.0%** · buy≥1.21 (+5.3% margin)	U3.75 74.0% +1.5% (floor −4.0) · buy≥1.27 (+0.9% margin)		
+2026-10-03 16:00	INT-FR	Friendlies	India v Brazil	O1.5 77.4% +2.1% · buy≥1.32 (+5.9% margin)	**Brazil O1.5** 67.0% +38.9% (team) · buy≥1.55 (+3.7% margin)		12 80.3% +4.8% · buy≥1.31 · probation
+2026-10-03 17:00	INT-FR	Friendlies	Russia v Namibia	O1.5 75.7% **+0.3%** · buy≥1.39 (+5.5% margin)	**Russia O0.5** 84.1% +9.0% (team) · buy≥1.32 (+11.0% margin)		DNB1 78.7% +12.7% · buy≥1.33 · probation
+2026-10-03 18:00	INT-UEFA	Nations League & qualifiers	Belarus v San Marino	U3.0 79.7% +12.9% · buy≥1.46 (+8.7% margin)	U2.75 59.3% +14.8% (floor −15.7) · buy≥1.56 (+3.1% margin)		DNB1 72.1% +15.7% · buy≥1.46 · probation
+2026-10-03 18:00	INT-UEFA	Nations League & qualifiers	Croatia v England	O1.5 80.7% +2.1% · buy≥1.20 (+5.6% margin)	O2.25 71.3% +15.7% (floor −3.7) · buy≥1.33 (+4.0% margin)		
+2026-10-03 18:00	INT-UEFA	Nations League & qualifiers	Estonia v Luxembourg	U4.25 80.7% **−2.4%** · buy≥1.20 (+5.6% margin)	U3.75 74.8% +8.0% (floor −0.2) · buy≥1.31 (+5.3% margin)		
+2026-10-03 18:00	INT-UEFA	Nations League & qualifiers	Iceland v Bulgaria	U4.25 81.0% **−2.1%** · buy≥1.25 (+5.7% margin)	**Iceland O1.5** 59.5% +13.9% (team) · buy≥1.73 (+3.2% margin)		DNB1 80.5% +24.1% · buy≥1.31 · probation
+2026-10-03 20:00	INT-FR	Friendlies	Canada v Peru	O1.5 77.4% +2.0% · buy≥1.37 (+5.9% margin)	**Canada O0.5** 84.0% +8.9% (team) · buy≥1.32 (+11.0% margin)		DNB1 78.5% +12.6% · buy≥1.34 · probation
+2026-10-03 20:00	INT-FR	Friendlies	Sri Lanka v Djibouti	U3.0 77.0% +5.9% · buy≥1.54 (+9.2% margin)	U2.75 55.9% +6.8% (floor −19.1) · buy≥1.65 (+2.8% margin)		
+2026-10-03 20:00	INT-FR	Friendlies	Tunisia v Mali	U3.0 75.1% +4.0% · buy≥1.59 (+8.7% margin)	— none		
+2026-10-03 20:45	INT-UEFA	Nations League & qualifiers	North Macedonia v Scotland	U4.25 81.2% **−1.9%** · buy≥1.28 (+5.7% margin)	U3.75 67.9% +1.1% (floor −7.1) · buy≥1.36 (+0.6% margin)		
+2026-10-03 20:45	INT-UEFA	Nations League & qualifiers	Spain v Czechia	O1.5 80.8% +2.2% · buy≥1.21 (+5.6% margin)	**Spain O1.5** 64.9% +19.3% (team) · buy≥1.60 (+3.6% margin)		12 80.9% +2.6% · buy≥1.30 · probation
+2026-10-03 20:45	INT-UEFA	Nations League & qualifiers	Switzerland v Slovenia	U4.25 81.1% **−2.0%** · buy≥1.27 (+5.7% margin)	**Switzerland O0.5** 82.5% +9.8% (team) · buy≥1.33 (+9.5% margin)		DNB1 78.0% +21.6% · buy≥1.35 · probation
+2026-10-03 21:00	INT-FR	Friendlies	Ivory Coast v Cameroon	U4.25 76.7% **−9.4%** · buy≥1.22 (+5.7% margin)	**Cameroon U1.5** 75.4% +3.5% (team) · buy≥1.40 (+5.4% margin)		
+2026-10-03 22:00	INT-FR	Friendlies	Argentina v Burkina Faso	O1.5 77.1% +1.7% · buy≥1.26 (+5.9% margin)	**Argentina O1.5** 72.3% +25.9% (team) · buy≥1.48 (+6.9% margin)		DNB1 88.6% +22.7% · buy≥1.18 · probation
+2026-10-03 23:00	INT-CONCACAF	Nations League & qualifiers	Sint Maarten v St. Vincent and the Grenadines	O1.5 73.0% **−10.0%** · buy≥1.30 (+8.6% margin)	**St. Vincent and the Grenadines O1.5** 52.0% +15.3% (team) · buy≥1.97 (+2.5% margin)		
+2026-10-03 23:30	BRA-SA	Brasileirão	Atletico Mineiro v Bragantino-SP	U4.25 82.9% **−5.8%** · buy≥1.24 (+6.8% margin)	O1.75 74.4% +2.5% (floor −0.6) · buy≥1.47 (+3.8% margin)		DNB1 72.3% +7.7% · buy≥1.45 · probation
+2026-10-04 04:00	INT-CONCACAF	Nations League & qualifiers	Belize v French Guiana	U4.25 73.6% **−4.3%** · buy≥1.44 (+8.8% margin)	**Belize O0.5** 82.4% +10.4% (team) · buy≥1.39 (+14.4% margin)		
+2026-10-04 04:00	INT-FR	Friendlies	United States v Mexico	O1.5 77.0% +1.6% · buy≥1.25 (+5.8% margin)	**Mexico O0.5** 82.7% +22.0% (team) · buy≥1.34 (+10.7% margin)		
+2026-10-04 14:00	ESP-L2	LaLiga 2	Real Sociedad B v Granada CF	U3.0 76.2% **+0.0%** · buy≥1.41 (+1.0% margin)	— none		
+2026-10-04 15:00	INT-FR	Friendlies	Comoros v Senegal	O1.5 75.4% **+0.0%** · buy≥1.40 (+5.4% margin)	— none		
+2026-10-04 15:00	INT-UEFA	Nations League & qualifiers	Azerbaijan v Lithuania	U3.0 77.0% +10.2% · buy≥1.51 (+7.2% margin)	U2.75 55.9% +11.4% (floor −19.1) · buy≥1.65 (+2.8% margin)		
+2026-10-04 16:00	INT-FR	Friendlies	Kyrgyz Republic v Lebanon	U3.0 77.5% +6.3% · buy≥1.46 (+9.3% margin)	U2.75 59.7% +10.6% (floor −15.3) · buy≥1.55 (+3.2% margin)		
+2026-10-04 16:15	ESP-L2	LaLiga 2	Sporting Gijón v Celta Fortuna	U3.0 76.2% **+0.0%** · buy≥1.35 (+1.0% margin)	**Celta Fortuna U1.5** 75.4% +4.4% (team) · buy≥1.38 (+4.2% margin)		DNB1 70.2% +7.6% · buy≥1.50 · probation
+2026-10-04 18:00	INT-UEFA	Nations League & qualifiers	Kosovo v Austria	O1.5 81.3% +2.6% · buy≥1.28 (+5.7% margin)	**Austria O0.5** 77.0% +11.2% (team) · buy≥1.39 (+7.2% margin)		
+2026-10-04 18:00	INT-UEFA	Nations League & qualifiers	Malta v Andorra	U3.0 79.0% +12.2% · buy≥1.48 (+8.5% margin)	U2.75 58.4% +14.0% (floor −16.6) · buy≥1.58 (+3.1% margin)		DNB1 65.3% +8.9% · buy≥1.61 · probation
+2026-10-04 18:30	ESP-L2	LaLiga 2	CD Castellón v AD Ceuta FC	U4.25 84.5% **−4.9%** · buy≥1.23 (+5.4% margin)	**CD Castellón O1.5** 60.2% +19.0% (team) · buy≥1.71 (+3.2% margin)		DNB1 82.7% +20.1% · buy≥1.27 · probation
+2026-10-04 18:30	ESP-L2	LaLiga 2	Las Palmas v Real Valladolid CF	U3.0 76.2% **+0.0%** · buy≥1.37 (+1.0% margin)	— none		DNB1 72.1% +9.5% · buy≥1.46 · probation
+2026-10-04 18:45	ARG-PD	Primera División	Sarmiento de Junin v River Plate	O1.0 89.5% +2.6% · buy≥1.22 (+5.4% margin)	O1.75 65.9% +5.5% (floor −9.1) · buy≥1.71 (+3.6% margin)		12 74.6% +6.2% · buy≥1.41 · probation
+2026-10-04 20:00	INT-FR	Friendlies	Egypt v South Africa	O1.5 77.7% +2.3% · buy≥1.36 (+6.0% margin)	— none		
+2026-10-04 20:45	INT-UEFA	Nations League & qualifiers	Greece v Germany	O1.5 81.2% +2.6% · buy≥1.28 (+5.7% margin)	**Germany O0.5** 81.1% +15.3% (team) · buy≥1.35 (+9.1% margin)		
+2026-10-04 20:45	INT-UEFA	Nations League & qualifiers	Netherlands v Serbia	O1.5 81.2% +2.5% · buy≥1.26 (+5.7% margin)	**Netherlands O1.5** 58.9% +13.3% (team) · buy≥1.75 (+3.1% margin)		DNB1 80.5% +24.1% · buy≥1.30 · probation
+2026-10-04 20:45	INT-UEFA	Nations League & qualifiers	Portugal v Norway	O1.5 80.6% +2.0% · buy≥1.19 (+5.6% margin)	**Norway O1.5** 52.5% +19.1% (team) · buy≥1.95 (+2.5% margin)		
+2026-10-04 20:45	INT-UEFA	Nations League & qualifiers	Republic of Ireland v Israel	O1.5 80.2% +1.6% · buy≥1.31 (+5.5% margin)	**Republic of Ireland O0.5** 81.5% +8.8% (team) · buy≥1.34 (+9.2% margin)		
+2026-10-04 20:45	INT-UEFA	Nations League & qualifiers	Wales v Denmark	O1.5 80.9% +2.3% · buy≥1.22 (+5.7% margin)	**Denmark O1.5** 53.0% +19.5% (team) · buy≥1.94 (+2.6% margin)		
+2026-10-04 21:00	ESP-L2	LaLiga 2	Girona FC v Mallorca	U4.25 84.4% **−5.0%** · buy≥1.21 (+5.4% margin)	— none		
+2026-10-04 21:00	INT-CONCACAF	Nations League & qualifiers	Guyana v Dominica	O1.5 73.1% **−9.9%** · buy≥1.31 (+8.7% margin)	**Guyana O1.5** 69.8% +20.6% (team) · buy≥1.59 (+11.2% margin)		DNB1 82.2% +25.6% · buy≥1.28 · probation
+2026-10-04 21:00	INT-CONCACAF	Nations League & qualifiers	Turks and Caicos Islands v British Virgin Islands	U3.0 73.7% +13.7% · buy≥1.59 (+12.3% margin)	U2.75 55.6% +17.8% (floor −19.4) · buy≥1.65 (+2.8% margin)		1X 74.6% +10.2% · buy≥1.41 · probation
+2026-10-04 21:00	INT-FR	Friendlies	Morocco v Ghana	O1.5 77.6% +2.2% · buy≥1.34 (+6.0% margin)	**Morocco O1.5** 63.9% +17.5% (team) · buy≥1.62 (+3.5% margin)		DNB1 85.4% +19.4% · buy≥1.23 · probation
+2026-10-04 22:00	ARG-PD	Primera División	Talleres v Belgrano de Cordoba	O1.0 87.1% **+0.1%** · buy≥1.27 (+4.3% margin)	**Talleres U1.5** 75.4% +8.2% (team) · buy≥1.38 (+4.2% margin)		
+2026-10-04 22:00	INT-CONCACAF	Nations League & qualifiers	Bahamas v US Virgin Islands	U4.25 73.0% **−4.8%** · buy≥1.32 (+8.6% margin)	**Bahamas O0.5** 80.8% +8.8% (team) · buy≥1.41 (+14.0% margin)		
+2026-10-05 00:00	INT-CONCACAF	Nations League & qualifiers	Puerto Rico v Cayman Islands	U4.25 73.4% **−4.5%** · buy≥1.39 (+8.7% margin)	**Puerto Rico O0.5** 87.9% +15.9% (team) · buy≥1.31 (+15.5% margin)		DNB1 82.3% +25.7% · buy≥1.28 · probation
+2026-10-05 00:00	INT-CONCACAF	Nations League & qualifiers	Trinidad and Tobago v Curaçao	O1.5 73.0% **−10.0%** · buy≥1.29 (+8.6% margin)	**Curaçao O0.5** 80.1% +12.9% (team) · buy≥1.42 (+13.8% margin)		
+2026-10-05 00:30	INT-FR	Friendlies	Bolivia v Gambia	U3.0 77.1% +6.0% · buy≥1.37 (+9.2% margin)	U2.75 64.3% +15.2% (floor −10.7) · buy≥1.46 (+3.5% margin)		
+2026-10-05 01:00	INT-CONCACAF	Nations League & qualifiers	Aruba v Anguilla	U4.25 72.8% **−5.1%** · buy≥1.27 (+8.6% margin)	**Anguilla U1.5** 75.4% +12.2% (team) · buy≥1.49 (+12.7% margin)		DNB1 77.0% +20.3% · buy≥1.36 · probation
+2026-10-05 02:00	INT-CONCACAF	Nations League & qualifiers	Costa Rica v Haiti	O1.5 72.9% **−10.1%** · buy≥1.28 (+8.6% margin)	**Costa Rica O0.5** 80.7% +8.7% (team) · buy≥1.41 (+14.0% margin)		
+2026-10-05 02:30	ARG-PD	Primera División	Estudiantes de Río Cuarto v Racing Club	U3.0 89.5% +4.4% · buy≥1.24 (+8.7% margin)	**Estudiantes de Río Cuarto U1.5** 75.4% +8.2% (team) · buy≥1.38 (+4.2% margin)		
+2026-10-05 04:00	INT-CONCACAF	Nations League & qualifiers	Nicaragua v Dominican Republic	O1.5 72.6% **−10.4%** · buy≥1.23 (+8.5% margin)	**Dominican Republic O1.5** 74.1% +37.4% (team) · buy≥1.52 (+12.4% margin)		

@@ -120,6 +120,18 @@ def build(days: int = DAYS, now: dt.datetime | None = None,
     for code in roster():
         if only and code not in only:
             continue
+        # An INT-* code is listed from ESPN below, never from here, even
+        # when the odds feed happens to carry it. Two reasons, and both
+        # bite: the feed's national-team SPELLINGS are the old English
+        # ones ("Turkey", "Czech Republic") which the store cannot
+        # resolve, and a code listed by both sources lands twice, since
+        # "Turkey v Italy" and "Türkiye v Italy" are different strings to
+        # any exact check. ESPN's names are the ones the store was built
+        # from and the ones the sweep grades against, so they are the
+        # spellings a card should carry. The feed still PRICES these
+        # cards; it just no longer names them.
+        if code.startswith("INT-"):
+            continue
         if not oa.carried(code):
             continue
         events = oa.fetch_league(code)
@@ -149,8 +161,65 @@ def build(days: int = DAYS, now: dt.datetime | None = None,
                                 f"{'home' if rh is None else 'away'} name unresolved"))
                 continue
             rows.append((ko.strftime("%Y-%m-%d %H:%M"), code, names[code], teams))
+
+    # ── the international codes, from ESPN ───────────────────────────────
+    # The odds feed does not list them. It carries the Nations League for
+    # UEFA and nothing at all for CONCACAF's, CAF's or AFC's, so
+    # oa.carried() is False for most of the set most of the year and the
+    # loop above never asks. The bettor, 28 Sep, on a CONCACAF Nations
+    # League round that had come and gone: "these matches weren't loaded
+    # in automatically." ESPN carries every one of them — it is what
+    # GRADES them already — so the fixture list comes from there instead,
+    # through the same three filters as everything above: inside the
+    # window, not already on the board, both names resolvable.
+    for ko_s, code, _name, teams in _espn_intl(days, now, only):
+        ko = dt.datetime.strptime(ko_s, "%Y-%m-%d %H:%M")
+        # slate() applies the window itself, but the check belongs here
+        # too: this loop must not depend on a helper's bounds. Its rows
+        # are board-clock naive, so compare in the board's own zone.
+        ko_aware = ko.replace(tzinfo=AMS)
+        if ko_aware < now or ko_aware > until:
+            continue
+        if " v " not in teams:
+            continue
+        home, away = (x.strip() for x in teams.split(" v ", 1))
+        key = (code, ko.date(), teams)
+        if key in seen:
+            continue
+        seen.add(key)
+        if _on_board(code, home, away, ko.date(), fixtures):
+            continue
+        df = store.load_results(code)
+        known = sorted(set(df["home"]) | set(df["away"])) if not df.empty else []
+        rh = _resolve(code, df, known, home)
+        ra = _resolve(code, df, known, away)
+        if rh is None or ra is None:
+            skipped.append((code, teams,
+                            f"{'home' if rh is None else 'away'} name unresolved"))
+            continue
+        rows.append((ko_s, code, names.get(code, code), teams))
     rows.sort()
     return rows, skipped
+
+
+def _espn_intl(days: int, now: dt.datetime,
+               only: list[str] | None) -> list[tuple]:
+    """Upcoming international fixtures from ESPN, best-effort.
+
+    scripts/internationals.slate already knows every confederation's
+    slugs and returns rows in the board's own clock; it is the same fetch
+    the history was built with. Wrapped so a network failure costs the
+    club half of the fill nothing."""
+    from scripts.internationals import SETS, slate
+    codes = [c for c in SETS if not only or c in only]
+    if not codes:
+        return []
+    try:
+        return slate(days, codes)
+    except Exception as exc:                      # noqa: BLE001
+        print(f"international slate failed ({type(exc).__name__}: {exc}) — "
+              "club leagues still filled", file=sys.stderr)
+        return []
 
 
 def clock(fixtures=None) -> list[tuple]:

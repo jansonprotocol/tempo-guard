@@ -240,7 +240,7 @@ def write_norms(codes: list[str]) -> None:
     print(f"config/leagues.json now holds {len(cfg)} leagues")
 
 
-def slate(days: int, codes: list[str]) -> None:
+def slate(days: int, codes: list[str]) -> list[tuple]:
     """Print futurematch slate rows for the international fixtures still to
     be played in the next `days` days.
 
@@ -297,10 +297,7 @@ def slate(days: int, codes: list[str]) -> None:
                 rows.append((board, code, name,
                              f"{h['team']['displayName']} v "
                              f"{a['team']['displayName']}"))
-    for r in sorted(set(rows)):
-        print("\t".join(r))
-    print(f"# {len(set(rows))} international fixtures in the next {days} days",
-          file=sys.stderr)
+    return sorted(set(rows))
 
 
 def main() -> None:
@@ -314,7 +311,12 @@ def main() -> None:
         return
 
     if "--slate" in args:
-        slate(int(args[args.index("--slate") + 1]), codes)
+        days = int(args[args.index("--slate") + 1])
+        rows = slate(days, codes)
+        for r in rows:
+            print("\t".join(r))
+        print(f"# {len(rows)} international fixtures in the next {days} days",
+              file=sys.stderr)
         return
 
     grand = 0

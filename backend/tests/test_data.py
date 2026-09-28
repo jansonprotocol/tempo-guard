@@ -3902,17 +3902,46 @@ def test_the_board_fills_itself_from_the_feed(monkeypatch, tmp_path):
     monkeypatch.setattr(oa, "fetch_league", feed)
     monkeypatch.setattr(oa, "_ACTIVE", {"soccer_epl"})
     monkeypatch.setattr(fs, "roster", lambda: ["ENG-PL", "INT-CAF", "INT-FR"])
+    # the international half comes from ESPN, never from the odds feed
+    # (28 Sep: a CONCACAF Nations League round came and went unlisted,
+    # because the feed has no key for it). Pinned here, no network.
+    intl = []
+    cc = sorted(set(store.load_results("INT-CONCACAF")["home"]))
+    c1, c2 = cc[0], cc[1]                      # names that store really holds
+
+    def espn(days, now, only):
+        intl.append((days, tuple(only) if only else None))
+        return [("2026-09-27 21:00", "INT-CONCACAF", "Nations League & qualifiers",
+                 f"{c1} v {c2}"),                    # resolvable, lands
+                ("2026-09-27 21:00", "INT-CONCACAF", "Nations League & qualifiers",
+                 f"{c1} v {c2}"),                    # the same fixture twice
+                ("2026-10-30 21:00", "INT-CONCACAF", "Nations League & qualifiers",
+                 f"{c2} v {c1}"),                    # beyond the window
+                ("2026-09-27 21:00", "INT-CONCACAF", "Nations League & qualifiers",
+                 f"Nowhere Rovers v {c1}")]          # refused, named
+    monkeypatch.setattr(fs, "_espn_intl", espn)
     monkeypatch.setattr(board, "load", lambda: [
         board.Fixture("2026-09-26 16:00", "ENG-PL", "Premier League", f"{a} v {b}",
                       "U4.25 84.0% +2.0% · buy≥1.20", "", "")])
     now = dt.datetime(2026, 9, 21, 9, 0, tzinfo=dt.timezone.utc)
     rows, skipped = fs.build(days=7, now=now)
-    assert rows == [("2026-09-27 17:30", "ENG-PL", "Premier League", f"{b} v {c}")], rows
-    assert skipped == [("ENG-PL", f"Nowhere Rovers v {a}", "home name unresolved")]
-    # a dormant national-team key and a code with no key are never asked
-    assert calls == ["ENG-PL"]
-    # --only narrows, and a league outside it costs nothing
-    calls.clear()
+    assert rows == [
+        ("2026-09-27 17:30", "ENG-PL", "Premier League", f"{b} v {c}"),
+        ("2026-09-27 21:00", "INT-CONCACAF", "Nations League & qualifiers", f"{c1} v {c2}"),
+    ], rows
+    assert sorted(skipped) == [
+        ("ENG-PL", f"Nowhere Rovers v {a}", "home name unresolved"),
+        ("INT-CONCACAF", f"Nowhere Rovers v {c1}", "home name unresolved"),
+    ], skipped
+    # the odds feed is asked for CLUB leagues only: an INT code is never
+    # listed from there even when the feed carries it, because its
+    # national-team spellings ("Turkey", "Czech Republic") do not resolve
+    # and a code listed twice lands twice
+    assert calls == ["ENG-PL"], calls
+    assert intl and intl[0][0] == 7
+    # --only narrows both halves, and a league outside it costs nothing
+    calls.clear(); intl.clear()
+    monkeypatch.setattr(fs, "_espn_intl", lambda d, n, o: [])
     assert fs.build(days=7, now=now, only=["INT-CAF"]) == ([], []) and calls == []
 
     # the daily job: lists, fills through the slate path, commits the
