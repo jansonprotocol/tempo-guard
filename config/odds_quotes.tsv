@@ -3,89 +3,92 @@
 # renderer reads it and never calls the API itself. Delete it and
 # the cards fall back to the engine's own buy>= bar.
 # fixture	which	lane	consensus	best	book	unibet_nl	books
-# unmatched	Azerbaijan v Liechtenstein	INT-UEFA	2026-10-01	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Malta v Gibraltar	INT-UEFA	2026-10-01	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Cyprus v Armenia	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Belgium v Türkiye	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Bosnia-Herzegovina v Sweden	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Faroe Islands v Slovakia	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	France v Italy	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Hungary v Georgia	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Poland v Romania	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Ukraine v Northern Ireland	INT-UEFA	2026-10-02	Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia | Greece v Netherlands
-# unmatched	Finland v Albania	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	Belarus v San Marino	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	Croatia v England	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	Estonia v Luxembourg	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	Iceland v Bulgaria	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	North Macedonia v Scotland	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	Spain v Czechia	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	Switzerland v Slovenia	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro
-# unmatched	Azerbaijan v Lithuania	INT-UEFA	2026-10-04	
-# unmatched	Kosovo v Austria	INT-UEFA	2026-10-04	
-# unmatched	Malta v Andorra	INT-UEFA	2026-10-04	
-# unmatched	Greece v Germany	INT-UEFA	2026-10-04	
-# unmatched	Netherlands v Serbia	INT-UEFA	2026-10-04	
-# unmatched	Portugal v Norway	INT-UEFA	2026-10-04	
-# unmatched	Republic of Ireland v Israel	INT-UEFA	2026-10-04	
-# unmatched	Wales v Denmark	INT-UEFA	2026-10-04	
+# unmatched	Cyprus v Armenia	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	Belgium v Türkiye	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	Bosnia-Herzegovina v Sweden	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	Faroe Islands v Slovakia	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	France v Italy	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	Hungary v Georgia	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	Poland v Romania	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	Ukraine v Northern Ireland	INT-UEFA	2026-10-02	Azerbaijan v Liechtenstein | Republic of Ireland v Austria | Denmark v Portugal | Germany v Serbia
+# unmatched	Finland v Albania	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	Belarus v San Marino	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	Croatia v England	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	Estonia v Luxembourg	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	Iceland v Bulgaria	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	North Macedonia v Scotland	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	Spain v Czechia	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	Switzerland v Slovenia	INT-UEFA	2026-10-03	Kazakhstan v Moldova | Latvia v Montenegro | Wales v Denmark
+# unmatched	Azerbaijan v Lithuania	INT-UEFA	2026-10-04	Wales v Denmark
+# unmatched	Kosovo v Austria	INT-UEFA	2026-10-04	Wales v Denmark
+# unmatched	Malta v Andorra	INT-UEFA	2026-10-04	Wales v Denmark
+# unmatched	Greece v Germany	INT-UEFA	2026-10-04	Wales v Denmark
+# unmatched	Netherlands v Serbia	INT-UEFA	2026-10-04	Wales v Denmark
+# unmatched	Portugal v Norway	INT-UEFA	2026-10-04	Wales v Denmark
+# unmatched	Republic of Ireland v Israel	INT-UEFA	2026-10-04	Wales v Denmark
 # unmatched	Levante v Athletic Club	ESP-LL	2026-10-21	
 # unmatched	Randers v Brøndby	DEN-SL	2026-10-23	
-Armenia v Montenegro	1	U4.5	1.03	1.08	1xBet		4
-Georgia v Ukraine	1	O1.5	1.34	1.38	1xBet		5
-Latvia v Cyprus	1	U4.5	1.01	1.05	1xBet		4
-Latvia v Cyprus	2	U3.75	1.16	1.20	1xBet		5
+Armenia v Montenegro	1	U4.5	1.04	1.09	1xBet		4
+Georgia v Ukraine	1	O1.5	1.36	1.39	1xBet		5
+Latvia v Cyprus	1	U4.5	1.05	1.05	1xBet		2
+Latvia v Cyprus	2	U3.75	1.15	1.19	1xBet		5
 Leganés v CD Castellón	1	U4.5	1.07	1.13	1xBet	1.07	13
 Leganés v CD Castellón	3	12	1.29	1.36	Pinnacle	1.30	18
-Belgium v France	1	O1.5	1.16	1.28	Pinnacle		6
-Belgium v France	2	O2.25	1.55	1.88	Pinnacle		6
+Belgium v France	1	O1.5	1.15	1.30	Pinnacle		6
+Belgium v France	2	O2.25	1.55	1.95	Pinnacle		6
 Northern Ireland v Hungary	1	U4.5	1.02	1.05	1xBet		3
-Romania v Bosnia & Herzegovina	1	O1.5	1.30	1.34	1xBet		5
-Romania v Bosnia & Herzegovina	2	O2.25	2.02	2.06	1xBet		5
-Sweden v Poland	1	O1.5	1.18	1.23	1xBet		5
-Türkiye v Italy	1	O1.5	1.20	1.29	Pinnacle		6
-América Mineiro v Juventude	1	U3.5	1.18	1.32	Pinnacle	1.17	11
-Finland v Belarus	1	U4.5	1.06	1.06	1xBet		1
-Finland v Belarus	2	U3.75	1.15	1.21	1xBet		5
-Finland v Belarus	3	DNB1	1.31	1.35	Winamax (FR)		10
+Romania v Bosnia & Herzegovina	1	O1.5	1.30	1.35	1xBet		5
+Romania v Bosnia & Herzegovina	2	O2.25	2.02	2.08	1xBet		5
+Sweden v Poland	1	O1.5	1.17	1.22	1xBet		5
+Türkiye v Italy	1	O1.5	1.18	1.33	Pinnacle		6
+América Mineiro v Juventude	1	U3.5	1.20	1.33	Pinnacle	1.21	11
+Finland v Belarus	1	U4.5	1.03	1.07	1xBet		4
+Finland v Belarus	2	U3.75	1.19	1.23	1xBet		5
+Finland v Belarus	3	DNB1	1.31	1.33	Winamax (FR)		10
 Moldova v Faroe Islands	1	U4.5	1.03	1.03	1xBet		1
 Moldova v Faroe Islands	2	U3.75	1.14	1.16	1xBet		4
 Scotland v Switzerland	1	O1.5	1.36	1.39	1xBet		5
 Scotland v Switzerland	2	O2.25	2.18	2.21	1xBet		5
 Slovenia v North Macedonia	1	U4.5	1.04	1.07	1xBet		4
 Slovenia v North Macedonia	2	U3.75	1.20	1.24	1xBet		5
-Spain v Croatia	1	O1.5	1.13	1.15	1xBet		6
+Spain v Croatia	1	O1.5	1.12	1.14	1xBet		6
 Bulgaria v Estonia	1	U3.5	1.16	1.21	1xBet		5
 Bulgaria v Estonia	2	U2.75	1.55	1.62	1xBet		5
 Luxembourg v Iceland	1	U4.5	1.05	1.09	1xBet		4
 Luxembourg v Iceland	2	U3.75	1.23	1.27	1xBet		5
-San Marino v Albania	1	U3.5	1.74	1.86	1xBet		5
-Slovakia v Kazakhstan	1	U4.5	1.08	1.12	1xBet		5
-Slovakia v Kazakhstan	2	U3.75	1.30	1.35	1xBet		5
-Slovakia v Kazakhstan	3	DNB1	1.12	1.13	William Hill		10
-Czechia v England	1	O1.5	1.20	1.28	Pinnacle		6
+San Marino v Albania	1	U3.5	1.76	1.82	1xBet		5
+Slovakia v Kazakhstan	1	U4.5	1.09	1.13	1xBet		5
+Slovakia v Kazakhstan	2	U3.75	1.32	1.37	1xBet		5
+Slovakia v Kazakhstan	3	DNB1	1.12	1.13	Winamax (DE)		10
+Czechia v England	1	O1.5	1.19	1.28	Pinnacle		6
 Botafogo-SP v Ponte Preta	1	U3.5	1.40	1.44	Nordic Bet	1.40	10
 Botafogo-SP v Ponte Preta	2	U2.75	2.12	2.22	Nordic Bet	2.12	10
 Botafogo-SP v Ponte Preta	3	DNB1	1.11	1.12	Codere (IT)	1.11	13
-New York Red Bulls v St. Louis City SC	1	O1.5	1.09	1.11	1xBet		7
-Greece v Netherlands	1	O1.5	1.21	1.32	Pinnacle		6
-Denmark v Portugal	1	O1.5	1.25	1.29	Pinnacle		4
-Denmark v Portugal	2	O2.25	1.78	1.93	Pinnacle		4
+New York Red Bulls v St. Louis City SC	1	O1.5	1.09	1.11	1xBet	1.07	10
+Azerbaijan v Liechtenstein	1	U3.5	1.43	1.53	1xBet		4
+Azerbaijan v Liechtenstein	2	U2.75	2.25	2.36	1xBet		4
+Azerbaijan v Liechtenstein	3	DNB1	1.07	1.11	Winamax (FR)		8
+Greece v Netherlands	1	O1.5	1.21	1.33	Pinnacle		6
+Denmark v Portugal	1	O1.5	1.24	1.30	Pinnacle		4
+Denmark v Portugal	2	O2.25	1.75	1.93	Pinnacle		4
 Germany v Serbia	1	O1.5	1.08	1.12	1xBet		4
-Germany v Serbia	3	DNB1	1.11	1.13	PMU (FR)		8
-Wales v Norway	1	O1.5	1.19	1.31	Pinnacle		4
+Germany v Serbia	3	DNB1	1.12	1.13	Winamax (DE)		8
+Wales v Norway	1	O1.5	1.19	1.32	Pinnacle		4
 Israel v Kosovo	1	O1.5	1.26	1.31	1xBet		3
-Republic of Ireland v Austria	1	O1.5	1.30	1.40	1xBet		3
+Malta v Gibraltar	1	U3.5	1.30	1.30	1xBet		2
+Malta v Gibraltar	2	U2.75	1.82	1.82	1xBet		2
+Malta v Gibraltar	3	DNB1	1.11	1.14	Winamax (FR)		7
+Republic of Ireland v Austria	1	O1.5	1.34	1.40	1xBet		3
 Athletic Club (MG) v Sport Recife	1	O1.0	1.02	1.03	Pinnacle	1.01	7
-Athletic Club (MG) v Sport Recife	2	O1.75	1.31	1.34	Nordic Bet	1.31	10
+Athletic Club (MG) v Sport Recife	2	O1.75	1.31	1.33	Coolbet	1.31	10
 Athletic Club (MG) v Sport Recife	3	12	1.31	1.35	Pinnacle	1.32	12
 Grêmio Novorizontino v Goiás	1	O1.0	1.02	1.03	William Hill	1.01	7
 Grêmio Novorizontino v Goiás	2	O1.75	1.31	1.36	William Hill	1.31	10
-Grêmio Novorizontino v Goiás	3	DNB1	1.31	1.34	LeoVegas (SE)	1.33	13
+Grêmio Novorizontino v Goiás	3	DNB1	1.29	1.34	LeoVegas (SE)	1.33	13
 Seattle Sounders FC v Sporting Kansas City	1	U4.5	1.33	1.41	1xBet	1.31	14
 Seattle Sounders FC v Sporting Kansas City	2	U3.75	1.83	1.95	1xBet	1.79	14
 Kazakhstan v Moldova	1	U4.5	1.09	1.09	1xBet		1
-Kazakhstan v Moldova	3	DNB1	1.33	1.36	Winamax (FR)		5
+Kazakhstan v Moldova	3	DNB1	1.33	1.36	Winamax (FR)		6
 Latvia v Montenegro	1	U4.5	1.07	1.07	1xBet		1
 Latvia v Montenegro	2	U3.75	1.24	1.24	1xBet		2
 CD Eldense v Oviedo	1	U3.5	1.20	1.32	Pinnacle	1.16	12
@@ -105,48 +108,35 @@ Independiente Rivadavia v Gimnasia La Plata	1	O1.0	1.02	1.03	Pinnacle		6
 Independiente Rivadavia v Gimnasia La Plata	2	O1.75	1.28	1.30	Pinnacle		7
 Boca Juniors v Union Santa Fe	1	O1.0	1.03	1.03	1xBet		6
 Boca Juniors v Union Santa Fe	2	O1.75	1.33	1.35	Unibet (SE)		7
-Boca Juniors v Union Santa Fe	3	12	1.26	1.28	Betsson		7
+Boca Juniors v Union Santa Fe	3	12	1.26	1.26	Betsson		7
 Fortaleza v Nautico PE	1	O1.0	1.01	1.02	Pinnacle		5
-Fortaleza v Nautico PE	2	O1.75	1.28	1.32	1xBet	1.27	10
+Fortaleza v Nautico PE	2	O1.75	1.28	1.31	1xBet	1.27	10
 Chesterfield FC v Tranmere Rovers	1	U4.5	1.13	1.13	Betsson		8
-Chesterfield FC v Tranmere Rovers	3	DNB1	1.38	1.39	1xBet		10
-Albacete v SD Eibar	1	U4.5	1.04	1.12	Pinnacle	1.03	11
+Chesterfield FC v Tranmere Rovers	3	DNB1	1.38	1.39	888sport		10
+Albacete v SD Eibar	1	U4.5	1.05	1.10	1xBet	1.03	11
 Avai v Ceará	1	O1.0	1.02	1.10	Coolbet	1.02	7
 Avai v Ceará	2	O1.75	1.33	1.66	Coolbet	1.33	9
 Blackpool v Leicester City	1	O1.5	1.14	1.14	Unibet (NL)	1.14	3
 Burton Albion v Huddersfield Town	1	O1.5	1.22	1.26	Pinnacle	1.19	11
 Leyton Orient v Plymouth Argyle	1	O1.5	1.16	1.32	Coolbet	1.16	11
-Reading v Bradford City	1	U4.5	1.05	1.08	Pinnacle	1.05	11
+Reading v Bradford City	1	U4.5	1.05	1.09	Pinnacle	1.05	11
 Reading v Bradford City	2	U3.75	1.26	1.29	Pinnacle	1.26	11
 Accrington Stanley v Cheltenham Town	1	U4.5	1.10	1.11	Betsson		8
 Accrington Stanley v Cheltenham Town	2	U3.75	1.36	1.36	Betsson		8
-Crewe Alexandra v Bristol Rovers	1	U4.5	1.09	1.12	Coolbet		8
+Crewe Alexandra v Bristol Rovers	1	U4.5	1.11	1.12	William Hill		8
 Exeter City v Rotherham United	1	U4.5	1.07	1.09	Pinnacle		8
 Exeter City v Rotherham United	2	O1.75	1.25	1.27	Pinnacle		8
 Gillingham v Newport County	1	U4.5	1.07	1.08	Pinnacle		8
 Gillingham v Newport County	2	U3.75	1.28	1.28	Pinnacle		8
-Grimsby Town v Shrewsbury Town	1	U4.5	1.10	1.12	Coolbet		8
+Grimsby Town v Shrewsbury Town	1	U4.5	1.10	1.11	William Hill		8
 Grimsby Town v Shrewsbury Town	3	DNB1	1.36	1.37	888sport		10
-Rochdale v Swindon Town	1	U4.5	1.09	1.11	Pinnacle		8
-Rochdale v Swindon Town	2	U3.75	1.33	1.36	Pinnacle		8
+Rochdale v Swindon Town	1	U4.5	1.09	1.10	Betsson		8
+Rochdale v Swindon Town	2	U3.75	1.33	1.35	Betsson		8
 Salford City v Fleetwood Town	1	U4.5	1.11	1.13	Betsson		8
 Salford City v Fleetwood Town	3	1X	1.16	1.18	Pinnacle		10
-Barnsley v Milton Keynes Dons	1	U4.5	1.13	1.13	Unibet (SE)	1.13	4
-Bromley FC v Wycombe Wanderers	1	U4.5	1.12	1.13	Coolbet	1.08	6
-Luton v Doncaster Rovers	1	O1.5	1.17	1.30	Coolbet	1.13	6
-Peterborough United v Notts County	1	U4.5	1.11	1.13	Betsson	1.11	5
-Peterborough United v Notts County	2	U3.75	1.39	1.41	Betsson	1.39	5
-Wigan Athletic v Mansfield Town	1	U4.5	1.08	1.12	Coolbet	1.08	4
-Wigan Athletic v Mansfield Town	2	U3.75	1.32	1.38	Coolbet	1.32	4
-Wimbledon v Stevenage	1	U3.5	1.16	1.19	Betsson	1.16	5
-Colchester United v Port Vale	1	U4.5	1.09	1.09	Coolbet		3
-Colchester United v Port Vale	2	O1.75	1.24	1.24	Coolbet		3
-Northampton Town v Oldham Athletic	1	U4.5	1.07	1.07	Nordic Bet		3
-Walsall v Crawley Town	1	U4.5	1.09	1.09	Coolbet		1
-Walsall v Crawley Town	2	U3.75	1.32	1.32	Coolbet		1
-Almería v Burgos CF	1	U4.5	1.04	1.10	1xBet	1.04	11
+Almería v Burgos CF	1	U4.5	1.05	1.10	1xBet	1.04	11
 Cádiz CF v Leganés	1	U3.5	1.17	1.17	Unibet (NL)	1.17	4
-Sabadell FC v Andorra CF	1	U4.5	1.04	1.12	Pinnacle	1.03	8
+Sabadell FC v Andorra CF	1	U4.5	1.04	1.12	Pinnacle	1.03	9
 Defensa y Justicia v San Lorenzo	1	U3.5	1.12	1.13	Nordic Bet		7
 Defensa y Justicia v San Lorenzo	2	U2.75	1.44	1.46	Nordic Bet		7
 Atletico Goianiense v América Mineiro	3	DNB1	1.23	1.23	LeoVegas (SE)	1.23	3
@@ -161,17 +151,17 @@ Atletico Mineiro v Bragantino-SP	2	O1.75	1.27	1.30	1xBet	1.27	15
 Atletico Mineiro v Bragantino-SP	3	DNB1	1.61	1.64	Winamax (DE)	1.56	21
 Argentinos Juniors v CA Tigre BA	1	O1.0	1.06	1.17	Pinnacle		7
 Atlético Huracán v Aldosivi Mar del Plata	1	U3.5	1.14	1.16	1xBet		7
-Atlético Huracán v Aldosivi Mar del Plata	2	U2.75	1.49	1.52	1xBet		7
-Real Sociedad B v Granada CF	1	U3.5	1.26	1.33	1xBet		9
+Atlético Huracán v Aldosivi Mar del Plata	2	U2.75	1.50	1.52	1xBet		7
+Real Sociedad B v Granada CF	1	U3.5	1.26	1.34	1xBet		9
 Sporting Gijón v Celta Fortuna	1	U3.5	1.33	1.43	1xBet		9
-Sporting Gijón v Celta Fortuna	3	DNB1	1.29	1.31	PMU (FR)		14
+Sporting Gijón v Celta Fortuna	3	DNB1	1.31	1.32	Winamax (FR)		14
 CD Castellón v AD Ceuta FC	1	U4.5	1.26	1.26	Unibet (SE)	1.26	4
 CD Castellón v AD Ceuta FC	3	DNB1	1.13	1.16	Winamax (FR)	1.12	12
-Las Palmas v Real Valladolid CF	1	U3.5	1.25	1.34	Pinnacle	1.26	10
-Las Palmas v Real Valladolid CF	3	DNB1	1.63	1.66	William Hill	1.51	15
+Las Palmas v Real Valladolid CF	1	U3.5	1.23	1.39	Pinnacle	1.23	11
+Las Palmas v Real Valladolid CF	3	DNB1	1.66	1.69	BetOnline.ag	1.68	16
 Sarmiento de Junin v River Plate	1	O1.0	1.04	1.04	Pinnacle		1
 Sarmiento de Junin v River Plate	2	O1.75	1.33	1.33	Pinnacle		1
 Sarmiento de Junin v River Plate	3	12	1.29	1.29	Pinnacle		1
 Girona FC v Mallorca	1	U4.5	1.08	1.14	1xBet	1.05	10
 Talleres v Belgrano de Cordoba	1	O1.0	1.07	1.17	Pinnacle		6
-Estudiantes de Río Cuarto v Racing Club	1	U3.5	1.09	1.12	1xBet		4
+Estudiantes de Río Cuarto v Racing Club	1	U3.5	1.10	1.12	1xBet		4
