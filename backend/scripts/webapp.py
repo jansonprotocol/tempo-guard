@@ -1287,7 +1287,13 @@ def verdict(f, best: int) -> dict | None:
     # later would go on offering a price from a game now in progress. The
     # bar belongs on the decision, not only on the fetch.
     live = odds_api.started(f.kickoff)
-    play = (not lab.endswith("red")) and got_odds is not None \
+    # A red card whose PROFILE the two-day review has released
+    # (scripts/profile_review.py) is let back through the tier's gate.
+    gap = (got_odds / need - 1) * 100 if got_odds and need else None
+    freed = bool(lab.endswith("red") and gap is not None and lane
+                 and lane[:1] in "OU"
+                 and review_label((lab, lane[:1], gap_band(gap))) == "release")
+    play = (not lab.endswith("red") or freed) and got_odds is not None \
         and got_odds >= need and not live
     # The watch list: same lane, same bar, the panel's best a little short
     # of it. Decided here beside PLAY, so the tab and the verify cannot
@@ -1295,12 +1301,13 @@ def verdict(f, best: int) -> dict | None:
     # WATCH: short of value, but at or within WATCH_BAND of the BAND bar
     # — the plays the band's record alone would have called, plus the
     # cards a book of the bettor's own may still clear.
-    watch = (not play) and (not lab.endswith("red")) and got_odds is not None \
+    watch = (not play) and (not lab.endswith("red") or freed) and got_odds is not None \
         and got_odds >= bar * (1 - WATCH_BAND) and not live
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
                 band=claim_band(p), bar=bar, value=_value_of(cell),
                 need=need, odds=got_odds, book=(q or {}).get("book"),
                 play=play, watch=watch, strong=play and strong,
+                gap=gap, freed=freed,
                 mark=("strong" if play and strong else
                       "normal" if play else "no play"))
 
@@ -1512,7 +1519,7 @@ def record_lane(f) -> str | None:
         lab = label_any(f)
         return None if (not lab or lab.endswith("red")) else "athena"
     v = verdict(f, _star(f))
-    if not v or v["label"].endswith("red"):
+    if not v or (v["label"].endswith("red") and not v.get("freed")):
         return None
     return "priced" if v["play"] else "watch" if v["watch"] else "athena"
 
@@ -1584,7 +1591,84 @@ def o15_declined(f) -> bool:
     return O15_BAND[0] <= gap < O15_BAND[1]
 
 
+_REVIEW = None
+
+
+def review_label(key) -> str | None:
+    """'release', 'decline' or 'hold' for a (group, side, band) profile,
+    from config/profile_review.tsv — written every two days by
+    scripts/profile_review.py. No file, no moves."""
+    global _REVIEW
+    if _REVIEW is None:
+        _REVIEW = {}
+        path = ROOT / "config" / "profile_review.tsv"
+        if path.exists():
+            for ln in path.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                p = ln.split("\t")
+                if len(p) >= 10:
+                    _REVIEW[(p[0], p[1], p[2])] = p[9]
+    return _REVIEW.get(key)
+
+
+def _gap_point(f):
+    """(lane, percent over the play bar) at the price the card is judged
+    on: the verdict's before kickoff, the first-sight stamp after it."""
+    if f.settled or odds_api.started(f.kickoff):
+        c = was_called(f)
+        r = c["row"] if c else None
+        if not r or not r.get("best") or not r.get("need") or not r.get("lane"):
+            return None
+        return r["lane"], (float(r["best"]) / float(r["need"]) - 1) * 100
+    v = verdict(f, _star(f))
+    if not v or not v["lane"] or v.get("gap") is None:
+        return None
+    return v["lane"], v["gap"]
+
+
+def profile_of(f, base: bool | None = None):
+    """The card's review profile: (group, side, band), or None. The group
+    is its BASE status — the tier and the older rules, before the review —
+    so the review measures a cell on the cards that define it."""
+    got = _gap_point(f)
+    if not got or got[0][:1] not in ("O", "U"):
+        return None
+    lab = label_any(f) or ""
+    if lab in ("red", "super red"):
+        group = lab
+    else:
+        group = "rule" if (_declined_base(f) if base is None else base) else "counted"
+    return (group, got[0][:1], gap_band(got[1]))
+
+
+def review_move(f) -> str | None:
+    """'release' or 'decline' where the review changes this card's
+    status, else None."""
+    base = _declined_base(f)
+    key = profile_of(f, base)
+    lab = review_label(key) if key else None
+    if base and lab == "release":
+        return "release"
+    if not base and lab == "decline":
+        return "decline"
+    return None
+
+
 def is_declined(f) -> bool:
+    """The base rules below, then the two-day profile review on top
+    (the bettor, 28 Sep): a declined card whose profile the review has
+    RELEASED is back in the record, and a counted card whose profile it
+    has DECLINED is out of it. See scripts/profile_review.py."""
+    move = review_move(f)
+    if move == "release":
+        return False
+    if move == "decline":
+        return True
+    return _declined_base(f)
+
+
+def _declined_base(f) -> bool:
     """Is this a Declined card: a red or super-red label (the tier saying
     avoid); a card on any lane tagged live unsafe; or, since 13 Sep, any
     card whose strike combo is declined.
@@ -1804,8 +1888,16 @@ def _livetag_html(f) -> str:
         pill = (f'<span class="livetag lt-{tag}" title="{html.escape(tip)}">'
                 f'{word}</span>')
     nocount = ""
+    move = review_move(f)
+    if move == "release":
+        nocount = ('<span class="livetag lt-safe" title="Released by the two-day '
+                   'profile review (scripts/profile_review.py): this card\'s '
+                   'group, side and price band cleared the bar upward on the '
+                   'board\'s own settled cards, so it is back in the record.">'
+                   '↺ released</span>')
     if out:
-        why = ("the tier says avoid" if (lab := label_any(f)) and lab.endswith("red")
+        why = ("its profile is declined by the two-day review" if move == "decline"
+               else "the tier says avoid" if (lab := label_any(f)) and lab.endswith("red")
                else "a priced O1.5 0–6% over its play bar (28 Sep)" if o15_declined(f)
                else "its strike combo is declined" if strike_declined(f)
                else "tagged live unsafe")
@@ -4322,7 +4414,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   on this board's own record, re-measured every two days — reaches a
   priced play, and so does one more: a <b>priced O1.5 0–6% over its
   play bar</b> (the bettor, 28 Sep — 33 settled cards at 63.6% and
-  −18.3%, down in both halves of the session). Either way the card counts toward
+  −18.3%, down in both halves of the session). And every two days a
+  <b>profile review</b> re-measures each group × side × price band on the
+  board's own settled cards: a declined profile that has clearly earned
+  it is <b>↺ released</b> back to the board, and a counted one that has
+  clearly lost is declined (30+ cards, both halves the same way, a 5%
+  return and a result about 1 in 100 by chance). Either way the card counts toward
   <b>no hit rate anywhere</b>, on this board or in the bank (the bettor's
   rule, 12 and 13 Sep). Both are kept, swept and graded, because a
   rule that is never checked is only a habit. Search <b>declined</b>,

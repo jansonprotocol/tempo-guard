@@ -92,6 +92,11 @@ jobs:
             python scripts/internationals.py --write --since 2026 || echo "international refresh failed, continuing"
             python scripts/matchbank.py --since
             python scripts/livebands.py
+            # The two-day profile review (the bettor, 28 Sep): a declined
+            # price profile that clears the bar upward is released back to
+            # the board, a counted one that clears it downward is declined.
+            # Written before the render so the board reads the new table.
+            python scripts/profile_review.py
             # The verdict per declining rule — tier red, live unsafe on each
             # lane (priced included since 21 Sep), strike combo — on the
             # board's own settled cards first, the bank beside it. Report
@@ -106,6 +111,7 @@ jobs:
             python scripts/board.py --allow-stale
             cd ..
             git add -A data/ config/live_bands.tsv config/drift.tsv \
+                       config/profile_review.tsv \
                        config/declinecheck.tsv \
                        config/ladder_rates.tsv \
                        config/matchbank_retro.json \
