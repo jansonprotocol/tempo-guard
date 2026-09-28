@@ -119,9 +119,16 @@ def quotes() -> dict:
                 f = ln.split("\t")
                 if len(f) < 8:
                     continue
+                top = []
+                for part in (f[8].split("|") if len(f) > 8 else []):
+                    price, _, book = part.strip().partition(" ")
+                    try:
+                        top.append((float(price), book))
+                    except ValueError:
+                        pass
                 _QUOTES[(f[0], f[2])] = dict(
                     consensus=f[3], best=f[4], book=f[5],
-                    unibet=f[6], books=f[7])
+                    unibet=f[6], books=f[7], top=top)
     return _QUOTES
 
 
@@ -1394,6 +1401,69 @@ def was_called(f) -> dict | None:
     return dict(row=r, mark="no play")
 
 
+# PRICE AGAINST THE BAR, ON THE CARD (the bettor, 28 Sep: "give me a
+# band mark on all cards in which band ... the final pick stands, give me
+# a range band from the 2-3 best bookmaker prices", searchable as "gap").
+# The same seven bands as the Found bets panel, in percent over the final
+# pick's PLAY bar (verdict()["need"], the printed buy-from less 3%).
+# Before kickoff the range runs from the third-best to the best book in
+# the quote file; after it, the card keeps its first-sight stamp, which
+# carries only the best price, so the range closes to one number.
+# Information only: no bar, verdict, colour or hit rate moves on it.
+GAP_BANDS = ((-999.0, -5.0, "5%+ under"), (-5.0, -3.0, "3–5% under"),
+             (-3.0, 0.0, "0–3% under"), (0.0, 3.0, "0–3% over"),
+             (3.0, 6.0, "3–6% over"), (6.0, 10.0, "6–10% over"),
+             (10.0, 999.0, "10%+ over"))
+
+
+def gap_band(g: float) -> str:
+    return next(n for lo, hi, n in GAP_BANDS if lo <= g < hi)
+
+
+def price_gap(f, best: int, v: dict | None) -> dict | None:
+    """(lo, hi) percent over the final pick's play bar, with the prices
+    behind it — or None where the card has no bar or no price."""
+    live = not (f.settled or f.status or odds_api.started(f.kickoff))
+    if live and v and v.get("lane") and v.get("need"):
+        q = quotes().get((f.teams, v["lane"]))
+        if not q:
+            return None
+        top = q.get("top") or []
+        if not top:
+            try:
+                top = [(float(q["best"]), q["book"])]
+            except (TypeError, ValueError):
+                return None
+        need, lane, src = v["need"], v["lane"], "now"
+    else:
+        c = was_called(f)
+        r = c["row"] if c else None
+        if not r or not r.get("best") or not r.get("need"):
+            return None
+        top = [(float(r["best"]), r.get("book") or "best")]
+        need, lane, src = float(r["need"]), r.get("lane") or "", "first sight"
+    gaps = [(p / need - 1) * 100 for p, _b in top[:3]]
+    return dict(lo=min(gaps), hi=max(gaps), need=need, lane=lane,
+                top=top[:3], src=src)
+
+
+def _gap_html(g: dict | None) -> str:
+    if not g:
+        return ""
+    lo, hi = g["lo"], g["hi"]
+    rng = (f"{lo:+.1f}%" if abs(hi - lo) < .05 else f"{lo:+.1f}% … {hi:+.1f}%")
+    b1, b2 = gap_band(lo), gap_band(hi)
+    band = b1 if b1 == b2 else f"{b1} → {b2}"
+    books = ", ".join(f"{b} {p:.2f}" for p, b in g["top"])
+    tip = (f"The final pick {g['lane']} against its play bar {g['need']:.3f} "
+           f"(buy-from less 3%), {g['src']}: {books}. Search gap 8 for the "
+           "6–10% band, gap>6 or gap<-3 for a threshold. Information only.")
+    cls = " over3" if hi >= 3 else ""
+    return (f'<div class="gapbar{cls}" title="{html.escape(tip)}">'
+            f'<span class="bl">VS BAR</span> <b>{rng}</b> '
+            f'<span class="dim">· {band}</span></div>')
+
+
 PLAYED_MARKS = ("strong", "normal", "watch")
 
 # LIVE SAFETY (the bettor's bands, 12 Sep). Whether a card that the board
@@ -2509,12 +2579,13 @@ def _card(f, kind: str, reads: dict) -> str:
             pick = _struck(_rung(cells[1]))
     else:
         pick = v["lane"] if v else None
+    gp = price_gap(f, best, v)
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
            f'{_livetag_html(f)}'
            f'{_taken(f, pick)}'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{_guard(f, best)}{face}{_profile_html(f)}")
+           f"{_guard(f, best)}{_gap_html(gp)}{face}{_profile_html(f)}")
     body = rest + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
@@ -2524,8 +2595,9 @@ def _card(f, kind: str, reads: dict) -> str:
             f'data-fx="{html.escape(f.teams)}" '
             f'data-t="{_haystack(f)}" '
             f'data-lg="{html.escape(_fold(f.league.lower()))}" '
-            f"{_sortkeys(f)}{_probkeys(f)}{_gradekeys(f)}>"
-            f"<summary>{top}</summary>{body}</details>")
+            f"{_sortkeys(f)}{_probkeys(f)}{_gradekeys(f)}"
+            + (f' data-gl="{gp["lo"]:.2f}" data-gh="{gp["hi"]:.2f}"' if gp else "")
+            + f"><summary>{top}</summary>{body}</details>")
 
 
 SORTS = (("k", "kickoff"), ("p", "probability"), ("e", "edge"),
@@ -3672,6 +3744,10 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 /* Declined mode: the counters are reading the cards the guard REFUSED,
    which are in no hit rate on this page. It must be impossible to
    mistake for the record, so it does not borrow the record's colours. */
+.gapbar {{ font-size:12px; margin:3px 0 2px; color:var(--dim); }}
+.gapbar .bl {{ font-size:10px; letter-spacing:.1em; }}
+.gapbar b {{ color:var(--fg, inherit); font-variant-numeric:tabular-nums; }}
+.gapbar.over3 b {{ color:#e9a34a; }}
 .fc.bands {{ text-align:left; }}
 .bandbtn {{ margin:0; }}
 .bandgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }}
@@ -4139,6 +4215,13 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   at the side it keeps and can sit either way round; the % is optional.<br>
   <b>a goal threshold</b> — <code>goal &gt;3</code>, <code>goal &lt;3</code>:
   how the match actually finished, on settled cards only.<br>
+  <b>price against the bar</b> — <code>gap 8</code> keeps the whole band
+  8 sits in (6–10% over the final pick's play bar), <code>gap -2</code>
+  the 0–3% under band; <code>gap&gt;6</code>, <code>gap&lt;-3</code> for a
+  threshold. Bands: 5%+ under, 3–5 under, 0–3 under, 0–3 over, 3–6, 6–10,
+  10%+ over. Before kickoff the card reads a range off the three best
+  books and matches where that range reaches; after kickoff it keeps the
+  first-sight best price.<br>
   <b>commas narrow</b> — <code>brazil, serie b, tip 1 under, 80&gt;</code>
   is all four at once.</div></details>
  <div class="fxmodal" id="fxmodal" onclick="hideCard(event)">
@@ -4518,6 +4601,12 @@ const GOALQ = /^(?:goals?|g) *(?:(<=|>=|<|>) *(\d+)|(\d+) *(<=|>=|<|>))$/;
 function parseCmp(s) {{
   const t = s.replace(/[%≤≥]/g, x => x === "≤" ? "<=" : x === "≥" ? ">=" : "")
              .replace(/\\s+/g, " ").trim();
+  // "gap": the final pick's price against its play bar, in percent (the
+  // bettor, 28 Sep). "gap>6" / "gap<-3" is a threshold; a bare "gap 8"
+  // means the whole band 8 sits in, 6–10% (and "gap -2" the -3–0% band),
+  // the same seven bands the card and the Found bets panel print.
+  const gp = /^gap ?(<=|>=|<|>)? ?(-?\d+(?:\.\d+)?)$/.exec(t);
+  if (gp) return {{what: "gap", op: gp[1] || "band", val: parseFloat(gp[2])}};
   const g = GOALQ.exec(t);
   if (g) return {{what: "goals", op: g[1] || g[4],
                  val: parseFloat(g[2] !== undefined ? g[2] : g[3])}};
@@ -4526,8 +4615,23 @@ function parseCmp(s) {{
   return {{what: "prob", lane: m[1] || null, op: m[2] || m[5],
           val: parseFloat(m[3] !== undefined ? m[3] : m[4])}};
 }}
+const GAP_BANDS = [-999, -5, -3, 0, 3, 6, 10, 999];
 function cmpOk(el, c) {{
   const d = el.dataset;
+  if (c.what === "gap") {{
+    // The card carries a RANGE (third-best to best book), so a term
+    // matches where the range reaches it: "gap>6" wants the best price
+    // over 6%, "gap 8" wants any of the prices inside 6–10%.
+    if (d.gl === undefined) return false;
+    const lo = parseFloat(d.gl), hi = parseFloat(d.gh);
+    if (c.op === "band") {{
+      let i = 0;
+      while (i < GAP_BANDS.length - 2 && c.val >= GAP_BANDS[i + 1]) i++;
+      return hi >= GAP_BANDS[i] && lo < GAP_BANDS[i + 1];
+    }}
+    return c.op === "<" ? lo < c.val : c.op === "<=" ? lo <= c.val
+         : c.op === ">" ? hi > c.val : hi >= c.val;
+  }}
   const raw = c.what === "goals" ? d.goals
             : c.lane ? d["p" + c.lane]
             : (d.p1 !== undefined ? d.p1 : d.p);

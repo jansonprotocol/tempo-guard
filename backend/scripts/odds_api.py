@@ -405,6 +405,10 @@ def lane_price(ev: dict, lane: str) -> dict | None:
     return {"lane": lane, "n": len(pool),
             "consensus": round(vals[len(vals) // 2], 3),
             "best": best[1], "book": best[0],
+            # The three best book prices, best first — the card's price
+            # band reads a RANGE off these, since the bettor sees the
+            # second and third book as often as the first (28 Sep).
+            "top": sorted(pool.items(), key=lambda kv: -kv[1])[:3],
             "exchange": exch[1] if exch else None,
             "unibet_nl": quotes.get("Unibet (NL)"),
             "quotes": quotes}
@@ -498,12 +502,14 @@ def write_quotes() -> int:
             rows.append((f.teams, str(which), q["lane"], f"{q['consensus']:.2f}",
                          f"{q['best']:.2f}", q["book"],
                          f"{q['unibet_nl']:.2f}" if q["unibet_nl"] else "",
-                         str(q["n"])))
+                         str(q["n"]),
+                         "|".join(f"{v:.2f} {k}" for k, v in q["top"])))
     head = ["# What the market is offering on each pending lane. Derived by",
             "# scripts/odds_api.py --quotes from live bookmaker prices; the",
             "# renderer reads it and never calls the API itself. Delete it and",
             "# the cards fall back to the engine's own buy>= bar.",
-            "# fixture\twhich\tlane\tconsensus\tbest\tbook\tunibet_nl\tbooks"]
+            "# top: the three best book prices, best first, as 'price book|...'",
+            "# fixture\twhich\tlane\tconsensus\tbest\tbook\tunibet_nl\tbooks\ttop"]
     # The misses travel with the quotes, so the render can say them too.
     for teams, code, day, near in unmatched:
         head.append(f"# unmatched\t{teams}\t{code}\t{day}\t" + " | ".join(near))
