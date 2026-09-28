@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 81.3%
+## CURRENT CONFIRMED HITRATE: 81.2%
 
     lane                        Tip 1              Tip 2
-    all matches            577 / 710  81.3%    375 / 571  65.7%
-    played lanes  >+1%     251 / 308  81.5%    373 / 566  65.9%
+    all matches            577 / 711  81.2%    376 / 572  65.7%
+    played lanes  >+1%     251 / 308  81.5%    374 / 567  66.0%
     placed bets            171 / 220  77.7%    ROI -0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 624 / 874   ·   71.4%**   ·   **Tip 1 — 251 / 308   ·   81.5%**   ·   **Tip 2 — 373 / 566   ·   65.9%**
+**Playable — 625 / 875   ·   71.4%**   ·   **Tip 1 — 251 / 308   ·   81.5%**   ·   **Tip 2 — 374 / 567   ·   66.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -981,7 +981,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-2 · 27-09 23:30 <b>Fortaleza v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>— under +1%</td><td>✅ O1.75 66.5% +1.3%<br>buy≥1.64 (+0.5% margin) · floor −8.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 28-09 01:00 <b>Columbus Crew v Inter Miami</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>— under +1%</td><td>❌ <b>Inter Miami O1.5</b> 60.1% +20.1%<br>buy≥1.72 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.1% +3.8% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 28-09 03:00 <b>León v FC Juárez</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.1 capped)</td><td>— under +1%</td><td>✅ <b>León O1.5</b> 57.9% +9.6%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 79.2% +16.9% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-4 <b>Necaxa v América</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.1 capped)</td><td>— under +1%</td><td><b>América O1.5</b> 61.2% +26.6%<br>buy≥1.69 (+3.3% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.5% +3.1% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-4 · 28-09 05:00 <b>Necaxa v América</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.1 capped)</td><td>— under +1%</td><td>✅ <b>América O1.5</b> 61.2% +26.6%<br>buy≥1.69 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.5% +3.1% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-09 18:00 <b>Armenia v Montenegro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>— under +1%</td><td><b>Montenegro O0.5</b> 81.2% +15.7%<br>buy≥1.34 (+9.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-09 18:00 <b>Georgia v Ukraine</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>O1.5 80.1% +1.1%<br>buy≥1.32 (+5.4% margin)</td><td><b>Ukraine O0.5</b> 80.0% +14.5%<br>buy≥1.36 (+8.8% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 28-09 18:00 <b>Latvia v Cyprus</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>— under +1%</td><td>U3.75 71.8% +5.5%<br>buy≥1.34 (+4.0% margin) · floor −3.2</td></tr></table>
@@ -1044,7 +1044,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔵 27-09 20:00 <b>Maghreb de Fès v Renaissance Zemamra</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Botola Pro (94.8 capped)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-09 22:00 <b>KACM v Hassania Agadir</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Botola Pro (94.8 capped)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-4 <b>Necaxa v América</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.1 capped)</td><td>U4.25 81.6% <b>−2.6%</b><br>buy≥1.31 (+5.0% margin)<br><i>U4.25 holding · ✗ gone</i></td><td><b>América O1.5</b> 61.2% +26.6%<br>buy≥1.69 (+3.3% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.5% +3.1% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-09 18:00 <b>Armenia v Montenegro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>U4.25 80.9% <b>−1.7%</b><br>buy≥1.25 (+5.7% margin)</td><td><b>Montenegro O0.5</b> 81.2% +15.7%<br>buy≥1.34 (+9.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-09 18:00 <b>Georgia v Ukraine</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>O1.5 80.1% +1.1%<br>buy≥1.32 (+5.4% margin)</td><td><b>Ukraine O0.5</b> 80.0% +14.5%<br>buy≥1.36 (+8.8% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 28-09 18:00 <b>Latvia v Cyprus</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>U4.25 80.9% <b>−1.8%</b><br>buy≥1.24 (+5.6% margin)</td><td>U3.75 71.8% +5.5%<br>buy≥1.34 (+4.0% margin) · floor −3.2</td></tr></table>
@@ -1114,7 +1113,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 577 / 710   ·   81.3%**   ·   **Tip 2 — 375 / 571   ·   65.7%**
+**Tip 1 — 577 / 711   ·   81.2%**   ·   **Tip 2 — 376 / 572   ·   65.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2209,6 +2208,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 28-09 01:00 <b>Columbus Crew v Inter Miami</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>MLS (82.6 +2.9)</td><td>O1.5 80.5% <b>−1.0%</b><br>buy≥1.27 (+6.1% margin)</td><td>❌ <b>Inter Miami O1.5</b> 60.1% +20.1%<br>buy≥1.72 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.1% +3.8% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 28-09 01:05 <b>Fortaleza CEIF v Tolima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 85.9% <b>−5.3%</b><br>buy≥1.18 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 74.2% +2.1% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 28-09 03:00 <b>León v FC Juárez</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.1 capped)</td><td>U4.25 83.2% <b>−1.0%</b><br>buy≥1.24 (+5.4% margin)</td><td>✅ <b>León O1.5</b> 57.9% +9.6%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 79.2% +16.9% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-4 · 28-09 05:00 <b>Necaxa v América</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.1 capped)</td><td>U4.25 81.6% <b>−2.6%</b><br>buy≥1.31 (+5.0% margin)</td><td>✅ <b>América O1.5</b> 61.2% +26.6%<br>buy≥1.69 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.5% +3.1% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
