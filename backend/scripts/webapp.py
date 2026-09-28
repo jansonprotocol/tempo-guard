@@ -1549,6 +1549,41 @@ def strike_declined(f) -> bool:
     return bool(lane) and livebands.combo(lane, strikes(f)) == "decline"
 
 
+# O1.5 PRICED 0-6% OVER THE BAR (the bettor, 28 Sep: "on 0% - 6% it's a
+# significant change, I think we need to start declining those"). A
+# priced play whose starred lane is O1.5 and whose price sits 0% to 6%
+# over its play bar. Measured on the board's settled first-sight cards,
+# red and already-declined out: 33 cards, 63.6%, -18.3% at the feed's
+# best price, negative in both halves of the session (10 to 13 Sep at
+# 50.0% and -34.2%, 23 after at 69.6% and -11.4%), across ten leagues.
+# Beside it the same band without these cards returned 84.3% and +9.7%
+# at 3-6% over, and O1.5 at 6-10% over +2.2% on 13, which stays playable.
+# Found by slicing after the fact, so it is small and was not
+# pre-registered: it is re-checked as the board grows, like every
+# decline. The price is the verdict's before kickoff and the forward
+# log's first-sight stamp after it — the same two the card's gap line
+# reads.
+O15_BAND = (0.0, 6.0)
+
+
+def o15_declined(f) -> bool:
+    if f.settled or odds_api.started(f.kickoff):
+        c = was_called(f)
+        if not c or c["mark"] not in ("normal", "strong"):
+            return False
+        r = c["row"]
+        lane, best, need = r.get("lane"), r.get("best"), r.get("need")
+    else:
+        v = verdict(f, _star(f))
+        if not v or not v["play"]:
+            return False
+        lane, best, need = v["lane"], v["odds"], v["need"]
+    if lane != "O1.5" or not best or not need:
+        return False
+    gap = (float(best) / float(need) - 1) * 100
+    return O15_BAND[0] <= gap < O15_BAND[1]
+
+
 def is_declined(f) -> bool:
     """Is this a Declined card: a red or super-red label (the tier saying
     avoid); a card on any lane tagged live unsafe; or, since 13 Sep, any
@@ -1566,6 +1601,8 @@ def is_declined(f) -> bool:
     if lab and lab.endswith("red"):
         return True
     if record_lane(f) in ("athena", "watch", "priced") and record_tag(f) == "unsafe":
+        return True
+    if o15_declined(f):
         return True
     return strike_declined(f)
 
@@ -1769,6 +1806,7 @@ def _livetag_html(f) -> str:
     nocount = ""
     if out:
         why = ("the tier says avoid" if (lab := label_any(f)) and lab.endswith("red")
+               else "a priced O1.5 0–6% over its play bar (28 Sep)" if o15_declined(f)
                else "its strike combo is declined" if strike_declined(f)
                else "tagged live unsafe")
         nocount = (f'<span class="nocount" title="Declined: {why}. Swept and graded, '
@@ -3047,7 +3085,7 @@ def main() -> None:
         f'first, then each family. The bracket is what those lanes '
         f'CLAIMED on average, so a low number reads as what it promised '
         f'rather than as failure. Declined cards are excluded — red, '
-        f'super red, live unsafe, a declined strike combo.">'
+        f'super red, live unsafe, a declined strike combo, a priced O1.5 0–6% over its bar.">'
         f'<span class="bl">SESSION #{SESSION_NO}</span>'
         + "".join([
             sc("★ pick", fh, fn, sum(fsays) / len(fsays) if fsays else None),
@@ -4281,8 +4319,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   live buys as well — an Athena lane or a watch card whose edge band is
   landing under 77 in its league on the bank. A card whose <b>strike
   combo</b> is declined — its lane and strikes together landing under 77
-  on this board's own record, re-measured every two days — is the one
-  rule that reaches a priced play. Either way the card counts toward
+  on this board's own record, re-measured every two days — reaches a
+  priced play, and so does one more: a <b>priced O1.5 0–6% over its
+  play bar</b> (the bettor, 28 Sep — 33 settled cards at 63.6% and
+  −18.3%, down in both halves of the session). Either way the card counts toward
   <b>no hit rate anywhere</b>, on this board or in the bank (the bettor's
   rule, 12 and 13 Sep). Both are kept, swept and graded, because a
   rule that is never checked is only a habit. Search <b>declined</b>,
