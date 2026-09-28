@@ -3107,6 +3107,77 @@ def main() -> None:
     # lane kind exactly like a card is.
     _fxmap = {f.teams: f for f in fixtures}
 
+    # PRICE AGAINST THE BAR, BY BAND (the bettor, 28 Sep: "give me this
+    # table on the Found bets tab ... which also automatically update
+    # when bets settle"). Each card's play bar is its FIRST-SIGHT stamp
+    # in the forward log (`needs`, the printed buy-from less 3%), under
+    # a lane the board could strike. A bet is banded only where it bought
+    # that same lane: a team total, a different line or the opposite side
+    # has no stamped bar of its own, and the bar is not re-derived here.
+    # Counted in the browser off whatever the filter leaves on screen;
+    # the all-cards table beside it is the same banding on the feed's
+    # best EU price, graded off the board's final scores. A MEASUREMENT
+    # ON DISPLAY ONLY: it declines nothing and informs no rule.
+    _stamps: dict = {}
+    if FORWARD.exists():
+        for ln in FORWARD.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            p = ln.split("\t")
+            if len(p) < 13 or _fs._artefact(p[5]):
+                continue
+            _stamps.setdefault((p[1], p[3]), p)
+            _stamps.setdefault(p[3], p)
+
+    def _bar_gap(b) -> float | None:
+        """Price paid against the card's stamped play bar, or None."""
+        if "(" in b["lane"]:
+            return None
+        f = _fxmap.get(b["name"])
+        st = (_stamps.get((f.kickoff.split(" ")[0], b["name"]))
+              if f is not None else None) or _stamps.get(b["name"])
+        if not st or st[5] != b["lane"]:
+            return None
+        try:
+            need = float(st[9])
+        except ValueError:
+            return None
+        return b["odds"] / need - 1 if need > 0 else None
+
+    BAR_BANDS = ((-9.0, -.05, "5%+ under"), (-.05, -.03, "3–5% under"),
+                 (-.03, 0.0, "0–3% under"), (0.0, .03, "0–3% over"),
+                 (.03, .06, "3–6% over"), (.06, .10, "6–10% over"),
+                 (.10, 99.0, "10%+ over"))
+    _cb = {n: [0, 0, 0.0] for _lo, _hi, n in BAR_BANDS}   # n, hits, P/L
+    _cseen: set = set()
+    for (key, st) in _stamps.items():
+        if not isinstance(key, tuple) or key in _cseen or key not in final:
+            continue
+        try:
+            need, best = float(st[9]), float(st[11] or st[10])
+        except ValueError:
+            continue
+        got = _fs._settle(st[5], *final[key])
+        if got is None or need <= 0:
+            continue
+        _cseen.add(key)
+        gap = best / need - 1
+        for lo, hi, n in BAR_BANDS:
+            if lo <= gap < hi:
+                a = _cb[n]
+                a[0] += 1
+                a[1] += got[1]
+                a[2] += got[0] * (best - 1) if got[0] > 0 else got[0]
+                break
+    over3 = ' class="over3"'
+    cards_bands = "".join(
+        f"<tr{over3 if lo >= .03 else ''}><td>{n}</td>"
+        + (f"<td>{a[0]}</td><td>{a[1] / a[0] * 100:.1f}%</td>"
+           f"<td>{a[2] / a[0] * 100:+.1f}%</td></tr>" if a[0] else
+           "<td>0</td><td>—</td><td>—</td></tr>")
+        for lo, _hi, n in BAR_BANDS for a in (_cb[n],))
+    cards_bands_n = sum(a[0] for a in _cb.values())
+
     def _short(note: str, cap: int = 64) -> str:
         """The Found bets cell gets the book and the first clause; the
         full note stays in bets.tsv, the README and the row's hover
@@ -3150,6 +3221,13 @@ def main() -> None:
         # whatever the filter leaves on screen.
         g = ("" if b["mark"] == "open"
              else f' data-g="{0 if b["mark"].startswith("❌") else 1}"')
+        # And, where the card stamped a bar on the lane bought, the gap to
+        # it, the return multiple and the stake — the bands panel's input.
+        gap = _bar_gap(b)
+        if gap is not None and b["mark"] != "open":
+            g += (f' data-gap="{gap:.4f}" data-r="{b["ret"].rstrip("x")}"'
+                  f' data-st="{b["stake"]:.2f}"'
+                  + (' data-ip="1"' if "in-play" in b["note"] else ""))
         # A taken bet is one lane, not three, so it carries a single
         # probability — a bare "<80" reaches it, a lane-prefixed
         # "tip 2 <80" does not, because the row has no such lane.
@@ -3594,6 +3672,13 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 /* Declined mode: the counters are reading the cards the guard REFUSED,
    which are in no hit rate on this page. It must be impossible to
    mistake for the record, so it does not borrow the record's colours. */
+.fc.bands {{ text-align:left; }}
+.bandbtn {{ margin:0; }}
+.bandgrid {{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }}
+@media (max-width:700px) {{ .bandgrid {{ grid-template-columns:1fr; }} }}
+.bandtable {{ width:100%; border-collapse:collapse; margin:6px 0; font-variant-numeric:tabular-nums; }}
+.bandtable td, .bandtable th {{ padding:3px 10px 3px 0; text-align:left; }}
+.bandtable tr.over3 td {{ background:rgba(233,163,74,.10); }}
 .fcounts.dmode .fc {{ border-color:#8a3a2e; background:rgba(138,58,46,.12); }}
 .fcounts.dmode .fc .v {{ color:#f0a08e; }}
 .fcap {{ color:var(--dim); font-size:11px; margin:6px 0 0; }}
@@ -4027,6 +4112,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   placeholder="filter — team, league, code, lane, tip 2 none… commas narrow: real madrid, team over">
  <div class="fcounts" id="fcounts"></div>
  <div class="fcap dim" id="fcap"></div>
+ <template id="cardbands"><table class="bandtable"><tr><th>band</th>
+  <th>cards</th><th>hit</th><th>ROI</th></tr>{cards_bands}</table>
+  <div class="s">all {cards_bands_n} settled cards with a first-sight quote,
+  at the feed's BEST EU price — what the market offered, often at a book
+  you cannot reach, so optimistic for you</div></template>
  <details class="fhelp"><summary>what can I type in the filter?</summary>
   <div><b>anything on the card</b> — a team, a league, a country, a code,
   a rung (<code>o2.5</code>), a mark (<code>hit</code>, <code>miss</code>,
@@ -4599,6 +4689,52 @@ function wantsDeclined(raw) {{
       || / not in the record /.test(s);
 }}
 
+// The price-vs-bar bands over the Found bets rows on screen: a settled
+// bet that carries data-gap (its price against the card's stamped play
+// bar), banded, with hit rate and staked ROI. Pre-kickoff only on the
+// toggle, since an in-play price is not comparable to a pre-match bar.
+const BAR_BANDS = [[-9, -.05, "5%+ under"], [-.05, -.03, "3–5% under"],
+  [-.03, 0, "0–3% under"], [0, .03, "0–3% over"], [.03, .06, "3–6% over"],
+  [.06, .10, "6–10% over"], [.10, 99, "10%+ over"]];
+function barBands() {{
+  const pre = !!window._bandsPre;
+  const acc = BAR_BANDS.map(() => [0, 0, 0, 0]);   // n, hits, staked, P/L
+  let tot = 0;
+  for (const r of document.querySelectorAll("#t-bets tr[data-gap]")) {{
+    if (r.style.display === "none") continue;
+    if (pre && r.dataset.ip) continue;
+    const gap = parseFloat(r.dataset.gap), st = parseFloat(r.dataset.st),
+          ret = parseFloat(r.dataset.r);
+    const i = BAR_BANDS.findIndex(b => gap >= b[0] && gap < b[1]);
+    if (i < 0) continue;
+    const a = acc[i];
+    a[0]++; a[1] += r.dataset.g === "1" ? 1 : 0; a[2] += st; a[3] += st * (ret - 1);
+    tot++;
+  }}
+  const rows = BAR_BANDS.map((b, i) => {{
+    const a = acc[i];
+    return "<tr" + (b[0] >= .03 ? ' class="over3"' : "") + "><td>" + b[2]
+      + "</td><td>" + a[0] + "</td><td>"
+      + (a[0] ? (a[1] / a[0] * 100).toFixed(1) + "%" : "—") + "</td><td>"
+      + (a[2] ? (a[3] / a[2] * 100 >= 0 ? "+" : "")
+                + (a[3] / a[2] * 100).toFixed(1) + "%" : "—") + "</td></tr>";
+  }}).join("");
+  const tpl = document.getElementById("cardbands");
+  return '<div class="bandgrid"><div><div class="l">your taken bets</div>'
+    + '<table class="bandtable"><tr><th>band</th><th>bets</th><th>hit</th>'
+    + "<th>ROI</th></tr>" + rows + "</table>"
+    + '<div class="s">' + tot + " settled bets in this filter on the card's "
+    + "own lane, at the price you PAID against the card's first-sight play "
+    + "bar (buy-from less 3%). ROI on stake.</div>"
+    + '<label class="s"><input type="checkbox"' + (pre ? " checked" : "")
+    + ' onchange="window._bandsPre=this.checked;recount()"> pre-kickoff only'
+    + "</label></div>"
+    + '<div><div class="l">all cards</div>' + (tpl ? tpl.innerHTML : "")
+    + "</div></div>"
+    + '<div class="s">Bands over 3% are shaded: the over-3% flag. A counter, '
+    + "not a finding, and nothing is declined on it.</div>";
+}}
+
 function recount() {{
   const box = document.getElementById("fcounts");
   if (!box) return;
@@ -4638,14 +4774,20 @@ function recount() {{
       if (r.style.display === "none") continue;
       n++; h += r.dataset.g === "1" ? 1 : 0;
     }}
+    // The book's hit rate already heads the page (the "taken bets" tile),
+    // so this slot holds the price-vs-bar bands instead, behind a button
+    // (the bettor, 28 Sep). Counted off the rows on screen, so it follows
+    // the filter and moves by itself as bets settle.
     box.style.display = "";
     box.style.gridTemplateColumns = "1fr";
-    box.innerHTML = '<div class="fc"><div class="v">' +
-      (n ? (h / n * 100).toFixed(1) + "%" : "—") +
-      '</div><div class="l">taken bets</div><div class="s">' +
-      (n ? h + "/" + n + " settled" : "nothing settled in this filter") +
-      "</div></div>";
-    if (cap) cap.textContent = "your own positions, pushes counted as hits";
+    box.innerHTML = '<div class="fc bands"><button class="btn bandbtn" '
+      + 'onclick="window._bandsOpen=!window._bandsOpen;recount()">'
+      + (window._bandsOpen ? "▾ hide" : "▸ show")
+      + " price vs play bar, by band</button>"
+      + (window._bandsOpen ? barBands() : "") + "</div>";
+    if (cap) cap.textContent = n
+      ? h + "/" + n + " settled in this filter, pushes counted as hits"
+      : "nothing settled in this filter";
     return;
   }}
   if (tab !== "done") {{
