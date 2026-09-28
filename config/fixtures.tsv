@@ -1162,7 +1162,7 @@
 2026-10-03 23:30	BRA-SB	Brasileirão Série B	Botafogo-SP v Vila Nova	O1.0 88.5% **−0.9%** · buy≥1.23 (+6.1% margin)	— none		
 2026-10-04 00:15	ARG-PD	Primera División	Argentinos Juniors v CA Tigre BA	O1.0 88.0% +1.0% · buy≥1.25 (+5.0% margin)	— none		
 2026-10-04 02:30	ARG-PD	Primera División	Atlético Huracán v Aldosivi Mar del Plata	U3.0 87.6% +2.5% · buy≥1.23 (+4.7% margin)	U2.75 70.5% +3.8% (floor −4.5) · buy≥1.35 (+3.9% margin)		
-2026-09-28 11:30	INT-FR	Friendlies	Turkmenistan v Palestine	U3.0 77.0% +5.9% · buy≥1.35 (+9.2% margin)	U2.75 65.8% +16.7% (floor −9.2) · buy≥1.43 (+3.6% margin)		
+2026-09-28 11:30	INT-FR	Friendlies	Turkmenistan v Palestine	U3.0 77.0% +5.9% · buy≥1.35 (+9.2% margin)	U2.75 65.8% +16.7% (floor −9.2) · buy≥1.43 (+3.6% margin)	PP Canceled	
 2026-09-28 12:25	INT-FR	Friendlies	Japan v Venezuela	O1.5 77.4% +2.1% · buy≥1.37 (+5.9% margin)	**Japan O0.5** 81.6% +6.5% (team) · buy≥1.35 (+10.4% margin)		DNB1 75.9% +10.0% · buy≥1.38 · probation
 2026-09-28 13:00	INT-FR	Friendlies	South Korea v Uruguay	O1.5 77.7% +2.3% · buy≥1.36 (+6.0% margin)	**South Korea O0.5** 82.9% +7.8% (team) · buy≥1.34 (+10.7% margin)		DNB1 76.6% +10.6% · buy≥1.37 · probation
 2026-09-28 14:00	INT-FR	Friendlies	Tajikistan v Palestine	U3.0 76.9% +5.7% · buy≥1.54 (+9.2% margin)	U2.75 55.7% +6.7% (floor −19.3) · buy≥1.65 (+2.8% margin)		DNB1 70.9% +4.9% · buy≥1.48 · probation
@@ -1232,15 +1232,15 @@
 2026-10-03 02:00	INT-FR	Friendlies	Colombia v Paraguay	O1.5 77.4% +2.0% · buy≥1.31 (+5.9% margin)	**Colombia O1.5** 57.5% +11.1% (team) · buy≥1.79 (+3.0% margin)		DNB1 76.8% +10.8% · buy≥1.37 · probation
 2026-10-03 04:00	INT-CONCACAF	Nations League & qualifiers	El Salvador v Jamaica	U4.25 73.1% **−4.8%** · buy≥1.33 (+8.6% margin)	U3.75 67.3% +7.3% (floor −7.7) · buy≥1.51 (+10.5% margin)		
 2026-10-03 15:00	INT-UEFA	Nations League & qualifiers	Finland v Albania	U4.25 81.0% **−2.1%** · buy≥1.25 (+5.7% margin)	U3.75 70.2% +3.4% (floor −4.8) · buy≥1.33 (+0.7% margin)		
-2026-10-03 16:00	ENG-L1	League One	Barnsley v Milton Keynes Dons	U4.25 83.0% **−4.5%** · buy≥1.22 (+6.1% margin)	— none		
-2026-10-03 16:00	ENG-L1	League One	Bromley FC v Wycombe Wanderers	U4.25 83.2% **−4.3%** · buy≥1.24 (+6.1% margin)	— none		
-2026-10-03 16:00	ENG-L1	League One	Luton v Doncaster Rovers	O1.5 78.2% +4.6% · buy≥1.38 (+7.9% margin)	**Luton O0.5** 78.9% +2.7% (team) · buy≥1.33 (+5.0% margin)		
-2026-10-03 16:00	ENG-L1	League One	Peterborough United v Notts County	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.9% +1.6% (floor −0.1) · buy≥1.27 (+1.8% margin)		
-2026-10-03 16:00	ENG-L1	League One	Wigan Athletic v Mansfield Town	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.6% +1.4% (floor −0.4) · buy≥1.27 (+1.6% margin)		
-2026-10-03 16:00	ENG-L1	League One	Wimbledon v Stevenage	U3.0 79.6% +6.4% · buy≥1.46 (+8.6% margin)	**Wimbledon U1.5** 73.6% +15.3% (team) · buy≥1.41 (+4.1% margin)		
-2026-10-03 16:00	ENG-L2	League Two	Colchester United v Port Vale	U4.25 84.4% **−2.6%** · buy≥1.24 (+3.4% margin)	O1.75 77.3% +3.1% (floor −0.7) · buy≥1.36 (+1.1% margin)		
-2026-10-03 16:00	ENG-L2	League Two	Northampton Town v Oldham Athletic	U4.25 87.5% **+0.5%** · buy≥1.22 (+5.2% margin)	— none		
-2026-10-03 16:00	ENG-L2	League Two	Walsall v Crawley Town	U4.25 88.0% **+1.0%** · buy≥1.21 (+5.3% margin)	U3.75 74.0% +1.5% (floor −4.0) · buy≥1.27 (+0.9% margin)		
+2026-10-03 16:00	ENG-L1	League One	Barnsley v Milton Keynes Dons	U4.25 83.0% **−4.5%** · buy≥1.22 (+6.1% margin)	— none	PP Postponed	
+2026-10-03 16:00	ENG-L1	League One	Bromley FC v Wycombe Wanderers	U4.25 83.2% **−4.3%** · buy≥1.24 (+6.1% margin)	— none	PP Postponed	
+2026-10-03 16:00	ENG-L1	League One	Luton v Doncaster Rovers	O1.5 78.2% +4.6% · buy≥1.38 (+7.9% margin)	**Luton O0.5** 78.9% +2.7% (team) · buy≥1.33 (+5.0% margin)	PP Postponed	
+2026-10-03 16:00	ENG-L1	League One	Peterborough United v Notts County	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.9% +1.6% (floor −0.1) · buy≥1.27 (+1.8% margin)	PP Postponed	
+2026-10-03 16:00	ENG-L1	League One	Wigan Athletic v Mansfield Town	U4.25 83.0% **−4.5%** · buy≥1.21 (+6.1% margin)	U3.75 74.6% +1.4% (floor −0.4) · buy≥1.27 (+1.6% margin)	PP Postponed	
+2026-10-03 16:00	ENG-L1	League One	Wimbledon v Stevenage	U3.0 79.6% +6.4% · buy≥1.46 (+8.6% margin)	**Wimbledon U1.5** 73.6% +15.3% (team) · buy≥1.41 (+4.1% margin)	PP Postponed	
+2026-10-03 16:00	ENG-L2	League Two	Colchester United v Port Vale	U4.25 84.4% **−2.6%** · buy≥1.24 (+3.4% margin)	O1.75 77.3% +3.1% (floor −0.7) · buy≥1.36 (+1.1% margin)	PP Postponed	
+2026-10-03 16:00	ENG-L2	League Two	Northampton Town v Oldham Athletic	U4.25 87.5% **+0.5%** · buy≥1.22 (+5.2% margin)	— none	PP Postponed	
+2026-10-03 16:00	ENG-L2	League Two	Walsall v Crawley Town	U4.25 88.0% **+1.0%** · buy≥1.21 (+5.3% margin)	U3.75 74.0% +1.5% (floor −4.0) · buy≥1.27 (+0.9% margin)	PP Postponed	
 2026-10-03 16:00	INT-FR	Friendlies	India v Brazil	O1.5 77.4% +2.1% · buy≥1.32 (+5.9% margin)	**Brazil O1.5** 67.0% +38.9% (team) · buy≥1.55 (+3.7% margin)		12 80.3% +4.8% · buy≥1.31 · probation
 2026-10-03 17:00	INT-FR	Friendlies	Russia v Namibia	O1.5 75.7% **+0.3%** · buy≥1.39 (+5.5% margin)	**Russia O0.5** 84.1% +9.0% (team) · buy≥1.32 (+11.0% margin)		DNB1 78.7% +12.7% · buy≥1.33 · probation
 2026-10-03 18:00	INT-UEFA	Nations League & qualifiers	Belarus v San Marino	U3.0 79.7% +12.9% · buy≥1.46 (+8.7% margin)	U2.75 59.3% +14.8% (floor −15.7) · buy≥1.56 (+3.1% margin)		DNB1 72.1% +15.7% · buy≥1.46 · probation
