@@ -11,10 +11,10 @@ counted	O	0–3% over	0						hold
 counted	O	3–6% over	0						hold
 counted	O	6–10% over	13	76.9	+2.2	+13.3	-7.3	+0.14	hold
 counted	O	10%+ over	3	66.7	-11.3	-100.0	+33.0	-0.26	hold
-counted	U	5%+ under	235	83.8	-4.4	-4.4	-4.3	-1.58	hold
-counted	U	3–5% under	54	72.2	-15.0	-16.8	-13.1	-2.06	hold
-counted	U	0–3% under	62	83.9	+1.8	+6.6	-3.0	+0.31	hold
-counted	U	0–3% over	8	87.5	+10.4	-3.5	+24.2	+0.66	hold
+counted	U	5%+ under	261	82.0	-7.0	-4.2	-9.8	-2.59	decline
+counted	U	3–5% under	36	77.8	-8.9	-1.9	-15.9	-1.07	hold
+counted	U	0–3% under	42	88.1	+5.7	+16.6	-5.2	+0.93	hold
+counted	U	0–3% over	9	88.9	+12.4	-3.5	+25.2	+0.88	hold
 counted	U	3–6% over	15	93.3	+23.6	+33.3	+15.1	+2.65	hold
 counted	U	6–10% over	23	73.9	+1.0	+12.0	-9.1	+0.08	hold
 counted	U	10%+ over	16	68.8	+0.6	+10.9	-9.6	+0.04	hold
@@ -25,9 +25,9 @@ rule	O	0–3% over	33	81.8	+5.2	+13.1	-2.3	+0.59	hold
 rule	O	3–6% over	34	67.6	-11.3	-14.5	-8.2	-1.06	hold
 rule	O	6–10% over	8	75.0	+0.3	-31.7	+32.3	+0.01	hold
 rule	O	10%+ over	2	0.0	-100.0	-100.0	-100.0		hold
-rule	U	5%+ under	43	79.1	-9.4	-7.6	-11.1	-1.30	hold
-rule	U	3–5% under	0						hold
-rule	U	0–3% under	0						hold
+rule	U	5%+ under	17	100.0	+23.6	+27.1	+20.4	+10.19	hold
+rule	U	3–5% under	18	61.1	-27.1	-32.9	-21.3	-1.92	hold
+rule	U	0–3% under	20	75.0	-6.3	-0.4	-12.3	-0.51	hold
 rule	U	0–3% over	9	66.7	-14.7	-8.0	-20.0	-0.68	hold
 rule	U	3–6% over	15	80.0	+3.2	-7.0	+12.1	+0.23	hold
 rule	U	6–10% over	25	80.0	+9.1	+14.1	+4.5	+0.82	hold
