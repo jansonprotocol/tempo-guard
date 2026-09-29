@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 81.8%
+## CURRENT CONFIRMED HITRATE: 81.7%
 
     lane                        Tip 1              Tip 2
-    all matches            563 / 688  81.8%    370 / 555  66.7%
-    played lanes  >+1%     243 / 297  81.8%    368 / 551  66.8%
+    all matches            563 / 689  81.7%    371 / 556  66.7%
+    played lanes  >+1%     243 / 297  81.8%    369 / 552  66.8%
     placed bets            174 / 225  77.3%    ROI -1.1%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 611 / 848   ·   72.1%**   ·   **Tip 1 — 243 / 297   ·   81.8%**   ·   **Tip 2 — 368 / 551   ·   66.8%**
+**Playable — 612 / 849   ·   72.1%**   ·   **Tip 1 — 243 / 297   ·   81.8%**   ·   **Tip 2 — 369 / 552   ·   66.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1002,7 +1002,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-1 · 29-09 02:00 <b>Jamaica v Honduras</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ U3.75 63.8% +3.8%<br>buy≥1.57 (+9.4% margin) · floor −11.2</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 67.4% +10.7% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 29-09 02:00 <b>St. Kitts and Nevis v Grenada</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>❌ <b>Grenada O0.5</b> 78.2% +11.0%<br>buy≥1.45 (+13.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 5-2 · 29-09 02:00 <b>St. Lucia v Bermuda</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>St. Lucia O0.5</b> 85.9% +13.9%<br>buy≥1.34 (+15.1% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+1' 5-0 <b>Guatemala v El Salvador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td><b>El Salvador U1.5</b> 74.1% +10.9%<br>buy≥1.52 (+12.4% margin) · team · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.6% +19.9% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 6-0 · 29-09 04:00 <b>Guatemala v El Salvador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>El Salvador U1.5</b> 74.1% +10.9%<br>buy≥1.52 (+12.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.6% +19.9% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-09 12:00 <b>Australia v Brazil</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.0% +1.7%<br>buy≥1.26 (+5.8% margin)</td><td><b>Brazil O1.5</b> 61.7% +33.7%<br>buy≥1.67 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.6% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-09 18:00 <b>Finland v Belarus</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>— under +1%</td><td>U3.75 73.6% +7.3%<br>buy≥1.32 (+4.3% margin) · floor −1.4</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 70.5% +13.5% · buy≥1.49 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 29-09 18:00 <b>Moldova v Faroe Islands</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>— under +1%</td><td>U3.75 73.3% +7.0%<br>buy≥1.32 (+4.1% margin) · floor −1.7</td></tr></table>
@@ -1160,7 +1160,6 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔴 PP Canceled <b>Turkmenistan v Palestine</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.0% +5.9%<br>buy≥1.35 (+9.2% margin)</td><td>U2.75 65.8% +16.7%<br>buy≥1.43 (+3.6% margin) · floor −9.2</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+1' 5-0 <b>Guatemala v El Salvador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.0% <b>−4.8%</b><br>buy≥1.32 (+8.6% margin)<br><i>U4.25 holding · ✗ gone</i><br><i>also live: U5.5 more room 77% fair 1.30</i></td><td><b>El Salvador U1.5</b> 74.1% +10.9%<br>buy≥1.52 (+12.4% margin) · team · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.6% +19.9% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-09 12:00 <b>Australia v Brazil</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.0% +1.7%<br>buy≥1.26 (+5.8% margin)</td><td><b>Brazil O1.5</b> 61.7% +33.7%<br>buy≥1.67 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.6% +3.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-09 18:00 <b>Finland v Belarus</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>U4.25 80.8% <b>−1.9%</b><br>buy≥1.22 (+5.6% margin)</td><td>U3.75 73.6% +7.3%<br>buy≥1.32 (+4.3% margin) · floor −1.4</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 70.5% +13.5% · buy≥1.49 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-09 18:00 <b>Moldova v Faroe Islands</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.1 +0.9)</td><td>U4.25 80.8% <b>−1.9%</b><br>buy≥1.22 (+5.6% margin)</td><td>U3.75 73.3% +7.0%<br>buy≥1.32 (+4.1% margin) · floor −1.7</td></tr></table>
@@ -1335,7 +1334,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 563 / 688   ·   81.8%**   ·   **Tip 2 — 370 / 555   ·   66.7%**
+**Tip 1 — 563 / 689   ·   81.7%**   ·   **Tip 2 — 371 / 556   ·   66.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (81.9 −5.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -2453,6 +2452,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-1 · 29-09 02:00 <b>Jamaica v Honduras</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.3% <b>−4.6%</b><br>buy≥1.37 (+8.7% margin)</td><td>✅ U3.75 63.8% +3.8%<br>buy≥1.57 (+9.4% margin) · floor −11.2</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 67.4% +10.7% · buy≥1.56 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-0 · 29-09 02:00 <b>St. Kitts and Nevis v Grenada</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.9% <b>−10.1%</b><br>buy≥1.28 (+8.6% margin)</td><td>❌ <b>Grenada O0.5</b> 78.2% +11.0%<br>buy≥1.45 (+13.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 5-2 · 29-09 02:00 <b>St. Lucia v Bermuda</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.4% <b>−4.5%</b><br>buy≥1.39 (+8.7% margin)</td><td>✅ <b>St. Lucia O0.5</b> 85.9% +13.9%<br>buy≥1.34 (+15.1% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">❌ 6-0 · 29-09 04:00 <b>Guatemala v El Salvador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.0% <b>−4.8%</b><br>buy≥1.32 (+8.6% margin)</td><td>✅ <b>El Salvador U1.5</b> 74.1% +10.9%<br>buy≥1.52 (+12.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.6% +19.9% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
