@@ -3331,8 +3331,12 @@ def main() -> None:
             _stamps.setdefault((p[1], p[3]), p)
             _stamps.setdefault(p[3], p)
 
-    def _bar_gap(b) -> float | None:
-        """Price paid against the card's stamped play bar, or None."""
+    def _bar_gap(b, card: bool = False) -> float | None:
+        """Price paid against the card's stamped play bar, or None. With
+        card=True, the CARD's first-sight best price against the same bar
+        — the gap the all-cards table bands by, so a bet can be read in
+        the same band as the card it was struck from (the bettor, 30 Sep:
+        "otherwise I'm reading 2 different things")."""
         if "(" in b["lane"]:
             return None
         f = _fxmap.get(b["name"])
@@ -3344,7 +3348,14 @@ def main() -> None:
             need = float(st[9])
         except ValueError:
             return None
-        return b["odds"] / need - 1 if need > 0 else None
+        if card:
+            try:
+                price = float(st[11] or st[10])
+            except ValueError:
+                return None
+        else:
+            price = b["odds"]
+        return price / need - 1 if need > 0 else None
 
     BAR_BANDS = ((-9.0, -.05, "5%+ under"), (-.05, -.03, "3–5% under"),
                  (-.03, 0.0, "0–3% under"), (0.0, .03, "0–3% over"),
@@ -3445,7 +3456,9 @@ def main() -> None:
         # it, the return multiple and the stake — the bands panel's input.
         gap = _bar_gap(b)
         if gap is not None and b["mark"] != "open":
-            g += (f' data-gap="{gap:.4f}" data-r="{b["ret"].rstrip("x")}"'
+            cg = _bar_gap(b, card=True)
+            g += ((f' data-cgap="{cg:.4f}"' if cg is not None else "")
+                  + f' data-gap="{gap:.4f}" data-r="{b["ret"].rstrip("x")}"'
                   f' data-sd="{ {"O": "o", "U": "u"}.get(b["lane"][:1], "") }"'
                   f' data-st="{b["stake"]:.2f}"'
                   + (' data-ip="1"' if "in-play" in b["note"] else ""))
@@ -4959,13 +4972,19 @@ const BAR_BANDS = [[-9, -.05, "5%+ under"], [-.05, -.03, "3–5% under"],
 function barBands() {{
   const pre = !!window._bandsPre;
   const side = window._bandsSide || "all";
+  // Banded by the CARD's first-sight best price by default — the same gap
+  // the all-cards table uses, so a row means the same cards in both; "my
+  // price" bands by what was paid instead. ROI is always at the price paid.
+  const by = window._bandsBy || "card";
   const acc = BAR_BANDS.map(() => [0, 0, 0, 0]);   // n, hits, staked, P/L
   let tot = 0;
   for (const r of document.querySelectorAll("#t-bets tr[data-gap]")) {{
     if (r.style.display === "none") continue;
     if (pre && r.dataset.ip) continue;
     if (side !== "all" && r.dataset.sd !== side) continue;
-    const gap = parseFloat(r.dataset.gap), st = parseFloat(r.dataset.st),
+    if (by === "card" && r.dataset.cgap === undefined) continue;
+    const gap = parseFloat(by === "card" ? r.dataset.cgap : r.dataset.gap),
+          st = parseFloat(r.dataset.st),
           ret = parseFloat(r.dataset.r);
     const i = BAR_BANDS.findIndex(b => gap >= b[0] && gap < b[1]);
     if (i < 0) continue;
@@ -4986,14 +5005,24 @@ function barBands() {{
   const pick = (k, label) => '<button class="sidebtn' + (side === k ? " on" : "")
     + '" data-k="' + k + '" onclick="window._bandsSide=this.dataset.k;recount()">'
     + label + "</button>";
+  const byb = (k, label) => '<button class="sidebtn' + (by === k ? " on" : "")
+    + '" data-k="' + k + '" onclick="window._bandsBy=this.dataset.k;recount()">'
+    + label + "</button>";
   return '<div class="sidebar">' + pick("all", "all lanes") + pick("o", "overs")
     + pick("u", "unders") + "</div>"
+    + '<div class="sidebar"><span class="s">band by</span>'
+    + byb("card", "card's price") + byb("paid", "my price") + "</div>"
     + '<div class="bandgrid"><div><div class="l">your taken bets</div>'
     + '<table class="bandtable"><tr><th>band</th><th>bets</th><th>hit</th>'
     + "<th>ROI</th></tr>" + rows + "</table>"
     + '<div class="s">' + tot + " settled" + word + " bets in this filter on the card's "
-    + "own lane, at the price you PAID against the card's first-sight play "
-    + "bar (buy-from less 3%). ROI on stake.</div>"
+    + "own lane, banded by "
+    + (by === "card"
+       ? "the CARD's first-sight best price against its play bar — the same "
+         + "gap as the all-cards table, so each row is your share of the same "
+         + "cards"
+       : "the price you PAID against the card's first-sight play bar")
+    + " (buy-from less 3%). ROI at the price you paid, on stake.</div>"
     + '<label class="s"><input type="checkbox"' + (pre ? " checked" : "")
     + ' onchange="window._bandsPre=this.checked;recount()"> pre-kickoff only'
     + "</label></div>"
