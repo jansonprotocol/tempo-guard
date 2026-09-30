@@ -3369,8 +3369,15 @@ def main() -> None:
     _cb = {k: {n: [0, 0, 0.0] for _lo, _hi, n in BAR_BANDS}
            for k in ("all", "o", "u")}             # n, hits, P/L
     _cseen: set = set()
+    # COUNTED CARDS ONLY (the bettor, 30 Sep: "just show it excluding
+    # declined all the time"): a card that is declined now — red, super
+    # red, a board rule or the profile review — is out of both tables,
+    # as it is out of every hit rate on the board.
+    _byday = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
     for (key, st) in _stamps.items():
         if not isinstance(key, tuple) or key in _cseen or key not in final:
+            continue
+        if key in _byday and is_declined(_byday[key]):
             continue
         try:
             need, best = float(st[9]), float(st[11] or st[10])
@@ -3406,7 +3413,8 @@ def main() -> None:
         return (f'<template id="cardbands-{k}"><table class="bandtable"><tr>'
                 f"<th>band</th><th>cards</th><th>hit</th><th>ROI</th></tr>"
                 f"{rows}</table><div class=\"s\">{tot} settled"
-                f"{_side_word[k]} cards with a first-sight quote, at the "
+                f"{_side_word[k]} counted cards (declined left out) with a "
+                "first-sight quote, at the "
                 "feed's BEST EU price — what the market offered, often at a "
                 "book you cannot reach, so optimistic for you</div></template>")
     cards_bands_tpl = "".join(_cards_tpl(k) for k in ("all", "o", "u"))
@@ -3457,7 +3465,8 @@ def main() -> None:
         # And, where the card stamped a bar on the lane bought, the gap to
         # it, the return multiple and the stake — the bands panel's input.
         gap = _bar_gap(b)
-        if gap is not None and b["mark"] != "open":
+        if (gap is not None and b["mark"] != "open"
+                and not (f is not None and is_declined(f))):
             cg = _bar_gap(b, card=True)
             g += ((f' data-cgap="{cg:.4f}"' if cg is not None else "")
                   + f' data-gap="{gap:.4f}" data-r="{b["ret"].rstrip("x")}"'
@@ -5018,7 +5027,8 @@ function barBands() {{
     + '<div class="bandgrid"><div><div class="l">your taken bets</div>'
     + '<table class="bandtable"><tr><th>band</th><th>bets</th><th>hit</th>'
     + "<th>ROI</th></tr>" + rows + "</table>"
-    + '<div class="s">' + tot + " settled" + word + " bets in this filter on the card's "
+    + '<div class="s">' + tot + " settled" + word + " bets in this filter on counted cards "
+    + "(bets on declined cards left out), on the card's "
     + "own lane, banded by "
     + (by === "card"
        ? "the CARD's first-sight best price against its play bar — the same "
