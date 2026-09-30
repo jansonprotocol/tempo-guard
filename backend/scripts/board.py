@@ -574,6 +574,9 @@ def verify(quiet: bool = False, allow_stale: bool = False) -> None:
             i = app.index(f'id="{pid}"')
             ends = [x for x in (app.find('class="tabpane"', i + 1),
                                 app.find('<div id="learn"', i + 1),
+                                # Learn is a popup since 30 Sep, and its
+                                # example cards sit inside the modal.
+                                app.find('<div class="lmodal"', i + 1),
                                 app.find("</section>", i + 1)) if x > 0]
             panes[pid] = app[i:min(ends)] if ends else app[i:]
 

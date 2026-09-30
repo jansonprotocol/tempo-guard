@@ -152,9 +152,11 @@ def _fmt(cell: str, fixture: str = "", quoted: bool = True) -> str:
     q = (quotes().get((fixture, _struck(m.group(1))))
          if (m and fixture and quoted) else None)
     if q:
-        best = (f' · best <b>{html.escape(q["best"])}</b> '
-                f'<span class="dim">{html.escape(q["book"])}</span>'
-                if q["best"] != q["consensus"] else "")
+        # The feed's median ("market") is gone from the card (the bettor,
+        # 30 Sep: "remove market, I don't look at that"): the best price
+        # and its book lead the line on their own.
+        best = (f'best <b>{html.escape(q["best"])}</b> '
+                f'<span class="dim">{html.escape(q["book"])}</span>')
         uni = (f' <span class="dim">· Unibet {html.escape(q["unibet"])}</span>'
                if q["unibet"] else "")
         # "market", not "buy at min" (the bettor, 12 Sep, reading it as an
@@ -171,11 +173,20 @@ def _fmt(cell: str, fixture: str = "", quoted: bool = True) -> str:
                f'board calls PLAY from the band bar in the verdict line.">'
                f'· value {html.escape(bm.group(1))}</span>' if bm else "")
         s = re.sub(r"buy≥\s*[\d.]+(\s*\([^)]*\))?",
-                   f'<span class="buyat" title="The market: the median quote '
-                   f'across the feed\'s books for this lane.">market '
-                   f'<b>{html.escape(q["consensus"])}</b>{best}{uni}</span>{val}', s)
+                   f'<span class="buyat" title="The best price across the '
+                   f'feed\'s EU books for this lane, and where.">'
+                   f'{best}{uni}</span>{val}', s)
     # LEAD WITH THE LINE THAT REACHES THE SLIP. Athena publishes Asian
     # rungs; a real bet is the safer neighbour — U3.0 is struck as U3.5.
+    # With no quote to show (unquoted, or past kickoff) the engine's own
+    # buy>= used to stand on the line, which is the "needs" number the
+    # bettor does not read (30 Sep): it is shown as the lane's value
+    # instead, the same word the quoted line uses, margin on the hover.
+    if not q:
+        s = re.sub(r"buy≥\s*([\d.]+)(?:\s*\(([^)]*)\))?",
+                   lambda mm: (f'<span class="dim" title="The engine\'s own '
+                               f'price for this lane ({mm.group(2) or ""})">'
+                               f'value {mm.group(1)}</span>'), s)
     # Printing the rung beside a price quoted for the struck line invites
     # exactly the wrong bet: Unibet pays 1.45 on U3.0 against 1.29 on
     # U3.5, so a reader chasing the bigger number takes a lane that
@@ -1467,9 +1478,34 @@ def _gap_html(g: dict | None) -> str:
            f"(buy-from less 3%), {g['src']}: {books}. Search gap 8 for the "
            "6–10% band, gap>6 or gap<-3 for a threshold. Information only.")
     cls = " over3" if hi >= 3 else ""
+    # The band's record, at the BEST price's band — the same banding as
+    # the Found bets panel: counted cards only, by the card's first-sight
+    # best price; the bettor's bets at the price he paid (30 Sep).
+    at = gap_band(hi)
+    stats = ""
+    if BAND_STATS:
+        def cell(who, t):
+            n, h, r = t.get(at, (0, 0, 0))
+            return (f"<div>{who} <b>{n}</b>"
+                    + (f" · {h:.0f}% · <b>{r:+.1f}%</b>" if n else "")
+                    + "</div>")
+        # The band is already on the VS BAR line; it is named here only
+        # when that line spans two bands, to say which one these are.
+        which = f"<div>at {at}</div>" if b1 != b2 else ""
+        stats = (f'<div class="gapstats" title="The {at} band on counted '
+                 f'cards: your settled bets on the card\'s own lane at the '
+                 f'price you paid, and every card at the feed\'s best EU price '
+                 f'at first sight — the Found bets panel\'s two tables.">'
+                 f'{which}{cell("my bets", BAND_STATS["bets"])}'
+                 f'{cell("all cards", BAND_STATS["cards"])}</div>')
     return (f'<div class="gapbar{cls}" title="{html.escape(tip)}">'
             f'<span class="bl">VS BAR</span> <b>{rng}</b> '
-            f'<span class="dim">· {band}</span></div>')
+            f'<span class="dim">· {band}</span></div>{stats}')
+
+
+# Filled once per render from the Found bets panel's populations, before
+# any card is drawn; empty means the line is left off.
+BAND_STATS: dict = {}
 
 
 PLAYED_MARKS = ("strong", "normal", "watch")
@@ -1937,23 +1973,17 @@ def _frozen_guard(f, call: dict) -> str:
     badge = (f'<div class="guard g-{_gclass(lab)}" '
              f'title="{html.escape(tip)}">{lab}</div>')
 
-    word = {"strong": "★ STRONG · PLAY", "normal": "PLAY",
+    # The card leads with the tip box, so the call is a pill in it rather
+    # than a line of its own (the bettor, 30 Sep: "choose one of the play
+    # tip 1 ... I'll choose the original box, fuse the rest").
+    word = {"strong": "★ STRONG", "normal": "PLAY",
             "watch": "watch", "no play": "no play"}[call["mark"]]
     cls = {"strong": "strong", "normal": "yes",
            "watch": "dimv", "no play": "no"}[call["mark"]]
-    when = "was" if f.settled else "running · was"
-    who = f'Tip {r.get("tip") or ""} {html.escape(str(r.get("lane") or ""))}'
-    tail = ""
-    if r.get("need") and r.get("best"):
-        tail = (f'<span class="dim"> · needed {r["need"]:.2f}, '
-                f'{html.escape(str(r.get("book") or "market"))} paid</span> '
-                f'<b>{r["best"]:.2f}</b>')
-    # The date the price was frozen goes on hover rather than in the
-    # line: on a phone the strong block ran to four lines (the bettor,
-    # 12 Sep: "some are big").
-    return (badge + f'<div class="verdict {cls}" title="price at first '
-            f'sight, {html.escape(r["d"])}">{when} {word} '
-            f'<span class="dim">· {who.strip()}</span>{tail}</div>')
+    when = "was " if f.settled else "running · was "
+    mark = (f'<span class="vmark {cls}" title="the call at first sight, '
+            f'{html.escape(r["d"])}">{when}{word}</span>')
+    return badge, mark
 
 
 def _guard(f, best: int) -> str:
@@ -1980,7 +2010,7 @@ def _guard(f, best: int) -> str:
         return _frozen_guard(f, call)
     v = verdict(f, best)
     if not v:
-        return ""
+        return "", ""
     lab, sc = v["label"], v["score"]
     tip = (_says_text(lab)
            + ("The tier says avoid. " if lab.endswith("red") else "")
@@ -1996,37 +2026,23 @@ def _guard(f, best: int) -> str:
     # top-quartile score in Europe grades 81.0% and +8.87% (+9.91/+7.83
     # by window) while everything else grades 72.8% and -0.67%. One half
     # carries the entire return; the other has no measured edge at all.
-    who = f'Tip {best} {html.escape(v["lane"])}' if v["lane"] else f'Tip {best}'
-    need, odds, book = v["need"], v["odds"], v["book"] or "market"
-    bt = html.escape(
-        f"PLAY needs the engine's value price less {VALUE_BAND*100:.0f}% "
-        + (f"({v['value']:.2f} on this lane), " if v["value"] else "")
-        + f"floored at the {v['band']} claim band's bar of {v['bar']:.2f}: "
-        f"{need:.2f} here. A quote at or within {WATCH_BAND*100:.0f}% of the "
-        f"band bar but short of value is a watch card (the bettor's rule, 12 Sep).")
+    need, odds = v["need"], v["odds"]
     if v["strong"]:
-        line = (f'<div class="verdict strong" title="{bt}">★ STRONG · PLAY {who} '
-                f'<span class="dim">· needs {need:.2f}, '
-                f'{html.escape(book)} pays</span> <b>{odds:.2f}</b>'
-                f'<span class="dim"> · score {sc:+.1f}</span></div>')
+        mark = '<span class="vmark strong">★ STRONG · PLAY</span>'
     elif v["play"]:
-        line = (f'<div class="verdict yes" title="{bt}">PLAY {who} '
-                f'<span class="dim">· needs {need:.2f}, '
-                f'{html.escape(book)} pays</span> <b>{odds:.2f}</b></div>')
+        mark = '<span class="vmark yes">PLAY</span>'
     elif lab.endswith("red"):
-        line = (f'<div class="verdict no">no play <span class="dim">· '
-                f'{who} · the tier says avoid</span></div>')
+        mark = '<span class="vmark no" title="the tier says avoid">no play</span>'
     elif odds is None:
-        line = (f'<div class="verdict dimv" title="{bt}">{who} needs <b>{need:.2f}</b> '
-                f'<span class="dim">· nothing quoted yet</span></div>')
+        mark = '<span class="vmark dimv">nothing quoted yet</span>'
+    elif v["watch"]:
+        mark = '<span class="vmark dimv">watch</span>'
     else:
-        line = (f'<div class="verdict no" title="{bt}">no play <span class="dim">· {who} '
-                f'needs {need:.2f}, best anywhere is</span> '
-                f'<b>{odds:.2f}</b></div>')
+        mark = '<span class="vmark no">no play</span>'
     if odds is not None:
         _stamp(f, best, v["lane"], lab, sc, v["claim"], need,
                quotes().get((f.teams, v["lane"])) or {}, v["bar"])
-    return badge + line
+    return badge, mark
 
 
 def region_silent(code: str) -> bool:
@@ -2609,7 +2625,7 @@ def _card(f, kind: str, reads: dict) -> str:
             'card — not a claim that it is the better bet; the buy≥ '
             'bracket decides that">★</span>')
 
-    def lane(which, cell, lab=None, noplay=False, terse=False):
+    def lane(which, cell, lab=None, noplay=False, terse=False, head="", extra=""):
         if cell.strip() in ("", "—", "— none"):
             return ""
         pl = " pl" if (not f.settled and f.lane(which)) else ""
@@ -2643,8 +2659,8 @@ def _card(f, kind: str, reads: dict) -> str:
                      'the price never cleared its bar or it is not the '
                      'starred lane.">no play</span>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span> {_fmt(cell, f.teams, quoted=not past)}{tail}"
-                f"{star if which == best else ''}"
+                f"</span>{head} {_fmt(cell, f.teams, quoted=not past)}{tail}"
+                f"{star if which == best else ''}{extra}"
                 f"{_lanebar(f, cell, lab, terse)}{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
@@ -2694,8 +2710,11 @@ def _card(f, kind: str, reads: dict) -> str:
     # (the bettor, 15 Sep). The lanes behind the fold keep theirs — they
     # have no verdict of their own and the mark is the only thing telling
     # them apart from an instruction.
+    badge, vmark = _guard(f, best)
+    gp = price_gap(f, best, v)
     face = lane(seq[0], cells[seq[0]], lab, terse=bool(v),
-                noplay=mark and not playing and not v)
+                noplay=mark and not playing and not v,
+                head=(" " + vmark) if vmark else "", extra=_gap_html(gp))
     rest = "".join(lane(w, cells[w], None, noplay=mark) for w in seq[1:])
     # Which lane the card starred, for the "line taken" flag: live before
     # kickoff, frozen after it, so a completed card reads the same as it
@@ -2710,13 +2729,18 @@ def _card(f, kind: str, reads: dict) -> str:
             pick = _struck(_rung(cells[1]))
     else:
         pick = v["lane"] if v else None
-    gp = price_gap(f, best, v)
+    # The colour stamp sits in the row of stamps at the top (the bettor,
+    # 30 Sep), beside the live tag, the strikes and any decline.
+    lb = _livetag_html(f)
+    if badge:
+        lb = (lb.replace('<div class="livebar">', '<div class="livebar">' + badge, 1)
+              if lb else f'<div class="livebar">{badge}</div>')
     top = (f'<div class="teams">{html.escape(f.teams)}'
            f'<span class="more">more ▾</span></div>'
-           f'{_livetag_html(f)}'
+           f'{lb}'
            f'{_taken(f, pick)}'
            f'<div class="meta">{head} · {league}</div>{kw}'
-           f"{_guard(f, best)}{_gap_html(gp)}{face}{_profile_html(f)}")
+           f"{face}{_profile_html(f)}")
     body = rest + tie_html
     if read:
         body += f'<div class="read">{read[1]}</div>'
@@ -2884,27 +2908,28 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
                 f'<div class="lesson">{lesson}</div></div>')
 
     blocks = show(normal, "play", "1 \u00b7 A normal play",
-        "The card is green-bordered and the verdict line says <b>PLAY</b> "
-        "with the lane, the price it needs and the book that pays it. Read "
-        "it in this order: the <b>label</b> (green+, green, orange, pink \u2014 the "
-        "claim band the starred lane sits in; orange lands 82.9% of the time, "
-        "green 88.0%), then <b>needs</b> (the lane's value price less 3%, "
-        "floored at the band's bar: 1.14 at a claim of 85 or more, 1.18 at "
-        "80\u201385, 1.31 at 75\u201380), then the <b>price</b>. The price cleared the bar, so this "
-        "is a bet: 4% of the bankroll at that price or better. If the book "
-        "you use is short of the bar, it is not a bet there.") + show(
+        "Read it top to bottom. The <b>stamps</b> row: the colour label "
+        "(green+, green, orange, pink \u2014 the claim band of the starred "
+        "lane; orange lands 82.9% of the time, green 88.0%), the live tag "
+        "and any strikes. Then the <b>tip box</b>: the lane with its "
+        "<b>PLAY</b> pill, the engine's claim, the best price and its book. "
+        "Under it <b>VS BAR</b>: how far that price sits over the card's play "
+        "bar, as a range across the three best books, and the band it lands "
+        "in \u2014 with what that band has done, <b>my bets</b> at your price "
+        "and <b>all cards</b> at the feed's best. PLAY means the best price "
+        "cleared the bar; if your own book is short of it, it is not a bet "
+        "there.") + show(
         strong, "play", "2 \u00b7 A strong play",
         "Same as a normal play, plus <b>\u2605 STRONG</b>: the confluence score "
         "\u2014 the card run back through the board's own searches, league, each "
         "club, the side, club-and-side, all as-of \u2014 sits in the top quarter "
         "in a European league. On 1,008 replayed bets the strong ones landed "
-        "81.0% at +8.87% while the rest landed 72.8% at \u22120.67%. In the "
-        "bankroll replay this lane is the only thing that compounds: play "
+        "81.0% at +8.87% while the rest landed 72.8% at \u22120.67%. Play "
         "these first, and never skip one for price if any book you hold "
         "clears the bar.") + show(
         none, "pend", "3 \u00b7 A card with no play",
-        "The lane bars say <b>DECLINE</b> or <b>needs</b> and the verdict "
-        "says <b>no play</b>: either the tier is red (the guard says avoid, "
+        "The tip box says <b>no play</b> (or <b>watch</b>, or <b>nothing "
+        "quoted yet</b>): either the tier is red (the guard says avoid, "
         "whatever the price) or no book clears the bar. Nothing here is a "
         "bet. Do not buy a declined card because it is a good read \u2014 the "
         "market disagrees with Athena most exactly where Athena is most "
@@ -2914,19 +2939,31 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         "books.")
 
     rows = [
-        ("The rule in one line", "Bet only what the verdict line says "
-         "PLAY, at 4% of the bankroll, at or above the price it needs. "
-         "Everything else on the board is graded and banked, not played."),
+        ("The rule in one line", "Bet only what the tip box marks PLAY, at "
+         "your unit, at a price that clears the card's bar. Everything else "
+         "on the board is graded and banked, not played."),
         ("Label", "the colour of the starred lane's CLAIM BAND (the "
          "bettor's ladder, 12 Sep): green+ at 90 or more, green 85\u201390, "
          "orange 80\u201385, pink 75\u201380, each with its measured hit rate on "
          "the bank. Red and super red are still the tier and the "
          "confluence score saying avoid; they are never played."),
-        ("needs", "the lane's value price (the engine's break-even plus its "
-         "margin and league blend) less 3%, floored at the band's bar: 1.14 "
-         "at a claim of 85 or more, 1.18 at 80\u201385, 1.31 at 75\u201380, each the "
-         "ROI-optimal bar on the bank at closing prices (the bettor's rule, "
-         "12 Sep)."),
+        ("The play bar", "the lane's value price (the engine's break-even "
+         "plus its margin and league blend) less 3%, floored at the band's "
+         "bar: 1.14 at a claim of 85 or more, 1.18 at 80\u201385, 1.31 at "
+         "75\u201380 (the bettor's rule, 12 Sep). The card no longer prints it; "
+         "VS BAR says how far the price sits from it."),
+        ("VS BAR", "the best price against the play bar, in percent, as a "
+         "range from the third-best to the best book before kickoff (one "
+         "number after it, the first-sight price). Eight bands: 10%+ under, "
+         "5\u201310, 3\u20135, 0\u20133 under, 0\u20133 over, 3\u20136, 6\u201310, 10%+ over; amber "
+         "from 3% over. The line under it is that band's record on counted "
+         "cards: <b>my bets</b> at the price you paid, <b>all cards</b> at "
+         "the feed's best. Search it with <code>gap 8</code>, "
+         "<code>gap&gt;6</code>, <code>gap&lt;-3</code>."),
+        ("Found bets bands", "the same eight bands on the Found bets tab, "
+         "behind the button under the filter: your bets and all cards side "
+         "by side, split by overs and unders, declined cards left out, "
+         "banded by the card's price (or by what you paid, on the switch)."),
         ("PASS / DECLINE", "every lane on the card carries its own bar: "
          "PASS means the best quote clears it, DECLINE means it does not, "
          "needs x.xx means nothing is quoted yet. Only the starred lane's "
@@ -2944,8 +2981,8 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "best clears its claim band's bar, or sits under it by five "
          "percent or less, but is short of the lane's value price. Not a "
          "play on the feed's prices — but your own book may clear it: "
-         "check the offer, take it only at or above the needs price on "
-         "the card."),
+         "check the offer, and take it only where VS BAR at your price "
+         "would read 0% or over."),
         ("When to decide", "at first sight, two or three days out. A card "
          "that clears then may be bought later if its price has drifted "
          "out. A card that does not clear then is not a play on Saturday "
@@ -2956,15 +2993,20 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "has since happened. Not buyable any more, so not a play — the "
          "price shown is the one from first sight, kept in the forward "
          "log. A card the board declined never appears here."),
-        ("⛔ Declined", "two kinds, one rule. A red or super-red label is "
-         "the tier saying avoid: never played at any price. A card tagged "
-         "LIVE UNSAFE is one whose lane and edge band have been landing "
-         "under 77 — an Athena lane, a watch card, or since 21 Sep a "
-         "priced play, where unsafe means the book paid more than Athena "
-         "asked and in this league the book has been right. Either way the card "
+        ("⛔ Declined", "a red or super-red label is the tier saying avoid: "
+         "never played at any price. A card tagged LIVE UNSAFE is one whose "
+         "lane and edge band have been landing under 77. A declined STRIKE "
+         "COMBO reaches a priced play, and so does a priced O1.5 0–6% over "
+         "its bar (28 Sep). The hover on ⛔ says which. A declined card "
          "counts toward NO hit rate — not the tiles, not the baselines, "
-         "not a league badge, not the bank (the bettor's rule, 12 Sep). "
-         "Both are swept and graded."),
+         "not a league badge, not the bank, not the band tables. All are "
+         "swept and graded."),
+        ("↺ Profile review", "every two days each group × side × price "
+         "band is re-measured on the board's settled cards. A declined "
+         "profile that has clearly earned it is <b>↺ released</b> back to "
+         "the board; a counted one that has clearly lost is declined (30+ "
+         "cards, both halves the same way, a 5% return, about 1 in 100 by "
+         "chance). Every move undoes itself when it stops clearing."),
         ("🔵 Live Watch", "the cards the price never cleared and the tier "
          "did not refuse, tagged live safe or live cautious: the ones a "
          "live buy may be read on, with the from-here line once they "
@@ -2985,19 +3027,23 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
             'repeat(auto-fit,minmax(300px,1fr))}.learncard h3{margin:6px 0}'
             '.lesson{font-size:.93em;line-height:1.45;margin-top:8px;'
             'padding:8px 10px;border-left:3px solid #888;opacity:.92}</style>'
-            f'<div id="learn"><h2>\U0001f393 Learn Athena \u2014 how the '
+            # A POPUP rather than a section to scroll to (the bettor, 30
+            # Sep): the backdrop closes it, and so do the button and Esc.
+            f'<div class="lmodal" id="learnmodal" onclick="if(event.target'
+            f'===this)this.classList.remove(\'on\')">'
+            f'<div class="lbox" id="learn">'
+            f'<button class="btn lshut" onclick="document.getElementById('
+            f'\'learnmodal\').classList.remove(\'on\')">\u2715 close</button>'
+            f'<h2>\U0001f393 Learn Athena \u2014 how the '
             f'board is played</h2>'
             f'<p class="dim">Three cards from today\'s board, live: the '
             f'lesson is whatever they show right now.</p>'
             f'<div class="learngrid">{blocks}</div>'
             f'<div class="wrap" style="margin-top:10px">'
             f"<table>{items}</table></div>"
-            # window. is not optional here: an inline handler runs with
-            # the element in its scope chain, and Element.prototype has a
-            # scrollTo of its own — so a bare scrollTo scrolled the
-            # button's own (unscrollable) content and silently did nothing.
-            f'<button class="btn" onclick="window.scrollTo({{top:0,'
-            f'behavior:\'smooth\'}})">\u2191 Back to top</button></div>')
+            f'<button class="btn" onclick="document.getElementById('
+            f'\'learnmodal\').classList.remove(\'on\')">✕ close</button>'
+            f'</div></div>')
 
 
 def _check_js(page: str) -> None:
@@ -3418,6 +3464,34 @@ def main() -> None:
                 "feed's BEST EU price — what the market offered, often at a "
                 "book you cannot reach, so optimistic for you</div></template>")
     cards_bands_tpl = "".join(_cards_tpl(k) for k in ("all", "o", "u"))
+
+    # The same two populations for every card's VS BAR line: counted
+    # cards only, banded by the card's first-sight best price; the bets
+    # at the price paid, hit with pushes counted as hits, ROI on stake.
+    BAND_STATS.clear()
+    BAND_STATS["cards"] = {n: (a[0], a[1] / a[0] * 100, a[2] / a[0] * 100)
+                           for n, a in _cb["all"].items() if a[0]}
+    _bb: dict = {}
+    for b in bet_rows:
+        if b["mark"] == "open":
+            continue
+        fx = _fxmap.get(b["name"])
+        if fx is not None and is_declined(fx):
+            continue
+        cg = _bar_gap(b, card=True)
+        if cg is None:
+            continue
+        try:
+            ret = float(b["ret"].rstrip("x"))
+        except ValueError:
+            continue
+        a = _bb.setdefault(gap_band(cg * 100), [0, 0, 0.0, 0.0])
+        a[0] += 1
+        a[1] += 0 if b["mark"].startswith("❌") else 1
+        a[2] += b["stake"]
+        a[3] += b["stake"] * (ret - 1)
+    BAND_STATS["bets"] = {n: (a[0], a[1] / a[0] * 100, a[3] / a[2] * 100)
+                          for n, a in _bb.items() if a[0] and a[2]}
 
     def _short(note: str, cap: int = 64) -> str:
         """The Found bets cell gets the book and the first clause; the
@@ -3917,6 +3991,17 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 /* Declined mode: the counters are reading the cards the guard REFUSED,
    which are in no hit rate on this page. It must be impossible to
    mistake for the record, so it does not borrow the record's colours. */
+.livebar .guard {{ margin:0 6px 0 0; vertical-align:middle; }}
+.vmark {{ font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+  padding:1px 7px; border-radius:999px; border:1px solid var(--edge);
+  margin-left:6px; vertical-align:1px; }}
+.vmark.yes {{ color:#8fe3a8; border-color:#2f6b45; }}
+.vmark.strong {{ color:#f3c969; border-color:#8a6d1f; }}
+.vmark.no {{ color:#f0a08e; border-color:#8a3a2e; }}
+.vmark.dimv {{ color:var(--dim); }}
+.gapstats {{ font-size:11px; color:var(--dim); margin:0 0 3px;
+  font-variant-numeric:tabular-nums; }}
+.gapstats b {{ color:var(--fg, inherit); }}
 .gapbar {{ font-size:12px; margin:3px 0 2px; color:var(--dim); }}
 .gapbar .bl {{ font-size:10px; letter-spacing:.1em; }}
 .gapbar b {{ color:var(--fg, inherit); font-variant-numeric:tabular-nums; }}
@@ -4010,8 +4095,12 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border:1px solid var(--edge); border-radius:8px; color:var(--gold);
   padding:9px 12px; margin:2px 0 8px; font:inherit; font-size:13px;
   cursor:pointer; text-align:center; }}
-#learn {{ margin-top:26px; border-top:1px solid var(--edge);
-  padding-top:6px; }}
+.lmodal {{ display:none; position:fixed; inset:0; z-index:60;
+  background:rgba(0,0,0,.62); padding:16px; overflow-y:auto; }}
+.lmodal.on {{ display:block; }}
+.lbox {{ max-width:1100px; margin:0 auto; background:var(--bg, #0f1319);
+  border:1px solid var(--edge); border-radius:12px; padding:14px 16px 18px; }}
+.lbox .lshut {{ float:right; margin:0 0 6px 8px; }}
 input#q {{ width:100%; background:var(--card); border:1px solid var(--edge);
   border-radius:8px; color:var(--tx); padding:9px 12px; margin:2px 0 10px; }}
 h2 {{ font-size:16px; margin:16px 0 10px; }}
@@ -4358,9 +4447,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <a href="#home/done" data-t="done" class="grey">⚪ Completed
    <span class="dim">{len(done)}</span></a>
  </div>
- <button class="btn" onclick="document.getElementById('learn')
-  .scrollIntoView({{behavior:'smooth'}})">🎓 Learn Athena — how to read
-  these blocks</button>
+ <button class="btn" onclick="document.getElementById('learnmodal')
+  .classList.add('on')">🎓 Learn Athena — how to read these blocks</button>
  <input id="q" oninput="applyFilter(this.value)"
   placeholder="filter — team, league, code, lane, tip 2 none… commas narrow: real madrid, team over">
  <div class="fcounts" id="fcounts"></div>
@@ -4872,7 +4960,11 @@ function hideCard(ev) {{
   document.getElementById("fxmodal").classList.remove("on");
 }}
 document.addEventListener("keydown", e => {{
-  if (e.key === "Escape") hideCard();
+  if (e.key === "Escape") {{
+    hideCard();
+    const lm = document.getElementById("learnmodal");
+    if (lm) lm.classList.remove("on");
+  }}
 }});
 
 // One term against one element: a threshold, an exact league, or text.
