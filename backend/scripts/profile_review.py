@@ -14,10 +14,10 @@ cannot go looking for the one slice that happens to win:
     group   counted | rule (declined by a board rule: strike combo, live
             unsafe, the O1.5 band) | red | super red
     side    O | U           (result lanes are left out)
-    band    the price against the play bar, in the seven bands the card's
+    band    the price against the play bar, in the eight bands the card's
             VS BAR line and the Found bets panel print
 
-2 x 7 x 4 = 56 cells, measured on the board's settled cards at the price
+2 x 8 x 4 = 64 cells (56 before 30 Sep, when 5%+ under was split at 10%), measured on the board's settled cards at the price
 the card was first seen at (the forward log), graded off the final score.
 The group is the card's BASE status — what the tier and the older rules
 say before this review — so a released or declined cell is still measured

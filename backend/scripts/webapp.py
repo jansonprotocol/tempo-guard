@@ -1411,13 +1411,14 @@ def was_called(f) -> dict | None:
 # PRICE AGAINST THE BAR, ON THE CARD (the bettor, 28 Sep: "give me a
 # band mark on all cards in which band ... the final pick stands, give me
 # a range band from the 2-3 best bookmaker prices", searchable as "gap").
-# The same seven bands as the Found bets panel, in percent over the final
+# The same eight bands as the Found bets panel, in percent over the final
 # pick's PLAY bar (verdict()["need"], the printed buy-from less 3%).
 # Before kickoff the range runs from the third-best to the best book in
 # the quote file; after it, the card keeps its first-sight stamp, which
 # carries only the best price, so the range closes to one number.
 # Information only: no bar, verdict, colour or hit rate moves on it.
-GAP_BANDS = ((-999.0, -5.0, "5%+ under"), (-5.0, -3.0, "3–5% under"),
+GAP_BANDS = ((-999.0, -10.0, "10%+ under"), (-10.0, -5.0, "5–10% under"),
+             (-5.0, -3.0, "3–5% under"),
              (-3.0, 0.0, "0–3% under"), (0.0, 3.0, "0–3% over"),
              (3.0, 6.0, "3–6% over"), (6.0, 10.0, "6–10% over"),
              (10.0, 999.0, "10%+ over"))
@@ -3357,7 +3358,8 @@ def main() -> None:
             price = b["odds"]
         return price / need - 1 if need > 0 else None
 
-    BAR_BANDS = ((-9.0, -.05, "5%+ under"), (-.05, -.03, "3–5% under"),
+    BAR_BANDS = ((-9.0, -.10, "10%+ under"), (-.10, -.05, "5–10% under"),
+                 (-.05, -.03, "3–5% under"),
                  (-.03, 0.0, "0–3% under"), (0.0, .03, "0–3% over"),
                  (.03, .06, "3–6% over"), (.06, .10, "6–10% over"),
                  (.10, 99.0, "10%+ over"))
@@ -4380,7 +4382,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <b>price against the bar</b> — <code>gap 8</code> keeps the whole band
   8 sits in (6–10% over the final pick's play bar), <code>gap -2</code>
   the 0–3% under band; <code>gap&gt;6</code>, <code>gap&lt;-3</code> for a
-  threshold. Bands: 5%+ under, 3–5 under, 0–3 under, 0–3 over, 3–6, 6–10,
+  threshold. Bands: 10%+ under, 5–10 under, 3–5 under, 0–3 under, 0–3 over, 3–6, 6–10,
   10%+ over. Before kickoff the card reads a range off the three best
   books and matches where that range reaches; after kickoff it keeps the
   first-sight best price.<br>
@@ -4773,7 +4775,7 @@ function parseCmp(s) {{
   // "gap": the final pick's price against its play bar, in percent (the
   // bettor, 28 Sep). "gap>6" / "gap<-3" is a threshold; a bare "gap 8"
   // means the whole band 8 sits in, 6–10% (and "gap -2" the -3–0% band),
-  // the same seven bands the card and the Found bets panel print.
+  // the same eight bands the card and the Found bets panel print.
   const gp = /^gap ?(<=|>=|<|>)? ?(-?\d+(?:\.\d+)?)$/.exec(t);
   if (gp) return {{what: "gap", op: gp[1] || "band", val: parseFloat(gp[2])}};
   const g = GOALQ.exec(t);
@@ -4784,7 +4786,7 @@ function parseCmp(s) {{
   return {{what: "prob", lane: m[1] || null, op: m[2] || m[5],
           val: parseFloat(m[3] !== undefined ? m[3] : m[4])}};
 }}
-const GAP_BANDS = [-999, -5, -3, 0, 3, 6, 10, 999];
+const GAP_BANDS = [-999, -10, -5, -3, 0, 3, 6, 10, 999];
 function cmpOk(el, c) {{
   const d = el.dataset;
   if (c.what === "gap") {{
@@ -4966,7 +4968,8 @@ function wantsDeclined(raw) {{
 // bet that carries data-gap (its price against the card's stamped play
 // bar), banded, with hit rate and staked ROI. Pre-kickoff only on the
 // toggle, since an in-play price is not comparable to a pre-match bar.
-const BAR_BANDS = [[-9, -.05, "5%+ under"], [-.05, -.03, "3–5% under"],
+const BAR_BANDS = [[-9, -.10, "10%+ under"], [-.10, -.05, "5–10% under"],
+  [-.05, -.03, "3–5% under"],
   [-.03, 0, "0–3% under"], [0, .03, "0–3% over"], [.03, .06, "3–6% over"],
   [.06, .10, "6–10% over"], [.10, 99, "10%+ over"]];
 function barBands() {{
