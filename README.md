@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            351 / 429  81.8%    232 / 355  65.4%
     played lanes  >+1%     177 / 218  81.2%    232 / 353  65.7%
-    placed bets            177 / 228  77.6%    ROI -0.5%
+    placed bets            178 / 229  77.7%    ROI -0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -2505,7 +2505,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 177 / 228  ·  ROI -0.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 178 / 229  ·  ROI -0.3%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -2738,6 +2738,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Scotland v Switzerland | O1.5 | 1.33 | 1.33x | Unibet, 1.15 a side, two singles taken 28 Sep, pre-kickoff (29 Sep 20:45). Both on the card's own side — no wrong lane. THE FLAGGED LEG. The card's own rung: O1.5, claim 80.5%, edge +1.5%, over the +1% playable bar. The card prints buy>=1.31 and its play bar is 1.271; 1.33 is +4.6% OVER the play bar, in the 3-6% over band, which trips the over-3% counter shipped 27 Sep. WHAT THAT COUNTER IS WORTH: it rests on 36 of his own bets that returned -14.7% in this band, and the same band across all 946 quoted cards returns +1.6%, so it has not replicated. Flag only, nothing declined. First sight on 23 Sep had the feed's best at 1.24 (William Hill), so the price has drifted out since the card was stamped. Orange. |
 | ✅ | Czechia v England | O1.5 | 1.20 | 1.20x | Unibet, 1.15 a side, two singles taken 28 Sep, pre-kickoff (29 Sep 20:45). Both on the card's own side — no wrong lane. The card's own rung: O1.5, claim 80.9%, edge +2.3%, over the +1% playable bar. The card prints buy>=1.22 and its play bar is 1.183; 1.20 is +1.4% over the play bar, in the 0-3% over band — no flag. The feed's first-sight best on 28 Sep was 1.28 at PINNACLE, which he cannot reach; the consensus was 1.20, which is what he got at a book he can use. Orange. |
 | ✅ | San Marino v Albania | U3.5 | 1.78 | 1.78x | Unibet, 1.15, single taken 28 Sep, pre-kickoff (29 Sep 20:45), after Scotland and Czechia on the same night. On the card's own side — no wrong lane. The card prints U3.0 and the board strikes it as U3.5 (odds_api.STRUCK); the engine's grader wins both on 0-3 goals, so they are the same bet and the card's bar applies unchanged. Claim 76.9%, pink, edge +10.6%. The card prints buy>=1.51 and its play bar is 1.465; 1.78 is +21.5% OVER the play bar, in the 6%+ over band, which trips the over-3% counter. WHAT THAT COUNTER IS WORTH: in the 3-6% band it has not replicated (-14.7% on 36 of his bets, +1.6% on 946 cards), but the 6%+ band is the one that is weak in both cuts — +0.2% on 51 of his bets, -0.7% and 71.3% hit on 123 cards, the lowest hit rate of any band. The size of the gap is the market disagreeing: the 1.73 consensus implies about 58% against the engine's 76.9%. Only 6 settled cards have sat 20%+ over the bar (3 landed); the last San Marino U3.5, against Finland on 26 Sep at 9% over, lost. Flag only, nothing declined. |
+| ✅ | Botafogo-SP v Ponte Preta | U3.5 | 1.42 | 1.42x | Unibet — pre-kickoff, coupon 13170317693, struck 29 Sep 19:21 CEST on a 30 Sep 00:30 kickoff. The card's own side — no wrong lane. The card prints U3.0 and the board strikes it as U3.5 (odds_api.STRUCK); the engine's grader wins both on 0-3 goals, so they are the same bet and the card's bar applies unchanged. Claim 84.5%, orange, confluence score -9.4. The card prints buy>=1.30 and its play bar is 1.261; 1.42 is +12.6% OVER the play bar, in the 10%+ over band, which trips the over-3% counter — a flag, not a decline, and in that band his bets and the card population are both weak (64.3% on 28 and 68.6% on 51), though on small counts. First sight on 23 Sep had the feed's best at 1.44 (Nordic Bet). WON: 2-0, the under landed with a goal to spare. |
 
 <!-- HYPOTHESES:START -->
 
