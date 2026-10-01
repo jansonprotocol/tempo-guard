@@ -1,0 +1,5 @@
+# The book's record twice a day (webapp.roi_log): slot (UTC date and 00/12 half),
+# when it was written, settled bets, hits (pushes as hits), hit rate, staked EUR,
+# ROI on stake — the numbers the top tiles print.
+# slot	written_utc	settled	hits	hit	staked	roi
+2026-10-01 12	2026-10-01 20:03	232	181	78.0	248.98	+0.27

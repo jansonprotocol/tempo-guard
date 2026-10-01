@@ -1526,6 +1526,36 @@ BAND_STATS: dict = {}
 PRICE_NEAR = 0.10
 
 BAND_LOG = ROOT / "config" / "band_log.tsv"
+ROI_LOG = ROOT / "config" / "roi_log.tsv"
+
+
+def roi_log(hits: int, settled: int, roi: float, staked: float) -> None:
+    """Append the book's record to config/roi_log.tsv twice a day.
+
+    THE ROI OVER TIME (the bettor, 1 Oct: "can my ROI get tracked twice a
+    day? Each 12th hour"). Two slots a day, 00 and 12 UTC: the first
+    render inside a slot writes one row — the same three numbers the top
+    tiles print (taken bets, ROI, the money it is a return on) — and the
+    rest of that slot leaves it alone. A slot no render reached stays
+    empty rather than being guessed.
+    """
+    now = dt.datetime.now(dt.timezone.utc)
+    slot = f"{now:%Y-%m-%d} {'00' if now.hour < 12 else '12'}"
+    if ROI_LOG.exists():
+        tail = ROI_LOG.read_text().splitlines()[-1:]
+        if tail and tail[0].startswith(slot):
+            return
+    new = not ROI_LOG.exists()
+    with ROI_LOG.open("a") as fh:
+        if new:
+            fh.write("# The book's record twice a day (webapp.roi_log): slot "
+                     "(UTC date and 00/12 half),\n# when it was written, "
+                     "settled bets, hits (pushes as hits), hit rate, staked "
+                     "EUR,\n# ROI on stake — the numbers the top tiles print.\n"
+                     "# slot\twritten_utc\tsettled\thits\thit\tstaked\troi\n")
+        fh.write(f"{slot}\t{now:%Y-%m-%d %H:%M}\t{settled}\t{hits}\t"
+                 f"{hits / settled * 100 if settled else 0:.1f}\t"
+                 f"{staked:.2f}\t{roi:+.2f}\n")
 
 
 def band_log(cards: list, bets: list) -> None:
@@ -3182,6 +3212,7 @@ def main() -> None:
     # What the ROI is a return ON. Stakes stopped being flat on 6 Sep, so
     # the tile names the money rather than implying a unit count.
     _staked = sum(b["stake"] for b in _bets_rows() if b["mark"] != "open")
+    roi_log(bh, bn, roi, _staked)
     # Tip 3 grades off its own column marks — on probation it feeds no
     # other tally, but its record is public from the first settled lane.
     # A ◦ (DNB draw) counts as a hit, same convention as everywhere.
