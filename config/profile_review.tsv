@@ -4,7 +4,7 @@
 # board; 'release' puts a declined one back; 'hold' does nothing.
 # Bar: n>=30, >=10 a half, |ROI|>=5%, both halves one side of zero, |t|>=2.33.
 # group	side	band	n	hit	roi	half_a	half_b	t	label
-counted	O	10%+ under	71	85.9	-5.7	-12.0	+0.5	-1.24	hold
+counted	O	10%+ under	72	86.1	-5.4	-11.4	+0.6	-1.20	hold
 counted	O	5–10% under	25	76.0	-12.1	+5.8	-28.6	-1.20	hold
 counted	O	3–5% under	17	76.5	-6.9	-23.4	+7.7	-0.54	hold
 counted	O	0–3% under	31	80.6	+2.0	+9.3	-4.9	+0.22	hold

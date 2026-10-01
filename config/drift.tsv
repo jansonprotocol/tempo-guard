@@ -4,22 +4,22 @@
 # must not move on its own, or an improvement cannot be told from a
 # ruler that shifted. A flag is an invitation to look, not a verdict.
 # thresholds: label 2 points, side 2 points, bar 0.02, floor 200 cards
-# written	2026-09-29
+# written	2026-10-01
 # check	subject	n	measured	code_says	delta	flag
-label	green+	620	92.90	92.10	0.80	0
-label	green	9209	88.09	88.00	0.09	0
-label	orange	15443	83.64	82.90	0.74	0
+label	green+	621	92.91	92.10	0.81	0
+label	green	9207	88.09	88.00	0.09	0
+label	orange	15454	83.65	82.90	0.75	0
 label	released	230	81.74	80.90	0.84	0
-label	pink	6458	78.37	78.30	0.07	0
+label	pink	6466	78.39	78.30	0.09	0
 label	super red	253	73.91	77.05	-3.14	1
-label	red	1627	74.86	75.70	-0.84	0
-side	claim 70-76: over vs under	1931	76.59	75.28	1.31	0
-side	claim 76-80: over vs under	6329	79.07	77.35	1.72	0
-side	claim 80-85: over vs under	15145	82.34	83.89	-1.55	0
-side	claim 85-90: over vs under	8985	89.62	87.62	1.99	0
-ladder	green+ over green	9829	92.90	88.09	4.82	0
-ladder	green over orange	24652	88.09	83.64	4.44	0
-ladder	orange over pink	21901	83.64	78.37	5.28	0
+label	red	1632	74.88	75.70	-0.82	0
+side	claim 70-76: over vs under	1936	76.51	75.38	1.13	0
+side	claim 76-80: over vs under	6337	79.08	77.39	1.69	0
+side	claim 80-85: over vs under	15155	82.36	83.89	-1.53	0
+side	claim 85-90: over vs under	8983	89.62	87.62	2.00	0
+ladder	green+ over green	9828	92.91	88.09	4.83	0
+ladder	green over orange	24661	88.09	83.65	4.44	0
+ladder	orange over pink	21920	83.65	78.39	5.25	0
 bar	85+ at 1.14	603	0.38	0.38	0.00	0
 bar	80–85 at 1.18	1921	-2.00	-1.75	-0.09	1
 bar	75–80 at 1.31	756	0.63	2.84	-0.04	1
