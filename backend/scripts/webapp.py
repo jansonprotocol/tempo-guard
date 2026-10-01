@@ -3213,6 +3213,28 @@ def main() -> None:
     # the tile names the money rather than implying a unit count.
     _staked = sum(b["stake"] for b in _bets_rows() if b["mark"] != "open")
     roi_log(bh, bn, roi, _staked)
+    # THE ROI CURVE (the bettor, 1 Oct: "make this into a graph on the
+    # frontend ... can it grow along the table get filled"): the roi_log
+    # rows, backfilled and live, drawn on the Found bets tab. Read fresh on
+    # every render, so each new 12-hour row extends the line by itself.
+    _roi_pts = []
+    if ROI_LOG.exists():
+        for ln in ROI_LOG.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            q = ln.split("\t")
+            if len(q) >= 7 and q[2] != "0":
+                _roi_pts.append({"s": q[0], "n": int(q[2]), "h": float(q[4]),
+                                 "st": float(q[5]), "r": float(q[6]),
+                                 "b": q[1] == "backfill"})
+    roi_chart = (
+        '<div class="roiwrap"><div class="roihead"><span class="l">ROI over '
+        'time</span> <span class="s">every 12 hours · money-weighted · '
+        'backfilled before 1 Oct</span></div>'
+        '<div id="roichart" class="roichart"></div>'
+        f'<script type="application/json" id="roidata">'
+        f'{__import__("json").dumps(_roi_pts)}</script></div>'
+        ) if len(_roi_pts) >= 2 else ""
     # Tip 3 grades off its own column marks — on probation it feeds no
     # other tally, but its record is public from the first settled lane.
     # A ◦ (DNB draw) counts as a hit, same convention as everywhere.
@@ -4179,6 +4201,24 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .gapbar .bl {{ font-size:10px; letter-spacing:.1em; }}
 .gapbar b {{ color:var(--fg, inherit); font-variant-numeric:tabular-nums; }}
 .gapbar.over3 b {{ color:#e9a34a; }}
+.roiwrap {{ background:var(--card); border:1px solid var(--edge);
+  border-radius:8px; padding:8px 10px 4px; margin:8px 0 10px; }}
+.roihead .l {{ color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:.1em; }}
+.roihead .s {{ color:var(--dim); font-size:11px; }}
+.roichart {{ position:relative; width:100%; }}
+.roichart svg {{ display:block; }}
+.roichart .rg {{ stroke:var(--edge); stroke-width:1; }}
+.roichart .r0 {{ stroke:var(--dim); stroke-dasharray:3 3; }}
+.roichart .rt {{ fill:var(--dim); font-size:11px; }}
+.roichart .rl {{ fill:none; stroke:var(--blue); stroke-width:2; stroke-linejoin:round; }}
+.roichart .rd {{ fill:var(--blue); stroke:var(--card); stroke-width:2; }}
+.roichart .rh {{ fill:var(--blue); stroke:var(--card); stroke-width:2; }}
+.roichart .rv {{ fill:var(--tx); font-size:12px; font-weight:600; }}
+.roichart .rx {{ stroke:var(--dim); stroke-width:1; }}
+.roichart .rhit {{ fill:transparent; cursor:crosshair; }}
+.roichart .rtip {{ position:absolute; top:0; width:190px; background:var(--bg);
+  border:1px solid var(--edge); border-radius:6px; padding:4px 7px; font-size:11px;
+  pointer-events:none; }}
 .fc.bands {{ text-align:left; }}
 .sidebar {{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }}
 .sidebtn {{ background:transparent; color:var(--dim); border:1px solid var(--edge);
@@ -4711,7 +4751,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <b>live unsafe</b>, <b>live cautious</b> or <b>live safe</b> on any
   tab to find cards by their tag.</div>
   {_grid(declined, "declined", reads)}</div>
- <div class="tabpane" id="t-bets">{bets_meta}<div class="wrap">
+ <div class="tabpane" id="t-bets">{bets_meta}{roi_chart}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th>
   <th data-sort="s" data-dir="asc" class="asc">Kickoff</th>
@@ -5319,7 +5359,79 @@ function barBands() {{
     + "not a finding, and nothing is declined on it.</div>";
 }}
 
+// The ROI curve on Found bets: one series, one axis, a dashed zero line,
+// the last value labelled at the end and a crosshair readout on hover.
+// Drawn at the box's real width so the text stays crisp on a phone, and
+// redrawn whenever the tab is shown or the window resized.
+function drawRoi() {{
+  const box = document.getElementById("roichart");
+  const src = document.getElementById("roidata");
+  if (!box || !src || !box.clientWidth) return;
+  const pts = JSON.parse(src.textContent);
+  if (pts.length < 2) return;
+  const W = box.clientWidth, H = 170, L = 44, R = 58, T = 12, B = 24;
+  const lo = Math.min(0, ...pts.map(p => p.r)), hi = Math.max(0, ...pts.map(p => p.r));
+  const pad = Math.max(1, (hi - lo) * 0.08);
+  const y0 = lo - pad, y1 = hi + pad;
+  const X = i => L + (W - L - R) * i / (pts.length - 1);
+  const Y = v => T + (H - T - B) * (1 - (v - y0) / (y1 - y0));
+  const step = Math.max(1, Math.round((y1 - y0) / 4 / 5) * 5) || 5;
+  let grid = "";
+  for (let v = Math.ceil(y0 / step) * step; v <= y1; v += step) {{
+    grid += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v)
+      + '" class="rg' + (v === 0 ? " r0" : "") + '"/><text x="' + (L - 6) + '" y="'
+      + (Y(v) + 4) + '" class="rt" text-anchor="end">' + (v > 0 ? "+" : "") + v + '%</text>';
+  }}
+  const fmt = s => {{ const d = new Date(s.slice(0, 10) + "T00:00:00Z");
+    return d.getUTCDate() + " " + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug",
+      "Sep","Oct","Nov","Dec"][d.getUTCMonth()]; }};
+  let ticks = "";
+  // A date under every Nth midnight, N chosen so labels sit ~70px apart.
+  const days = pts.filter(p => p.s.endsWith(" 00")).length || 1;
+  const every = Math.max(1, Math.ceil(days / Math.max(2, Math.floor((W - L - R) / 70))));
+  let day = -1;
+  pts.forEach((p, i) => {{
+    if (p.s.endsWith(" 00") && ++day % every === 0)
+      ticks += '<text x="' + X(i) + '" y="' + (H - 6) + '" class="rt" text-anchor="middle">'
+        + fmt(p.s) + "</text>";
+  }});
+  const path = pts.map((p, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(p.r).toFixed(1)).join("");
+  const last = pts[pts.length - 1];
+  box.innerHTML = '<svg width="' + W + '" height="' + H + '" role="img" aria-label="ROI over time, last '
+    + last.r.toFixed(2) + '%">' + grid + ticks
+    + '<path d="' + path + '" class="rl"/>'
+    + '<circle cx="' + X(pts.length - 1) + '" cy="' + Y(last.r) + '" r="4" class="rd"/>'
+    + '<text x="' + (X(pts.length - 1) + 8) + '" y="' + (Y(last.r) + 4) + '" class="rv">'
+    + (last.r > 0 ? "+" : "") + last.r.toFixed(2) + '%</text>'
+    + '<line class="rx" y1="' + T + '" y2="' + (H - B) + '" style="display:none"/>'
+    + '<circle class="rh" r="5" style="display:none"/>'
+    + '<rect class="rhit" x="' + L + '" y="0" width="' + (W - L - R) + '" height="' + H + '"/>'
+    + '</svg><div class="rtip" style="display:none"></div>';
+  const svg = box.querySelector("svg"), cx = svg.querySelector(".rx"),
+        dot = svg.querySelector(".rh"), tip = box.querySelector(".rtip");
+  const move = e => {{
+    const r = svg.getBoundingClientRect();
+    const px = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    const i = Math.max(0, Math.min(pts.length - 1, Math.round((px - L) / (W - L - R) * (pts.length - 1))));
+    const p = pts[i];
+    cx.setAttribute("x1", X(i)); cx.setAttribute("x2", X(i)); cx.style.display = "";
+    dot.setAttribute("cx", X(i)); dot.setAttribute("cy", Y(p.r)); dot.style.display = "";
+    tip.innerHTML = "<b>" + fmt(p.s) + " " + p.s.slice(11) + ":00</b> UTC"
+      + (p.b ? ' <span class="dim">backfill</span>' : "")
+      + "<br>ROI <b>" + (p.r > 0 ? "+" : "") + p.r.toFixed(2) + "%</b> · "
+      + p.n + " settled · " + p.h.toFixed(1) + "% · €" + p.st.toFixed(2);
+    tip.style.display = "";
+    tip.style.left = Math.min(Math.max(0, X(i) - 90), W - 190) + "px";
+  }};
+  const hide = () => {{ cx.style.display = dot.style.display = tip.style.display = "none"; }};
+  const hit = svg.querySelector(".rhit");
+  hit.addEventListener("mousemove", move); hit.addEventListener("touchmove", move, {{passive: true}});
+  hit.addEventListener("touchstart", move, {{passive: true}}); hit.addEventListener("mouseleave", hide);
+}}
+window.addEventListener("resize", () => drawRoi());
+
 function recount() {{
+  drawRoi();
   const box = document.getElementById("fcounts");
   if (!box) return;
   const qel = document.getElementById("q");
