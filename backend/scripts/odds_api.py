@@ -458,6 +458,7 @@ def write_quotes() -> int:
     """
     from scripts.board import load
     rows, unmatched = [], []
+    seen: dict = {}
     for f in load():
         if f.settled or f.status or started(f.kickoff):
             continue
@@ -504,6 +505,9 @@ def write_quotes() -> int:
                          f"{q['unibet_nl']:.2f}" if q["unibet_nl"] else "",
                          str(q["n"]),
                          "|".join(f"{v:.2f} {k}" for k, v in q["top"])))
+            seen[(day, f.teams, str(which))] = (
+                q["lane"], f"{q['best']:.2f}", q["book"],
+                "|".join(f"{v:.2f} {k}" for k, v in q["top"]))
     head = ["# What the market is offering on each pending lane. Derived by",
             "# scripts/odds_api.py --quotes from live bookmaker prices; the",
             "# renderer reads it and never calls the API itself. Delete it and",
@@ -529,7 +533,52 @@ def write_quotes() -> int:
     tmp = QUOTES.with_suffix(".tsv.tmp")
     tmp.write_text("\n".join(head + ["\t".join(r) for r in rows]) + "\n")
     tmp.replace(QUOTES)
+    write_last(seen)
     return len(rows)
+
+
+LAST = ROOT / "config" / "last_quotes.tsv"
+
+
+def read_last() -> dict:
+    """(date, fixture, which) -> (lane, best, book, top), the LAST quote
+    each lane had before kickoff."""
+    out: dict = {}
+    if LAST.exists():
+        for ln in LAST.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            p = ln.split("\t")
+            if len(p) >= 7:
+                out[(p[0], p[1], p[2])] = (p[3], p[4], p[5], p[6])
+    return out
+
+
+def write_last(seen: dict) -> None:
+    """Merge this refresh's quotes into config/last_quotes.tsv.
+
+    THE PRICE A CARD WAS OFFERED AT LAST (the bettor, 1 Oct: Greece v
+    Netherlands and Wales v Norway flipped from PLAY to declined at
+    kickoff). odds_quotes.tsv drops a lane the moment its match starts,
+    so after kickoff the board only had the FIRST-sight stamp, and a rule
+    reading the price could judge a card on a different number after the
+    whistle than before it. Each refresh overwrites a lane's row while
+    the match is pending and leaves it alone once it has started, so the
+    row left behind is the last price the board showed — what a card
+    keeps through Running and Completed. Rows are never pruned: this is
+    also the closing record an archived session keeps.
+    """
+    rows = read_last()
+    rows.update(seen)
+    head = ["# The last quote each lane had before kickoff, kept after it.",
+            "# Updated by scripts/odds_api.py --quotes on every refresh; read",
+            "# by webapp so a card is judged on the same price after kickoff",
+            "# as just before it. Never pruned.",
+            "# date\tfixture\twhich\tlane\tbest\tbook\ttop"]
+    body = ["\t".join(k + v) for k, v in sorted(rows.items())]
+    tmp = LAST.with_suffix(".tsv.tmp")
+    tmp.write_text("\n".join(head + body) + "\n")
+    tmp.replace(LAST)
 
 
 def usage() -> dict:

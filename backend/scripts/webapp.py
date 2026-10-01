@@ -1628,13 +1628,39 @@ def strike_declined(f) -> bool:
 O15_BAND = (0.0, 6.0)
 
 
+def _last_price(f, r: dict) -> float | None:
+    """The last quote the starred lane had before kickoff
+    (config/last_quotes.tsv), on the lane the first-sight row stamped."""
+    got = _LAST().get((f.kickoff.split(" ")[0], f.teams, str(r.get("tip") or "")))
+    if not got or got[0] != r.get("lane"):
+        return None
+    try:
+        return float(got[1])
+    except ValueError:
+        return None
+
+
+@lru_cache(maxsize=1)
+def _LAST() -> dict:
+    return odds_api.read_last()
+
+
 def o15_declined(f) -> bool:
     if f.settled or odds_api.started(f.kickoff):
+        # After kickoff: the LAST price before it where the board kept one,
+        # so a card is judged on the price it was offered at when the
+        # whistle went, not flipped to its first-sight price (Greece v
+        # Netherlands and Wales v Norway, 1 Oct: PLAY at +11.4% and +8.5%
+        # until kickoff, then declined on first-sight prices at +2.3% and
+        # +0.8%). First sight is the fallback for cards older than the file.
         c = was_called(f)
-        if not c or c["mark"] not in ("normal", "strong"):
+        if not c or str(c["row"].get("label", "")).endswith("red"):
             return False
         r = c["row"]
-        lane, best, need = r.get("lane"), r.get("best"), r.get("need")
+        lane, need = r.get("lane"), r.get("need")
+        best = _last_price(f, r) or r.get("best")
+        if not best or not need or float(best) < float(need):
+            return False
     else:
         v = verdict(f, _star(f))
         if not v or not v["play"]:
@@ -1669,13 +1695,15 @@ def review_label(key) -> str | None:
 
 def _gap_point(f):
     """(lane, percent over the play bar) at the price the card is judged
-    on: the verdict's before kickoff, the first-sight stamp after it."""
+    on: the verdict's before kickoff; after it, the last quote before
+    kickoff where config/last_quotes.tsv kept one, else first sight."""
     if f.settled or odds_api.started(f.kickoff):
         c = was_called(f)
         r = c["row"] if c else None
         if not r or not r.get("best") or not r.get("need") or not r.get("lane"):
             return None
-        return r["lane"], (float(r["best"]) / float(r["need"]) - 1) * 100
+        best = _last_price(f, r) or float(r["best"])
+        return r["lane"], (best / float(r["need"]) - 1) * 100
     v = verdict(f, _star(f))
     if not v or not v["lane"] or v.get("gap") is None:
         return None
