@@ -1484,20 +1484,37 @@ def _gap_html(g: dict | None) -> str:
     at = gap_band(hi)
     stats = ""
     if BAND_STATS:
-        def cell(who, t):
-            n, h, r = t.get(at, (0, 0, 0))
+        # LIKE WITH LIKE (the bettor, 1 Oct): the same band AND a best
+        # price within PRICE_NEAR of this card's, so a 1.30 under is not
+        # read against a band full of 1.14s nobody would take.
+        price = max(p for p, _b in g["top"])
+        lo_p, hi_p = price - PRICE_NEAR, price + PRICE_NEAR
+        near = lambda bp: lo_p - 1e-9 <= bp <= hi_p + 1e-9
+        cs = [(h, pl) for band, bp, h, pl in BAND_STATS["cards"]
+              if band == at and near(bp)]
+        bs = [(h, st, r) for band, bp, h, st, r in BAND_STATS["bets"]
+              if band == at and near(bp)]
+
+        def cell(who, n, hit, roi):
             return (f"<div>{who} <b>{n}</b>"
-                    + (f" · {h:.0f}% · <b>{r:+.1f}%</b>" if n else "")
+                    + (f" · {hit:.0f}% · <b>{roi:+.1f}%</b>" if n else "")
                     + "</div>")
-        # The band is already on the VS BAR line; it is named here only
-        # when that line spans two bands, to say which one these are.
-        which = f"<div>at {at}</div>" if b1 != b2 else ""
-        stats = (f'<div class="gapstats" title="The {at} band on counted '
-                 f'cards: your settled bets on the card\'s own lane at the '
-                 f'price you paid, and every card at the feed\'s best EU price '
-                 f'at first sight — the Found bets panel\'s two tables.">'
-                 f'{which}{cell("my bets", BAND_STATS["bets"])}'
-                 f'{cell("all cards", BAND_STATS["cards"])}</div>')
+        stake = sum(st for _h, st, _r in bs)
+        mine = cell("my bets", len(bs),
+                    sum(h for h, _s, _r in bs) / len(bs) * 100 if bs else 0,
+                    sum(st * (r - 1) for _h, st, r in bs) / stake * 100
+                    if stake else 0)
+        every = cell("all cards", len(cs),
+                     sum(h for h, _p in cs) / len(cs) * 100 if cs else 0,
+                     sum(pl for _h, pl in cs) / len(cs) * 100 if cs else 0)
+        which = (f"<div>{at if b1 != b2 else 'this band'}, priced "
+                 f"{lo_p:.2f}–{hi_p:.2f}</div>")
+        stats = (f'<div class="gapstats" title="Counted cards in the {at} '
+                 f'band whose first-sight best price was within '
+                 f'{PRICE_NEAR:.2f} of this card\'s {price:.2f}: your settled '
+                 f'bets on the card\'s own lane at the price you paid, and '
+                 f'every card at the feed\'s best EU price.">'
+                 f'{which}{mine}{every}</div>')
     return (f'<div class="gapbar{cls}" title="{html.escape(tip)}">'
             f'<span class="bl">VS BAR</span> <b>{rng}</b> '
             f'<span class="dim">· {band}</span></div>{stats}')
@@ -1506,6 +1523,7 @@ def _gap_html(g: dict | None) -> str:
 # Filled once per render from the Found bets panel's populations, before
 # any card is drawn; empty means the line is left off.
 BAND_STATS: dict = {}
+PRICE_NEAR = 0.10
 
 
 PLAYED_MARKS = ("strong", "normal", "watch")
@@ -3404,6 +3422,21 @@ def main() -> None:
             price = b["odds"]
         return price / need - 1 if need > 0 else None
 
+    def _card_best(b) -> float | None:
+        """The card's first-sight best price behind this bet, on the lane
+        bought, or None — what the panel's price floor reads."""
+        if "(" in b["lane"]:
+            return None
+        f = _fxmap.get(b["name"])
+        st = (_stamps.get((f.kickoff.split(" ")[0], b["name"]))
+              if f is not None else None) or _stamps.get(b["name"])
+        if not st or st[5] != b["lane"]:
+            return None
+        try:
+            return float(st[11] or st[10])
+        except ValueError:
+            return None
+
     BAR_BANDS = ((-9.0, -.10, "10%+ under"), (-.10, -.05, "5–10% under"),
                  (-.05, -.03, "3–5% under"),
                  (-.03, 0.0, "0–3% under"), (0.0, .03, "0–3% over"),
@@ -3412,8 +3445,7 @@ def main() -> None:
     # Kept three ways — every lane, overs, unders (the bettor, 28 Sep:
     # "can we also split this on under and over") — by the side of the
     # stamped lane. A result lane (DNB, double chance) is in "all" only.
-    _cb = {k: {n: [0, 0, 0.0] for _lo, _hi, n in BAR_BANDS}
-           for k in ("all", "o", "u")}             # n, hits, P/L
+    _crow: list = []          # (band, side, best, hit, P/L) per counted card
     _cseen: set = set()
     # COUNTED CARDS ONLY (the bettor, 30 Sep: "just show it excluding
     # declined all the time"): a card that is declined now — red, super
@@ -3433,45 +3465,59 @@ def main() -> None:
         if got is None or need <= 0:
             continue
         _cseen.add(key)
-        gap = best / need - 1
-        side = {"O": "o", "U": "u"}.get(st[5][:1])
-        for lo, hi, n in BAR_BANDS:
-            if lo <= gap < hi:
-                for k in ("all", side):
-                    if not k:
-                        continue
-                    a = _cb[k][n]
-                    a[0] += 1
-                    a[1] += got[1]
-                    a[2] += got[0] * (best - 1) if got[0] > 0 else got[0]
-                break
+        _crow.append((gap_band((best / need - 1) * 100),
+                      {"O": "o", "U": "u"}.get(st[5][:1]), best, got[1],
+                      got[0] * (best - 1) if got[0] > 0 else got[0]))
+    # PRICE FLOOR (the bettor, 1 Oct: the under-bar bands are "saturated
+    # with terrible low offered prices, prices I would never go on"): the
+    # panel can hide every card and bet whose first-sight best price was
+    # under 1.20 — 172 of the 195 cards in 5-10% under were.
+    MIN_PRICE = 1.20
+
+    def _agg(k: str, floor: float) -> dict:
+        out = {n: [0, 0, 0.0] for _lo, _hi, n in BAR_BANDS}
+        for band, side, best, hit, pl in _crow:
+            if (k == "all" or side == k) and best >= floor:
+                a = out[band]
+                a[0] += 1
+                a[1] += hit
+                a[2] += pl
+        return out
+    _cb = {(k, fl): _agg(k, fl) for k in ("all", "o", "u")
+           for fl in (0.0, MIN_PRICE)}
     over3 = ' class="over3"'
     _side_word = {"all": "", "o": " over", "u": " under"}
 
-    def _cards_tpl(k: str) -> str:
+    def _cards_tpl(k: str, fl: float) -> str:
         rows = "".join(
             f"<tr{over3 if lo >= .03 else ''}><td>{n}</td>"
             + (f"<td>{a[0]}</td><td>{a[1] / a[0] * 100:.1f}%</td>"
                f"<td>{a[2] / a[0] * 100:+.1f}%</td></tr>" if a[0] else
                "<td>0</td><td>—</td><td>—</td></tr>")
-            for lo, _hi, n in BAR_BANDS for a in (_cb[k][n],))
-        tot = sum(a[0] for a in _cb[k].values())
-        return (f'<template id="cardbands-{k}"><table class="bandtable"><tr>'
+            for lo, _hi, n in BAR_BANDS for a in (_cb[(k, fl)][n],))
+        tot = sum(a[0] for a in _cb[(k, fl)].values())
+        tag = "" if not fl else f"-{int(fl * 100)}"
+        return (f'<template id="cardbands-{k}{tag}"><table class="bandtable"><tr>'
                 f"<th>band</th><th>cards</th><th>hit</th><th>ROI</th></tr>"
                 f"{rows}</table><div class=\"s\">{tot} settled"
                 f"{_side_word[k]} counted cards (declined left out) with a "
-                "first-sight quote, at the "
-                "feed's BEST EU price — what the market offered, often at a "
-                "book you cannot reach, so optimistic for you</div></template>")
-    cards_bands_tpl = "".join(_cards_tpl(k) for k in ("all", "o", "u"))
+                "first-sight quote"
+                + (f", best price {fl:.2f} or more" if fl else "")
+                + ", at the feed's BEST EU price — what the market offered, "
+                "often at a book you cannot reach, so optimistic for you"
+                "</div></template>")
+    cards_bands_tpl = "".join(_cards_tpl(k, fl) for k in ("all", "o", "u")
+                              for fl in (0.0, MIN_PRICE))
 
-    # The same two populations for every card's VS BAR line: counted
-    # cards only, banded by the card's first-sight best price; the bets
-    # at the price paid, hit with pushes counted as hits, ROI on stake.
+    # The same two populations for every card's VS BAR line, kept card by
+    # card so the line can compare like with like — the same band AND a
+    # price within PRICE_NEAR of this card's (the bettor, 1 Oct). Counted
+    # cards only, banded and priced by the card's first-sight best price;
+    # the bets at the price paid, pushes as hits, ROI on stake.
     BAND_STATS.clear()
-    BAND_STATS["cards"] = {n: (a[0], a[1] / a[0] * 100, a[2] / a[0] * 100)
-                           for n, a in _cb["all"].items() if a[0]}
-    _bb: dict = {}
+    BAND_STATS["cards"] = [(band, best, hit, pl)
+                           for band, _side, best, hit, pl in _crow]
+    BAND_STATS["bets"] = []
     for b in bet_rows:
         if b["mark"] == "open":
             continue
@@ -3479,19 +3525,16 @@ def main() -> None:
         if fx is not None and is_declined(fx):
             continue
         cg = _bar_gap(b, card=True)
-        if cg is None:
+        cb = _card_best(b)
+        if cg is None or cb is None:
             continue
         try:
             ret = float(b["ret"].rstrip("x"))
         except ValueError:
             continue
-        a = _bb.setdefault(gap_band(cg * 100), [0, 0, 0.0, 0.0])
-        a[0] += 1
-        a[1] += 0 if b["mark"].startswith("❌") else 1
-        a[2] += b["stake"]
-        a[3] += b["stake"] * (ret - 1)
-    BAND_STATS["bets"] = {n: (a[0], a[1] / a[0] * 100, a[3] / a[2] * 100)
-                          for n, a in _bb.items() if a[0] and a[2]}
+        BAND_STATS["bets"].append((gap_band(cg * 100), cb,
+                                   not b["mark"].startswith("❌"),
+                                   b["stake"], ret))
 
     def _short(note: str, cap: int = 64) -> str:
         """The Found bets cell gets the book and the first clause; the
@@ -3542,7 +3585,9 @@ def main() -> None:
         if (gap is not None and b["mark"] != "open"
                 and not (f is not None and is_declined(f))):
             cg = _bar_gap(b, card=True)
+            cbp = _card_best(b)
             g += ((f' data-cgap="{cg:.4f}"' if cg is not None else "")
+                  + (f' data-cb="{cbp:.2f}"' if cbp is not None else "")
                   + f' data-gap="{gap:.4f}" data-r="{b["ret"].rstrip("x")}"'
                   f' data-sd="{ {"O": "o", "U": "u"}.get(b["lane"][:1], "") }"'
                   f' data-st="{b["stake"]:.2f}"'
@@ -5080,12 +5125,16 @@ function barBands() {{
   // the all-cards table uses, so a row means the same cards in both; "my
   // price" bands by what was paid instead. ROI is always at the price paid.
   const by = window._bandsBy || "card";
+  // The price floor (1 Oct): hide cards and bets whose first-sight best
+  // price was under 1.20 — the short prices that fill the under bands.
+  const floor = window._bandsMin ? 1.20 : 0;
   const acc = BAR_BANDS.map(() => [0, 0, 0, 0]);   // n, hits, staked, P/L
   let tot = 0;
   for (const r of document.querySelectorAll("#t-bets tr[data-gap]")) {{
     if (r.style.display === "none") continue;
     if (pre && r.dataset.ip) continue;
     if (side !== "all" && r.dataset.sd !== side) continue;
+    if (floor && !(parseFloat(r.dataset.cb) >= floor)) continue;
     if (by === "card" && r.dataset.cgap === undefined) continue;
     const gap = parseFloat(by === "card" ? r.dataset.cgap : r.dataset.gap),
           st = parseFloat(r.dataset.st),
@@ -5104,7 +5153,10 @@ function barBands() {{
       + (a[2] ? (a[3] / a[2] * 100 >= 0 ? "+" : "")
                 + (a[3] / a[2] * 100).toFixed(1) + "%" : "—") + "</td></tr>";
   }}).join("");
-  const tpl = document.getElementById("cardbands-" + side);
+  const tpl = document.getElementById("cardbands-" + side + (floor ? "-120" : ""));
+  const minb = (on, label) => '<button class="sidebtn' + (!!window._bandsMin === on ? " on" : "")
+    + '" data-k="' + (on ? 1 : "") + '" onclick="window._bandsMin=!!this.dataset.k;recount()">'
+    + label + "</button>";
   const word = {{all: "", o: " over", u: " under"}}[side];
   const pick = (k, label) => '<button class="sidebtn' + (side === k ? " on" : "")
     + '" data-k="' + k + '" onclick="window._bandsSide=this.dataset.k;recount()">'
@@ -5116,6 +5168,8 @@ function barBands() {{
     + pick("u", "unders") + "</div>"
     + '<div class="sidebar"><span class="s">band by</span>'
     + byb("card", "card's price") + byb("paid", "my price") + "</div>"
+    + '<div class="sidebar"><span class="s">prices</span>'
+    + minb(false, "all prices") + minb(true, "1.20 and up") + "</div>"
     + '<div class="bandgrid"><div><div class="l">your taken bets</div>'
     + '<table class="bandtable"><tr><th>band</th><th>bets</th><th>hit</th>'
     + "<th>ROI</th></tr>" + rows + "</table>"
