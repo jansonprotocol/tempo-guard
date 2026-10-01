@@ -3230,8 +3230,21 @@ def main() -> None:
     roi_chart = (
         '<div class="roiwrap"><div class="roihead"><span class="l">ROI over '
         'time</span> <span class="s">every 12 hours · money-weighted · '
-        'backfilled before 1 Oct</span></div>'
+        'backfilled before 1 Oct</span>'
+        # The zoom (the bettor, 1 Oct): a window onto the same curve. The
+        # line stays the running ROI since the session began; a window
+        # longer than the log simply shows all of it.
+        '<select id="roirange" class="roisel" onchange="window._roiRange='
+        'this.value;try{localStorage.setItem(\'roiRange\',this.value)}'
+        'catch(e){};drawRoi()">'
+        '<option value="14">last 2 weeks</option>'
+        '<option value="30">last month</option>'
+        '<option value="91">last 3 months</option>'
+        '<option value="182">last 6 months</option>'
+        '<option value="all" selected>all time (since session start)</option>'
+        '</select></div>'
         '<div id="roichart" class="roichart"></div>'
+        '<div id="roinote" class="s roinote"></div>'
         f'<script type="application/json" id="roidata">'
         f'{__import__("json").dumps(_roi_pts)}</script></div>'
         ) if len(_roi_pts) >= 2 else ""
@@ -4205,6 +4218,11 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border-radius:8px; padding:8px 10px 4px; margin:8px 0 10px; }}
 .roihead .l {{ color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:.1em; }}
 .roihead .s {{ color:var(--dim); font-size:11px; }}
+.roihead {{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; }}
+.roisel {{ margin-left:auto; background:var(--bg); color:var(--tx);
+  border:1px solid var(--edge); border-radius:6px; padding:3px 6px; font:inherit;
+  font-size:12px; }}
+.roinote {{ color:var(--dim); font-size:11px; min-height:0; }}
 .roichart {{ position:relative; width:100%; }}
 .roichart svg {{ display:block; }}
 .roichart .rg {{ stroke:var(--edge); stroke-width:1; }}
@@ -5367,8 +5385,26 @@ function drawRoi() {{
   const box = document.getElementById("roichart");
   const src = document.getElementById("roidata");
   if (!box || !src || !box.clientWidth) return;
-  const pts = JSON.parse(src.textContent);
-  if (pts.length < 2) return;
+  const all = JSON.parse(src.textContent);
+  // The window: remembered per viewer, "all" by default. A window longer
+  // than the log shows everything there is and says so.
+  if (window._roiRange === undefined) {{
+    try {{ window._roiRange = localStorage.getItem("roiRange") || "all"; }}
+    catch (e) {{ window._roiRange = "all"; }}
+  }}
+  const sel = document.getElementById("roirange");
+  if (sel && sel.value !== window._roiRange) sel.value = window._roiRange;
+  let pts = all;
+  const note = document.getElementById("roinote");
+  if (window._roiRange !== "all") {{
+    const days = parseInt(window._roiRange, 10);
+    const last = new Date(all[all.length - 1].s.slice(0, 10) + "T00:00:00Z");
+    const from = new Date(last.getTime() - days * 864e5).toISOString().slice(0, 10);
+    pts = all.filter(p => p.s.slice(0, 10) >= from);
+    if (note) note.textContent = all[0].s.slice(0, 10) >= from
+      ? "the log is shorter than this window, so this is everything so far" : "";
+  }} else if (note) note.textContent = "";
+  if (pts.length < 2) pts = all.slice(-2);
   const W = box.clientWidth, H = 170, L = 44, R = 58, T = 12, B = 24;
   const lo = Math.min(0, ...pts.map(p => p.r)), hi = Math.max(0, ...pts.map(p => p.r));
   const pad = Math.max(1, (hi - lo) * 0.08);
