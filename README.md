@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            574 / 700  82.0%    385 / 569  67.7%
     played lanes  >+1%     241 / 294  82.0%    383 / 565  67.8%
-    placed bets            180 / 231  77.9%    ROI +0.1%
+    placed bets            181 / 232  78.0%    ROI +0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -2584,7 +2584,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 180 / 231  ·  ROI +0.1%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 181 / 232  ·  ROI +0.3%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -2821,6 +2821,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Azerbaijan v Liechtenstein | U3.5 | 1.50 | 1.50x | Unibet, 1.15 a side, three singles taken 1 Oct around 10:12 CEST, pre-kickoff. All three on the card's own side — no wrong lane. The card prints U3.0, struck as U3.5 (the same bet to the grader). Claim 81.4%, orange, a PRICED play (one strike, tagged live cautious), not declined. Play bar 1.368 (buy>=1.41 less 3%); 1.50 is +9.6% OVER it, in the 6-10% over band, which trips the over-3% counter — a flag, not a decline. That band on counted cards: his bets 24 at 75.0% and -5.4%, all cards 38 at 76.3% and +2.8%. First sight on 28 Sep had the feed's best at 1.53 (1xBet); the feed shows 1.57 today. |
 | ✅ | Republic of Ireland v Austria | O1.5 | 1.37 | 1.37x | Unibet, 1.15 a side, three singles taken 1 Oct around 10:12 CEST, pre-kickoff. All three on the card's own side — no wrong lane. The card's own rung. Claim 81.3%, orange, a PRICED play (one strike, live cautious), not declined. Play bar 1.251 (buy>=1.29 less 3%); 1.37 is +9.5% OVER it, in the 6-10% over band, which trips the over-3% counter — a flag, not a decline. At 9.5% it sits OUTSIDE the 28 Sep O1.5 decline (priced O1.5 0-6% over the bar). First sight on 28 Sep had the feed's best at 1.40 (1xBet). |
 | — open | Malta v Gibraltar | U3.5 | 1.30 | — | Unibet, 1.15 a side, three singles taken 1 Oct around 10:12 CEST, pre-kickoff. All three on the card's own side — no wrong lane. The card prints U3.0, struck as U3.5 (the same bet to the grader). Claim 79.9%, PINK, confluence score -14.8, a WATCH card (live safe), not a play: play bar 1.406 (buy>=1.45 less 3%), and 1.30 is 7.5% UNDER it, in the 5-10% under band. Bought under the bar — the price is short of what the card asks, which is a body note, not an alert. That band on counted cards: his bets 25 at 96.0% and +25.9%, all cards 192 at 81.8% and -6.4%. |
+| ✅ | Greece v Netherlands | O1.5 | 1.27 | 1.27x | Unibet — in-play, coupon 13177066198, struck 1 Oct 21:01 CEST on a 20:45 kickoff, around the 16th minute; the score at the strike is not on the slip (the 2-0 shown is the current one, at 47'). The card's own side and rung — no wrong lane. Claim 81.1%, orange, a priced play that flipped to Declined at kickoff by the bug fixed the same night (first-sight price read instead of the last one) and is back in the record. Play bar 1.212; 1.27 is +4.8% OVER it, in the 3-6% over band, which trips the over-3% counter — a flag, not a decline, and an in-play price is not strictly comparable to a pre-match bar. The card's band line at the time, 0-3% over priced 1.14-1.34: his bets 4 at 100% and +22.9%, all cards 10 at 90% and +14.2% — thin, as he says. At 2-0 the over is already landed. |
 
 <!-- HYPOTHESES:START -->
 
