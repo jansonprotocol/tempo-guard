@@ -94,6 +94,19 @@ market offered, never as what he would have got.
 - **Price the line he actually bought**, not the card's rung, when they
   differ. The buy-from bar must be recomputed on his line.
 
+## Archiving a session
+
+- **Keep the odds with the cards.** (1 Oct, on finding the older archives
+  hold boards and bets but no prices: "whenever this session gets
+  archived keep the odds these cards had in store as well".) An archived
+  session folder carries, beside its README, bets and fixtures:
+  `config/forward_log.tsv` (every card's first-sight best price, book,
+  consensus and play bar — the record the band tables are built on),
+  `config/odds_quotes.tsv` (the last quote snapshot, with the three best
+  books), and `config/bets.tsv` (the prices actually paid). Copied whole,
+  never trimmed, so a later build can be re-priced against the real
+  quotes of the time rather than prices derived from the 2.5 market.
+
 ## Grading by hand
 
 - **Three sources, never one.** Never set a score from a single page;
