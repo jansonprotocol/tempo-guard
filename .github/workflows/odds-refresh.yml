@@ -82,7 +82,7 @@ jobs:
             # call (lane, bar, price) there, and until 21 Sep this job threw
             # that stamp away with its checkout — the card was then "called"
             # at whatever the sweep saw at kickoff instead.
-            git add -A config/odds_quotes.tsv config/last_quotes.tsv config/reads_cache.json config/forward_log.tsv README.md web/
+            git add -A config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/
             if git diff --cached --quiet; then
               echo "the market has not moved a printed lane"; exit 0
             fi

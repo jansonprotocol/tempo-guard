@@ -1525,6 +1525,66 @@ def _gap_html(g: dict | None) -> str:
 BAND_STATS: dict = {}
 PRICE_NEAR = 0.10
 
+BAND_LOG = ROOT / "config" / "band_log.tsv"
+
+
+def band_log(cards: list, bets: list) -> None:
+    """Append today's band tables to config/band_log.tsv, once a day.
+
+    THE BANDS OVER TIME (the bettor, 1 Oct: "record the table and its
+    variants in the logs, so we can compare over a few weeks"). Every
+    variant the Found bets panel can show, as it stands the first time
+    the board renders on a given day: counted cards and the bettor's
+    bets, all lanes / overs / unders, all prices / 1.20 and up, and for
+    the bets both bandings (card's price, price paid) and both timings
+    (every bet, pre-kickoff only). A day already logged is left alone,
+    so the file is one honest snapshot per day, never rewritten.
+    """
+    today = dt.date.today().isoformat()
+    if BAND_LOG.exists():
+        for ln in BAND_LOG.read_text().splitlines()[-5:]:
+            if ln.startswith(today):
+                return
+    names = [n for _lo, _hi, n in GAP_BANDS]
+    out = []
+
+    def emit(pop, by, side, floor, timing, rows, roi):
+        for n in names:
+            x = [r for r in rows if r[0] == n]
+            if not x:
+                out.append([today, pop, by, side, floor, timing, n, "0", "", ""])
+                continue
+            hit = sum(r[1] for r in x) / len(x) * 100
+            out.append([today, pop, by, side, floor, timing, n, str(len(x)),
+                        f"{hit:.1f}", f"{roi(x):+.1f}"])
+
+    for side in ("all", "o", "u"):
+        for fl in (0.0, 1.20):
+            fs_ = "all" if not fl else f"{fl:.2f}+"
+            cs = [(band, hit, pl) for band, sd, best, hit, pl in cards
+                  if (side == "all" or sd == side) and best >= fl]
+            emit("cards", "card", side, fs_, "all", cs,
+                 lambda x: sum(r[2] for r in x) / len(x) * 100)
+            for by in ("card", "paid"):
+                for timing in ("all", "pre"):
+                    bs = [(b[by], b["hit"], b["stake"], b["ret"]) for b in bets
+                          if b[by] and (side == "all" or b["side"] == side)
+                          and b["best"] >= fl and not (timing == "pre" and b["ip"])]
+                    emit("bets", by, side, fs_, timing, bs,
+                         lambda x: (sum(r[2] * (r[3] - 1) for r in x)
+                                    / sum(r[2] for r in x) * 100))
+    head = ("# The Found bets band tables, one snapshot per day, every variant\n"
+            "# (webapp.band_log). pop: cards = counted cards at the feed's best,\n"
+            "# bets = his bets at the price paid; by: banded by the card's\n"
+            "# first-sight price or the price paid; floor: all prices or 1.20+;\n"
+            "# timing: all bets or pre-kickoff only. Declined cards left out.\n"
+            "# date\tpop\tby\tside\tfloor\ttiming\tband\tn\thit\troi\n")
+    new = not BAND_LOG.exists()
+    with BAND_LOG.open("a") as fh:
+        if new:
+            fh.write(head)
+        fh.write("".join("\t".join(r) + "\n" for r in out))
+
 
 PLAYED_MARKS = ("strong", "normal", "watch")
 
@@ -3546,6 +3606,7 @@ def main() -> None:
     BAND_STATS["cards"] = [(band, best, hit, pl)
                            for band, _side, best, hit, pl in _crow]
     BAND_STATS["bets"] = []
+    _logbets: list = []
     for b in bet_rows:
         if b["mark"] == "open":
             continue
@@ -3563,6 +3624,14 @@ def main() -> None:
         BAND_STATS["bets"].append((gap_band(cg * 100), cb,
                                    not b["mark"].startswith("❌"),
                                    b["stake"], ret))
+        pg = _bar_gap(b)
+        _logbets.append(dict(
+            card=gap_band(cg * 100),
+            paid=gap_band(pg * 100) if pg is not None else None,
+            side={"O": "o", "U": "u"}.get(b["lane"][:1]), best=cb,
+            hit=not b["mark"].startswith("❌"), stake=b["stake"], ret=ret,
+            ip="in-play" in b["note"]))
+    band_log(_crow, _logbets)
 
     def _short(note: str, cap: int = 64) -> str:
         """The Found bets cell gets the book and the first clause; the
