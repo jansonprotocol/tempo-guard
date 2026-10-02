@@ -1635,17 +1635,10 @@ def _gap_html(g: dict | None) -> str:
     # best price; the bettor's bets at the price he paid (30 Sep).
     at = gap_band(hi)
     stats = ""
-    if BAND_STATS:
-        # LIKE WITH LIKE (the bettor, 1 Oct): the same band AND a best
-        # price within PRICE_NEAR of this card's, so a 1.30 under is not
-        # read against a band full of 1.14s nobody would take.
-        price = max(p for p, _b in g["top"])
-        lo_p, hi_p = price - PRICE_NEAR, price + PRICE_NEAR
-        near = lambda bp: lo_p - 1e-9 <= bp <= hi_p + 1e-9
-        cs = [(h, pl) for band, bp, h, pl in BAND_STATS["cards"]
-              if band == at and near(bp)]
-        bs = [(h, st, r) for band, bp, h, st, r in BAND_STATS["bets"]
-              if band == at and near(bp)]
+    rd = band_read(g)
+    if rd:
+        price, lo_p, hi_p, cs, bs = (rd["price"], rd["lo_p"], rd["hi_p"],
+                                     rd["cs"], rd["bs"])
 
         def cell(who, n, hit, roi):
             return (f"<div>{who} <b>{n}</b>"
@@ -1661,12 +1654,17 @@ def _gap_html(g: dict | None) -> str:
                      sum(pl for _h, pl in cs) / len(cs) * 100 if cs else 0)
         which = (f"<div>{at if b1 != b2 else 'this band'}, priced "
                  f"{lo_p:.2f}–{hi_p:.2f}</div>")
+        call = band_call(rd)
+        says = (f'<div class="bcall bc-{call}" title="Tracked only, never '
+                f'used: a band reading 80%+ on both lines confirms a tier, '
+                f'under 80% on both vetoes it (the bettor, 2 Oct).">band '
+                f'{BAND_CALL_WORD[call]}</div>')
         stats = (f'<div class="gapstats" title="Counted cards in the {at} '
                  f'band whose first-sight best price was within '
                  f'{PRICE_NEAR:.2f} of this card\'s {price:.2f}: your settled '
                  f'bets on the card\'s own lane at the price you paid, and '
                  f'every card at the feed\'s best EU price.">'
-                 f'{which}{mine}{every}</div>')
+                 f'{which}{mine}{every}{says}</div>')
     return (f'<div class="gapbar{cls}" title="{html.escape(tip)}">'
             f'<span class="bl">VS BAR</span> <b>{rng}</b> '
             f'<span class="dim">· {band}</span></div>{stats}')
@@ -1676,6 +1674,157 @@ def _gap_html(g: dict | None) -> str:
 # any card is drawn; empty means the line is left off.
 BAND_STATS: dict = {}
 PRICE_NEAR = 0.10
+
+
+def band_read(g: dict | None) -> dict | None:
+    """The like-for-like record behind a card's VS BAR line: the band its
+    best price sits in, cards and bets within PRICE_NEAR of that price."""
+    if not g or not BAND_STATS:
+        return None
+    at = gap_band(g["hi"])
+    price = max(p for p, _b in g["top"])
+    lo_p, hi_p = price - PRICE_NEAR, price + PRICE_NEAR
+    near = lambda bp: lo_p - 1e-9 <= bp <= hi_p + 1e-9
+    cs = [(h, pl) for band, bp, h, pl in BAND_STATS["cards"]
+          if band == at and near(bp)]
+    bs = [(h, st, r) for band, bp, h, st, r in BAND_STATS["bets"]
+          if band == at and near(bp)]
+    return dict(at=at, price=price, lo_p=lo_p, hi_p=hi_p, cs=cs, bs=bs,
+                my_n=len(bs),
+                my_hit=sum(h for h, _s, _r in bs) / len(bs) * 100 if bs else None,
+                all_n=len(cs),
+                all_hit=sum(h for h, _p in cs) / len(cs) * 100 if cs else None)
+
+
+# DOES THE BAND BACK THE TIER? (the bettor, 2 Oct: "keep track of when the
+# gap bands, or parts of them, start justifying or confirming the
+# strong/medium tags, or by chance veto-ing it ... too early now to
+# already use, but perhaps worthy to keep track"). His two examples: a
+# STRONG card whose band read 82% and 87% and landed — the band
+# confirmed; a STRONG WATCH whose band read 67% and 77% and lost — the
+# band said coin flip. So: every line with BAND_CALL_MIN or more behind
+# it at 80%+ confirms, every such line under 80% vetoes, one of each is
+# split, and too few on both is thin. TRACKED ONLY: it moves no card.
+BAND_CALL_HIT = 80.0
+BAND_CALL_MIN = 3
+BAND_CALL_WORD = {"confirms": "backs it · both lines 80%+",
+                  "split": "split · one line 80%+, one under",
+                  "vetoes": "vetoes · both lines under 80%",
+                  "thin": "too thin to read"}
+
+
+def band_call(rd: dict | None) -> str:
+    if not rd:
+        return "thin"
+    rates = [h for n, h in ((rd["my_n"], rd["my_hit"]),
+                            (rd["all_n"], rd["all_hit"]))
+             if n >= BAND_CALL_MIN]
+    if not rates:
+        return "thin"
+    if all(h >= BAND_CALL_HIT for h in rates):
+        return "confirms"
+    if all(h < BAND_CALL_HIT for h in rates):
+        return "vetoes"
+    return "split"
+
+
+TIER_BAND_LOG = ROOT / "config" / "tier_band_log.tsv"
+_TBL_HEAD = ("# Does the band back the tier? One row per tiered card, the band's\n"
+             "# like-for-like reading (webapp.band_read / band_call) as it stood at\n"
+             "# the last render before kickoff; rewritten while the card is pending,\n"
+             "# frozen from kickoff. Tracked only: it moves no card (bettor, 2 Oct).\n"
+             "# date\tfixture\ttier\tlane\tprice\tband\tmy_n\tmy_hit\tall_n\t"
+             "all_hit\tcall\tread_at\n")
+
+
+def tier_band_log(fixtures) -> list[list[str]]:
+    """Update config/tier_band_log.tsv for the pending tiered cards and
+    return every row."""
+    rows: dict = {}
+    if TIER_BAND_LOG.exists():
+        for ln in TIER_BAND_LOG.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            q = ln.split("\t")
+            if len(q) >= 12:
+                rows[(q[0], q[1])] = q
+    now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
+    for f in fixtures:
+        if f.settled or f.status or odds_api.started(f.kickoff):
+            continue
+        key = (f.kickoff.split(" ")[0], f.teams)
+        t = tier_of(f)
+        v = verdict(f, _star(f)) if t else None
+        g = price_gap(f, _star(f), v) if v else None
+        if not t or not g:
+            rows.pop(key, None)
+            continue
+        rd = band_read(g)
+        fmt = lambda x: "" if x is None else f"{x:.1f}"
+        rows[key] = [key[0], f.teams, t, v["lane"], f"{rd['price'] if rd else g['hi']:.2f}",
+                     gap_band(g["hi"]),
+                     str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
+                     str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
+                     band_call(rd), now]
+    out = sorted(rows.values(), key=lambda q: (q[0], q[1]))
+    try:
+        TIER_BAND_LOG.write_text(_TBL_HEAD + "".join("\t".join(q) + "\n"
+                                                     for q in out))
+    except OSError:
+        pass
+    return out
+
+
+def tier_band_html(rows, fixtures) -> str:
+    """The tier x band-read table for the Found bets tab."""
+    from scripts import forward_settle as _fs
+    final = {}
+    for f in fixtures:
+        if f.settled and "—" in f.status:
+            sc_ = f.status.split("—")[-1].strip().split(" ")[0]
+            if "-" in sc_:
+                try:
+                    hg, ag = sc_.split("-")
+                    final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
+                except ValueError:
+                    pass
+    calls = ("confirms", "split", "vetoes", "thin")
+    tiers = (("strong", "\u2605 STRONG"), ("medium", "MEDIUM"),
+             ("strong watch", "STRONG WATCH"))
+    agg = {(t, c): [0, 0, 0] for t, _w in tiers for c in calls}
+    for q in rows:
+        k = (q[2], q[10])
+        if k not in agg:
+            continue
+        sc = final.get((q[0], q[1]))
+        got = _fs._settle(q[3], *sc) if sc else None
+        if got is None:
+            agg[k][2] += 1
+        else:
+            agg[k][0] += 1
+            agg[k][1] += bool(got[1])
+    if not rows:
+        return ""
+
+    def cell(n, h, pend):
+        s_ = f"{h}/{n} · {h / n * 100:.0f}%" if n else "—"
+        return s_ + (f' <span class="dim">+{pend} open</span>' if pend else "")
+    body = "".join(
+        f"<tr><td>{w}</td>" + "".join(f"<td>{cell(*agg[(t, c)])}</td>"
+                                      for c in calls) + "</tr>"
+        for t, w in tiers)
+    return ('<div class="wrap tbwrap"><div class="roihead"><span class="l">'
+            'Does the band back the tier?</span> <span class="s">tracked only '
+            '\u00b7 since 2 Oct</span></div><table class="bandtable"><tr>'
+            '<th>tier</th><th>band confirms</th><th>split</th>'
+            '<th>band vetoes</th><th>thin</th></tr>' + body + '</table>'
+            '<div class="s">Each tiered card\'s VS BAR record line as it stood '
+            'before kickoff: <b>confirms</b> when every line with '
+            f'{BAND_CALL_MIN}+ behind it reads {BAND_CALL_HIT:.0f}%+ (my bets '
+            'and all cards), <b>vetoes</b> when every such line is under '
+            f'{BAND_CALL_HIT:.0f}%, <b>split</b> one of each, <b>thin</b> too '
+            'few to read. Landed / settled, pushes as hits. It moves no card.'
+            '</div></div>')
 
 BAND_LOG = ROOT / "config" / "band_log.tsv"
 ROI_LOG = ROOT / "config" / "roi_log.tsv"
@@ -3893,6 +4042,7 @@ def main() -> None:
             hit=not b["mark"].startswith("❌"), stake=b["stake"], ret=ret,
             ip="in-play" in b["note"]))
     band_log(_crow, _logbets)
+    tier_band = tier_band_html(tier_band_log(fixtures), fixtures)
 
     def _short(note: str, cap: int = 64) -> str:
         """The Found bets cell gets the book and the first clause; the
@@ -4403,6 +4553,11 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.no {{ color:#f0a08e; border-color:#8a3a2e; }}
 .vmark.dimv {{ color:var(--dim); }}
 .vmark.swatch {{ color:#9cc3ff; border-color:#2c4f80; }}
+.bcall {{ margin-top:2px; font-size:.92em; }}
+.bcall.bc-confirms {{ color:#7fd18b; }}
+.bcall.bc-vetoes {{ color:#f08a7e; }}
+.bcall.bc-split, .bcall.bc-thin {{ opacity:.75; }}
+.tbwrap .bandtable td:first-child {{ white-space:nowrap; }}
 .vmark .tedge {{ font-weight:400; opacity:.8; margin-left:2px; }}
 .gapstats {{ font-size:11px; color:var(--dim); margin:0 0 3px;
   font-variant-numeric:tabular-nums; }}
@@ -4972,7 +5127,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <b>live unsafe</b>, <b>live cautious</b> or <b>live safe</b> on any
   tab to find cards by their tag.</div>
   {_grid(declined, "declined", reads)}</div>
- <div class="tabpane" id="t-bets">{bets_meta}{roi_chart}<div class="wrap">
+ <div class="tabpane" id="t-bets">{bets_meta}{roi_chart}{tier_band}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th>
   <th data-sort="s" data-dir="asc" class="asc">Kickoff</th>
