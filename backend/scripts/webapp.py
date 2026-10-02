@@ -1138,6 +1138,35 @@ _SEVEN_DONE: dict = {}      # one answer per card and label per render
 #                 a better price — a pill only, the card stays on its tab.
 STRONG_WATCH_UNDER = 5.0
 
+# EACH TIER HAS A FLOOR PRICE (the bettor, 2 Oct: "those breakeven prices
+# should be the minimal to eventually really get qualified for the card
+# type, if a card doesn't reach it, it reverts back to its original type").
+# The floor is the tier's break-even at its own measured hit rate, 1 / hit:
+#   STRONG        85.7% on 126  -> 1.17
+#   MEDIUM        76.2% on 42   -> 1.31
+#   STRONG WATCH  83.0% on 371  -> 1.20
+# Under it the card is what it was before the tiers: a STRONG at or over
+# the play bar is a plain PLAY, a STRONG under the bar is not a play at
+# all, a MEDIUM is a plain PLAY, a STRONG WATCH a plain watch. The pill
+# carries "+x%", how far the best price sits above the tier's floor.
+TIER_MIN = {"strong": 1.17, "medium": 1.31, "strong watch": 1.20}
+
+
+def tier_edge(tier: str, price) -> float | None:
+    try:
+        return (float(price) / TIER_MIN[tier] - 1) * 100
+    except (TypeError, ValueError, KeyError, ZeroDivisionError):
+        return None
+
+
+def _edge_html(tier: str, price) -> str:
+    e = tier_edge(tier, price)
+    if e is None:
+        return ""
+    return (f' <span class="tedge" title="best price {float(price):.2f} against '
+            f'the {TIER_MIN[tier]:.2f} this tier needs to break even">'
+            f'+{e:.1f}%</span>')
+
 
 def tier_of(f) -> str | None:
     """'strong', 'medium', 'strong watch' or None for this card."""
@@ -1147,17 +1176,22 @@ def tier_of(f) -> str | None:
         c = was_called(f)
         if c and c["mark"] == "strong":
             return "strong"
-        if c and c["mark"] == "normal":
+        if c and c["mark"] == "normal" \
+                and (c["row"].get("best") or 0) >= TIER_MIN["medium"]:
             return "medium"
         g = _gap_point(f)
+        # the same price _gap_point judged the gap on
+        price = (_last_price(f, c["row"]) or c["row"].get("best")) if c else None
     else:
         v = verdict(f, _star(f))
         if v and v["strong"]:
             return "strong"
-        if v and v["play"]:
+        if v and v["play"] and (v["odds"] or 0) >= TIER_MIN["medium"]:
             return "medium"
         g = (v["lane"], v["gap"]) if v and v.get("gap") is not None else None
-    if g and g[1] <= -STRONG_WATCH_UNDER:
+        price = v["odds"] if v else None
+    if g and g[1] <= -STRONG_WATCH_UNDER \
+            and (price or 0) >= TIER_MIN["strong watch"]:
         return "strong watch"
     return None
 
@@ -1419,6 +1453,7 @@ def verdict(f, best: int) -> dict | None:
     # that the board would not buy is a label with nothing behind it.
     strong = bool((not lab.endswith("red") or freed) and got_odds is not None
                   and not live and gap is not None and gap >= -STRONG_UNDER
+                  and got_odds >= TIER_MIN["strong"]
                   and all_seven(f, lab))
     play = play or strong
     # The watch list: same lane, same bar, the panel's best a little short
@@ -1523,7 +1558,8 @@ def was_called(f) -> dict | None:
         return dict(row=r, mark="no play")
     # STRONG reaches STRONG_UNDER below the bar (2 Oct), so it is asked
     # before the plain PLAY test, on the price the card kept at kickoff.
-    if best >= need * (1 - STRONG_UNDER / 100) and all_seven(f, str(r["label"])):
+    if best >= need * (1 - STRONG_UNDER / 100) and best >= TIER_MIN["strong"] \
+            and all_seven(f, str(r["label"])):
         return dict(row=r, mark="strong")
     if best >= need:
         return dict(row=r, mark="normal")
@@ -2228,15 +2264,17 @@ def _frozen_guard(f, call: dict) -> str:
     # The card leads with the tip box, so the call is a pill in it rather
     # than a line of its own (the bettor, 30 Sep: "choose one of the play
     # tip 1 ... I'll choose the original box, fuse the rest").
-    word = {"strong": "★ STRONG", "normal": "MEDIUM",
+    t = tier_of(f)
+    word = {"strong": "★ STRONG", "normal": "MEDIUM" if t == "medium" else "PLAY",
             "watch": "watch", "no play": "no play"}[call["mark"]]
     cls = {"strong": "strong", "normal": "yes",
            "watch": "dimv", "no play": "no"}[call["mark"]]
-    if call["mark"] in ("watch", "no play") and tier_of(f) == "strong watch":
+    if call["mark"] in ("watch", "no play") and t == "strong watch":
         word, cls = "STRONG WATCH", "swatch"
     when = "was " if f.settled else "running · was "
     mark = (f'<span class="vmark {cls}" title="the call at first sight, '
-            f'{html.escape(r["d"])}">{when}{word}</span>')
+            f'{html.escape(r["d"])}">{when}{word}'
+            f'{_edge_html(t, (_last_price(f, r) or r.get("best")) if t == "strong watch" else r.get("best")) if t else ""}</span>')
     return badge, mark
 
 
@@ -2281,19 +2319,26 @@ def _guard(f, best: int) -> str:
     # by window) while everything else grades 72.8% and -0.67%. One half
     # carries the entire return; the other has no measured edge at all.
     need, odds = v["need"], v["odds"]
+    t = tier_of(f)
     if v["strong"]:
-        mark = '<span class="vmark strong">★ STRONG · PLAY</span>'
+        mark = ('<span class="vmark strong">★ STRONG · PLAY'
+                f'{_edge_html("strong", odds)}</span>')
+    elif v["play"] and t == "medium":
+        mark = ('<span class="vmark yes">MEDIUM · PLAY'
+                f'{_edge_html("medium", odds)}</span>')
     elif v["play"]:
-        mark = '<span class="vmark yes">MEDIUM · PLAY</span>'
+        mark = ('<span class="vmark yes" title="at or over the play bar but '
+                f'under the {TIER_MIN["medium"]:.2f} MEDIUM needs to break '
+                'even">PLAY</span>')
     elif lab.endswith("red"):
         mark = '<span class="vmark no" title="the tier says avoid">no play</span>'
     elif odds is None:
         mark = '<span class="vmark dimv">nothing quoted yet</span>'
-    elif tier_of(f) == "strong watch":
+    elif t == "strong watch":
         mark = ('<span class="vmark swatch" title="5% or more under the play '
                 'bar: cards like this land about 83% but lose at the pre-match '
                 'price — one to watch for a better price, live or at your '
-                'book.">STRONG WATCH</span>')
+                f'book.">STRONG WATCH{_edge_html("strong watch", odds)}</span>')
     elif v["watch"]:
         mark = '<span class="vmark dimv">watch</span>'
     else:
@@ -3184,7 +3229,9 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         "and across all leagues \u2014 and the price is no more than 5% under "
         "the play bar (since 2 Oct). A STRONG card is a play even a little "
         "under the bar. On this session's counted cards: at or over the bar "
-        "84.3% and +12.5% on 51, 0\u20135% under 86.7% and +2.9% on 75. Play "
+        "84.3% and +12.5% on 51, 0\u20135% under 86.7% and +2.9% on 75. It "
+        "also needs a best price of 1.17 or more, the break-even at that "
+        "hit rate; the pill's +x% is how far above 1.17 the price sits. Play "
         "these first, and never skip one for price if any "
         "book you hold clears the bar.") + show(
         none, "pend", "3 \u00b7 A card with no play",
@@ -3241,7 +3288,12 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "more than 5% under the bar \u2014 a play. <b>MEDIUM</b>: every other "
          "play (at or over the bar). <b>STRONG WATCH</b>: 5% or more under the "
          "bar \u2014 such cards land about 83% but lose at the pre-match price, "
-         "so they are for a better price, live or at your own book. Search "
+         "so they are for a better price, live or at your own book. Each tier "
+         "has a floor price, its break-even at its own hit rate: STRONG 1.17, "
+         "MEDIUM 1.31, STRONG WATCH 1.20. A card under its floor reverts: a "
+         "STRONG or MEDIUM at or over the bar is a plain PLAY, a STRONG under "
+         "the bar is not a play, a STRONG WATCH a plain watch. The pill's "
+         "<b>+x%</b> is how far the best price sits above the floor. Search "
          "<code>strong</code>, <code>medium</code>, <code>strong watch</code>."),
         ("👀 Watch lanes", "the starred lane is not red and the panel's "
          "best clears its claim band's bar, or sits under it by five "
@@ -3605,8 +3657,11 @@ def main() -> None:
             # more than STRONG_UNDER below the bar; NORMAL needs the bar.
             fx_ = _tile_fx.get(key)
             strong_ = (best >= need * (1 - STRONG_UNDER / 100)
+                       and best >= TIER_MIN["strong"]
                        and fx_ is not None and all_seven(fx_, p[7]))
-            if not strong_ and best < need:
+            # The MEDIUM tile counts MEDIUM only: a play under the 1.31
+            # floor is a plain PLAY and sits in neither tile.
+            if not strong_ and (best < need or best < TIER_MIN["medium"]):
                 continue
             got = _fs._settle(p[5], *final[key])
             if got is None:
@@ -4345,6 +4400,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.no {{ color:#f0a08e; border-color:#8a3a2e; }}
 .vmark.dimv {{ color:var(--dim); }}
 .vmark.swatch {{ color:#9cc3ff; border-color:#2c4f80; }}
+.vmark .tedge {{ font-weight:400; opacity:.8; margin-left:2px; }}
 .gapstats {{ font-size:11px; color:var(--dim); margin:0 0 3px;
   font-variant-numeric:tabular-nums; }}
 .gapstats b {{ color:var(--fg, inherit); }}
