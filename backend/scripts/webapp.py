@@ -1090,6 +1090,13 @@ STRONG_SCORE = 6.34    # the confluence cut STRONG used until 2 Oct; drift.py st
 # top-quartile confluence score in Europe. A cell under the grid's floor
 # ("too few") is not a reading, so a card missing any of the six is not
 # STRONG.
+#
+# AND THE PRICE NO MORE THAN 5% UNDER THE PLAY BAR (the bettor, 2 Oct,
+# correcting the first version the same day: "this is strong — all 7 at
+# 80%+ at/over the bar, 51, 84.3%, +12.5%; all 7 at 80%+ 0-5% under, 75,
+# 86.7%, +2.9%"). Both rows together: 126 cards, about 85.7% and +6.8% at
+# the feed's best price. A STRONG card is a PLAY even under the bar.
+STRONG_UNDER = 5.0          # percent below the play bar STRONG still reaches
 _SEVEN_BUSY: set = set()
 
 
@@ -1364,6 +1371,14 @@ def verdict(f, best: int) -> dict | None:
                  and review_label((lab, lane[:1], gap_band(gap))) == "release")
     play = (not lab.endswith("red") or freed) and got_odds is not None \
         and got_odds >= need and not live
+    # STRONG (2 Oct): all seven rates at 80%+ and the price no more than
+    # STRONG_UNDER below the play bar. A STRONG card under the bar is a
+    # PLAY too — the bettor named both rows as strong, and a strong card
+    # that the board would not buy is a label with nothing behind it.
+    strong = bool((not lab.endswith("red") or freed) and got_odds is not None
+                  and not live and gap is not None and gap >= -STRONG_UNDER
+                  and all_seven(f, lab))
+    play = play or strong
     # The watch list: same lane, same bar, the panel's best a little short
     # of it. Decided here beside PLAY, so the tab and the verify cannot
     # hold two definitions of "just shy".
@@ -1372,7 +1387,6 @@ def verdict(f, best: int) -> dict | None:
     # cards a book of the bettor's own may still clear.
     watch = (not play) and (not lab.endswith("red") or freed) and got_odds is not None \
         and got_odds >= bar * (1 - WATCH_BAND) and not live
-    strong = bool(play and all_seven(f, lab))
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
                 band=claim_band(p), bar=bar, value=_value_of(cell),
                 need=need, odds=got_odds, book=(q or {}).get("book"),
@@ -1465,9 +1479,12 @@ def was_called(f) -> dict | None:
     best, need = r.get("best"), r.get("need")
     if str(r["label"]).endswith("red") or not best or not need:
         return dict(row=r, mark="no play")
+    # STRONG reaches STRONG_UNDER below the bar (2 Oct), so it is asked
+    # before the plain PLAY test, on the price the card kept at kickoff.
+    if best >= need * (1 - STRONG_UNDER / 100) and all_seven(f, str(r["label"])):
+        return dict(row=r, mark="strong")
     if best >= need:
-        strong = all_seven(f, str(r["label"]))
-        return dict(row=r, mark="strong" if strong else "normal")
+        return dict(row=r, mark="normal")
     # The WATCH test reads the band bar the live verdict used (stamped
     # since 14 Sep), not the play bar — otherwise a card is a watch card
     # before the whistle and an Athena lane after it.
@@ -3113,12 +3130,13 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         "cleared the bar; if your own book is short of it, it is not a bet "
         "there.") + show(
         strong, "play", "2 \u00b7 A strong play",
-        "Same as a normal play, plus <b>\u2605 STRONG</b>: every rate the card "
-        "prints reads 80% or more \u2014 the engine's claim and all six cells "
-        "of the profile grid, here and across all leagues (since 2 Oct). On "
-        "this session's graded cards, all seven at 80%+ landed 84.4% on 487, "
-        "against 75.5% for none or one; priced at or over the bar, 84.3% and "
-        "+12.5% on 51. Play these first, and never skip one for price if any "
+        "<b>\u2605 STRONG</b>: every rate the card prints reads 80% or more "
+        "\u2014 the engine's claim and all six cells of the profile grid, here "
+        "and across all leagues \u2014 and the price is no more than 5% under "
+        "the play bar (since 2 Oct). A STRONG card is a play even a little "
+        "under the bar. On this session's counted cards: at or over the bar "
+        "84.3% and +12.5% on 51, 0\u20135% under 86.7% and +2.9% on 75. Play "
+        "these first, and never skip one for price if any "
         "book you hold clears the bar.") + show(
         none, "pend", "3 \u00b7 A card with no play",
         "The tip box says <b>no play</b> (or <b>watch</b>, or <b>nothing "
@@ -3526,14 +3544,19 @@ def main() -> None:
                 score = float(p[8]) if p[8] else None
             except ValueError:
                 continue
-            if p[7].endswith("red") or best < need or key not in final:
+            if p[7].endswith("red") or key not in final:
+                continue
+            # STRONG since 2 Oct: all seven rates at 80%+ and the price no
+            # more than STRONG_UNDER below the bar; NORMAL needs the bar.
+            fx_ = _tile_fx.get(key)
+            strong_ = (best >= need * (1 - STRONG_UNDER / 100)
+                       and fx_ is not None and all_seven(fx_, p[7]))
+            if not strong_ and best < need:
                 continue
             got = _fs._settle(p[5], *final[key])
             if got is None:
                 continue
-            # STRONG by the card's own seven rates since 2 Oct (all_seven).
-            fx_ = _tile_fx.get(key)
-            kind = "strong" if fx_ is not None and all_seven(fx_, p[7]) else "normal"
+            kind = "strong" if strong_ else "normal"
             kinds[kind][1] += 1
             kinds[kind][0] += got[1]
     (nh, nn), (sh, sn) = kinds["normal"], kinds["strong"]
@@ -4784,10 +4807,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   best quote is at or within 3% of the lane's <b>value</b> price (the
   engine's break-even plus its margin), it clears the <b>claim band's
   bar</b> — 1.14 for a claim of 85 or more, 1.18 for 80–85, 1.31 for
-  75–80 — and the tier is not red (the bettor's rule, 12 Sep). <b class="sgm">★ STRONG</b> adds every rate on
-  the card at 80% or more — the claim and all six profile-grid cells
-  (2 Oct): on this session's graded cards 84.4% on 487, and priced at or
-  over the bar 84.3% and +12.5% on 51.</div>
+  75–80 — and the tier is not red (the bettor's rule, 12 Sep). <b class="sgm">★ STRONG</b> is every rate on
+  the card at 80% or more — the claim and all six profile-grid cells —
+  with the price no more than 5% under the bar, and it plays down to
+  there (2 Oct): at or over the bar 84.3% and +12.5% on 51, 0–5% under
+  86.7% and +2.9% on 75.</div>
   {_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-watch">
   <div class="panenote">Not plays — yet. The starred lane is not red and

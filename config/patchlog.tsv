@@ -1,6 +1,7 @@
 # The patch log: what changed in the engine and when, one line each.
 # Typed by hand like a changelog is; read by scripts/webapp.py for the
 # Patches page. Newest first. Columns: date, area, note.
+2026-10-02	board	STRONG widened the same day: all seven rates at 80%+ with the price no more than 5% under the play bar, and a STRONG card is a PLAY down to there (at/over the bar 84.3% +12.5% on 51; 0-5% under 86.7% +2.9% on 75)
 2026-10-02	board	STRONG is now a PLAY whose claim and all six profile-grid rates read 80%+ (the bettor: "replace that as ruling for strong cards"), replacing the top-quartile confluence score in Europe. Session cards with all seven at 80%+ landed 84.4% on 487; priced at or over the bar, 84.3% and +12.5% on 51
 2026-10-01	board	Fix: a card no longer changes verdict at kickoff. The O1.5 0-6% decline and the profile review read the live price before kickoff but the first-sight price after it, so Greece v Netherlands and Wales v Norway flipped from PLAY (+11.4%, +8.5%) to declined (+2.3%, +0.8%) at the whistle. The quote refresh now keeps every lane's last pre-kickoff price in config/last_quotes.tsv (backfilled from 28 Sep), and both read that after kickoff
 2026-09-28	board	Two-day profile review (scripts/profile_review.py, in the bank refresh): each group x side x price band is re-measured on the board's settled cards, and a declined profile that clears a strict bar is released back to the board, a counted one that clears it downward is declined. Nothing moves at ship time
