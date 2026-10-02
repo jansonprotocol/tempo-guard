@@ -764,6 +764,13 @@ def _haystack(f) -> str:
                 bits.append("verdict play")
             if call["mark"] == "strong":
                 bits.append("strong")
+    # The tier as its own words (2 Oct): "tier strong", "tier medium",
+    # "tier swatch" — distinct so a search for one never finds another,
+    # since "strong" alone is also inside "strong watch" and "strong attack".
+    t = tier_of(f)
+    if t:
+        bits += [{"strong": "tier strong", "medium": "tier medium medium",
+                  "strong watch": "tier swatch"}[t]]
     raw = " ".join(bits).lower()
     folded = _fold(raw)
     return html.escape(raw if folded == raw else raw + " " + folded)
@@ -1118,6 +1125,41 @@ def all_seven(f, label: str | None) -> bool:
 
 
 _SEVEN_DONE: dict = {}      # one answer per card and label per render
+
+
+# THE TIERS (the bettor, 2 Oct), on counted cards only:
+#   STRONG        all seven rates at 80%+, price no more than 5% under the bar
+#                 (84.3% +12.5% on 51 over the bar; 86.7% +2.9% on 75 just under)
+#   MEDIUM        every other PLAY: fewer than seven, at or over the bar
+#                 (76.2% +5.5% on 42)
+#   STRONG WATCH  any card 5% or more under the bar, whatever its rates
+#                 (83.3% -6.8% on 257 and 82.5% -5.9% on 114): it lands, but
+#                 the pre-match price does not pay, so it is one to watch for
+#                 a better price — a pill only, the card stays on its tab.
+STRONG_WATCH_UNDER = 5.0
+
+
+def tier_of(f) -> str | None:
+    """'strong', 'medium', 'strong watch' or None for this card."""
+    if is_declined(f):
+        return None
+    if f.settled or odds_api.started(f.kickoff):
+        c = was_called(f)
+        if c and c["mark"] == "strong":
+            return "strong"
+        if c and c["mark"] == "normal":
+            return "medium"
+        g = _gap_point(f)
+    else:
+        v = verdict(f, _star(f))
+        if v and v["strong"]:
+            return "strong"
+        if v and v["play"]:
+            return "medium"
+        g = (v["lane"], v["gap"]) if v and v.get("gap") is not None else None
+    if g and g[1] <= -STRONG_WATCH_UNDER:
+        return "strong watch"
+    return None
 
 
 def _all_seven(f, label: str | None) -> bool:
@@ -2186,10 +2228,12 @@ def _frozen_guard(f, call: dict) -> str:
     # The card leads with the tip box, so the call is a pill in it rather
     # than a line of its own (the bettor, 30 Sep: "choose one of the play
     # tip 1 ... I'll choose the original box, fuse the rest").
-    word = {"strong": "★ STRONG", "normal": "PLAY",
+    word = {"strong": "★ STRONG", "normal": "MEDIUM",
             "watch": "watch", "no play": "no play"}[call["mark"]]
     cls = {"strong": "strong", "normal": "yes",
            "watch": "dimv", "no play": "no"}[call["mark"]]
+    if call["mark"] in ("watch", "no play") and tier_of(f) == "strong watch":
+        word, cls = "STRONG WATCH", "swatch"
     when = "was " if f.settled else "running · was "
     mark = (f'<span class="vmark {cls}" title="the call at first sight, '
             f'{html.escape(r["d"])}">{when}{word}</span>')
@@ -2240,11 +2284,16 @@ def _guard(f, best: int) -> str:
     if v["strong"]:
         mark = '<span class="vmark strong">★ STRONG · PLAY</span>'
     elif v["play"]:
-        mark = '<span class="vmark yes">PLAY</span>'
+        mark = '<span class="vmark yes">MEDIUM · PLAY</span>'
     elif lab.endswith("red"):
         mark = '<span class="vmark no" title="the tier says avoid">no play</span>'
     elif odds is None:
         mark = '<span class="vmark dimv">nothing quoted yet</span>'
+    elif tier_of(f) == "strong watch":
+        mark = ('<span class="vmark swatch" title="5% or more under the play '
+                'bar: cards like this land about 83% but lose at the pre-match '
+                'price — one to watch for a better price, live or at your '
+                'book.">STRONG WATCH</span>')
     elif v["watch"]:
         mark = '<span class="vmark dimv">watch</span>'
     else:
@@ -3188,6 +3237,12 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "U4.25 as U4.5, because the engine cannot tell those apart and "
          "the safer line pays more on settlement. Everything else as "
          "printed."),
+        ("Tiers", "<b>\u2605 STRONG</b>: all seven rates at 80%+ and the price no "
+         "more than 5% under the bar \u2014 a play. <b>MEDIUM</b>: every other "
+         "play (at or over the bar). <b>STRONG WATCH</b>: 5% or more under the "
+         "bar \u2014 such cards land about 83% but lose at the pre-match price, "
+         "so they are for a better price, live or at your own book. Search "
+         "<code>strong</code>, <code>medium</code>, <code>strong watch</code>."),
         ("👀 Watch lanes", "the starred lane is not red and the panel's "
          "best clears its claim band's bar, or sits under it by five "
          "percent or less, but is short of the lane's value price. Not a "
@@ -3564,8 +3619,8 @@ def main() -> None:
         tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
              f"your lanes · {bh}/{bn} hits"),
         tile("roi", f"{roi:+.1f}%", f"on €{_staked:.2f} · {bn} settled"),
-        tile("normal", f"{nh / nn * 100:.1f}%" if nn else "—",
-             f"PLAY cards · {nh}/{nn}" if nn else "PLAY cards · none settled yet"),
+        tile("medium", f"{nh / nn * 100:.1f}%" if nn else "—",
+             f"MEDIUM plays · {nh}/{nn}" if nn else "MEDIUM plays · none settled yet"),
         tile("★ strong", f"{sh / sn * 100:.1f}%" if sn else "—",
              f"STRONG cards · {sh}/{sn}" if sn else "STRONG cards · none settled yet"),
     ])
@@ -4289,6 +4344,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.strong {{ color:#f3c969; border-color:#8a6d1f; }}
 .vmark.no {{ color:#f0a08e; border-color:#8a3a2e; }}
 .vmark.dimv {{ color:var(--dim); }}
+.vmark.swatch {{ color:#9cc3ff; border-color:#2c4f80; }}
 .gapstats {{ font-size:11px; color:var(--dim); margin:0 0 3px;
   font-variant-numeric:tabular-nums; }}
 .gapstats b {{ color:var(--fg, inherit); }}
@@ -4779,8 +4835,12 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <b>the guard</b> — <code>green+</code> (also <code>green plus</code>),
   <code>green</code>, <code>orange</code>, <code>pink</code>,
   <code>red</code>, <code>super red</code>: the label on the card. Type <code>guard red</code> or <code>label red</code>
-  to keep clubs called Red out of it. Also <code>strong</code>,
-  <code>verdict play</code>, <code>verdict no play</code>.<br>
+  to keep clubs called Red out of it. Also <code>verdict play</code>,
+  <code>verdict no play</code>.<br>
+  <b>the tier</b> — <code>strong</code> (all seven rates at 80%+, price no
+  more than 5% under the bar), <code>medium</code> (every other play),
+  <code>strong watch</code> (5% or more under the bar: lands, but the
+  pre-match price does not pay).<br>
   <b>an absent lane</b> — <code>tip 2 none</code> (also
   <code>no tip 3</code>): the cards where that lane never printed.<br>
   <b>a probability threshold</b> — <code>tip 2 &lt;80</code>,
@@ -5248,6 +5308,11 @@ function qterms(q) {{
       // "unpriced".
       if (flat === "priced" || flat === "watch" || flat === "athena")
         return "lane " + flat;
+      // The tiers (2 Oct): "strong" is also inside "strong watch" and the
+      // reads' "strong attack", so each tier word maps to its own token.
+      if (flat === "strong" || flat === "tier strong") return "tier strong";
+      if (flat === "medium") return "tier medium";
+      if (flat === "strong watch" || flat === "swatch") return "tier swatch";
       return parseCmp(flat) || s;
     }});
 }}
