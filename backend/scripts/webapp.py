@@ -1078,7 +1078,65 @@ WATCH_BAND = 0.05
 # cards — so the bar is set where the return is, not at a quartile. It
 # is the same 6.34 the old super-green label used, and it makes STRONG
 # rare: about one play in fourteen.
-STRONG_SCORE = 6.34
+STRONG_SCORE = 6.34    # the confluence cut STRONG used until 2 Oct; drift.py still reads it
+
+# STRONG, RULED BY THE CARD'S OWN RATES (the bettor, 2 Oct: "this is the new
+# strong ones ... replace that as ruling for strong cards"). A PLAY is STRONG
+# when every rate the card prints reads 80% or more: the engine's claim on
+# tip 1 and all six cells of the profile grid (here and all leagues, three
+# rows). Measured on the session's 1,135 graded cards: those with all seven
+# at 80%+ landed 84.4% on 487, against 75.5% for 0-1 of seven; on counted
+# cards priced at or over the bar, 84.3% and +12.5% on 51. It replaces the
+# top-quartile confluence score in Europe. A cell under the grid's floor
+# ("too few") is not a reading, so a card missing any of the six is not
+# STRONG.
+_SEVEN_BUSY: set = set()
+
+
+def all_seven(f, label: str | None) -> bool:
+    # strikes() asks record_lane(), which asks verdict(), which asks this:
+    # the inner pass only needs PLAY or not, so it is told "not strong"
+    # rather than recursing.
+    key = (f.kickoff, f.teams)
+    if key in _SEVEN_BUSY:
+        return False
+    if (key, label) in _SEVEN_DONE:
+        return _SEVEN_DONE[(key, label)]
+    _SEVEN_BUSY.add(key)
+    try:
+        _SEVEN_DONE[(key, label)] = got = _all_seven(f, label)
+        return got
+    finally:
+        _SEVEN_BUSY.discard(key)
+
+
+_SEVEN_DONE: dict = {}      # one answer per card and label per render
+
+
+def _all_seven(f, label: str | None) -> bool:
+    claim = _claim(f.tip1)
+    if claim is None or claim < 80:
+        return False
+    from scripts import cardgrid, cellrates
+    rows = _shown_rows(cardgrid.rows(
+        f.code, label, len(strikes(f)), claim,
+        side=cellrates.side_of(f.tip1), declined=False))
+    cells = [r[k] for r in rows for k in ("here", "all")]
+    return len(cells) == 6 and all(
+        n >= cardgrid.MIN_N and h / n >= 0.80 for h, n in cells)
+
+
+def _shown_rows(rows: list) -> list:
+    """The PROFILE_ROWS rows the card face prints (see _profile_html)."""
+    from scripts import cardgrid
+    keep = [i for i, r in enumerate(rows) if r["here"][1] >= cardgrid.MIN_N]
+    keep = keep[:PROFILE_ROWS]
+    for i in range(len(rows)):
+        if len(keep) >= PROFILE_ROWS:
+            break
+        if i not in keep:
+            keep.append(i)
+    return [rows[i] for i in sorted(keep)]
 
 FORWARD = ROOT / "config" / "forward_log.tsv"
 _LOGGED: dict | None = None
@@ -1290,8 +1348,8 @@ def verdict(f, best: int) -> dict | None:
         got_odds = float(q["best"] or q["consensus"]) if q else None
     except (TypeError, ValueError):
         got_odds = None
-    strong = (region_silent(f.code) is False and sc is not None
-              and sc >= STRONG_SCORE)
+    # STRONG, since 2 Oct: every rate the card prints at 80%+ — the claim
+    # and the six profile-grid rates (all_seven). Decided below, on a PLAY.
     # A match that has kicked off is not playable, whatever the file says.
     # odds_api stops QUOTING a started fixture, but the quote file is a
     # file: it outlives the moment it was written, and a render an hour
@@ -1314,12 +1372,13 @@ def verdict(f, best: int) -> dict | None:
     # cards a book of the bettor's own may still clear.
     watch = (not play) and (not lab.endswith("red") or freed) and got_odds is not None \
         and got_odds >= bar * (1 - WATCH_BAND) and not live
+    strong = bool(play and all_seven(f, lab))
     return dict(label=lab, score=sc, cell=cell, claim=p, lane=lane,
                 band=claim_band(p), bar=bar, value=_value_of(cell),
                 need=need, odds=got_odds, book=(q or {}).get("book"),
-                play=play, watch=watch, strong=play and strong,
+                play=play, watch=watch, strong=strong,
                 gap=gap, freed=freed,
-                mark=("strong" if play and strong else
+                mark=("strong" if strong else
                       "normal" if play else "no play"))
 
 
@@ -1407,9 +1466,7 @@ def was_called(f) -> dict | None:
     if str(r["label"]).endswith("red") or not best or not need:
         return dict(row=r, mark="no play")
     if best >= need:
-        sc = r.get("score")
-        strong = (not region_silent(r.get("code") or f.code)
-                  and sc is not None and sc >= STRONG_SCORE)
+        strong = all_seven(f, str(r["label"]))
         return dict(row=r, mark="strong" if strong else "normal")
     # The WATCH test reads the band bar the live verdict used (stamped
     # since 14 Sep), not the play bar — otherwise a card is a watch card
@@ -3056,13 +3113,13 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         "cleared the bar; if your own book is short of it, it is not a bet "
         "there.") + show(
         strong, "play", "2 \u00b7 A strong play",
-        "Same as a normal play, plus <b>\u2605 STRONG</b>: the confluence score "
-        "\u2014 the card run back through the board's own searches, league, each "
-        "club, the side, club-and-side, all as-of \u2014 sits in the top quarter "
-        "in a European league. On 1,008 replayed bets the strong ones landed "
-        "81.0% at +8.87% while the rest landed 72.8% at \u22120.67%. Play "
-        "these first, and never skip one for price if any book you hold "
-        "clears the bar.") + show(
+        "Same as a normal play, plus <b>\u2605 STRONG</b>: every rate the card "
+        "prints reads 80% or more \u2014 the engine's claim and all six cells "
+        "of the profile grid, here and across all leagues (since 2 Oct). On "
+        "this session's graded cards, all seven at 80%+ landed 84.4% on 487, "
+        "against 75.5% for none or one; priced at or over the bar, 84.3% and "
+        "+12.5% on 51. Play these first, and never skip one for price if any "
+        "book you hold clears the bar.") + show(
         none, "pend", "3 \u00b7 A card with no play",
         "The tip box says <b>no play</b> (or <b>watch</b>, or <b>nothing "
         "quoted yet</b>): either the tier is red (the guard says avoid, "
@@ -3451,6 +3508,7 @@ def main() -> None:
                 except ValueError:
                     pass
     kinds = {"normal": [0, 0], "strong": [0, 0]}
+    _tile_fx = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
     seen: set = set()
     if FORWARD.exists():
         for ln in FORWARD.read_text().splitlines():
@@ -3473,8 +3531,9 @@ def main() -> None:
             got = _fs._settle(p[5], *final[key])
             if got is None:
                 continue
-            kind = ("strong" if (score is not None and score >= STRONG_SCORE
-                                 and _region(p[2]) == "Europe") else "normal")
+            # STRONG by the card's own seven rates since 2 Oct (all_seven).
+            fx_ = _tile_fx.get(key)
+            kind = "strong" if fx_ is not None and all_seven(fx_, p[7]) else "normal"
             kinds[kind][1] += 1
             kinds[kind][0] += got[1]
     (nh, nn), (sh, sn) = kinds["normal"], kinds["strong"]
@@ -4725,9 +4784,10 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   best quote is at or within 3% of the lane's <b>value</b> price (the
   engine's break-even plus its margin), it clears the <b>claim band's
   bar</b> — 1.14 for a claim of 85 or more, 1.18 for 80–85, 1.31 for
-  75–80 — and the tier is not red (the bettor's rule, 12 Sep). <b class="sgm">★ STRONG</b> adds a top-quartile
-  confluence score in Europe — on 1,008 replayed bets those graded 81.0%
-  and +8.87%, against 72.8% and −0.67% for the rest.</div>
+  75–80 — and the tier is not red (the bettor's rule, 12 Sep). <b class="sgm">★ STRONG</b> adds every rate on
+  the card at 80% or more — the claim and all six profile-grid cells
+  (2 Oct): on this session's graded cards 84.4% on 487, and priced at or
+  over the bar 84.3% and +12.5% on 51.</div>
   {_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-watch">
   <div class="panenote">Not plays — yet. The starred lane is not red and
