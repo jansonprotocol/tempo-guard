@@ -1165,7 +1165,7 @@ def _edge_html(tier: str, price) -> str:
         return ""
     return (f' <span class="tedge" title="best price {float(price):.2f} against '
             f'the {TIER_MIN[tier]:.2f} this tier needs to break even">'
-            f'+{e:.1f}%</span>')
+            f'+{e:.1f}% · min {TIER_MIN[tier]:.2f}</span>')
 
 
 def tier_of(f) -> str | None:
@@ -2329,7 +2329,8 @@ def _guard(f, best: int) -> str:
     elif v["play"]:
         mark = ('<span class="vmark yes" title="at or over the play bar but '
                 f'under the {TIER_MIN["medium"]:.2f} MEDIUM needs to break '
-                'even">PLAY</span>')
+                'even">PLAY <span class="tedge">· medium from '
+                f'{TIER_MIN["medium"]:.2f}</span></span>')
     elif lab.endswith("red"):
         mark = '<span class="vmark no" title="the tier says avoid">no play</span>'
     elif odds is None:
@@ -3675,9 +3676,11 @@ def main() -> None:
              f"your lanes · {bh}/{bn} hits"),
         tile("roi", f"{roi:+.1f}%", f"on €{_staked:.2f} · {bn} settled"),
         tile("medium", f"{nh / nn * 100:.1f}%" if nn else "—",
-             f"MEDIUM plays · {nh}/{nn}" if nn else "MEDIUM plays · none settled yet"),
+             (f"MEDIUM plays · {nh}/{nn}" if nn else "MEDIUM plays · none settled yet")
+             + f" · min {TIER_MIN['medium']:.2f}"),
         tile("★ strong", f"{sh / sn * 100:.1f}%" if sn else "—",
-             f"STRONG cards · {sh}/{sn}" if sn else "STRONG cards · none settled yet"),
+             (f"STRONG cards · {sh}/{sn}" if sn else "STRONG cards · none settled yet")
+             + f" · min {TIER_MIN['strong']:.2f}"),
     ])
 
     bet_rows = _bets_rows()
