@@ -198,8 +198,75 @@ def build(days: int = DAYS, now: dt.datetime | None = None,
                             f"{'home' if rh is None else 'away'} name unresolved"))
             continue
         rows.append((ko_s, code, names.get(code, code), teams))
+    # ── club leagues the odds feed does not carry, from ESPN ─────────────
+    # The bettor, 2 Oct, on a weekend of Eerste Divisie fixtures missing
+    # from the board: NED-D2 is built and graded from ESPN (ned.2), but the
+    # feed loop above only lists what the odds FEED lists, and the feed has
+    # no Eerste Divisie key, so its matches never arrived. Any club league
+    # whose store comes from ESPN and that the feed does not carry is
+    # listed from ESPN instead, through the same filters: inside the
+    # window, not on the board, both names resolvable. Such a card has no
+    # quote, so it shows the engine's own value until a book prices it.
+    rows += _espn_clubs(now, until, only, fixtures, names, skipped, seen)
     rows.sort()
     return rows, skipped
+
+
+def _espn_clubs(now, until, only, fixtures, names, skipped, seen) -> list[tuple]:
+    import requests
+    from app.data import espn, store
+    from app.data.sources import LEAGUES
+    from scripts.ingest_board import _resolve
+    # One request PER DAY: ESPN answered a date range for ned.2 with no
+    # events at all while the single days of that range each listed theirs.
+    days = [(now + dt.timedelta(days=i)).strftime("%Y%m%d")
+            for i in range((until - now).days + 1)]
+    out = []
+    for code, src in LEAGUES.items():
+        if (code.startswith("INT-") or getattr(src, "provider", "") != "espn"
+                or not getattr(src, "espn_code", "") or code not in names
+                or (only and code not in only) or oa.carried(code)):
+            continue
+        evs = []
+        for day in days:
+            try:
+                evs += requests.get(espn.SCOREBOARD.format(code=src.espn_code),
+                                    params={"dates": day, "limit": espn.LIMIT},
+                                    timeout=espn.TIMEOUT).json().get("events") or []
+            except Exception as exc:                  # noqa: BLE001
+                print(f"{code} {day}: ESPN slate failed ({exc}) — skipped",
+                      file=sys.stderr)
+        df = store.load_results(code)
+        known = sorted(set(df["home"]) | set(df["away"])) if not df.empty else []
+        for ev in evs:
+            c = (ev.get("competitions") or [{}])[0]
+            if ((c.get("status") or {}).get("type") or {}).get("completed"):
+                continue
+            try:
+                ko = dt.datetime.strptime(ev["date"], "%Y-%m-%dT%H:%MZ").replace(
+                    tzinfo=dt.timezone.utc).astimezone(AMS)
+            except (KeyError, ValueError):
+                continue
+            if ko < now or ko > until:
+                continue
+            sides = {x.get("homeAway"): x for x in c.get("competitors") or []}
+            if "home" not in sides or "away" not in sides:
+                continue
+            home = sides["home"]["team"]["displayName"]
+            away = sides["away"]["team"]["displayName"]
+            teams = f"{home} v {away}"
+            key = (code, ko.date(), teams)
+            if key in seen or _on_board(code, home, away, ko.date(), fixtures):
+                continue
+            seen.add(key)
+            rh = _resolve(code, df, known, home)
+            ra = _resolve(code, df, known, away)
+            if rh is None or ra is None:
+                skipped.append((code, teams,
+                                f"{'home' if rh is None else 'away'} name unresolved"))
+                continue
+            out.append((ko.strftime("%Y-%m-%d %H:%M"), code, names[code], teams))
+    return out
 
 
 def _espn_intl(days: int, now: dt.datetime,
