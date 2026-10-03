@@ -1154,10 +1154,10 @@
 2026-10-03 16:15	ESP-L2	LaLiga 2	Almería v Burgos CF	U4.25 84.3% **−5.2%** · buy≥1.19 (+5.4% margin)	— none	✅ HIT — 2-1	
 2026-10-03 18:30	ESP-L2	LaLiga 2	Cádiz CF v Leganés	U3.0 76.3% **+0.0%** · buy≥1.32 (+1.0% margin)	— none	❌ MISS — 4-0	
 2026-10-03 19:45	ARG-PD	Primera División	Defensa y Justicia v San Lorenzo	U3.0 88.1% +3.1% · buy≥1.23 (+5.0% margin)	❌ U2.75 71.4% +4.7% (floor −3.6) · buy≥1.33 (+4.0% margin)	✅ HIT — 3-0	
-2026-10-03 21:00	BRA-SB	Brasileirão Série B	Atletico Goianiense v América Mineiro	O1.0 88.5% **−0.9%** · buy≥1.22 (+6.1% margin)	**Atletico Goianiense O0.5** 84.0% +7.6% (team) · buy≥1.29 (+8.4% margin)	LIVE 88' 2-0	DNB1 78.5% +12.3% · buy≥1.34 · probation
+2026-10-03 21:00	BRA-SB	Brasileirão Série B	Atletico Goianiense v América Mineiro	O1.0 88.5% **−0.9%** · buy≥1.22 (+6.1% margin)	**Atletico Goianiense O0.5** 84.0% +7.6% (team) · buy≥1.29 (+8.4% margin)	LIVE 90' 2-0	DNB1 78.5% +12.3% · buy≥1.34 · probation
 2026-10-03 22:00	ARG-PD	Primera División	Atlético Tucuman v Barracas Central	U3.0 88.9% +3.8% · buy≥1.25 (+8.6% margin)	**Atlético Tucuman U1.5** 75.4% +8.2% (team) · buy≥1.38 (+4.2% margin)	LIVE HT 1-0	
-2026-10-03 22:00	ARG-PD	Primera División	Newells Old Boys v Lanus	O1.0 87.5% **+0.5%** · buy≥1.26 (+4.6% margin)	— none	LIVE 45'+3' 0-0	
-2026-10-03 22:00	BRA-SB	Brasileirão Série B	Cuiabá v Ponte Preta	U3.0 83.5% +2.3% · buy≥1.31 (+4.6% margin)	U2.75 64.4% +3.2% (floor −10.6) · buy≥1.41 (+0.3% margin)	LIVE 45' 1-0	DNB1 74.9% +8.6% · buy≥1.40 · probation
+2026-10-03 22:00	ARG-PD	Primera División	Newells Old Boys v Lanus	O1.0 87.5% **+0.5%** · buy≥1.26 (+4.6% margin)	— none	LIVE HT 0-0	
+2026-10-03 22:00	BRA-SB	Brasileirão Série B	Cuiabá v Ponte Preta	U3.0 83.5% +2.3% · buy≥1.31 (+4.6% margin)	U2.75 64.4% +3.2% (floor −10.6) · buy≥1.41 (+0.3% margin)	LIVE 45'+3' 1-0	DNB1 74.9% +8.6% · buy≥1.40 · probation
 2026-10-03 23:30	BRA-SB	Brasileirão Série B	Botafogo-SP v Vila Nova	O1.0 88.5% **−0.9%** · buy≥1.23 (+6.1% margin)	— none		
 2026-10-04 00:15	ARG-PD	Primera División	Argentinos Juniors v CA Tigre BA	O1.0 88.0% +1.0% · buy≥1.25 (+5.0% margin)	— none		
 2026-10-04 02:30	ARG-PD	Primera División	Atlético Huracán v Aldosivi Mar del Plata	U3.0 87.6% +2.5% · buy≥1.23 (+4.7% margin)	U2.75 70.5% +3.8% (floor −4.5) · buy≥1.35 (+3.9% margin)		
@@ -1239,7 +1239,7 @@
 2026-10-03 20:45	INT-UEFA	Nations League & qualifiers	North Macedonia v Scotland	U4.25 81.2% **−1.9%** · buy≥1.28 (+5.7% margin)	✅ U3.75 67.9% +1.1% (floor −7.1) · buy≥1.36 (+0.6% margin)	✅ HIT — 0-2	
 2026-10-03 20:45	INT-UEFA	Nations League & qualifiers	Spain v Czechia	O1.5 80.8% +2.2% · buy≥1.21 (+5.6% margin)	✅ **Spain O1.5** 64.9% +19.3% (team) · buy≥1.60 (+3.6% margin)	✅ HIT — 3-1	✅ 12 80.9% +2.6% · buy≥1.30 · probation
 2026-10-03 20:45	INT-UEFA	Nations League & qualifiers	Switzerland v Slovenia	U4.25 81.1% **−2.0%** · buy≥1.27 (+5.7% margin)	✅ **Switzerland O0.5** 82.5% +9.8% (team) · buy≥1.33 (+9.5% margin)	✅ HIT — 2-1	✅ DNB1 78.0% +21.6% · buy≥1.35 · probation
-2026-10-03 21:00	INT-FR	Friendlies	Ivory Coast v Cameroon	U4.25 76.7% **−9.4%** · buy≥1.22 (+5.7% margin)	**Cameroon U1.5** 75.4% +3.5% (team) · buy≥1.40 (+5.4% margin)	LIVE 87' 0-1	
+2026-10-03 21:00	INT-FR	Friendlies	Ivory Coast v Cameroon	U4.25 76.7% **−9.4%** · buy≥1.22 (+5.7% margin)	**Cameroon U1.5** 75.4% +3.5% (team) · buy≥1.40 (+5.4% margin)	LIVE 89' 0-1	
 2026-10-03 22:00	INT-FR	Friendlies	Argentina v Burkina Faso	O1.5 77.1% +1.7% · buy≥1.26 (+5.9% margin)	**Argentina O1.5** 72.3% +25.9% (team) · buy≥1.48 (+6.9% margin)		DNB1 88.6% +22.7% · buy≥1.18 · probation
 2026-10-03 23:00	INT-CONCACAF	Nations League & qualifiers	Sint Maarten v St. Vincent and the Grenadines	O1.5 73.0% **−10.0%** · buy≥1.30 (+8.6% margin)	**St. Vincent and the Grenadines O1.5** 52.0% +15.3% (team) · buy≥1.97 (+2.5% margin)		
 2026-10-03 23:30	BRA-SA	Brasileirão	Atletico Mineiro v Bragantino-SP	U4.25 82.9% **−5.8%** · buy≥1.24 (+6.8% margin)	O1.75 74.4% +2.5% (floor −0.6) · buy≥1.47 (+3.8% margin)		DNB1 72.3% +7.7% · buy≥1.45 · probation
@@ -1358,7 +1358,7 @@
 2026-10-03 20:00	NED-D2	Eerste Divisie	FC Den Bosch v FC Dordrecht	U4.25 79.1% **+0.1%** · buy≥1.31 (+1.2% margin)	❌ **FC Den Bosch O1.5** 61.1% +8.6% (team) · buy≥1.69 (+3.3% margin)	✅ HIT — 1-1	
 2026-10-03 20:00	NED-D2	Eerste Divisie	FC Eindhoven v De Graafschap	U4.25 82.4% +3.3% · buy≥1.28 (+3.5% margin)	❌ U3.75 65.8% +4.3% (floor −9.2) · buy≥1.44 (+3.6% margin)	✅ HIT — 2-2	
 2026-10-03 20:00	NED-D2	Eerste Divisie	RKC Waalwijk v FC Emmen	O1.5 84.0% +1.9% · buy≥1.21 (+4.8% margin)	❌ **FC Emmen O1.5** 55.5% +15.2% (team) · buy≥1.85 (+2.8% margin)	✅ HIT — 1-1	
-2026-10-03 21:00	COL-PA	Primera A	Águilas Doradas v Jaguares de Córdoba	U4.25 85.9% **−5.4%** · buy≥1.17 (+5.4% margin)	**Águilas Doradas O0.5** 80.7% +5.2% (team) · buy≥1.31 (+5.5% margin)	LIVE 88' 0-0	DNB1 71.4% +7.4% · buy≥1.47 · probation
+2026-10-03 21:00	COL-PA	Primera A	Águilas Doradas v Jaguares de Córdoba	U4.25 85.9% **−5.4%** · buy≥1.17 (+5.4% margin)	**Águilas Doradas O0.5** 80.7% +5.2% (team) · buy≥1.31 (+5.5% margin)	LIVE 90' 0-0	DNB1 71.4% +7.4% · buy≥1.47 · probation
 2026-10-03 23:05	COL-PA	Primera A	Deportes Tolima v Boyacá Chicó FC	U3.0 79.3% **+0.0%** · buy≥1.36 (+1.2% margin)	**Deportes Tolima O0.5** 82.2% +6.7% (team) · buy≥1.30 (+6.7% margin)		DNB1 76.6% +12.6% · buy≥1.37 · probation
 2026-10-04 14:30	NED-D2	Eerste Divisie	VVV-Venlo v Roda JC Kerkrade	U4.25 80.7% +1.6% · buy≥1.30 (+2.2% margin)	U3.75 63.6% +2.0% (floor −11.4) · buy≥1.44 (+0.3% margin)		
 2026-10-04 21:00	COL-PA	Primera A	Deportivo Pasto v Fortaleza CEIF	U3.0 79.3% **+0.0%** · buy≥1.29 (+1.2% margin)	— none		
