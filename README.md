@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            603 / 728  82.8%    402 / 593  67.8%
     played lanes  >+1%     261 / 315  82.9%    400 / 589  67.9%
-    placed bets            186 / 238  78.2%    ROI +0.5%
+    placed bets            187 / 240  77.9%    ROI +0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -2713,7 +2713,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 186 / 238  ·  ROI +0.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 187 / 240  ·  ROI +0.3%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -2963,6 +2963,9 @@ that premium the book is keeping the insurance money.
 | — open | Remo v Grêmio | U3.5 | 1.34 | — | Unibet — pre-kickoff, one of three U3.5 singles on one coupon (€3.45, 1.15 a side), struck by 2 Oct 21:51 CEST for Thursday 8 Oct 00:30. The card's U3.5 — no wrong lane. Claim 79.2%, pink, a WATCH card wearing STRONG WATCH (5%+ under the bar). Play bar 1.436; 1.34 is 6.7% UNDER it, in the 5-10% under band — bought under the bar, a body note. Feed best 1.34 (1xBet/Pinnacle): he matched it. +11.7% over the STRONG WATCH floor of 1.20. |
 | — open | Vitoria v Chapecoense | U3.5 | 1.35 | — | Unibet — pre-kickoff, one of three U3.5 singles on one coupon (€3.45, 1.15 a side), struck by 2 Oct 21:51 CEST for Thursday 8 Oct 01:00. The card's U3.5 — no wrong lane. Claim 79.4%, pink, a WATCH card wearing STRONG WATCH. Play bar 1.436; 1.35 is 6.0% UNDER it, in the 5-10% under band — bought under the bar. Feed best 1.35 (1xBet/Pinnacle): matched. +12.5% over the STRONG WATCH floor of 1.20. |
 | — open | Fluminense v Coritiba | U3.5 | 1.30 | — | Unibet — pre-kickoff, one of three U3.5 singles on one coupon (€3.45, 1.15 a side), struck by 2 Oct 21:51 CEST for Friday 9 Oct 02:30. The card's U3.5 — no wrong lane. Claim 76.0%, pink, a WATCH card wearing STRONG WATCH; the weakest claim on the slip. Play bar 1.465; 1.30 is 11.2% UNDER it, in the 10%+ under band — bought under the bar. Feed best 1.34 (1xBet/Pinnacle), four cents better than paid. +8.3% over the STRONG WATCH floor of 1.20. |
+| ✅ | RKC Waalwijk v FC Emmen | O1.5 | 1.42 | 1.42x | TOTO — IN-PLAY, bet O/0556769/0000563, struck 3 Oct 20:28 CEST on a 20:00 kickoff, around the 28th minute; the score at the strike is not on the slip. The card's own side and rung — no wrong lane. Claim 84.0%, orange; an Eerste Divisie card with no feed quote (ESPN-only league), so it carries no first-sight price, no gap band and no tier. Play bar 1.174 (buy>=1.21 less 3%); 1.42 is +21.0% OVER it, which trips the over-3% counter — a flag, not a decline, and an in-play price after half an hour is not comparable to a pre-match bar. WON: 1-1, the over landed. |
+| ❌ | Almere City v FC Volendam | O1.5 | 1.26 | 0.00x | TOTO — IN-PLAY, bet O/0556769/0000562, struck 3 Oct 20:27 CEST on a 20:00 kickoff, around the 27th minute; the score at the strike is not on the slip. The card's own side and rung — no wrong lane. Claim 84.0%, orange; Eerste Divisie, no feed quote, so no first-sight price, band or tier. Play bar 1.213 (buy>=1.25 less 3%); 1.26 is +3.9% OVER it, which trips the over-3% counter — a flag, not a decline, in-play price. LOST: 1-0. |
+| — open | Switzerland v Slovenia | U4.5 | 1.28 | — | TOTO — IN-PLAY, bet O/0556769/0000564, struck 3 Oct 20:52 CEST on a 20:45 kickoff, around the 7th minute. The card prints U4.25, bought as U4.5 (struck line, odds_api.STRUCK) — the card's own side, no wrong lane. Claim 81.1%, orange, confluence score +5.65. Play bar on U4.5 1.232; 1.28 is +3.9% OVER it, which trips the over-3% counter — a flag, not a decline, and an in-play price is not comparable to a pre-match bar. Pre-match the card was a WATCH: first-sight best 1.14 (1xBet, -7.5%), last quote 1.12 — under the 1.20 STRONG WATCH floor, so no tier. 2-1 at 86' when sent: one more goal still wins (3 goals is under 4.5). |
 
 <!-- HYPOTHESES:START -->
 
