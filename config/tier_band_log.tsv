@@ -3,25 +3,25 @@
 # the last render before kickoff; rewritten while the card is pending,
 # frozen from kickoff. Tracked only: it moves no card (bettor, 2 Oct).
 # date	fixture	tier	lane	price	band	my_n	my_hit	all_n	all_hit	call	read_at
-2026-10-03	Belarus v San Marino	medium	U3.5	1.79	10%+ over	2	100.0	2	100.0	thin	2026-10-03 05:09
-2026-10-03	Botafogo-SP v Vila Nova	strong	O1.0	1.18	0–3% under	14	85.7	62	85.5	confirms	2026-10-03 05:09
-2026-10-03	Croatia v England	strong	O1.5	1.34	10%+ over	17	70.6	21	76.2	vetoes	2026-10-03 05:09
-2026-10-03	Cuiabá v Ponte Preta	strong	U3.5	1.74	10%+ over	1	100.0	1	100.0	thin	2026-10-03 05:09
+2026-10-03	Belarus v San Marino	medium	U3.5	1.79	10%+ over	2	100.0	2	100.0	thin	2026-10-03 05:59
+2026-10-03	Botafogo-SP v Vila Nova	strong	O1.0	1.18	0–3% under	14	85.7	62	85.5	confirms	2026-10-03 05:59
+2026-10-03	Croatia v England	strong	O1.5	1.34	10%+ over	17	70.6	21	76.2	vetoes	2026-10-03 05:59
+2026-10-03	Cuiabá v Ponte Preta	strong	U3.5	1.74	10%+ over	1	100.0	1	100.0	thin	2026-10-03 05:59
 2026-10-03	Independiente v Instituto de Córdoba	strong	O1.0	1.22	0–3% under	16	87.5	64	84.4	confirms	2026-10-02 20:30
 2026-10-03	Juventude v Operario PR	strong	U3.5	1.34	3–6% over	14	85.7	20	90.0	confirms	2026-10-02 23:43
 2026-10-03	Londrina v Criciuma	strong	U3.5	1.30	0–3% over	5	100.0	10	90.0	confirms	2026-10-02 20:30
-2026-10-03	Newells Old Boys v Lanus	strong	O1.0	1.21	0–3% under	16	87.5	66	84.8	confirms	2026-10-03 05:09
-2026-10-04	Argentinos Juniors v CA Tigre BA	strong	O1.0	1.18	0–3% under	14	85.7	62	85.5	confirms	2026-10-03 05:09
-2026-10-04	Atlético Huracán v Aldosivi Mar del Plata	strong	U3.5	1.17	0–3% under	14	85.7	61	85.2	confirms	2026-10-03 05:09
-2026-10-04	Greece v Germany	strong	O1.5	1.38	10%+ over	17	70.6	21	76.2	vetoes	2026-10-03 05:09
-2026-10-04	Republic of Ireland v Israel	strong	O1.5	1.35	6–10% over	25	76.0	40	77.5	vetoes	2026-10-03 05:09
-2026-10-04	Wales v Denmark	strong	O1.5	1.31	10%+ over	10	60.0	13	69.2	vetoes	2026-10-03 05:09
-2026-10-05	Romania v Sweden	strong	O1.5	1.22	3–5% under	7	71.4	46	78.3	vetoes	2026-10-03 05:09
-2026-10-06	Croatia v Spain	strong	O1.5	1.17	0–3% under	14	85.7	61	85.2	confirms	2026-10-03 05:09
-2026-10-07	Ponte Preta v Juventude	strong	U3.5	1.35	3–6% over	14	85.7	20	90.0	confirms	2026-10-03 05:09
-2026-10-08	América Mineiro v Fortaleza	strong	U3.5	1.37	6–10% over	24	75.0	38	76.3	vetoes	2026-10-03 05:09
-2026-10-08	Avai v Londrina	strong	U3.5	1.27	0–3% under	15	86.7	55	81.8	confirms	2026-10-03 05:09
-2026-10-08	Internacional v Corinthians	strong watch	U3.5	1.34	5–10% under	3	100.0	10	70.0	split	2026-10-03 05:09
-2026-10-08	Remo v Grêmio	strong watch	U3.5	1.34	5–10% under	3	100.0	10	70.0	split	2026-10-03 05:09
-2026-10-08	Vitoria v Chapecoense	strong watch	U3.5	1.35	5–10% under	3	100.0	8	75.0	split	2026-10-03 05:09
-2026-10-09	Fluminense v Coritiba	strong watch	U3.5	1.34	5–10% under	3	100.0	10	70.0	split	2026-10-03 05:09
+2026-10-03	Newells Old Boys v Lanus	strong	O1.0	1.21	0–3% under	16	87.5	66	84.8	confirms	2026-10-03 05:59
+2026-10-04	Argentinos Juniors v CA Tigre BA	strong	O1.0	1.18	0–3% under	14	85.7	62	85.5	confirms	2026-10-03 05:59
+2026-10-04	Atlético Huracán v Aldosivi Mar del Plata	strong	U3.5	1.17	0–3% under	14	85.7	61	85.2	confirms	2026-10-03 05:59
+2026-10-04	Greece v Germany	strong	O1.5	1.38	10%+ over	17	70.6	21	76.2	vetoes	2026-10-03 05:59
+2026-10-04	Republic of Ireland v Israel	strong	O1.5	1.35	6–10% over	25	76.0	40	77.5	vetoes	2026-10-03 05:59
+2026-10-04	Wales v Denmark	strong	O1.5	1.31	10%+ over	10	60.0	13	69.2	vetoes	2026-10-03 05:59
+2026-10-05	Romania v Sweden	strong	O1.5	1.22	3–5% under	7	71.4	46	78.3	vetoes	2026-10-03 05:59
+2026-10-06	Croatia v Spain	strong	O1.5	1.17	0–3% under	14	85.7	61	85.2	confirms	2026-10-03 05:59
+2026-10-07	Ponte Preta v Juventude	strong	U3.5	1.35	3–6% over	14	85.7	20	90.0	confirms	2026-10-03 05:59
+2026-10-08	América Mineiro v Fortaleza	strong	U3.5	1.37	6–10% over	24	75.0	38	76.3	vetoes	2026-10-03 05:59
+2026-10-08	Avai v Londrina	strong	U3.5	1.27	0–3% under	15	86.7	55	81.8	confirms	2026-10-03 05:59
+2026-10-08	Internacional v Corinthians	strong watch	U3.5	1.34	5–10% under	3	100.0	10	70.0	split	2026-10-03 05:59
+2026-10-08	Remo v Grêmio	strong watch	U3.5	1.34	5–10% under	3	100.0	10	70.0	split	2026-10-03 05:59
+2026-10-08	Vitoria v Chapecoense	strong watch	U3.5	1.35	5–10% under	3	100.0	8	75.0	split	2026-10-03 05:59
+2026-10-09	Fluminense v Coritiba	strong watch	U3.5	1.34	5–10% under	3	100.0	10	70.0	split	2026-10-03 05:59
