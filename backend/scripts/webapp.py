@@ -1749,6 +1749,10 @@ def tier_band_log(fixtures) -> list[list[str]]:
             if len(q) >= 12:
                 rows[(q[0], q[1])] = q
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
+    # A card taken off the board (postponed, cleared until re-dated) has
+    # no result coming at that date: its row goes rather than sit open.
+    on_board = {(f.kickoff.split(" ")[0], f.teams) for f in fixtures}
+    rows = {k: q for k, q in rows.items() if k in on_board}
     for f in fixtures:
         if f.settled or f.status or odds_api.started(f.kickoff):
             continue
