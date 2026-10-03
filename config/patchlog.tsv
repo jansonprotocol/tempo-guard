@@ -189,4 +189,4 @@
 2026-09-19	ledger	config/bets.tsv has no representation for a COMBINATION bet: a double is logged as two half-stake legs and graded independently, which mis-scores a split result and understates a full win
 2026-10-02	board	Tier floors: STRONG 1.17, MEDIUM 1.31, STRONG WATCH 1.20 (break-even at each tier's hit rate); under the floor a card reverts (plain PLAY, watch); pill carries +x% above the floor
 2026-10-02	board	Tracked: does the band back the tier? Each tiered card's like-for-like band reading (confirms / split / vetoes / thin) is logged before kickoff in config/tier_band_log.tsv and scored on the Found bets tab; a line on every VS BAR box. Moves no card
-2026-10-03	board	Cleared 14 off cards (11 postponed, 4 cancelled friendlies) from fixtures.tsv at the bettor's request; a re-dated fixture comes back through the daily fill. tier_band_log drops rows for cards no longer on the board
+2026-10-03	board	Cleared 14 off cards (10 postponed, 4 cancelled friendlies) from fixtures.tsv at the bettor's request; a re-dated fixture comes back through the daily fill. tier_band_log drops rows for cards no longer on the board
