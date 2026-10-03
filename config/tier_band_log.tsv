@@ -4,36 +4,36 @@
 # frozen from kickoff. Tracked only: it moves no card (bettor, 2 Oct).
 # date	fixture	tier	lane	price	band	my_n	my_hit	all_n	all_hit	call	read_at
 2026-10-03	Avai v Ceará	strong	O1.0	1.17	0–3% under	15	86.7	68	85.3	confirms	2026-10-03 13:58
-2026-10-03	Belarus v San Marino	medium	U3.5	1.63	10%+ over	2	100.0	2	100.0	thin	2026-10-03 15:45
-2026-10-03	Botafogo-SP v Vila Nova	strong	O1.0	1.18	0–3% under	15	86.7	69	85.5	confirms	2026-10-03 15:45
-2026-10-03	Croatia v England	strong	O1.5	1.33	10%+ over	15	66.7	19	73.7	vetoes	2026-10-03 15:45
-2026-10-03	Cuiabá v Ponte Preta	strong	U3.5	1.63	10%+ over	2	100.0	2	100.0	thin	2026-10-03 15:45
+2026-10-03	Belarus v San Marino	medium	U3.5	1.63	10%+ over	2	100.0	2	100.0	thin	2026-10-03 15:47
+2026-10-03	Botafogo-SP v Vila Nova	strong	O1.0	1.18	0–3% under	15	86.7	69	85.5	confirms	2026-10-03 15:47
+2026-10-03	Croatia v England	strong	O1.5	1.33	10%+ over	15	66.7	19	73.7	vetoes	2026-10-03 15:47
+2026-10-03	Cuiabá v Ponte Preta	strong	U3.5	1.63	10%+ over	2	100.0	2	100.0	thin	2026-10-03 15:47
 2026-10-03	Independiente v Instituto de Córdoba	strong	O1.0	1.22	0–3% under	16	87.5	64	84.4	confirms	2026-10-02 20:30
 2026-10-03	Juventude v Operario PR	strong	U3.5	1.34	3–6% over	14	85.7	20	90.0	confirms	2026-10-02 23:43
 2026-10-03	Londrina v Criciuma	strong	U3.5	1.30	0–3% over	5	100.0	10	90.0	confirms	2026-10-02 20:30
-2026-10-03	Newells Old Boys v Lanus	strong	O1.0	1.22	0–3% under	17	88.2	72	84.7	confirms	2026-10-03 15:45
+2026-10-03	Newells Old Boys v Lanus	strong	O1.0	1.22	0–3% under	17	88.2	72	84.7	confirms	2026-10-03 15:47
 2026-10-03	Rochdale v Swindon Town	strong	U4.5	1.17	0–3% over	3	100.0	7	100.0	confirms	2026-10-03 13:58
-2026-10-04	Argentinos Juniors v CA Tigre BA	strong	O1.0	1.18	0–3% under	15	86.7	69	85.5	confirms	2026-10-03 15:45
-2026-10-04	Atlético Huracán v Aldosivi Mar del Plata	strong	U3.5	1.17	0–3% under	15	86.7	68	85.3	confirms	2026-10-03 15:45
-2026-10-04	Greece v Germany	strong	O1.5	1.34	6–10% over	25	76.0	40	77.5	vetoes	2026-10-03 15:45
-2026-10-04	Republic of Ireland v Israel	strong	O1.5	1.37	6–10% over	24	75.0	38	76.3	vetoes	2026-10-03 15:45
-2026-10-04	Wales v Denmark	strong	O1.5	1.31	10%+ over	10	60.0	13	69.2	vetoes	2026-10-03 15:45
-2026-10-05	Romania v Sweden	strong	O1.5	1.22	3–5% under	10	70.0	57	75.4	vetoes	2026-10-03 15:45
-2026-10-06	Croatia v Spain	strong	O1.5	1.17	0–3% under	15	86.7	68	85.3	confirms	2026-10-03 15:45
-2026-10-07	Ponte Preta v Juventude	strong	U3.5	1.35	3–6% over	14	85.7	20	90.0	confirms	2026-10-03 15:45
-2026-10-08	América Mineiro v Fortaleza	strong	U3.5	1.36	6–10% over	25	76.0	40	77.5	vetoes	2026-10-03 15:45
-2026-10-08	Avai v Londrina	strong	U3.5	1.27	0–3% under	18	88.9	64	81.2	confirms	2026-10-03 15:45
-2026-10-08	Internacional v Corinthians	strong watch	U3.5	1.34	5–10% under	6	100.0	15	86.7	confirms	2026-10-03 15:45
-2026-10-08	Remo v Grêmio	strong watch	U3.5	1.34	5–10% under	6	100.0	15	86.7	confirms	2026-10-03 15:45
-2026-10-08	Vitoria v Chapecoense	strong watch	U3.5	1.35	5–10% under	6	100.0	14	85.7	confirms	2026-10-03 15:45
-2026-10-09	Avellino v Sampdoria	strong watch	U3.5	1.29	5–10% under	10	100.0	33	90.9	confirms	2026-10-03 15:45
-2026-10-09	FC Nordsjaelland v OB Odense BK	strong	U4.5	1.42	10%+ over	17	70.6	20	75.0	vetoes	2026-10-03 15:45
-2026-10-09	Fluminense v Coritiba	strong watch	U3.5	1.34	5–10% under	6	100.0	15	86.7	confirms	2026-10-03 15:45
-2026-10-09	Gimnasia La Plata v Atlético Tucuman	strong	U3.5	1.19	0–3% under	16	87.5	72	84.7	confirms	2026-10-03 15:45
-2026-10-09	Moreirense FC v Gil Vicente	strong watch	U3.5	1.28	10%+ under	0		5	100.0	confirms	2026-10-03 15:45
-2026-10-09	Raków Częstochowa v GKS Katowice	strong	U4.5	1.21	3–5% under	10	70.0	60	75.0	vetoes	2026-10-03 15:45
-2026-10-09	Sochaux v Boulogne	strong watch	U3.5	1.27	5–10% under	14	100.0	49	85.7	confirms	2026-10-03 15:45
-2026-10-09	Waterford FC v Galway United	strong	U4.5	1.17	0–3% under	15	86.7	68	85.3	confirms	2026-10-03 15:45
-2026-10-09	Zhejiang v Shanghai SIPG FC	medium	U4.5	1.38	6–10% over	24	75.0	37	78.4	vetoes	2026-10-03 15:45
-2026-10-10	FC Tokyo v Urawa Red Diamonds	strong	U4.5	1.18	0–3% over	4	100.0	8	100.0	confirms	2026-10-03 15:45
-2026-10-10	Instituto de Córdoba v Boca Juniors	strong	O1.0	1.21	0–3% over	5	100.0	12	91.7	confirms	2026-10-03 15:45
+2026-10-04	Argentinos Juniors v CA Tigre BA	strong	O1.0	1.18	0–3% under	15	86.7	69	85.5	confirms	2026-10-03 15:47
+2026-10-04	Atlético Huracán v Aldosivi Mar del Plata	strong	U3.5	1.17	0–3% under	15	86.7	68	85.3	confirms	2026-10-03 15:47
+2026-10-04	Greece v Germany	strong	O1.5	1.34	6–10% over	25	76.0	40	77.5	vetoes	2026-10-03 15:47
+2026-10-04	Republic of Ireland v Israel	strong	O1.5	1.37	6–10% over	24	75.0	38	76.3	vetoes	2026-10-03 15:47
+2026-10-04	Wales v Denmark	strong	O1.5	1.31	10%+ over	10	60.0	13	69.2	vetoes	2026-10-03 15:47
+2026-10-05	Romania v Sweden	strong	O1.5	1.22	3–5% under	10	70.0	57	75.4	vetoes	2026-10-03 15:47
+2026-10-06	Croatia v Spain	strong	O1.5	1.17	0–3% under	15	86.7	68	85.3	confirms	2026-10-03 15:47
+2026-10-07	Ponte Preta v Juventude	strong	U3.5	1.35	3–6% over	14	85.7	20	90.0	confirms	2026-10-03 15:47
+2026-10-08	América Mineiro v Fortaleza	strong	U3.5	1.36	6–10% over	25	76.0	40	77.5	vetoes	2026-10-03 15:47
+2026-10-08	Avai v Londrina	strong	U3.5	1.27	0–3% under	18	88.9	64	81.2	confirms	2026-10-03 15:47
+2026-10-08	Internacional v Corinthians	strong watch	U3.5	1.34	5–10% under	6	100.0	15	86.7	confirms	2026-10-03 15:47
+2026-10-08	Remo v Grêmio	strong watch	U3.5	1.34	5–10% under	6	100.0	15	86.7	confirms	2026-10-03 15:47
+2026-10-08	Vitoria v Chapecoense	strong watch	U3.5	1.35	5–10% under	6	100.0	14	85.7	confirms	2026-10-03 15:47
+2026-10-09	Avellino v Sampdoria	strong watch	U3.5	1.29	5–10% under	10	100.0	33	90.9	confirms	2026-10-03 15:47
+2026-10-09	FC Nordsjaelland v OB Odense BK	strong	U4.5	1.42	10%+ over	17	70.6	20	75.0	vetoes	2026-10-03 15:47
+2026-10-09	Fluminense v Coritiba	strong watch	U3.5	1.34	5–10% under	6	100.0	15	86.7	confirms	2026-10-03 15:47
+2026-10-09	Gimnasia La Plata v Atlético Tucuman	strong	U3.5	1.19	0–3% under	16	87.5	72	84.7	confirms	2026-10-03 15:47
+2026-10-09	Moreirense FC v Gil Vicente	strong watch	U3.5	1.28	10%+ under	0		5	100.0	confirms	2026-10-03 15:47
+2026-10-09	Raków Częstochowa v GKS Katowice	strong	U4.5	1.21	3–5% under	10	70.0	60	75.0	vetoes	2026-10-03 15:47
+2026-10-09	Sochaux v Boulogne	strong watch	U3.5	1.27	5–10% under	14	100.0	49	85.7	confirms	2026-10-03 15:47
+2026-10-09	Waterford FC v Galway United	strong	U4.5	1.17	0–3% under	15	86.7	68	85.3	confirms	2026-10-03 15:47
+2026-10-09	Zhejiang v Shanghai SIPG FC	medium	U4.5	1.38	6–10% over	24	75.0	37	78.4	vetoes	2026-10-03 15:47
+2026-10-10	FC Tokyo v Urawa Red Diamonds	strong	U4.5	1.18	0–3% over	4	100.0	8	100.0	confirms	2026-10-03 15:47
+2026-10-10	Instituto de Córdoba v Boca Juniors	strong	O1.0	1.21	0–3% over	5	100.0	12	91.7	confirms	2026-10-03 15:47
