@@ -1867,6 +1867,26 @@ def was_called(f) -> dict | None:
     r = frozen().get((f.kickoff.split(" ")[0], f.teams))
     if not r:
         return None
+    day = f.kickoff.split(" ")[0]
+    if day >= LOCK_FROM:
+        # THE CALL IS THE KICKOFF PRICE, NOT THE FIRST SIGHT (the bettor, 4
+        # Oct, on Wales v Denmark: STRONG all day at 1.29, bought at 1.28,
+        # then "was no play" at the whistle because the frozen call read
+        # its 28 Sep first-sight 1.12 — "this one moved"). From LOCK_FROM
+        # the call reads the last quote before kickoff, and a card locked
+        # as a play is never called below the price it was locked at.
+        # Earlier cards keep the call they were graded on.
+        r = dict(r)
+        lp = _last_price(f, r)
+        if lp:
+            r["best"] = lp
+        lk = _locks().get((day, f.teams))
+        try:
+            lkp = float(lk[3]) if lk and lk[2] == r.get("lane") else None
+        except (ValueError, IndexError):
+            lkp = None
+        if lkp and (not r.get("best") or float(r["best"]) < float(r.get("need") or 0)):
+            r["best"] = max(lkp, float(r.get("best") or 0))
     best, need = r.get("best"), r.get("need")
     if str(r["label"]).endswith("red") or not best or not need:
         return dict(row=r, mark="no play")
