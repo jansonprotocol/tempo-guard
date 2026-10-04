@@ -1207,7 +1207,7 @@ def _load_tier_params() -> None:
 _load_tier_params()
 
 
-def tier_target(f, lab: str | None, need) -> tuple[str, float] | None:
+def tier_target(f, lab: str | None, need, price=None) -> tuple[str, float] | None:
     """The tier this card's RATES qualify it for, and the price that buys
     it: ('strong', p) when all seven read 80%+, else ('medium', p).
 
@@ -1229,10 +1229,17 @@ def tier_target(f, lab: str | None, need) -> tuple[str, float] | None:
         opts = [("strong", max(need * (1 - STRONG_UNDER / 100), TIER_MIN["strong"]))]
     else:
         opts = [("medium", max(need, TIER_MIN["medium"]))]
-    # STRONG WATCH is reached at its floor when the floor still sits 5% or
-    # more under the bar; the cheapest tier on offer is the one printed.
+    # STRONG WATCH only for a card that sits UNDER its floor and 5% or more
+    # under the bar now: there 1.20 is a price RISE that earns the tier.
+    # Anywhere else STRONG WATCH lies below the current price, and a
+    # from-price must never point down (Real Sociedad B v Granada, 4 Oct,
+    # read "STRONG WATCH FROM 1.20" at 1.33 — a price it already beat).
     sw = TIER_MIN["strong watch"]
-    if sw <= need * (1 - STRONG_WATCH_UNDER / 100):
+    try:
+        cur = float(price) if price is not None else None
+    except (TypeError, ValueError):
+        cur = None
+    if cur is not None and cur < sw <= need * (1 - STRONG_WATCH_UNDER / 100):
         opts.append(("strong watch", sw))
     t, p = min(opts, key=lambda o: o[1])
     return t, math.ceil(p * 100 - 1e-6) / 100
@@ -1254,11 +1261,12 @@ FROM_GROUP = {"strong from": ("strong", "\u2605 STRONG FROM", "sfrom"),
               "strong watch from": ("strong watch", "STRONG WATCH FROM", "swfrom")}
 
 
-def _from_pill(f, t: str, lab, need, band: str | None, prefix: str = "") -> str:
+def _from_pill(f, t: str, lab, need, band: str | None, prefix: str = "",
+               price=None) -> str:
     """The pill of a near-tier card: its group, and the price that lifts it
     into a tier (the group's own, or a better one when that comes first)."""
     base, group, cls = FROM_GROUP[t]
-    tt = tier_target(f, lab, need)
+    tt = tier_target(f, lab, need, price)
     if tt and tt[0] == base:
         price = f" {tt[1]:.2f}"
     elif tt:
@@ -2764,7 +2772,8 @@ def _guard(f, best: int) -> str:
                 f'{_target_html(f, lab, need)}</span>')
     elif t in FROM_GROUP:
         mark = _from_pill(f, t, lab, need,
-                          gap_band(v["gap"]) if v.get("gap") is not None else None)
+                          gap_band(v["gap"]) if v.get("gap") is not None else None,
+                          price=odds)
     elif v["watch"]:
         mark = ('<span class="vmark dimv">watch'
                 f'{_target_html(f, lab, need)}</span>')
