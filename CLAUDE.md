@@ -62,6 +62,15 @@ tier?" table): on its first as-of read, 4 Oct, vetoed tiered cards had
 landed 16 of 17 and backed ones 82 of 94 — no edge yet. Say so whenever
 it fires; it never argues against a bet already placed.
 
+**WEAK MEANS NO PLAY.** (4 Oct: "Medium actually looks weak to me ... label
+it weak"; then "everything else is also weak, all below 75% ... leaving it
+now for data, but weak basically means no plays.") The tier once called
+MEDIUM is shown as WEAK, and so is any untiered play under its tier's
+floor; both land about 72-75% on counted cards. On the board they read
+"WEAK · NO PLAY" but stay in the record for data — not declined, unless he
+later says so. When a slip leg is on a WEAK card, say so in the body; it
+is not an alert.
+
 ## The books he can actually reach
 
 "1xBet and Tonybet and often Unibet are the prices I most likely see

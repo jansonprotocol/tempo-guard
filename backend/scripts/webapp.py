@@ -2863,9 +2863,9 @@ def _frozen_guard(f, call: dict) -> str:
     # than a line of its own (the bettor, 30 Sep: "choose one of the play
     # tip 1 ... I'll choose the original box, fuse the rest").
     t = tier_of(f)
-    word = {"strong": "★ STRONG", "normal": "WEAK" if t == "medium" else "PLAY",
+    word = {"strong": "★ STRONG", "normal": "WEAK",
             "watch": "watch", "no play": "no play"}[call["mark"]]
-    cls = {"strong": "strong", "normal": "yes",
+    cls = {"strong": "strong", "normal": "weak",
            "watch": "dimv", "no play": "no"}[call["mark"]]
     if call["mark"] in ("watch", "no play") and t == "strong watch":
         word, cls = "STRONG WATCH", "swatch"
@@ -2878,7 +2878,7 @@ def _frozen_guard(f, call: dict) -> str:
     # A settled card keeps the word it was called with; only the band note
     # is added. A running one shows the advice as it stands.
     if mb and mb[1] in ("skip", "hard") and not f.settled:
-        word, cls = "WEAK · SKIP", "mskipv"
+        word, cls = "WEAK · NO PLAY", "mskipv"
     mbh = _medband_html(mb) if mb else ""
     when = "was " if f.settled else "running · was "
     # Running and not a play: the from-price stays on, for a live price —
@@ -2962,15 +2962,23 @@ def _guard(f, best: int) -> str:
     elif v["play"] and t == "medium":
         mb = medband_state(f)
         if mb and mb[1] in ("skip", "hard"):
-            mark = ('<span class="vmark mskipv">WEAK · SKIP'
+            mark = ('<span class="vmark mskipv">WEAK · NO PLAY'
                     f'{_edge_html("medium", odds)}{_medband_html(mb)}</span>')
         else:
-            mark = ('<span class="vmark weak">WEAK · PLAY'
+            # WEAK MEANS NO PLAY (the bettor, 4 Oct: "everything else is also
+            # weak, all below 75% ... leaving it now for data, but weak
+            # basically means no plays"). Advice on the pill only: the card
+            # stays in the record and in every measurement.
+            mark = ('<span class="vmark weak" title="WEAK: lands about 75% — '
+                    'not a play; kept in the record for data">WEAK · NO PLAY'
                     f'{_medband_html(mb) if mb else ""}'
                     f'{_edge_html("medium", odds)}</span>')
     elif v["play"]:
-        mark = ('<span class="vmark yes" title="at or over the play bar but '
-                'under the floor its tier needs to break even">PLAY'
+        # An untiered play (under its tier's floor) is WEAK too: these land
+        # about 72% on this session's counted cards.
+        mark = ('<span class="vmark weak" title="at or over the play bar but '
+                'under the floor its tier needs to break even — WEAK, not a '
+                'play; kept in the record for data">WEAK \u00b7 NO PLAY'
                 f'{_target_html(f, lab, need)}</span>')
     elif lab.endswith("red"):
         mark = '<span class="vmark no" title="the tier says avoid">no play</span>'
