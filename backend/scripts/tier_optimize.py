@@ -27,6 +27,12 @@ A floor moves only on FLOOR_MIN_N settled cards or more (MEDIUM, at 40,
 is held) and only when the new break-even is FLOOR_STEP or more away
 from the old one, so it does not twitch a cent with every result.
 
+THE MEDIUM BANDS (4 Oct). Each gap band of the MEDIUM tier gets a state:
+good (80%+ and a gain on 5+: a mark on the pill), skip (a loss under 70%:
+advised SKIP, still counted), hard (the same on 30+: declined from that
+day on) or none. Measured with the hard rule off, so a declined band can
+still recover.
+
 THE FROM BANDS. Under the (new) floors, the near groups are the cards
 that met a tier's rules but not its price; each gap band of each group
 is ON while it lands FROM_HIT or more on FROM_MIN_N or more, and OFF
@@ -53,6 +59,10 @@ FLOOR_MIN_N = 100
 FLOOR_STEP = 0.02
 FROM_HIT = 81.0
 FROM_MIN_N = 15
+# MEDIUM by gap band (the bettor, 4 Oct): a mark where it has paid, SKIP
+# advice where it has lost, a hard decline once the loss holds on HARD_N.
+MED_GOOD_HIT, MED_GOOD_N = 80.0, 5
+MED_BAD_HIT, MED_HARD_N = 70.0, 30
 
 
 def cards() -> list[dict]:
@@ -92,7 +102,8 @@ def cards() -> list[dict]:
             continue
         gap = (best / need - 1) * 100
         out.append(dict(key=key, best=best, gap=gap, band=w.gap_band(gap),
-                        seven=w.all_seven(f, p[7]), hit=bool(got[1])))
+                        seven=w.all_seven(f, p[7]), hit=bool(got[1]),
+                        pl=got[0] * (best - 1) if got[0] > 0 else got[0]))
     return out
 
 
@@ -101,6 +112,9 @@ def rate(xs: list[dict]) -> tuple[int, float | None]:
 
 
 def main() -> None:
+    # Measure with the MEDIUM hard rule off: a band it declines must stay
+    # in the sample, or it could never show that it has recovered.
+    w._MEDBAND_OFF = True
     cs = cards()
     under = w.STRONG_UNDER
     pops = {
@@ -151,6 +165,29 @@ def main() -> None:
             rows.append(["from", g, band, "on" if on else "off", str(n),
                          f"{hit:.1f}", f"near {g}: rules met, under the "
                          f"{floors[g]:.2f} floor"])
+    today = dt.date.today().isoformat()
+    meds = [c for c in pops["medium"] if c["best"] >= floors["medium"]]
+    for _lo, _hi, band in w.GAP_BANDS:
+        xs = [c for c in meds if c["band"] == band]
+        if not xs:
+            continue
+        n, hit = rate(xs)
+        roi = sum(c["pl"] for c in xs) / n * 100
+        if n >= MED_GOOD_N and hit >= MED_GOOD_HIT and roi > 0:
+            state = "good"
+        elif roi < 0 and hit < MED_BAD_HIT:
+            state = "hard" if n >= MED_HARD_N else "skip"
+        else:
+            state = "none"
+        prev = w.MED_BANDS.get(band)
+        was = prev[0] if prev else "none"
+        since = (prev[4] if prev and was == "hard" and prev[4] else today) \
+            if state == "hard" else ""
+        if state != was:
+            changes.append(f"medium {band}: {was} -> {state} "
+                           f"({hit:.1f}% on {n}, {roi:+.1f}%)")
+        rows.append(["medband", band, state, str(n), f"{hit:.1f}",
+                     f"{roi:+.1f}", since])
     stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
     head = ("# Tier floors and near-tier FROM bands, set by scripts/tier_optimize.py\n"
             f"# (two-day bank refresh). Last run {stamp} UTC on {len(cs)} settled\n"
@@ -158,7 +195,10 @@ def main() -> None:
             f"{FLOOR_MIN_N}+ cards and a {FLOOR_STEP:.2f}+ step;\n"
             f"# a FROM band is on at {FROM_HIT:.0f}%+ on {FROM_MIN_N}+ cards. "
             "Read by webapp at import.\n"
-            "# kind\ttier\tvalue/band\tn|state\thit|n\tbreak-even|hit\tnote\n")
+            "# MEDIUM bands: good at 80%+ with a gain on 5+; skip on a loss under 70%;\n"
+            f"# hard (declined from the date in the last column) on {MED_HARD_N}+.\n"
+            "# kind\ttier\tvalue/band\tn|state\thit|n\tbreak-even|hit\tnote\n"
+            "# medband\tband\tstate\tn\thit\troi\thard since\n")
     PARAMS.write_text(head + "".join("\t".join(r) + "\n" for r in rows))
     if changes:
         new_log = not LOG.exists()

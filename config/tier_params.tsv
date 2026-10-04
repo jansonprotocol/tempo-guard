@@ -1,12 +1,18 @@
 # Tier floors and near-tier FROM bands, set by scripts/tier_optimize.py
-# (two-day bank refresh). Last run 2026-10-04 13:03 UTC on 612 settled
+# (two-day bank refresh). Last run 2026-10-04 15:09 UTC on 614 settled
 # counted cards at first-sight prices. Floors move on 100+ cards and a 0.02+ step;
 # a FROM band is on at 81%+ on 15+ cards. Read by webapp at import.
+# MEDIUM bands: good at 80%+ with a gain on 5+; skip on a loss under 70%;
+# hard (declined from the date in the last column) on 30+.
 # kind	tier	value/band	n|state	hit|n	break-even|hit	note
+# medband	band	state	n	hit	roi	hard since
 floor	strong	1.17	143	86.0	1.163	held: break-even 1.163 within 0.02 of 1.17
 floor	medium	1.31	40	75.0	1.333	held: 40 settled, needs 100
-floor	strong watch	1.20	360	84.7	1.180	held: break-even 1.180 within 0.02 of 1.20
+floor	strong watch	1.18	361	84.8	1.180	moved from 1.20
 from	strong	3–5% under	off	29	72.4	near strong: rules met, under the 1.17 floor
 from	strong	0–3% under	on	15	93.3	near strong: rules met, under the 1.17 floor
-from	strong watch	10%+ under	on	168	84.5	near strong watch: rules met, under the 1.20 floor
-from	strong watch	5–10% under	on	163	83.4	near strong watch: rules met, under the 1.20 floor
+from	strong watch	10%+ under	on	169	84.6	near strong watch: rules met, under the 1.18 floor
+from	strong watch	5–10% under	on	146	84.2	near strong watch: rules met, under the 1.18 floor
+medband	3–6% over	good	7	100.0	+35.0	
+medband	6–10% over	skip	16	56.2	-23.4	
+medband	10%+ over	good	13	84.6	+20.2	

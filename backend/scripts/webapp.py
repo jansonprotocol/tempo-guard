@@ -772,6 +772,12 @@ def _haystack(f) -> str:
         c_ = was_called(f)
         if c_ and live_stop(f, c_["row"].get("lane")):
             bits.append("live stopped")
+    if t == "medium":
+        mb_ = medband_state(f)
+        if mb_ and mb_[1] == "good":
+            bits.append("medium good band")
+        elif mb_ and mb_[1] in ("skip", "hard"):
+            bits.append("medium skip")
     if t:
         bits += [{"strong": "tier strong", "medium": "tier medium medium",
                   "strong watch": "tier swatch",
@@ -1175,6 +1181,21 @@ TIER_MIN = {"strong": 1.17, "medium": 1.31, "strong watch": 1.20}
 FROM_BANDS = {"strong": {"0–3% under"},
               "strong watch": {"5–10% under", "10%+ under"}}
 FROM_STATS: dict = {}       # (group, band) -> (n, hit) from the optimizer
+
+# MEDIUM BY GAP BAND (the bettor, 4 Oct). On 36 settled MEDIUM cards the
+# bands split hard: 3-6% over 100% +35.0% on 7 and 10%+ over 84.6% +20.2%
+# on 13, against 6-10% over 56.2% -23.4% on 16. "Make an attention on the
+# mark if it's in these ranges ... still thin, but worth to know now" and,
+# for 6-10% over, "let Athena advise to skip it for now; as soon as it ...
+# becomes less thin make it hard." The optimizer sets each band's state:
+#   good   80%+ and a positive ROI on 5+       -> a mark on the pill
+#   skip   a loss and under 70%, under 30 cards -> advised SKIP, still counted
+#   hard   the same on 30+ cards                -> declined from that date
+#   (none) anything else, and a skip that recovers is released by itself.
+MED_BANDS: dict = {"3–6% over": ("good", 7, 100.0, 35.0, ""),
+                   "10%+ over": ("good", 13, 84.6, 20.2, ""),
+                   "6–10% over": ("skip", 16, 56.2, -23.4, "")}
+_MEDBAND_OFF = False        # the optimizer measures with the hard rule off
 TIER_PARAMS = ROOT / "config" / "tier_params.tsv"
 
 
@@ -1185,6 +1206,7 @@ def _load_tier_params() -> None:
         return
     bands: dict = {"strong": set(), "strong watch": set()}
     seen_from = False
+    seen_med = False
     for ln in lines:
         if ln.startswith("#") or not ln.strip():
             continue
@@ -1192,6 +1214,12 @@ def _load_tier_params() -> None:
         try:
             if q[0] == "floor" and q[1] in TIER_MIN:
                 TIER_MIN[q[1]] = float(q[2])
+            elif q[0] == "medband":
+                if not seen_med:
+                    MED_BANDS.clear()
+                    seen_med = True
+                MED_BANDS[q[1]] = (q[2], int(q[3]), float(q[4]), float(q[5]),
+                                   q[6] if len(q) > 6 else "")
             elif q[0] == "from" and q[1] in bands:
                 seen_from = True
                 if q[3] == "on":
@@ -1341,6 +1369,62 @@ def live_stop(f, lane: str | None) -> bool:
         if m is not None:
             pts.append((m, int(mm.group(2)) + int(mm.group(3))))
     return any(m <= LIVE_STOP_MINUTE and g >= LIVE_STOP_GOALS for m, g in pts)
+
+
+def medband_state(f) -> tuple[str, str, tuple] | None:
+    """(band, state, stats) for a MEDIUM card whose gap band carries a
+    state, else None. A MEDIUM is a play, not STRONG, at or over the 1.31
+    floor — which also means fewer than seven rates (a seven-rate card at
+    that price is STRONG). Before kickoff on the live price, after it on
+    the price the card was called at."""
+    fm = TIER_MIN["medium"]
+    if f.settled or odds_api.started(f.kickoff):
+        c = was_called(f)
+        if not c or c["mark"] != "normal":
+            return None
+        r = c["row"]
+        try:
+            best, need = float(r.get("best") or 0), float(r.get("need") or 0)
+        except (TypeError, ValueError):
+            return None
+        if best < fm or not need:
+            return None
+        gap = (best / need - 1) * 100
+    else:
+        v = verdict(f, _star(f))
+        if not v or not v["play"] or v["strong"] or (v["odds"] or 0) < fm \
+                or v.get("gap") is None:
+            return None
+        gap = v["gap"]
+    band = gap_band(gap)
+    st = MED_BANDS.get(band)
+    return (band, st[0], st) if st else None
+
+
+def medband_declined(f) -> bool:
+    """A MEDIUM in a band the optimizer has made HARD, kicking off on or
+    after the day it became hard — earlier cards keep their record."""
+    if _MEDBAND_OFF:
+        return False
+    m = medband_state(f)
+    if not m or m[1] != "hard":
+        return False
+    since = m[2][4] or "0000"
+    return f.kickoff.split(" ")[0] >= since
+
+
+def _medband_html(m) -> str:
+    band, state, st = m
+    rec = f"{band}: {st[2]:.0f}% on {st[1]}, {st[3]:+.1f}%"
+    if state == "good":
+        return (f' <span class="tedge mgood" title="MEDIUM in a band that has '
+                f'paid — {rec}. Thin: a mark, not a rule.">\u25b2 {band}</span>')
+    if state in ("skip", "hard"):
+        return (f' <span class="tedge mskip" title="MEDIUM in a band that has '
+                f'lost — {rec}. Athena advises to skip it; it becomes a hard '
+                f'decline on 30 cards if it stays this bad, and is released '
+                f'if it recovers.">\u00b7 {band} {st[2]:.0f}% on {st[1]}</span>')
+    return ""
 
 
 def tier_edge(tier: str, price) -> float | None:
@@ -2424,6 +2508,8 @@ def _declined_base(f) -> bool:
         return True
     if o15_declined(f):
         return True
+    if medband_declined(f):
+        return True
     return strike_declined(f)
 
 
@@ -2684,6 +2770,12 @@ def _frozen_guard(f, call: dict) -> str:
         word, cls = "STRONG WATCH", "swatch"
     elif call["mark"] in ("watch", "no play") and t in FROM_GROUP:
         word, cls = FROM_GROUP[t][1], FROM_GROUP[t][2]
+    mb = medband_state(f) if t == "medium" else None
+    # A settled card keeps the word it was called with; only the band note
+    # is added. A running one shows the advice as it stands.
+    if mb and mb[1] in ("skip", "hard") and not f.settled:
+        word, cls = "MEDIUM · SKIP", "mskipv"
+    mbh = _medband_html(mb) if mb else ""
     when = "was " if f.settled else "running · was "
     # Running and not a play: the from-price stays on, for a live price —
     # unless a near-tier under has crossed the break-off scoreline, where
@@ -2702,6 +2794,7 @@ def _frozen_guard(f, call: dict) -> str:
                    else "")
     mark = (f'<span class="vmark {cls}" title="the call at first sight, '
             f'{html.escape(r["d"])}">{when}{word}'
+            f'{mbh}'
             f'{_edge_html(t, (_last_price(f, r) or r.get("best")) if t == "strong watch" else r.get("best")) if t else ""}'
             f'{live_to}</span>')
     return badge, mark
@@ -2753,8 +2846,14 @@ def _guard(f, best: int) -> str:
         mark = ('<span class="vmark strong">★ STRONG · PLAY'
                 f'{_edge_html("strong", odds)}</span>')
     elif v["play"] and t == "medium":
-        mark = ('<span class="vmark yes">MEDIUM · PLAY'
-                f'{_edge_html("medium", odds)}</span>')
+        mb = medband_state(f)
+        if mb and mb[1] in ("skip", "hard"):
+            mark = ('<span class="vmark mskipv">MEDIUM · SKIP'
+                    f'{_edge_html("medium", odds)}{_medband_html(mb)}</span>')
+        else:
+            mark = ('<span class="vmark yes">MEDIUM · PLAY'
+                    f'{_medband_html(mb) if mb else ""}'
+                    f'{_edge_html("medium", odds)}</span>')
     elif v["play"]:
         mark = ('<span class="vmark yes" title="at or over the play bar but '
                 'under the floor its tier needs to break even">PLAY'
@@ -4875,6 +4974,9 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .bcall.bc-close {{ color:#e3c46b; }}
 .bcall.bc-split, .bcall.bc-thin {{ opacity:.75; }}
 .tbwrap .bandtable td:first-child {{ white-space:nowrap; }}
+.vmark .tedge.mgood {{ color:#7fd18b; opacity:1; font-weight:600; }}
+.vmark .tedge.mskip {{ color:#f0b26b; opacity:1; }}
+.vmark.mskipv {{ color:#f0b26b; border-color:#7a5420; }}
 .vmark .tedge.lstop {{ color:#f08a7e; opacity:1; font-weight:600; }}
 .vmark .tedge {{ font-weight:400; opacity:.8; margin-left:2px; }}
 .gapstats {{ font-size:11px; color:var(--dim); margin:0 0 3px;
@@ -5373,6 +5475,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   more than 5% under the bar), <code>medium</code> (every other play),
   <code>strong watch</code> (5% or more under the bar: lands, but the
   pre-match price does not pay), <code>strong from</code> and
+  <code>medium good band</code> and <code>medium skip</code> (a MEDIUM in a
+  gap band that has paid, or one Athena advises to skip),
   <code>strong watch from</code> (the near-tier cards short of the floor
   price, kept by the optimizer), <code>live stopped</code> (a near-tier
   under that had 3+ goals in by the hour: live buying withdrawn).<br>
