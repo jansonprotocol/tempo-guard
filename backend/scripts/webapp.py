@@ -1657,7 +1657,8 @@ def _gap_html(g: dict | None) -> str:
         call = band_call(rd)
         says = (f'<div class="bcall bc-{call}" title="Tracked only, never '
                 f'used: a band reading 80%+ on both lines confirms a tier, '
-                f'under 80% on both vetoes it (the bettor, 2 Oct).">band '
+                f'none at 80% with a line under 75% vetoes it, 75-80% is close '
+                f'(the bettor, 2 and 4 Oct).">band '
                 f'{BAND_CALL_WORD[call]}</div>')
         stats = (f'<div class="gapstats" title="Counted cards in the {at} '
                  f'band whose first-sight best price was within '
@@ -1705,27 +1706,40 @@ def band_read(g: dict | None) -> dict | None:
 # band said coin flip. So: every line with BAND_CALL_MIN or more behind
 # it at 80%+ confirms, every such line under 80% vetoes, one of each is
 # split, and too few on both is thin. TRACKED ONLY: it moves no card.
+#
+# LOOSENED THE SAME WEEK (the bettor, 4 Oct, on Portugal v Norway reading
+# 78% and 79%: "I think we set the veto lines a bit too strict, this one is
+# actually pretty good"). A veto now needs a line under BAND_VETO_HIT —
+# his coin-flip example had a 67% in it — and a band with no line at 80%
+# but none under 75% reads CLOSE: short of backing, not against.
 BAND_CALL_HIT = 80.0
+BAND_VETO_HIT = 75.0
 BAND_CALL_MIN = 3
 BAND_CALL_WORD = {"confirms": "backs it · both lines 80%+",
+                  "close": "close · 75–80%, short of backing",
                   "split": "split · one line 80%+, one under",
-                  "vetoes": "vetoes · both lines under 80%",
+                  "vetoes": "vetoes · under 80%, a line under 75%",
                   "thin": "too thin to read"}
+
+
+def _call_of(my_n, my_hit, all_n, all_hit) -> str:
+    rates = [h for n, h in ((my_n, my_hit), (all_n, all_hit))
+             if n >= BAND_CALL_MIN and h is not None]
+    if not rates:
+        return "thin"
+    if all(h >= BAND_CALL_HIT for h in rates):
+        return "confirms"
+    if any(h >= BAND_CALL_HIT for h in rates):
+        return "split"
+    if any(h < BAND_VETO_HIT for h in rates):
+        return "vetoes"
+    return "close"
 
 
 def band_call(rd: dict | None) -> str:
     if not rd:
         return "thin"
-    rates = [h for n, h in ((rd["my_n"], rd["my_hit"]),
-                            (rd["all_n"], rd["all_hit"]))
-             if n >= BAND_CALL_MIN]
-    if not rates:
-        return "thin"
-    if all(h >= BAND_CALL_HIT for h in rates):
-        return "confirms"
-    if all(h < BAND_CALL_HIT for h in rates):
-        return "vetoes"
-    return "split"
+    return _call_of(rd["my_n"], rd["my_hit"], rd["all_n"], rd["all_hit"])
 
 
 TIER_BAND_LOG = ROOT / "config" / "tier_band_log.tsv"
@@ -1747,6 +1761,13 @@ def tier_band_log(fixtures) -> list[list[str]]:
                 continue
             q = ln.split("\t")
             if len(q) >= 12:
+                # re-read under the current lines, so a frozen row follows
+                # a change of the thresholds rather than keeping the old word
+                try:
+                    q[10] = _call_of(int(q[6]), float(q[7]) if q[7] else None,
+                                     int(q[8]), float(q[9]) if q[9] else None)
+                except ValueError:
+                    pass
                 rows[(q[0], q[1])] = q
     now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
     # A card taken off the board (postponed, cleared until re-dated) has
@@ -1792,7 +1813,7 @@ def tier_band_html(rows, fixtures) -> str:
                     final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
                 except ValueError:
                     pass
-    calls = ("confirms", "split", "vetoes", "thin")
+    calls = ("confirms", "close", "split", "vetoes", "thin")
     tiers = (("strong", "\u2605 STRONG"), ("medium", "MEDIUM"),
              ("strong watch", "STRONG WATCH"))
     agg = {(t, c): [0, 0, 0] for t, _w in tiers for c in calls}
@@ -1820,13 +1841,15 @@ def tier_band_html(rows, fixtures) -> str:
     return ('<div class="wrap tbwrap"><div class="roihead"><span class="l">'
             'Does the band back the tier?</span> <span class="s">tracked only '
             '\u00b7 since 2 Oct</span></div><table class="bandtable"><tr>'
-            '<th>tier</th><th>band confirms</th><th>split</th>'
+            '<th>tier</th><th>band confirms</th><th>close</th><th>split</th>'
             '<th>band vetoes</th><th>thin</th></tr>' + body + '</table>'
             '<div class="s">Each tiered card\'s VS BAR record line as it stood '
             'before kickoff: <b>confirms</b> when every line with '
             f'{BAND_CALL_MIN}+ behind it reads {BAND_CALL_HIT:.0f}%+ (my bets '
-            'and all cards), <b>vetoes</b> when every such line is under '
-            f'{BAND_CALL_HIT:.0f}%, <b>split</b> one of each, <b>thin</b> too '
+            f'and all cards), <b>close</b> when none reaches {BAND_CALL_HIT:.0f}% '
+            f'but none is under {BAND_VETO_HIT:.0f}%, <b>vetoes</b> when none '
+            f'reaches {BAND_CALL_HIT:.0f}% and one is under {BAND_VETO_HIT:.0f}%, '
+            '<b>split</b> one line 80%+ and one under, <b>thin</b> too '
             'few to read. Landed / settled, pushes as hits. It moves no card.'
             '</div></div>')
 
@@ -4560,6 +4583,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .bcall {{ margin-top:2px; font-size:.92em; }}
 .bcall.bc-confirms {{ color:#7fd18b; }}
 .bcall.bc-vetoes {{ color:#f08a7e; }}
+.bcall.bc-close {{ color:#e3c46b; }}
 .bcall.bc-split, .bcall.bc-thin {{ opacity:.75; }}
 .tbwrap .bandtable td:first-child {{ white-space:nowrap; }}
 .vmark .tedge {{ font-weight:400; opacity:.8; margin-left:2px; }}
