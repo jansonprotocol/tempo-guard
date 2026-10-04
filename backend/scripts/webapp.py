@@ -1401,6 +1401,24 @@ def medband_state(f) -> tuple[str, str, tuple] | None:
     return (band, st[0], st) if st else None
 
 
+def decline_reason(f) -> str | None:
+    """Why a card that is not red is declined, in words for the pill, or
+    None when it is not declined (or is red — the label says that)."""
+    lab = label_any(f)
+    if (lab and lab.endswith("red")) or not is_declined(f):
+        return None
+    if review_move(f) == "decline":
+        return "profile review"
+    if record_tag(f) == "unsafe":
+        return "live unsafe"
+    if o15_declined(f):
+        lo, hi = O15_BAND
+        return f"O1.5 {lo:.0f}–{hi:.0f}% over the bar"
+    if medband_declined(f):
+        return "MEDIUM band"
+    return "strike combo"
+
+
 def medband_declined(f) -> bool:
     """A MEDIUM in a band the optimizer has made HARD, kicking off on or
     after the day it became hard — earlier cards keep their record."""
@@ -2770,7 +2788,10 @@ def _frozen_guard(f, call: dict) -> str:
         word, cls = "STRONG WATCH", "swatch"
     elif call["mark"] in ("watch", "no play") and t in FROM_GROUP:
         word, cls = FROM_GROUP[t][1], FROM_GROUP[t][2]
-    mb = medband_state(f) if t == "medium" else None
+    why = decline_reason(f)
+    if why:
+        word, cls = f"\u26d4 declined \u00b7 {why}", "no"
+    mb = medband_state(f) if t == "medium" and not why else None
     # A settled card keeps the word it was called with; only the band note
     # is added. A running one shows the advice as it stands.
     if mb and mb[1] in ("skip", "hard") and not f.settled:
@@ -2842,7 +2863,17 @@ def _guard(f, best: int) -> str:
     # carries the entire return; the other has no measured edge at all.
     need, odds = v["need"], v["odds"]
     t = tier_of(f)
-    if v["strong"]:
+    # A DECLINED card never wears a play pill (the bettor, 4 Oct, on
+    # Republic of Ireland v Israel: "declined cards can never have those").
+    # verdict() prices the lane before any board rule runs — it has to,
+    # the O1.5 rule reads its price — so the decline is applied here, on
+    # the pill, the same way the tabs and the record apply it.
+    why = decline_reason(f)
+    if why:
+        mark = (f'<span class="vmark no" title="declined by a board rule: '
+                f'{html.escape(why)} — out of the record whatever the price">'
+                f'\u26d4 declined \u00b7 {html.escape(why)}</span>')
+    elif v["strong"]:
         mark = ('<span class="vmark strong">★ STRONG · PLAY'
                 f'{_edge_html("strong", odds)}</span>')
     elif v["play"] and t == "medium":
