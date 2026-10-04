@@ -1745,6 +1745,13 @@ def verdict(f, best: int) -> dict | None:
         got_odds = float(q["best"] or q["consensus"]) if q else None
     except (TypeError, ValueError):
         got_odds = None
+    # Locked at first sight: once the lane is stamped, its price and bar
+    # are the stamped ones (FIRST_SIGHT). Before the first stamp the live
+    # quote is what gets stamped, so the two agree.
+    fs_ = first_sight(f, lane)
+    if fs_:
+        got_odds, need = fs_[0], fs_[1]
+        q = dict(q or {}, book=fs_[2])
     # STRONG, since 2 Oct: every rate the card prints at 80%+ — the claim
     # and the six profile-grid rates (all_seven). Decided below, on a PLAY.
     # A match that has kicked off is not playable, whatever the file says.
@@ -1827,6 +1834,7 @@ def frozen() -> dict:
     if _FROZEN is None:
         from scripts import forward_settle
         _FROZEN = {}
+        _FIRST.clear()
         if forward_settle.FORWARD.exists():
             for ln in forward_settle.FORWARD.read_text().splitlines():
                 if ln.startswith("#") or not ln.strip():
@@ -1847,11 +1855,39 @@ def frozen() -> dict:
                     bar = float(p[13]) if len(p) > 13 and p[13] else need
                 except ValueError:
                     bar = need
+                # LOCKED AT FIRST SIGHT: the price of a lane is the one it
+                # carried the first time the board saw it, whatever rows
+                # come later (see FIRST_SIGHT below).
+                fk = (p[1], p[3], p[5])
+                if fk not in _FIRST:
+                    _FIRST[fk] = (best, need, p[12])
+                best, need, book = _FIRST[fk]
                 _FROZEN[key] = dict(d=p[1], code=p[2], fixture=p[3],
                                     tip=p[4], lane=p[5], label=p[7],
                                     score=score, need=need, best=best,
-                                    book=p[12], bar=bar)
+                                    book=book, bar=bar)
     return _FROZEN
+
+
+# EVERYTHING IS LOCKED AT FIRST SIGHT (the bettor, 4 Oct: "everything must
+# get locked as soon as a card comes in. That gives a clear line that is
+# always rated and measured with: the max price from the moment the card
+# gets in. Otherwise we keep doubting how much was profile A or B ... no
+# matter where the card ends up."). A lane's price and play bar are the
+# feed's best and the bar stamped the first time the board saw it
+# (config/forward_log.tsv); its tier, gap band, play or no play, the
+# price-reading declines and its record all read that, before kickoff and
+# after, and never move. The live quote is still printed as information.
+# This replaces the play lock and the last-price call of the same day.
+_FIRST: dict = {}           # (date, fixture, lane) -> (best, need, book)
+
+
+def first_sight(f, lane: str | None) -> tuple | None:
+    """(best, need, book) the lane was first stamped at, or None."""
+    if not lane:
+        return None
+    frozen()
+    return _FIRST.get((f.kickoff.split(" ")[0], f.teams, lane))
 
 
 def was_called(f) -> dict | None:
@@ -1867,26 +1903,6 @@ def was_called(f) -> dict | None:
     r = frozen().get((f.kickoff.split(" ")[0], f.teams))
     if not r:
         return None
-    day = f.kickoff.split(" ")[0]
-    if day >= LOCK_FROM:
-        # THE CALL IS THE KICKOFF PRICE, NOT THE FIRST SIGHT (the bettor, 4
-        # Oct, on Wales v Denmark: STRONG all day at 1.29, bought at 1.28,
-        # then "was no play" at the whistle because the frozen call read
-        # its 28 Sep first-sight 1.12 — "this one moved"). From LOCK_FROM
-        # the call reads the last quote before kickoff, and a card locked
-        # as a play is never called below the price it was locked at.
-        # Earlier cards keep the call they were graded on.
-        r = dict(r)
-        lp = _last_price(f, r)
-        if lp:
-            r["best"] = lp
-        lk = _locks().get((day, f.teams))
-        try:
-            lkp = float(lk[3]) if lk and lk[2] == r.get("lane") else None
-        except (ValueError, IndexError):
-            lkp = None
-        if lkp and (not r.get("best") or float(r["best"]) < float(r.get("need") or 0)):
-            r["best"] = max(lkp, float(r.get("best") or 0))
     best, need = r.get("best"), r.get("need")
     if str(r["label"]).endswith("red") or not best or not need:
         return dict(row=r, mark="no play")
@@ -1929,7 +1945,12 @@ def price_gap(f, best: int, v: dict | None) -> dict | None:
     """(lo, hi) percent over the final pick's play bar, with the prices
     behind it — or None where the card has no bar or no price."""
     live = not (f.settled or f.status or odds_api.started(f.kickoff))
-    if live and v and v.get("lane") and v.get("need"):
+    fs_ = first_sight(f, v.get("lane")) if (live and v) else None
+    if fs_:
+        # Locked at first sight: the band is the stamped price's band.
+        top = [(fs_[0], fs_[2] or "best")]
+        need, lane, src = fs_[1], v["lane"], "first sight"
+    elif live and v and v.get("lane") and v.get("need"):
         q = quotes().get((f.teams, v["lane"]))
         if not q:
             return None
@@ -2413,7 +2434,12 @@ O15_BAND = (0.0, 6.0)
 
 def _last_price(f, r: dict) -> float | None:
     """The last quote the starred lane had before kickoff
-    (config/last_quotes.tsv), on the lane the first-sight row stamped."""
+    (config/last_quotes.tsv), on the lane the first-sight row stamped.
+
+    Not read for any decision since 4 Oct: cards are locked at first sight
+    (FIRST_SIGHT), so every caller falls back to the first-sight price.
+    last_quotes.tsv is still written, as the closing record."""
+    return None
     got = _LAST().get((f.kickoff.split(" ")[0], f.teams, str(r.get("tip") or "")))
     if not got or got[0] != r.get("lane"):
         return None
@@ -2552,6 +2578,9 @@ def _locks() -> dict:
 
 
 def play_locked(f) -> bool:
+    # Superseded the same day by locking at first sight: a price cannot
+    # move a card any more, so nothing needs protecting from it.
+    return False
     day = f.kickoff.split(" ")[0]
     if day < LOCK_FROM:
         return False
@@ -3967,7 +3996,10 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "U4.25 as U4.5, because the engine cannot tell those apart and "
          "the safer line pays more on settlement. Everything else as "
          "printed."),
-        ("Tiers", "<b>\u2605 STRONG</b>: all seven rates at 80%+ and the price no "
+        ("Tiers", "<b>Locked at first sight</b> (4 Oct): every card is rated "
+         "once, on the feed's best price and the bar stamped when it first came "
+         "in, and keeps that tier, band and verdict whatever the price does "
+         "later. <b>\u2605 STRONG</b>: all seven rates at 80%+ and the price no "
          "more than 5% under the bar \u2014 a play. <b>WEAK</b> (was MEDIUM): every other "
          "play (at or over the bar). <b>STRONG WATCH</b>: 5% or more under the "
          "bar \u2014 such cards land about 83% but lose at the pre-match price, "
@@ -4238,7 +4270,6 @@ def _check_js(page: str) -> None:
 
 def main() -> None:
     fixtures = board.load()
-    update_play_locks(fixtures)
     t, p = board._tallies(fixtures)
     (h1, n1), (h2, n2) = t[1], t[2]
     (p1, q1), _ = p[1], p[2]

@@ -128,14 +128,19 @@ market offered, never as what he would have got.
   comments, or anything else pushed to the repository. Chat replies only.
 - **Work directly in `main`.** (28 Sep: "always directly work in main".)
   Check out `main`, commit there, push to `main`. No session branch.
-- **A play stays a play.** (4 Oct, after Republic of Ireland v Israel was
-  declined by the O1.5 rule when its price slid after he bought it:
-  "cards have the decency to move ... track records then get affected
-  ... I took a bet on it, which I now distrust.") Once a card has been a
-  play before kickoff, or he holds a bet on it, no rule that reads the
-  PRICE (the O1.5 band, the MEDIUM band, the profile review's gap band)
-  may decline it. A declined card may still rise into a play. Locks live
-  in `config/play_lock.tsv` (webapp.update_play_locks), cards from 4 Oct.
+- **Everything is locked at first sight.** (4 Oct: "everything must get
+  locked as soon as a card comes in. That gives a clear line that always
+  is rated and measured with: max price from the moment the card gets in.
+  Otherwise we keep doubting how much was profile A or B ... no matter
+  where the card ends up.") A card's lane is rated on the feed's best
+  price and the play bar stamped the FIRST time the board saw it
+  (config/forward_log.tsv): tier, gap band, play or no play, the
+  price-reading declines and the record all read that, before kickoff and
+  after, and never move — whatever the price does later, and whether or
+  not he holds a bet. The live quote is shown as information only, and a
+  card's "from" price is buy guidance, not a way to change its profile.
+  This replaced the same day's "a play stays a play" lock
+  (config/play_lock.tsv is kept as history, no longer read).
 - PRE-ALFA 2: the engine and its rules are not touched while the run is
   live, except where he explicitly overrides it. Measure freely; changing
   a rule is his call.
