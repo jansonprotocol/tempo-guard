@@ -770,7 +770,9 @@ def _haystack(f) -> str:
     t = tier_of(f)
     if t:
         bits += [{"strong": "tier strong", "medium": "tier medium medium",
-                  "strong watch": "tier swatch"}[t]]
+                  "strong watch": "tier swatch",
+                  "strong from": "tier sfrom",
+                  "strong watch from": "tier swfrom"}[t]]
     raw = " ".join(bits).lower()
     folded = _fold(raw)
     return html.escape(raw if folded == raw else raw + " " + folded)
@@ -1151,6 +1153,55 @@ STRONG_WATCH_UNDER = 5.0
 # carries "+x%", how far the best price sits above the tier's floor.
 TIER_MIN = {"strong": 1.17, "medium": 1.31, "strong watch": 1.20}
 
+# THE NEAR-TIER "FROM" CARDS (the bettor, 4 Oct). A card short of its tier's
+# floor reverted to plain watch — but two of the near groups held up on
+# their own: all seven rates 0-3% under the bar yet under 1.17 (93.3% on
+# 15), and 5%+ under the bar yet under 1.20 (84.5% on 168 at 10%+ under,
+# 83.4% on 163 at 5-10% under). "Make those the real strong from and strong
+# watch from cards." They are pills, not plays: STRONG FROM and STRONG
+# WATCH FROM, each with the price that lifts the card into a tier.
+#
+# WHICH BANDS, AND THE FLOORS, ARE SET BY THE OPTIMIZER (scripts/
+# tier_optimize.py, in the two-day bank refresh): a near band is on while
+# it lands 81%+ on 15 or more settled cards, off when it drops under 81%,
+# and any other band that earns it comes on. The floors follow the tiers'
+# measured break-even once the sample is big enough and the move is worth
+# making. config/tier_params.tsv carries the result; the values below are
+# only the fallback when the file is missing.
+FROM_BANDS = {"strong": {"0–3% under"},
+              "strong watch": {"5–10% under", "10%+ under"}}
+FROM_STATS: dict = {}       # (group, band) -> (n, hit) from the optimizer
+TIER_PARAMS = ROOT / "config" / "tier_params.tsv"
+
+
+def _load_tier_params() -> None:
+    try:
+        lines = TIER_PARAMS.read_text().splitlines()
+    except OSError:
+        return
+    bands: dict = {"strong": set(), "strong watch": set()}
+    seen_from = False
+    for ln in lines:
+        if ln.startswith("#") or not ln.strip():
+            continue
+        q = ln.split("\t")
+        try:
+            if q[0] == "floor" and q[1] in TIER_MIN:
+                TIER_MIN[q[1]] = float(q[2])
+            elif q[0] == "from" and q[1] in bands:
+                seen_from = True
+                if q[3] == "on":
+                    bands[q[1]].add(q[2])
+                if len(q) > 5 and q[4]:
+                    FROM_STATS[(q[1], q[2])] = (int(q[4]), float(q[5]))
+        except (IndexError, ValueError):
+            continue
+    if seen_from:
+        FROM_BANDS.update(bands)
+
+
+_load_tier_params()
+
 
 def tier_target(f, lab: str | None, need) -> tuple[str, float] | None:
     """The tier this card's RATES qualify it for, and the price that buys
@@ -1171,9 +1222,15 @@ def tier_target(f, lab: str | None, need) -> tuple[str, float] | None:
     if not need or not lab or lab.endswith("red") or is_declined(f):
         return None
     if all_seven(f, lab):
-        t, p = "strong", max(need * (1 - STRONG_UNDER / 100), TIER_MIN["strong"])
+        opts = [("strong", max(need * (1 - STRONG_UNDER / 100), TIER_MIN["strong"]))]
     else:
-        t, p = "medium", max(need, TIER_MIN["medium"])
+        opts = [("medium", max(need, TIER_MIN["medium"]))]
+    # STRONG WATCH is reached at its floor when the floor still sits 5% or
+    # more under the bar; the cheapest tier on offer is the one printed.
+    sw = TIER_MIN["strong watch"]
+    if sw <= need * (1 - STRONG_WATCH_UNDER / 100):
+        opts.append(("strong watch", sw))
+    t, p = min(opts, key=lambda o: o[1])
     return t, math.ceil(p * 100 - 1e-6) / 100
 
 
@@ -1181,10 +1238,34 @@ def _target_html(f, lab, need) -> str:
     tt = tier_target(f, lab, need)
     if not tt:
         return ""
-    word = "\u2605 STRONG" if tt[0] == "strong" else "MEDIUM"
+    word = TIER_WORD[tt[0]]
     return (f' <span class="tedge" title="the tier its rates qualify for, and '
             f'the best price that buys it — at your book now or live">'
             f'\u00b7 {word} from {tt[1]:.2f}</span>')
+
+
+TIER_WORD = {"strong": "\u2605 STRONG", "medium": "MEDIUM",
+             "strong watch": "STRONG WATCH"}
+FROM_GROUP = {"strong from": ("strong", "\u2605 STRONG FROM", "sfrom"),
+              "strong watch from": ("strong watch", "STRONG WATCH FROM", "swfrom")}
+
+
+def _from_pill(f, t: str, lab, need, band: str | None, prefix: str = "") -> str:
+    """The pill of a near-tier card: its group, and the price that lifts it
+    into a tier (the group's own, or a better one when that comes first)."""
+    base, group, cls = FROM_GROUP[t]
+    tt = tier_target(f, lab, need)
+    if tt and tt[0] == base:
+        price = f" {tt[1]:.2f}"
+    elif tt:
+        price = f" \u00b7 {TIER_WORD[tt[0]]} {tt[1]:.2f}"
+    else:
+        price = ""
+    st = FROM_STATS.get((base, band)) if band else None
+    rec = (f"{band}: {st[1]:.1f}% on {st[0]} settled" if st else (band or ""))
+    return (f'<span class="vmark {cls}" title="near-tier card, {html.escape(rec)}'
+            f' — not a play until a book reaches the price shown, now or '
+            f'live">{prefix}{group}{price}</span>')
 
 
 def tier_edge(tier: str, price) -> float | None:
@@ -1204,7 +1285,8 @@ def _edge_html(tier: str, price) -> str:
 
 
 def tier_of(f) -> str | None:
-    """'strong', 'medium', 'strong watch' or None for this card."""
+    """'strong', 'medium', 'strong watch', 'strong from', 'strong watch
+    from' or None for this card."""
     if is_declined(f):
         return None
     if f.settled or odds_api.started(f.kickoff):
@@ -1217,6 +1299,7 @@ def tier_of(f) -> str | None:
         g = _gap_point(f)
         # the same price _gap_point judged the gap on
         price = (_last_price(f, c["row"]) or c["row"].get("best")) if c else None
+        lab = str(c["row"]["label"]) if c else None
     else:
         v = verdict(f, _star(f))
         if v and v["strong"]:
@@ -1225,9 +1308,20 @@ def tier_of(f) -> str | None:
             return "medium"
         g = (v["lane"], v["gap"]) if v and v.get("gap") is not None else None
         price = v["odds"] if v else None
+        lab = v["label"] if v else None
     if g and g[1] <= -STRONG_WATCH_UNDER \
             and (price or 0) >= TIER_MIN["strong watch"]:
         return "strong watch"
+    # The near-tier groups the optimizer keeps on (FROM_BANDS).
+    if not g or not price or not lab or lab.endswith("red"):
+        return None
+    band = gap_band(g[1])
+    if g[1] <= -STRONG_WATCH_UNDER:
+        if band in FROM_BANDS["strong watch"]:
+            return "strong watch from"
+    elif price < TIER_MIN["strong"] and band in FROM_BANDS["strong"] \
+            and all_seven(f, lab):
+        return "strong from"
     return None
 
 
@@ -1877,7 +1971,9 @@ def tier_band_html(rows, fixtures) -> str:
                     pass
     calls = ("confirms", "close", "split", "vetoes", "thin")
     tiers = (("strong", "\u2605 STRONG"), ("medium", "MEDIUM"),
-             ("strong watch", "STRONG WATCH"))
+             ("strong watch", "STRONG WATCH"),
+             ("strong from", "\u2605 STRONG FROM"),
+             ("strong watch from", "STRONG WATCH FROM"))
     agg = {(t, c): [0, 0, 0] for t, _w in tiers for c in calls}
     for q in rows:
         k = (q[2], q[10])
@@ -2511,6 +2607,8 @@ def _frozen_guard(f, call: dict) -> str:
            "watch": "dimv", "no play": "no"}[call["mark"]]
     if call["mark"] in ("watch", "no play") and t == "strong watch":
         word, cls = "STRONG WATCH", "swatch"
+    elif call["mark"] in ("watch", "no play") and t in FROM_GROUP:
+        word, cls = FROM_GROUP[t][1], FROM_GROUP[t][2]
     when = "was " if f.settled else "running · was "
     # Running and not a play: the from-price stays on, for a live price.
     live_to = (_target_html(f, lab, r.get("need"))
@@ -2586,6 +2684,9 @@ def _guard(f, best: int) -> str:
                 'price — one to watch for a better price, live or at your '
                 f'book.">STRONG WATCH{_edge_html("strong watch", odds)}'
                 f'{_target_html(f, lab, need)}</span>')
+    elif t in FROM_GROUP:
+        mark = _from_pill(f, t, lab, need,
+                          gap_band(v["gap"]) if v.get("gap") is not None else None)
     elif v["watch"]:
         mark = ('<span class="vmark dimv">watch'
                 f'{_target_html(f, lab, need)}</span>')
@@ -3479,8 +3580,9 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         "the play bar (since 2 Oct). A STRONG card is a play even a little "
         "under the bar. On this session's counted cards: at or over the bar "
         "84.3% and +12.5% on 51, 0\u20135% under 86.7% and +2.9% on 75. It "
-        "also needs a best price of 1.17 or more, the break-even at that "
-        "hit rate; the pill's +x% is how far above 1.17 the price sits. Play "
+        f"also needs a best price of {TIER_MIN['strong']:.2f} or more, the "
+        "break-even at that hit rate; the pill's +x% is how far above "
+        f"{TIER_MIN['strong']:.2f} the price sits. Play "
         "these first, and never skip one for price if any "
         "book you hold clears the bar.") + show(
         none, "pend", "3 \u00b7 A card with no play",
@@ -3538,15 +3640,28 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "play (at or over the bar). <b>STRONG WATCH</b>: 5% or more under the "
          "bar \u2014 such cards land about 83% but lose at the pre-match price, "
          "so they are for a better price, live or at your own book. Each tier "
-         "has a floor price, its break-even at its own hit rate: STRONG 1.17, "
-         "MEDIUM 1.31, STRONG WATCH 1.20. A card under its floor reverts: a "
+         "has a floor price, its break-even at its own hit rate: STRONG "
+         f"{TIER_MIN['strong']:.2f}, MEDIUM {TIER_MIN['medium']:.2f}, STRONG "
+         f"WATCH {TIER_MIN['strong watch']:.2f}. A card under its floor reverts: a "
          "STRONG or MEDIUM at or over the bar is a plain PLAY, a STRONG under "
          "the bar is not a play, a STRONG WATCH a plain watch. The pill's "
          "<b>+x%</b> is how far the best price sits above the floor. A card "
          "that is not a play shows the tier its rates qualify for and the "
-         "price that buys it \u2014 <b>\u2605 STRONG from 1.17</b>, <b>MEDIUM "
-         "from 1.31</b> \u2014 kept on while it runs, for a live price. Search "
-         "<code>strong</code>, <code>medium</code>, <code>strong watch</code>."),
+         "price that buys it \u2014 <b>\u2605 STRONG from "
+         f"{TIER_MIN['strong']:.2f}</b>, <b>MEDIUM from "
+         f"{TIER_MIN['medium']:.2f}</b> \u2014 kept on while it runs, for a "
+         "live price. <b>\u2605 STRONG FROM</b> and <b>STRONG WATCH FROM</b> "
+         "(dashed) are the near-tier cards that held up on their own: "
+         + "; ".join(f"{TIER_WORD[g]} near band {b}"
+                     + (f" {FROM_STATS[(g, b)][1]:.1f}% on {FROM_STATS[(g, b)][0]}"
+                        if (g, b) in FROM_STATS else "")
+                     for g in ("strong", "strong watch")
+                     for b in sorted(FROM_BANDS[g])) +
+         ". A near band stays on while it lands 81%+ and goes off under it; "
+         "the two-day optimizer (scripts/tier_optimize.py) sets the bands and "
+         "the floors. Search <code>strong</code>, <code>medium</code>, "
+         "<code>strong watch</code>, <code>strong from</code>, "
+         "<code>strong watch from</code>."),
         ("👀 Watch lanes", "the starred lane is not red and the panel's "
          "best clears its claim band's bar, or sits under it by five "
          "percent or less, but is short of the lane's value price. Not a "
@@ -4665,6 +4780,8 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.no {{ color:#f0a08e; border-color:#8a3a2e; }}
 .vmark.dimv {{ color:var(--dim); }}
 .vmark.swatch {{ color:#9cc3ff; border-color:#2c4f80; }}
+.vmark.sfrom {{ color:#d9b65c; border-color:#6b5520; border-style:dashed; }}
+.vmark.swfrom {{ color:#86a9d6; border-color:#2c4f80; border-style:dashed; }}
 .bcall {{ margin-top:2px; font-size:.92em; }}
 .bcall.bc-confirms {{ color:#7fd18b; }}
 .bcall.bc-vetoes {{ color:#f08a7e; }}
@@ -5167,7 +5284,9 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <b>the tier</b> — <code>strong</code> (all seven rates at 80%+, price no
   more than 5% under the bar), <code>medium</code> (every other play),
   <code>strong watch</code> (5% or more under the bar: lands, but the
-  pre-match price does not pay).<br>
+  pre-match price does not pay), <code>strong from</code> and
+  <code>strong watch from</code> (the near-tier cards short of the floor
+  price, kept by the optimizer).<br>
   <b>an absent lane</b> — <code>tip 2 none</code> (also
   <code>no tip 3</code>): the cards where that lane never printed.<br>
   <b>a probability threshold</b> — <code>tip 2 &lt;80</code>,
@@ -5640,6 +5759,8 @@ function qterms(q) {{
       if (flat === "strong" || flat === "tier strong") return "tier strong";
       if (flat === "medium") return "tier medium";
       if (flat === "strong watch" || flat === "swatch") return "tier swatch";
+      if (flat === "strong from" || flat === "sfrom") return "tier sfrom";
+      if (flat === "strong watch from" || flat === "swfrom") return "tier swfrom";
       return parseCmp(flat) || s;
     }});
 }}

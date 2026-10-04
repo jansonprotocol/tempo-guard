@@ -35,6 +35,8 @@
 #                             stale (both the Over clause and the strong
 #                             bar sat wrong for weeks before a person read
 #                             them)
+#   scripts/tier_optimize.py  tier floors and near-tier FROM bands ->
+#                             config/tier_params.tsv (the board reads it)
 #   scripts/board.py          render README + app + live.json, then verify
 #
 # THE ENGINE'S RULES ARE NOT TOUCHED. config/guard_slices.tsv and
@@ -103,6 +105,11 @@ jobs:
             # only; livebands above is what moves the bands.
             python scripts/declinecheck.py
             python scripts/drift.py
+            # The tier optimizer (the bettor, 4 Oct): re-measures the tier
+            # floors and the near-tier FROM bands (on at 81%+ on 15+, off
+            # under 81%) into config/tier_params.tsv, read by the render
+            # below and by every later render, so the board stays in sync.
+            python scripts/tier_optimize.py
             # --allow-stale: a Polish or Algerian card waiting for a hand-set
             # score is a sweep matter, not a bank matter. Without the flag
             # board.verify refused the render and this job died on it on
@@ -111,7 +118,7 @@ jobs:
             python scripts/board.py --allow-stale
             cd ..
             git add -A data/ config/live_bands.tsv config/drift.tsv \
-                       config/profile_review.tsv config/band_log.tsv config/tier_band_log.tsv config/roi_log.tsv \
+                       config/profile_review.tsv config/tier_params.tsv config/tier_params_log.tsv config/band_log.tsv config/tier_band_log.tsv config/roi_log.tsv \
                        config/declinecheck.tsv \
                        config/ladder_rates.tsv \
                        config/matchbank_retro.json \

@@ -193,3 +193,4 @@
 2026-10-04	board	Band check loosened: a veto now needs a line under 75%; no line at 80% but none under 75% reads CLOSE (the bettor, on Portugal v Norway at 78/79%). Stored rows re-read under the new lines. Tracked only
 2026-10-04	board	Band check backfilled as-of: 161 settled tiered session cards read against only cards and bets from earlier days (read_at "as-of" in tier_band_log.tsv)
 2026-10-04	board	From-price on cards that are not a play: the tier its rates qualify for (STRONG if all seven 80%+, else MEDIUM) and the price that buys it, kept on while running
+2026-10-04	board	STRONG FROM / STRONG WATCH FROM pills (dashed), search words strong from / strong watch from, rows in the band-check table; tier floors and FROM bands now read from config/tier_params.tsv, set every two days by scripts/tier_optimize.py in bank-refresh
