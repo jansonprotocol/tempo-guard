@@ -37,39 +37,30 @@ times. Everything else goes between. When the slip is clean, say so in
 one line up front so the silence reads as a check rather than an
 omission.
 
-**MORE THAN 3% OVER THE BAR IS THE SECOND ALERT.** (25-27 Sep. Measured
-on 188 settled bets of this session that carry a stamped bar: bets
-bought UNDER the bar land 89.2% and return +11.4%, bets bought over or
-on it land 71.5% and return -5.7%. By band, every under band is
-positive and the leak is concentrated just past the bar — 0-3% over
-returns -4.6%, 3-6% over returns -14.7%. The session as a whole is level
-at +0.3%, so the whole of the profit comes from bets Athena called too
-short to buy.)
+**THE SECOND ALERT: DOES THE GAP BAND AGREE?** (4 Oct: "Remove the over
+the bar alert. Replace with: gap bands agree or don't.") It replaces the
+more-than-3%-over-the-bar alert of 25-27 Sep, which is retired: the
+over-3% gap is no longer flagged on a slip at all.
 
-So a leg priced MORE THAN 3% OVER the bar gets the same treatment as a
-wrong lane: named at the top and again at the bottom, bold, with the
-symbol. Both alerts can fire on one slip; name each once at each end.
+Every leg's card carries a band check under its VS BAR line: the
+like-for-like record of its gap band (same band, best price within
+±0.10), my bets and all cards, read by `webapp.band_call`:
 
-THE BAR MEANT HERE IS THE PLAY BAR — the card's printed buy-from less
-3%, which is `verdict["need"]` and the number config/forward_log.tsv
-stamps as `needs`. Not the printed buy-from itself; the two differ by
-exactly that 3% and confusing them moves a leg a whole band.
+- **agrees** — "backs it": every line with 3+ behind it at 80%+;
+- **does not agree** — "vetoes": no line at 80%, and one under 75%;
+- in between — "close" (75-80%, none under 75), "split" (one line 80%+,
+  one under), "thin" (too few to read).
 
-THIS IS A FLAG, NOT A DECLINE. (The bettor, 27 Sep: "I find it too soon
-to really start declining them overall, but it's worth keeping track
-of.") Nothing is refused on it, no rule changes, and it never argues
-against a bet he has already placed — it is recorded so the count grows
-and the measurement can be re-run with more bets behind it.
+A leg whose band DOES NOT AGREE gets the alert treatment: named at the
+top and again at the bottom, bold, with the symbol. Legs where it agrees
+are said so in one line; close, split and thin go in the body. Both
+alerts can fire on one slip; name each once at each end.
 
-AND IT IS WEAKLY SUPPORTED, WHICH THE ALERT MUST NOT HIDE. The same
-banding over all 946 settled cards that carry a first-sight quote does
-NOT reproduce it: over 0-3% returns +2.1% there, over 3-6% returns
-+1.6%, and only over 6%+ is negative at -0.7%. So the -14.7% that
-prompted the 3% line lives in 36 of his own bets and nowhere else. The
-two populations are not measuring the same thing — his gap is the price
-he actually PAID against the bar, the card population's is the best EU
-book's price against the bar — but until the first replicates, the flag
-is a counter, not a finding. Say so whenever it fires.
+THIS IS A FLAG, NOT A DECLINE, AND IT IS UNPROVEN. The band check is
+tracked only (config/tier_band_log.tsv, the "Does the band back the
+tier?" table): on its first as-of read, 4 Oct, vetoed tiered cards had
+landed 16 of 17 and backed ones 82 of 94 — no edge yet. Say so whenever
+it fires; it never argues against a bet already placed.
 
 ## The books he can actually reach
 
