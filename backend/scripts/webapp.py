@@ -1422,7 +1422,7 @@ def decline_reason(f) -> str | None:
 def medband_declined(f) -> bool:
     """A MEDIUM in a band the optimizer has made HARD, kicking off on or
     after the day it became hard — earlier cards keep their record."""
-    if _MEDBAND_OFF:
+    if _MEDBAND_OFF or play_locked(f):
         return False
     m = medband_state(f)
     if not m or m[1] != "hard":
@@ -2401,6 +2401,8 @@ def _LAST() -> dict:
 
 
 def o15_declined(f) -> bool:
+    if play_locked(f):
+        return False
     if f.settled or odds_api.started(f.kickoff):
         # After kickoff: the LAST price before it where the board kept one,
         # so a card is judged on the price it was offered at when the
@@ -2480,6 +2482,83 @@ def profile_of(f, base: bool | None = None):
     return (group, got[0][:1], gap_band(got[1]))
 
 
+# A PLAY STAYS A PLAY (the bettor, 4 Oct, on Republic of Ireland v Israel
+# declined by the O1.5 rule when its best price slid from 1.35 to 1.31,
+# after he had bought it: "cards have the decency to move. I'd rather not
+# have that, as track records then get affected ... it first was inside a
+# certain profile and its result would be evidence inside that, now it got
+# pulled out ... plus, I took a bet on it, which I now distrust"). Once a
+# card has been a PLAY before kickoff, or he holds a bet on it, the rules
+# that read the PRICE — the O1.5 band, the MEDIUM band, the profile
+# review's gap band — can no longer decline it. The other direction stays
+# open: a declined card whose price climbs into a play becomes one (Greece
+# v Netherlands, 1 Oct), and is then locked in turn. Rules that do not
+# read the price (red, live unsafe, strike combo) are untouched. Cards
+# from LOCK_FROM on; earlier records are left as they were graded.
+PLAY_LOCK = ROOT / "config" / "play_lock.tsv"
+LOCK_FROM = "2026-10-04"
+_LOCKS: dict = {}
+_LOCKS_READ: list = []
+_BET_NAMES: set = set()
+
+
+def _locks() -> dict:
+    if not _LOCKS_READ:
+        _LOCKS_READ.append(True)
+        try:
+            for ln in PLAY_LOCK.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                q = ln.split("\t")
+                if len(q) >= 2:
+                    _LOCKS[(q[0], q[1])] = q
+        except OSError:
+            pass
+        try:
+            for ln in ledger.BETS.read_text().splitlines():
+                if ln.strip() and not ln.startswith("#"):
+                    _BET_NAMES.add(ln.split("\t")[0])
+        except OSError:
+            pass
+    return _LOCKS
+
+
+def play_locked(f) -> bool:
+    day = f.kickoff.split(" ")[0]
+    if day < LOCK_FROM:
+        return False
+    return (day, f.teams) in _locks() or f.teams in _BET_NAMES
+
+
+def update_play_locks(fixtures) -> int:
+    """Lock every card that is a play now, before kickoff. Returns how many
+    were added; config/play_lock.tsv is append-only."""
+    _locks()
+    now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
+    new = []
+    for f in fixtures:
+        day = f.kickoff.split(" ")[0]
+        if day < LOCK_FROM or f.settled or f.status or odds_api.started(f.kickoff):
+            continue
+        if (day, f.teams) in _LOCKS:
+            continue
+        v = verdict(f, _star(f))
+        if not v or not v["play"] or is_declined(f):
+            continue
+        row = [day, f.teams, v["lane"] or "", f"{v['odds']:.2f}",
+               f"{v['need']:.3f}", now, "play"]
+        _LOCKS[(day, f.teams)] = row
+        new.append(row)
+    if new:
+        head = "" if PLAY_LOCK.exists() else (
+            "# Cards locked as plays (webapp.update_play_locks): once a play before\n"
+            "# kickoff, no price-reading rule declines it. Append-only.\n"
+            "# date\tfixture\tlane\tbest\tneed\tlocked_at\tsource\n")
+        with PLAY_LOCK.open("a") as fh:
+            fh.write(head + "".join("\t".join(r) + "\n" for r in new))
+    return len(new)
+
+
 def review_move(f) -> str | None:
     """'release' or 'decline' where the review changes this card's
     status, else None."""
@@ -2501,7 +2580,7 @@ def is_declined(f) -> bool:
     move = review_move(f)
     if move == "release":
         return False
-    if move == "decline":
+    if move == "decline" and not play_locked(f):
         return True
     return _declined_base(f)
 
@@ -3971,6 +4050,7 @@ def _check_js(page: str) -> None:
 
 def main() -> None:
     fixtures = board.load()
+    update_play_locks(fixtures)
     t, p = board._tallies(fixtures)
     (h1, n1), (h2, n2) = t[1], t[2]
     (p1, q1), _ = p[1], p[2]

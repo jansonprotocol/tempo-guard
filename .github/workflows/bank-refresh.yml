@@ -118,7 +118,7 @@ jobs:
             python scripts/board.py --allow-stale
             cd ..
             git add -A data/ config/live_bands.tsv config/drift.tsv \
-                       config/profile_review.tsv config/tier_params.tsv config/tier_params_log.tsv config/band_log.tsv config/tier_band_log.tsv config/roi_log.tsv \
+                       config/profile_review.tsv config/tier_params.tsv config/tier_params_log.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv \
                        config/declinecheck.tsv \
                        config/ladder_rates.tsv \
                        config/matchbank_retro.json \

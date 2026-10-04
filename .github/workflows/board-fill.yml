@@ -71,7 +71,7 @@ jobs:
             python scripts/feedslate.py --clock || true
             cd ..
             git add -A config/fixtures.tsv config/odds_quotes.tsv config/reads_cache.json \
-                       config/forward_log.tsv README.md web/
+                       config/forward_log.tsv config/play_lock.tsv config/tier_band_log.tsv README.md web/
             if git diff --cached --quiet; then
               echo "nothing to add — the board already has the week"; exit 0
             fi

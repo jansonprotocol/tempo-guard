@@ -118,7 +118,7 @@ jobs:
             cd ..
             git add -A config/fixtures.tsv README.md web/ \
                        config/forward_log.tsv config/reads_cache.json \
-                       config/live_log.tsv config/band_log.tsv config/tier_band_log.tsv config/roi_log.tsv || true
+                       config/live_log.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv || true
             # Every pass commits — but not every commit is a deploy. The
             # page polls web/live.json from the repository between
             # deploys, so a goal or a minute goes out as a small "live

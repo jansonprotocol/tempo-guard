@@ -115,6 +115,14 @@ market offered, never as what he would have got.
   comments, or anything else pushed to the repository. Chat replies only.
 - **Work directly in `main`.** (28 Sep: "always directly work in main".)
   Check out `main`, commit there, push to `main`. No session branch.
+- **A play stays a play.** (4 Oct, after Republic of Ireland v Israel was
+  declined by the O1.5 rule when its price slid after he bought it:
+  "cards have the decency to move ... track records then get affected
+  ... I took a bet on it, which I now distrust.") Once a card has been a
+  play before kickoff, or he holds a bet on it, no rule that reads the
+  PRICE (the O1.5 band, the MEDIUM band, the profile review's gap band)
+  may decline it. A declined card may still rise into a play. Locks live
+  in `config/play_lock.tsv` (webapp.update_play_locks), cards from 4 Oct.
 - PRE-ALFA 2: the engine and its rules are not touched while the run is
   live, except where he explicitly overrides it. Measure freely; changing
   a rule is his call.
