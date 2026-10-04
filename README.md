@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            613 / 741  82.7%    410 / 603  68.0%
     played lanes  >+1%     264 / 319  82.8%    408 / 599  68.1%
-    placed bets            189 / 242  78.1%    ROI +0.6%
+    placed bets            190 / 243  78.2%    ROI +0.8%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3006,7 +3006,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 189 / 242  ·  ROI +0.6%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 190 / 243  ·  ROI +0.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -3267,6 +3267,7 @@ that premium the book is keeping the insurance money.
 | — open | Kosovo v Austria | O1.5 | 1.27 | — | Unibet — pre-kickoff, receipt 13188117724, struck 4 Oct 17:51 CEST on an 18:00 kickoff. The card's own side and rung — no wrong lane. Claim 81.3%, orange, ★ STRONG (all seven rates at 80%+), locked as a play since 15:18 (config/play_lock.tsv). Play bar 1.242; 1.27 is +2.3% over it. Feed best 1.35 (BetAnything, +8.7%). +8.5% over the STRONG floor of 1.17. Band check on the card (6-10% over at the feed's best, priced 1.25-1.45): my bets 25 at 76%, all cards 41 at 78% — close, not a veto. At his own price the gap is 0-3% over, inside the O1.5 0-6% band, but the play lock keeps the card in the record. |
 | — open | Albania v San Marino | U3.5 | 2.70 | — | Unibet — pre-kickoff, coupon 13188162784 (two singles, half stake each), struck 4 Oct 17:59 CEST for Tuesday 6 Oct 20:45. The bettor's call after weighing it in chat: a price far over the card's bar, half staked and split across two lines so a four-goal result roughly breaks even. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 78.3%, pink, MEDIUM. Play bar 1.445; 2.70 is +86.9% OVER it (feed best 2.79, +93%), further over the bar than any card settled this session (widest +41%). The market reads about 35-37% where the engine reads 78%. Band check: thin, no card ever priced near this. Counted San Marino record: San Marino v Albania U3.5 won 0-3, Belarus v San Marino U3.5 lost 4-0 by one goal; San Marino v Finland was declined. |
 | — open | Albania v San Marino | U4.5 | 1.78 | — | Unibet — pre-kickoff, coupon 13188162784 (two singles, half stake each), struck 4 Oct 17:59 CEST for Tuesday 6 Oct 20:45. The bettor's call after weighing it in chat: a price far over the card's bar, half staked and split across two lines so a four-goal result roughly breaks even. A different LINE on the card's own side (the card prices U3.0/U3.5) — no wrong lane. Engine on U4.5 90.7% (ledger.bet_prob), fair 1.10; 1.78 is +61% on the engine's number. Loses only on five goals or more; covers the 4-0 kind of result that beat the Belarus card. |
+| ✅ | Kosovo v Austria | O0.5 | 1.54 | 1.54x | TOTO — IN-PLAY, bet O/0556769/0000573, struck 4 Oct 19:20 CEST on an 18:00 kickoff, around the 65th minute at 0-0, at a 1.00 stake. A different LINE on the card's own side (the card prices O1.5, ★ STRONG, locked as a play) — no wrong lane. The bettor took it on the board's live read of 90%+ for a goal still to come, at a generous in-play price. WON: 1-1, the first goal came late and the second followed, so the O1.5 at 1.27 on the same match landed too. |
 
 <!-- HYPOTHESES:START -->
 
