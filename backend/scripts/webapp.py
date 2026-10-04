@@ -132,7 +132,7 @@ def quotes() -> dict:
     return _QUOTES
 
 
-def _fmt(cell: str, fixture: str = "", quoted: bool = True) -> str:
+def _fmt(cell: str, fixture: str = "", quoted: bool = True, fx=None) -> str:
     """One lane's text. `quoted` is False once the match has kicked off:
     the quote file outlives the moment it was written, so injecting a
     price there would print a market that has already closed."""
@@ -157,6 +157,18 @@ def _fmt(cell: str, fixture: str = "", quoted: bool = True) -> str:
         # and its book lead the line on their own.
         best = (f'best <b>{html.escape(q["best"])}</b> '
                 f'<span class="dim">{html.escape(q["book"])}</span>')
+        # Locked at first sight: the card is rated on the stamped price, so
+        # that is the number the line leads with; today's best follows when
+        # it differs (the bettor, 4 Oct, on Cerezo Osaka v Yokohama: rated
+        # at 1.16, shown "best 1.17 TOTO", read as two profiles).
+        fs_ = first_sight(fx, _struck(m.group(1))) if fx is not None else None
+        if fs_ and f"{fs_[0]:.2f}" != f"{float(q['best']):.2f}":
+            best = (f'locked <b>{fs_[0]:.2f}</b> <span class="dim">'
+                    f'{html.escape(fs_[2] or "")} · now {html.escape(q["best"])} '
+                    f'{html.escape(q["book"])}</span>')
+        elif fs_:
+            best = (f'locked <b>{fs_[0]:.2f}</b> '
+                    f'<span class="dim">{html.escape(fs_[2] or q["book"])}</span>')
         uni = (f' <span class="dim">· Unibet {html.escape(q["unibet"])}</span>'
                if q["unibet"] else "")
         # "market", not "buy at min" (the bettor, 12 Sep, reading it as an
@@ -1277,12 +1289,15 @@ def tier_target(f, lab: str | None, need, price=None) -> tuple[str, float] | Non
 
 def _target_html(f, lab, need) -> str:
     tt = tier_target(f, lab, need)
-    if not tt:
+    # Buy guidance, not a second profile (4 Oct): the card's profile is
+    # locked; this says at what price a book would make it a strong-grade
+    # bet. WEAK is no play, so it gets no price to aim for.
+    if not tt or tt[0] == "medium":
         return ""
     word = TIER_WORD[tt[0]]
     return (f' <span class="tedge" title="the tier its rates qualify for, and '
             f'the best price that buys it — at your book now or live">'
-            f'\u00b7 {word} from {tt[1]:.2f}</span>')
+            f'\u00b7 buy at {tt[1]:.2f}+ ({word.replace(chr(9733) + " ", "").lower()} price)</span>')
 
 
 # MEDIUM is shown as WEAK (the bettor, 4 Oct: "medium actually looks weak to
@@ -3718,7 +3733,7 @@ def _card(f, kind: str, reads: dict) -> str:
                      'the price never cleared its bar or it is not the '
                      'starred lane.">no play</span>')
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
-                f"</span>{head} {_fmt(cell, f.teams, quoted=not past)}{tail}"
+                f"</span>{head} {_fmt(cell, f.teams, quoted=not past, fx=f)}{tail}"
                 f"{star if which == best else ''}{extra}"
                 f"{_lanebar(f, cell, lab, terse)}{live}</div>")
 
