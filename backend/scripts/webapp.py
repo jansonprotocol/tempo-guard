@@ -1189,8 +1189,10 @@ FROM_STATS: dict = {}       # (group, band) -> (n, hit) from the optimizer
 # for 6-10% over, "let Athena advise to skip it for now; as soon as it ...
 # becomes less thin make it hard." The optimizer sets each band's state:
 #   good   80%+ and a positive ROI on 5+       -> a mark on the pill
-#   skip   a loss and under 70%, under 30 cards -> advised SKIP, still counted
-#   hard   the same on 30+ cards                -> declined from that date
+#   skip   a loss and under 70%                 -> advised SKIP, still counted
+#   hard   any band on 50+ settled cards        -> declined from that date,
+#          for good ("weak needs to move to declined whenever one of its
+#          bands gets 50 cards; one band can go earlier than the other")
 #   (none) anything else, and a skip that recovers is released by itself.
 MED_BANDS: dict = {"3–6% over": ("good", 7, 100.0, 35.0, ""),
                    "10%+ over": ("good", 13, 84.6, 20.2, ""),
@@ -1438,15 +1440,17 @@ def medband_declined(f) -> bool:
 def _medband_html(m) -> str:
     band, state, st = m
     rec = f"{band}: {st[2]:.0f}% on {st[1]}, {st[3]:+.1f}%"
+    left = f"{st[1]}/50 cards — declined at 50"
     if state == "good":
         return (f' <span class="tedge mgood" title="WEAK in a band that has '
-                f'paid — {rec}. Thin: a mark, not a rule.">\u25b2 {band}</span>')
+                f'paid — {rec}. Thin: a mark, not a rule. {left}.">'
+                f'\u25b2 {band} \u00b7 {st[1]}/50</span>')
     if state in ("skip", "hard"):
         return (f' <span class="tedge mskip" title="WEAK in a band that has '
-                f'lost — {rec}. Athena advises to skip it; it becomes a hard '
-                f'decline on 30 cards if it stays this bad, and is released '
-                f'if it recovers.">\u00b7 {band} {st[2]:.0f}% on {st[1]}</span>')
-    return ""
+                f'lost — {rec}. Athena advises to skip it. {left}.">'
+                f'\u00b7 {band} {st[2]:.0f}% \u00b7 {st[1]}/50</span>')
+    return (f' <span class="tedge" title="{rec}. {left}.">\u00b7 {band} '
+            f'{st[1]}/50</span>')
 
 
 def tier_edge(tier: str, price) -> float | None:

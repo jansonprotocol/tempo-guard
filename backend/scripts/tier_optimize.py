@@ -29,9 +29,11 @@ from the old one, so it does not twitch a cent with every result.
 
 THE MEDIUM BANDS (4 Oct). Each gap band of the MEDIUM tier gets a state:
 good (80%+ and a gain on 5+: a mark on the pill), skip (a loss under 70%:
-advised SKIP, still counted), hard (the same on 30+: declined from that
-day on) or none. Measured with the hard rule off, so a declined band can
-still recover.
+advised SKIP, still counted), none, and hard: every band is DECLINED from
+the day it reaches 50 settled cards, whatever it has done, and stays so
+(the bettor, 4 Oct: "weak needs to move to declined whenever one of its
+bands gets 50 cards"). Measured with the hard rule off, so the count keeps
+running.
 
 THE FROM BANDS. Under the (new) floors, the near groups are the cards
 that met a tier's rules but not its price; each gap band of each group
@@ -62,7 +64,11 @@ FROM_MIN_N = 15
 # MEDIUM by gap band (the bettor, 4 Oct): a mark where it has paid, SKIP
 # advice where it has lost, a hard decline once the loss holds on HARD_N.
 MED_GOOD_HIT, MED_GOOD_N = 80.0, 5
-MED_BAD_HIT, MED_HARD_N = 70.0, 30
+# WEAK BAND TO DECLINED AT 50 (the bettor, 4 Oct: "weak needs to move to
+# declined whenever one of its bands gets 50 cards; one band can go earlier
+# than the other"). A band reaching MED_HARD_N settled cards is declined from
+# that day, whatever it has done, and stays declined.
+MED_BAD_HIT, MED_HARD_N = 70.0, 50
 
 
 def cards() -> list[dict]:
@@ -173,14 +179,16 @@ def main() -> None:
             continue
         n, hit = rate(xs)
         roi = sum(c["pl"] for c in xs) / n * 100
-        if n >= MED_GOOD_N and hit >= MED_GOOD_HIT and roi > 0:
-            state = "good"
-        elif roi < 0 and hit < MED_BAD_HIT:
-            state = "hard" if n >= MED_HARD_N else "skip"
-        else:
-            state = "none"
         prev = w.MED_BANDS.get(band)
         was = prev[0] if prev else "none"
+        if n >= MED_HARD_N or was == "hard":
+            state = "hard"
+        elif n >= MED_GOOD_N and hit >= MED_GOOD_HIT and roi > 0:
+            state = "good"
+        elif roi < 0 and hit < MED_BAD_HIT:
+            state = "skip"
+        else:
+            state = "none"
         since = (prev[4] if prev and was == "hard" and prev[4] else today) \
             if state == "hard" else ""
         if state != was:

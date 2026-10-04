@@ -67,8 +67,12 @@ it weak"; then "everything else is also weak, all below 75% ... leaving it
 now for data, but weak basically means no plays.") The tier once called
 MEDIUM is shown as WEAK, and so is any untiered play under its tier's
 floor; both land about 72-75% on counted cards. On the board they read
-"WEAK · NO PLAY" but stay in the record for data — not declined, unless he
-later says so. When a slip leg is on a WEAK card, say so in the body; it
+"WEAK · NO PLAY" but stay in the record for data. **Each WEAK gap band
+moves to DECLINED the day it reaches 50 settled cards**, one band at a time
+(4 Oct: "weak needs to move to declined whenever one of its bands gets 50
+cards; one band can go earlier than the other") — set by
+scripts/tier_optimize.py, shown as "n/50" on the pill. A card already a
+play or carrying a bet keeps its place (a play stays a play). When a slip leg is on a WEAK card, say so in the body; it
 is not an alert.
 
 ## The books he can actually reach
