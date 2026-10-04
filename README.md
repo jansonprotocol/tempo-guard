@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            613 / 742  82.6%    411 / 604  68.0%
     played lanes  >+1%     264 / 320  82.5%    409 / 600  68.2%
-    placed bets            192 / 246  78.0%    ROI +0.7%
+    placed bets            193 / 248  77.8%    ROI +0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3006,7 +3006,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 192 / 246  ·  ROI +0.7%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 193 / 248  ·  ROI +0.3%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -3268,6 +3268,8 @@ that premium the book is keeping the insurance money.
 | — open | Albania v San Marino | U3.5 | 2.70 | — | Unibet — pre-kickoff, coupon 13188162784 (two singles, half stake each), struck 4 Oct 17:59 CEST for Tuesday 6 Oct 20:45. The bettor's call after weighing it in chat: a price far over the card's bar, half staked and split across two lines so a four-goal result roughly breaks even. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 78.3%, pink, MEDIUM. Play bar 1.445; 2.70 is +86.9% OVER it (feed best 2.79, +93%), further over the bar than any card settled this session (widest +41%). The market reads about 35-37% where the engine reads 78%. Band check: thin, no card ever priced near this. Counted San Marino record: San Marino v Albania U3.5 won 0-3, Belarus v San Marino U3.5 lost 4-0 by one goal; San Marino v Finland was declined. |
 | — open | Albania v San Marino | U4.5 | 1.78 | — | Unibet — pre-kickoff, coupon 13188162784 (two singles, half stake each), struck 4 Oct 17:59 CEST for Tuesday 6 Oct 20:45. The bettor's call after weighing it in chat: a price far over the card's bar, half staked and split across two lines so a four-goal result roughly breaks even. A different LINE on the card's own side (the card prices U3.0/U3.5) — no wrong lane. Engine on U4.5 90.7% (ledger.bet_prob), fair 1.10; 1.78 is +61% on the engine's number. Loses only on five goals or more; covers the 4-0 kind of result that beat the Belarus card. |
 | ✅ | Kosovo v Austria | O0.5 | 1.54 | 1.54x | TOTO — IN-PLAY, bet O/0556769/0000573, struck 4 Oct 19:20 CEST on an 18:00 kickoff, around the 65th minute at 0-0, at a 1.00 stake. A different LINE on the card's own side (the card prices O1.5, ★ STRONG, locked as a play) — no wrong lane. The bettor took it on the board's live read of 90%+ for a goal still to come, at a generous in-play price. WON: 1-1, the first goal came late and the second followed, so the O1.5 at 1.27 on the same match landed too. |
+| ❌ | Greece v Germany | O1.5 | 1.26 | 0.00x | TOTO — IN-PLAY, bet O/0556769/0000574, struck 4 Oct 20:59 CEST on a 20:45 kickoff, around the 14th minute at 0-0. The card's own side and rung — no wrong lane. Claim 81.2%, orange, ★ STRONG at first sight (1.20 at MyBookie.ag, -3.4% under the 1.242 bar; the card is locked there). Band check at first sight (3-5% under, priced 1.10-1.30): my bets 10 at 70%, all cards 67 at 76% before kickoff — VETOES (unproven flag, tracked only). LOST: 0-0. |
+| ✅ | Portugal v Norway | O1.5 | 1.24 | 1.24x | Unibet — IN-PLAY, coupon 13189335019, struck 4 Oct 21:16 CEST on a 20:45 kickoff, around the 31st minute. The card's own side and rung — no wrong lane. Claim 80.6%, orange, ★ STRONG at first sight (1.17 at Unibet (SE), -0.8% under the 1.180 bar; locked there). Band check at first sight (0-3% under): my bets 15 at 87%, all cards 70 at 86% — backs it. WON: 2-1. |
 
 <!-- HYPOTHESES:START -->
 
