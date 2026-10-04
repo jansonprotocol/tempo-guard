@@ -1677,19 +1677,24 @@ BAND_STATS: dict = {}
 PRICE_NEAR = 0.10
 
 
-def band_read(g: dict | None) -> dict | None:
+def band_read(g: dict | None, before: str | None = None) -> dict | None:
     """The like-for-like record behind a card's VS BAR line: the band its
-    best price sits in, cards and bets within PRICE_NEAR of that price."""
+    best price sits in, cards and bets within PRICE_NEAR of that price.
+    With `before` (a date), only what was played on an earlier day — the
+    reading as it could have been seen before that card kicked off."""
     if not g or not BAND_STATS:
         return None
     at = gap_band(g["hi"])
     price = max(p for p, _b in g["top"])
     lo_p, hi_p = price - PRICE_NEAR, price + PRICE_NEAR
     near = lambda bp: lo_p - 1e-9 <= bp <= hi_p + 1e-9
-    cs = [(h, pl) for band, bp, h, pl in BAND_STATS["cards"]
-          if band == at and near(bp)]
-    bs = [(h, st, r) for band, bp, h, st, r in BAND_STATS["bets"]
-          if band == at and near(bp)]
+    if before:
+        cards = [r[1:] for r in BAND_STATS.get("cards_d", []) if r[0] < before]
+        bets = [r[1:] for r in BAND_STATS.get("bets_d", []) if r[0] < before]
+    else:
+        cards, bets = BAND_STATS["cards"], BAND_STATS["bets"]
+    cs = [(h, pl) for band, bp, h, pl in cards if band == at and near(bp)]
+    bs = [(h, st, r) for band, bp, h, st, r in bets if band == at and near(bp)]
     return dict(at=at, price=price, lo_p=lo_p, hi_p=hi_p, cs=cs, bs=bs,
                 my_n=len(bs),
                 my_hit=sum(h for h, _s, _r in bs) / len(bs) * 100 if bs else None,
@@ -1791,6 +1796,28 @@ def tier_band_log(fixtures) -> list[list[str]]:
                      str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
                      str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
                      band_call(rd), now]
+    # AS-OF BACKFILL (the bettor, 4 Oct: "can we backfill the completed
+    # tiered cards with good decent data?"). A settled session card with a
+    # tier and no row is read against only the cards and bets played on an
+    # EARLIER day than its own, so no result — its own or a same-day one —
+    # is in its reading. Marked "as-of" in read_at, never "live".
+    for f in fixtures:
+        key = (f.kickoff.split(" ")[0], f.teams)
+        if key in rows or not f.settled or key[0] < SESSION_DATE:
+            continue
+        t = tier_of(f)
+        if not t:
+            continue
+        g = price_gap(f, _star_any(f) or 1, None)
+        if not g:
+            continue
+        rd = band_read(g, before=key[0])
+        fmt = lambda x: "" if x is None else f"{x:.1f}"
+        rows[key] = [key[0], f.teams, t, g["lane"], f"{rd['price'] if rd else 0:.2f}",
+                     gap_band(g["hi"]),
+                     str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
+                     str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
+                     band_call(rd), "as-of"]
     out = sorted(rows.values(), key=lambda q: (q[0], q[1]))
     try:
         TIER_BAND_LOG.write_text(_TBL_HEAD + "".join("\t".join(q) + "\n"
@@ -1840,7 +1867,7 @@ def tier_band_html(rows, fixtures) -> str:
         for t, w in tiers)
     return ('<div class="wrap tbwrap"><div class="roihead"><span class="l">'
             'Does the band back the tier?</span> <span class="s">tracked only '
-            '\u00b7 since 2 Oct</span></div><table class="bandtable"><tr>'
+            '\u00b7 live since 2 Oct, earlier cards read as-of</span></div><table class="bandtable"><tr>'
             '<th>tier</th><th>band confirms</th><th>close</th><th>split</th>'
             '<th>band vetoes</th><th>thin</th></tr>' + body + '</table>'
             '<div class="s">Each tiered card\'s VS BAR record line as it stood '
@@ -1850,7 +1877,9 @@ def tier_band_html(rows, fixtures) -> str:
             f'but none is under {BAND_VETO_HIT:.0f}%, <b>vetoes</b> when none '
             f'reaches {BAND_CALL_HIT:.0f}% and one is under {BAND_VETO_HIT:.0f}%, '
             '<b>split</b> one line 80%+ and one under, <b>thin</b> too '
-            'few to read. Landed / settled, pushes as hits. It moves no card.'
+            'few to read. Cards before 2 Oct are backfilled AS-OF: each read only '
+            'against cards and bets played on an earlier day than its own. '
+            'Landed / settled, pushes as hits. It moves no card.'
             '</div></div>')
 
 BAND_LOG = ROOT / "config" / "band_log.tsv"
@@ -3972,6 +4001,7 @@ def main() -> None:
     # stamped lane. A result lane (DNB, double chance) is in "all" only.
     _crow: list = []          # (band, side, best, hit, P/L) per counted card
     _cseen: set = set()
+    _crow_day: list = []      # the match date of each _crow row, same order
     # COUNTED CARDS ONLY (the bettor, 30 Sep: "just show it excluding
     # declined all the time"): a card that is declined now — red, super
     # red, a board rule or the profile review — is out of both tables,
@@ -3990,6 +4020,7 @@ def main() -> None:
         if got is None or need <= 0:
             continue
         _cseen.add(key)
+        _crow_day.append(key[0])
         _crow.append((gap_band((best / need - 1) * 100),
                       {"O": "o", "U": "u"}.get(st[5][:1]), best, got[1],
                       got[0] * (best - 1) if got[0] > 0 else got[0]))
@@ -4043,6 +4074,11 @@ def main() -> None:
     BAND_STATS["cards"] = [(band, best, hit, pl)
                            for band, _side, best, hit, pl in _crow]
     BAND_STATS["bets"] = []
+    # The same rows with their match date, for the as-of backfill of the
+    # band check: a card is read against what had settled before its day.
+    BAND_STATS["cards_d"] = [(d,) + (band, best, hit, pl) for d, (band, _s, best,
+                             hit, pl) in zip(_crow_day, _crow)]
+    BAND_STATS["bets_d"] = []
     _logbets: list = []
     for b in bet_rows:
         if b["mark"] == "open":
@@ -4061,6 +4097,9 @@ def main() -> None:
         BAND_STATS["bets"].append((gap_band(cg * 100), cb,
                                    not b["mark"].startswith("❌"),
                                    b["stake"], ret))
+        if fx is not None:
+            BAND_STATS["bets_d"].append((fx.kickoff.split(" ")[0],)
+                                        + BAND_STATS["bets"][-1])
         pg = _bar_gap(b)
         _logbets.append(dict(
             card=gap_band(cg * 100),
