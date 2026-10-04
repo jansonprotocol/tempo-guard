@@ -775,11 +775,11 @@ def _haystack(f) -> str:
     if t == "medium":
         mb_ = medband_state(f)
         if mb_ and mb_[1] == "good":
-            bits.append("medium good band")
+            bits.append("weak good band")
         elif mb_ and mb_[1] in ("skip", "hard"):
-            bits.append("medium skip")
+            bits.append("weak skip")
     if t:
-        bits += [{"strong": "tier strong", "medium": "tier medium medium",
+        bits += [{"strong": "tier strong", "medium": "tier weak",
                   "strong watch": "tier swatch",
                   "strong from": "tier sfrom",
                   "strong watch from": "tier swfrom"}[t]]
@@ -1283,7 +1283,11 @@ def _target_html(f, lab, need) -> str:
             f'\u00b7 {word} from {tt[1]:.2f}</span>')
 
 
-TIER_WORD = {"strong": "\u2605 STRONG", "medium": "MEDIUM",
+# MEDIUM is shown as WEAK (the bettor, 4 Oct: "medium actually looks weak to
+# me — while ROI might be good due to odds, the hitrate isn't to my liking.
+# Label it weak. Possibly later going to declined."). The key stays
+# "medium" in code and in config/tier_params.tsv; only the word changes.
+TIER_WORD = {"strong": "\u2605 STRONG", "medium": "WEAK",
              "strong watch": "STRONG WATCH"}
 FROM_GROUP = {"strong from": ("strong", "\u2605 STRONG FROM", "sfrom"),
               "strong watch from": ("strong watch", "STRONG WATCH FROM", "swfrom")}
@@ -1415,7 +1419,7 @@ def decline_reason(f) -> str | None:
         lo, hi = O15_BAND
         return f"O1.5 {lo:.0f}–{hi:.0f}% over the bar"
     if medband_declined(f):
-        return "MEDIUM band"
+        return "WEAK band"
     return "strike combo"
 
 
@@ -1435,10 +1439,10 @@ def _medband_html(m) -> str:
     band, state, st = m
     rec = f"{band}: {st[2]:.0f}% on {st[1]}, {st[3]:+.1f}%"
     if state == "good":
-        return (f' <span class="tedge mgood" title="MEDIUM in a band that has '
+        return (f' <span class="tedge mgood" title="WEAK in a band that has '
                 f'paid — {rec}. Thin: a mark, not a rule.">\u25b2 {band}</span>')
     if state in ("skip", "hard"):
-        return (f' <span class="tedge mskip" title="MEDIUM in a band that has '
+        return (f' <span class="tedge mskip" title="WEAK in a band that has '
                 f'lost — {rec}. Athena advises to skip it; it becomes a hard '
                 f'decline on 30 cards if it stays this bad, and is released '
                 f'if it recovers.">\u00b7 {band} {st[2]:.0f}% on {st[1]}</span>')
@@ -2147,7 +2151,7 @@ def tier_band_html(rows, fixtures) -> str:
                 except ValueError:
                     pass
     calls = ("confirms", "close", "split", "vetoes", "thin")
-    tiers = (("strong", "\u2605 STRONG"), ("medium", "MEDIUM"),
+    tiers = (("strong", "\u2605 STRONG"), ("medium", "WEAK"),
              ("strong watch", "STRONG WATCH"),
              ("strong from", "\u2605 STRONG FROM"),
              ("strong watch from", "STRONG WATCH FROM"))
@@ -2859,7 +2863,7 @@ def _frozen_guard(f, call: dict) -> str:
     # than a line of its own (the bettor, 30 Sep: "choose one of the play
     # tip 1 ... I'll choose the original box, fuse the rest").
     t = tier_of(f)
-    word = {"strong": "★ STRONG", "normal": "MEDIUM" if t == "medium" else "PLAY",
+    word = {"strong": "★ STRONG", "normal": "WEAK" if t == "medium" else "PLAY",
             "watch": "watch", "no play": "no play"}[call["mark"]]
     cls = {"strong": "strong", "normal": "yes",
            "watch": "dimv", "no play": "no"}[call["mark"]]
@@ -2874,7 +2878,7 @@ def _frozen_guard(f, call: dict) -> str:
     # A settled card keeps the word it was called with; only the band note
     # is added. A running one shows the advice as it stands.
     if mb and mb[1] in ("skip", "hard") and not f.settled:
-        word, cls = "MEDIUM · SKIP", "mskipv"
+        word, cls = "WEAK · SKIP", "mskipv"
     mbh = _medband_html(mb) if mb else ""
     when = "was " if f.settled else "running · was "
     # Running and not a play: the from-price stays on, for a live price —
@@ -2958,10 +2962,10 @@ def _guard(f, best: int) -> str:
     elif v["play"] and t == "medium":
         mb = medband_state(f)
         if mb and mb[1] in ("skip", "hard"):
-            mark = ('<span class="vmark mskipv">MEDIUM · SKIP'
+            mark = ('<span class="vmark mskipv">WEAK · SKIP'
                     f'{_edge_html("medium", odds)}{_medband_html(mb)}</span>')
         else:
-            mark = ('<span class="vmark yes">MEDIUM · PLAY'
+            mark = ('<span class="vmark weak">WEAK · PLAY'
                     f'{_medband_html(mb) if mb else ""}'
                     f'{_edge_html("medium", odds)}</span>')
     elif v["play"]:
@@ -3932,19 +3936,19 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "the safer line pays more on settlement. Everything else as "
          "printed."),
         ("Tiers", "<b>\u2605 STRONG</b>: all seven rates at 80%+ and the price no "
-         "more than 5% under the bar \u2014 a play. <b>MEDIUM</b>: every other "
+         "more than 5% under the bar \u2014 a play. <b>WEAK</b> (was MEDIUM): every other "
          "play (at or over the bar). <b>STRONG WATCH</b>: 5% or more under the "
          "bar \u2014 such cards land about 83% but lose at the pre-match price, "
          "so they are for a better price, live or at your own book. Each tier "
          "has a floor price, its break-even at its own hit rate: STRONG "
-         f"{TIER_MIN['strong']:.2f}, MEDIUM {TIER_MIN['medium']:.2f}, STRONG "
+         f"{TIER_MIN['strong']:.2f}, WEAK {TIER_MIN['medium']:.2f}, STRONG "
          f"WATCH {TIER_MIN['strong watch']:.2f}. A card under its floor reverts: a "
-         "STRONG or MEDIUM at or over the bar is a plain PLAY, a STRONG under "
+         "STRONG or WEAK at or over the bar is a plain PLAY, a STRONG under "
          "the bar is not a play, a STRONG WATCH a plain watch. The pill's "
          "<b>+x%</b> is how far the best price sits above the floor. A card "
          "that is not a play shows the tier its rates qualify for and the "
          "price that buys it \u2014 <b>\u2605 STRONG from "
-         f"{TIER_MIN['strong']:.2f}</b>, <b>MEDIUM from "
+         f"{TIER_MIN['strong']:.2f}</b>, <b>WEAK from "
          f"{TIER_MIN['medium']:.2f}</b> \u2014 kept on while it runs, for a "
          "live price. <b>\u2605 STRONG FROM</b> and <b>STRONG WATCH FROM</b> "
          "(dashed) are the near-tier cards that held up on their own: "
@@ -3955,7 +3959,7 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
                      for b in sorted(FROM_BANDS[g])) +
          ". A near band stays on while it lands 81%+ and goes off under it; "
          "the two-day optimizer (scripts/tier_optimize.py) sets the bands and "
-         "the floors. Search <code>strong</code>, <code>medium</code>, "
+         "the floors. Search <code>strong</code>, <code>weak</code>, "
          "<code>strong watch</code>, <code>strong from</code>, "
          "<code>strong watch from</code>."),
         ("👀 Watch lanes", "the starred lane is not red and the panel's "
@@ -4320,6 +4324,10 @@ def main() -> None:
             # STRONG since 2 Oct: all seven rates at 80%+ and the price no
             # more than STRONG_UNDER below the bar; NORMAL needs the bar.
             fx_ = _tile_fx.get(key)
+            # Declined cards are out of every record on the board; the two
+            # tiles counted them (73 of the 109 "MEDIUM plays", 4 Oct).
+            if fx_ is not None and is_declined(fx_):
+                continue
             strong_ = (best >= need * (1 - STRONG_UNDER / 100)
                        and best >= TIER_MIN["strong"]
                        and fx_ is not None and all_seven(fx_, p[7]))
@@ -4338,8 +4346,8 @@ def main() -> None:
         tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
              f"your lanes · {bh}/{bn} hits"),
         tile("roi", f"{roi:+.1f}%", f"on €{_staked:.2f} · {bn} settled"),
-        tile("medium", f"{nh / nn * 100:.1f}%" if nn else "—",
-             (f"MEDIUM plays · {nh}/{nn}" if nn else "MEDIUM plays · none settled yet")
+        tile("weak", f"{nh / nn * 100:.1f}%" if nn else "—",
+             (f"WEAK plays · {nh}/{nn}" if nn else "WEAK plays · none settled yet")
              + f" · min {TIER_MIN['medium']:.2f}"),
         tile("★ strong", f"{sh / sn * 100:.1f}%" if sn else "—",
              (f"STRONG cards · {sh}/{sn}" if sn else "STRONG cards · none settled yet")
@@ -5087,6 +5095,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .tbwrap .bandtable td:first-child {{ white-space:nowrap; }}
 .vmark .tedge.mgood {{ color:#7fd18b; opacity:1; font-weight:600; }}
 .vmark .tedge.mskip {{ color:#f0b26b; opacity:1; }}
+.vmark.weak {{ color:#c9c27a; border-color:#5e5a2c; }}
 .vmark.mskipv {{ color:#f0b26b; border-color:#7a5420; }}
 .vmark .tedge.lstop {{ color:#f08a7e; opacity:1; font-weight:600; }}
 .vmark .tedge {{ font-weight:400; opacity:.8; margin-left:2px; }}
@@ -5583,10 +5592,11 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   to keep clubs called Red out of it. Also <code>verdict play</code>,
   <code>verdict no play</code>.<br>
   <b>the tier</b> — <code>strong</code> (all seven rates at 80%+, price no
-  more than 5% under the bar), <code>medium</code> (every other play),
+  more than 5% under the bar), <code>weak</code> (every other play — was
+  medium; <code>medium</code> still finds it),
   <code>strong watch</code> (5% or more under the bar: lands, but the
   pre-match price does not pay), <code>strong from</code> and
-  <code>medium good band</code> and <code>medium skip</code> (a MEDIUM in a
+  <code>weak good band</code> and <code>weak skip</code> (a WEAK play in a
   gap band that has paid, or one Athena advises to skip),
   <code>strong watch from</code> (the near-tier cards short of the floor
   price, kept by the optimizer), <code>live stopped</code> (a near-tier
@@ -6061,7 +6071,7 @@ function qterms(q) {{
       // The tiers (2 Oct): "strong" is also inside "strong watch" and the
       // reads' "strong attack", so each tier word maps to its own token.
       if (flat === "strong" || flat === "tier strong") return "tier strong";
-      if (flat === "medium") return "tier medium";
+      if (flat === "medium" || flat === "weak") return "tier weak";
       if (flat === "strong watch" || flat === "swatch") return "tier swatch";
       if (flat === "strong from" || flat === "sfrom") return "tier sfrom";
       if (flat === "strong watch from" || flat === "swfrom") return "tier swfrom";
