@@ -4043,6 +4043,158 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
             f'</div></div>')
 
 
+def profiles_html(fixtures) -> str:
+    """THE PROFILES PAGE (the bettor, 4 Oct: "a page or hidden page, shown
+    with a button on the play boards, that shows the hit rates and such on
+    each profile and sub bands"). A popup like Learn: every profile the
+    board names — and the unlabelled rest — split by gap band, on this
+    session's settled COUNTED cards (declined out) at their first-sight
+    best price, with each band's state as the optimizer last set it and
+    how many cards wear the profile on the board now."""
+    from scripts import forward_settle as _fs
+    byday = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
+    final = {}
+    for f in fixtures:
+        if f.settled and "—" in f.status:
+            sc_ = f.status.split("—")[-1].strip().split(" ")[0]
+            if "-" in sc_:
+                try:
+                    hg, ag = sc_.split("-")
+                    final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
+                except ValueError:
+                    pass
+    first: dict = {}
+    if FORWARD.exists():
+        for ln in FORWARD.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            p = ln.split("\t")
+            if len(p) < 13 or p[1] < SESSION_DATE or _fs._artefact(p[5]):
+                continue
+            first.setdefault((p[1], p[3]), p)
+    fsr, fm, fsw = (TIER_MIN["strong"], TIER_MIN["medium"],
+                    TIER_MIN["strong watch"])
+    U = "unlabelled \u00b7 "
+    order = ["\u2605 STRONG", "\u2605 STRONG FROM", "STRONG WATCH",
+             "STRONG WATCH FROM", "WEAK", U + "all 7 rates, under the floor",
+             U + "plain play (fewer than 7, under the floor)",
+             U + "plain watch (fewer than 7, 0\u20135% under)",
+             U + "5%+ under, band off"]
+    rows: dict = {k: [] for k in order}
+    for key, p in first.items():
+        f = byday.get(key)
+        if key not in final or f is None or p[7].endswith("red") \
+                or is_declined(f):
+            continue
+        try:
+            need, best = float(p[9]), float(p[11] or p[10])
+        except ValueError:
+            continue
+        got = _fs._settle(p[5], *final[key])
+        if got is None or need <= 0:
+            continue
+        gap = (best / need - 1) * 100
+        band = gap_band(gap)
+        seven = all_seven(f, p[7])
+        if seven and gap >= -STRONG_UNDER and best >= fsr:
+            g = order[0]
+        elif seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
+            g = order[1]
+        elif gap <= -STRONG_WATCH_UNDER and best >= fsw:
+            g = order[2]
+        elif gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
+            g = order[3]
+        elif not seven and gap >= 0 and best >= fm:
+            g = order[4]
+        elif seven and gap >= -STRONG_UNDER:
+            g = order[5]
+        elif gap >= 0:
+            g = order[6]
+        elif gap <= -STRONG_WATCH_UNDER:
+            g = order[8]
+        else:
+            g = order[7]
+        pl = got[0] * (best - 1) if got[0] > 0 else got[0]
+        rows[g].append((band, bool(got[1]), pl, best))
+    # On the board now, by the tier the card wears.
+    import collections
+    now = collections.Counter()
+    word = {"strong": order[0], "strong from": order[1],
+            "strong watch": order[2], "strong watch from": order[3],
+            "medium": order[4]}
+    for f in fixtures:
+        if f.settled or f.status or odds_api.started(f.kickoff):
+            continue
+        t = tier_of(f)
+        if t in word:
+            now[word[t]] += 1
+
+    def stat(xs):
+        n = len(xs)
+        if not n:
+            return "<td>0</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td>"
+        h = sum(x[1] for x in xs)
+        hit = h / n * 100
+        roi = sum(x[2] for x in xs) / n * 100
+        avg = sum(x[3] for x in xs) / n
+        be = f"{n / h:.2f}" if h else "\u2014"
+        cls = "pos" if roi > 0 else "neg"
+        return (f"<td>{n}</td><td>{hit:.1f}%</td><td class=\"{cls}\">"
+                f"{roi:+.1f}%</td><td>{avg:.2f}</td><td>{be}</td>")
+
+    def state(g, band):
+        if g == order[1] or g == order[3]:
+            base = "strong" if g == order[1] else "strong watch"
+            return "on" if band in FROM_BANDS[base] else "off"
+        if g == order[4]:
+            st = MED_BANDS.get(band)
+            if not st:
+                return ""
+            return {"good": "\u25b2 good", "skip": "skip", "hard": "declined",
+                    "none": ""}.get(st[0], "") + f" \u00b7 {st[1]}/50"
+        return ""
+    floor = {order[0]: f"min {fsr:.2f}", order[1]: f"under {fsr:.2f}",
+             order[2]: f"min {fsw:.2f}", order[3]: f"under {fsw:.2f}",
+             order[4]: f"min {fm:.2f} \u00b7 no play"}
+    body = []
+    allu = []
+    for g in order:
+        xs = rows[g]
+        if g.startswith(U):
+            allu += xs
+        if not xs and not now[g]:
+            continue
+        tag = (f' <span class="dim">{floor[g]}</span>' if g in floor else "")
+        live = f' <span class="dim">\u00b7 {now[g]} on the board</span>' \
+            if now[g] else ""
+        body.append(f'<tr class="pgrp"><td><b>{g}</b>{tag}{live}</td>'
+                    f'{stat(xs)}<td></td></tr>')
+        for _lo, _hi, band in GAP_BANDS:
+            ys = [x for x in xs if x[0] == band]
+            if ys:
+                body.append(f'<tr><td class="pband">{band}</td>{stat(ys)}'
+                            f'<td>{state(g, band)}</td></tr>')
+    body.append(f'<tr class="pgrp"><td><b>all unlabelled</b></td>'
+                f'{stat(allu)}<td></td></tr>')
+    return ('<div class="lmodal" id="profmodal" onclick="if(event.target'
+            '===this)this.classList.remove(\'on\')"><div class="lbox">'
+            '<button class="btn lshut" onclick="document.getElementById('
+            '\'profmodal\').classList.remove(\'on\')">\u2715 close</button>'
+            '<h2>\U0001f4ca Profiles \u2014 every tier by gap band</h2>'
+            '<p class="dim">This session\'s settled counted cards (declined out), '
+            'each at its first-sight best price against its play bar. ROI is at '
+            'the feed\'s best EU price \u2014 what the market offered, often at '
+            'a book you cannot reach. Break-even is the price that pays at that '
+            'hit rate. State: a FROM band on/off, a WEAK band\'s mark and its '
+            'count to 50 (declined at 50). Pushes count as hits.</p>'
+            '<div class="wrap"><table class="bandtable proftable"><tr>'
+            '<th>profile \u00b7 band</th><th>cards</th><th>hit</th><th>ROI</th>'
+            '<th>avg price</th><th>break-even</th><th>state</th></tr>'
+            + "".join(body) + '</table></div>'
+            '<button class="btn" onclick="document.getElementById(\'profmodal\')'
+            '.classList.remove(\'on\')">\u2715 close</button></div></div>')
+
+
 def _check_js(page: str) -> None:
     """A syntax error in the generated script blanks the whole app — the
     router never runs, so every page stays hidden. This page is written by
@@ -4587,6 +4739,7 @@ def main() -> None:
             ip="in-play" in b["note"]))
     band_log(_crow, _logbets)
     tier_band = tier_band_html(tier_band_log(fixtures), fixtures)
+    profiles_modal = profiles_html(fixtures)
 
     def _short(note: str, cap: int = 64) -> str:
         """The Found bets cell gets the book and the first clause; the
@@ -5236,6 +5389,14 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .lbox {{ max-width:1100px; margin:0 auto; background:var(--bg, #0f1319);
   border:1px solid var(--edge); border-radius:12px; padding:14px 16px 18px; }}
 .lbox .lshut {{ float:right; margin:0 0 6px 8px; }}
+.proftable {{ font-size:12px; }}
+.proftable th, .proftable td {{ padding:4px 5px; }}
+@media (max-width:520px) {{ .proftable {{ font-size:11px; }}
+  .proftable th, .proftable td {{ padding:3px 3px; }} }}
+.proftable tr.pgrp td {{ border-top:1px solid var(--edge); padding-top:8px; }}
+.proftable td.pband {{ padding-left:18px; opacity:.85; }}
+.proftable td.pos {{ color:#7fd18b; }}
+.proftable td.neg {{ color:#f08a7e; }}
 input#q {{ width:100%; background:var(--card); border:1px solid var(--edge);
   border-radius:8px; color:var(--tx); padding:9px 12px; margin:2px 0 10px; }}
 h2 {{ font-size:16px; margin:16px 0 10px; }}
@@ -5635,6 +5796,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <button class="fxshut" onclick="hideCard()">close</button>
  </div>
  <div class="tabpane" id="t-playable">
+  <button class="btn" onclick="document.getElementById('profmodal').classList.add('on')">\U0001f4ca Profiles \u2014 hit rates of every tier and gap band</button>
   <div class="panenote">Only what the guard would actually stake: the
   best quote is at or within 3% of the lane's <b>value</b> price (the
   engine's break-even plus its margin), it clears the <b>claim band's
@@ -5646,6 +5808,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   86.7% and +2.9% on 75.</div>
   {_grid(playable, "play", reads)}</div>
  <div class="tabpane" id="t-watch">
+  <button class="btn" onclick="document.getElementById('profmodal').classList.add('on')">\U0001f4ca Profiles \u2014 hit rates of every tier and gap band</button>
   <div class="panenote">Not plays — yet. The starred lane is not red and
   the panel's best quote clears its claim band's bar, or sits under it by
   no more than {WATCH_BAND*100:.0f}%, but is short of the lane's
@@ -5705,6 +5868,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   {_grid(waiting, "pend", reads)}</div>
  <div class="tabpane" id="t-done">{_grid(done, "done", reads)}</div>
  {_learn(playable, waiting, reads)}
+ {profiles_modal}
 </section>
 
 <section class="page" id="p-sessions">
@@ -6118,6 +6282,8 @@ document.addEventListener("keydown", e => {{
     hideCard();
     const lm = document.getElementById("learnmodal");
     if (lm) lm.classList.remove("on");
+    const pm = document.getElementById("profmodal");
+    if (pm) pm.classList.remove("on");
   }}
 }});
 
