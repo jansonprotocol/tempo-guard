@@ -2210,6 +2210,30 @@ def tier_band_log(fixtures) -> list[list[str]]:
                      str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
                      str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
                      band_call(rd), now]
+    # RE-READ AT FIRST SIGHT. Rows frozen at kickoff before the first-sight
+    # lock (4 Oct, about 19:45 UTC) were read at the live price of the
+    # moment; a card from that day is re-read once at its first-sight price,
+    # against cards and bets from earlier days only, and marked "relocked".
+    fxk = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
+    for key, q in list(rows.items()):
+        if q[0] < "2026-10-04" or q[11] in ("as-of", "relocked") \
+                or q[11] >= "2026-10-04 19:45":
+            continue
+        f = fxk.get(key)
+        if f is None or not (f.settled or f.status or odds_api.started(f.kickoff)):
+            continue
+        t = tier_of(f)
+        g = price_gap(f, _star_any(f) or 1, None) if t else None
+        if not g:
+            rows.pop(key, None)
+            continue
+        rd = band_read(g, before=key[0])
+        fmt = lambda x: "" if x is None else f"{x:.1f}"
+        rows[key] = [key[0], f.teams, t, g["lane"],
+                     f"{rd['price'] if rd else g['hi']:.2f}", gap_band(g["hi"]),
+                     str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
+                     str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
+                     band_call(rd), "relocked"]
     # AS-OF BACKFILL (the bettor, 4 Oct: "can we backfill the completed
     # tiered cards with good decent data?"). A settled session card with a
     # tier and no row is read against only the cards and bets played on an
