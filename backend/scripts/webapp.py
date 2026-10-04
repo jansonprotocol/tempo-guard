@@ -1152,6 +1152,41 @@ STRONG_WATCH_UNDER = 5.0
 TIER_MIN = {"strong": 1.17, "medium": 1.31, "strong watch": 1.20}
 
 
+def tier_target(f, lab: str | None, need) -> tuple[str, float] | None:
+    """The tier this card's RATES qualify it for, and the price that buys
+    it: ('strong', p) when all seven read 80%+, else ('medium', p).
+
+    THE FROM-PRICE ON A CARD THAT IS NOT A PLAY (the bettor, 4 Oct: "show
+    its profile pill with from odds — strong, medium — if my bookmaker has
+    that, now or live, I take those"). STRONG is bought at the higher of
+    5% under the play bar and its 1.17 floor; MEDIUM at the higher of the
+    bar and its 1.31 floor. Rounded UP to the cent, so the printed price
+    really qualifies. None on a red or declined card: no price buys it.
+    """
+    import math
+    try:
+        need = float(need)
+    except (TypeError, ValueError):
+        return None
+    if not need or not lab or lab.endswith("red") or is_declined(f):
+        return None
+    if all_seven(f, lab):
+        t, p = "strong", max(need * (1 - STRONG_UNDER / 100), TIER_MIN["strong"])
+    else:
+        t, p = "medium", max(need, TIER_MIN["medium"])
+    return t, math.ceil(p * 100 - 1e-6) / 100
+
+
+def _target_html(f, lab, need) -> str:
+    tt = tier_target(f, lab, need)
+    if not tt:
+        return ""
+    word = "\u2605 STRONG" if tt[0] == "strong" else "MEDIUM"
+    return (f' <span class="tedge" title="the tier its rates qualify for, and '
+            f'the best price that buys it — at your book now or live">'
+            f'\u00b7 {word} from {tt[1]:.2f}</span>')
+
+
 def tier_edge(tier: str, price) -> float | None:
     try:
         return (float(price) / TIER_MIN[tier] - 1) * 100
@@ -2477,9 +2512,14 @@ def _frozen_guard(f, call: dict) -> str:
     if call["mark"] in ("watch", "no play") and t == "strong watch":
         word, cls = "STRONG WATCH", "swatch"
     when = "was " if f.settled else "running · was "
+    # Running and not a play: the from-price stays on, for a live price.
+    live_to = (_target_html(f, lab, r.get("need"))
+               if not f.settled and call["mark"] in ("watch", "no play")
+               else "")
     mark = (f'<span class="vmark {cls}" title="the call at first sight, '
             f'{html.escape(r["d"])}">{when}{word}'
-            f'{_edge_html(t, (_last_price(f, r) or r.get("best")) if t == "strong watch" else r.get("best")) if t else ""}</span>')
+            f'{_edge_html(t, (_last_price(f, r) or r.get("best")) if t == "strong watch" else r.get("best")) if t else ""}'
+            f'{live_to}</span>')
     return badge, mark
 
 
@@ -2533,22 +2573,25 @@ def _guard(f, best: int) -> str:
                 f'{_edge_html("medium", odds)}</span>')
     elif v["play"]:
         mark = ('<span class="vmark yes" title="at or over the play bar but '
-                f'under the {TIER_MIN["medium"]:.2f} MEDIUM needs to break '
-                'even">PLAY <span class="tedge">· medium from '
-                f'{TIER_MIN["medium"]:.2f}</span></span>')
+                'under the floor its tier needs to break even">PLAY'
+                f'{_target_html(f, lab, need)}</span>')
     elif lab.endswith("red"):
         mark = '<span class="vmark no" title="the tier says avoid">no play</span>'
     elif odds is None:
-        mark = '<span class="vmark dimv">nothing quoted yet</span>'
+        mark = ('<span class="vmark dimv">nothing quoted yet'
+                f'{_target_html(f, lab, need)}</span>')
     elif t == "strong watch":
         mark = ('<span class="vmark swatch" title="5% or more under the play '
                 'bar: cards like this land about 83% but lose at the pre-match '
                 'price — one to watch for a better price, live or at your '
-                f'book.">STRONG WATCH{_edge_html("strong watch", odds)}</span>')
+                f'book.">STRONG WATCH{_edge_html("strong watch", odds)}'
+                f'{_target_html(f, lab, need)}</span>')
     elif v["watch"]:
-        mark = '<span class="vmark dimv">watch</span>'
+        mark = ('<span class="vmark dimv">watch'
+                f'{_target_html(f, lab, need)}</span>')
     else:
-        mark = '<span class="vmark no">no play</span>'
+        mark = ('<span class="vmark no">no play'
+                f'{_target_html(f, lab, need)}</span>')
     if odds is not None:
         _stamp(f, best, v["lane"], lab, sc, v["claim"], need,
                quotes().get((f.teams, v["lane"])) or {}, v["bar"])
@@ -3499,7 +3542,10 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "MEDIUM 1.31, STRONG WATCH 1.20. A card under its floor reverts: a "
          "STRONG or MEDIUM at or over the bar is a plain PLAY, a STRONG under "
          "the bar is not a play, a STRONG WATCH a plain watch. The pill's "
-         "<b>+x%</b> is how far the best price sits above the floor. Search "
+         "<b>+x%</b> is how far the best price sits above the floor. A card "
+         "that is not a play shows the tier its rates qualify for and the "
+         "price that buys it \u2014 <b>\u2605 STRONG from 1.17</b>, <b>MEDIUM "
+         "from 1.31</b> \u2014 kept on while it runs, for a live price. Search "
          "<code>strong</code>, <code>medium</code>, <code>strong watch</code>."),
         ("👀 Watch lanes", "the starred lane is not red and the panel's "
          "best clears its claim band's bar, or sits under it by five "
