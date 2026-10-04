@@ -768,6 +768,10 @@ def _haystack(f) -> str:
     # "tier swatch" — distinct so a search for one never finds another,
     # since "strong" alone is also inside "strong watch" and "strong attack".
     t = tier_of(f)
+    if t in FROM_GROUP and (f.settled or odds_api.started(f.kickoff)):
+        c_ = was_called(f)
+        if c_ and live_stop(f, c_["row"].get("lane")):
+            bits.append("live stopped")
     if t:
         bits += [{"strong": "tier strong", "medium": "tier medium medium",
                   "strong watch": "tier swatch",
@@ -1266,6 +1270,69 @@ def _from_pill(f, t: str, lab, need, band: str | None, prefix: str = "") -> str:
     return (f'<span class="vmark {cls}" title="near-tier card, {html.escape(rec)}'
             f' — not a play until a book reaches the price shown, now or '
             f'live">{prefix}{group}{price}</span>')
+
+
+# THE LIVE BREAK-OFF ON A NEAR-TIER UNDER (the bettor, 4 Oct: "break off
+# buying in on HT 3+ (12, 25.0%) and 60' 3+ (29, 37.9%) ... give it a
+# decline line when the card is live and crosses the scoreline. Card
+# remains on its profile and will go into the record, but live in play is
+# stopped and changed to decline"). Measured on the settled STRONG FROM /
+# STRONG WATCH FROM cards and the live log: an under that has 3 goals in
+# by the hour lands a quarter to a third of the time, where 2 goals at
+# half time still landed 84%. Once crossed it stays crossed — a goal
+# cannot be taken back. It moves no record: the card keeps its pill and
+# its grade; only the live buy-in is withdrawn.
+LIVE_STOP_GOALS = 3
+LIVE_STOP_MINUTE = 60
+_LIVE_HIST: dict = {}
+
+
+def _minute(s: str) -> float | None:
+    s = s.strip()
+    if s == "HT":
+        return 45.5
+    m = re.match(r"(\d+)'?", s)
+    return float(m.group(1)) if m else None
+
+
+def _live_hist() -> dict:
+    """(date, fixture) -> [(minute, goals)] from config/live_log.tsv, read
+    once a render."""
+    if _LIVE_HIST:
+        return _LIVE_HIST
+    try:
+        lines = (ROOT / "config" / "live_log.tsv").read_text().splitlines()
+    except OSError:
+        lines = []
+    for ln in lines:
+        if ln.startswith("#"):
+            continue
+        q = ln.split("\t")
+        if len(q) < 7:
+            continue
+        m = _minute(q[4])
+        try:
+            g = int(q[5]) + int(q[6])
+        except ValueError:
+            continue
+        if m is not None:
+            _LIVE_HIST.setdefault((q[1], q[3]), []).append((m, g))
+    _LIVE_HIST.setdefault(("", ""), [])     # read, even when empty
+    return _LIVE_HIST
+
+
+def live_stop(f, lane: str | None) -> bool:
+    """True once an UNDER card has LIVE_STOP_GOALS in by LIVE_STOP_MINUTE."""
+    if not lane or not lane.startswith("U"):
+        return False
+    pts = list(_live_hist().get((f.kickoff.split(" ")[0], f.teams), []))
+    st = (f.status or "")
+    mm = re.match(r"LIVE (\S+) (\d+)-(\d+)", st)
+    if mm:
+        m = _minute(mm.group(1))
+        if m is not None:
+            pts.append((m, int(mm.group(2)) + int(mm.group(3))))
+    return any(m <= LIVE_STOP_MINUTE and g >= LIVE_STOP_GOALS for m, g in pts)
 
 
 def tier_edge(tier: str, price) -> float | None:
@@ -2610,10 +2677,21 @@ def _frozen_guard(f, call: dict) -> str:
     elif call["mark"] in ("watch", "no play") and t in FROM_GROUP:
         word, cls = FROM_GROUP[t][1], FROM_GROUP[t][2]
     when = "was " if f.settled else "running · was "
-    # Running and not a play: the from-price stays on, for a live price.
-    live_to = (_target_html(f, lab, r.get("need"))
-               if not f.settled and call["mark"] in ("watch", "no play")
-               else "")
+    # Running and not a play: the from-price stays on, for a live price —
+    # unless a near-tier under has crossed the break-off scoreline, where
+    # the live buy-in is withdrawn (it stays withdrawn on the settled card,
+    # so the record shows where live buying stopped).
+    stopped = t in FROM_GROUP and live_stop(f, r.get("lane"))
+    if stopped:
+        live_to = (f' <span class="tedge lstop" title="{LIVE_STOP_GOALS} goals '
+                   f'in by {LIVE_STOP_MINUTE}\': near-tier unders landed 25% '
+                   f'(HT) and 38% (60\') from here — live buying stopped. The '
+                   f'card keeps its tier and its grade.">\u00b7 LIVE DECLINED '
+                   f'\u00b7 {LIVE_STOP_GOALS}+ goals by {LIVE_STOP_MINUTE}\'</span>')
+    else:
+        live_to = (_target_html(f, lab, r.get("need"))
+                   if not f.settled and call["mark"] in ("watch", "no play")
+                   else "")
     mark = (f'<span class="vmark {cls}" title="the call at first sight, '
             f'{html.escape(r["d"])}">{when}{word}'
             f'{_edge_html(t, (_last_price(f, r) or r.get("best")) if t == "strong watch" else r.get("best")) if t else ""}'
@@ -4788,6 +4866,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .bcall.bc-close {{ color:#e3c46b; }}
 .bcall.bc-split, .bcall.bc-thin {{ opacity:.75; }}
 .tbwrap .bandtable td:first-child {{ white-space:nowrap; }}
+.vmark .tedge.lstop {{ color:#f08a7e; opacity:1; font-weight:600; }}
 .vmark .tedge {{ font-weight:400; opacity:.8; margin-left:2px; }}
 .gapstats {{ font-size:11px; color:var(--dim); margin:0 0 3px;
   font-variant-numeric:tabular-nums; }}
@@ -5286,7 +5365,8 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <code>strong watch</code> (5% or more under the bar: lands, but the
   pre-match price does not pay), <code>strong from</code> and
   <code>strong watch from</code> (the near-tier cards short of the floor
-  price, kept by the optimizer).<br>
+  price, kept by the optimizer), <code>live stopped</code> (a near-tier
+  under that had 3+ goals in by the hour: live buying withdrawn).<br>
   <b>an absent lane</b> — <code>tip 2 none</code> (also
   <code>no tip 3</code>): the cards where that lane never printed.<br>
   <b>a probability threshold</b> — <code>tip 2 &lt;80</code>,

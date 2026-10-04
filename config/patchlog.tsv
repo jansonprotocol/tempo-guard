@@ -194,3 +194,4 @@
 2026-10-04	board	Band check backfilled as-of: 161 settled tiered session cards read against only cards and bets from earlier days (read_at "as-of" in tier_band_log.tsv)
 2026-10-04	board	From-price on cards that are not a play: the tier its rates qualify for (STRONG if all seven 80%+, else MEDIUM) and the price that buys it, kept on while running
 2026-10-04	board	STRONG FROM / STRONG WATCH FROM pills (dashed), search words strong from / strong watch from, rows in the band-check table; tier floors and FROM bands now read from config/tier_params.tsv, set every two days by scripts/tier_optimize.py in bank-refresh
+2026-10-04	board	Live break-off on near-tier unders: once a STRONG FROM / STRONG WATCH FROM under has 3+ goals in by 60' (HT 3+ landed 25% on 12, 60' 3+ 37.9% on 29) the live from-price is replaced by LIVE DECLINED; card keeps its tier and grade; search live stopped. 27 settled cards crossed it, 9 landed
