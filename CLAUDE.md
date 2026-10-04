@@ -150,6 +150,12 @@ market offered, never as what he would have got.
   Unibet's own (Kambi) offering API, inside the normal quote refresh: book
   "Unibet (NL)", one book, .5 lines only. Leagues in kambi.PATHS: NED-D2,
   COL-PA, PER-L1, INT-CONCACAF.
+- **TOTO is a book on every card it prices.** (4 Oct: "TonyBet can
+  sometimes price better ... also TOTO has good ones.") scripts/toto.py
+  reads TOTO's Total Goals ladder (sport-api.toto.nl) for 40 board leagues
+  inside the quote refresh; where it beats the feed it becomes the lane's
+  best price and book, so a new card's first-sight stamp can be TOTO's.
+  TonyBet is not read yet (its API filter could not be confirmed).
 - PRE-ALFA 2: the engine and its rules are not touched while the run is
   live, except where he explicitly overrides it. Measure freely; changing
   a rule is his call.

@@ -479,6 +479,77 @@ def _kambi_rows(f, day: str, rows: list, seen: dict) -> None:
                                             q["book"], top)
 
 
+def toto_merge(rows: list, seen: dict) -> int:
+    """Add TOTO to every card it prices (the bettor, 4 Oct: "TOTO has good
+    ones"). Where TOTO beats the feed's best it becomes the lane's best
+    price and book; it always joins the top three. A card with no row yet
+    gets a TOTO-only row. Returns how many lanes TOTO priced."""
+    from scripts import toto
+    from scripts.board import load
+    idx = {(r[0], r[1]): i for i, r in enumerate(rows)}
+    n = 0
+    # Fetch every match page first, four at a time: one page per card is
+    # the slow part, and the refresh has a 20-minute budget.
+    from concurrent.futures import ThreadPoolExecutor
+    ids = []
+    for f in load():
+        if f.settled or f.status or started(f.kickoff) or f.code not in toto.LEAGUES:
+            continue
+        ev = toto.find(f.code, f.teams, f.kickoff.split(" ")[0])
+        if ev:
+            ids.append(ev["id"])
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        list(pool.map(toto.totals, dict.fromkeys(ids)))
+    for f in load():
+        if f.settled or f.status or started(f.kickoff) or f.code not in toto.LEAGUES:
+            continue
+        day = f.kickoff.split(" ")[0]
+        for which, cell in ((1, f.tip1), (2, f.tip2)):
+            c = (cell or "").strip()
+            if not c or c.startswith("—") or "(team)" in c:
+                continue
+            m = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", c)
+            if not m:
+                continue
+            want = bought(m.group(1))
+            try:
+                p = toto.price(f.code, f.teams, day, want)
+            except Exception:
+                p = None
+            if not p:
+                continue
+            i = idx.get((f.teams, str(which)))
+            if i is None:
+                r = [f.teams, str(which), want, f"{p:.2f}", f"{p:.2f}",
+                     toto.BOOK, "", "1", f"{p:.2f} {toto.BOOK}"]
+                rows.append(tuple(r))
+                idx[(f.teams, str(which))] = len(rows) - 1
+            else:
+                r = list(rows[i])
+                if r[2] != want:
+                    continue
+                top = []
+                for part in (r[8] or "").split("|"):
+                    bits = part.strip().split(" ", 1)
+                    try:
+                        top.append((float(bits[0]), bits[1] if len(bits) > 1 else ""))
+                    except ValueError:
+                        pass
+                top = [t for t in top if t[1] != toto.BOOK] + [(p, toto.BOOK)]
+                top.sort(key=lambda t: -t[0])
+                r[8] = "|".join(f"{v:.2f} {k}" for v, k in top[:3])
+                if p > float(r[4] or 0):
+                    r[4], r[5] = f"{p:.2f}", toto.BOOK
+                try:
+                    r[7] = str(int(r[7]) + 1)
+                except ValueError:
+                    pass
+                rows[i] = tuple(r)
+            seen[(day, f.teams, str(which))] = (r[2], r[4], r[5], r[8])
+            n += 1
+    return n
+
+
 def write_quotes() -> int:
     """Derive config/odds_quotes.tsv — what the market offers on every
     pending lane. The renderer reads this file and never calls the API:
@@ -561,6 +632,10 @@ def write_quotes() -> int:
     # a card with no row reads as "nothing quoted yet", not as an error.
     # Written beside the target and renamed into place, so a reader never
     # sees a partial file and a crash mid-write leaves the old one intact.
+    try:
+        print(f"TOTO priced {toto_merge(rows, seen)} lanes")
+    except Exception as e:          # a TOTO outage must not cost the feed
+        print(f"TOTO skipped: {e}")
     tmp = QUOTES.with_suffix(".tsv.tmp")
     tmp.write_text("\n".join(head + ["\t".join(r) for r in rows]) + "\n")
     tmp.replace(QUOTES)
