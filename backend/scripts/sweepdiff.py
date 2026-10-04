@@ -46,13 +46,19 @@ def kinds(before: str, after: str) -> list[str]:
     a, b = _norm(before), _norm(after)
     if a == b:
         return []
-    old = {ln.split("\t")[3]: ln for ln in a if ln.count("\t") >= 6}
+    # Keyed by kickoff AND fixture: the same two sides can sit on the board
+    # twice (a friendly double-header, a re-dated match), and a name-only
+    # key collapsed them, so every pass with any real change also reported
+    # the duplicates as "final" — four phantom finals on every sweep from
+    # 2 Oct, each turning a goal into a deploy (sanity check, 4 Oct).
+    old = {(ln.split("\t")[0], ln.split("\t")[3]): ln
+           for ln in a if ln.count("\t") >= 6}
     out = []
     for ln in b:
         if ln.count("\t") < 6:
             continue
         c = ln.split("\t")
-        was = old.get(c[3])
+        was = old.get((c[0], c[3]))
         if was == ln:
             continue
         w = was.split("\t")[6] if was else ""
