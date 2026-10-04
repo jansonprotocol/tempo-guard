@@ -1882,6 +1882,50 @@ def frozen() -> dict:
 _FIRST: dict = {}           # (date, fixture, lane) -> (best, need, book)
 
 
+def stamp_bets(fixtures) -> int:
+    """THE ONE EXCEPTION TO FIRST SIGHT (the bettor, 4 Oct: "not quoted
+    cards I do bet on now get the quote I took, as that one now has
+    something for the odds fields"). A pre-kickoff bet on a card's own lane
+    that no book has quoted yet becomes that lane's first-sight stamp, at
+    the price he paid and his book's name. In-play bets and cards a quote
+    already stamped are left alone. Cards from 4 Oct on."""
+    global _FROZEN
+    fxm = {f.teams: f for f in fixtures}
+    n = 0
+    try:
+        lines = ledger.BETS.read_text().splitlines()
+    except OSError:
+        return 0
+    for ln in lines:
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        q = ln.split("\t")
+        if len(q) < 3:
+            continue
+        name, rung, note = q[0], q[1], (q[6] if len(q) > 6 else "")
+        f = fxm.get(name)
+        if f is None or f.settled or f.status or odds_api.started(f.kickoff) \
+                or f.kickoff.split(" ")[0] < "2026-10-04" \
+                or "in-play" in note.lower():
+            continue
+        if quotes().get((f.teams, rung)) or first_sight(f, rung):
+            continue
+        v = verdict(f, _star(f))
+        if not v or v["lane"] != rung:
+            continue
+        try:
+            odds = float(q[2])
+        except ValueError:
+            continue
+        book = re.split(r"[\s,—-]", note.strip(), 1)[0] or "bet"
+        _stamp(f, _star(f), rung, v["label"], v["score"], v["claim"],
+               v["need"], {"consensus": f"{odds:.2f}", "best": f"{odds:.2f}",
+                           "book": f"{book} (his bet)"}, v["bar"])
+        _FROZEN = None
+        n += 1
+    return n
+
+
 def first_sight(f, lane: str | None) -> tuple | None:
     """(best, need, book) the lane was first stamped at, or None."""
     if not lane:
@@ -4270,6 +4314,7 @@ def _check_js(page: str) -> None:
 
 def main() -> None:
     fixtures = board.load()
+    stamp_bets(fixtures)
     t, p = board._tallies(fixtures)
     (h1, n1), (h2, n2) = t[1], t[2]
     (p1, q1), _ = p[1], p[2]

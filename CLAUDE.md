@@ -141,6 +141,15 @@ market offered, never as what he would have got.
   card's "from" price is buy guidance, not a way to change its profile.
   This replaced the same day's "a play stays a play" lock
   (config/play_lock.tsv is kept as history, no longer read).
+  ONE EXCEPTION (4 Oct): a card no book has quoted that he bets on
+  pre-kickoff takes the price he paid as its first-sight stamp
+  (webapp.stamp_bets, book "<book> (his bet)").
+- **Unquoted leagues are priced from Unibet (NL).** (4 Oct: "can't you use
+  that for any other missing league without quotes?") Where the odds feed
+  has no market, scripts/kambi.py reads the Total Goals ladder from
+  Unibet's own (Kambi) offering API, inside the normal quote refresh: book
+  "Unibet (NL)", one book, .5 lines only. Leagues in kambi.PATHS: NED-D2,
+  COL-PA, PER-L1, INT-CONCACAF.
 - PRE-ALFA 2: the engine and its rules are not touched while the run is
   live, except where he explicitly overrides it. Measure freely; changing
   a rule is his call.

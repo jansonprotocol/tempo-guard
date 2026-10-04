@@ -451,6 +451,34 @@ def started(kickoff: str) -> bool:
     return ko <= datetime.now(timezone.utc)
 
 
+def _kambi_rows(f, day: str, rows: list, seen: dict) -> None:
+    """Total-goals quotes from Unibet (NL) for a card the feed has no event
+    for. Same row shape as the feed's, book 'Unibet (NL)', one book."""
+    from scripts import kambi
+    if f.code not in kambi.PATHS:
+        return
+    for which, cell in ((1, f.tip1), (2, f.tip2)):
+        c = (cell or "").strip()
+        if not c or c.startswith("—") or "(team)" in c:
+            continue
+        m = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", c)
+        if not m:
+            continue
+        want = bought(m.group(1))
+        try:
+            q = kambi.lane_price(f.code, f.teams, day, want)
+        except Exception:
+            q = None
+        if not q:
+            continue
+        top = "|".join(f"{v:.2f} {k}" for k, v in q["top"])
+        rows.append((f.teams, str(which), q["lane"], f"{q['consensus']:.2f}",
+                     f"{q['best']:.2f}", q["book"], f"{q['unibet_nl']:.2f}",
+                     "1", top))
+        seen[(day, f.teams, str(which))] = (q["lane"], f"{q['best']:.2f}",
+                                            q["book"], top)
+
+
 def write_quotes() -> int:
     """Derive config/odds_quotes.tsv — what the market offers on every
     pending lane. The renderer reads this file and never calls the API:
@@ -477,6 +505,9 @@ def write_quotes() -> int:
                         if e.get("commence_time", "")[:10] in
                         (day, _shift(day, 1), _shift(day, -1))]
                 unmatched.append((f.teams, f.code, day, near[:4]))
+            # No feed market: ask Unibet (NL) through Kambi, for the
+            # leagues mapped in scripts/kambi.py (the bettor, 4 Oct).
+            _kambi_rows(f, day, rows, seen)
             continue
         for which, cell in ((1, f.tip1), (2, f.tip2), (3, f.tip3)):
             c = (cell or "").strip()
