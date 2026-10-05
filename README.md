@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 82.7%
+## CURRENT CONFIRMED HITRATE: 82.5%
 
     lane                        Tip 1              Tip 2
-    all matches            629 / 761  82.7%    420 / 618  68.0%
-    played lanes  >+1%     266 / 322  82.6%    418 / 613  68.2%
+    all matches            629 / 762  82.5%    420 / 619  67.9%
+    played lanes  >+1%     266 / 323  82.4%    418 / 614  68.1%
     placed bets            193 / 248  77.8%    ROI +0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 684 / 935   ·   73.2%**   ·   **Tip 1 — 266 / 322   ·   82.6%**   ·   **Tip 2 — 418 / 613   ·   68.2%**
+**Playable — 684 / 937   ·   73.0%**   ·   **Tip 1 — 266 / 323   ·   82.4%**   ·   **Tip 2 — 418 / 614   ·   68.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1147,8 +1147,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-0 · 05-10 02:00 <b>Costa Rica v Haiti</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>Costa Rica O0.5</b> 80.7% +8.7%<br>buy≥1.41 (+14.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 05-10 02:30 <b>Estudiantes de Río Cuarto v Racing Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>U3.0 89.5% +4.4%<br>buy≥1.24 (+8.7% margin)</td><td>✅ <b>Estudiantes de Río Cuarto U1.5</b> 75.4% +8.2%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 05-10 04:00 <b>Nicaragua v Dominican Republic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>Dominican Republic O1.5</b> 74.1% +37.4%<br>buy≥1.52 (+12.4% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🟢 05-10 17:00 <b>Mauritius v Sri Lanka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.2% +6.1%<br>buy≥1.39 (+9.3% margin)</td><td><b>Mauritius U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE HT 0-0 <b>Cyprus v Latvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>— under +1%</td><td><b>Latvia U1.5</b> 75.4% +8.9%<br>buy≥1.40 (+5.9% margin) · team · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.5% +17.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 05-10 17:00 <b>Mauritius v Sri Lanka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.2% +6.1%<br>buy≥1.39 (+9.3% margin)</td><td>❌ <b>Mauritius U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 46' 0-0 <b>Cyprus v Latvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>— under +1%</td><td><b>Latvia U1.5</b> 75.4% +8.9%<br>buy≥1.40 (+5.9% margin) · team · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.5% +17.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-0 <b>Rwanda v Kenya</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.3% +6.4%<br>buy≥1.41 (+9.3% margin)<br><i>U3.0 holding · room for 2 · 95% · fair 1.05</i><br><i>also live: O1.5 flip 39% fair 2.55 · O0.5 flip 74% fair 1.35</i></td><td>U2.75 62.1% +13.3%<br>buy≥1.50 (+3.4% margin) · floor −12.9 · <i>room for 2</i></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 05-10 20:00 <b>Uganda v Congo DR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.3% +6.2%<br>buy≥1.43 (+9.3% margin)</td><td>✅ <b>Uganda U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 05-10 20:45 <b>Liechtenstein v Gibraltar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.8% +5.7%<br>buy≥1.31 (+9.2% margin)</td><td><b>Liechtenstein U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
@@ -1478,8 +1478,7 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔵 05-10 17:00 <b>Mauritius v Sri Lanka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.2% +6.1%<br>buy≥1.39 (+9.3% margin)</td><td><b>Mauritius U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE HT 0-0 <b>Cyprus v Latvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>U4.25 80.8% <b>−2.4%</b><br>buy≥1.22 (+5.6% margin)<br><i>U4.25 holding · room for 4 · half from the 4th · 97% · fair 1.03</i><br><i>also live: O1.5 flip 51% fair 1.98 · U2.5 tighter 76% fair 1.32</i></td><td><b>Latvia U1.5</b> 75.4% +8.9%<br>buy≥1.40 (+5.9% margin) · team · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.5% +17.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 46' 0-0 <b>Cyprus v Latvia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>U4.25 80.8% <b>−2.4%</b><br>buy≥1.22 (+5.6% margin)<br><i>U4.25 holding · room for 4 · half from the 4th · 97% · fair 1.03</i><br><i>also live: O1.5 flip 50% fair 2.02 · U2.5 tighter 77% fair 1.30</i></td><td><b>Latvia U1.5</b> 75.4% +8.9%<br>buy≥1.40 (+5.9% margin) · team · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.5% +17.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-0 <b>Rwanda v Kenya</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.3% +6.4%<br>buy≥1.41 (+9.3% margin)<br><i>U3.0 holding · room for 2 · 95% · fair 1.05</i><br><i>also live: O1.5 flip 39% fair 2.55 · O0.5 flip 74% fair 1.35</i></td><td>U2.75 62.1% +13.3%<br>buy≥1.50 (+3.4% margin) · floor −12.9 · <i>room for 2</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 05-10 20:30 <b>Córdoba v Tenerife</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (85.1 capped)</td><td>U3.0 76.1% <b>+0.0%</b><br>buy≥1.44 (+1.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.1% +8.3% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 05-10 20:45 <b>Liechtenstein v Gibraltar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.8% +5.7%<br>buy≥1.31 (+9.2% margin)</td><td><b>Liechtenstein U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
@@ -1874,7 +1873,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 629 / 761   ·   82.7%**   ·   **Tip 2 — 420 / 618   ·   68.0%**
+**Tip 1 — 629 / 762   ·   82.5%**   ·   **Tip 2 — 420 / 619   ·   67.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3161,6 +3160,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 05-10 02:30 <b>Estudiantes de Río Cuarto v Racing Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>U3.0 89.5% +4.4%<br>buy≥1.24 (+8.7% margin)</td><td>✅ <b>Estudiantes de Río Cuarto U1.5</b> 75.4% +8.2%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 05-10 03:15 <b>Llaneros FC v América de Cali</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.7 capped)</td><td>U4.25 86.1% <b>−5.2%</b><br>buy≥1.20 (+5.4% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 05-10 04:00 <b>Nicaragua v Dominican Republic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.6% <b>−10.4%</b><br>buy≥1.23 (+8.5% margin)</td><td>✅ <b>Dominican Republic O1.5</b> 74.1% +37.4%<br>buy≥1.52 (+12.4% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">❌ 2-3 · 05-10 17:00 <b>Mauritius v Sri Lanka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.2% +6.1%<br>buy≥1.39 (+9.3% margin)</td><td>❌ <b>Mauritius U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 05-10 20:00 <b>Uganda v Congo DR</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 77.3% +6.2%<br>buy≥1.43 (+9.3% margin)</td><td>✅ <b>Uganda U1.5</b> 75.4% +21.7%<br>buy≥1.44 (+8.8% margin) · team</td></tr></table>
 
 <br clear="all">
