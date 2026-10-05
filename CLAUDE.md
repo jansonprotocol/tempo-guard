@@ -75,6 +75,15 @@ scripts/tier_optimize.py, shown as "n/50" on the pill. A card already a
 play or carrying a bet keeps its place (a play stays a play). When a slip leg is on a WEAK card, say so in the body; it
 is not an alert.
 
+**HIS METHOD: THE CLASS RATE, THEN WAIT FOR THE PRICE.** (5 Oct: "All is
+moot. As we have found out how all cards are performing, that's the only
+number that counts. Each time and band is measured, that's the only rate
+I'm counting on. So whatever happens, I'm just waiting for the good prices
+for those classes.") He buys a card's locked profile and gap-band record
+at whatever moment the price is right, pre-match or live. Do not argue an
+in-play bet against the live game state; judge it on the card's class and
+band record and the price paid, like any other leg.
+
 ## The books he can actually reach
 
 "1xBet and Tonybet and often Unibet are the prices I most likely see
