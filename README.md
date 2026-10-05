@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 82.4%
+## CURRENT CONFIRMED HITRATE: 82.5%
 
     lane                        Tip 1              Tip 2
-    all matches            634 / 769  82.4%    424 / 625  67.8%
-    played lanes  >+1%     267 / 325  82.2%    422 / 620  68.1%
+    all matches            635 / 770  82.5%    425 / 626  67.9%
+    played lanes  >+1%     268 / 326  82.2%    423 / 621  68.1%
     placed bets            193 / 248  77.8%    ROI +0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 689 / 945   ·   72.9%**   ·   **Tip 1 — 267 / 325   ·   82.2%**   ·   **Tip 2 — 422 / 620   ·   68.1%**
+**Playable — 691 / 947   ·   73.0%**   ·   **Tip 1 — 268 / 326   ·   82.2%**   ·   **Tip 2 — 423 / 621   ·   68.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1160,8 +1160,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 0-1 · 05-10 20:45 <b>Romania v Sweden</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>O1.5 80.9% +2.4%<br>buy≥1.31 (+5.7% margin)</td><td>❌ <b>Romania O0.5</b> 82.4% +9.8%<br>buy≥1.33 (+9.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 05-10 20:45 <b>Ukraine v Hungary</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>— under +1%</td><td>✅ <b>Ukraine O0.5</b> 80.3% +7.7%<br>buy≥1.36 (+8.9% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 05-10 21:00 <b>Guadeloupe v St. Lucia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>❌ <b>Guadeloupe O0.5</b> 88.1% +15.9%<br>buy≥1.31 (+15.5% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+2' 1-1 <b>Deportivo Riestra v Central Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>U3.0 88.7% +3.7%<br>buy≥1.25 (+8.5% margin)<br><i>U3.0 holding · next goal hurts · 99% · fair 1.01</i></td><td>U2.75 72.4% +5.7%<br>buy≥1.32 (+4.0% margin) · floor −2.6 · <i>next goal hurts</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 33' 1-1 <b>Cuba v St. Kitts and Nevis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td><b>Cuba O0.5</b> 81.2% +9.0%<br>buy≥1.41 (+14.1% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 05-10 21:45 <b>Deportivo Riestra v Central Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>U3.0 88.7% +3.7%<br>buy≥1.25 (+8.5% margin)</td><td>✅ U2.75 72.4% +5.7%<br>buy≥1.32 (+4.0% margin) · floor −2.6</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 36' 1-1 <b>Cuba v St. Kitts and Nevis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td><b>Cuba O0.5</b> 81.2% +9.0%<br>buy≥1.41 (+14.1% margin) · team · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 00:00 <b>Estudiantes v Gimnasia Mendoza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>O1.0 88.9% +1.9%<br>buy≥1.23 (+5.2% margin)</td><td>O1.75 64.5% +4.1%<br>buy≥1.76 (+3.5% margin) · floor −10.5</td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 00:00 <b>Velez Sarsfield BA v Platense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>— under +1%</td><td>U2.75 67.7% +1.1%<br>buy≥1.35 (+0.5% margin) · floor −7.3</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 66.5% +2.0% · buy≥1.58 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 00:00 <b>Martinique v El Salvador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td><b>El Salvador U1.5</b> 74.1% +10.9%<br>buy≥1.52 (+12.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.0% +16.3% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1478,8 +1478,7 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+2' 1-1 <b>Deportivo Riestra v Central Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>U3.0 88.7% +3.7%<br>buy≥1.25 (+8.5% margin)<br><i>U3.0 holding · next goal hurts · 99% · fair 1.01</i></td><td>U2.75 72.4% +5.7%<br>buy≥1.32 (+4.0% margin) · floor −2.6 · <i>next goal hurts</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 33' 1-1 <b>Cuba v St. Kitts and Nevis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.9% <b>−10.1%</b><br>buy≥1.28 (+8.6% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i><br><i>also live: U3.5 flip 48% fair 2.09 · O3.5 tighter 52% fair 1.92</i></td><td><b>Cuba O0.5</b> 81.2% +9.0%<br>buy≥1.41 (+14.1% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 36' 1-1 <b>Cuba v St. Kitts and Nevis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.9% <b>−10.1%</b><br>buy≥1.28 (+8.6% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i><br><i>also live: O3.5 tighter 50% fair 2.01 · U3.5 flip 50% fair 1.99</i></td><td><b>Cuba O0.5</b> 81.2% +9.0%<br>buy≥1.41 (+14.1% margin) · team · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 00:00 <b>Estudiantes v Gimnasia Mendoza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>O1.0 88.9% +1.9%<br>buy≥1.23 (+5.2% margin)</td><td>O1.75 64.5% +4.1%<br>buy≥1.76 (+3.5% margin) · floor −10.5</td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 00:00 <b>Velez Sarsfield BA v Platense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>U3.0 85.7% <b>+0.7%</b><br>buy≥1.25 (+3.4% margin)</td><td>U2.75 67.7% +1.1%<br>buy≥1.35 (+0.5% margin) · floor −7.3</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 66.5% +2.0% · buy≥1.58 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 00:00 <b>Martinique v El Salvador</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 72.9% <b>−5.0%</b><br>buy≥1.29 (+8.6% margin)</td><td><b>El Salvador U1.5</b> 74.1% +10.9%<br>buy≥1.52 (+12.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.0% +16.3% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1861,7 +1860,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 634 / 769   ·   82.4%**   ·   **Tip 2 — 424 / 625   ·   67.8%**
+**Tip 1 — 635 / 770   ·   82.5%**   ·   **Tip 2 — 425 / 626   ·   67.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3162,6 +3161,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 0-1 · 05-10 20:45 <b>Romania v Sweden</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>O1.5 80.9% +2.4%<br>buy≥1.31 (+5.7% margin)</td><td>❌ <b>Romania O0.5</b> 82.4% +9.8%<br>buy≥1.33 (+9.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 05-10 20:45 <b>Ukraine v Hungary</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>U4.25 81.2% <b>−2.0%</b><br>buy≥1.29 (+5.7% margin)</td><td>✅ <b>Ukraine O0.5</b> 80.3% +7.7%<br>buy≥1.36 (+8.9% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 05-10 21:00 <b>Guadeloupe v St. Lucia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 73.1% <b>−9.9%</b><br>buy≥1.31 (+8.7% margin)</td><td>❌ <b>Guadeloupe O0.5</b> 88.1% +15.9%<br>buy≥1.31 (+15.5% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 05-10 21:45 <b>Deportivo Riestra v Central Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>U3.0 88.7% +3.7%<br>buy≥1.25 (+8.5% margin)</td><td>✅ U2.75 72.4% +5.7%<br>buy≥1.32 (+4.0% margin) · floor −2.6</td></tr></table>
 
 <br clear="all">
 
