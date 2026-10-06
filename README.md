@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            640 / 778  82.3%    427 / 630  67.8%
     played lanes  >+1%     271 / 331  81.9%    425 / 625  68.0%
-    placed bets            194 / 249  77.9%    ROI +0.4%
+    placed bets            195 / 250  78.0%    ROI +0.5%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3167,7 +3167,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 194 / 249  ·  ROI +0.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 195 / 250  ·  ROI +0.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -3432,6 +3432,7 @@ that premium the book is keeping the insurance money.
 | — open | De Graafschap v Jong FC Utrecht | U4.5 | 1.37 | — | TOTO — pre-kickoff, bet O/0556769/0000575, struck 4 Oct 23:21 CEST for Friday 9 Oct 20:00. The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 80.5%, orange, ★ STRONG at first sight (1.32 at Unibet (NL), +4.7% over the 1.261 bar; locked there). 1.37 is +8.6% over the bar. Band check at first sight (3-6% over): my bets 12 at 92%, all cards 18 at 94% — backs it. |
 | — open | Internacional v Corinthians | U3.5 | 1.22 | — | Unibet — pre-kickoff, struck 5 Oct for Thursday 8 Oct 00:30. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 78.1%, pink, STRONG WATCH at first sight (1.34 at Pinnacle, -5.4% under the 1.416 bar; locked there). 1.22 is 13.8% UNDER the bar, in the 10%+ under band — bought under the bar, a body note; 1.22 needs 82% to break even against a 78.1% claim. Band check at first sight (5-10% under): my bets 6 at 100%, all cards 15 at 87% — backs it. |
 | ✅ | France v Belgium | O1.5 | 1.23 | 1.23x | TOTO — IN-PLAY, bet O/0556769/0000576, struck 5 Oct 21:05 CEST on a 20:45 kickoff, around the 20th minute. The card's own side and rung — no wrong lane. Claim 80.7%, orange, STRONG WATCH FROM at first sight (1.10 at MyBookie.ag, -6.8% under the 1.18 bar; locked there) — a near-tier card bought live at a better price. Band check at first sight (5-10% under): my bets 19 at 95%, all cards 173 at 84% — backs it. WON: 4-1. |
+| ✅ | Switzerland v North Macedonia | O1.5 | 1.27 | 1.27x | Unibet — IN-PLAY, coupon 13195838767, struck 6 Oct 21:04 CEST on a 20:45 kickoff, around the 19th minute. The card's own side and rung — no wrong lane. Claim 80.3%, orange, STRONG WATCH FROM at first sight (1.16 at 1xBet, -8.7% under the 1.271 bar; locked there) — a near-tier card bought live at a better price. 1.27 sits on the bar (-0.1%). Band check at first sight (5-10% under): my bets 22 at 95%, all cards 185 at 85% — backs it. WON: 3-0. |
 
 <!-- HYPOTHESES:START -->
 
