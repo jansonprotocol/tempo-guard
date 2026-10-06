@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 82.4%
+## CURRENT CONFIRMED HITRATE: 82.3%
 
     lane                        Tip 1              Tip 2
-    all matches            640 / 777  82.4%    427 / 630  67.8%
-    played lanes  >+1%     271 / 330  82.1%    425 / 625  68.0%
+    all matches            640 / 778  82.3%    427 / 630  67.8%
+    played lanes  >+1%     271 / 331  81.9%    425 / 625  68.0%
     placed bets            194 / 249  77.9%    ROI +0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 696 / 955   ·   72.9%**   ·   **Tip 1 — 271 / 330   ·   82.1%**   ·   **Tip 2 — 425 / 625   ·   68.0%**
+**Playable — 696 / 956   ·   72.8%**   ·   **Tip 1 — 271 / 331   ·   81.9%**   ·   **Tip 2 — 425 / 625   ·   68.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1172,9 +1172,9 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 06-10 04:00 <b>Honduras v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ U3.75 61.9% +1.9%<br>buy≥1.55 (+5.4% margin) · floor −13.1</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 06-10 13:00 <b>South Korea v Uzbekistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.7% +2.3%<br>buy≥1.36 (+6.0% margin)</td><td>✅ <b>South Korea O0.5</b> 82.0% +7.1%<br>buy≥1.35 (+10.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.8% +9.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 06-10 13:35 <b>China v Tajikistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.1% +1.5%<br>buy≥1.37 (+5.9% margin)</td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+1' 1-6 <b>India v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.2% +5.3%<br>buy≥1.56 (+9.0% margin)<br><i>U3.0 holding · ✗ gone</i></td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">❌ 1-6 · 06-10 16:00 <b>India v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.2% +5.3%<br>buy≥1.56 (+9.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 06-10 16:00 <b>Kazakhstan v Faroe Islands</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>— under +1%</td><td>❌ U3.75 72.8% +5.7%<br>buy≥1.33 (+4.1% margin) · floor −2.2</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 24' 0-1 <b>Russia v Nigeria</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.5% +1.9%<br>buy≥1.33 (+6.0% margin)<br><i>O1.5 holding · needs 1 more · 89% · fair 1.13</i><br><i>also live: U2.5 flip 36% fair 2.76 · O3.5 tighter 37% fair 2.71</i></td><td><b>Russia O1.5</b> 63.0% +16.6%<br>buy≥1.64 (+3.4% margin) · team · <i>needs 2 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 83.3% +17.7% · buy≥1.26 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 26' 0-1 <b>Russia v Nigeria</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.5% +1.9%<br>buy≥1.33 (+6.0% margin)<br><i>O1.5 holding · needs 1 more · 88% · fair 1.14</i><br><i>also live: O3.5 tighter 35% fair 2.83 · U2.5 flip 38% fair 2.66</i></td><td><b>Russia O1.5</b> 63.0% +16.6%<br>buy≥1.64 (+3.4% margin) · team · <i>needs 2 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 83.3% +17.7% · buy≥1.26 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 19:00 <b>Jordan v Venezuela</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 75.1% +4.2%<br>buy≥1.59 (+8.7% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 20:45 <b>Albania v San Marino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>U3.0 78.3% +11.2%<br>buy≥1.49 (+8.3% margin)</td><td>U2.75 57.5% +12.8%<br>buy≥1.60 (+3.0% margin) · floor −17.5</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.9% +21.2% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 20:45 <b>Belarus v Finland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>— under +1%</td><td><b>Finland O0.5</b> 79.3% +13.4%<br>buy≥1.37 (+8.6% margin) · team</td></tr></table>
@@ -1478,8 +1478,7 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+1' 1-6 <b>India v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.2% +5.3%<br>buy≥1.56 (+9.0% margin)<br><i>U3.0 holding · ✗ gone</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 24' 0-1 <b>Russia v Nigeria</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.5% +1.9%<br>buy≥1.33 (+6.0% margin)<br><i>O1.5 holding · needs 1 more · 89% · fair 1.13</i><br><i>also live: U2.5 flip 36% fair 2.76 · O3.5 tighter 37% fair 2.71</i></td><td><b>Russia O1.5</b> 63.0% +16.6%<br>buy≥1.64 (+3.4% margin) · team · <i>needs 2 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 83.3% +17.7% · buy≥1.26 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 26' 0-1 <b>Russia v Nigeria</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.5% +1.9%<br>buy≥1.33 (+6.0% margin)<br><i>O1.5 holding · needs 1 more · 88% · fair 1.14</i><br><i>also live: O3.5 tighter 35% fair 2.83 · U2.5 flip 38% fair 2.66</i></td><td><b>Russia O1.5</b> 63.0% +16.6%<br>buy≥1.64 (+3.4% margin) · team · <i>needs 2 more</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 83.3% +17.7% · buy≥1.26 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 19:00 <b>Jordan v Venezuela</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 75.1% +4.2%<br>buy≥1.59 (+8.7% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 20:45 <b>Albania v San Marino</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>U3.0 78.3% +11.2%<br>buy≥1.49 (+8.3% margin)</td><td>U2.75 57.5% +12.8%<br>buy≥1.60 (+3.0% margin) · floor −17.5</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.9% +21.2% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 20:45 <b>Belarus v Finland</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>U4.25 80.9% <b>−2.4%</b><br>buy≥1.23 (+5.6% margin)</td><td><b>Finland O0.5</b> 79.3% +13.4%<br>buy≥1.37 (+8.6% margin) · team</td></tr></table>
@@ -1847,7 +1846,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 640 / 777   ·   82.4%**   ·   **Tip 2 — 427 / 630   ·   67.8%**
+**Tip 1 — 640 / 778   ·   82.3%**   ·   **Tip 2 — 427 / 630   ·   67.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3161,6 +3160,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 06-10 04:00 <b>Honduras v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.5% <b>−4.4%</b><br>buy≥1.41 (+8.7% margin)</td><td>✅ U3.75 61.9% +1.9%<br>buy≥1.55 (+5.4% margin) · floor −13.1</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 06-10 13:00 <b>South Korea v Uzbekistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.7% +2.3%<br>buy≥1.36 (+6.0% margin)</td><td>✅ <b>South Korea O0.5</b> 82.0% +7.1%<br>buy≥1.35 (+10.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.8% +9.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 06-10 13:35 <b>China v Tajikistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.1% +1.5%<br>buy≥1.37 (+5.9% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">❌ 1-6 · 06-10 16:00 <b>India v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.2% +5.3%<br>buy≥1.56 (+9.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-2 · 06-10 16:00 <b>Kazakhstan v Faroe Islands</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (83.3 +0.3)</td><td>U4.25 80.8% <b>−2.5%</b><br>buy≥1.23 (+5.6% margin)</td><td>❌ U3.75 72.8% +5.7%<br>buy≥1.33 (+4.1% margin) · floor −2.2</td></tr></table>
 
 <br clear="all">
