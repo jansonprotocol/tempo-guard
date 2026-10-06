@@ -1316,6 +1316,11 @@ def _from_pill(f, t: str, lab, need, band: str | None, prefix: str = "",
     into a tier (the group's own, or a better one when that comes first)."""
     base, group, cls = FROM_GROUP[t]
     tt = tier_target(f, lab, need, price)
+    # WEAK is no play, so it is never a price to aim for (6 Oct: Belarus v
+    # Finland read "STRONG WATCH FROM · WEAK 1.31" and the WEAK tail hid
+    # the group it is in).
+    if tt and tt[0] == "medium":
+        tt = None
     if tt and tt[0] == base:
         price = f" {tt[1]:.2f}"
     elif tt:
