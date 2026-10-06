@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 82.4%
 
     lane                        Tip 1              Tip 2
-    all matches            637 / 773  82.4%    426 / 628  67.8%
-    played lanes  >+1%     269 / 327  82.3%    424 / 623  68.1%
+    all matches            638 / 774  82.4%    426 / 628  67.8%
+    played lanes  >+1%     270 / 328  82.3%    424 / 623  68.1%
     placed bets            194 / 249  77.9%    ROI +0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 693 / 950   ·   72.9%**   ·   **Tip 1 — 269 / 327   ·   82.3%**   ·   **Tip 2 — 424 / 623   ·   68.1%**
+**Playable — 694 / 951   ·   73.0%**   ·   **Tip 1 — 270 / 328   ·   82.3%**   ·   **Tip 2 — 424 / 623   ·   68.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1168,8 +1168,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 06-10 02:00 <b>Bermuda v Barbados</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>Barbados O1.5</b> 70.5% +33.6%<br>buy≥1.58 (+11.4% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-4 · 06-10 02:00 <b>Grenada v Bonaire</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>Grenada O0.5</b> 79.3% +7.1%<br>buy≥1.43 (+13.7% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 06-10 02:00 <b>Guatemala v Suriname</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>✅ <b>Guatemala O0.5</b> 81.0% +8.8%<br>buy≥1.41 (+14.0% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 1-1 <b>Banfield v Rosario Central</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>O1.0 88.3% +1.3%<br>buy≥1.25 (+5.1% margin)<br><i>O1.0 holding · ✓ landed · as good as landed</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 12' 0-0 <b>Honduras v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>U3.75 61.9% +1.9%<br>buy≥1.55 (+5.4% margin) · floor −13.1 · <i>room for 3</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 06-10 02:15 <b>Banfield v Rosario Central</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>O1.0 88.3% +1.3%<br>buy≥1.25 (+5.1% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 14' 0-0 <b>Honduras v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>U3.75 61.9% +1.9%<br>buy≥1.55 (+5.4% margin) · floor −13.1 · <i>room for 3</i></td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 13:00 <b>South Korea v Uzbekistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.7% +2.3%<br>buy≥1.36 (+6.0% margin)</td><td><b>South Korea O0.5</b> 82.0% +7.1%<br>buy≥1.35 (+10.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.8% +9.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 13:35 <b>China v Tajikistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.1% +1.5%<br>buy≥1.37 (+5.9% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-10 16:00 <b>India v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.2% +5.3%<br>buy≥1.56 (+9.0% margin)</td><td>— none</td></tr></table>
@@ -1478,8 +1478,7 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 1-1 <b>Banfield v Rosario Central</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>O1.0 88.3% +1.3%<br>buy≥1.25 (+5.1% margin)<br><i>O1.0 holding · ✓ landed · as good as landed</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 12' 0-0 <b>Honduras v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.5% <b>−4.4%</b><br>buy≥1.41 (+8.7% margin)<br><i>U4.25 holding · room for 4 · half from the 4th · 81% · fair 1.24</i><br><i>also live: O3.5 flip 36% fair 2.76 · U2.5 tighter 41% fair 2.42</i></td><td>U3.75 61.9% +1.9%<br>buy≥1.55 (+5.4% margin) · floor −13.1 · <i>room for 3</i></td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 14' 0-0 <b>Honduras v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.5% <b>−4.4%</b><br>buy≥1.41 (+8.7% margin)<br><i>U4.25 holding · room for 4 · half from the 4th · 82% · fair 1.22</i><br><i>also live: O3.5 flip 35% fair 2.88 · U2.5 tighter 43% fair 2.33</i></td><td>U3.75 61.9% +1.9%<br>buy≥1.55 (+5.4% margin) · floor −13.1 · <i>room for 3</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 13:00 <b>South Korea v Uzbekistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.7% +2.3%<br>buy≥1.36 (+6.0% margin)</td><td><b>South Korea O0.5</b> 82.0% +7.1%<br>buy≥1.35 (+10.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.8% +9.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 13:35 <b>China v Tajikistan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.1% +1.5%<br>buy≥1.37 (+5.9% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-10 16:00 <b>India v Uruguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>U3.0 76.2% +5.3%<br>buy≥1.56 (+9.0% margin)</td><td>— none</td></tr></table>
@@ -1852,7 +1851,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 637 / 773   ·   82.4%**   ·   **Tip 2 — 426 / 628   ·   67.8%**
+**Tip 1 — 638 / 774   ·   82.4%**   ·   **Tip 2 — 426 / 628   ·   67.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.1 −5.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3162,6 +3161,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 1-4 · 06-10 02:00 <b>Grenada v Bonaire</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.6% <b>−4.3%</b><br>buy≥1.43 (+8.8% margin)</td><td>✅ <b>Grenada O0.5</b> 79.3% +7.1%<br>buy≥1.43 (+13.7% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 06-10 02:00 <b>Guatemala v Suriname</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.5% <b>−4.3%</b><br>buy≥1.42 (+8.8% margin)</td><td>✅ <b>Guatemala O0.5</b> 81.0% +8.8%<br>buy≥1.41 (+14.0% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 06-10 02:00 <b>Independiente Medellín v Independiente Santa Fe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 68.2% +4.1% · buy≥1.54 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 06-10 02:15 <b>Banfield v Rosario Central</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.1 −0.0)</td><td>O1.0 88.3% +1.3%<br>buy≥1.25 (+5.1% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
