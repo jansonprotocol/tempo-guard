@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 83.0%
 
     lane                        Tip 1              Tip 2
-    all matches            623 / 751  83.0%    421 / 620  67.9%
-    played lanes  >+1%     267 / 324  82.4%    419 / 615  68.1%
+    all matches            624 / 752  83.0%    422 / 621  68.0%
+    played lanes  >+1%     267 / 324  82.4%    420 / 616  68.2%
     placed bets            201 / 257  78.2%    ROI +0.8%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 686 / 939   ·   73.1%**   ·   **Tip 1 — 267 / 324   ·   82.4%**   ·   **Tip 2 — 419 / 615   ·   68.1%**
+**Playable — 687 / 940   ·   73.1%**   ·   **Tip 1 — 267 / 324   ·   82.4%**   ·   **Tip 2 — 420 / 616   ·   68.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1206,7 +1206,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-1 · 08-10 01:30 <b>América Mineiro v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 83.6% +2.6%<br>buy≥1.31 (+4.7% margin)</td><td>✅ <b>América Mineiro U1.5</b> 73.8% +12.8%<br>buy≥1.41 (+4.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 08-10 01:30 <b>Clube de Regatas Brasil v Atletico Goianiense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>— under +1%</td><td>✅ O1.75 70.0% +4.3%<br>buy≥1.59 (+3.9% margin) · floor −5.0</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 08-10 01:30 <b>Vila Nova v Cuiabá</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>— under +1%</td><td>❌ O1.75 72.7% +7.0%<br>buy≥1.51 (+4.1% margin) · floor −2.3</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.0% +4.7% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+3' 2-0 <b>Cruzeiro v Sao Paulo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>O1.75 74.0% +2.4%<br>buy≥1.47 (+3.5% margin) · floor −1.0 · <i>needs 1 more (half in)</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.2% +11.3% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 08-10 02:30 <b>Cruzeiro v Sao Paulo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>✅ O1.75 74.0% +2.4%<br>buy≥1.47 (+3.5% margin) · floor −1.0</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.2% +11.3% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-10 03:20 <b>Atlético Nacional v Deportes Tolima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.7 capped)</td><td>— under +1%</td><td><b>Atlético Nacional O0.5</b> 82.9% +7.4%<br>buy≥1.29 (+7.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.0% +7.0% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-10 20:00 <b>Deportivo Moquegua v Cienciano del Cusco</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>— under +1%</td><td>U3.75 73.8% +1.8%<br>buy≥1.30 (+3.6% margin) · floor −1.2</td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-10 21:00 <b>Shamrock Rovers v Drogheda United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.5 capped)</td><td>— under +1%</td><td><b>Shamrock Rovers O0.5</b> 82.3% +7.2%<br>buy≥1.31 (+7.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.7% +15.6% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1478,7 +1478,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+3' 2-0 <b>Cruzeiro v Sao Paulo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.9%</b><br>buy≥1.24 (+6.8% margin)<br><i>U4.25 holding · room for 2 · half from the 2nd · as good as landed</i></td><td>O1.75 74.0% +2.4%<br>buy≥1.47 (+3.5% margin) · floor −1.0 · <i>needs 1 more (half in)</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.2% +11.3% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-10 03:20 <b>Atlético Nacional v Deportes Tolima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.7 capped)</td><td>U4.25 86.2% <b>−5.2%</b><br>buy≥1.22 (+5.5% margin)</td><td><b>Atlético Nacional O0.5</b> 82.9% +7.4%<br>buy≥1.29 (+7.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.0% +7.0% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-10 20:00 <b>Deportivo Moquegua v Cienciano del Cusco</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>U4.25 81.0% <b>−5.7%</b><br>buy≥1.22 (+6.4% margin)</td><td>U3.75 73.8% +1.8%<br>buy≥1.30 (+3.6% margin) · floor −1.2</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-10 21:00 <b>Shamrock Rovers v Drogheda United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.5 capped)</td><td>U4.25 84.8% <b>−4.8%</b><br>buy≥1.19 (+5.4% margin)</td><td><b>Shamrock Rovers O0.5</b> 82.3% +7.2%<br>buy≥1.31 (+7.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.7% +15.6% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1811,7 +1810,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 623 / 751   ·   83.0%**   ·   **Tip 2 — 421 / 620   ·   67.9%**
+**Tip 1 — 624 / 752   ·   83.0%**   ·   **Tip 2 — 422 / 621   ·   68.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3162,6 +3161,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-1 · 08-10 01:30 <b>América Mineiro v Fortaleza</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 83.6% +2.6%<br>buy≥1.31 (+4.7% margin)</td><td>✅ <b>América Mineiro U1.5</b> 73.8% +12.8%<br>buy≥1.41 (+4.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 3-1 · 08-10 01:30 <b>Clube de Regatas Brasil v Atletico Goianiense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>O1.0 88.5% <b>−1.0%</b><br>buy≥1.19 (+6.1% margin)</td><td>✅ O1.75 70.0% +4.3%<br>buy≥1.59 (+3.9% margin) · floor −5.0</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 08-10 01:30 <b>Vila Nova v Cuiabá</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>O1.0 88.3% <b>−1.1%</b><br>buy≥1.17 (+6.0% margin)</td><td>❌ O1.75 72.7% +7.0%<br>buy≥1.51 (+4.1% margin) · floor −2.3</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.0% +4.7% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-0 · 08-10 02:30 <b>Cruzeiro v Sao Paulo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.9%</b><br>buy≥1.24 (+6.8% margin)</td><td>✅ O1.75 74.0% +2.4%<br>buy≥1.47 (+3.5% margin) · floor −1.0</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.2% +11.3% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
