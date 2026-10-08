@@ -1337,10 +1337,10 @@
 2026-10-04 20:00	INT-FR	Friendlies	Morocco v Mali	O1.5 77.5% +1.9% · buy≥1.32 (+5.9% margin)	❌ O2.25 57.7% +6.5% (floor −17.3) · buy≥1.59 (+3.0% margin)	✅ HIT — 1-1	◦ DNB1 73.3% +7.7% · buy≥1.43 · probation
 2026-10-05 18:00	INT-FR	Friendlies	Rwanda v Kenya	U3.0 77.3% +6.4% · buy≥1.41 (+9.3% margin)	✅ U2.75 62.1% +13.3% (floor −12.9) · buy≥1.50 (+3.4% margin)	✅ HIT — 0-0	
 2026-10-08 21:00	IRL-PD	Premier Division	Shamrock Rovers v Drogheda United	U4.25 84.8% **−4.8%** · buy≥1.19 (+5.4% margin)	**Shamrock Rovers O0.5** 82.3% +7.2% (team) · buy≥1.31 (+7.7% margin)		DNB1 74.7% +15.6% · buy≥1.41 · probation
-2026-10-09 00:30	BRA-SA	Brasileirão	Santos v Flamengo	O1.5 79.4% +7.7% · buy≥1.38 (+9.3% margin)	**Flamengo O1.5** 55.8% +27.5% (team) · buy≥1.84 (+2.8% margin)	LIVE 41' 0-0	12 77.1% +3.5% · buy≥1.36 · probation
-2026-10-09 00:30	BRA-SB	Brasileirão Série B	Ceará v Criciuma	U3.0 82.1% **+1.0%** · buy≥1.33 (+3.5% margin)	U2.75 62.5% +1.3% (floor −12.5) · buy≥1.45 (+0.2% margin)	LIVE 40' 0-0	DNB1 70.0% +3.7% · buy≥1.50 · probation
-2026-10-09 00:30	BRA-SB	Brasileirão Série B	Nautico PE v Grêmio Novorizontino	O1.0 88.3% **−1.0%** · buy≥1.17 (+6.0% margin)	O1.75 72.6% +7.1% (floor −2.4) · buy≥1.52 (+4.1% margin)	LIVE 37' 0-2	12 74.9% +3.0% · buy≥1.40 · probation
-2026-10-09 01:00	BRA-SA	Brasileirão	Atletico Paranaense v Atletico Mineiro	U4.25 83.0% **−5.9%** · buy≥1.25 (+6.8% margin)	O1.75 74.9% +3.2% (floor −0.1) · buy≥1.46 (+4.3% margin)	LIVE 11' 1-0	
+2026-10-09 00:30	BRA-SA	Brasileirão	Santos v Flamengo	O1.5 79.4% +7.7% · buy≥1.38 (+9.3% margin)	**Flamengo O1.5** 55.8% +27.5% (team) · buy≥1.84 (+2.8% margin)	LIVE 44' 0-0	12 77.1% +3.5% · buy≥1.36 · probation
+2026-10-09 00:30	BRA-SB	Brasileirão Série B	Ceará v Criciuma	U3.0 82.1% **+1.0%** · buy≥1.33 (+3.5% margin)	U2.75 62.5% +1.3% (floor −12.5) · buy≥1.45 (+0.2% margin)	LIVE 43' 0-0	DNB1 70.0% +3.7% · buy≥1.50 · probation
+2026-10-09 00:30	BRA-SB	Brasileirão Série B	Nautico PE v Grêmio Novorizontino	O1.0 88.3% **−1.0%** · buy≥1.17 (+6.0% margin)	O1.75 72.6% +7.1% (floor −2.4) · buy≥1.52 (+4.1% margin)	LIVE 40' 0-2	12 74.9% +3.0% · buy≥1.40 · probation
+2026-10-09 01:00	BRA-SA	Brasileirão	Atletico Paranaense v Atletico Mineiro	U4.25 83.0% **−5.9%** · buy≥1.25 (+6.8% margin)	O1.75 74.9% +3.2% (floor −0.1) · buy≥1.46 (+4.3% margin)	LIVE 14' 1-0	
 2026-10-09 02:30	BRA-SA	Brasileirão	Fluminense v Coritiba	U3.0 76.0% **+0.6%** · buy≥1.51 (+5.0% margin)	**Coritiba U1.5** 75.2% +3.5% (team) · buy≥1.39 (+4.5% margin)		DNB1 74.9% +10.1% · buy≥1.40 · probation
 2026-10-09 02:30	BRA-SA	Brasileirão	Palmeiras v Bahia	U3.0 75.7% **+0.4%** · buy≥1.52 (+4.9% margin)	— none		
 2026-10-02 21:00	NED-D2	Eerste Divisie	Helmond Sport v Heracles Almelo	O1.5 84.0% +1.9% · buy≥1.22 (+4.8% margin)	✅ **Heracles Almelo O1.5** 66.5% +26.2% (team) · buy≥1.56 (+3.7% margin)	✅ HIT — 2-2	❌ 12 79.8% +2.2% · buy≥1.32 · probation
@@ -1360,7 +1360,7 @@
 2026-10-05 01:10	COL-PA	Primera A	Atlético Bucaramanga v Atlético Junior	U4.25 86.0% **−5.3%** · buy≥1.19 (+5.4% margin)	— none	✅ HIT — 3-1	✅ DNB1 66.5% +2.5% · buy≥1.58 · probation
 2026-10-05 03:15	COL-PA	Primera A	Llaneros FC v América de Cali	U4.25 86.1% **−5.2%** · buy≥1.20 (+5.4% margin)	— none	✅ HIT — 1-2	
 2026-10-06 02:00	COL-PA	Primera A	Independiente Medellín v Independiente Santa Fe	U4.25 86.0% **−5.3%** · buy≥1.19 (+5.4% margin)	— none	✅ HIT — 0-1	❌ DNB1 68.2% +4.1% · buy≥1.54 · probation
-2026-10-08 03:20	COL-PA	Primera A	Atlético Nacional v Deportes Tolima	U4.25 86.2% **−5.2%** · buy≥1.22 (+5.5% margin)	**Atlético Nacional O0.5** 82.9% +7.4% (team) · buy≥1.29 (+7.3% margin)	LIVE 5' 0-0	DNB1 71.0% +7.0% · buy≥1.48 · probation
+2026-10-08 03:20	COL-PA	Primera A	Atlético Nacional v Deportes Tolima	U4.25 86.2% **−5.2%** · buy≥1.22 (+5.5% margin)	**Atlético Nacional O0.5** 82.9% +7.4% (team) · buy≥1.29 (+7.3% margin)	LIVE 8' 0-0	DNB1 71.0% +7.0% · buy≥1.48 · probation
 2026-10-08 20:00	PER-L1	Liga 1	Deportivo Moquegua v Cienciano del Cusco	U4.25 81.0% **−5.7%** · buy≥1.22 (+6.4% margin)	✅ U3.75 73.8% +1.8% (floor −1.2) · buy≥1.30 (+3.6% margin)	✅ HIT — 0-2	
 2026-10-08 22:30	PER-L1	Liga 1	Atlético Grau v Los Chankas	U4.25 81.0% **−5.7%** · buy≥1.23 (+6.4% margin)	✅ U3.75 73.6% +1.6% (floor −1.4) · buy≥1.31 (+3.4% margin)	✅ HIT — 0-0	◦ DNB1 72.3% +5.0% · buy≥1.45 · probation
 2026-10-09 03:10	COL-PA	Primera A	Fortaleza CEIF v Millonarios	U4.25 85.9% **−5.4%** · buy≥1.18 (+5.4% margin)	— none		
