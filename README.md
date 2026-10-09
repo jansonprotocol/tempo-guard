@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 83.0%
 
     lane                        Tip 1              Tip 2
-    all matches            631 / 760  83.0%    429 / 629  68.2%
+    all matches            632 / 761  83.0%    429 / 629  68.2%
     played lanes  >+1%     268 / 325  82.5%    427 / 624  68.4%
     placed bets            201 / 258  77.9%    ROI +0.4%
 
@@ -1479,7 +1479,6 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔵 08-10 21:00 <b>Shamrock Rovers v Drogheda United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.5 capped)</td><td>U4.25 84.8% <b>−4.8%</b><br>buy≥1.19 (+5.4% margin)</td><td><b>Shamrock Rovers O0.5</b> 82.3% +7.2%<br>buy≥1.31 (+7.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 74.7% +15.6% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 0-1 <b>Fortaleza CEIF v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.7 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.18 (+5.4% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 09-10 12:00 <b>Kashima Antlers v Gamba Osaka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>U4.25 83.5% <b>−4.6%</b><br>buy≥1.23 (+1.4% margin)</td><td><b>Kashima Antlers O1.5</b> 56.4% +16.7%<br>buy≥1.83 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.2% +4.8% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 09-10 12:00 <b>Kashiwa Reysol v Vissel Kobe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>U4.25 87.1% <b>−1.0%</b><br>buy≥1.20 (+3.0% margin)</td><td>O1.75 74.1% +1.3%<br>buy≥1.43 (+0.9% margin) · floor −7.9</td></tr></table>
 <table align="left"><tr><th align="left">🔵 09-10 13:35 <b>Shenzhen Peng City FC v Henan FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +1.4)</td><td>U4.25 83.7% +4.7%<br>buy≥1.25 (+8.3% margin)</td><td><b>Shenzhen Peng City FC U1.5</b> 72.9% +23.4%<br>buy≥1.43 (+4.1% margin) · team</td></tr></table>
@@ -1801,7 +1800,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 631 / 760   ·   83.0%**   ·   **Tip 2 — 429 / 629   ·   68.2%**
+**Tip 1 — 632 / 761   ·   83.0%**   ·   **Tip 2 — 429 / 629   ·   68.2%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3162,6 +3161,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-2 · 09-10 01:00 <b>Atletico Paranaense v Atletico Mineiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 83.0% <b>−5.9%</b><br>buy≥1.25 (+6.8% margin)</td><td>✅ O1.75 74.9% +3.2%<br>buy≥1.46 (+4.3% margin) · floor −0.1</td></tr></table>
 <table align="left"><tr><th align="left">❌ 4-0 · 09-10 02:30 <b>Fluminense v Coritiba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 76.0% <b>+0.6%</b><br>buy≥1.51 (+5.0% margin)</td><td>✅ <b>Coritiba U1.5</b> 75.2% +3.5%<br>buy≥1.39 (+4.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.9% +10.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 09-10 02:30 <b>Palmeiras v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 75.7% <b>+0.4%</b><br>buy≥1.52 (+4.9% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 09-10 03:10 <b>Fortaleza CEIF v Millonarios</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.7 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.18 (+5.4% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
