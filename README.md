@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            642 / 773  83.1%    438 / 640  68.4%
     played lanes  >+1%     273 / 331  82.5%    436 / 635  68.7%
-    placed bets            204 / 261  78.2%    ROI +0.7%
+    placed bets            207 / 264  78.4%    ROI +1.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3167,7 +3167,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 204 / 261  ·  ROI +0.7%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 207 / 264  ·  ROI +1.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -3445,6 +3445,10 @@ that premium the book is keeping the insurance money.
 | — open | Padova v Carrarese | U3.5 | 1.27 | — | Unibet — pre-kickoff, struck by 7 Oct 22:24 CEST for Sunday 11 Oct 17:15. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 79.2%, pink, STRONG WATCH at first sight (1.33 at Coolbet, -6.1% under the 1.416 bar; locked there). 1.27 is 10.3% under the bar. Band check at first sight (5-10% under): my bets 3 at 100%, all cards 8 at 75% — split. |
 | ✅ | Al-Fateh v Al-Ahli | O1.5 | 1.21 | 1.21x | Unibet — IN-PLAY, coupon 13203464124, struck 9 Oct 17:16 CEST on a 16:55 kickoff, around the 21st minute. The card's own side and rung — no wrong lane. Claim 80.0%, orange, STRONG WATCH FROM at first sight (1.09 at Unibet (SE), -11.5% under the 1.232 bar; locked there) — a near-tier card bought live at a better price. 1.21 is 1.8% under the bar. Band check at first sight (10%+ under): my bets 10 at 60%, all cards 176 at 85% — split. WON: 0-2 (settled by the 55th minute). |
 | ✅ | Eintracht Braunschweig v Holstein Kiel | U4.5 | 1.29 | 1.29x | Unibet — IN-PLAY, coupon 13203774518, struck 9 Oct 18:53 CEST on an 18:30 kickoff, around the 23rd minute. The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 83.2%, orange, 1 strike, plain WATCH at first sight (5 of 7 rates at 80%+; 1.21 at 1xBet, -3.3% under the 1.251 bar; locked there) — the plain watch 3-5% under class, 18 at 83.3%. 1.29 is +3.1% over the bar. Band check at first sight (3-5% under): my bets 8 at 62%, all cards 58 at 76% — VETOES (an unproven flag). WON: 1-0. |
+| ✅ | FC Volendam v Vitesse | O1.5 | 1.21 | 1.21x | Unibet — IN-PLAY, coupon 13204143777, struck 9 Oct 20:24 CEST on a 20:00 kickoff, around the 24th minute. The card's own side and rung — no wrong lane. Claim 82.3%, orange, STRONG WATCH FROM at first sight (1.09 at Unibet (NL), -10.8% under the 1.222 bar; locked there) — a near-tier card bought live at a better price. 1.21 is 1.0% under the bar. Band check at first sight (10%+ under): my bets 11 at 64%, all cards 177 at 85% — split. WON: 2-0. |
+| ✅ | Heracles Almelo v RKC Waalwijk | O1.5 | 1.21 | 1.21x | Unibet — IN-PLAY, coupon 13204138911, struck 9 Oct 20:23 CEST on a 20:00 kickoff, around the 23rd minute. The card's own side and rung — no wrong lane. Claim 83.8%, orange, STRONG WATCH FROM at first sight (1.10 at Unibet (NL), -6.8% under the 1.180 bar; locked there) — a near-tier card bought live at a better price. 1.21 is +2.5% over the bar. Band check at first sight (5-10% under): my bets 21 at 95%, all cards 184 at 85% — backs it. WON: 3-0. |
+| ✅ | FC Dordrecht v FC Emmen | O1.5 | 1.23 | 1.23x | Unibet — struck 9 Oct 20:19 CEST on a 20:00 kickoff (in play, around the 19th minute), coupon 13204121931. The card's own side and rung — no wrong lane. Claim 84.2%, orange, STRONG WATCH FROM at first sight (1.09 at Unibet (NL), -9.4% under the 1.203 bar; locked there) — a near-tier card bought live at a better price. 1.23 is +2.2% over the bar. Band check at first sight (5-10% under): my bets 20 at 95%, all cards 178 at 84% — backs it. WON: 0-3. |
+| — open | TOP Oss v Helmond Sport | U5.5 | 1.38 | — | TOTO — IN-PLAY, bet O/0556769/0000579, struck 9 Oct 20:44 CEST on a 20:00 kickoff, around the 44th minute. The card prints U4.25 (struck U4.5); bought as U5.5 — a different LINE on the card's own side, no wrong lane. Claim 82.7%, orange, STRONG WATCH FROM at first sight (1.14 at Unibet (NL), -8.2% under the 1.242 bar on U4.5; locked there). Band check at first sight (5-10% under): my bets 23 at 96%, all cards 190 at 85% — backs it. Struck at 2-1 (44'): the card's live break-off (3+ goals by 60') had already fired on the U4.5 lane; U5.5 keeps one more goal of room. Engine on U5.5 92.3% (ledger.bet_prob), fair 1.08; 1.38 is +27% on the engine's number. |
 
 <!-- HYPOTHESES:START -->
 
