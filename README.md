@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            637 / 768  82.9%    434 / 636  68.2%
     played lanes  >+1%     270 / 328  82.3%    432 / 631  68.5%
-    placed bets            201 / 258  77.9%    ROI +0.4%
+    placed bets            202 / 259  78.0%    ROI +0.5%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3167,7 +3167,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 201 / 258  ·  ROI +0.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 202 / 259  ·  ROI +0.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -3443,6 +3443,7 @@ that premium the book is keeping the insurance money.
 | — open | Bradford City v Leyton Orient | U3.5 | 1.32 | — | Unibet — pre-kickoff, struck by 7 Oct 22:24 CEST for Saturday 10 Oct 16:00. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 76.2%, pink, STRONG WATCH at first sight (1.33 at Pinnacle, -6.7% under the 1.426 bar; locked there). 1.32 is 7.4% under the bar. Band check at first sight (5-10% under): my bets 3 at 100%, all cards 8 at 75% — split. |
 | — open | Sao Paulo v Vitoria | U3.5 | 1.25 | — | Unibet — pre-kickoff, struck by 7 Oct 22:24 CEST for Sunday 11 Oct 02:00. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 80.3%, orange, STRONG WATCH at first sight (1.29 at 1xBet, -8.9% under the 1.416 bar; locked there). 1.25 is 11.7% under the bar. Band check at first sight (5-10% under): my bets 7 at 100%, all cards 26 at 88% — backs it. |
 | — open | Padova v Carrarese | U3.5 | 1.27 | — | Unibet — pre-kickoff, struck by 7 Oct 22:24 CEST for Sunday 11 Oct 17:15. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 79.2%, pink, STRONG WATCH at first sight (1.33 at Coolbet, -6.1% under the 1.416 bar; locked there). 1.27 is 10.3% under the bar. Band check at first sight (5-10% under): my bets 3 at 100%, all cards 8 at 75% — split. |
+| ✅ | Al-Fateh v Al-Ahli | O1.5 | 1.21 | 1.21x | Unibet — IN-PLAY, coupon 13203464124, struck 9 Oct 17:16 CEST on a 16:55 kickoff, around the 21st minute. The card's own side and rung — no wrong lane. Claim 80.0%, orange, STRONG WATCH FROM at first sight (1.09 at Unibet (SE), -11.5% under the 1.232 bar; locked there) — a near-tier card bought live at a better price. 1.21 is 1.8% under the bar. Band check at first sight (10%+ under): my bets 10 at 60%, all cards 176 at 85% — split. WON: 0-2 (settled by the 55th minute). |
 
 <!-- HYPOTHESES:START -->
 
