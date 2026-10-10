@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            677 / 815  83.1%    462 / 672  68.8%
     played lanes  >+1%     290 / 352  82.4%    460 / 667  69.0%
-    placed bets            212 / 270  78.5%    ROI +1.2%
+    placed bets            214 / 272  78.7%    ROI +1.5%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3166,7 +3166,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 212 / 270  ·  ROI +1.2%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 214 / 272  ·  ROI +1.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -3451,6 +3451,10 @@ that premium the book is keeping the insurance money.
 | ✅ | Arsenal v Leeds United | U4.5 | 1.21 | 1.21x | Unibet — pre-kickoff, struck 10 Oct 15:00 CEST (slip: Gewonnen; the slip's 15:00 stamp is after the board's 13:30 kickoff, so pre-match or live is not confirmed). The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 82.0%, orange, STRONG WATCH FROM at first sight (1.17 at 1xBet, -5.8% under the 1.242 bar; locked there) — a near-tier card. 1.21 is 2.6% under the bar. Band check at first sight (5-10% under): my bets 26 at 96%, all cards 200 at 85% — backs it. WON: 2-1. |
 | ✅ | Swansea City v Norwich City | U4.5 | 1.18 | 1.18x | Unibet — struck 10 Oct 14:58 CEST (slip: Gewonnen). The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 83.7%, orange, STRONG WATCH FROM at first sight (1.12 at GTbets, -6.9% under the 1.203 bar; locked there) — a near-tier card bought at a better price. 1.18 is 1.9% under the bar. Band check at first sight (5-10% under): my bets 25 at 96%, all cards 200 at 86% — backs it. WON: 2-1. |
 | ❌ | Chengdu Rongcheng FC v Tianjin Jinmen Tiger FC | O1.5 | 1.30 | 0.00x | Unibet — IN-PLAY, coupon 13206800471, struck 10 Oct 13:54 CEST on a 13:35 kickoff, around the 19th minute (slip: Verloren). The card's own side and rung — no wrong lane. Claim 83.4%, orange, ★ STRONG at first sight (1.35 at Coolbet, +10.5% over the 1.222 bar; locked there). 1.30 is +6.4% over the bar. Band check at first sight (10%+ over): my bets 19 at 74%, all cards 23 at 78% — VETOES (an unproven flag). LOST: 0-1. |
+| ✅ | Benevento v Cesena FC | U3.5 | 1.36 | 1.36x | Unibet — IN-PLAY, coupon 13207351890, struck 10 Oct 15:36 CEST on a 15:00 kickoff, around the 35th minute. The SECOND bet on this card: the bettor went double by accident (the first, 1.32, was struck pre-kickoff on 7 Oct) — a happy one. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 76.3%, pink, STRONG WATCH at first sight (1.35 at 1xBet, -5.3% under the 1.426 bar; locked there). 1.36 is 4.6% under the bar. Band check at first sight (5-10% under): my bets 3 at 100%, all cards 7 at 71% — split. WON. |
+| ✅ | SC Paderborn v VfB Stuttgart | O1.5 | 1.62 | 1.62x | TOTO — IN-PLAY, bet O/0556769/0000582, struck 10 Oct (minute not on the slip; at 1.62 it was struck early, before a goal). The card's own side and rung — no wrong lane. Claim 83.9%, orange, STRONG WATCH FROM at first sight (1.13 at 1xBet, -6.8% under the 1.212 bar; locked there) — a near-tier card bought live at a far better price. 1.62 is +33.7% over the bar. Band check at first sight (5-10% under): my bets 25 at 96%, all cards 201 at 86% — backs it. WON: 0-2 at 89'. |
+| — open | Bodø/Glimt v Kristiansund BK | O1.5 | 1.22 | — | TOTO — IN-PLAY, bet O/0556769/0000581, struck 10 Oct 16:38 CEST on a 16:00 kickoff, around the 35th minute. The card's own side and rung — no wrong lane. Claim 83.8%, no first-sight price on this lane (the feed carried only the DNB1 lane at first sight; O1.5 shows 1.04 at TOTO now), so no tier or band check can be read; a live bet takes no bet-price stamp (that exception is for pre-kickoff bets). Open at 1-0 in the 57th minute (cash-out offer €1.09 declined). |
+| — open | Aston Villa v Brentford | U4.5 | 1.39 | — | TOTO — IN-PLAY, bet O/0556769/0000580, struck 10 Oct 16:34 CEST on a 16:00 kickoff, around the 32nd minute. The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 83.5%, orange, ★ STRONG at first sight (1.20 at 1xBet, -2.6% under the 1.232 bar; locked there). 1.39 is +12.8% over the bar. Band check at first sight (0-3% under): my bets 17 at 88%, all cards 76 at 87% — backs it. Open at 1-1 in the 57th minute. |
 
 <!-- HYPOTHESES:START -->
 
