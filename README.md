@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 83.0%
+## CURRENT CONFIRMED HITRATE: 82.9%
 
     lane                        Tip 1              Tip 2
-    all matches            660 / 795  83.0%    450 / 657  68.5%
+    all matches            660 / 796  82.9%    450 / 657  68.5%
     played lanes  >+1%     282 / 343  82.2%    448 / 652  68.7%
     placed bets            209 / 266  78.6%    ROI +1.3%
 
@@ -1484,7 +1484,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 09-10 20:45 <b>Shelbourne Dublin v Sligo Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.5 capped)</td><td>U3.0 76.6% <b>+0.0%</b><br>buy≥1.42 (+1.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 69.3% +10.3% · buy≥1.51 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 09-10 20:45 <b>Waterford FC v Galway United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.5 capped)</td><td>U4.25 84.8% <b>−4.8%</b><br>buy≥1.20 (+5.4% margin)</td><td><b>Waterford FC O0.5</b> 80.0% +4.9%<br>buy≥1.32 (+5.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.7% +14.6% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-10 01:00 <b>Universidad de Chile v Ñublense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (84.5 −0.0)</td><td>O1.5 80.3% +4.3%<br>buy≥1.33 (+7.1% margin)</td><td><b>Universidad de Chile O1.5</b> 55.5% +8.2%<br>buy≥1.85 (+2.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 72.4% +12.8% · buy≥1.45 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+5' 3-2 <b>Tigres v Toluca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.5% <b>−0.8%</b><br>buy≥1.29 (+5.5% margin)<br><i>U4.25 holding · ✗ gone</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-10 07:00 <b>Cerezo Osaka v Yokohama F Marinos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>U4.25 87.7% <b>−0.4%</b><br>buy≥1.19 (+3.4% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-10 08:00 <b>Avispa Fukuoka v Fagiano Okayama</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>U4.25 86.2% <b>−1.9%</b><br>buy≥1.20 (+2.3% margin)</td><td>O1.75 75.3% +2.5%<br>buy≥1.41 (+1.0% margin) · floor −6.7</td></tr></table>
 <table align="left"><tr><th align="left">🔵 10-10 08:00 <b>FC Tokyo v Urawa Red Diamonds</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>U4.25 86.8% <b>−1.3%</b><br>buy≥1.20 (+2.7% margin)</td><td><b>FC Tokyo O0.5</b> 82.6% +8.2%<br>buy≥1.27 (+4.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.1% +3.7% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1751,7 +1750,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 660 / 795   ·   83.0%**   ·   **Tip 2 — 450 / 657   ·   68.5%**
+**Tip 1 — 660 / 796   ·   82.9%**   ·   **Tip 2 — 450 / 657   ·   68.5%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3160,6 +3159,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 10-10 03:00 <b>Puebla v León</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.2% <b>−1.1%</b><br>buy≥1.23 (+5.4% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 10-10 03:00 <b>Deportivo Garcilaso v Sport Huancayo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 77.5% +2.8%<br>buy≥1.36 (+5.5% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 70.7% +3.4% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 10-10 03:10 <b>Once Caldas v Llaneros FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.4%</b><br>buy≥1.18 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 69.0% +5.0% · buy≥1.52 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-2 · 10-10 05:00 <b>Tigres v Toluca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.5% <b>−0.8%</b><br>buy≥1.29 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-3 · 10-10 14:00 <b>Qingdao Hainiu FC v Beijing FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +1.4)</td><td>O1.5 82.5% <b>+0.3%</b><br>buy≥1.26 (+4.1% margin)</td><td>✅ <b>Beijing FC O1.5</b> 61.0% +22.0%<br>buy≥1.69 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.3% +3.1% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
