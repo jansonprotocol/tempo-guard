@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            672 / 809  83.1%    459 / 668  68.7%
     played lanes  >+1%     287 / 349  82.2%    457 / 663  68.9%
-    placed bets            209 / 266  78.6%    ROI +1.3%
+    placed bets            211 / 269  78.4%    ROI +1.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3166,7 +3166,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 209 / 266  ·  ROI +1.3%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 211 / 269  ·  ROI +1.0%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -3448,6 +3448,9 @@ that premium the book is keeping the insurance money.
 | ✅ | Heracles Almelo v RKC Waalwijk | O1.5 | 1.21 | 1.21x | Unibet — IN-PLAY, coupon 13204138911, struck 9 Oct 20:23 CEST on a 20:00 kickoff, around the 23rd minute. The card's own side and rung — no wrong lane. Claim 83.8%, orange, STRONG WATCH FROM at first sight (1.10 at Unibet (NL), -6.8% under the 1.180 bar; locked there) — a near-tier card bought live at a better price. 1.21 is +2.5% over the bar. Band check at first sight (5-10% under): my bets 21 at 95%, all cards 184 at 85% — backs it. WON: 3-0. |
 | ✅ | FC Dordrecht v FC Emmen | O1.5 | 1.23 | 1.23x | Unibet — struck 9 Oct 20:19 CEST on a 20:00 kickoff (in play, around the 19th minute), coupon 13204121931. The card's own side and rung — no wrong lane. Claim 84.2%, orange, STRONG WATCH FROM at first sight (1.09 at Unibet (NL), -9.4% under the 1.203 bar; locked there) — a near-tier card bought live at a better price. 1.23 is +2.2% over the bar. Band check at first sight (5-10% under): my bets 20 at 95%, all cards 178 at 84% — backs it. WON: 0-3. |
 | ✅ | TOP Oss v Helmond Sport | U5.5 | 1.38 | 1.38x | TOTO — IN-PLAY, bet O/0556769/0000579, struck 9 Oct 20:44 CEST on a 20:00 kickoff, around the 44th minute. The card prints U4.25 (struck U4.5); bought as U5.5 — a different LINE on the card's own side, no wrong lane. Claim 82.7%, orange, STRONG WATCH FROM at first sight (1.14 at Unibet (NL), -8.2% under the 1.242 bar on U4.5; locked there). Band check at first sight (5-10% under): my bets 23 at 96%, all cards 190 at 85% — backs it. Struck at 2-1 (44'): the card's live break-off (3+ goals by 60') had already fired on the U4.5 lane; U5.5 keeps one more goal of room. Engine on U5.5 92.3% (ledger.bet_prob), fair 1.08; 1.38 is +27% on the engine's number. |
+| ✅ | Arsenal v Leeds United | U4.5 | 1.21 | 1.21x | Unibet — pre-kickoff, struck 10 Oct 15:00 CEST (slip: Gewonnen; the slip's 15:00 stamp is after the board's 13:30 kickoff, so pre-match or live is not confirmed). The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 82.0%, orange, STRONG WATCH FROM at first sight (1.17 at 1xBet, -5.8% under the 1.242 bar; locked there) — a near-tier card. 1.21 is 2.6% under the bar. Band check at first sight (5-10% under): my bets 26 at 96%, all cards 200 at 85% — backs it. WON: 2-1. |
+| ✅ | Swansea City v Norwich City | U4.5 | 1.18 | 1.18x | Unibet — struck 10 Oct 14:58 CEST (slip: Gewonnen). The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 83.7%, orange, STRONG WATCH FROM at first sight (1.12 at GTbets, -6.9% under the 1.203 bar; locked there) — a near-tier card bought at a better price. 1.18 is 1.9% under the bar. Band check at first sight (5-10% under): my bets 25 at 96%, all cards 200 at 86% — backs it. WON: 2-1. |
+| ❌ | Chengdu Rongcheng FC v Tianjin Jinmen Tiger FC | O1.5 | 1.30 | 0.00x | Unibet — IN-PLAY, coupon 13206800471, struck 10 Oct 13:54 CEST on a 13:35 kickoff, around the 19th minute (slip: Verloren). The card's own side and rung — no wrong lane. Claim 83.4%, orange, ★ STRONG at first sight (1.35 at Coolbet, +10.5% over the 1.222 bar; locked there). 1.30 is +6.4% over the bar. Band check at first sight (10%+ over): my bets 19 at 74%, all cards 23 at 78% — VETOES (an unproven flag). LOST: 0-1. |
 
 <!-- HYPOTHESES:START -->
 
