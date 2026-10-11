@@ -1484,3 +1484,296 @@
 2026-10-07 17:25	2026-10-11	BRA-SB	Atletico Goianiense v Sport Recife	1	O1.0	88.4	green	+3.43	1.145	1.01	1.01	William Hill	1.140
 2026-10-07 17:25	2026-10-11	BRA-SB	Nautico PE v Vila Nova	1	O1.0	88.5	green	+7.49	1.174	1.02	1.03	Coolbet	1.140
 2026-10-11 12:41	2026-10-11	COL-PA	Jaguares de Córdoba v Deportes Tolima	1	U4.5	85.9	green	+3.51	1.145	1.10	1.10	TOTO	1.140
+2026-10-11 13:24	2026-10-12	DEN-SL	AGF Aarhus v SonderjyskE	1	O1.5	82.1	orange	-0.28	1.242	1.11	1.21	Coolbet	1.180
+2026-10-11 13:24	2026-10-12	SWE-AL	IF Elfsborg v Halmstads BK	1	U4.5	83.3	orange	+2.96	1.180	1.16	1.21	TOTO	1.180
+2026-10-11 13:24	2026-10-12	ARG-PD	Lanus v Velez Sarsfield BA	1	O1.0	88.2	green	+7.70	1.212	1.08	1.19	Pinnacle	1.140
+2026-10-11 13:24	2026-10-12	ENG-PL	Coventry City v Newcastle United	1	U4.5	84.2	orange	+3.10	1.222	1.14	1.19	1xBet	1.180
+2026-10-11 13:24	2026-10-12	ARG-PD	Gimnasia Mendoza v Newells Old Boys	1	O1.0	89.1	green	+5.07	1.193	1.07	1.19	Pinnacle	1.140
+2026-10-11 13:24	2026-10-13	BRA-SB	Criciuma v América Mineiro	1	U3.5	85.4	green	-12.52	1.280	1.30	1.36	Unibet (SE)	1.140
+2026-10-11 13:24	2026-10-13	BRA-SB	Botafogo-SP v Ceará	1	U3.5	81.6	orange	-17.26	1.300	1.17	1.29	Pinnacle	1.180
+2026-10-11 13:24	2026-10-13	ENG-CH	Birmingham City v Preston North End	1	U4.5	83.6	orange	+0.96	1.193	1.11	1.17	TOTO	1.180
+2026-10-11 13:24	2026-10-13	UCL	Arsenal v Lille	1	O1.5	87.2	green	+7.17	1.174	1.16	1.30	Pinnacle	1.140
+2026-10-11 13:24	2026-10-13	UCL	Atlético Madrid v Manchester United	1	O1.5	80.3	orange	+0.27	1.232	1.13	1.23	BetOnline.ag	1.180
+2026-10-11 13:24	2026-10-14	UCL	Aston Villa v Fenerbahce	1	O1.5	85.0	green	+4.97	1.203	1.19	1.34	BetOnline.ag	1.140
+2026-10-11 13:24	2026-10-14	COL-PA	Atlético Junior v Deportivo Pereira	1	U3.5	79.4	pink	-11.60	1.310	1.52	1.52	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-15	MLS	D.C. United v New York Red Bulls	1	U4.5	80.7	orange	-2.78	1.280	1.24	1.35	Pinnacle	1.180
+2026-10-11 13:24	2026-10-15	MLS	Real Salt Lake v San Jose Earthquakes	1	U4.5	80.4	orange	+10.33	1.310	1.28	1.36	Pinnacle	1.180
+2026-10-11 13:24	2026-10-15	MLS	LA Galaxy v Portland Timbers	1	U4.5	80.4	orange	-7.01	1.310	1.33	1.36	1xBet	1.180
+2026-10-11 13:24	2026-10-15	UECL	Hajduk Split v Ajax	1	U4.5	87.5	green	+5.60	1.183	1.18	1.24	1xBet	1.140
+2026-10-11 13:24	2026-10-15	UEL	Jagiellonia Białystok v FC Ararat-Armenia	1	O1.5	80.1	orange	-8.04	1.222	1.18	1.31	Pinnacle	1.180
+2026-10-11 13:24	2026-10-16	POL-EK	Wieczysta Kraków v Raków Częstochowa	1	U4.5	85.2	green	+1.54	1.242	1.15	1.22	TOTO	1.140
+2026-10-11 13:24	2026-10-16	IRL-PD	Bohemians v Waterford FC	1	U4.5	84.9	orange	+6.87	1.180	1.24	1.24	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	ARG-PD	Defensa y Justicia v Instituto de Córdoba	1	O1.0	89.6	green	+4.67	1.183	1.05	1.17	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	BRA-SB	Ponte Preta v Atletico Goianiense	1	U3.5	85.6	green	-4.72	1.280	1.37	1.37	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-17	JPN-J1	Shimizu S Pulse v Gamba Osaka	1	U4.5	88.7	green	+1.68	1.145	1.11	1.15	TOTO	1.140
+2026-10-11 13:24	2026-10-17	JPN-J1	Hiroshima Sanfrecce FC v Kyoto Purple Sanga	1	U4.5	82.9	orange	-4.99	1.212	1.31	1.39	Pinnacle	1.180
+2026-10-11 13:24	2026-10-17	JPN-J1	Cerezo Osaka v Kawasaki Frontale	1	U4.5	86.5	green	-4.71	1.164	1.18	1.24	1xBet	1.140
+2026-10-11 13:24	2026-10-17	JPN-J1	Kashima Antlers v V-Varen Nagasaki	1	U4.5	86.5	green	-0.18	1.164	1.13	1.18	TOTO	1.140
+2026-10-11 13:24	2026-10-17	JPN-J1	Kashiwa Reysol v Nagoya Grampus	1	U4.5	85.5	green	+1.17	1.174	1.15	1.21	TOTO	1.140
+2026-10-11 13:24	2026-10-17	ENG-CH	Middlesbrough v Cardiff City	1	U4.5	83.7	orange	+2.92	1.203	1.35	1.35	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	CHN-SL	Shandong Luneng Taishan FC v Zhejiang	1	U4.5	80.0	orange	-2.28	1.271	1.39	1.46	1xBet	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Southampton v Bolton Wanderers	3	DNB1	81.2	orange	+3.36	1.251	1.25	1.28	Winamax (FR)	1.180
+2026-10-11 13:24	2026-10-17	ENG-L1	Sheffield Wednesday v Wimbledon	1	U3.5	82.7	orange	+1.61	1.348	1.41	1.43	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-17	ENG-L2	Salford City v Crawley Town	1	U4.5	88.4	green	+5.04	1.164	1.24	1.36	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	ITA-SA	Bologna v Inter Milan	1	U4.5	85.9	green	+1.29	1.154	1.14	1.20	1xBet	1.140
+2026-10-11 13:24	2026-10-17	IRL-PD	Sligo Rovers v Dundalk	1	U4.5	84.8	orange	+7.63	1.180	1.18	1.23	TOTO	1.180
+2026-10-11 13:24	2026-10-17	ITA-SA	AS Roma v Genoa	1	U4.5	86.1	green	+3.39	1.193	1.16	1.21	1xBet	1.140
+2026-10-11 13:24	2026-10-17	NED-ED	Sparta Rotterdam v Willem II	1	U4.5	84.4	orange	+1.57	1.261	1.26	1.39	Pinnacle	1.180
+2026-10-11 13:24	2026-10-17	BRA-SA	Botafogo v Chapecoense	1	U3.5	77.4	pink	-4.81	1.436	1.56	1.61	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-17	BRA-SB	América Mineiro v Operario PR	1	U3.5	81.7	orange	-16.22	1.300	1.27	1.27	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	ARG-PD	Atlético Tucuman v Rosario Central	1	U3.5	87.1	green	-3.27	1.203	1.14	1.17	Unibet (SE)	1.140
+2026-10-11 13:24	2026-10-18	COL-PA	Millonarios v Jaguares de Córdoba	1	U4.5	85.9	green	+3.37	1.140	1.17	1.17	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-18	MLS	New York Red Bulls v Toronto FC	1	U4.5	80.7	orange	-0.72	1.280	1.34	1.34	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	MEX-LMX	Toluca v Atlético San Luis	1	U4.5	81.8	orange	-6.06	1.271	1.25	1.25	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	MLS	LA Galaxy v San Diego FC	1	U4.5	80.7	orange	-3.97	1.290	1.31	1.31	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	MEX-LMX	Cruz Azul v FC Juárez	1	U4.5	83.3	orange	+1.52	1.203	1.22	1.22	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	GER-B2	Dynamo Dresden v 1. FC Magdeburg	1	U4.5	83.1	orange	+0.14	1.251	1.23	1.33	Pinnacle	1.180
+2026-10-11 13:24	2026-10-18	CHN-SL	Shanghai SIPG FC v Chengdu Rongcheng FC	1	U4.5	83.5	orange	+1.22	1.280	1.21	1.34	Pinnacle	1.180
+2026-10-11 13:24	2026-10-18	DEN-SL	Lyngby v FC Nordsjaelland	1	U4.5	81.2	orange	+0.72	1.271	1.19	1.24	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-12	SWE-AL	Malmo FF v Kalmar FF	1	U4.5	83.6	orange	-2.51	1.222	1.11	1.15	TOTO	1.180
+2026-10-11 13:24	2026-10-12	TUR-SL	Eyüpspor v Goztepe	1	U4.5	83.9	orange	+0.19	1.242	1.10	1.16	1xBet	1.180
+2026-10-11 13:24	2026-10-12	FRA-L2	Dijon v Metz	1	U4.5	83.8	orange	+2.06	1.261	1.11	1.15	TOTO	1.180
+2026-10-11 13:24	2026-10-12	ITA-SA	Torino v Udinese	1	U4.5	86.1	green	+1.40	1.193	1.06	1.12	Pinnacle	1.140
+2026-10-11 13:24	2026-10-12	BRA-SA	Coritiba v Botafogo	1	U3.5	76.7	pink	-5.51	1.455	1.36	1.42	TOTO	1.310
+2026-10-11 13:24	2026-10-12	ESP-L2	Tenerife v Girona FC	1	U3.5	76.0	pink	-5.46	1.387	1.22	1.33	Pinnacle	1.310
+2026-10-11 13:24	2026-10-13	BRA-SA	Bragantino-SP v Cruzeiro	1	U4.5	82.9	orange	+3.95	1.203	1.12	1.16	TOTO	1.180
+2026-10-11 13:24	2026-10-13	ENG-CH	Burnley v Charlton Athletic	1	U4.5	83.7	orange	+2.02	1.193	1.09	1.14	TOTO	1.180
+2026-10-11 13:24	2026-10-13	ENG-CH	Millwall v Swansea City	1	U4.5	83.7	orange	+5.06	1.203	1.07	1.13	TOTO	1.180
+2026-10-11 13:24	2026-10-14	BRA-SB	Athletic Club (MG) v Londrina	1	O1.0	88.5	green	+3.72	1.183	1.02	1.10	Coolbet	1.140
+2026-10-11 13:24	2026-10-14	COL-PA	Millonarios v Once Caldas	1	U4.5	85.9	green	+6.24	1.140	1.11	1.11	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-14	ENG-CH	Lincoln City v West Ham United	1	O1.5	76.9	pink	-7.29	1.348	1.17	1.26	Pinnacle	1.310
+2026-10-11 13:24	2026-10-14	UCL	Bodø/Glimt v Borussia Dortmund	1	O1.5	80.0	orange	+2.24	1.232	1.09	1.13	1xBet	1.180
+2026-10-11 13:24	2026-10-14	UCL	Shakhtar Donetsk v AEK Athens	1	O1.5	77.9	pink	-2.13	1.310	1.25	1.30	1xBet	1.310
+2026-10-11 13:24	2026-10-15	COL-PA	Independiente Santa Fe v Jaguares de Córdoba	1	U4.5	86.0	green	+4.92	1.154	1.09	1.09	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-15	MLS	CF Montreal v Atlanta United FC	1	U4.5	80.7	orange	+0.81	1.290	1.19	1.24	1xBet	1.180
+2026-10-11 13:24	2026-10-15	MLS	Nashville SC v Sporting Kansas City	3	DNB1	84.7	orange	+11.51	1.203	1.15	1.17	Winamax (FR)	1.180
+2026-10-11 13:24	2026-10-15	MLS	St. Louis City SC v Vancouver Whitecaps FC	1	O1.5	80.5	orange	+0.34	1.222	1.12	1.22	Coolbet	1.180
+2026-10-11 13:24	2026-10-15	MLS	Colorado Rapids v Minnesota United FC	1	U4.5	80.3	orange	+3.57	1.310	1.16	1.21	1xBet	1.180
+2026-10-11 13:24	2026-10-15	MLS	Los Angeles FC v Austin FC	1	U4.5	80.6	orange	+5.46	1.310	1.18	1.22	1xBet	1.180
+2026-10-11 13:24	2026-10-15	MLS	San Diego FC v Houston Dynamo	1	U4.5	80.7	orange	+4.74	1.300	1.16	1.21	1xBet	1.180
+2026-10-11 13:24	2026-10-15	SAU-PL	Al-Hazem v Al-Fateh	1	U4.5	86.1	green	+8.27	1.232	1.11	1.13	1xBet	1.140
+2026-10-11 13:24	2026-10-15	UECL	KuPS Kuopio v Trabzonspor	1	U4.5	87.8	green	+5.90	1.174	1.12	1.15	1xBet	1.140
+2026-10-11 13:24	2026-10-15	UECL	Riga FC v FC Kairat	1	U4.5	89.9	green	+8.00	1.183	1.07	1.10	1xBet	1.140
+2026-10-11 13:24	2026-10-15	UEL	Union Saint-Gilloise v Real Sociedad	1	U4.5	84.7	orange	+0.00	1.212	1.11	1.16	1xBet	1.180
+2026-10-11 13:24	2026-10-15	ENG-L1	Mansfield Town v Oxford United	1	O1.5	78.3	pink	-7.27	1.339	1.21	1.30	Pinnacle	1.310
+2026-10-11 13:24	2026-10-15	UEL	Benfica v Celtic	1	O1.5	81.4	orange	-6.74	1.251	1.11	1.21	Coolbet	1.180
+2026-10-11 13:24	2026-10-15	UEL	Celta Vigo v Juventus	1	U4.5	85.1	green	+0.40	1.212	1.08	1.09	Pinnacle	1.140
+2026-10-11 13:24	2026-10-15	UEL	Dinamo Zagreb v Anderlecht	1	U4.5	86.9	green	+2.20	1.193	1.09	1.14	1xBet	1.140
+2026-10-11 13:24	2026-10-16	ARG-PD	Atlético Huracán v Gimnasia La Plata	1	U3.5	85.8	green	-1.85	1.212	1.13	1.14	Nordic Bet	1.140
+2026-10-11 13:24	2026-10-16	DEN-SL	AC Horsens v Randers FC	1	U4.5	83.8	orange	+7.32	1.242	1.09	1.15	TOTO	1.180
+2026-10-11 13:24	2026-10-16	TUR-SL	Çorum FK v Çaykur Rizespor	1	O1.5	83.1	orange	-2.99	1.271	1.20	1.20	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-16	FRA-L2	Grenoble v Boulogne	1	U3.5	81.8	orange	+3.05	1.377	1.16	1.27	Pinnacle	1.180
+2026-10-11 13:24	2026-10-16	FRA-L2	Stade Lavallois v Clermont	1	U3.5	78.5	pink	-1.09	1.455	1.22	1.33	Pinnacle	1.310
+2026-10-11 13:24	2026-10-16	NED-D2	FC Den Bosch v TOP Oss	1	U4.5	79.7	pink	-4.91	1.310	1.28	1.28	TOTO	1.310
+2026-10-11 13:24	2026-10-16	NED-D2	FC Eindhoven v Vitesse	1	O1.5	82.8	orange	+6.32	1.212	1.15	1.15	TOTO	1.180
+2026-10-11 13:24	2026-10-16	ESP-L2	Leganés v Córdoba	1	U3.5	76.1	pink	-8.88	1.358	1.32	1.32	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-16	ITA-SB	Hellas Verona v US Catanzaro 1929	1	O1.5	74.6	released	-1.98	1.271	1.21	1.21	LeoVegas (SE)	1.180
+2026-10-11 13:24	2026-10-16	FRA-L1	Le Mans FC v Toulouse	1	O1.5	77.5	pink	-7.57	1.310	1.21	1.30	Pinnacle	1.310
+2026-10-11 13:24	2026-10-16	IRL-PD	Drogheda United v Derry City	1	U3.5	76.6	pink	+0.62	1.387	1.31	1.36	Coolbet	1.310
+2026-10-11 13:24	2026-10-16	IRL-PD	St Patricks Athletic v Shelbourne Dublin	1	U4.5	84.8	orange	+3.75	1.180	1.10	1.15	TOTO	1.180
+2026-10-11 13:24	2026-10-16	ESP-LL	Deportivo La Coruña v Levante	1	U4.5	84.9	orange	+0.30	1.203	1.08	1.13	1xBet	1.180
+2026-10-11 13:24	2026-10-17	BRA-SA	Mirassol v Internacional	1	U3.5	80.1	orange	-2.11	1.416	1.29	1.33	1xBet	1.180
+2026-10-11 13:24	2026-10-17	JPN-J1	JEF United Chiba v Yokohama F Marinos	1	U4.5	90.0	green+	+2.11	1.154	1.10	1.15	TOTO	1.140
+2026-10-11 13:24	2026-10-17	JPN-J1	Tokyo Verdy v FC Tokyo	1	U4.5	89.0	green	+2.04	1.145	1.07	1.12	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	JPN-J1	Mito HollyHock v Urawa Red Diamonds	1	U4.5	88.1	green	-1.87	1.154	1.10	1.14	Coolbet	1.140
+2026-10-11 13:24	2026-10-17	CHN-SL	Dalian Yingbo v Shenzhen Peng City FC	1	U4.5	83.9	orange	+0.12	1.251	1.14	1.20	TOTO	1.180
+2026-10-11 13:24	2026-10-17	GER-B2	1. FC Kaiserslautern v VfL Bochum	1	U4.5	84.6	orange	+1.64	1.242	1.13	1.17	TOTO	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Watford v Charlton Athletic	1	U3.5	79.4	pink	-0.78	1.416	1.29	1.29	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-17	ENG-L1	Milton Keynes Dons v Luton	1	O1.5	78.2	pink	-5.34	1.339	1.19	1.26	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	ENG-L2	Fleetwood Town v Rotherham United	1	U4.5	85.0	green	-3.16	1.203	1.07	1.09	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Shrewsbury Town v Bristol Rovers	1	U4.5	87.8	green	+0.14	1.174	1.05	1.11	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	ENG-PL	Everton v Chelsea	1	U4.5	82.3	orange	+4.74	1.242	1.16	1.20	1xBet	1.180
+2026-10-11 13:24	2026-10-17	CHN-SL	Qingdao Hainiu FC v Liaoning Tieren FC	1	U4.5	84.0	orange	+1.72	1.271	1.15	1.19	1xBet	1.180
+2026-10-11 13:24	2026-10-17	ITA-SB	Ascoli v Empoli	1	U3.5	78.9	pink	+2.24	1.426	1.28	1.32	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	ITA-SB	Benevento v Vicenza	1	U3.5	76.0	pink	+0.29	1.426	1.34	1.41	1xBet	1.310
+2026-10-11 13:24	2026-10-17	TUR-SL	Genclerbirligi SK v Galatasaray	1	O1.5	81.0	orange	-8.01	1.300	1.09	1.13	1xBet	1.180
+2026-10-11 13:24	2026-10-17	GER-BL	Elversberg v Augsburg	1	O1.5	83.9	orange	+1.46	1.212	1.09	1.15	1xBet	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Derby County v Stoke City	1	U3.5	76.1	pink	-6.54	1.426	1.25	1.25	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-17	ENG-CH	Swansea City v West Ham United	1	O1.5	81.0	orange	-3.19	1.300	1.22	1.22	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	ENG-L1	Leicester City v Doncaster Rovers	1	O1.5	78.1	pink	-7.47	1.339	1.13	1.27	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	ENG-L1	Leyton Orient v Blackpool	1	U3.5	77.1	pink	-1.99	1.465	1.37	1.45	Nordic Bet	1.310
+2026-10-11 13:24	2026-10-17	ENG-L1	Wigan Athletic v Reading	1	U3.5	76.8	pink	-6.88	1.465	1.40	1.46	TOTO	1.310
+2026-10-11 13:24	2026-10-17	ENG-L1	Wycombe Wanderers v Notts County	1	O1.5	76.2	pink	-9.37	1.310	1.22	1.26	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	ENG-L2	Accrington Stanley v Gillingham	1	U4.5	88.6	green	+1.55	1.164	1.08	1.10	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Colchester United v Exeter City	1	U4.5	86.6	green	-1.06	1.193	1.09	1.10	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Crewe Alexandra v Rochdale	1	U4.5	90.0	green+	+2.34	1.164	1.10	1.11	Coolbet	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Grimsby Town v Northampton Town	1	U4.5	86.4	green	-1.26	1.193	1.10	1.11	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Newport County v York City	1	U4.5	85.9	green	-6.09	1.193	1.12	1.13	Nordic Bet	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Oldham Athletic v Cheltenham Town	1	U4.5	87.7	green	+0.04	1.174	1.12	1.14	1xBet	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Port Vale v Chesterfield FC	1	U4.5	86.3	green	-4.59	1.193	1.10	1.12	Betsson	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Swindon Town v Walsall	1	U4.5	87.9	green	+3.05	1.174	1.12	1.14	1xBet	1.140
+2026-10-11 13:24	2026-10-17	ENG-L2	Tranmere Rovers v Barnet	1	U4.5	84.3	orange	-2.69	1.203	1.12	1.13	Coolbet	1.180
+2026-10-11 13:24	2026-10-17	ENG-PL	Fulham v Hull City	1	U4.5	85.4	green	+4.71	1.222	1.13	1.17	1xBet	1.140
+2026-10-11 13:24	2026-10-17	ENG-PL	Manchester City v Ipswich Town	3	DNB1	85.8	green	+6.24	1.183	1.12	1.16	Winamax (FR)	1.140
+2026-10-11 13:24	2026-10-17	NOR-EL	Kristiansund BK v Aalesund	1	U4.5	82.7	orange	-8.96	1.251	1.20	1.22	LeoVegas (SE)	1.180
+2026-10-11 13:24	2026-10-17	SCO-PL	Aberdeen v St Mirren	1	U4.5	85.4	green	+1.37	1.193	1.10	1.13	TOTO	1.140
+2026-10-11 13:24	2026-10-17	SCO-PL	Kilmarnock v Motherwell	1	O1.5	79.3	pink	-3.09	1.310	1.16	1.30	Coolbet	1.310
+2026-10-11 13:24	2026-10-17	ITA-SB	Mantova v Palermo	1	O1.5	73.8	released	-11.80	1.271	1.23	1.23	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	POL-EK	GKS Katowice v Pogoń Szczecin	1	U4.5	85.5	green	+3.37	1.232	1.14	1.18	TOTO	1.140
+2026-10-11 13:24	2026-10-17	SWE-AL	AIK v IFK Goteborg	1	O1.5	79.0	pink	-6.66	1.310	1.16	1.30	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	NOR-EL	Viking FK v Fredrikstad FK	1	O1.5	85.4	green	+4.41	1.242	1.05	1.11	TOTO	1.140
+2026-10-11 13:24	2026-10-17	ENG-PL	Newcastle United v Aston Villa	1	U4.5	82.1	orange	+5.82	1.242	1.18	1.23	1xBet	1.180
+2026-10-11 13:24	2026-10-17	GRE-SL	Atromitos Athens v AEK Athens	1	O1.5	76.3	pink	-4.46	1.339	1.21	1.30	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	SAU-PL	Diriyah Club v Al-Taawoun	1	U4.5	85.8	green	+7.97	1.203	1.14	1.14	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-17	GER-B2	Hannover 96 v FC St. Pauli	1	O1.5	82.4	orange	-3.19	1.232	1.08	1.13	TOTO	1.180
+2026-10-11 13:24	2026-10-17	COL-PA	Boyacá Chicó FC v Atlético Nacional	1	U4.5	86.0	green	+0.40	1.154	1.09	1.09	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-17	ARG-PD	Platense v Lanus	1	O1.0	85.4	green	+2.95	1.251	1.08	1.11	1xBet	1.140
+2026-10-11 13:24	2026-10-17	MLS	Minnesota United FC v St. Louis City SC	1	O1.5	80.6	orange	+0.44	1.242	1.13	1.13	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	MEX-LMX	Santos Laguna v Querétaro	1	U4.5	83.2	orange	-3.27	1.193	1.15	1.15	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-18	MEX-LMX	Guadalajara v Tigres	1	U4.5	83.3	orange	+0.68	1.212	1.10	1.13	Pinnacle	1.180
+2026-10-11 13:24	2026-10-18	MLS	Orlando City SC v D.C. United	1	U4.5	79.7	pink	-0.55	1.319	1.31	1.31	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-18	BRA-SA	Sao Paulo v Vasco da Gama	1	U3.5	78.4	pink	-3.81	1.406	1.22	1.38	Pinnacle	1.310
+2026-10-11 13:24	2026-10-18	MLS	Sporting Kansas City v Real Salt Lake	1	U4.5	80.7	orange	+6.62	1.290	1.27	1.27	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	MEX-LMX	León v América	1	O1.5	77.4	pink	-12.42	1.310	1.18	1.27	Pinnacle	1.310
+2026-10-11 13:24	2026-10-18	COL-PA	Independiente Medellín v Once Caldas	1	U4.5	85.9	green	+3.62	1.140	1.09	1.09	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-18	PER-L1	Alianza Lima v Atlético Grau	1	O1.5	76.6	pink	-17.06	1.329	1.25	1.25	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-18	MLS	San Jose Earthquakes v Nashville SC	1	U4.5	80.7	orange	+11.92	1.280	1.27	1.27	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-18	MLS	Seattle Sounders FC v CF Montreal	1	U4.5	80.8	orange	-1.97	1.300	1.28	1.28	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-18	JPN-J1	Fagiano Okayama v Vissel Kobe	1	U4.5	87.5	green	+3.88	1.154	1.08	1.13	Pinnacle	1.140
+2026-10-11 13:24	2026-10-18	POL-EK	Górnik Zabrze v Piast Gliwice	1	O1.5	80.8	orange	-11.00	1.310	1.17	1.22	TOTO	1.180
+2026-10-11 13:24	2026-10-18	ITA-SA	Udinese v Lecce	1	U4.5	85.8	green	+5.56	1.145	1.08	1.13	1xBet	1.140
+2026-10-11 13:24	2026-10-18	TUR-SL	Kasimpasa SK v Samsunspor	1	U4.5	85.1	green	+2.52	1.222	1.06	1.10	1xBet	1.140
+2026-10-11 13:24	2026-10-18	GER-B2	Arminia Bielefeld v VfL Osnabrück	1	O1.5	81.1	orange	-4.49	1.242	1.12	1.22	Coolbet	1.180
+2026-10-11 13:24	2026-10-18	DEN-SL	SonderjyskE v Silkeborg IF	1	U4.5	80.6	orange	-2.92	1.280	1.21	1.21	1xBet	1.180
+2026-10-11 13:24	2026-10-18	SWE-AL	IK Sirius v IF Elfsborg	1	O1.5	80.0	orange	-3.38	1.242	1.18	1.20	LeoVegas (SE)	1.180
+2026-10-11 13:24	2026-10-18	SWE-AL	Västerås SK v Mjällby AIF	1	U4.5	83.6	orange	+3.59	1.222	1.13	1.16	TOTO	1.180
+2026-10-11 13:24	2026-10-12	COL-PA	Boyacá Chicó FC v Cúcuta Deportivo	1	U3.5	79.4	pink	-18.79	1.310	1.17	1.22	TOTO	1.310
+2026-10-11 13:24	2026-10-12	ESP-L2	Burgos CF v Granada CF	1	U4.5	84.5	orange	-0.48	1.203	1.03	1.11	Pinnacle	1.180
+2026-10-11 13:24	2026-10-12	POL-EK	Radomiak Radom v Motor Lublin	1	U4.5	86.2	green	-2.88	1.193	1.13	1.21	TOTO	1.140
+2026-10-11 13:24	2026-10-12	ESP-L2	Oviedo v SD Eibar	1	O1.5	71.0	super red	-13.39	1.310	1.35	1.68	Coolbet	1.310
+2026-10-11 13:24	2026-10-12	ITA-SA	Atalanta BC v Venezia	1	U4.5	85.8	green	-0.21	1.140	1.19	1.28	1xBet	1.140
+2026-10-11 13:24	2026-10-12	NOR-EL	KFUM v Vålerenga	1	O1.5	81.3	orange	+0.31	1.242	1.14	1.29	Pinnacle	1.180
+2026-10-11 13:24	2026-10-12	ESP-LL	Levante v Sevilla	1	O1.5	77.5	pink	-7.75	1.310	1.32	1.36	1xBet	1.310
+2026-10-11 13:24	2026-10-12	IRL-PD	Shamrock Rovers v Bohemians	1	O1.5	70.5	super red	-67.15	1.339	1.21	1.32	Pinnacle	1.310
+2026-10-11 13:24	2026-10-12	CHI-PD	Universidad de Chile v Ñublense	1	O1.5	80.3	orange	-22.35	1.290	1.22	1.31	Pinnacle	1.180
+2026-10-11 13:24	2026-10-13	BRA-SA	Chapecoense v Atletico Paranaense	1	U3.5	75.8	red	-6.41	1.474	1.30	1.35	Pinnacle	1.310
+2026-10-11 13:24	2026-10-13	ENG-CH	Cardiff City v Watford	1	U3.5	79.5	pink	-0.68	1.416	1.61	1.83	Pinnacle	1.310
+2026-10-11 13:24	2026-10-13	ENG-CH	Wolverhampton Wanderers v Bolton Wanderers	1	O1.5	75.7	red	-8.49	1.310	1.13	1.31	Pinnacle	1.310
+2026-10-11 13:24	2026-10-13	ENG-CH	Wrexham AFC v West Bromwich Albion	1	U3.5	75.7	red	-5.04	1.436	1.26	1.30	TOTO	1.310
+2026-10-11 13:24	2026-10-13	ENG-CH	Stoke City v Middlesbrough	1	O1.5	75.5	super red	-13.75	1.310	1.18	1.31	BetOnline.ag	1.310
+2026-10-11 13:24	2026-10-13	UCL	Villarreal v Napoli	1	O1.5	79.0	pink	-1.03	1.310	1.19	1.33	Pinnacle	1.310
+2026-10-11 13:24	2026-10-14	ENG-CH	Portsmouth v Sheffield United	1	U4.5	83.6	orange	-2.89	1.183	1.06	1.11	TOTO	1.180
+2026-10-11 13:24	2026-10-14	ENG-CH	Queens Park Rangers v Derby County	1	U3.5	75.2	red	-7.44	1.445	1.33	1.39	TOTO	1.310
+2026-10-11 13:24	2026-10-15	MLS	Columbus Crew SC v Charlotte FC	1	O1.5	80.7	orange	+0.54	1.251	1.14	1.27	BetOnline.ag	1.180
+2026-10-11 13:24	2026-10-15	MLS	FC Dallas v Seattle Sounders FC	1	O1.5	80.7	orange	-1.73	1.261	1.14	1.27	Pinnacle	1.180
+2026-10-11 13:24	2026-10-15	UECL	Panathinaikos FC v FK Borac Banja Luka	1	O1.5	80.9	orange	-9.39	1.251	1.18	1.30	Pinnacle	1.180
+2026-10-11 13:24	2026-10-15	UEL	AZ Alkmaar v Hapoel Be'er Sheva	1	U4.5	84.1	orange	-0.60	1.222	1.23	1.35	Pinnacle	1.180
+2026-10-11 13:24	2026-10-15	UEL	Salzburg v AC Milan	1	U4.5	83.7	orange	-1.00	1.222	1.15	1.19	1xBet	1.180
+2026-10-11 13:24	2026-10-15	SAU-PL	Al-Ahli v Al-Nassr	1	O1.5	85.2	green	+1.59	1.232	1.11	1.28	Pinnacle	1.140
+2026-10-11 13:24	2026-10-16	GER-B2	Holstein Kiel v Hertha Berlin	1	U4.5	81.9	orange	-0.08	1.261	1.24	1.39	Pinnacle	1.180
+2026-10-11 13:24	2026-10-16	FRA-L2	Annecy FC v Nancy	1	U4.5	84.0	orange	-3.06	1.193	1.06	1.09	Coolbet	1.180
+2026-10-11 13:24	2026-10-16	FRA-L2	Guingamp v Pau FC	1	U4.5	83.9	orange	-3.87	1.180	1.08	1.12	Pinnacle	1.180
+2026-10-11 13:24	2026-10-16	PER-L1	Sport Huancayo v Cusco FC	1	O1.5	77.1	pink	-12.27	1.329	1.17	1.17	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-16	ITA-SA	Frosinone v Sassuolo	1	U4.5	86.1	green	-7.46	1.193	1.21	1.34	Pinnacle	1.140
+2026-10-11 13:24	2026-10-17	GER-B2	Greuther Fürth v Eintracht Braunschweig	1	O1.5	80.6	orange	-4.99	1.251	1.12	1.26	Pinnacle	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Millwall v Lincoln City	1	U3.5	75.1	red	-3.54	1.445	1.32	1.32	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-17	ENG-L1	Peterborough United v Burton Albion	1	U3.5	75.9	red	-5.19	1.436	1.44	1.51	TOTO	1.310
+2026-10-11 13:24	2026-10-17	ESP-L2	Real Sociedad B v Almería	1	U4.5	84.3	orange	-0.68	1.180	1.09	1.10	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	ESP-LL	Espanyol v Atlético Madrid	1	O1.5	77.2	pink	-8.52	1.310	1.22	1.32	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	POL-EK	Motor Lublin v Śląsk Wrocław	1	U4.5	86.1	green	-1.58	1.183	1.14	1.19	TOTO	1.140
+2026-10-11 13:24	2026-10-17	ITA-SA	Venezia v Napoli	1	U4.5	85.9	green	-0.11	1.154	1.14	1.19	1xBet	1.140
+2026-10-11 13:24	2026-10-17	ITA-SB	Carrarese v Modena	1	U3.5	78.7	pink	-1.89	1.426	1.23	1.23	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-17	GER-BL	FC Schalke 04 v FSV Mainz 05	1	O1.5	84.4	orange	+0.86	1.212	1.17	1.29	Coolbet	1.180
+2026-10-11 13:24	2026-10-17	GER-BL	Union Berlin v Borussia Dortmund	1	O1.5	83.5	orange	+1.06	1.212	1.12	1.22	Coolbet	1.180
+2026-10-11 13:24	2026-10-17	GER-BL	Werder Bremen v SC Paderborn	1	U4.5	82.8	orange	-4.84	1.280	1.22	1.27	1xBet	1.180
+2026-10-11 13:24	2026-10-17	ENG-L1	Barnsley v Cambridge United	1	U3.5	75.5	red	-6.16	1.445	1.41	1.49	TOTO	1.310
+2026-10-11 13:24	2026-10-17	ENG-L1	Bradford City v Stevenage	1	U3.5	75.1	red	+1.95	1.445	1.19	1.33	Pinnacle	1.310
+2026-10-11 13:24	2026-10-17	ENG-L1	Plymouth Argyle v Huddersfield Town	1	O1.5	80.5	orange	-5.07	1.310	1.17	1.32	Coolbet	1.180
+2026-10-11 13:24	2026-10-17	ENG-PL	Brentford v Liverpool	1	O1.5	80.1	orange	-1.81	1.232	1.13	1.28	Coolbet	1.180
+2026-10-11 13:24	2026-10-17	SCO-PL	Hibernian v Falkirk F.C.	1	U3.5	75.8	red	-8.67	1.455	1.39	1.45	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-17	ESP-L2	SD Eibar v Mallorca	1	O1.5	70.9	super red	-13.49	1.310	1.29	1.29	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-17	SAU-PL	Neom v Al-Ettifaq	1	O1.5	82.9	orange	-0.71	1.242	1.13	1.26	Pinnacle	1.180
+2026-10-11 13:24	2026-10-17	TUR-SL	Fenerbahce v Alanyaspor	1	O1.5	81.9	orange	-6.45	1.290	1.17	1.30	Coolbet	1.180
+2026-10-11 13:24	2026-10-17	ESP-L2	Sporting Gijón v Albacete	1	U4.5	84.2	orange	-1.43	1.180	1.06	1.06	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-17	ITA-SB	Pisa v Cremonese	1	O1.5	75.1	red	-0.41	1.310	1.30	1.34	TOTO	1.310
+2026-10-11 13:24	2026-10-17	FRA-L2	Red Star v Saint Etienne	1	U4.5	84.1	orange	-1.50	1.203	1.07	1.10	Pinnacle	1.180
+2026-10-11 13:24	2026-10-17	POL-EK	Cracovia Kraków v Legia Warszawa	1	O1.5	78.0	pink	-12.60	1.310	1.28	1.31	TOTO	1.310
+2026-10-11 13:24	2026-10-17	FRA-L1	Lille v Brest	1	U4.5	83.3	orange	+3.94	1.193	1.14	1.19	1xBet	1.180
+2026-10-11 13:24	2026-10-17	FRA-L1	Troyes v RC Lens	1	U4.5	83.4	orange	+5.37	1.212	1.19	1.23	1xBet	1.180
+2026-10-11 13:24	2026-10-17	PER-L1	Juan Pablo II v Sport Boys	1	O1.5	76.4	pink	-12.61	1.339	1.24	1.24	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-17	BRA-SA	Atletico Mineiro v Coritiba	1	U3.5	75.7	red	-6.51	1.474	1.32	1.35	1xBet	1.310
+2026-10-11 13:24	2026-10-18	NED-ED	FC Zwolle v Go Ahead Eagles	1	U4.5	83.1	orange	-3.03	1.271	1.32	1.32	1xBet	1.180
+2026-10-11 13:24	2026-10-18	GER-B2	Karlsruher SC v SV Darmstadt 98	1	U4.5	81.9	orange	-1.06	1.261	1.25	1.40	Pinnacle	1.180
+2026-10-11 13:24	2026-10-18	ESP-L2	AD Ceuta FC v Oviedo	1	U3.5	76.1	pink	-8.88	1.348	1.16	1.16	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-18	ESP-LL	CA Osasuna v Real Racing Club de Santander	1	U4.5	84.9	orange	+3.27	1.193	1.12	1.18	1xBet	1.180
+2026-10-11 13:24	2026-10-18	AUT-BL	Wolfsberger AC v WSG Tirol	1	U3.5	75.5	red	-6.03	1.455	1.50	1.59	1xBet	1.310
+2026-10-11 13:24	2026-10-18	NED-ED	SC Cambuur v AZ Alkmaar	1	U4.5	82.0	orange	-3.43	1.242	1.36	1.39	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-21	ESP-LL	Levante v Athletic Club	1	O1.5	77.6	pink	-12.74	1.310	1.32	1.32	TOTO	1.310
+2026-10-11 13:24	2026-10-12	POL-EK	GKS Katowice v Wieczysta Kraków	1	O1.5	78.5	pink	-16.07	1.310	1.09	1.22	Coolbet	1.310
+2026-10-11 13:24	2026-10-12	BRA-SB	Fortaleza v Clube de Regatas Brasil	1	O1.0	88.5	green	-1.10	1.174	1.01	1.02	Pinnacle	1.140
+2026-10-11 13:24	2026-10-12	POR-PL	Famalicão v Alverca	1	U4.5	84.0	orange	+4.55	1.183	1.05	1.09	Pinnacle	1.180
+2026-10-11 13:24	2026-10-13	BRA-SB	Grêmio Novorizontino v Ponte Preta	3	DNB1	84.9	orange	-0.49	1.203	1.05	1.07	BetOnline.ag	1.180
+2026-10-11 13:24	2026-10-13	ENG-CH	Bristol City v Blackburn Rovers	1	U4.5	83.6	orange	+2.61	1.183	1.09	1.12	TOTO	1.180
+2026-10-11 13:24	2026-10-13	UCL	Galatasaray v Barcelona	1	O1.5	80.5	orange	+0.47	1.232	1.03	1.07	Coolbet	1.180
+2026-10-11 13:24	2026-10-14	ENG-CH	Norwich City v Southampton	1	O1.5	76.8	pink	-6.72	1.348	1.10	1.15	TOTO	1.310
+2026-10-11 13:24	2026-10-14	UCL	AS Roma v Real Madrid	1	O1.5	79.7	pink	-0.33	1.310	1.09	1.13	1xBet	1.310
+2026-10-11 13:24	2026-10-14	UCL	Manchester City v Paris Saint Germain	1	O1.5	79.8	pink	-0.23	1.310	1.10	1.14	1xBet	1.310
+2026-10-11 13:24	2026-10-14	UCL	ŠK Slovan Bratislava v VfB Stuttgart	1	O1.5	80.6	orange	+0.57	1.232	1.08	1.12	1xBet	1.180
+2026-10-11 13:24	2026-10-15	ARG-PD	Sarmiento de Junin v River Plate	1	O1.0	89.6	green	+6.42	1.183	1.04	1.05	1xBet	1.140
+2026-10-11 13:24	2026-10-15	MLS	FC Cincinnati v New England Revolution	1	O1.5	80.6	orange	-0.45	1.242	1.08	1.11	1xBet	1.180
+2026-10-11 13:24	2026-10-15	MLS	Inter Miami CF v New York City FC	1	O1.5	80.6	orange	+0.44	1.242	1.06	1.10	Pinnacle	1.180
+2026-10-11 13:24	2026-10-15	MLS	Toronto FC v Orlando City SC	1	O1.5	80.6	orange	-1.33	1.242	1.08	1.11	1xBet	1.180
+2026-10-11 13:24	2026-10-15	MLS	Chicago Fire v Philadelphia Union	1	O1.5	80.4	orange	-4.89	1.212	1.08	1.11	1xBet	1.180
+2026-10-11 13:24	2026-10-15	SAU-PL	Al-Faisaly KSA FC v Al-Kholood	1	U4.5	85.9	green	+8.07	1.212	1.08	1.08	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-15	SAU-PL	Al-Khaleej v Al-Fayha	1	U4.5	86.0	green	+8.17	1.212	1.07	1.07	Unibet (NL)	1.140
+2026-10-11 13:24	2026-10-15	UECL	SK Brann v Lincoln Red Imps FC	1	O1.5	84.2	orange	-6.09	1.232	1.08	1.10	1xBet	1.180
+2026-10-11 13:24	2026-10-16	CHN-SL	Henan FC v Tianjin Jinmen Tiger FC	1	U4.5	79.5	pink	-2.78	1.310	1.08	1.13	TOTO	1.310
+2026-10-11 13:24	2026-10-16	SAU-PL	Al-Qadsiah v Abha Club	1	O1.5	81.2	orange	-2.41	1.212	1.05	1.05	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-16	SAU-PL	Al-Riyadh v Al-Hilal	1	O1.5	82.9	orange	-0.71	1.242	1.06	1.06	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-16	GER-B2	FC Energie Cottbus v 1. FC Nürnberg	1	O1.5	83.2	orange	-2.39	1.222	1.07	1.11	TOTO	1.180
+2026-10-11 13:24	2026-10-16	SWE-AL	IF Brommapojkarna v Djurgardens IF	1	O1.5	79.0	pink	-4.38	1.310	1.13	1.23	Pinnacle	1.310
+2026-10-11 13:24	2026-10-16	NED-D2	Helmond Sport v NAC Breda	1	O1.5	83.3	orange	+4.88	1.212	1.11	1.11	TOTO	1.180
+2026-10-11 13:24	2026-10-16	NED-D2	VVV-Venlo v Jong AZ	1	O1.5	83.8	orange	+7.88	1.180	1.09	1.09	TOTO	1.180
+2026-10-11 13:24	2026-10-16	NED-ED	Heerenveen v Excelsior	1	O1.5	84.5	orange	+5.22	1.203	1.08	1.12	TOTO	1.180
+2026-10-11 13:24	2026-10-16	SAU-PL	Al-Ittihad v Al-Shabab	1	O1.5	80.2	orange	-3.41	1.222	1.06	1.06	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-16	GER-BL	Eintracht Frankfurt v 1. FC Köln	1	O1.5	83.6	orange	+0.06	1.212	1.09	1.12	1xBet	1.180
+2026-10-11 13:24	2026-10-16	POL-EK	Widzew Łódź v Wisła Kraków	1	O1.5	78.3	pink	-12.30	1.310	1.21	1.23	TOTO	1.310
+2026-10-11 13:24	2026-10-16	IRL-PD	Galway United v Shamrock Rovers	1	U4.5	84.8	orange	+11.34	1.180	1.08	1.08	LeoVegas (SE)	1.180
+2026-10-11 13:24	2026-10-16	ENG-CH	Burnley v Wolverhampton Wanderers	1	O1.5	79.6	pink	-12.46	1.319	1.19	1.19	LeoVegas (SE)	1.310
+2026-10-11 13:24	2026-10-17	ARG-PD	Boca Juniors v Talleres	1	O1.0	87.5	green	-0.26	1.222	1.03	1.05	1xBet	1.140
+2026-10-11 13:24	2026-10-17	MEX-LMX	Necaxa v Atlas	1	U4.5	83.4	orange	+1.53	1.222	1.10	1.10	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	MEX-LMX	Atlante FC v Pumas	1	U4.5	83.4	orange	+0.78	1.232	1.11	1.11	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-17	MEX-LMX	Tijuana v Puebla	1	U4.5	83.4	orange	-0.58	1.222	1.10	1.12	GTbets	1.180
+2026-10-11 13:24	2026-10-17	TUR-SL	Erzurum BB v Eyüpspor	1	U4.5	85.0	green	+1.29	1.222	1.02	1.06	Nordic Bet	1.140
+2026-10-11 13:24	2026-10-17	GER-B2	VfL Wolfsburg v 1. FC Heidenheim	1	O1.5	84.6	orange	-0.99	1.212	1.08	1.11	TOTO	1.180
+2026-10-11 13:24	2026-10-17	CHN-SL	Yunnan Yukun v Chongqing Tonglianglong FC	1	U4.5	79.6	pink	-6.90	1.310	1.18	1.24	1xBet	1.310
+2026-10-11 13:24	2026-10-17	FRA-L2	Nantes v USL Dunkerque	1	U4.5	84.3	orange	+1.19	1.232	1.09	1.12	Coolbet	1.180
+2026-10-11 13:24	2026-10-17	NOR-EL	HamKam v Bodø/Glimt	1	O1.5	83.8	orange	+7.84	1.222	1.04	1.04	LeoVegas (SE)	1.180
+2026-10-11 13:24	2026-10-17	ITA-SB	Padova v Virtus Entella	1	U3.5	77.1	pink	+5.77	1.406	1.18	1.18	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-17	GER-BL	Hamburger SV v VfB Stuttgart	1	O1.5	84.8	orange	+1.26	1.203	1.07	1.12	1xBet	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Birmingham City v Queens Park Rangers	1	U4.5	83.6	orange	+0.96	1.183	1.09	1.09	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Bristol City v Sheffield United	1	U4.5	83.6	orange	+3.10	1.180	1.09	1.09	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Norwich City v Portsmouth	1	O1.5	76.5	pink	-14.96	1.348	1.18	1.18	Unibet (NL)	1.310
+2026-10-11 13:24	2026-10-17	ENG-CH	West Bromwich Albion v Blackburn Rovers	1	U4.5	83.6	orange	+0.96	1.183	1.09	1.09	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-17	ENG-CH	Wrexham AFC v Preston North End	1	U4.5	83.6	orange	+2.86	1.180	1.09	1.09	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	ENG-L1	Stockport County FC v Bromley FC	1	O1.5	77.2	pink	-8.37	1.348	1.09	1.19	Coolbet	1.310
+2026-10-11 13:24	2026-10-17	GRE-SL	Levadiakos v Volos FC	1	O1.0	82.0	orange	+1.24	1.180	1.02	1.04	Betsson	1.180
+2026-10-11 13:24	2026-10-17	ESP-LL	Villarreal v Elche CF	1	O1.5	79.9	pink	+0.52	1.310	1.09	1.16	1xBet	1.310
+2026-10-11 13:24	2026-10-17	NED-ED	ADO Den Haag v PSV Eindhoven	1	O1.5	86.3	green	+2.34	1.222	1.03	1.07	Coolbet	1.140
+2026-10-11 13:24	2026-10-17	AUT-BL	Austria Lustenau v LASK	1	O1.5	79.3	pink	-6.58	1.329	1.09	1.10	Nordic Bet	1.310
+2026-10-11 13:24	2026-10-17	FRA-L1	Strasbourg v Paris Saint Germain	1	O1.5	80.7	orange	-7.07	1.261	1.07	1.11	1xBet	1.180
+2026-10-11 13:24	2026-10-17	ESP-LL	Real Betis v Barcelona	1	O1.5	80.8	orange	-5.08	1.290	1.04	1.09	1xBet	1.180
+2026-10-11 13:24	2026-10-17	GER-BL	Bayern Munich v RB Leipzig	1	O1.5	86.7	green	+9.59	1.193	1.02	1.04	1xBet	1.140
+2026-10-11 13:24	2026-10-17	ARG-PD	Banfield v Argentinos Juniors	1	O1.0	88.8	green	+3.40	1.193	1.03	1.05	1xBet	1.140
+2026-10-11 13:24	2026-10-17	NED-ED	SC Telstar v Feyenoord	1	O1.5	85.6	green	+1.64	1.193	1.05	1.08	TOTO	1.140
+2026-10-11 13:24	2026-10-17	MLS	Philadelphia Union v Charlotte FC	1	O1.5	80.5	orange	-5.26	1.222	1.08	1.08	LeoVegas (SE)	1.180
+2026-10-11 13:24	2026-10-17	ESP-L2	Las Palmas v CD Castellón	1	U4.5	84.4	orange	+4.07	1.180	1.10	1.10	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-17	ESP-LL	Valencia v Athletic Bilbao	1	U4.5	84.8	orange	+2.74	1.180	1.07	1.12	1xBet	1.180
+2026-10-11 13:24	2026-10-17	SCO-PL	Dundee FC v Rangers	1	O1.5	78.5	pink	-4.37	1.310	1.10	1.21	Coolbet	1.310
+2026-10-11 13:24	2026-10-17	BRA-SB	Ceará v Juventude	1	O1.0	88.5	green	+6.09	1.174	1.03	1.03	Unibet (SE)	1.140
+2026-10-11 13:24	2026-10-17	ARG-PD	Independiente Rivadavia v CA Tigre BA	1	O1.0	88.5	green	+1.62	1.203	1.03	1.05	1xBet	1.140
+2026-10-11 13:24	2026-10-18	BRA-SA	Atletico Paranaense v Palmeiras	1	U4.5	82.8	orange	+0.59	1.183	1.06	1.08	1xBet	1.180
+2026-10-11 13:24	2026-10-18	ARG-PD	Velez Sarsfield BA v Gimnasia Mendoza	1	O1.0	88.2	green	+3.84	1.212	1.03	1.05	1xBet	1.140
+2026-10-11 13:24	2026-10-18	PER-L1	Melgar v Deportivo Garcilaso	1	U4.5	80.9	orange	+10.68	1.183	1.07	1.07	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	MLS	Atlanta United FC v Inter Miami CF	1	O1.5	80.6	orange	+1.00	1.251	1.04	1.04	Unibet (NL)	1.180
+2026-10-11 13:24	2026-10-18	MLS	New England Revolution v Chicago Fire	1	O1.5	80.6	orange	+2.55	1.242	1.10	1.10	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-18	MLS	New York City FC v Los Angeles FC	1	U4.5	80.4	orange	-2.33	1.310	1.12	1.12	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-18	MLS	Austin FC v Vancouver Whitecaps FC	1	O1.5	80.7	orange	+1.54	1.261	1.12	1.12	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-18	MLS	Houston Dynamo v FC Dallas	1	U4.5	80.2	orange	+9.26	1.310	1.12	1.12	Unibet (SE)	1.180
+2026-10-11 13:24	2026-10-18	MLS	Portland Timbers v Colorado Rapids	1	U4.5	79.8	pink	-4.09	1.319	1.24	1.24	Unibet (SE)	1.310
+2026-10-11 13:24	2026-10-18	JPN-J1	FC Machida Zelvia v Avispa Fukuoka	1	U4.5	83.3	orange	-0.88	1.203	1.06	1.08	Pinnacle	1.180
+2026-10-11 13:24	2026-10-18	CHN-SL	Wuhan Three Towns v Shanghai Shenhua FC	1	O1.5	83.3	orange	+2.76	1.222	1.06	1.09	TOTO	1.180
+2026-10-11 13:24	2026-10-18	NED-D2	RKC Waalwijk v FC Volendam	1	O1.5	83.9	orange	+14.04	1.180	1.11	1.11	TOTO	1.180
+2026-10-11 13:24	2026-10-18	CHN-SL	Beijing FC v Qingdao West Coast FC	1	O1.5	82.8	orange	+1.02	1.222	1.08	1.12	TOTO	1.180
+2026-10-11 13:24	2026-10-18	AUT-BL	RB Salzburg v Rheindorf Altach	1	O1.5	76.3	pink	-6.89	1.329	1.08	1.09	Nordic Bet	1.310
+2026-10-11 13:24	2026-10-18	NOR-EL	Sarpsborg FK v Rosenborg	1	O1.5	83.5	orange	+3.97	1.222	1.09	1.10	LeoVegas (SE)	1.180
