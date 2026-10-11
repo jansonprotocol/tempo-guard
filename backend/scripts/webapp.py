@@ -1127,7 +1127,20 @@ STRONG_SCORE = 6.34    # the confluence cut STRONG used until 2 Oct; drift.py st
 # 80%+ at/over the bar, 51, 84.3%, +12.5%; all 7 at 80%+ 0-5% under, 75,
 # 86.7%, +2.9%"). Both rows together: 126 cards, about 85.7% and +6.8% at
 # the feed's best price. A STRONG card is a PLAY even under the bar.
-STRONG_UNDER = 5.0          # percent below the play bar STRONG still reaches
+#
+# THE 3-5% UNDER BAND LEFT STRONG (the bettor, 11 Oct: "move this 3-5
+# under strong to weak and replace with unlabelled all 7 rates 0-3
+# under"). Split by band, the old 0-5% under half was two different
+# cards: 0-3% under landed 30 of 33 (+11.2%), 3-5% under only 11 of 16
+# (-16.8%, break-even 1.45). So STRONG now reaches 3% under the bar, not
+# 5, and an all-seven card in the 3-5% under band that used to be STRONG
+# is WEAK instead — kept in the record, never a play. Its place is taken
+# by the all-seven 0-3% under cards sitting under the floor (21 cards,
+# 100%, +14.0%), which become ★ STRONG FROM: the FROM band they need is
+# on, so they carry a named profile and a buy-from price rather than the
+# play pill (his call, 11 Oct, over waiving the floor for them).
+STRONG_UNDER = 3.0          # percent below the play bar STRONG still reaches
+STRONG_WEAK_BAND = "3–5% under"   # all seven, this band: WEAK, no play
 _SEVEN_BUSY: set = set()
 
 
@@ -1521,6 +1534,12 @@ def tier_of(f) -> str | None:
     if not g or not price or not lab or lab.endswith("red"):
         return None
     band = gap_band(g[1])
+    # THE BAND STRONG GAVE UP (11 Oct, STRONG_WEAK_BAND): an all-seven
+    # card at the price STRONG used to take, but 3-5% under the bar, is
+    # WEAK — no play, still counted.
+    if band == STRONG_WEAK_BAND and price >= TIER_MIN["strong"] \
+            and all_seven(f, lab):
+        return "medium"
     if g[1] <= -STRONG_WATCH_UNDER:
         if band in FROM_BANDS["strong watch"]:
             return "strong watch from"
@@ -3010,6 +3029,9 @@ def _frozen_guard(f, call: dict) -> str:
            "watch": "dimv", "no play": "no"}[call["mark"]]
     if call["mark"] in ("watch", "no play") and t == "strong watch":
         word, cls = "STRONG WATCH", "swatch"
+    elif call["mark"] in ("watch", "no play") and t == "medium":
+        # The band STRONG gave up (11 Oct, STRONG_WEAK_BAND).
+        word, cls = "WEAK", "weak"
     elif call["mark"] in ("watch", "no play") and t in FROM_GROUP:
         word, cls = FROM_GROUP[t][1], FROM_GROUP[t][2]
     why = decline_reason(f)
@@ -3121,6 +3143,14 @@ def _guard(f, best: int) -> str:
                 'under the floor its tier needs to break even — WEAK, not a '
                 'play; kept in the record for data">WEAK \u00b7 NO PLAY'
                 f'{_target_html(f, lab, need)}</span>')
+    elif t == "medium":
+        # The band STRONG gave up (11 Oct): all seven rates, 3-5% under
+        # the bar, at a price STRONG would once have taken.
+        mark = ('<span class="vmark weak" title="all seven rates at 80%+ but '
+                '3-5% under the play bar, the band STRONG gave up on 11 Oct: '
+                '11 of 16 and -16.8% — WEAK, not a play; kept in the record '
+                f'for data">WEAK · NO PLAY{_target_html(f, lab, need)}'
+                '</span>')
     elif lab.endswith("red"):
         mark = '<span class="vmark no" title="the tier says avoid">no play</span>'
     elif odds is None:
@@ -4238,6 +4268,8 @@ def profiles_html(fixtures) -> str:
         seven = all_seven(f, p[7])
         if seven and gap >= -STRONG_UNDER and best >= fsr:
             g = order[0]
+        elif seven and band == STRONG_WEAK_BAND and best >= fsr:
+            g = order[4]        # the band STRONG gave up on 11 Oct
         elif seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
             g = order[1]
         elif gap <= -STRONG_WATCH_UNDER and best >= fsw:

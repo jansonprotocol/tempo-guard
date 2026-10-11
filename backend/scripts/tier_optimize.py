@@ -59,6 +59,14 @@ LOG = ROOT / "config" / "tier_params_log.tsv"
 
 FLOOR_MIN_N = 100
 FLOOR_STEP = 0.02
+# A FLOOR THE BETTOR HAS FIXED BY HAND. When STRONG gave up the 3-5%
+# under band (11 Oct) the tier's break-even fell to 1.11, and a 1.11
+# floor would have swept the all-seven 0-3% under cards under the old
+# floor into STRONG — the very cards he had just chosen to keep OUT of
+# the play pill and show as ★ STRONG FROM instead. So the strong floor
+# is held at the price he decided on; drop the entry to let the
+# optimizer measure it again.
+FLOOR_HELD = {"strong": 1.17}
 FROM_HIT = 81.0
 FROM_MIN_N = 15
 # MEDIUM by gap band (the bettor, 4 Oct): a mark where it has paid, SKIP
@@ -135,7 +143,13 @@ def main() -> None:
         n, hit = rate(pop)
         be = 100 / hit if hit else None
         cur = old_floor[t]
-        if be is None:
+        if t in FLOOR_HELD:
+            new = FLOOR_HELD[t]
+            note = (f"held by hand (the bettor, 11 Oct); measured "
+                    f"{be:.3f} on {n}" if be else "held by hand")
+            if new != cur:
+                changes.append(f"floor {t}: {cur:.2f} -> {new:.2f} (held by hand)")
+        elif be is None:
             note = "no settled cards"
             new = cur
         elif n < FLOOR_MIN_N:

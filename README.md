@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 83.5%
+## CURRENT CONFIRMED HITRATE: 83.4%
 
     lane                        Tip 1              Tip 2
-    all matches            743 / 890  83.5%    510 / 737  69.2%
-    played lanes  >+1%     325 / 391  83.1%    507 / 731  69.4%
+    all matches            746 / 895  83.4%    513 / 742  69.1%
+    played lanes  >+1%     326 / 394  82.7%    510 / 736  69.3%
     placed bets            220 / 281  78.3%    ROI +1.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 832 / 1122   ·   74.2%**   ·   **Tip 1 — 325 / 391   ·   83.1%**   ·   **Tip 2 — 507 / 731   ·   69.4%**
+**Playable — 836 / 1130   ·   74.0%**   ·   **Tip 1 — 326 / 394   ·   82.7%**   ·   **Tip 2 — 510 / 736   ·   69.3%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.4 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1597,7 +1597,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 743 / 890   ·   83.5%**   ·   **Tip 2 — 510 / 737   ·   69.2%**
+**Tip 1 — 746 / 895   ·   83.4%**   ·   **Tip 2 — 513 / 742   ·   69.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.3 −4.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.7 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>

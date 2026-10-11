@@ -75,6 +75,21 @@ scripts/tier_optimize.py, shown as "n/50" on the pill. A card already a
 play or carrying a bet keeps its place (a play stays a play). When a slip leg is on a WEAK card, say so in the body; it
 is not an alert.
 
+**STRONG STOPS AT 3% UNDER THE BAR.** (11 Oct: "Move this 3-5 under
+strong to weak and replace with Unlabeled all 7 rates 0-3 under".) Split
+by band, STRONG's old 0-5% under half was two different cards: 0-3%
+under landed 30 of 33 (+11.2%), 3-5% under 11 of 16 (-16.8%,
+break-even 1.45). So `STRONG_UNDER` is 3, and an all-seven card in the
+3-5% under band at a price STRONG would once have taken is **WEAK**,
+never a play, still counted. Its place goes to the all-seven 0-3% under
+cards under the floor (21 cards, 100%, +14.0%): they are **★ STRONG
+FROM**, a named profile and a buy-from price, NOT the play pill — his
+call, 11 Oct, when asked whether to waive the floor for them instead.
+THE 1.17 STRONG FLOOR IS HELD BY HAND for that reason
+(`tier_optimize.FLOOR_HELD`): with the 3-5% band gone the tier's
+break-even falls to about 1.11, and a 1.11 floor would sweep those very
+cards into STRONG. Drop the entry to let the optimizer measure it again.
+
 **HIS METHOD: THE CLASS RATE, THEN WAIT FOR THE PRICE.** (5 Oct: "All is
 moot. As we have found out how all cards are performing, that's the only
 number that counts. Each time and band is measured, that's the only rate
