@@ -65,12 +65,22 @@ jobs:
           # --allow-stale: an unswept no-feed card hours past kickoff is
           # the sweep's problem, not a reason to leave the week unfilled
           python scripts/feedslate.py --write --allow-stale
+          # QUOTE WHAT THE FILL JUST ADDED (11 Oct). The fill prices its
+          # new cards through the engine but leaves nearly all of them
+          # without a MARKET price — 303 cards landed on 11 Oct and only
+          # the first two days carried a quote. A card with no price has
+          # no first-sight stamp, so no locked lane, no tier and no band
+          # check, until some later odds refresh happens to reach it. The
+          # league listings this needs are already in the cache the fill
+          # just paid for, so it costs nothing extra.
+          python scripts/odds_api.py --quotes || true
+          python scripts/board.py --allow-stale || true
           # and say so if any pending card's kickoff has drifted from
           # the feed's, on the Amsterdam clock — a moved match or a typo
           python scripts/feedslate.py --clock || true
           cd ..
           git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv \
-                     config/reads_cache.json config/roi_log.tsv \
+                     config/reads_cache.json config/roi_log.tsv config/band_log.tsv \
                      config/forward_log.tsv config/play_lock.tsv config/tier_band_log.tsv README.md web/
           if git diff --cached --quiet; then
             echo "nothing to add — the board already has the week"; exit 0
