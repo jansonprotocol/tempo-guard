@@ -59,28 +59,51 @@ jobs:
         run: |
           git config user.name  "tempo-guard bot"
           git config user.email "noreply@anthropic.com"
-          for try in 1 2 3; do
-            git fetch origin main
-            git reset --hard origin/main
-            cd backend
-            # --allow-stale: an unswept no-feed card hours past kickoff is
-            # the sweep's problem, not a reason to leave the week unfilled
-            python scripts/feedslate.py --write --allow-stale
-            # and say so if any pending card's kickoff has drifted from
-            # the feed's, on the Amsterdam clock — a moved match or a typo
-            python scripts/feedslate.py --clock || true
-            cd ..
-            git add -A config/fixtures.tsv config/odds_quotes.tsv config/reads_cache.json \
-                       config/forward_log.tsv config/play_lock.tsv config/tier_band_log.tsv README.md web/
-            if git diff --cached --quiet; then
-              echo "nothing to add — the board already has the week"; exit 0
-            fi
-            n=$(git diff --cached --numstat config/fixtures.tsv | cut -f1)
-            git commit -q -m "board fill: $(date -u '+%Y-%m-%d') — ${n:-0} cards from the feed" \
-              -m "Next week's fixtures in every league the engine and the feed both carry, priced through the current engine and quoted, as a typed slate would be."
+          git fetch origin main
+          git reset --hard origin/main
+          cd backend
+          # --allow-stale: an unswept no-feed card hours past kickoff is
+          # the sweep's problem, not a reason to leave the week unfilled
+          python scripts/feedslate.py --write --allow-stale
+          # and say so if any pending card's kickoff has drifted from
+          # the feed's, on the Amsterdam clock — a moved match or a typo
+          python scripts/feedslate.py --clock || true
+          cd ..
+          git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv \
+                     config/reads_cache.json config/roi_log.tsv \
+                     config/forward_log.tsv config/play_lock.tsv config/tier_band_log.tsv README.md web/
+          if git diff --cached --quiet; then
+            echo "nothing to add — the board already has the week"; exit 0
+          fi
+          n=$(git diff --cached --numstat config/fixtures.tsv | cut -f1)
+          git commit -q -m "board fill: $(date -u '+%Y-%m-%d') — ${n:-0} cards from the feed" \
+            -m "Next week's fixtures in every league the engine and the feed both carry, priced through the current engine and quoted, as a typed slate would be."
+          # THE PUSH, NOT THE FILL, IS WHAT LOSES THE RACE (11 Oct). The
+          # live sweep pushes every two minutes; a fill takes minutes. The
+          # old loop answered a refused push by throwing the whole fill
+          # away and starting over, which simply lost the same race again
+          # — the board fill failed every day from 6 to 11 Oct and the
+          # board ran a week short. So the fill happens ONCE, and a
+          # refused push is answered by merging what the sweep pushed and
+          # re-rendering on top of it. -X ours keeps the new cards where a
+          # hunk truly collides; the sweep's own lines merge in cleanly,
+          # since it edits rows the fill never touched.
+          for try in $(seq 1 8); do
             if git push origin HEAD:main; then
               echo "pushed on try $try"; exit 0
             fi
-            echo "push refused on try $try — resetting onto main and filling again"
+            echo "push refused on try $try — merging what the sweep pushed"
+            git fetch origin main
+            git merge -X ours --no-edit origin/main || {
+              for f in $(git diff --name-only --diff-filter=U); do
+                git checkout --ours -- "$f" || git checkout MERGE_HEAD -- "$f"
+                git add "$f"
+              done
+              git commit -q --no-edit
+            }
+            (cd backend && python scripts/board.py --allow-stale) || true
+            git add -A config README.md web/
+            git diff --cached --quiet || git commit -q -m "re-render onto the sweep's push"
+            sleep $((RANDOM % 20 + 5))
           done
-          echo "could not push after 3 tries"; exit 1
+          echo "could not push after 8 tries"; exit 1
