@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 83.1%
+## CURRENT CONFIRMED HITRATE: 83.0%
 
     lane                        Tip 1              Tip 2
-    all matches            878 / 1057  83.1%    593 / 862  68.8%
+    all matches            878 / 1058  83.0%    593 / 862  68.8%
     played lanes  >+1%     390 / 471  82.8%    590 / 856  68.9%
     placed bets            231 / 295  78.3%    ROI +0.8%
 
@@ -1728,7 +1728,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 11-10 18:30 <b>Rubin Kazan v Dinamo Moscow</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (83.5 −3.1)</td><td>U4.25 86.8% <b>−0.5%</b><br>buy≥1.18 (+5.5% margin)</td><td>U3.75 77.2% +4.2%<br>buy≥1.27 (+4.3% margin) · floor −0.8</td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-10 20:00 <b>Olympiakos Piraeus v Panathinaikos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (75.9 −9.0)</td><td>O1.0 82.1% <b>−10.8%</b><br>buy≥1.17 (+6.7% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 11-10 20:15 <b>Legia Warszawa v Wisła Kraków</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.1 −6.8)</td><td>O1.5 82.7% +6.9%<br>buy≥1.33 (+9.8% margin)</td><td>O2.25 61.7% +10.2%<br>buy≥1.50 (+3.3% margin) · floor −16.3</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.2% +5.7% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 3-3 <b>Pumas v Cruz Azul</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.0 capped)</td><td>U4.25 83.3% <b>−1.0%</b><br>buy≥1.25 (+5.5% margin)<br><i>U4.25 holding · ✗ gone</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-10 14:00 <b>Real Valladolid CF v Albacete</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (86.5 capped)</td><td>U3.0 76.1% <b>+0.0%</b><br>buy≥1.39 (+1.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-10 16:15 <b>Burgos CF v Granada CF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (86.5 capped)</td><td>U4.25 84.5% <b>−4.8%</b><br>buy≥1.24 (+5.5% margin)</td><td><b>Burgos CF O0.5</b> 81.4% +5.1%<br>buy≥1.32 (+7.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 72.9% +10.0% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-10 18:00 <b>Radomiak Radom v Motor Lublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.1 −6.8)</td><td>U4.25 86.2% <b>+0.4%</b><br>buy≥1.23 (+7.2% margin)</td><td>U3.75 73.6% +3.0%<br>buy≥1.29 (+2.0% margin) · floor −4.4</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 75.8% +3.3% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2039,7 +2038,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 878 / 1057   ·   83.1%**   ·   **Tip 2 — 593 / 862   ·   68.8%**
+**Tip 1 — 878 / 1058   ·   83.0%**   ·   **Tip 2 — 593 / 862   ·   68.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.4 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3684,6 +3683,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-3 · 12-10 01:15 <b>Pachuca v Necaxa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.0 capped)</td><td>U4.25 83.2% <b>−1.0%</b><br>buy≥1.24 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 71.0% +8.7% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 12-10 01:30 <b>Cusco FC v Alianza Lima</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>U4.25 81.1% <b>−5.6%</b><br>buy≥1.25 (+6.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 12-10 02:30 <b>Talleres v Independiente</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.2 −0.2)</td><td>U3.0 85.4% <b>+0.5%</b><br>buy≥1.25 (+3.1% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-3 · 12-10 03:00 <b>Pumas v Cruz Azul</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.0 capped)</td><td>U4.25 83.3% <b>−1.0%</b><br>buy≥1.25 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 12-10 03:15 <b>América de Cali v Independiente Medellín</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.4 capped)</td><td>O1.5 67.6% <b>+0.0%</b><br>buy≥1.30 (+0.5% margin)</td><td>❌ <b>América de Cali O1.5</b> 56.0% +16.3%<br>buy≥1.84 (+2.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 75.1% +11.1% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
