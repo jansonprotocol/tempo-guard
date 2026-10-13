@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 82.8%
+## CURRENT CONFIRMED HITRATE: 82.7%
 
     lane                        Tip 1              Tip 2
-    all matches            890 / 1075  82.8%    601 / 874  68.8%
-    played lanes  >+1%     395 / 478  82.6%    598 / 868  68.9%
+    all matches            890 / 1076  82.7%    602 / 875  68.8%
+    played lanes  >+1%     395 / 478  82.6%    599 / 869  68.9%
     placed bets            234 / 298  78.5%    ROI +1.1%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 993 / 1346   ·   73.8%**   ·   **Tip 1 — 395 / 478   ·   82.6%**   ·   **Tip 2 — 598 / 868   ·   68.9%**
+**Playable — 994 / 1347   ·   73.8%**   ·   **Tip 1 — 395 / 478   ·   82.6%**   ·   **Tip 2 — 599 / 869   ·   68.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1486,7 +1486,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">◦ 1-0 · 12-10 23:30 <b>Gimnasia Mendoza v Newells Old Boys</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.2 −0.2)</td><td>O1.0 89.1% +2.0%<br>buy≥1.23 (+5.3% margin)</td><td>❌ O1.75 65.0% +4.3%<br>buy≥1.74 (+3.6% margin) · floor −10.0</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 72.8% +4.4% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 5-1 · 13-10 00:00 <b>Grêmio Novorizontino v Ponte Preta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>U3.0 82.2% +1.1%<br>buy≥1.33 (+3.6% margin)</td><td>✅ <b>Grêmio Novorizontino O1.5</b> 63.3% +24.1%<br>buy≥1.64 (+3.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 84.9% +18.7% · buy≥1.24 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 13-10 00:30 <b>Criciuma v América Mineiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>U3.0 85.4% +4.3%<br>buy≥1.32 (+8.7% margin)</td><td>✅ U2.75 67.2% +6.1%<br>buy≥1.40 (+3.7% margin) · floor −7.8</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 4-2 <b>Bragantino-SP v Cruzeiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>O1.75 74.3% +2.6%<br>buy≥1.47 (+3.7% margin) · floor −0.7 · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">❌ 4-2 · 13-10 02:00 <b>Bragantino-SP v Cruzeiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>✅ O1.75 74.3% +2.6%<br>buy≥1.47 (+3.7% margin) · floor −0.7</td></tr></table>
 <table align="left"><tr><th align="left">🟢 13-10 20:45 <b>Burnley v Charlton Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.3 −4.9)</td><td>— under +1%</td><td><b>Burnley O0.5</b> 81.9% +4.8%<br>buy≥1.33 (+9.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 72.1% +12.7% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 13-10 20:45 <b>Cardiff City v Watford</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.3 −4.9)</td><td>U3.0 79.5% +5.3%<br>buy≥1.46 (+8.5% margin)</td><td>U2.75 59.0% +6.4%<br>buy≥1.57 (+3.1% margin) · floor −16.0</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 70.5% +11.1% · buy≥1.49 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 13-10 20:45 <b>Millwall v Swansea City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.3 −4.9)</td><td>— under +1%</td><td><b>Swansea City O0.5</b> 80.7% +11.4%<br>buy≥1.35 (+8.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 75.6% +2.1% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1784,7 +1784,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 12-10 18:00 <b>Radomiak Radom v Motor Lublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.1 −6.8)</td><td>U4.25 86.2% <b>+0.4%</b><br>buy≥1.23 (+7.2% margin)</td><td>U3.75 73.6% +3.0%<br>buy≥1.29 (+2.0% margin) · floor −4.4</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 75.8% +3.3% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-10 20:30 <b>GKS Katowice v Wieczysta Kraków</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (79.1 −6.8)</td><td>O1.5 78.5% +2.8%<br>buy≥1.34 (+5.4% margin)</td><td><b>GKS Katowice O1.5</b> 59.5% +13.8%<br>buy≥1.73 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 79.1% +6.6% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 12-10 21:00 <b>Shamrock Rovers v Bohemians</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.1 capped)</td><td>O1.5 70.5% <b>+0.0%</b><br>buy≥1.38 (+0.7% margin)</td><td><b>Shamrock Rovers O0.5</b> 81.5% +6.4%<br>buy≥1.31 (+7.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.8% +7.1% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+6' 4-2 <b>Bragantino-SP v Cruzeiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.9%</b><br>buy≥1.24 (+6.8% margin)<br><i>U4.25 holding · ✗ gone</i></td><td>O1.75 74.3% +2.6%<br>buy≥1.47 (+3.7% margin) · floor −0.7 · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 13-10 18:45 <b>RC Lens v Sporting Lisbon</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Champions League (87.0 +2.9)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 13-10 20:45 <b>Bristol City v Blackburn Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.3 −4.9)</td><td>U4.25 83.6% <b>−4.5%</b><br>buy≥1.22 (+6.2% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 13-10 20:45 <b>Burnley v Charlton Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Championship (78.3 −4.9)</td><td>U4.25 83.7% <b>−4.5%</b><br>buy≥1.23 (+6.2% margin)</td><td><b>Burnley O0.5</b> 81.9% +4.8%<br>buy≥1.33 (+9.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 72.1% +12.7% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2140,7 +2139,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 890 / 1075   ·   82.8%**   ·   **Tip 2 — 601 / 874   ·   68.8%**
+**Tip 1 — 890 / 1076   ·   82.7%**   ·   **Tip 2 — 602 / 875   ·   68.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.4 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3810,6 +3809,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 5-1 · 13-10 00:00 <b>Grêmio Novorizontino v Ponte Preta</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>U3.0 82.2% +1.1%<br>buy≥1.33 (+3.6% margin)</td><td>✅ <b>Grêmio Novorizontino O1.5</b> 63.3% +24.1%<br>buy≥1.64 (+3.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 84.9% +18.7% · buy≥1.24 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-4 · 13-10 00:30 <b>Chapecoense v Atletico Paranaense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 75.8% <b>+0.4%</b><br>buy≥1.52 (+5.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 13-10 00:30 <b>Criciuma v América Mineiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>U3.0 85.4% +4.3%<br>buy≥1.32 (+8.7% margin)</td><td>✅ U2.75 67.2% +6.1%<br>buy≥1.40 (+3.7% margin) · floor −7.8</td></tr></table>
+<table align="left"><tr><th align="left">❌ 4-2 · 13-10 02:00 <b>Bragantino-SP v Cruzeiro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.9%</b><br>buy≥1.24 (+6.8% margin)</td><td>✅ O1.75 74.3% +2.6%<br>buy≥1.47 (+3.7% margin) · floor −0.7</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 13-10 02:00 <b>Botafogo-SP v Ceará</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (82.5 −4.5)</td><td>U3.0 81.6% <b>+0.5%</b><br>buy≥1.34 (+3.1% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
