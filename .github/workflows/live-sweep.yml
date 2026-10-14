@@ -129,10 +129,28 @@ jobs:
             # card sits in — carries the [deploy] marker that builds the
             # site. scripts/sweepdiff.py says what moved.
             RC=0; WHY=$(python backend/scripts/sweepdiff.py) || RC=$?
+            # A COMMIT THAT IS NOT THE SWEEP'S OWN HAS TO REACH THE SITE
+            # (14 Oct: "I'm not seeing it live. Are you pushing to
+            # main?"). Render skips a deploy whose head commit carries
+            # [skip render], and the sweep pushes one of those every
+            # ninety seconds — so a push of code or a re-render lands on
+            # main, the next tick becomes the head, and the build never
+            # happens: the site sat a whole commit behind for an evening
+            # while the page it was meant to show was already on main. So
+            # when the commit this pass is building on is NOT a sweep
+            # commit, this pass deploys whatever it finds, whatever moved.
+            PREV=$(git log -1 --pretty=%s)
+            case "$PREV" in
+              "live sweep"*|"live tick"*) CARRY=0 ;;
+              *) CARRY=1; echo "carrying a deploy for: $PREV" ;;
+            esac
             if git diff --cached --quiet; then
               echo "nothing moved"
             else
-              if [ "$RC" -eq 0 ] && echo "$WHY" | grep -qE '^(kicked off|final|new row|changed)'; then
+              if [ "$CARRY" -eq 1 ]; then
+                SUBJECT="live sweep [deploy]: $(date -u '+%Y-%m-%d %H:%M') UTC"
+                WHY="deploying the commit before this one — $PREV"
+              elif [ "$RC" -eq 0 ] && echo "$WHY" | grep -qE '^(kicked off|final|new row|changed)'; then
                 SUBJECT="live sweep [deploy]: $(date -u '+%Y-%m-%d %H:%M') UTC"
               elif [ "$RC" -eq 0 ]; then
                 SUBJECT="live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC [skip render]"
