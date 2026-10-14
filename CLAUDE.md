@@ -220,6 +220,38 @@ first-sight stamp, every tier, band, decline and record read exactly what
 they read before; this is display only, and the prices are still in
 config/forward_log.tsv and config/odds_quotes.tsv for logging a bet.
 
+**AND A LIVE BAR ONCE IT KICKS OFF.** (14 Oct: "when match goes live its
+original buy from is gone. And I'm not seeing the new live advisor
+design.") Both halves are one thing. A card past kickoff has no starred
+lane (`best = 0`), so the pre-match bar never attached — and putting it
+back would be worse than nothing, because a price measured on cards
+bought BEFORE kickoff is not the price to pay at 60' with a goal in. What
+sits there now is the live record (`webapp.build_live`, `live_advice`),
+measured from config/live_log.tsv joined to the settled counted cards:
+
+    🎯 LIVE BUY FROM 1.17 · U4.5 at 13' with 0 in lands 90.0% on 230
+
+AT THIS MINUTE, WITH THIS MANY GOALS IN, how often has this LANE landed
+on cards like this one — five minute buckets, goals capped at 3+, and the
+pool is cards whose OWN lane is this lane, because the two differ hugely
+(at 60' goalless, O0.5 lands 94% on over-lane cards and 64% on under-lane
+ones). Under `LIVE_MIN_N` it falls back to every lane and says "all
+lanes". Same +5% margin as the pre-match bar, same thin-cell honesty.
+
+THE PIVOT, when the card's own lane has died (`LIVE_DEAD`, 55%): the
+same-side line that is still alive, with its own price — O1.5 at 45-60'
+goalless reads 41.2% (2.55) and the pivot names O0.5 at 94.1% (1.12).
+SAME SIDE ONLY, and this is not a detail: at 60' goalless the table has
+U4.5 at 100%, and naming it would be the board telling him to take the
+opposite side of his own card — the one thing his own rules call a wrong
+lane. A pivot loosens the line; it never crosses. A candidate must also
+beat the dying lane by 10 points, so the suggestion is a real improvement
+and its PRICE decides whether to take it.
+
+A DECLINED CARD GETS NO LIVE BAR EITHER — two of the three cards running
+when this shipped were declined on claim, and they correctly showed
+nothing.
+
 **THE BAND MOVER: PROFILES MOVE BOTH WAYS, BY THEMSELVES.** (14 Oct:
 "Build that rule: 85%+ positive ROI on 30+ promotes. This means it can
 check all profiles inside decline (same as we have on the other boards).

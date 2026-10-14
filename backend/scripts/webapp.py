@@ -1960,6 +1960,175 @@ def market_bar(f, cell: str) -> list | None:
     return out or None
 
 
+# ───────── THE LIVE BAR: the same guard, at the current minute ─────────
+#
+# (the bettor, 14 Oct, on a card that had kicked off: "when match goes
+# live its original buy from is gone. And I'm not seeing the new live
+# advisor design".) Both halves of that are one thing. A card past
+# kickoff has no starred lane any more, so the pre-match bar never
+# attached — and putting it back would be worse than nothing: a price
+# measured on cards bought before kickoff is not the price to pay at 60'
+# with a goal in. What belongs there is the live record:
+#
+#     at this MINUTE, with this many GOALS in, how often has this LANE
+#     landed on cards like this one, and what price does that need
+#
+# Measured the way he asked for it (14 Oct: "the advisor should measure
+# the market versus the opposite - in time"), from config/live_log.tsv
+# joined to the settled counted cards: every card's state at each
+# checkpoint against what the match finally did. The pool is cards whose
+# own lane is this lane — the two differ hugely (at 60' goalless, O0.5
+# lands 94% on over-lane cards and 64% on under-lane ones), so pooling
+# them would price both wrong — and falls back to every lane when thin.
+# AND THE PIVOT: when the card's own lane has died, the line that is
+# still live is named with its own price, which is the 0-0-at-60 case he
+# described ("pivot to O0.5?").
+LIVE_BUCKETS = ((0, 25, 20, "by 25'"), (25, 45, 35, "25-45'"),
+                (45, 60, 52, "45-60'"), (60, 75, 67, "60-75'"),
+                (75, 200, 80, "75'+"))
+LIVE_LINES = ("O0.5", "O1.5", "O2.5", "U3.5", "U4.5")
+LIVE_LANDS = {"O0.5": lambda t: t >= 1, "O1.5": lambda t: t >= 2,
+              "O2.5": lambda t: t >= 3, "U3.5": lambda t: t <= 3,
+              "U4.5": lambda t: t <= 4}
+LIVE_BAR: dict = {}         # (lane, bucket, goals, line) -> (n, hits)
+LIVE_MIN_N = 12             # cards before a live cell speaks
+LIVE_DEAD = 55.0            # under this the card's own lane is called dead
+
+
+def build_live(fixtures) -> None:
+    """Fill LIVE_BAR from the settled counted cards that have a timeline."""
+    from scripts import forward_settle as _fs
+    LIVE_BAR.clear()
+    byday = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
+    final = {}
+    for f in fixtures:
+        if f.settled and "\u2014" in f.status:
+            sc = f.status.split("\u2014")[-1].strip().split(" ")[0]
+            if "-" in sc:
+                try:
+                    hg, ag = sc.split("-")
+                    final[(f.kickoff.split(" ")[0], f.teams)] = int(hg) + int(ag)
+                except ValueError:
+                    pass
+    hist, seen = _live_hist(), set()
+    if not FORWARD.exists():
+        return
+    for ln in FORWARD.read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        p = ln.split("\t")
+        if len(p) < 13 or p[1] < SESSION_DATE or _fs._artefact(p[5]):
+            continue
+        key = (p[1], p[3])
+        if key in seen or key not in final or key not in hist:
+            continue
+        seen.add(key)
+        f = byday.get(key)
+        if f is None or p[7].endswith("red") or is_declined(f):
+            continue
+        lane, pts, total = _struck(p[5]), hist[key], final[key]
+        for i, (_lo, _hi, probe, _w) in enumerate(LIVE_BUCKETS):
+            had = [g for m, g in pts if m <= probe]
+            if not had:
+                continue
+            g = min(max(had), 3)        # 3+ goals in is one state
+            for line, fn in LIVE_LANDS.items():
+                for k in ((lane, i, g, line), ("", i, g, line)):
+                    n, h = LIVE_BAR.get(k, (0, 0))
+                    LIVE_BAR[k] = (n + 1, h + bool(fn(total)))
+
+
+def live_state(f) -> tuple | None:
+    """(bucket index, goals in, minute) for a card being played, or None."""
+    from scripts import fromhere, liveline
+    if f.settled or not (f.status or "").startswith("LIVE"):
+        return None
+    when, sc = fromhere.minute_of(f.status), liveline.score_of(f.status)
+    if not when or not sc:
+        return None
+    minute = when[0]
+    for i, (lo, hi, _p, _w) in enumerate(LIVE_BUCKETS):
+        if lo <= minute < hi:
+            return i, min(sc[0] + sc[1], 3), minute
+    return None
+
+
+def _live_cell(lane: str, i: int, g: int, line: str) -> tuple | None:
+    """(n, hits, pooled) for a live cell, its lane's own first."""
+    rec = LIVE_BAR.get((lane, i, g, line))
+    if rec and rec[0] >= LIVE_MIN_N and rec[1]:
+        return rec[0], rec[1], False
+    rec = LIVE_BAR.get(("", i, g, line))
+    if rec and rec[0] >= LIVE_MIN_N and rec[1]:
+        return rec[0], rec[1], True
+    return None
+
+
+def live_advice(f, cell: str) -> dict | None:
+    """What this card's lane is worth NOW, and the pivot when it is dead."""
+    st = live_state(f)
+    if not st or is_declined(f):
+        return None
+    i, g, minute = st
+    m = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", cell or "")
+    lane = _struck(m.group(1)) if m else ""
+    if lane not in LIVE_LINES:
+        return None
+    own = _live_cell(lane, i, g, lane)
+    if not own:
+        return None
+    n, h, pooled = own
+    out = dict(lane=lane, minute=minute, goals=g, word=LIVE_BUCKETS[i][3],
+               n=n, hit=h / n * 100, price=_bar_price(n, h), pooled=pooled,
+               pivot=None)
+    if out["hit"] < LIVE_DEAD:
+        best = None
+        for line in LIVE_LINES:
+            # SAME SIDE ONLY. The dying over card at 60' goalless has
+            # U4.5 at 100% sitting in the table, and naming it would be
+            # the board telling him to take the opposite side of his own
+            # card — the one thing his rules call a wrong lane. A pivot
+            # loosens the line; it never crosses.
+            if line == lane or line[:1] != lane[:1]:
+                continue
+            c = _live_cell(lane, i, g, line)
+            if not c:
+                continue
+            rate = c[1] / c[0] * 100
+            # better than the dying lane by a real margin, not a floor of
+            # its own: at 70' goalless the only honest over left is O0.5
+            # at 62%, and its PRICE is what says whether to take it.
+            if rate > out["hit"] + 10 and (best is None or rate > best[1]):
+                best = (line, rate, c[0], c[1], c[2])
+        if best:
+            out["pivot"] = dict(lane=best[0], hit=best[1], n=best[2],
+                                price=_bar_price(best[2], best[3]),
+                                pooled=best[4])
+    return out
+
+
+def _livebar_html(f, cell: str) -> str:
+    a = live_advice(f, cell)
+    if not a:
+        return ""
+    pool = " \u00b7 all lanes" if a["pooled"] else ""
+    piv = ""
+    if a["pivot"]:
+        p = a["pivot"]
+        piv = (f'<div class="bbalso">pivot: <b>{html.escape(p["lane"])}</b> '
+               f'lands {p["hit"]:.0f}% on {p["n"]} \u2192 {p["price"]:.2f}</div>')
+    return (f'<div class="buybar live" title="The live record: cards whose own '
+            f'lane is {html.escape(a["lane"])}, at this point of the match with '
+            f'this many goals in, and what they finally did — {a["hit"]:.1f}% on '
+            f'{a["n"]} settled cards. Break-even {100 / a["hit"]:.2f} plus '
+            f'{BUY_MARGIN * 100:.0f}%. The pre-match bar is gone because it was '
+            f'measured on cards bought before kickoff; this is the price to pay '
+            f'now.">\U0001f3af LIVE BUY FROM <b>{a["price"]:.2f}</b> '
+            f'<span class="dim">\u00b7 {html.escape(a["lane"])} at {a["minute"]}\' '
+            f'with {a["goals"]}{"+" if a["goals"] >= 3 else ""} in lands '
+            f'{a["hit"]:.1f}% on {a["n"]}{pool}</span>{piv}</div>')
+
+
 # The profile names the bar prints: the unlabelled groups carry their
 # whole definition in the name, which does not fit on a card.
 SHORT_PROFILE = {PROFILES[7]: "all 7, under the floor",
@@ -4353,7 +4522,7 @@ def _card(f, kind: str, reads: dict) -> str:
                 f"{star if which == best else ''}{extra}"
                 f"{_lanebar(f, cell, lab, terse)}"
                 f"{_buybar_html(f, cell) if which == best else ''}"
-                f"{live}</div>")
+                f"{live}{_livebar_html(f, cell)}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -5049,6 +5218,7 @@ def main() -> None:
     # once here, before any card is drawn (the same place BAND_STATS is
     # filled from).
     build_market(fixtures)
+    build_live(fixtures)
     pending = [f for f in fixtures if not f.settled]
     # PLAYABLE now means what it says: cards the guard would actually
     # stake. It used to mean "a lane cleared the engine's edge bar", which
@@ -6115,6 +6285,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   background:rgba(214,170,74,.07); border-radius:3px; font-size:.95em; }}
 .buybar b {{ color:var(--gold); font-size:1.08em; }}
 .bbalso {{ color:var(--dim); font-size:.9em; margin-top:.1rem; }}
+.buybar.live {{ border-left-color:#e06c5a; background:rgba(224,108,90,.07); }}
 .buyat {{ color:#cfd6e4; }}
 .buyat b {{ color:var(--gold); }}
 .fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
