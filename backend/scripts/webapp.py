@@ -798,6 +798,8 @@ def _haystack(f) -> str:
         # the half of STRONG WATCH whose live buy-in the record supports
         if live_good(f):
             bits.append("live inplay good")
+        if mild(f):
+            bits.append("tier mild")
     raw = " ".join(bits).lower()
     folded = _fold(raw)
     return html.escape(raw if folded == raw else raw + " " + folded)
@@ -1153,6 +1155,18 @@ STRONG_SCORE = 6.34    # the confluence cut STRONG used until 2 Oct; drift.py st
 # Without it STRONG reads 90 of 103, 87.4%, break-even 1.14.
 STRONG_UNDER = 3.0          # percent below the play bar STRONG still reaches
 STRONG_WEAK_BANDS = ("3–5% under", "10%+ over")  # all seven here: WEAK
+#
+# MILD: THE SOFT MIDDLE OF STRONG (the bettor, 14 Oct, on the one marker
+# left in the STRONG losses: "82-85% 35/42 = 83.3% +5.5% > make that
+# MILD"). Split by the card's own claim, STRONG is two different cards:
+# a claim under 82% lands 88.6% and one of 85%+ lands 92.3%, while the
+# 82-85% middle lands 35 of 42 (83.3%, break-even 1.20, +5.5% at a feed
+# price). It is the band that looks safe enough to trust without being
+# safe — 54% of what STRONG still loses sits there against 39% of the
+# wins. It stays a PLAY and stays in the record; the pill just stops
+# calling it strong, and names the 1.20 its own rate needs.
+MILD_CLAIM_LO, MILD_CLAIM_HI = 82.0, 85.0
+MILD_BREAKEVEN = 1.20
 _SEVEN_BUSY: set = set()
 
 
@@ -1400,6 +1414,14 @@ def live_good(f) -> tuple[str, float] | None:
             and claim is not None and claim >= LIVE_GOOD_UNDER_CLAIM:
         return ("under", LIVE_GOOD_UNDER_FROM)
     return None
+
+
+def mild(f) -> bool:
+    """A STRONG card whose claim sits in the soft 82-85% middle."""
+    if tier_of(f) != "strong":
+        return False
+    c = _claim(f.tip1)
+    return c is not None and MILD_CLAIM_LO <= c < MILD_CLAIM_HI
 
 
 def _live_good_html(lg) -> str:
@@ -3095,6 +3117,8 @@ def _frozen_guard(f, call: dict) -> str:
             "watch": "watch", "no play": "no play"}[call["mark"]]
     cls = {"strong": "strong", "normal": "weak",
            "watch": "dimv", "no play": "no"}[call["mark"]]
+    if call["mark"] == "strong" and mild(f):
+        word, cls = "MILD", "mild"
     lg = live_good(f) if call["mark"] in ("watch", "no play") else None
     if lg:
         word, cls = f"LIVE INPLAY GOOD \u00b7 from {lg[1]:.2f}", "lgood"
@@ -3190,6 +3214,12 @@ def _guard(f, best: int) -> str:
         mark = (f'<span class="vmark no" title="declined by a board rule: '
                 f'{html.escape(why)} — out of the record whatever the price">'
                 f'\u26d4 declined \u00b7 {html.escape(why)}</span>')
+    elif v["strong"] and mild(f):
+        mark = ('<span class="vmark mild" title="STRONG, but in the soft '
+                f'{MILD_CLAIM_LO:.0f}-{MILD_CLAIM_HI:.0f}% claim middle: 35 of '
+                '42 (83.3%) against 88.6% below it and 92.3% above. Still a '
+                f'play, and it needs {MILD_BREAKEVEN:.2f} to break even.">'
+                f'MILD · PLAY{_edge_html("strong", odds)}</span>')
     elif v["strong"]:
         mark = ('<span class="vmark strong">★ STRONG · PLAY'
                 f'{_edge_html("strong", odds)}</span>')
@@ -4320,7 +4350,7 @@ def profiles_html(fixtures) -> str:
     fsr, fm, fsw = (TIER_MIN["strong"], TIER_MIN["medium"],
                     TIER_MIN["strong watch"])
     U = "unlabelled \u00b7 "
-    order = ["\u2605 STRONG", "\u2605 STRONG FROM", "LIVE INPLAY GOOD",
+    order = ["\u2605 STRONG", "MILD", "\u2605 STRONG FROM", "LIVE INPLAY GOOD",
              "STRONG WATCH", "STRONG WATCH FROM", "WEAK",
              U + "all 7 rates, under the floor",
              U + "plain play (fewer than 7, under the floor)",
@@ -4356,40 +4386,44 @@ def profiles_html(fixtures) -> str:
             p[5][:1] == "O" or (p[5][:1] == "U" and p[7].startswith("green")
                                 and claim_ >= LIVE_GOOD_UNDER_CLAIM))
         if seven and band in STRONG_WEAK_BANDS and best >= fsr:
-            g = order[5]        # a band STRONG gave up
+            g = order[6]        # a band STRONG gave up
         elif seven and gap >= -STRONG_UNDER and best >= fsr:
-            g = order[0]
+            # MILD is carved out of STRONG by the card's own claim
+            g = order[1] if MILD_CLAIM_LO <= claim_ < MILD_CLAIM_HI \
+                else order[0]
         elif seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
-            g = order[1]
-        elif lgood_:
             g = order[2]
-        elif gap <= -STRONG_WATCH_UNDER and best >= fsw:
+        elif lgood_:
             g = order[3]
-        elif gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
+        elif gap <= -STRONG_WATCH_UNDER and best >= fsw:
             g = order[4]
-        elif not seven and gap >= 0 and best >= fm:
+        elif gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
             g = order[5]
-        elif seven and gap >= -STRONG_UNDER:
+        elif not seven and gap >= 0 and best >= fm:
             g = order[6]
-        elif gap >= 0:
+        elif seven and gap >= -STRONG_UNDER:
             g = order[7]
-        elif gap <= -STRONG_WATCH_UNDER:
-            g = order[9]
-        else:
+        elif gap >= 0:
             g = order[8]
+        elif gap <= -STRONG_WATCH_UNDER:
+            g = order[10]
+        else:
+            g = order[9]
         pl = got[0] * (best - 1) if got[0] > 0 else got[0]
         rows[g].append((band, bool(got[1]), pl, best))
     # On the board now, by the tier the card wears.
     import collections
     now = collections.Counter()
-    word = {"strong": order[0], "strong from": order[1],
-            "strong watch": order[3], "strong watch from": order[4],
-            "medium": order[5]}
+    word = {"strong": order[0], "strong from": order[2],
+            "strong watch": order[4], "strong watch from": order[5],
+            "medium": order[6]}
     for f in fixtures:
         if f.settled or f.status or odds_api.started(f.kickoff):
             continue
         t = tier_of(f)
-        if t in word:
+        if t == "strong" and mild(f):
+            now[order[1]] += 1
+        elif t in word:
             now[word[t]] += 1
 
     def stat(xs):
@@ -4406,23 +4440,26 @@ def profiles_html(fixtures) -> str:
                 f"{roi:+.1f}%</td><td>{avg:.2f}</td><td>{be}</td>")
 
     def state(g, band):
-        if g == order[1] or g == order[4]:
-            base = "strong" if g == order[1] else "strong watch"
+        if g == order[2] or g == order[5]:
+            base = "strong" if g == order[2] else "strong watch"
             return "on" if band in FROM_BANDS[base] else "off"
-        if g == order[5]:
+        if g == order[6]:
             st = MED_BANDS.get(band)
             if not st:
                 return ""
             return {"good": "\u25b2 good", "skip": "skip", "hard": "declined",
                     "none": ""}.get(st[0], "") + f" \u00b7 {st[1]}/50"
         return ""
-    floor = {order[0]: f"min {fsr:.2f}", order[1]: f"under {fsr:.2f}",
-             order[2]: (f"over from {LIVE_GOOD_OVER_FROM:.2f} \u00b7 green "
+    floor = {order[0]: f"min {fsr:.2f}",
+             order[1]: (f"claim {MILD_CLAIM_LO:.0f}-{MILD_CLAIM_HI:.0f}% "
+                        f"\u00b7 play, needs {MILD_BREAKEVEN:.2f}"),
+             order[2]: f"under {fsr:.2f}",
+             order[3]: (f"over from {LIVE_GOOD_OVER_FROM:.2f} \u00b7 green "
                         f"under from {LIVE_GOOD_UNDER_FROM:.2f} \u00b7 "
                         f"CARD rate below; REACHABLE live: overs 38/48 "
                         f"(79.2%), green unders 29/32 (90.6%)"),
-             order[3]: f"min {fsw:.2f}", order[4]: f"under {fsw:.2f}",
-             order[5]: f"min {fm:.2f} \u00b7 no play"}
+             order[4]: f"min {fsw:.2f}", order[5]: f"under {fsw:.2f}",
+             order[6]: f"min {fm:.2f} \u00b7 no play"}
     body = []
     allu = []
     for g in order:
@@ -5527,6 +5564,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.no {{ color:#f0a08e; border-color:#8a3a2e; }}
 .vmark.dimv {{ color:var(--dim); }}
 .vmark.swatch {{ color:#9cc3ff; border-color:#2c4f80; }}
+.vmark.mild {{ color:#d9c27a; border-color:#6b5a28; }}
 .vmark.lgood {{ color:#8ee6c8; border-color:#2a7a60; background:#10251f; font-weight:600; }}
 .vmark.sfrom {{ color:#d9b65c; border-color:#6b5520; border-style:dashed; }}
 .vmark.swfrom {{ color:#86a9d6; border-color:#2c4f80; border-style:dashed; }}

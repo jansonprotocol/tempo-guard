@@ -108,6 +108,17 @@ a green under claiming 85%+ (29 of 32, 90.6%, from 1.15); every other
 STRONG WATCH card keeps its own label and board, and ONLY these reach the
 Running tab. webapp.live_good; tracked as its own row on the Profiles page.
 
+**MILD: THE SOFT MIDDLE OF STRONG.** (14 Oct, on the one marker left in
+the STRONG losses: "82-85% 35/42 = 83.3% +5.5% > Make that MILD".) Split
+by the card's own claim, STRONG is two different cards: under 82% lands
+88.6%, 85%+ lands 92.3%, and the 82-85% middle lands 35 of 42 — 83.3%,
+break-even **1.20**, +5.5% at a feed price. It is where what STRONG still
+loses sits: 54% of the losses against 39% of the wins. MILD IS STILL A
+PLAY and stays in the record; the pill stops calling it strong and names
+the 1.20 its own rate needs. webapp.mild; its own row on Profiles, search
+word `tier mild`. The optimizer still measures MILD inside STRONG for the
+floor — splitting that is a separate decision.
+
 **THE 10%+ OVER BAND LEFT STRONG.** (14 Oct: "move over 10% from STRONG
 to weak. ROI and hitrate are negative".) 18 of 25, 72.0%, break-even
 1.39, and +0.5% only at a feed price he cannot reach. It is also where
