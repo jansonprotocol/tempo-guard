@@ -119,6 +119,22 @@ can promote it if the record holds. Both routes into WEAK are covered —
 the MEDIUM tier and an all-seven card in a band STRONG gave up —
 because `medband_state` now answers for both.
 
+AND NO WEAK CARD ON THE PLAYABLE BOARD, kept band included (14 Oct, on
+the three MLS cards still reading "WEAK - NO PLAY" there: "I want all
+weak from the playable board. We still track it record ofcourse. This
+band: 3-6% over 11 90.9% +23.7%, has potential. But not for now.").
+`webapp.weak_noplay` is the test the pill makes - a play that is not
+STRONG - so both routes into WEAK leave Playable and Watch and read from
+Athena lanes instead, still priced, graded, counted and carrying their
+n/50. Playable now holds STRONG and MILD only. board.verify partitions
+the pending tabs the same way, WEAK and the non-live_good STRONG WATCH
+cards included, or it would call the app's own tabs a contradiction.
+THE OPTIMIZER CANNOT PROMOTE THE KEPT BAND. scripts/tier_optimize.py
+only writes a band state (good / skip / hard / none), and `good` is a
+mark on the pill, nothing more - there is no path from a WEAK band to a
+play. Keeping the band counted keeps the record running so he can decide;
+the promotion itself would be a new rule and his call.
+
 **★ STRONG FROM JOINS LIVE INPLAY GOOD.** (14 Oct: "those are also cards
 i might go in live with".) Its unders need NO green/claim test: that test
 exists because a STRONG WATCH card is picked on price alone, while STRONG

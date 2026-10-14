@@ -590,15 +590,24 @@ def verify(quiet: bool = False, allow_stale: bool = False) -> None:
         #    rather than re-deriving it — two definitions of playable or
         #    of watch is exactly the drift this verify exists to catch.
         from scripts.webapp import (verdict, _star, running_call, label_any,
-                                    live_unsafe)
+                                    live_unsafe, weak_noplay, tier_of,
+                                    live_good)
         play, watch, live, declined, rest = [], [], [], [], []
         for f in pending:
             v = verdict(f, _star(f))
             lab = label_any(f)
             unsafe = live_unsafe(f)
-            (play if (v and v["play"] and not unsafe) else
-             watch if (v and v["watch"] and not unsafe) else
-             live if (running_call(f) and not unsafe) else
+            # the same three exclusions the app applies: an undeclined
+            # WEAK card is no play and no watch (14 Oct), and a STRONG
+            # WATCH card reaches Running only where live_good backs a
+            # live buy (14 Oct) — both then read from Athena lanes.
+            weak = weak_noplay(f)
+            runs = running_call(f) and not unsafe \
+                and (tier_of(f) not in ("strong watch", "strong watch from")
+                     or live_good(f))
+            (play if (v and v["play"] and not unsafe and not weak) else
+             watch if (v and v["watch"] and not unsafe and not weak) else
+             live if runs else
              declined if ((lab and lab.endswith("red")) or unsafe) else
              rest).append(f)
         for pid, want in (("t-playable", play), ("t-watch", watch),

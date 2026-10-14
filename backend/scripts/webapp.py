@@ -1598,6 +1598,27 @@ def medband_declined(f) -> bool:
     return bool(m) and m[0] != WEAK_KEPT_BAND
 
 
+# ALL WEAK OFF THE PLAYABLE BOARD (the bettor, 14 Oct: "I want all weak
+# from the playable board. We still track it record ofcourse. This band:
+# 3-6% over 11 90.9% +23.7%, has potential. But not for now."). The bands
+# WEAK declines leave by is_declined; WEAK_KEPT_BAND is not declined, so
+# it was still clearing the price bar and printing "WEAK - NO PLAY" on
+# Playable. It now reads from Athena lanes with the rest of the tier:
+# still priced, still graded, still counted, still carrying its n/50, but
+# never offered as a play.
+def weak_noplay(f) -> bool:
+    """Is this an undeclined WEAK card — no play, but still in the record.
+
+    WEAK is reached two ways and the pill reads the same on both (the
+    MEDIUM tier, and an untiered play under its tier's floor), so the
+    test is the one the pill makes: a play that is not STRONG.
+    """
+    if is_declined(f):
+        return False
+    v = verdict(f, _star(f))
+    return bool(v and v["play"] and not v["strong"])
+
+
 def _medband_html(m) -> str:
     band, state, st = m
     rec = f"{band}: {st[2]:.0f}% on {st[1]}, {st[3]:+.1f}%"
@@ -4642,7 +4663,10 @@ def main() -> None:
         return verdict(f, _star(f))
     # A play whose strike combo is declined (13 Sep) files under Declined
     # instead — the one rule that reaches a priced play.
-    playable = [f for f in pending if (v := _v(f)) and v["play"] and not live_unsafe(f)]
+    # WEAK never reaches Playable, declined band or kept band alike
+    # (weak_noplay, 14 Oct); it reads from Athena lanes and keeps counting.
+    playable = [f for f in pending if (v := _v(f)) and v["play"]
+                and not live_unsafe(f) and not weak_noplay(f)]
     strong_n = sum(1 for f in playable if (v := _v(f)) and v["strong"])
     # Three-way, not two: PLAY, WATCH (the bettor's list, 2 Sep — a
     # starred lane a few percent short of its bar on the panel, worth
@@ -4651,7 +4675,7 @@ def main() -> None:
     # Declined instead: the price may be a few percent short, but the
     # bettor does not want it offered for a live buy either.
     watch = [f for f in pending if (v := _v(f)) and v["watch"]
-             and not live_unsafe(f)]
+             and not live_unsafe(f) and not weak_noplay(f)]
     # RUNNING (the bettor's ask, 3 Sep): cards the board offered before
     # kickoff and that are now in progress. They cannot be PLAY or watch —
     # both bars require an unstarted match — but dropping them straight
