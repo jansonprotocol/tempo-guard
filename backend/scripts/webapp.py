@@ -3701,7 +3701,21 @@ def running_call(f) -> dict | None:
     if (f.status or "").startswith("PP"):
         return None
     call = was_called(f)
-    return call if call and call["mark"] in PLAYED_MARKS else None
+    if not call:
+        return None
+    if call["mark"] in PLAYED_MARKS:
+        return call
+    # A LIVE INPLAY GOOD CARD IS A "NO PLAY" BY PRICE, AND THAT IS THE
+    # POINT (the bettor, 14 Oct, on ŠK Slovan Bratislava v VfB Stuttgart
+    # reading "RUNNING · WAS LIVE INPLAY GOOD" while sitting on another
+    # tab: "why isn't this one at running"). The three marks above are
+    # the pre-kickoff ones — strong, normal, watch — and a LIVE INPLAY
+    # GOOD card is 5-15% UNDER the play bar by definition, which lands it
+    # in exactly the band was_called calls "no play". So the rule that
+    # let these cards onto Running (14 Oct) could never fire: this gate
+    # dropped them one step earlier. The label says the record supports
+    # buying it live; that is what Running is for.
+    return call if live_good(f) else None
 
 
 def _frozen_guard(f, call: dict) -> str:

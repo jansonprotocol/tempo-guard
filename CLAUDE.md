@@ -248,6 +248,17 @@ lane. A pivot loosens the line; it never crosses. A candidate must also
 beat the dying lane by 10 points, so the suggestion is a real improvement
 and its PRICE decides whether to take it.
 
+AND THE RUNNING GATE HAD TO LET THEM IN (14 Oct, on ŠK Slovan Bratislava
+v VfB Stuttgart reading "RUNNING - WAS LIVE INPLAY GOOD" from another
+tab: "why isn't this one at running"). `running_call` admitted only the
+three PRE-KICKOFF marks — strong, normal, watch — and a LIVE INPLAY GOOD
+card is 5-15% UNDER the play bar by definition, which is exactly the band
+`was_called` calls "no play". So the 14 Oct rule that let these cards onto
+Running could never fire: this gate dropped them one step earlier, and
+the tab sat empty with eleven matches running. It now admits a card whose
+`live_good` is on whatever its frozen mark says — the label means the
+record supports buying it live, which is what Running is for.
+
 A DECLINED CARD GETS NO LIVE BAR EITHER — two of the three cards running
 when this shipped were declined on claim, and they correctly showed
 nothing.
