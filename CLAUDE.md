@@ -108,6 +108,26 @@ a green under claiming 85%+ (29 of 32, 90.6%, from 1.15); every other
 STRONG WATCH card keeps its own label and board, and ONLY these reach the
 Running tab. webapp.live_good; tracked as its own row on the Profiles page.
 
+**WEAK IS A DECLINE.** (14 Oct: "Make weak = declined. Never going to
+play those. Only 3-6% over 11, 90.9%, +23.7% from the profile board shows
+potential, but too thin to conclude now. The workflow might promote it
+later.") WEAK had been no-play-but-counted since 4 Oct, each band
+declining itself at 50 cards; it lands 75.2% overall. Now the whole tier
+is declined at once and leaves the record, EXCEPT `WEAK_KEPT_BAND`
+(3-6% over), which keeps its place and keeps counting so the optimizer
+can promote it if the record holds. Both routes into WEAK are covered —
+the MEDIUM tier and an all-seven card in a band STRONG gave up —
+because `medband_state` now answers for both.
+
+**★ STRONG FROM JOINS LIVE INPLAY GOOD.** (14 Oct: "those are also cards
+i might go in live with".) Its unders need NO green/claim test: that test
+exists because a STRONG WATCH card is picked on price alone, while STRONG
+FROM has already passed all seven rates at 80%+. It also sits 0-3% under
+the bar, not 5-15%, so drift can carry it to the price and goals are not
+the only way in — which is the whole reason the STRONG WATCH unders were
+a trap. Thin: 24 settled cards, 23 landing, 9 of 10 on the reachable live
+subset. It keeps its own ★ STRONG FROM row on the Profiles page.
+
 **MILD: THE SOFT MIDDLE OF STRONG.** (14 Oct, on the one marker left in
 the STRONG losses: "82-85% 35/42 = 83.3% +5.5% > Make that MILD".) Split
 by the card's own claim, STRONG is two different cards: under 82% lands

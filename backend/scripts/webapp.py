@@ -1399,9 +1399,20 @@ LIVE_GOOD_UNDER_CLAIM = 85.0
 
 
 def live_good(f) -> tuple[str, float] | None:
-    """('over'|'under', the price it needs) for a STRONG WATCH card whose
-    live buy-in is one the record supports, else None."""
-    if tier_of(f) not in ("strong watch", "strong watch from"):
+    """('over'|'under', the price it needs) for a card whose live buy-in
+    the record supports, else None.
+
+    ★ STRONG FROM joins the STRONG WATCH family here (the bettor, 14 Oct:
+    "those are also cards i might go in live with"), and its unders need
+    no green/claim test. The test exists because a STRONG WATCH card is
+    chosen on price alone; STRONG FROM has already passed all seven rates
+    at 80%+, which is the stronger filter. It also needs far less of the
+    price to move — it sits 0-3% under the bar, not 5-15% — so drift can
+    carry it there and goals are not the only route in. Thin: 24 settled
+    cards, 23 of them landing, and 9 of 10 on the reachable live subset.
+    """
+    t = tier_of(f)
+    if t not in ("strong watch", "strong watch from", "strong from"):
         return None
     r = (frozen() or {}).get((f.kickoff.split(" ")[0], f.teams))
     if not r:
@@ -1410,8 +1421,12 @@ def live_good(f) -> tuple[str, float] | None:
     claim = _claim(f.tip1)
     if lane[:1] == "O":
         return ("over", LIVE_GOOD_OVER_FROM)
-    if lane[:1] == "U" and lab.startswith("green") \
-            and claim is not None and claim >= LIVE_GOOD_UNDER_CLAIM:
+    if lane[:1] != "U":
+        return None
+    if t == "strong from":
+        return ("under", LIVE_GOOD_UNDER_FROM)
+    if lab.startswith("green") and claim is not None \
+            and claim >= LIVE_GOOD_UNDER_CLAIM:
         return ("under", LIVE_GOOD_UNDER_FROM)
     return None
 
@@ -1428,7 +1443,8 @@ def _live_good_html(lg) -> str:
     side, price = lg
     rec = ("38 of 48 once a goal has not come by 20' (79.2%)"
            if side == "over" else
-           "29 of 32 green cards claiming 85%+ (90.6%)")
+           "29 of 32 green STRONG WATCH cards claiming 85%+ (90.6%), and "
+           "9 of 10 reachable ★ STRONG FROM unders")
     return (f'<span class="vmark lgood" title="STRONG WATCH, and the half of '
             f'it the live record supports: {rec}. Buy from {price:.2f}; '
             f'below that the reachable rate does not pay.">LIVE INPLAY GOOD '
@@ -1505,27 +1521,44 @@ def medband_state(f) -> tuple[str, str, tuple] | None:
     that price is STRONG). Before kickoff on the live price, after it on
     the price the card was called at."""
     fm = TIER_MIN["medium"]
+    # A card is WEAK two ways, and both have to answer here or the decline
+    # would only reach one of them: the MEDIUM tier (a play at the 1.31
+    # floor with fewer than seven rates), and an all-seven card in a band
+    # STRONG gave up (STRONG_WEAK_BANDS). tier_of says the same, but it
+    # cannot be called from here — is_declined is downstream of it.
     if f.settled or odds_api.started(f.kickoff):
         c = was_called(f)
-        if not c or c["mark"] != "normal":
+        if not c or c["mark"] not in ("normal", "watch", "no play"):
             return None
         r = c["row"]
         try:
             best, need = float(r.get("best") or 0), float(r.get("need") or 0)
         except (TypeError, ValueError):
             return None
-        if best < fm or not need:
+        if not need:
             return None
         gap = (best / need - 1) * 100
+        lab = str(r.get("label") or "")
+        given = (gap_band(gap) in STRONG_WEAK_BANDS
+                 and best >= TIER_MIN["strong"] and all_seven(f, lab))
+        if not given and (c["mark"] != "normal" or best < fm):
+            return None
     else:
         v = verdict(f, _star(f))
-        if not v or not v["play"] or v["strong"] or (v["odds"] or 0) < fm \
-                or v.get("gap") is None:
+        if not v or v.get("gap") is None or v["odds"] is None:
             return None
         gap = v["gap"]
+        given = (gap_band(gap) in STRONG_WEAK_BANDS
+                 and v["odds"] >= TIER_MIN["strong"]
+                 and all_seven(f, v["label"]))
+        if not given and (not v["play"] or v["strong"] or v["odds"] < fm):
+            return None
     band = gap_band(gap)
     st = MED_BANDS.get(band)
-    return (band, st[0], st) if st else None
+    # Since WEAK became a decline (14 Oct) the band matters even where the
+    # optimizer has written no state for it, so a stateless band answers
+    # with its name and an empty record rather than None.
+    return (band, st[0], st) if st else (band, "none", ("", 0, 0.0, 0.0, ""))
 
 
 def decline_reason(f) -> str | None:
@@ -1542,20 +1575,27 @@ def decline_reason(f) -> str | None:
         lo, hi = O15_BAND
         return f"O1.5 {lo:.0f}–{hi:.0f}% over the bar"
     if medband_declined(f):
-        return "WEAK band"
+        return "WEAK"
     return "strike combo"
 
 
+# WEAK IS A DECLINE (the bettor, 14 Oct: "Make weak = declined. Never
+# going to play those. Only 3-6% over 11, 90.9%, +23.7% from the profile
+# board shows potential, but too thin to conclude now. The workflow might
+# promote it later."). WEAK had been no-play-but-counted since 4 Oct, with
+# each band declining itself at 50 settled cards; it lands 75.2% overall
+# and he is not buying any of it. So the whole tier is declined at once —
+# except WEAK_KEPT_BAND, which keeps its place and keeps counting so the
+# optimizer can promote it if the record holds up.
+WEAK_KEPT_BAND = "3\u20136% over"
+
+
 def medband_declined(f) -> bool:
-    """A MEDIUM in a band the optimizer has made HARD, kicking off on or
-    after the day it became hard — earlier cards keep their record."""
+    """Is this WEAK card declined — every band but WEAK_KEPT_BAND."""
     if _MEDBAND_OFF or play_locked(f):
         return False
     m = medband_state(f)
-    if not m or m[1] != "hard":
-        return False
-    since = m[2][4] or "0000"
-    return f.kickoff.split(" ")[0] >= since
+    return bool(m) and m[0] != WEAK_KEPT_BAND
 
 
 def _medband_html(m) -> str:
