@@ -135,6 +135,46 @@ mark on the pill, nothing more - there is no path from a WEAK band to a
 play. Keeping the band counted keeps the record running so he can decide;
 the promotion itself would be a new rule and his call.
 
+**THE BAND MOVER: PROFILES MOVE BOTH WAYS, BY THEMSELVES.** (14 Oct:
+"Build that rule: 85%+ positive ROI on 30+ promotes. This means it can
+check all profiles inside decline (same as we have on the other boards).
+Also the other way around, when now playable or watch profiles in their
+bandsample start dropping below a good hitrate (ignore ROI in WATCH/LIVE
+profiles) they can move to declined.") The band tables had only ever run
+on the play boards, so a declined profile's record was measured and never
+acted on. `scripts/tier_optimize.py` now reads EVERY profile by gap band
+(`webapp.profile_name`, the one classifier the Profiles page also reads)
+and writes `move` rows to config/tier_params.tsv:
+
+- **promote** a no-play cell (WEAK, or unlabelled) at **85%+ with a
+  positive ROI on 30+** settled cards — `MOVE_UP_HIT`, `MOVE_MIN_N`. It
+  leaves decline, returns to the record and reads **PROMOTED · PLAY**
+  wherever its price clears the play bar.
+- **decline** a **play** cell under **80%** (`MOVE_DOWN_HIT`) whose ROI is
+  at or under zero, and a **watch or live** cell under 80% **whatever its
+  ROI** — his rule, and the right one: those pills are bought live at a
+  price the feed never printed, so their feed ROI says nothing.
+- Nothing is permanent. The state is recomputed every run with the mover
+  and the WEAK hard rule OFF (`webapp._MOVES_OFF`), so a declined cell
+  keeps counting and comes back by itself, and a promoted cell that slips
+  reverts the same way.
+
+WHICH CARDS A CELL IS MEASURED ON. Only the ones a promotion would
+actually free: a red card never (the tier says avoid — releasing a red
+profile is scripts/profile_review.py's job), and nor does a card declined
+by the O1.5 band, a strike combo or an unsafe tag, because promoting its
+cell would not free it. O1.5 alone holds 30 of the 41 cards sitting in
+WEAK's 3-6% over band; counting them would have read that cell as 78.0%
+instead of the 90.9% its own 11 cards have.
+
+ON THE FIRST RUN, 14 Oct, NOTHING MOVED: no cell is over or under a bar on
+30+ cards. The 3-6% over band he is waiting on stands at 11, 90.9%,
++23.7% — it promotes itself the day it reaches 30 if it holds. Every
+no-play cell, and any cell the mover declines, is listed with its record
+under **inside decline** at the foot of the Profiles page, because the
+table above it counts only the record and a declined cell has no row
+there at all.
+
 **★ STRONG FROM JOINS LIVE INPLAY GOOD.** (14 Oct: "those are also cards
 i might go in live with".) Its unders need NO green/claim test: that test
 exists because a STRONG WATCH card is picked on price alone, while STRONG

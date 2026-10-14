@@ -77,6 +77,15 @@ MED_GOOD_HIT, MED_GOOD_N = 80.0, 5
 # than the other"). A band reaching MED_HARD_N settled cards is declined from
 # that day, whatever it has done, and stays declined.
 MED_BAD_HIT, MED_HARD_N = 70.0, 50
+# THE MOVER'S BARS (the bettor, 14 Oct: "85%+ positive ROI on 30+
+# promotes ... when now playable or watch profiles in their bandsample
+# start dropping below a good hitrate ... they can move to declined").
+# 80% is the board's own word for a good rate — the band check's bar and
+# the WEAK band mark's — and a play cell is held unless the ROI agrees
+# with the hit rate, because a feed ROI is optimistic for him anyway.
+MOVE_MIN_N = w.MOVE_MIN_N           # 30
+MOVE_UP_HIT = w.MOVE_UP_HIT         # 85.0
+MOVE_DOWN_HIT = w.MOVE_DOWN_HIT     # 80.0
 
 
 def cards() -> list[dict]:
@@ -105,6 +114,17 @@ def cards() -> list[dict]:
         if key not in final or key not in byday:
             continue
         f = byday[key]
+        # THE CELLS INSIDE DECLINE ARE ALREADY IN HERE (14 Oct). main()
+        # measures with the WEAK band rule and the mover both OFF, so a
+        # card either of them declined is not declined here and counts —
+        # which is what lets a no-play cell earn its way back. The other
+        # declines stay out, and must: a red card is the tier saying avoid
+        # (releasing a red profile is profile_review.py's job), and a card
+        # declined by the O1.5 band, a strike combo or an unsafe tag would
+        # not be freed by promoting its cell, so measuring it here would
+        # only drag the cell's record down with cards the promotion could
+        # never reach. O1.5 alone holds 30 of the 41 cards in WEAK's
+        # 3-6% over cell.
         if p[7].endswith("red") or w.is_declined(f):
             continue
         try:
@@ -114,9 +134,15 @@ def cards() -> list[dict]:
         got = fs._settle(p[5], *final[key])
         if got is None or need <= 0:
             continue
+        try:
+            claim = float(p[6])
+        except ValueError:
+            claim = 0.0
         gap = (best / need - 1) * 100
+        seven = w.all_seven(f, p[7])
         out.append(dict(key=key, best=best, gap=gap, band=w.gap_band(gap),
-                        seven=w.all_seven(f, p[7]), hit=bool(got[1]),
+                        seven=seven, hit=bool(got[1]),
+                        prof=w.profile_name(p[5], p[7], claim, gap, best, seven),
                         pl=got[0] * (best - 1) if got[0] > 0 else got[0]))
     return out
 
@@ -129,6 +155,9 @@ def main() -> None:
     # Measure with the MEDIUM hard rule off: a band it declines must stay
     # in the sample, or it could never show that it has recovered.
     w._MEDBAND_OFF = True
+    # AND WITH THE MOVER OFF (14 Oct): a cell the mover declined would
+    # otherwise leave the record and could never show that it recovered.
+    w._MOVES_OFF = True
     cs = cards()
     under = w.STRONG_UNDER
     pops = {
@@ -139,6 +168,7 @@ def main() -> None:
         "medium": [c for c in cs if not c["seven"] and c["gap"] >= 0],
         "strong watch": [c for c in cs if c["gap"] <= -w.STRONG_WATCH_UNDER],
     }
+    today = dt.date.today().isoformat()
     old_floor = dict(w.TIER_MIN)
     old_bands = {g: set(b) for g, b in w.FROM_BANDS.items()}
     floors, rows, changes = {}, [], []
@@ -188,7 +218,6 @@ def main() -> None:
             rows.append(["from", g, band, "on" if on else "off", str(n),
                          f"{hit:.1f}", f"near {g}: rules met, under the "
                          f"{floors[g]:.2f} floor"])
-    today = dt.date.today().isoformat()
     meds = [c for c in pops["medium"] if c["best"] >= floors["medium"]]
     for _lo, _hi, band in w.GAP_BANDS:
         xs = [c for c in meds if c["band"] == band]
@@ -213,6 +242,41 @@ def main() -> None:
                            f"({hit:.1f}% on {n}, {roi:+.1f}%)")
         rows.append(["medband", band, state, str(n), f"{hit:.1f}",
                      f"{roi:+.1f}", since])
+    # THE BAND MOVER, BOTH WAYS (the bettor, 14 Oct). Every profile by gap
+    # band, the play boards and everything inside decline alike:
+    #   a no-play cell promotes at MOVE_UP_HIT with a gain on MOVE_MIN_N+
+    #   a play cell declines under MOVE_DOWN_HIT with a ROI at or under 0
+    #   a watch/live cell declines under MOVE_DOWN_HIT, ROI ignored — it is
+    #   bought live at a price the feed never printed, so its feed ROI
+    #   says nothing ("ignore ROI in WATCH/LIVE profiles")
+    # On the same population as every other row here (see cards): the
+    # WEAK band rule and the mover are off, so the cells inside decline
+    # are measured on the cards a promotion would actually free.
+    for prof in w.PROFILES:
+        kind = w.profile_kind(prof)
+        for _lo, _hi, band in w.GAP_BANDS:
+            xs = [c for c in cs if c["prof"] == prof and c["band"] == band]
+            if not xs:
+                continue
+            n, hit = rate(xs)
+            roi = sum(c["pl"] for c in xs) / n * 100
+            prev = w.MOVE_STATS.get((prof, band))
+            was = prev[0] if prev else "none"
+            if n < MOVE_MIN_N:
+                mv = "none"
+            elif kind == "no play":
+                mv = "promote" if hit >= MOVE_UP_HIT and roi > 0 else "none"
+            elif kind == "play":
+                mv = "decline" if hit < MOVE_DOWN_HIT and roi <= 0 else "none"
+            else:
+                mv = "decline" if hit < MOVE_DOWN_HIT else "none"
+            since = (prev[4] if prev and was == mv and prev[4] else today) \
+                if mv != "none" else ""
+            if mv != was:
+                changes.append(f"move {prof} {band}: {was} -> {mv} "
+                               f"({hit:.1f}% on {n}, {roi:+.1f}%)")
+            rows.append(["move", prof, band, mv, str(n), f"{hit:.1f}",
+                         f"{roi:+.1f}", since])
     stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
     head = ("# Tier floors and near-tier FROM bands, set by scripts/tier_optimize.py\n"
             f"# (two-day bank refresh). Last run {stamp} UTC on {len(cs)} settled\n"
@@ -222,6 +286,13 @@ def main() -> None:
             "Read by webapp at import.\n"
             "# MEDIUM bands: good at 80%+ with a gain on 5+; skip on a loss under 70%;\n"
             f"# hard (declined from the date in the last column) on {MED_HARD_N}+.\n"
+            f"# move rows: every profile by gap band on {MOVE_MIN_N}+ settled cards —\n"
+            f"# a no-play cell PROMOTES at {MOVE_UP_HIT:.0f}%+ with a gain (measured on\n"
+            "# every card it has, declines included); a play cell DECLINES under\n"
+            f"# {MOVE_DOWN_HIT:.0f}% with a ROI at or under zero, a watch/live cell under\n"
+            f"# {MOVE_DOWN_HIT:.0f}% whatever its ROI. Recomputed every run: a cell reverts\n"
+            "# by itself. Measured with the mover and the WEAK hard rule off.\n"
+            "# move\tprofile\tband\tpromote|decline|none\tn\thit\troi\tsince\n"
             "# kind\ttier\tvalue/band\tn|state\thit|n\tbreak-even|hit\tnote\n"
             "# medband\tband\tstate\tn\thit\troi\thard since\n")
     PARAMS.write_text(head + "".join("\t".join(r) + "\n" for r in rows))

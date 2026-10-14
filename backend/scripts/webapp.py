@@ -1249,6 +1249,36 @@ MED_BANDS: dict = {"3–6% over": ("good", 7, 100.0, 35.0, ""),
                    "10%+ over": ("good", 13, 84.6, 20.2, ""),
                    "6–10% over": ("skip", 16, 56.2, -23.4, "")}
 _MEDBAND_OFF = False        # the optimizer measures with the hard rule off
+
+# THE BAND MOVER, BOTH WAYS (the bettor, 14 Oct: "Build that rule: 85%+
+# positive ROI on 30+ promotes. This means it can check all profiles
+# inside decline (same as we have on the other boards). Also the other
+# way around, when now playable or watch profiles in their bandsample
+# start dropping below a good hitrate (ignore ROI in WATCH/LIVE profiles)
+# they can move to declined").
+#
+# The band tables had run on the play boards only; the MEDIUM-band machine
+# could decline a WEAK band but had no way back, so a declined profile's
+# record was measured and never acted on. The mover reads EVERY profile by
+# gap band — the play boards, the watch boards and everything inside
+# decline — and moves the cell itself:
+#   promote   a no-play cell (WEAK, or unlabelled) at MOVE_UP_HIT or more
+#             with a positive ROI on MOVE_MIN_N+ settled cards: back in
+#             the record, and a PLAY where its price clears the bar
+#   decline   a PLAY cell under MOVE_DOWN_HIT with a ROI at or under zero,
+#             or a WATCH/LIVE cell under MOVE_DOWN_HIT whatever its ROI —
+#             his rule: the watch and live pills are bought at a price the
+#             feed never printed, so their feed ROI says nothing
+# Set by scripts/tier_optimize.py, which measures with the mover OFF
+# (_MOVES_OFF) so a cell it declined keeps counting and can come back.
+# Nothing here is permanent: the state is recomputed every run, so a
+# promoted cell that slips under the bar reverts by itself.
+BAND_MOVES: dict = {}       # (profile, band) -> (move, n, hit, roi, since)
+MOVE_STATS: dict = {}       # the same for EVERY measured cell, moved or not
+_MOVES_OFF = False          # the optimizer measures with the mover off
+MOVE_MIN_N = 30             # settled cards before a cell may move either way
+MOVE_UP_HIT = 85.0          # promote a no-play cell at this hit rate, ROI > 0
+MOVE_DOWN_HIT = 80.0        # under this a play or watch cell is declined
 TIER_PARAMS = ROOT / "config" / "tier_params.tsv"
 
 
@@ -1260,6 +1290,7 @@ def _load_tier_params() -> None:
     bands: dict = {"strong": set(), "strong watch": set()}
     seen_from = False
     seen_med = False
+    seen_move = False
     for ln in lines:
         if ln.startswith("#") or not ln.strip():
             continue
@@ -1273,6 +1304,16 @@ def _load_tier_params() -> None:
                     seen_med = True
                 MED_BANDS[q[1]] = (q[2], int(q[3]), float(q[4]), float(q[5]),
                                    q[6] if len(q) > 6 else "")
+            elif q[0] == "move":
+                if not seen_move:
+                    BAND_MOVES.clear()
+                    MOVE_STATS.clear()
+                    seen_move = True
+                cell = (q[3], int(q[4]), float(q[5]), float(q[6]),
+                        q[7] if len(q) > 7 else "")
+                MOVE_STATS[(q[1], q[2])] = cell
+                if q[3] in ("promote", "decline"):
+                    BAND_MOVES[(q[1], q[2])] = cell
             elif q[0] == "from" and q[1] in bands:
                 seen_from = True
                 if q[3] == "on":
@@ -1514,6 +1555,116 @@ def live_stop(f, lane: str | None) -> bool:
     return any(m <= LIVE_STOP_MINUTE and g >= LIVE_STOP_GOALS for m, g in pts)
 
 
+# ONE CLASSIFIER FOR THE PROFILE A CARD WEARS (14 Oct). The chain below
+# lived inline in profiles_html, which is also where it was measured; the
+# mover needs the same answer on cards the Profiles page leaves out
+# (everything inside decline), so it moved out here and both read it.
+U_ = "unlabelled \u00b7 "
+PROFILES = ["\u2605 STRONG", "MILD", "\u2605 STRONG FROM", "LIVE INPLAY GOOD",
+            "STRONG WATCH", "STRONG WATCH FROM", "WEAK",
+            U_ + "all 7 rates, under the floor",
+            U_ + "plain play (fewer than 7, under the floor)",
+            U_ + "plain watch (fewer than 7, 0\u20135% under)",
+            U_ + "5%+ under, band off"]
+# What the board DOES with a profile, which is what decides the direction
+# the mover may move one of its bands: a play, a watch/live pill bought at
+# a price the feed never printed, or no play at all.
+PROFILE_KIND = {PROFILES[0]: "play", PROFILES[1]: "play",
+                PROFILES[2]: "watch", PROFILES[3]: "watch",
+                PROFILES[4]: "watch", PROFILES[5]: "watch"}
+
+
+def profile_kind(prof: str) -> str:
+    """'play', 'watch' or 'no play' — WEAK and the unlabelled rest."""
+    return PROFILE_KIND.get(prof, "no play")
+
+
+def profile_name(lane, lab, claim, gap, best, seven) -> str:
+    """Which profile row a card sits in, from its first-sight numbers."""
+    fsr, fm = TIER_MIN["strong"], TIER_MIN["medium"]
+    fsw = TIER_MIN["strong watch"]
+    band = gap_band(gap)
+    lab, side = str(lab or ""), str(lane or "")[:1]
+    claim = claim or 0.0
+    watch_ = gap <= -STRONG_WATCH_UNDER and (
+        best >= fsw or band in FROM_BANDS["strong watch"])
+    lgood_ = watch_ and (side == "O" or (side == "U" and lab.startswith("green")
+                                         and claim >= LIVE_GOOD_UNDER_CLAIM))
+    if seven and band in STRONG_WEAK_BANDS and best >= fsr:
+        return PROFILES[6]      # a band STRONG gave up
+    if seven and gap >= -STRONG_UNDER and best >= fsr:
+        return PROFILES[1] if MILD_CLAIM_LO <= claim < MILD_CLAIM_HI \
+            else PROFILES[0]
+    if seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
+        return PROFILES[2]
+    if lgood_:
+        return PROFILES[3]
+    if gap <= -STRONG_WATCH_UNDER and best >= fsw:
+        return PROFILES[4]
+    if gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
+        return PROFILES[5]
+    if not seven and gap >= 0 and best >= fm:
+        return PROFILES[6]
+    if seven and gap >= -STRONG_UNDER:
+        return PROFILES[7]
+    if gap >= 0:
+        return PROFILES[8]
+    if gap <= -STRONG_WATCH_UNDER:
+        return PROFILES[10]
+    return PROFILES[9]
+
+
+def card_profile(f) -> tuple[str, str] | None:
+    """(profile, gap band) for this card, or None where it has no price.
+
+    Read the way the pill reads it — the live verdict before kickoff, the
+    frozen call after it — and WITHOUT asking tier_of or is_declined:
+    band_declined is upstream of both.
+    """
+    if f.settled or odds_api.started(f.kickoff):
+        c = was_called(f)
+        if not c:
+            return None
+        r = c["row"]
+        lab, lane = str(r.get("label") or ""), str(r.get("lane") or "")
+        claim = r.get("claim")
+        try:
+            best, need = float(r.get("best") or 0), float(r.get("need") or 0)
+        except (TypeError, ValueError):
+            return None
+    else:
+        v = verdict(f, _star(f))
+        if not v or v["odds"] is None or not v["need"]:
+            return None
+        lab, lane, claim = str(v["label"]), str(v["lane"]), v["claim"]
+        best, need = float(v["odds"]), float(v["need"])
+    if not best or not need or lab.endswith("red"):
+        return None
+    gap = (best / need - 1) * 100
+    return (profile_name(lane, lab, claim, gap, best, all_seven(f, lab)),
+            gap_band(gap))
+
+
+def band_move(f) -> tuple[str, int, float, float, str] | None:
+    """What the mover has done to this card's (profile, band) cell."""
+    if _MOVES_OFF or play_locked(f):
+        return None
+    pb = card_profile(f)
+    return BAND_MOVES.get(pb) if pb else None
+
+
+def band_promoted(f) -> bool:
+    m = band_move(f)
+    return bool(m) and m[0] == "promote"
+
+
+def band_declined(f) -> bool:
+    """Declined by its own band record: a play or watch cell that dropped
+    under MOVE_DOWN_HIT on MOVE_MIN_N+ cards."""
+    m = band_move(f)
+    return bool(m) and m[0] == "decline"
+
+
 def medband_state(f) -> tuple[str, str, tuple] | None:
     """(band, state, stats) for a MEDIUM card whose gap band carries a
     state, else None. A MEDIUM is a play, not STRONG, at or over the 1.31
@@ -1576,6 +1727,8 @@ def decline_reason(f) -> str | None:
         return f"O1.5 {lo:.0f}–{hi:.0f}% over the bar"
     if medband_declined(f):
         return "WEAK"
+    if (m := band_move(f)) and m[0] == "decline":
+        return f"band record {m[2]:.0f}% on {m[1]}"
     return "strike combo"
 
 
@@ -1591,8 +1744,9 @@ WEAK_KEPT_BAND = "3\u20136% over"
 
 
 def medband_declined(f) -> bool:
-    """Is this WEAK card declined — every band but WEAK_KEPT_BAND."""
-    if _MEDBAND_OFF or play_locked(f):
+    """Is this WEAK card declined — every band but WEAK_KEPT_BAND, and
+    none the mover has promoted on its own record."""
+    if _MEDBAND_OFF or play_locked(f) or band_promoted(f):
         return False
     m = medband_state(f)
     return bool(m) and m[0] != WEAK_KEPT_BAND
@@ -1613,7 +1767,7 @@ def weak_noplay(f) -> bool:
     MEDIUM tier, and an untiered play under its tier's floor), so the
     test is the one the pill makes: a play that is not STRONG.
     """
-    if is_declined(f):
+    if is_declined(f) or band_promoted(f):
         return False
     v = verdict(f, _star(f))
     return bool(v and v["play"] and not v["strong"])
@@ -2051,10 +2205,14 @@ def frozen() -> dict:
                 if fk not in _FIRST:
                     _FIRST[fk] = (best, need, p[12])
                 best, need, book = _FIRST[fk]
+                try:
+                    claim = float(p[6])
+                except ValueError:
+                    claim = None
                 _FROZEN[key] = dict(d=p[1], code=p[2], fixture=p[3],
                                     tip=p[4], lane=p[5], label=p[7],
                                     score=score, need=need, best=best,
-                                    book=book, bar=bar)
+                                    book=book, bar=bar, claim=claim)
     return _FROZEN
 
 
@@ -2922,6 +3080,10 @@ def _declined_base(f) -> bool:
         return True
     if medband_declined(f):
         return True
+    # DECLINED BY ITS OWN BAND RECORD (the mover, 14 Oct): a play or watch
+    # cell that dropped under MOVE_DOWN_HIT on MOVE_MIN_N+ settled cards.
+    if band_declined(f):
+        return True
     return strike_declined(f)
 
 
@@ -3284,6 +3446,16 @@ def _guard(f, best: int) -> str:
     elif v["strong"]:
         mark = ('<span class="vmark strong">★ STRONG · PLAY'
                 f'{_edge_html("strong", odds)}</span>')
+    elif v["play"] and band_promoted(f):
+        mv, pb = band_move(f), (card_profile(f) or ("", ""))
+        mark = ('<span class="vmark lgood" title="PROMOTED by its own band '
+                f'record \u2014 {html.escape(pb[0])} at {html.escape(pb[1])}: '
+                f'{mv[1]} settled cards, {mv[2]:.1f}% and {mv[3]:+.1f}%, over '
+                f'the {MOVE_UP_HIT:.0f}% and the gain the mover promotes on '
+                f'(since {mv[4] or "today"}). It reverts by itself if the '
+                'record slips.">PROMOTED \u00b7 PLAY <span class="tedge mgood">'
+                f'\u25b2 {html.escape(pb[1])} \u00b7 {mv[2]:.0f}% on {mv[1]}'
+                '</span></span>')
     elif v["play"] and t == "medium":
         mb = medband_state(f)
         if mb and mb[1] in ("skip", "hard"):
@@ -4410,13 +4582,8 @@ def profiles_html(fixtures) -> str:
             first.setdefault((p[1], p[3]), p)
     fsr, fm, fsw = (TIER_MIN["strong"], TIER_MIN["medium"],
                     TIER_MIN["strong watch"])
-    U = "unlabelled \u00b7 "
-    order = ["\u2605 STRONG", "MILD", "\u2605 STRONG FROM", "LIVE INPLAY GOOD",
-             "STRONG WATCH", "STRONG WATCH FROM", "WEAK",
-             U + "all 7 rates, under the floor",
-             U + "plain play (fewer than 7, under the floor)",
-             U + "plain watch (fewer than 7, 0\u20135% under)",
-             U + "5%+ under, band off"]
+    U = U_
+    order = list(PROFILES)
     rows: dict = {k: [] for k in order}
     for key, p in first.items():
         f = byday.get(key)
@@ -4441,35 +4608,7 @@ def profiles_html(fixtures) -> str:
             claim_ = float(p[6])
         except ValueError:
             claim_ = 0.0
-        watch_ = gap <= -STRONG_WATCH_UNDER and (
-            best >= fsw or band in FROM_BANDS["strong watch"])
-        lgood_ = watch_ and (
-            p[5][:1] == "O" or (p[5][:1] == "U" and p[7].startswith("green")
-                                and claim_ >= LIVE_GOOD_UNDER_CLAIM))
-        if seven and band in STRONG_WEAK_BANDS and best >= fsr:
-            g = order[6]        # a band STRONG gave up
-        elif seven and gap >= -STRONG_UNDER and best >= fsr:
-            # MILD is carved out of STRONG by the card's own claim
-            g = order[1] if MILD_CLAIM_LO <= claim_ < MILD_CLAIM_HI \
-                else order[0]
-        elif seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
-            g = order[2]
-        elif lgood_:
-            g = order[3]
-        elif gap <= -STRONG_WATCH_UNDER and best >= fsw:
-            g = order[4]
-        elif gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
-            g = order[5]
-        elif not seven and gap >= 0 and best >= fm:
-            g = order[6]
-        elif seven and gap >= -STRONG_UNDER:
-            g = order[7]
-        elif gap >= 0:
-            g = order[8]
-        elif gap <= -STRONG_WATCH_UNDER:
-            g = order[10]
-        else:
-            g = order[9]
+        g = profile_name(p[5], p[7], claim_, gap, best, seven)
         pl = got[0] * (best - 1) if got[0] > 0 else got[0]
         rows[g].append((band, bool(got[1]), pl, best))
     # On the board now, by the tier the card wears.
@@ -4501,6 +4640,12 @@ def profiles_html(fixtures) -> str:
                 f"{roi:+.1f}%</td><td>{avg:.2f}</td><td>{be}</td>")
 
     def state(g, band):
+        # THE MOVER FIRST (14 Oct): where a cell has moved, that is its
+        # state, whatever its tier's own machinery says.
+        mv = BAND_MOVES.get((g, band))
+        if mv:
+            w_ = "\u25b2 promoted" if mv[0] == "promote" else "\u26d4 declined"
+            return f"{w_} \u00b7 {mv[2]:.0f}% on {mv[1]}"
         if g == order[2] or g == order[5]:
             base = "strong" if g == order[2] else "strong watch"
             return "on" if band in FROM_BANDS[base] else "off"
@@ -4541,6 +4686,37 @@ def profiles_html(fixtures) -> str:
                             f'<td>{state(g, band)}</td></tr>')
     body.append(f'<tr class="pgrp"><td><b>all unlabelled</b></td>'
                 f'{stat(allu)}<td></td></tr>')
+    # INSIDE DECLINE (14 Oct: "it can check all profiles inside decline").
+    # The table above counts the record, so a declined cell has no row in
+    # it at all — and a cell nobody measures can never earn its way back.
+    # These are the mover's own numbers, read from config/tier_params.tsv
+    # (every no-play cell, declined cards included), largest sample first,
+    # so what is close to the promote bar can be seen.
+    dec = [(k, v) for k, v in MOVE_STATS.items()
+           if profile_kind(k[0]) == "no play" or v[0] == "decline"]
+    dec.sort(key=lambda kv: -kv[1][1])
+    drows = []
+    for (prof, band), (st_, n_, hit_, roi_, _since) in dec:
+        mv = ("\u25b2 PROMOTED" if st_ == "promote" else
+              f"\u26d4 DECLINED \u00b7 under {MOVE_DOWN_HIT:.0f}%"
+              if st_ == "decline" else
+              f"{MOVE_UP_HIT:.0f}% and a gain on {MOVE_MIN_N}+ promotes"
+              if n_ < MOVE_MIN_N or hit_ < MOVE_UP_HIT or roi_ <= 0 else "")
+        cls = "pos" if roi_ > 0 else "neg"
+        drows.append(f'<tr><td class="pband">{prof} \u00b7 {band}</td>'
+                     f'<td>{n_}</td><td>{hit_:.1f}%</td>'
+                     f'<td class="{cls}">{roi_:+.1f}%</td><td></td><td>'
+                     f'{100 / hit_:.2f}</td><td>{mv}</td></tr>'
+                     if hit_ else "")
+    if drows:
+        body.append('<tr class="pgrp"><td><b>inside decline</b> '
+                    '<span class="dim">every cell the mover measures that '
+                    'the table above cannot show \u2014 no play, or '
+                    'declined by its own record \u00b7 '
+                    f'promotes at {MOVE_UP_HIT:.0f}% with a gain on '
+                    f'{MOVE_MIN_N}+</span></td><td></td><td></td><td></td>'
+                    '<td></td><td></td><td></td></tr>')
+        body += drows
     return ('<div class="lmodal" id="profmodal" onclick="if(event.target'
             '===this)this.classList.remove(\'on\')"><div class="lbox">'
             '<button class="btn lshut" onclick="document.getElementById('

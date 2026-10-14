@@ -5,18 +5,18 @@
 # BANK rows are the bank in two halves by date and pooled.
 # verdict: separates = declined landed 2+ under kept; BACKWARDS = 2+ over;
 # thin = under 15 declined cards, not judged.
-# written	2026-10-13
+# written	2026-10-14
 # source	window	rule	n	hit	kept_n	kept	verdict
-board	21d	tier red	87	71.3	499	82.8	separates
-board	21d	live unsafe · athena	60	73.3	499	82.8	separates
-board	21d	live unsafe · watch	0		499	82.8	thin
-board	21d	live unsafe · priced	21	66.7	499	82.8	separates
-board	21d	strike combo	43	72.1	499	82.8	separates
-board	all	tier red	205	75.1	1132	82.5	separates
-board	all	live unsafe · athena	89	74.2	1132	82.5	separates
-board	all	live unsafe · watch	0		1132	82.5	thin
-board	all	live unsafe · priced	70	68.6	1132	82.5	separates
-board	all	strike combo	128	75.8	1132	82.5	separates
+board	21d	tier red	92	71.7	482	84.6	separates
+board	21d	live unsafe · athena	60	73.3	482	84.6	separates
+board	21d	live unsafe · watch	0		482	84.6	thin
+board	21d	live unsafe · priced	22	68.2	482	84.6	separates
+board	21d	strike combo	89	69.7	482	84.6	separates
+board	all	tier red	210	75.2	1062	83.8	separates
+board	all	live unsafe · athena	89	74.2	1062	83.8	separates
+board	all	live unsafe · watch	0		1062	83.8	thin
+board	all	live unsafe · priced	71	69.0	1062	83.8	separates
+board	all	strike combo	230	73.9	1062	83.8	separates
 bank	A	tier red	916	75.0	14324	84.8	separates
 bank	A	live unsafe · athena	1079	76.0	14324	84.8	separates
 bank	A	live unsafe · watch	0		14324	84.8	thin

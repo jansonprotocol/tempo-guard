@@ -35,7 +35,13 @@
 #                             stale (both the Over clause and the strong
 #                             bar sat wrong for weeks before a person read
 #                             them)
-#   scripts/tier_optimize.py  tier floors and near-tier FROM bands ->
+#   scripts/tier_optimize.py  tier floors, near-tier FROM bands and THE
+#                             BAND MOVER — every profile by gap band, the
+#                             play boards and the cells inside decline
+#                             alike: a no-play cell promotes at 85%+ with
+#                             a gain on 30+, a play cell declines under
+#                             80% with no gain, a watch/live cell under
+#                             80% whatever its feed ROI ->
 #                             config/tier_params.tsv (the board reads it)
 #   scripts/board.py          render README + app + live.json, then verify
 #
