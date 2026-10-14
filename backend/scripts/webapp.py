@@ -1725,7 +1725,7 @@ def decline_reason(f) -> str | None:
     if o15_declined(f):
         lo, hi = O15_BAND
         return f"O1.5 {lo:.0f}–{hi:.0f}% over the bar"
-    if medband_declined(f):
+    if medband_declined(f) or weak_declined(f):
         return "WEAK"
     if (m := band_move(f)) and m[0] == "decline":
         return f"band record {m[2]:.0f}% on {m[1]}"
@@ -1737,19 +1737,43 @@ def decline_reason(f) -> str | None:
 # board shows potential, but too thin to conclude now. The workflow might
 # promote it later."). WEAK had been no-play-but-counted since 4 Oct, with
 # each band declining itself at 50 settled cards; it lands 75.2% overall
-# and he is not buying any of it. So the whole tier is declined at once —
-# except WEAK_KEPT_BAND, which keeps its place and keeps counting so the
-# optimizer can promote it if the record holds up.
-WEAK_KEPT_BAND = "3\u20136% over"
+# and he is not buying any of it. So the whole tier is declined at once.
+#
+# THE KEPT BAND WENT TOO (14 Oct, on the 3-6% over cards still showing
+# "WEAK - NO PLAY" on the Live Watch tab and counting as "5 on the board"
+# on the Profiles page: "weak is still on the board, but now at Live
+# Watch. Its also on profiles board"). It had been held out of the decline
+# so its record would keep running — but it no longer needs to be: the
+# band mover measures with _MEDBAND_OFF on, so a declined cell keeps
+# counting and promotes itself the day it reaches MOVE_MIN_N at
+# MOVE_UP_HIT with a gain. Nothing is lost by declining it, and the board
+# stops offering a card he would never buy.
 
 
 def medband_declined(f) -> bool:
-    """Is this WEAK card declined — every band but WEAK_KEPT_BAND, and
-    none the mover has promoted on its own record."""
+    """Is this a WEAK card, and so declined — unless the mover has
+    promoted its band on that band's own record."""
     if _MEDBAND_OFF or play_locked(f) or band_promoted(f):
         return False
-    m = medband_state(f)
-    return bool(m) and m[0] != WEAK_KEPT_BAND
+    return bool(medband_state(f))
+
+
+def weak_declined(f) -> bool:
+    """The OTHER card the pill calls WEAK (14 Oct, the last three still on
+    Live Watch): a play at or over its bar but under its tier's floor, so
+    it wears no tier at all and medband_state does not answer for it.
+    These land about 72% and he plays none of them, so they are declined
+    with the rest of WEAK. Read the way the pill reads it — the frozen
+    call after kickoff, the live verdict before it — and WITHOUT asking
+    tier_of or is_declined, which are both downstream of this.
+    """
+    if _MEDBAND_OFF or play_locked(f) or band_promoted(f):
+        return False
+    if f.settled or odds_api.started(f.kickoff):
+        c = was_called(f)
+        return bool(c and c["mark"] == "normal")
+    v = verdict(f, _star(f))
+    return bool(v and v["play"] and not v["strong"])
 
 
 # ALL WEAK OFF THE PLAYABLE BOARD (the bettor, 14 Oct: "I want all weak
@@ -3078,7 +3102,7 @@ def _declined_base(f) -> bool:
         return True
     if o15_declined(f):
         return True
-    if medband_declined(f):
+    if medband_declined(f) or weak_declined(f):
         return True
     # DECLINED BY ITS OWN BAND RECORD (the mover, 14 Oct): a play or watch
     # cell that dropped under MOVE_DOWN_HIT on MOVE_MIN_N+ settled cards.
@@ -5022,7 +5046,7 @@ def main() -> None:
                     final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
                 except ValueError:
                     pass
-    kinds = {"normal": [0, 0], "strong": [0, 0]}
+    kinds = {"mild": [0, 0], "strong": [0, 0]}
     _tile_fx = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
     seen: set = set()
     if FORWARD.exists():
@@ -5055,24 +5079,33 @@ def main() -> None:
                        and gap_band((best / need - 1) * 100)
                        not in STRONG_WEAK_BANDS
                        and fx_ is not None and all_seven(fx_, p[7]))
-            # The MEDIUM tile counts MEDIUM only: a play under the 1.31
-            # floor is a plain PLAY and sits in neither tile.
-            if not strong_ and (best < need or best < TIER_MIN["medium"]):
+            # MILD REPLACED WEAK IN THIS ROW (the bettor, 14 Oct:
+            # "Replace the weak box at the top next to ROI and Strong with
+            # MILD"). WEAK is a decline now, so its tile was counting a
+            # tier the board no longer offers; MILD is the other half of
+            # what he actually plays. The split is the card's own claim,
+            # the same one webapp.mild makes.
+            if not strong_:
                 continue
             got = _fs._settle(p[5], *final[key])
             if got is None:
                 continue
-            kind = "strong" if strong_ else "normal"
+            try:
+                claim_ = float(p[6])
+            except ValueError:
+                claim_ = 0.0
+            kind = "mild" if MILD_CLAIM_LO <= claim_ < MILD_CLAIM_HI \
+                else "strong"
             kinds[kind][1] += 1
             kinds[kind][0] += got[1]
-    (nh, nn), (sh, sn) = kinds["normal"], kinds["strong"]
+    (nh, nn), (sh, sn) = kinds["mild"], kinds["strong"]
     tiles = "".join([
         tile("taken bets", f"{bh / bn * 100:.1f}%" if bn else "—",
              f"your lanes · {bh}/{bn} hits"),
         tile("roi", f"{roi:+.1f}%", f"on €{_staked:.2f} · {bn} settled"),
-        tile("weak", f"{nh / nn * 100:.1f}%" if nn else "—",
-             (f"WEAK plays · {nh}/{nn}" if nn else "WEAK plays · none settled yet")
-             + f" · min {TIER_MIN['medium']:.2f}"),
+        tile("mild", f"{nh / nn * 100:.1f}%" if nn else "—",
+             (f"MILD cards · {nh}/{nn}" if nn else "MILD cards · none settled yet")
+             + f" · needs {MILD_BREAKEVEN:.2f}"),
         tile("★ strong", f"{sh / sn * 100:.1f}%" if sn else "—",
              (f"STRONG cards · {sh}/{sn}" if sn else "STRONG cards · none settled yet")
              + f" · min {TIER_MIN['strong']:.2f}"),

@@ -119,21 +119,41 @@ can promote it if the record holds. Both routes into WEAK are covered —
 the MEDIUM tier and an all-seven card in a band STRONG gave up —
 because `medband_state` now answers for both.
 
-AND NO WEAK CARD ON THE PLAYABLE BOARD, kept band included (14 Oct, on
-the three MLS cards still reading "WEAK - NO PLAY" there: "I want all
-weak from the playable board. We still track it record ofcourse. This
-band: 3-6% over 11 90.9% +23.7%, has potential. But not for now.").
+AND NOT ON ANY BOARD AT ALL, THE KEPT BAND INCLUDED (14 Oct, first on
+the three MLS cards reading "WEAK - NO PLAY" on Playable — "I want all
+weak from the playable board. We still track it record ofcourse" — and
+then, when they turned up one tab along: "weak is still on the board, but
+now at Live Watch. Its also on profiles board"). THE KEPT BAND IS GONE:
+3-6% over was held out of the decline so its record would keep running,
+and it no longer needs to be, because the band mover measures with
+`_MEDBAND_OFF` on — a declined cell keeps counting and promotes itself at
+MOVE_MIN_N and MOVE_UP_HIT with a gain. BOTH ROUTES ARE DECLINED: the
+MEDIUM tier and an all-seven card in a band STRONG gave up
+(`medband_declined`), and the untiered play — at or over its bar but
+under its tier's floor, which wears no tier and which `medband_state`
+never answered for (`weak_declined`, the last three on Live Watch; about
+72% on 10 settled cards, which left the record with them). The pill on a
+declined WEAK card reads "declined - WEAK"; 37 cards wear it.
+TWO STRAGGLERS, pre-existing: the Profiles page's WEAK row still holds
+Luzern v Vaduz and Young Boys v Luzern (2 and 5 Sep, 10%+ over). The
+decline reads the FROZEN call (the last forward-log row) and the Profiles
+page reads the FIRST-SIGHT row; on those two the starred lane moved
+between the two rows, so one reading says WEAK and the other says no
+play. Making them agree means changing which row the decline reads, which
+moves the record for every card — not worth it for two.
 `webapp.weak_noplay` is the test the pill makes - a play that is not
-STRONG - so both routes into WEAK leave Playable and Watch and read from
-Athena lanes instead, still priced, graded, counted and carrying their
-n/50. Playable now holds STRONG and MILD only. board.verify partitions
-the pending tabs the same way, WEAK and the non-live_good STRONG WATCH
-cards included, or it would call the app's own tabs a contradiction.
-THE OPTIMIZER CANNOT PROMOTE THE KEPT BAND. scripts/tier_optimize.py
-only writes a band state (good / skip / hard / none), and `good` is a
-mark on the pill, nothing more - there is no path from a WEAK band to a
-play. Keeping the band counted keeps the record running so he can decide;
-the promotion itself would be a new rule and his call.
+STRONG - and it keeps WEAK off Playable and Watch; the decline above now
+keeps it off Live Watch and Running too, so every WEAK card reads from
+the Declined tab. Playable holds STRONG and MILD only. board.verify
+partitions the pending tabs the same way, WEAK and the non-live_good
+STRONG WATCH cards included, or it would call the app's own tabs a
+contradiction.
+AND THE TOP ROW NAMES MILD, NOT WEAK (14 Oct: "the box at the top, we
+forgot that, next to the strong counter. Replace the weak box at the top
+next ROI and Strong with MILD"). The tile counted a tier the board no
+longer offers; it now splits the STRONG population by the card's own
+claim, the same split `webapp.mild` makes, and reads MILD 35/42 = 83.3%,
+needs 1.20, beside STRONG 55/61 = 90.2%.
 
 **THE BAND MOVER: PROFILES MOVE BOTH WAYS, BY THEMSELVES.** (14 Oct:
 "Build that rule: 85%+ positive ROI on 30+ promotes. This means it can
