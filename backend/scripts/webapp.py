@@ -1846,6 +1846,14 @@ def weak_noplay(f) -> bool:
 # changes by a cent.
 MARKET_BAR: dict = {}       # (profile, struck lane) -> (n, hits); "" = the profile
 MARKET_MIN_N = 10           # cards before a market cell speaks for itself
+# THE MARGIN IN THE BAR (the bettor, 14 Oct: "work in a good ROI margin in
+# the buy at prices. 5/6% good enough?"). A break-even price returns
+# exactly nothing, and the rate behind it is a sample, not a constant — a
+# cell reading 90% on 21 cards is one bad week from 86%. So the printed
+# bar is the record's break-even plus BUY_MARGIN, which is both the ROI he
+# is buying and the cushion under the estimate. One constant: raise it and
+# every bar on the board moves with it.
+BUY_MARGIN = 0.05
 # LIVE INPLAY GOOD is bought in play, so its CARD rate is not the rate he
 # gets: the reachable record is the bar (webapp.live_good's own numbers).
 LIVE_GOOD_REACH = {"over": (38, 48), "under": (29, 32)}
@@ -1897,9 +1905,15 @@ def build_market(fixtures) -> None:
             MARKET_BAR[k] = (n + 1, h + bool(got[1]))
 
 
-def market_bar(f, cell: str) -> tuple | None:
-    """(profile, market, n, hit%, min price, note) for a card's own lane."""
+def _bar_price(n: int, h: int) -> float:
+    """The record's break-even plus BUY_MARGIN, rounded UP to the cent, so
+    the printed price really clears it."""
     import math
+    return math.ceil(100 * (n / h) * (1 + BUY_MARGIN)) / 100
+
+
+def market_bar(f, cell: str) -> tuple | None:
+    """(profile, market, n, hit%, buy-from price, note) for a card's lane."""
     pb = card_profile(f)
     if not pb or is_declined(f):
         return None
@@ -1917,9 +1931,7 @@ def market_bar(f, cell: str) -> tuple | None:
                                  "under" if lane[:1] == "U" else None)
         if side:
             h, n = LIVE_GOOD_REACH[side]
-            price = lg[1] if lg else (LIVE_GOOD_OVER_FROM if side == "over"
-                                      else LIVE_GOOD_UNDER_FROM)
-            return (prof, lane, n, h / n * 100, price,
+            return (prof, lane, n, h / n * 100, _bar_price(n, h),
                     "the REACHABLE live record, not the card rate")
     rec, note = MARKET_BAR.get((prof, lane)), ""
     if not rec or rec[0] < MARKET_MIN_N:
@@ -1927,7 +1939,7 @@ def market_bar(f, cell: str) -> tuple | None:
     if not rec or not rec[1]:
         return None
     n, h = rec
-    return (prof, lane, n, h / n * 100, math.ceil(100 * n / h) / 100, note)
+    return (prof, lane, n, h / n * 100, _bar_price(n, h), note)
 
 
 # The profile names the bar prints: the unlabelled groups carry their
@@ -1948,8 +1960,10 @@ def _buybar_html(f, cell: str) -> str:
     return (f'<div class="buybar" title="What {html.escape(prof)} cards have '
             f'done on this market at first sight: {hit:.1f}% on {n} settled '
             f'({html.escape(note) if note else "this market only"}). '
-            f'{price:.2f} is where that record breaks even — under it the '
-            f'profile does not pay, over it the margin is yours.">'
+            f'Break-even is {n / (n * hit / 100):.2f}; the bar adds '
+            f'{BUY_MARGIN * 100:.0f}% on top, which is the ROI you are '
+            f'buying and the cushion under a rate measured on {n} cards. '
+            f'Below {price:.2f}, do not buy it.">'
             f'\U0001f3af BUY FROM <b>{price:.2f}</b> '
             f'<span class="dim">\u00b7 {where} lands {hit:.1f}% on {n}</span>'
             f'</div>')

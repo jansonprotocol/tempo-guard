@@ -32,7 +32,8 @@
   "Nottingham Forest FC": "Nott'm Forest",
   "Manchester City": "Man City",
   "Man United": "Manchester United FC",
-  "Nott'm Forest": "Nottingham Forest"
+  "Nott'm Forest": "Nottingham Forest",
+  "Brighton and Hove Albion": "Brighton & Hove Albion"
  },
  "ENG-CH": {
   "Queens Park Rangers FC": "QPR",
@@ -68,7 +69,8 @@
   "NEC": "Nijmegen",
   "NEC Nijmegen": "Nijmegen",
   "Fortuna Sittard": "For Sittard",
-  "PSV Eindhoven": "PSV"
+  "PSV Eindhoven": "PSV",
+  "FC Twente Enschede": "FC Twente '65"
  },
  "POR-PL": {
   "Sporting Clube de Braga": "Sp Braga",
@@ -114,7 +116,8 @@
   "København": "FC Copenhagen",
   "Kobenhavn": "FC Copenhagen",
   "FC København": "FC Copenhagen",
-  "FC Kobenhavn": "FC Copenhagen"
+  "FC Kobenhavn": "FC Copenhagen",
+  "AGF Aarhus": "Aarhus"
  },
  "SWE-AL": {
   "VSK": "Vasteras SK",
@@ -165,7 +168,8 @@
   "Sétif": "ES Sétif"
  },
  "BEL-PL": {
-  "OH Leuven": "Oud-Heverlee Leuven"
+  "OH Leuven": "Oud-Heverlee Leuven",
+  "Sint Truiden": "St Truiden"
  },
  "BRA-SA": {
   "Atlético-MG": "CA Mineiro",
@@ -181,5 +185,8 @@
  "ENG-L2": {
   "Peterborough United": "Peterboro",
   "Peterborough": "Peterboro"
+ },
+ "AUT-BL": {
+  "LASK": "LASK Linz"
  }
 }

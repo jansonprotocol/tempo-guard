@@ -61,6 +61,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts import odds_api as oa
 
 ROOT = Path(__file__).resolve().parents[2]
+UNRESOLVED = ROOT / "config" / "unresolved.tsv"
 NAMES = ROOT / "config" / "league_names.tsv"
 AMS = ZoneInfo("Europe/Amsterdam")
 DAYS = 7
@@ -335,6 +336,24 @@ def main() -> None:
         print("\t".join(r))
     print(f"{len(rows)} fixtures the board does not have, next {days} days, "
           f"{len({r[1] for r in rows})} leagues", file=sys.stderr)
+    # THE REFUSALS GO IN A FILE, NOT JUST A LOG (the bettor, 14 Oct, after
+    # spotting two missing Champions League cards on his phone). A name
+    # the engine cannot resolve is a card that never exists, and the only
+    # trace was a line in a workflow log nobody reads — twenty-one cup
+    # fixtures in one week were being dropped in silence. The file is
+    # rewritten every run, so it is a live list of what the board is
+    # missing right now, not a history.
+    stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
+    UNRESOLVED.write_text(
+        "# Fixtures the feed carries that the board REFUSED: the engine "
+        "could not resolve a club\n# against that competition's own store, "
+        "and it never guesses. Rewritten every fill run.\n"
+        "# A fix is an alias in config/team_aliases.json where the club is "
+        "stored under another\n# spelling, or nothing at all where the "
+        "league has no store — then there is no history\n# to price it "
+        "with and the refusal is the right answer.\n"
+        f"# as of {stamp} UTC\n# code\tfixture\twhy\n"
+        + "".join(f"{c}\t{t}\t{w}\n" for c, t, w in skipped))
     if skipped:
         print("skipped (name unresolved — never guessed; add the alias to "
               "config/team_aliases.json):", file=sys.stderr)

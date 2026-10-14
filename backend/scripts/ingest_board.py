@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import re
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
@@ -89,16 +90,73 @@ def _resolve(code: str, df, names: list[str], team: str):
     if got is not None:
         return got
     country = code.split("-")[0]
-    for sib in store.available_leagues():
-        if sib == code or sib.split("-")[0] != country:
-            continue
-        sdf = store.load_results(sib)
-        if sdf is None or sdf.empty:
-            continue
-        for n in sorted(set(sdf["home"]) | set(sdf["away"])):
+    sibs = [s for s in store.available_leagues()
+            if s != code and s.split("-")[0] == country]
+    # 4. A CUP ENTRANT, by its own spelling only (the bettor, 14 Oct, two
+    #    Champions League cards missing from the board: "just along those
+    #    matches come in correctly and give its true tip"). A code with no
+    #    sibling sharing its prefix is a continental cup, and there the
+    #    whole domestic world is the sibling: a club playing its first tie
+    #    in a competition has no rows in that competition's store and
+    #    cannot have any until it plays them — Como, LASK and Real Betis
+    #    are not in the UCL store, and Crystal Palace, Sunderland,
+    #    Bournemouth, Monaco, Getafe, Brighton, Copenhagen, Twente and
+    #    Freiburg are not in the UEL's or the UECL's. Twenty-one cup
+    #    fixtures in one week were refused for it. The engine was built
+    #    for exactly this case: cup_composite's club strength is
+    #    league_rating + 0.8 x (domestic PPG - 1.45) + 0.3 x own_cup_form,
+    #    and own_cup_form is OMITTED under six cup matches — so the card
+    #    prices from the club's domestic record, which is what it should
+    #    do. The name check in front of it was the only thing stopping it.
+    #    Exact spelling only, accent-insensitive or canonical, never
+    #    fuzzy: the same guard the promoted-club step carries.
+    if code in CUPS:
+        # every domestic store is the sibling here, and each one is asked
+        # through ITS OWN alias table first — the same two steps the club's
+        # domestic card already resolves by, so "Como" finds "Como 1907"
+        # and "Olympiakos Piraeus" finds "Olympiakos" without a guess.
+        for sib in store.available_leagues():
+            if sib in CUPS or sib.startswith("INT-") or sib == code:
+                continue
+            sdf = store.load_results(sib)
+            if sdf is None or sdf.empty:
+                continue
+            # NO FUZZY PASS ACROSS BORDERS. _aliased ends with a fuzzy
+            # match against the spellings a league's fold consumed, which
+            # is safe inside that league and lethal outside it: asked
+            # about "Inter Club d'Escaldes" the Italian store answered
+            # "FC Internazionale Milano". So only the two statements that
+            # cannot guess are used — the hand-written alias table and
+            # the store's own fold — and the comparison stays exact.
+            from app.data import aliases as _aliases
+            cands = {team, _aliases.get(sib, team),
+                     store.folded_name(sib, team)}
+            for cand in filter(None, cands):
+                for n in _store_names(sib):
+                    if _norm_accent(n) == _norm_accent(cand) \
+                            or _canonical(n) == _canonical(cand):
+                        return n
+        return None
+    for sib in sibs:
+        for n in _store_names(sib):
             if _norm_accent(n) == _norm_accent(team) or _canonical(n) == _canonical(team):
                 return n
     return None
+
+
+# The continental cups: codes whose entrants are CLUBS with domestic
+# records elsewhere. INT-* is deliberately not here — those are national
+# teams, and no domestic club store can speak for them.
+CUPS = frozenset({"UCL", "UCL-Q", "UEL", "UEL-Q", "UECL", "UECL-Q"})
+
+
+@lru_cache(maxsize=None)
+def _store_names(code: str) -> tuple[str, ...]:
+    """Every club name a league's store carries, read once per process."""
+    sdf = store.load_results(code)
+    if sdf is None or sdf.empty:
+        return ()
+    return tuple(sorted(set(sdf["home"]) | set(sdf["away"])))
 
 
 def main() -> None:

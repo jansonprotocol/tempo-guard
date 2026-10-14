@@ -188,6 +188,16 @@ CARD RATE: its bar is the REACHABLE live record (overs 38/48 at 1.30,
 green unders 29/32 at 1.15), because the 85% card rate is not what the
 live entry delivers.
 
+AND THE BAR CARRIES A MARGIN (14 Oct: "work in a good ROI margin in the
+buy at prices. 5/6% good enough?"). `webapp.BUY_MARGIN` is **5%** on top
+of the record's break-even, rounded up to the cent: a break-even price
+returns exactly nothing, and the rate behind it is a sample, not a
+constant — a cell reading 90% on 21 cards is one bad week from 86%. So
+the margin is both the ROI he is buying and the cushion under the
+estimate. ★ STRONG on U4.5 reads 1.17 (break-even 1.11), LIVE INPLAY GOOD
+overs 1.33 (1.26), MILD on U4.5 1.39 (1.32). One constant; raise it and
+every bar moves.
+
 EVERY OTHER PRICE IS OFF THE CARD, which is the point: the locked
 first-sight price, the live best and its book, the Unibet quote, the
 engine's value price, the tier's "min", and the near-tier "buy at X+" all
@@ -335,6 +345,43 @@ market offered, never as what he would have got.
   (Atlético Nacional v Deportivo Pasto, 11 Oct) turned out to be MOVED —
   the feed has it on the 14th — and the board rendered without
   --allow-stale for the first time in weeks.
+
+## Cards the board never made
+
+- **A CUP ENTRANT RESOLVES BY ITS DOMESTIC RECORD.** (14 Oct, two
+  Champions League cards missing from the board: "fix it however you think
+  best. Just along those matches come in correctly and give its true
+  tip.") The fill only makes a card when the engine can resolve BOTH clubs
+  against THAT COMPETITION's own store, and it never guesses. Como, LASK
+  and Real Betis are not in the UCL store; Crystal Palace, Sunderland,
+  Bournemouth, Monaco, Getafe, Brighton, Copenhagen, Twente and Freiburg
+  are not in the UEL's or the UECL's — a club playing its first tie in a
+  competition cannot be. **Twenty-one cup fixtures in one week were being
+  refused in silence.** `ingest_board._resolve` has a fourth step now: for
+  a code in `CUPS`, every domestic store is a sibling, asked through its
+  own HAND-WRITTEN alias and the store's own fold, compared EXACTLY. The
+  engine was built for this — `cup_composite`'s club strength is
+  `league_rating + 0.8 x (domestic PPG - 1.45) + 0.3 x own_cup_form`, and
+  own_cup_form is OMITTED under six cup matches — so the card prices from
+  the club's domestic record, which is what it should do.
+  NO FUZZY PASS ACROSS BORDERS, and this is the whole safety of it:
+  `features._aliased` ends with a fuzzy match against the spellings a
+  league's fold consumed, which is safe inside that league and lethal
+  outside it — asked about **Inter Club d'Escaldes**, the Italian store
+  answered **FC Internazionale Milano**. Only the two statements that
+  cannot guess are used. Four aliases were added for real spelling
+  variants (LASK Linz, Brighton & Hove Albion, FC Twente '65, Aarhus,
+  St Truiden).
+  WHAT STILL REFUSES IS RIGHT TO: seven fixtures whose clubs come from
+  leagues the engine has no store for at all (Serbia, Albania, Andorra,
+  Lithuania, Georgia, Cyprus, the Portuguese second tier). There is no
+  history to price them with, and the refusal is the answer.
+  AND THE REFUSALS ARE NOW A FILE, `config/unresolved.tsv`, rewritten by
+  every fill run — a live list of what the board is missing, because a
+  line in a workflow log is how this hid for a month. Of the 14 fixtures
+  the fix recovered, 7 took a real tip and 7 abstained on thin history,
+  which is the engine answering honestly rather than the board going
+  blank.
 
 ## Archiving a session
 
