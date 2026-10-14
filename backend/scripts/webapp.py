@@ -2117,7 +2117,8 @@ def _livebar_html(f, cell: str) -> str:
         p = a["pivot"]
         piv = (f'<div class="bbalso">pivot: <b>{html.escape(p["lane"])}</b> '
                f'lands {p["hit"]:.0f}% on {p["n"]} \u2192 {p["price"]:.2f}</div>')
-    return (f'<div class="buybar live" title="The live record: cards whose own '
+    return (f'<div class="buybar live" data-lb="{html.escape(a["lane"])}"'
+            f' title="The live record: cards whose own '
             f'lane is {html.escape(a["lane"])}, at this point of the match with '
             f'this many goals in, and what they finally did — {a["hit"]:.1f}% on '
             f'{a["n"]} settled cards. Break-even {100 / a["hit"]:.2f} plus '
@@ -2127,6 +2128,43 @@ def _livebar_html(f, cell: str) -> str:
             f'<span class="dim">\u00b7 {html.escape(a["lane"])} at {a["minute"]}\' '
             f'with {a["goals"]}{"+" if a["goals"] >= 3 else ""} in lands '
             f'{a["hit"]:.1f}% on {a["n"]}{pool}</span>{piv}</div>')
+
+
+def live_table_js() -> str:
+    """The live record as the page's own lookup, so the bar follows the
+    clock instead of freezing at the minute the render happened (the
+    bettor, 14 Oct, on a bar reading "at 4'" beside a card showing 21').
+    Keys are lane|bucket|goals|line; "" is the all-lanes pool."""
+    import json
+    tbl = {f"{k[0]}|{k[1]}|{k[2]}|{k[3]}": [v[0], v[1]]
+           for k, v in LIVE_BAR.items() if v[0] >= LIVE_MIN_N and v[1]}
+    edges = [[lo, hi] for lo, hi, _p, _w in LIVE_BUCKETS]
+    return (f"const LIVEBAR = {json.dumps(tbl, separators=(',', ':'))};\n"
+            f"const LB_EDGES = {json.dumps(edges)};\n"
+            f"const LB_LINES = {json.dumps(list(LIVE_LINES))};\n"
+            f"const LB_MARGIN = {BUY_MARGIN};\n"
+            f"const LB_DEAD = {LIVE_DEAD};\n")
+
+
+def _prekick_html(f, cell: str) -> str:
+    """The card's ORIGINAL pre-kickoff call, under the live module (the
+    bettor, 14 Oct: "below it I want its original call from pre
+    kickoff"). The live bar prices the match as it stands now; this says
+    what the board offered before a ball was kicked, so the two can be
+    read against each other."""
+    if f.settled or not live_state(f):
+        return ""
+    got = market_bar(f, cell)
+    if not got:
+        return ""
+    lead, n, hit, price = got[0]
+    pb = card_profile(f)
+    name = SHORT_PROFILE.get(pb[0], pb[0]) if pb else lead
+    return (f'<div class="prekick" title="What this card was worth before '
+            f'kickoff, on the same record the Playable board prices from. '
+            f'It is not a price to pay now — the live bar above is.">'
+            f'pre-kickoff call \u00b7 {html.escape(name)} '
+            f'{hit:.1f}% on {n} \u2192 <b>{price:.2f}</b></div>')
 
 
 # The profile names the bar prints: the unlabelled groups carry their
@@ -4536,7 +4574,8 @@ def _card(f, kind: str, reads: dict) -> str:
                 f"{star if which == best else ''}{extra}"
                 f"{_lanebar(f, cell, lab, terse)}"
                 f"{_buybar_html(f, cell) if which == best else ''}"
-                f"{live}{_livebar_html(f, cell)}</div>")
+                f"{_livebar_html(f, cell)}{live}"
+                f"{_prekick_html(f, cell)}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -6004,6 +6043,7 @@ def main() -> None:
     # The rungs the in-play ladder may offer, so the page rebuilds the
     # same list the server did rather than carrying its own copy.
     ladder_js = _json.dumps(list(fromhere.LADDER))
+    live_js = live_table_js()
     # Canonical keys: one club, one identity, every spelling aliased to
     # it. Three signals decide which spellings are the same club: the
     # engine's canonical form, the Club Elo identity (one external name
@@ -6300,6 +6340,8 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .buybar b {{ color:var(--gold); font-size:1.08em; }}
 .bbalso {{ color:var(--dim); font-size:.9em; margin-top:.1rem; }}
 .buybar.live {{ border-left-color:#e06c5a; background:rgba(224,108,90,.07); }}
+.prekick {{ color:var(--dim); font-size:.9em; margin:.15rem 0 .1rem .2rem; }}
+.prekick b {{ color:#cfd6e4; }}
 .buyat {{ color:#cfd6e4; }}
 .buyat b {{ color:var(--gold); }}
 .fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
@@ -7640,6 +7682,9 @@ function remainingShare(minute, second) {{
 // rebuilt rather than re-numbered.
 const LADDER = {ladder_js}, SHORT = {fromhere.SHORT}, LONG = {fromhere.LONG},
       ALT_ROWS = {fromhere.ROWS};
+// The live record the LIVE BUY bar is rebuilt from, so it follows the
+// clock rather than freezing at the minute of the render.
+{live_js}
 function turnsOn(rung) {{
   const l = parseFloat(rung.slice(1));
   return (rung[0] === "U" || l === Math.floor(l)) ? Math.floor(l) : Math.floor(l) + 1;
@@ -7725,6 +7770,39 @@ function ladderNow(mu, goals, ownK, side, minute, second) {{
   out.sort((a, b) => a.fair - b.fair);
   return out.slice(0, ALT_ROWS);
 }}
+function lbCell(lane, b, g, line) {{
+  let v = LIVEBAR[lane + "|" + b + "|" + g + "|" + line];
+  if (v) return [v[0], v[1], false];
+  v = LIVEBAR["|" + b + "|" + g + "|" + line];
+  return v ? [v[0], v[1], true] : null;
+}}
+function lbPrice(n, h) {{ return Math.ceil(100 * (n / h) * (1 + LB_MARGIN)) / 100; }}
+function liveBarHtml(lane, minute, goals) {{
+  let b = -1;
+  for (let i = 0; i < LB_EDGES.length; i++)
+    if (minute >= LB_EDGES[i][0] && minute < LB_EDGES[i][1]) b = i;
+  if (b < 0) return "";
+  const own = lbCell(lane, b, goals, lane);
+  if (!own) return "";
+  const hit = own[1] / own[0] * 100, price = lbPrice(own[0], own[1]);
+  let pivot = null;
+  if (hit < LB_DEAD) {{
+    for (const line of LB_LINES) {{
+      if (line === lane || line[0] !== lane[0]) continue;
+      const c = lbCell(lane, b, goals, line);
+      if (!c) continue;
+      const r = c[1] / c[0] * 100;
+      if (r > hit + 10 && (!pivot || r > pivot[1])) pivot = [line, r, c[0], lbPrice(c[0], c[1])];
+    }}
+  }}
+  const pool = own[2] ? " \u00b7 all lanes" : "";
+  const more = pivot ? '<div class="bbalso">pivot: <b>' + pivot[0] + "</b> lands "
+      + pivot[1].toFixed(0) + "% on " + pivot[2] + " \u2192 " + pivot[3].toFixed(2) + "</div>" : "";
+  return "\U0001F3AF LIVE BUY FROM <b>" + price.toFixed(2) + "</b> "
+    + '<span class="dim">\u00b7 ' + lane + " at " + minute + "' with " + goals
+    + (goals >= 3 ? "+" : "") + " in lands " + hit.toFixed(1) + "% on " + own[0]
+    + pool + "</span>" + more;
+}}
 function tickClocks() {{
   const now = Date.now() / 1000;
   for (const el of document.querySelectorAll(".live[data-min]")) {{
@@ -7733,6 +7811,22 @@ function tickClocks() {{
     const cap = half === 1 ? 45 : 90;
     const shown = m > cap ? cap + "'+" + (m - cap) + "'" : m + "'";
     el.textContent = "🔴 LIVE " + shown + " " + el.dataset.goals;
+  }}
+  // THE LIVE BAR FOLLOWS THE CLOCK (14 Oct). It is rendered server-side
+  // too, so it is right without JS and right on the first paint; this
+  // keeps it right at 21' when the render happened at 4'. The minute and
+  // the score come from the card's own live span, which pollLive already
+  // patches, so there is one source of truth for the state.
+  for (const el of document.querySelectorAll(".buybar.live[data-lb]")) {{
+    const card = el.closest("details");
+    const clk = card && card.querySelector(".live[data-min]");
+    if (!clk) continue;
+    const base = +clk.dataset.min, half = +clk.dataset.half, at = +clk.dataset.at;
+    const minute = base + Math.floor(Math.max(now - at, 0) / 60);
+    const sc = (clk.dataset.goals || "0-0").split("-").map(Number);
+    const goals = Math.min((sc[0] || 0) + (sc[1] || 0), 3);
+    const html = liveBarHtml(el.dataset.lb, minute, goals);
+    if (html) el.innerHTML = html;
   }}
   for (const el of document.querySelectorAll(".also[data-mu]")) {{
     const base = +el.dataset.min, half = +el.dataset.half, at = +el.dataset.at;

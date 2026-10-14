@@ -259,6 +259,20 @@ the tab sat empty with eleven matches running. It now admits a card whose
 `live_good` is on whatever its frozen mark says — the label means the
 record supports buying it live, which is what Running is for.
 
+IT FOLLOWS THE CLOCK, AND THE ORIGINAL CALL SITS UNDER IT (14 Oct, on a
+bar reading "at 4'" beside a card showing 21': "the live module is still
+the old version. Below it I want its original call from pre kickoff").
+The whole live record is embedded in the page (`live_table_js`, keyed
+lane|bucket|goals|line) and `tickClocks` rebuilds every live bar every 15
+seconds from the card's OWN live span — the one `pollLive` already
+patches — so the minute and the score have one source of truth and the
+bar is right at 21' though the render happened at 4'. It is still
+rendered server-side as well, so it is correct without JS and on the
+first paint. The order on a running card is now: the LIVE BUY bar, then
+the live ladder, then `pre-kickoff call · <profile> <rate> → <price>`,
+dim, which is what the board offered before a ball was kicked. It is not
+a price to pay now; the live bar above it is.
+
 A DECLINED CARD GETS NO LIVE BAR EITHER — two of the three cards running
 when this shipped were declined on claim, and they correctly showed
 nothing.
