@@ -132,7 +132,10 @@ def main() -> None:
     cs = cards()
     under = w.STRONG_UNDER
     pops = {
-        "strong": [c for c in cs if c["seven"] and c["gap"] >= -under],
+        # the bands STRONG gave up are not STRONG, so they do not set its
+        # floor either (3-5% under, 11 Oct; 10%+ over, 14 Oct)
+        "strong": [c for c in cs if c["seven"] and c["gap"] >= -under
+                   and c["band"] not in w.STRONG_WEAK_BANDS],
         "medium": [c for c in cs if not c["seven"] and c["gap"] >= 0],
         "strong watch": [c for c in cs if c["gap"] <= -w.STRONG_WATCH_UNDER],
     }

@@ -795,6 +795,9 @@ def _haystack(f) -> str:
                   "strong watch": "tier swatch",
                   "strong from": "tier sfrom",
                   "strong watch from": "tier swfrom"}[t]]
+        # the half of STRONG WATCH whose live buy-in the record supports
+        if live_good(f):
+            bits.append("live inplay good")
     raw = " ".join(bits).lower()
     folded = _fold(raw)
     return html.escape(raw if folded == raw else raw + " " + folded)
@@ -1139,8 +1142,17 @@ STRONG_SCORE = 6.34    # the confluence cut STRONG used until 2 Oct; drift.py st
 # 100%, +14.0%), which become ★ STRONG FROM: the FROM band they need is
 # on, so they carry a named profile and a buy-from price rather than the
 # play pill (his call, 11 Oct, over waiving the floor for them).
+#
+# AND THE 10%+ OVER BAND LEFT TOO (the bettor, 14 Oct: "move over 10% from
+# STRONG to weak, ROI and hitrate are negative"). Measured: 18 of 25,
+# 72.0%, break-even 1.39, and a ROI of +0.5% at the FEED's best price —
+# which runs 5 to 10 points worse at a book he can reach, so it is a loss
+# to him. It is also where the losses live: 35% of every STRONG loss sits
+# in this one band against 17% of the wins. A market that disagrees with
+# the card by more than 10% is telling us something, not handing us value.
+# Without it STRONG reads 90 of 103, 87.4%, break-even 1.14.
 STRONG_UNDER = 3.0          # percent below the play bar STRONG still reaches
-STRONG_WEAK_BAND = "3–5% under"   # all seven, this band: WEAK, no play
+STRONG_WEAK_BANDS = ("3–5% under", "10%+ over")  # all seven here: WEAK
 _SEVEN_BUSY: set = set()
 
 
@@ -1347,6 +1359,60 @@ def _from_pill(f, t: str, lab, need, band: str | None, prefix: str = "",
             f'live">{prefix}{group}{price}</span>')
 
 
+# LIVE INPLAY GOOD (the bettor, 14 Oct). A STRONG WATCH card is bought in
+# play, because that is the only time its price reaches the bar — and the
+# wait itself selects the match. Simulated against the live log (1,271
+# matches, minute by minute) over the 560 settled STRONG WATCH and FROM
+# cards, the headline 85.5% is not the rate he can reach:
+#
+#   OVERS  he can only buy while it is still goalless. Matches where a
+#          goal came first — which he never buys — land 96.3% (52 of 54);
+#          the ones still 0-0 at 20' land 79.2% (38 of 48, break-even
+#          1.26). So the lane is playable, but only at a real price.
+#   UNDERS he can only buy once goals go in, and those are the matches
+#          that overrun: by 30' the games that finish 5+ have 1.15 goals
+#          on average against 0.52 for the ones that stay under, and 32%
+#          are already 2+ against 7%. Buying an under BECAUSE goals went
+#          in selects the blow-ups. Nothing on the card separates them —
+#          colour, claim and band differ by under two points. One subset
+#          survives: green and a claim of 85%+, 29 of 32 (90.6%).
+#
+# So the pill names only the part he can actually play, with the price it
+# needs; every other STRONG WATCH card keeps its own label and its board.
+LIVE_GOOD_OVER_FROM = 1.30      # 79.2% reachable, break-even 1.26
+LIVE_GOOD_UNDER_FROM = 1.15     # 90.6% reachable, break-even 1.10
+LIVE_GOOD_UNDER_CLAIM = 85.0
+
+
+def live_good(f) -> tuple[str, float] | None:
+    """('over'|'under', the price it needs) for a STRONG WATCH card whose
+    live buy-in is one the record supports, else None."""
+    if tier_of(f) not in ("strong watch", "strong watch from"):
+        return None
+    r = (frozen() or {}).get((f.kickoff.split(" ")[0], f.teams))
+    if not r:
+        return None
+    lane, lab = str(r.get("lane") or ""), str(r.get("label") or "")
+    claim = _claim(f.tip1)
+    if lane[:1] == "O":
+        return ("over", LIVE_GOOD_OVER_FROM)
+    if lane[:1] == "U" and lab.startswith("green") \
+            and claim is not None and claim >= LIVE_GOOD_UNDER_CLAIM:
+        return ("under", LIVE_GOOD_UNDER_FROM)
+    return None
+
+
+def _live_good_html(lg) -> str:
+    side, price = lg
+    rec = ("38 of 48 once a goal has not come by 20' (79.2%)"
+           if side == "over" else
+           "29 of 32 green cards claiming 85%+ (90.6%)")
+    return (f'<span class="vmark lgood" title="STRONG WATCH, and the half of '
+            f'it the live record supports: {rec}. Buy from {price:.2f}; '
+            f'below that the reachable rate does not pay.">LIVE INPLAY GOOD '
+            f'· from {price:.2f}</span>')
+
+
 # THE LIVE BREAK-OFF ON A NEAR-TIER UNDER (the bettor, 4 Oct: "break off
 # buying in on HT 3+ (12, 25.0%) and 60' 3+ (29, 37.9%) ... give it a
 # decline line when the card is live and crosses the scoreline. Card
@@ -1534,10 +1600,10 @@ def tier_of(f) -> str | None:
     if not g or not price or not lab or lab.endswith("red"):
         return None
     band = gap_band(g[1])
-    # THE BAND STRONG GAVE UP (11 Oct, STRONG_WEAK_BAND): an all-seven
-    # card at the price STRONG used to take, but 3-5% under the bar, is
-    # WEAK — no play, still counted.
-    if band == STRONG_WEAK_BAND and price >= TIER_MIN["strong"] \
+    # THE BANDS STRONG GAVE UP (STRONG_WEAK_BANDS): an all-seven card
+    # at a price STRONG used to take, but 3-5% under the bar (11 Oct) or
+    # more than 10% over it (14 Oct), is WEAK — no play, still counted.
+    if band in STRONG_WEAK_BANDS and price >= TIER_MIN["strong"] \
             and all_seven(f, lab):
         return "medium"
     if g[1] <= -STRONG_WATCH_UNDER:
@@ -1814,6 +1880,7 @@ def verdict(f, best: int) -> dict | None:
     strong = bool((not lab.endswith("red") or freed) and got_odds is not None
                   and not live and gap is not None and gap >= -STRONG_UNDER
                   and got_odds >= TIER_MIN["strong"]
+                  and gap_band(gap) not in STRONG_WEAK_BANDS
                   and all_seven(f, lab))
     play = play or strong
     # The watch list: same lane, same bar, the panel's best a little short
@@ -1992,6 +2059,7 @@ def was_called(f) -> dict | None:
     # STRONG reaches STRONG_UNDER below the bar (2 Oct), so it is asked
     # before the plain PLAY test, on the price the card kept at kickoff.
     if best >= need * (1 - STRONG_UNDER / 100) and best >= TIER_MIN["strong"] \
+            and gap_band((best / need - 1) * 100) not in STRONG_WEAK_BANDS \
             and all_seven(f, str(r["label"])):
         return dict(row=r, mark="strong")
     if best >= need:
@@ -3027,10 +3095,13 @@ def _frozen_guard(f, call: dict) -> str:
             "watch": "watch", "no play": "no play"}[call["mark"]]
     cls = {"strong": "strong", "normal": "weak",
            "watch": "dimv", "no play": "no"}[call["mark"]]
-    if call["mark"] in ("watch", "no play") and t == "strong watch":
+    lg = live_good(f) if call["mark"] in ("watch", "no play") else None
+    if lg:
+        word, cls = f"LIVE INPLAY GOOD \u00b7 from {lg[1]:.2f}", "lgood"
+    elif call["mark"] in ("watch", "no play") and t == "strong watch":
         word, cls = "STRONG WATCH", "swatch"
     elif call["mark"] in ("watch", "no play") and t == "medium":
-        # The band STRONG gave up (11 Oct, STRONG_WEAK_BAND).
+        # A band STRONG gave up (STRONG_WEAK_BANDS).
         word, cls = "WEAK", "weak"
     elif call["mark"] in ("watch", "no play") and t in FROM_GROUP:
         word, cls = FROM_GROUP[t][1], FROM_GROUP[t][2]
@@ -3156,12 +3227,16 @@ def _guard(f, best: int) -> str:
     elif odds is None:
         mark = ('<span class="vmark dimv">nothing quoted yet'
                 f'{_target_html(f, lab, need)}</span>')
+    elif t == "strong watch" and live_good(f):
+        mark = _live_good_html(live_good(f))
     elif t == "strong watch":
         mark = ('<span class="vmark swatch" title="5% or more under the play '
                 'bar: cards like this land about 83% but lose at the pre-match '
                 'price — one to watch for a better price, live or at your '
                 f'book.">STRONG WATCH{_edge_html("strong watch", odds)}'
                 f'{_target_html(f, lab, need)}</span>')
+    elif t in FROM_GROUP and live_good(f):
+        mark = _live_good_html(live_good(f))
     elif t in FROM_GROUP:
         mark = _from_pill(f, t, lab, need,
                           gap_band(v["gap"]) if v.get("gap") is not None else None,
@@ -4245,8 +4320,9 @@ def profiles_html(fixtures) -> str:
     fsr, fm, fsw = (TIER_MIN["strong"], TIER_MIN["medium"],
                     TIER_MIN["strong watch"])
     U = "unlabelled \u00b7 "
-    order = ["\u2605 STRONG", "\u2605 STRONG FROM", "STRONG WATCH",
-             "STRONG WATCH FROM", "WEAK", U + "all 7 rates, under the floor",
+    order = ["\u2605 STRONG", "\u2605 STRONG FROM", "LIVE INPLAY GOOD",
+             "STRONG WATCH", "STRONG WATCH FROM", "WEAK",
+             U + "all 7 rates, under the floor",
              U + "plain play (fewer than 7, under the floor)",
              U + "plain watch (fewer than 7, 0\u20135% under)",
              U + "5%+ under, band off"]
@@ -4266,34 +4342,49 @@ def profiles_html(fixtures) -> str:
         gap = (best / need - 1) * 100
         band = gap_band(gap)
         seven = all_seven(f, p[7])
-        if seven and gap >= -STRONG_UNDER and best >= fsr:
+        # LIVE INPLAY GOOD is carved out of the STRONG WATCH family, by
+        # the same rule live_good applies on the board: an over, or a
+        # green under claiming 85%+. It is the part of the family whose
+        # live buy-in the record supports, so it is tracked on its own.
+        try:
+            claim_ = float(p[6])
+        except ValueError:
+            claim_ = 0.0
+        watch_ = gap <= -STRONG_WATCH_UNDER and (
+            best >= fsw or band in FROM_BANDS["strong watch"])
+        lgood_ = watch_ and (
+            p[5][:1] == "O" or (p[5][:1] == "U" and p[7].startswith("green")
+                                and claim_ >= LIVE_GOOD_UNDER_CLAIM))
+        if seven and band in STRONG_WEAK_BANDS and best >= fsr:
+            g = order[5]        # a band STRONG gave up
+        elif seven and gap >= -STRONG_UNDER and best >= fsr:
             g = order[0]
-        elif seven and band == STRONG_WEAK_BAND and best >= fsr:
-            g = order[4]        # the band STRONG gave up on 11 Oct
         elif seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
             g = order[1]
-        elif gap <= -STRONG_WATCH_UNDER and best >= fsw:
+        elif lgood_:
             g = order[2]
-        elif gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
+        elif gap <= -STRONG_WATCH_UNDER and best >= fsw:
             g = order[3]
-        elif not seven and gap >= 0 and best >= fm:
+        elif gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
             g = order[4]
-        elif seven and gap >= -STRONG_UNDER:
+        elif not seven and gap >= 0 and best >= fm:
             g = order[5]
-        elif gap >= 0:
+        elif seven and gap >= -STRONG_UNDER:
             g = order[6]
-        elif gap <= -STRONG_WATCH_UNDER:
-            g = order[8]
-        else:
+        elif gap >= 0:
             g = order[7]
+        elif gap <= -STRONG_WATCH_UNDER:
+            g = order[9]
+        else:
+            g = order[8]
         pl = got[0] * (best - 1) if got[0] > 0 else got[0]
         rows[g].append((band, bool(got[1]), pl, best))
     # On the board now, by the tier the card wears.
     import collections
     now = collections.Counter()
     word = {"strong": order[0], "strong from": order[1],
-            "strong watch": order[2], "strong watch from": order[3],
-            "medium": order[4]}
+            "strong watch": order[3], "strong watch from": order[4],
+            "medium": order[5]}
     for f in fixtures:
         if f.settled or f.status or odds_api.started(f.kickoff):
             continue
@@ -4315,10 +4406,10 @@ def profiles_html(fixtures) -> str:
                 f"{roi:+.1f}%</td><td>{avg:.2f}</td><td>{be}</td>")
 
     def state(g, band):
-        if g == order[1] or g == order[3]:
+        if g == order[1] or g == order[4]:
             base = "strong" if g == order[1] else "strong watch"
             return "on" if band in FROM_BANDS[base] else "off"
-        if g == order[4]:
+        if g == order[5]:
             st = MED_BANDS.get(band)
             if not st:
                 return ""
@@ -4326,8 +4417,12 @@ def profiles_html(fixtures) -> str:
                     "none": ""}.get(st[0], "") + f" \u00b7 {st[1]}/50"
         return ""
     floor = {order[0]: f"min {fsr:.2f}", order[1]: f"under {fsr:.2f}",
-             order[2]: f"min {fsw:.2f}", order[3]: f"under {fsw:.2f}",
-             order[4]: f"min {fm:.2f} \u00b7 no play"}
+             order[2]: (f"over from {LIVE_GOOD_OVER_FROM:.2f} \u00b7 green "
+                        f"under from {LIVE_GOOD_UNDER_FROM:.2f} \u00b7 "
+                        f"CARD rate below; REACHABLE live: overs 38/48 "
+                        f"(79.2%), green unders 29/32 (90.6%)"),
+             order[3]: f"min {fsw:.2f}", order[4]: f"under {fsw:.2f}",
+             order[5]: f"min {fm:.2f} \u00b7 no play"}
     body = []
     allu = []
     for g in order:
@@ -4489,7 +4584,15 @@ def main() -> None:
     # A running card tagged LIVE UNSAFE files under Declined too (the
     # bettor, 12 Sep): a watch card above +1 that has kicked off is not
     # one to buy into, and Running is the tab a live buy is read from.
-    running = [f for f in pending if running_call(f) and not live_unsafe(f)]
+    # STRONG WATCH ON RUNNING (the bettor, 14 Oct: "make those cards
+    # visible on the running page, other strong watch/from can stay on
+    # their own boards"). Running is the tab a live buy is read from, so a
+    # STRONG WATCH card earns a place there only when live_good says the
+    # record supports buying into it; the rest keep their own boards.
+    running = [f for f in pending
+               if running_call(f) and not live_unsafe(f)
+               and (tier_of(f) not in ("strong watch", "strong watch from")
+                    or live_good(f))]
     # DECLINED (the bettor's ask, 7 Sep): a red or super-red card can
     # never be played, so it has no business sitting in Athena lanes
     # beside cards that merely failed on price. It gets its own tab, is
@@ -4666,6 +4769,8 @@ def main() -> None:
                 continue
             strong_ = (best >= need * (1 - STRONG_UNDER / 100)
                        and best >= TIER_MIN["strong"]
+                       and gap_band((best / need - 1) * 100)
+                       not in STRONG_WEAK_BANDS
                        and fx_ is not None and all_seven(fx_, p[7]))
             # The MEDIUM tile counts MEDIUM only: a play under the 1.31
             # floor is a plain PLAY and sits in neither tile.
@@ -5422,6 +5527,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.no {{ color:#f0a08e; border-color:#8a3a2e; }}
 .vmark.dimv {{ color:var(--dim); }}
 .vmark.swatch {{ color:#9cc3ff; border-color:#2c4f80; }}
+.vmark.lgood {{ color:#8ee6c8; border-color:#2a7a60; background:#10251f; font-weight:600; }}
 .vmark.sfrom {{ color:#d9b65c; border-color:#6b5520; border-style:dashed; }}
 .vmark.swfrom {{ color:#86a9d6; border-color:#2c4f80; border-style:dashed; }}
 .bcall {{ margin-top:2px; font-size:.92em; }}
