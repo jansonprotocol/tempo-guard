@@ -1,0 +1,100 @@
+# Twice a day: no card stays stuck because no livescore ever reached it.
+#
+# WHY THIS EXISTS (the bettor, 14 Oct: "make an automatic workflow that
+# cleans up cards that never showed livescores and therefore stayed
+# stuck"). The live sweep asks ESPN for the board day and the day either
+# side of it. A card it cannot find there is left untouched — correctly,
+# nothing is guessed — and then sits unsettled for ever: a frozen call on
+# the Running tab days after the whistle, and board.verify's four-hour rot
+# check failing every other job until someone types a score by hand. That
+# someone was an assistant three times this session.
+#
+# scripts/stuck.py is the whole job (its docstring carries the rules):
+# ask again WIDE (seven days either side, same slugs, same club resolver)
+# and grade what turns up through the sweep's own grader; mark a fixture
+# the feed says was postponed, cancelled or MOVED with the OFF mark, so it
+# stops rotting and holds its place until a person re-dates it; park what
+# nothing carries at all as "FT — no source", which settles the row for
+# the board, grades nothing and counts nowhere, and log it to
+# config/unreached.tsv. Every answer is provisional: a parked or moved row
+# is re-asked for ten days, so a late-published or re-played match is
+# graded by this job rather than by hand.
+#
+# COST. Nothing but ESPN scoreboard calls, and only for cards that are
+# already stuck — usually none, a handful at worst, capped at 25 a run.
+#
+# A refused push is answered the way the board fill answers one: merge
+# what the sweep pushed, re-render on top of it, push again. The fill
+# itself is never repeated — its writes are a pure function of the feed
+# and the board, so a second pass would only lose the same race again.
+name: cleanup (cards no livescore reached)
+
+on:
+  schedule:
+    # Off the hour and off the other jobs: the sweep chain runs all day,
+    # the fill is 05:15, the two-day refresh 06:00, the odds refresh :05.
+    - cron: "37 8,20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r backend/requirements.txt
+      - run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          git fetch origin main
+          git reset --hard origin/main
+          cd backend
+          python scripts/stuck.py --write | tee /tmp/stuck.out
+          cd ..
+          git add -A config/fixtures.tsv config/unreached.tsv \
+                     config/forward_log.tsv config/reads_cache.json \
+                     config/band_log.tsv config/tier_band_log.tsv \
+                     config/roi_log.tsv README.md web/
+          if git diff --cached --quiet; then
+            echo "nothing stuck — board already clean"; exit 0
+          fi
+          # The subject says what moved, because this job writing anything
+          # at all is the interesting part: it means a card had rotted.
+          n=$(grep -cE '^(graded|marked|parked) ' /tmp/stuck.out || true)
+          git commit -q -m "cleanup: $(date -u '+%Y-%m-%d') — ${n:-0} stuck cards answered" \
+            -m "$(tail -1 /tmp/stuck.out)"
+          for try in $(seq 1 6); do
+            if git push origin HEAD:main; then
+              echo "pushed on try $try"; exit 0
+            fi
+            echo "push refused on try $try — merging what the sweep pushed"
+            git fetch origin main
+            git merge -X ours --no-edit origin/main || {
+              for f in $(git diff --name-only --diff-filter=U); do
+                git checkout --ours -- "$f" || git checkout MERGE_HEAD -- "$f"
+                git add "$f"
+              done
+              git commit -q --no-edit
+            }
+            (cd backend && python scripts/board.py --allow-stale) || true
+            git add -A config README.md web/
+            git diff --cached --quiet || git commit -q -m "re-render onto the sweep's push"
+            sleep $((RANDOM % 20 + 5))
+          done
+          echo "could not push after 6 tries"; exit 1
+      - if: always()
+        run: |
+          echo '### cleanup' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/stuck.out >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

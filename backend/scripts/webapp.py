@@ -3312,6 +3312,12 @@ def running_call(f) -> dict | None:
     """
     if f.settled or not odds_api.started(f.kickoff):
         return None
+    # A MATCH THAT IS NOT BEING PLAYED IS NOT RUNNING (14 Oct, with the
+    # stuck-card cleanup): a postponed, cancelled or moved fixture carries
+    # the OFF mark and no result is coming at this kickoff, so its frozen
+    # call has no business sitting on the live-buy tab for days.
+    if (f.status or "").startswith("PP"):
+        return None
     call = was_called(f)
     return call if call and call["mark"] in PLAYED_MARKS else None
 

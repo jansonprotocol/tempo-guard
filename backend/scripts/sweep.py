@@ -350,8 +350,10 @@ def set_result(teams: str, score: str) -> None:
     # An unsettled row, or the "FT — no source" placeholder an earlier
     # sweep left on a match no feed carried: that is a settled row with no
     # score in it, and exactly the kind this command exists to finish.
+    # "FT — no source" may carry a note saying why nothing reached it
+    # (scripts/stuck.py parks cards that way), so the test is the prefix.
     hits = [f for f in load() if f.teams == teams
-            and (not f.settled or f.status.strip() == "FT — no source")]
+            and (not f.settled or f.status.strip().startswith("FT — no source"))]
     if len(hits) != 1:
         raise SystemExit(f"{len(hits)} unsettled rows match {teams!r}; "
                          "type the fixture exactly as the board prints it")

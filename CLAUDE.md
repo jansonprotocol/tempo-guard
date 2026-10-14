@@ -234,6 +234,46 @@ market offered, never as what he would have got.
 - **Price the line he actually bought**, not the card's rung, when they
   differ. The buy-from bar must be recomputed on his line.
 
+## Cards nothing ever graded
+
+- **A STUCK CARD IS CLEANED UP BY A JOB, NOT BY HAND.** (14 Oct: "make an
+  automatic workflow that cleans up cards that never showed livescores and
+  therefore stayed stuck".) The sweep asks ESPN for the board day and the
+  day either side; a card it cannot find is left untouched and then sits
+  unsettled for ever — a frozen call on Running days after the whistle,
+  and board.verify's four-hour rot check failing every other job until a
+  person typed a score. `scripts/stuck.py`, in the twice-daily
+  `.github/workflows/cleanup.yml`, answers every card 12 hours past
+  kickoff with no result:
+  - **asks again, WIDE** — seven days either side, same slugs, same club
+    resolver — and grades a final it finds through `sweep.grade_cells`,
+    the same grader the sweep and the hand path use (extra time comes off
+    the scoreline the same way, and a drift of more than a day is noted on
+    the row as `[played <date>]`);
+  - **marks a fixture the feed says was postponed, cancelled or MOVED**
+    with the OFF mark (`PP Moved to <date>`): no result at this kickoff,
+    so it holds its place, unsettled, until a person re-dates it, and it
+    no longer rots. THE KICKOFF COLUMN IS NEVER REWRITTEN — a card's
+    first-sight stamp is keyed on (date, fixture), so moving the date
+    would orphan its locked lane, tier and band;
+  - **parks what nothing carries at all** (nine board codes have no ESPN
+    slug: Poland, Algeria, the friendlies, Greece and the rest) as
+    `FT — no source (why)`, which board.Fixture.settled reads as
+    finished-with-nothing-to-grade: off pending, off Running, no tally, no
+    hit rate, no ROI. Logged to `config/unreached.tsv` with its kickoff
+    and whether a bet is held.
+  NOTHING IS EVER GRADED FROM A GUESS: a score comes from the feed by the
+  same resolver and the same final test the sweep uses, or not at all.
+  Every answer is provisional — a parked or moved row is re-asked for ten
+  days, so a late-published or re-played match is graded by the job. A
+  parked card can still be finished by hand, `sweep.py --set "Home v
+  Away" 2-1`, which grades it properly; the first thing to look at is
+  anything in unreached.tsv with a bet held, because that bet stays open
+  until a score is typed. On the first run, 14 Oct, the one stuck card
+  (Atlético Nacional v Deportivo Pasto, 11 Oct) turned out to be MOVED —
+  the feed has it on the 14th — and the board rendered without
+  --allow-stale for the first time in weeks.
+
 ## Archiving a session
 
 - **Keep the odds with the cards.** (1 Oct, on finding the older archives
