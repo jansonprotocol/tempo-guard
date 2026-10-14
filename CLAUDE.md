@@ -90,6 +90,31 @@ THE 1.17 STRONG FLOOR IS HELD BY HAND for that reason
 break-even falls to about 1.11, and a 1.11 floor would sweep those very
 cards into STRONG. Drop the entry to let the optimizer measure it again.
 
+**LIVE INPLAY GOOD: THE HALF OF STRONG WATCH HE CAN ACTUALLY BUY.**
+(14 Oct, after he described the entry: "with overs that means waiting up
+to about 20-25 minutes with 0-0 ... with unders I actually need goals ...
+those never reached my sample".) A STRONG WATCH card is bought in play,
+and the wait itself selects the match. Simulated against config/live_log.tsv
+over the 560 settled STRONG WATCH and FROM cards, the 85.5% headline is
+not his: OVERS he can only buy while it is goalless, and the matches
+where a goal came first — which he never buys — land 96.3%, leaving him
+38 of 48 (79.2%, break-even 1.26); UNDERS he can only buy once goals go
+in, and those are the matches that overrun (by 30' the games finishing 5+
+average 1.15 goals against 0.52, 32% already 2+ against 7%), so buying an
+under BECAUSE goals went in selects the blow-ups. NOTHING on the card
+separates them — colour, claim and band differ by under two points.
+So the pill reads **LIVE INPLAY GOOD · from X** on an over (from 1.30) or
+a green under claiming 85%+ (29 of 32, 90.6%, from 1.15); every other
+STRONG WATCH card keeps its own label and board, and ONLY these reach the
+Running tab. webapp.live_good; tracked as its own row on the Profiles page.
+
+**THE 10%+ OVER BAND LEFT STRONG.** (14 Oct: "move over 10% from STRONG
+to weak. ROI and hitrate are negative".) 18 of 25, 72.0%, break-even
+1.39, and +0.5% only at a feed price he cannot reach. It is also where
+the losses sat: 35% of every STRONG loss against 17% of the wins. It
+joins 3-5% under in `STRONG_WEAK_BANDS`, and the strong test is gated on
+both at source. STRONG now reads 90 of 103, 87.4%, break-even 1.14.
+
 **HIS METHOD: THE CLASS RATE, THEN WAIT FOR THE PRICE.** (5 Oct: "All is
 moot. As we have found out how all cards are performing, that's the only
 number that counts. Each time and band is measured, that's the only rate
