@@ -188,6 +188,19 @@ CARD RATE: its bar is the REACHABLE live record (overs 38/48 at 1.30,
 green unders 29/32 at 1.15), because the 85% card rate is not what the
 live entry delivers.
 
+THE STRICTER OF TWO RECORDS LEADS, AND BOTH ARE NAMED (14 Oct, on a
+★ STRONG FROM card whose pill read LIVE INPLAY GOOD while its bar quoted
+the first-sight card rate: "make it the stricter one and name both").
+LIVE INPLAY GOOD is a FLAG OVER a card's real profile, never a tier of
+its own — `live_good` only answers for a tier of strong watch, strong
+watch from or strong from — so a ★ STRONG FROM card carrying the flag is
+read two ways: its own profile record (95.2% on 21 at first sight, 1.11)
+and the live entry's reachable record (90.6% on 32, 1.16). The DEARER
+price leads and the other prints under it, because a bar naming the
+looser of two records is not a guard. Every bar also says what it is
+measured on — "on U4.5" for a lane cell, "· all lanes" for a profile-wide
+or live-entry one — so the number is never ambiguous.
+
 AND THE BAR CARRIES A MARGIN (14 Oct: "work in a good ROI margin in the
 buy at prices. 5/6% good enough?"). `webapp.BUY_MARGIN` is **5%** on top
 of the record's break-even, rounded up to the cent: a break-even price

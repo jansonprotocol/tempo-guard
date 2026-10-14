@@ -1912,34 +1912,52 @@ def _bar_price(n: int, h: int) -> float:
     return math.ceil(100 * (n / h) * (1 + BUY_MARGIN)) / 100
 
 
-def market_bar(f, cell: str) -> tuple | None:
-    """(profile, market, n, hit%, buy-from price, note) for a card's lane."""
+def market_bar(f, cell: str) -> list | None:
+    """Every record that prices this card's own market, dearest FIRST.
+
+    Each entry is (label, n, hit%, price). The bar is the first one: where
+    a card is read two ways — its profile's record and the live entry's —
+    THE STRICTER PRICE LEADS and the other is printed under it (the
+    bettor, 14 Oct, on a ★ STRONG FROM card whose pill said LIVE INPLAY
+    GOOD and whose bar quoted the first-sight card rate: "make it the
+    stricter one and name both"). A bar that names the looser of two
+    records is not a guard.
+    """
     pb = card_profile(f)
     if not pb or is_declined(f):
         return None
     prof = pb[0]
     m = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell or "")
     lane = _struck(m.group(1)) if m else ""
-    # LIVE INPLAY GOOD never quotes its card rate: the bar is the price
-    # the REACHABLE record needs. live_good answers for a card whose tier
-    # still says so; where the profile says it and the tier has moved on,
-    # the lane's own side decides, so the bar can never fall back to the
-    # 85% card rate the live entry does not deliver.
+    out = []
+    # THE LIVE ENTRY. live_good answers for a card whose tier still says
+    # so; where the profile says LIVE INPLAY GOOD and the tier has moved
+    # on, the lane's own side decides. Its record is the REACHABLE one —
+    # the 85% card rate is not what the live entry delivers — and it is
+    # measured across the family's lanes, which the label says out loud.
     lg = live_good(f)
-    if prof == "LIVE INPLAY GOOD":
-        side = lg[0] if lg else ("over" if lane[:1] == "O" else
-                                 "under" if lane[:1] == "U" else None)
-        if side:
-            h, n = LIVE_GOOD_REACH[side]
-            return (prof, lane, n, h / n * 100, _bar_price(n, h),
-                    "the REACHABLE live record, not the card rate")
-    rec, note = MARKET_BAR.get((prof, lane)), ""
-    if not rec or rec[0] < MARKET_MIN_N:
-        rec, note = MARKET_BAR.get((prof, "")), "the whole profile — too few on this market"
-    if not rec or not rec[1]:
-        return None
-    n, h = rec
-    return (prof, lane, n, h / n * 100, _bar_price(n, h), note)
+    side = (lg[0] if lg else
+            ("over" if lane[:1] == "O" else "under" if lane[:1] == "U" else None)
+            if prof == "LIVE INPLAY GOOD" else None)
+    if side and (lg or prof == "LIVE INPLAY GOOD"):
+        h, n = LIVE_GOOD_REACH[side]
+        word = "overs, goalless at 20'" if side == "over" \
+            else "green unders, a goal by 30'"
+        out.append((f"live entry \u00b7 {word} \u00b7 all lanes",
+                    n, h / n * 100, _bar_price(n, h)))
+    # THE PROFILE'S OWN RECORD on this market. Never for a LIVE INPLAY
+    # GOOD card: its own cells ARE card rates, and quoting one would put
+    # back the number the live bar exists to replace.
+    if prof != "LIVE INPLAY GOOD":
+        rec, where = MARKET_BAR.get((prof, lane)), f" on {lane}" if lane else ""
+        if not rec or rec[0] < MARKET_MIN_N:
+            rec, where = MARKET_BAR.get((prof, "")), " \u00b7 all lanes"
+        if rec and rec[1]:
+            n, h = rec
+            out.append((f"{SHORT_PROFILE.get(prof, prof)}{where}",
+                        n, h / n * 100, _bar_price(n, h)))
+    out.sort(key=lambda x: -x[3])
+    return out or None
 
 
 # The profile names the bar prints: the unlabelled groups carry their
@@ -1953,20 +1971,20 @@ def _buybar_html(f, cell: str) -> str:
     got = market_bar(f, cell)
     if not got or f.settled:
         return ""
-    prof, lane, n, hit, price, note = got
-    name = SHORT_PROFILE.get(prof, prof)
-    where = f"{html.escape(name)} on {html.escape(lane)}" if lane and not note \
-        else html.escape(name)
-    return (f'<div class="buybar" title="What {html.escape(prof)} cards have '
-            f'done on this market at first sight: {hit:.1f}% on {n} settled '
-            f'({html.escape(note) if note else "this market only"}). '
-            f'Break-even is {n / (n * hit / 100):.2f}; the bar adds '
-            f'{BUY_MARGIN * 100:.0f}% on top, which is the ROI you are '
+    (lead, n, hit, price), rest = got[0], got[1:]
+    more = "".join(
+        f'<div class="bbalso">{html.escape(lbl)} {h:.1f}% on {m} '
+        f'\u2192 {p:.2f}</div>' for lbl, m, h, p in rest)
+    tip = ("Two records price this card and the DEARER one leads, because a "
+           "bar that names the looser one is not a guard. " if rest else "")
+    return (f'<div class="buybar" title="{tip}{hit:.1f}% on {n} settled cards '
+            f'({html.escape(lead)}). Break-even is {100 / hit:.2f}; the bar '
+            f'adds {BUY_MARGIN * 100:.0f}% on top, which is the ROI you are '
             f'buying and the cushion under a rate measured on {n} cards. '
             f'Below {price:.2f}, do not buy it.">'
             f'\U0001f3af BUY FROM <b>{price:.2f}</b> '
-            f'<span class="dim">\u00b7 {where} lands {hit:.1f}% on {n}</span>'
-            f'</div>')
+            f'<span class="dim">\u00b7 {html.escape(lead)} lands {hit:.1f}% '
+            f'on {n}</span>{more}</div>')
 
 
 def _medband_html(m) -> str:
@@ -6096,6 +6114,7 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .buybar {{ margin:.25rem 0 .1rem; padding:.2rem .45rem; border-left:3px solid var(--gold);
   background:rgba(214,170,74,.07); border-radius:3px; font-size:.95em; }}
 .buybar b {{ color:var(--gold); font-size:1.08em; }}
+.bbalso {{ color:var(--dim); font-size:.9em; margin-top:.1rem; }}
 .buyat {{ color:#cfd6e4; }}
 .buyat b {{ color:var(--gold); }}
 .fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
