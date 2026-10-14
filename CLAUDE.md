@@ -155,6 +155,48 @@ longer offers; it now splits the STRONG population by the card's own
 claim, the same split `webapp.mild` makes, and reads MILD 35/42 = 83.3%,
 needs 1.20, beside STRONG 55/61 = 90.2%.
 
+**A CLAIM UNDER 80% IS AN IMMEDIATE DECLINE.** (14 Oct, on the claim-band
+table: "Under 80% claims is an immediate decline rule for me, aren't those
+already mostly decline? If some still get through, move them over on this
+knowledge.") They were NOT already declined — 123 counted cards sat under
+80%, landing 89 of them (72.4%) at a loss on the feed's own best price,
+against 83.5% in the 80-85 band and 87.1% at 85+. STRONG can never hold
+one (all seven rates at 80%+ carries the claim up with them), but the
+watch families could, and the LIVE INPLAY GOOD over branch had no claim
+test at all (10 cards, 70%). `webapp.low_claim`, read at first sight like
+every other lock; the pill says "declined - claim under 80%". It cost the
+record 108 settled cards (1091 counted to 983) and declined 101 pending
+ones the day it went in. It is NOT tied to `_MEDBAND_OFF`: a promotion
+could never free these, so the band mover does not count them either.
+
+**ONE PRICE ON THE CARD: THE PROFILE'S OWN BUY BAR.** (14 Oct: "Show the
+hitrate and minimum odds as the real buy bar. Remove any other shown odds
+from the cards, all background rules remain untouched, this just as
+display. This will guard my ROI. If I can't buy a market with those odds,
+either pre kickoff or live I won't buy. Only show what applies to the
+given athena market pick and its card profile.") Under the starred lane:
+
+    🎯 BUY FROM 1.11 · ★ STRONG on U4.5 lands 90.5% on 21
+
+The rate is what THIS profile has done on THIS market (the card's struck
+line) over the session's settled counted cards at first sight, and the
+price is that record's break-even, rounded up to the cent
+(`webapp.MARKET_BAR`, filled once per render by `build_market`, the way
+BAND_STATS is). Under MARKET_MIN_N cards on the market it falls back to
+the profile's own rate and says so. LIVE INPLAY GOOD NEVER QUOTES ITS
+CARD RATE: its bar is the REACHABLE live record (overs 38/48 at 1.30,
+green unders 29/32 at 1.15), because the 85% card rate is not what the
+live entry delivers.
+
+EVERY OTHER PRICE IS OFF THE CARD, which is the point: the locked
+first-sight price, the live best and its book, the Unibet quote, the
+engine's value price, the tier's "min", and the near-tier "buy at X+" all
+used to sit there, and the only one he buys against is the bar. A declined
+or settled card shows none. NOTHING BEHIND IT MOVED — the quote file, the
+first-sight stamp, every tier, band, decline and record read exactly what
+they read before; this is display only, and the prices are still in
+config/forward_log.tsv and config/odds_quotes.tsv for logging a bet.
+
 **THE BAND MOVER: PROFILES MOVE BOTH WAYS, BY THEMSELVES.** (14 Oct:
 "Build that rule: 85%+ positive ROI on 30+ promotes. This means it can
 check all profiles inside decline (same as we have on the other boards).

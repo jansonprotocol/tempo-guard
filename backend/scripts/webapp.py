@@ -151,7 +151,15 @@ def _fmt(cell: str, fixture: str = "", quoted: bool = True, fx=None) -> str:
          re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell))
     q = (quotes().get((fixture, _struck(m.group(1))))
          if (m and fixture and quoted) else None)
-    if q:
+    # EVERY OTHER PRICE IS OFF THE CARD (the bettor, 14 Oct). The locked
+    # price, the live best and its book, the Unibet quote and the engine's
+    # value price all used to stand on this line; the only number he buys
+    # against is the profile's own bar (_buybar_html), so the rest is
+    # struck out here rather than inviting a cheaper bet. The quote file,
+    # the first-sight stamp and every rule that reads them are untouched.
+    if True:
+        s = re.sub(r"\s*·?\s*buy≥\s*[\d.]+(\s*\([^)]*\))?", "", s)
+    elif q:
         # The feed's median ("market") is gone from the card (the bettor,
         # 30 Sep: "remove market, I don't look at that"): the best price
         # and its book lead the line on their own.
@@ -1368,6 +1376,7 @@ def tier_target(f, lab: str | None, need, price=None) -> tuple[str, float] | Non
 
 
 def _target_html(f, lab, need) -> str:
+    return ""       # off the card since 14 Oct: one bar, not three prices
     tt = tier_target(f, lab, need)
     # Buy guidance, not a second profile (4 Oct): the card's profile is
     # locked; this says at what price a book would make it a strong-grade
@@ -1401,12 +1410,9 @@ def _from_pill(f, t: str, lab, need, band: str | None, prefix: str = "",
     # the group it is in).
     if tt and tt[0] == "medium":
         tt = None
-    if tt and tt[0] == base:
-        price = f" {tt[1]:.2f}"
-    elif tt:
-        price = f" \u00b7 {TIER_WORD[tt[0]]} {tt[1]:.2f}"
-    else:
-        price = ""
+    # the price that lifts it into a tier is off the pill (14 Oct): the
+    # buy bar under the lane is the only price the card shows now
+    price = "" if not tt or tt[0] == base else f" \u00b7 {TIER_WORD[tt[0]]}"
     st = FROM_STATS.get((base, band)) if band else None
     rec = (f"{band}: {st[1]:.1f}% on {st[0]} settled" if st else (band or ""))
     return (f'<span class="vmark {cls}" title="near-tier card, {html.escape(rec)}'
@@ -1488,8 +1494,8 @@ def _live_good_html(lg) -> str:
            "9 of 10 reachable ★ STRONG FROM unders")
     return (f'<span class="vmark lgood" title="STRONG WATCH, and the half of '
             f'it the live record supports: {rec}. Buy from {price:.2f}; '
-            f'below that the reachable rate does not pay.">LIVE INPLAY GOOD '
-            f'· from {price:.2f}</span>')
+            f'below that the reachable rate does not pay.">LIVE INPLAY '
+            f'GOOD</span>')
 
 
 # THE LIVE BREAK-OFF ON A NEAR-TIER UNDER (the bettor, 4 Oct: "break off
@@ -1725,6 +1731,8 @@ def decline_reason(f) -> str | None:
     if o15_declined(f):
         lo, hi = O15_BAND
         return f"O1.5 {lo:.0f}–{hi:.0f}% over the bar"
+    if low_claim(f):
+        return f"claim under {CLAIM_FLOOR:.0f}%"
     if medband_declined(f) or weak_declined(f):
         return "WEAK"
     if (m := band_move(f)) and m[0] == "decline":
@@ -1756,6 +1764,30 @@ def medband_declined(f) -> bool:
     if _MEDBAND_OFF or play_locked(f) or band_promoted(f):
         return False
     return bool(medband_state(f))
+
+
+# A CLAIM UNDER 80% IS A DECLINE (the bettor, 14 Oct, reading the claim
+# band against the record: "Under 80% claims is an immediate decline rule
+# for me ... If some still get through, move them over on this
+# knowledge"). Measured on this session's counted cards: 89 of 123 =
+# 72.4% and a loss at the feed's own best price, against 83.5% in 80-85
+# and 87.1% at 85+. STRONG can never hold one (all seven rates at 80%+
+# forces the claim up with them), but the watch families could, and the
+# LIVE INPLAY GOOD over branch had no claim test at all.
+CLAIM_FLOOR = 80.0
+
+
+def low_claim(f) -> bool:
+    """Is the card's own claim under CLAIM_FLOOR — read at first sight."""
+    if play_locked(f):
+        return False
+    if f.settled or odds_api.started(f.kickoff):
+        r = (frozen() or {}).get((f.kickoff.split(" ")[0], f.teams))
+        c = r.get("claim") if r else None
+    else:
+        v = verdict(f, _star(f))
+        c = v["claim"] if v else None
+    return c is not None and c < CLAIM_FLOOR
 
 
 def weak_declined(f) -> bool:
@@ -1797,6 +1829,132 @@ def weak_noplay(f) -> bool:
     return bool(v and v["play"] and not v["strong"])
 
 
+# THE BUY BAR THE CARD SHOWS (the bettor, 14 Oct: "Show the hitrate and
+# minimum odds as the real buy bar. Remove any other shown odds from the
+# cards, all background rules remain untouched, this just as display.
+# This will guard my ROI. If I can't buy a market with those odds, either
+# pre kickoff or live I won't buy. Only show what applies to the given
+# athena market pick and its card profile").
+#
+# ONE number on the card, and it is the only one: what this PROFILE has
+# done on THIS MARKET, and the price that record needs to break even. It
+# replaces the locked price, the live best, the Unibet quote, the
+# engine's value price, the tier's min and the near-tier buy-at — all of
+# which were prices, none of which was the bar he buys against. Nothing
+# behind it moves: the bar is read off the same first-sight record every
+# other table here is built on, and no verdict, tier, band or decline
+# changes by a cent.
+MARKET_BAR: dict = {}       # (profile, struck lane) -> (n, hits); "" = the profile
+MARKET_MIN_N = 10           # cards before a market cell speaks for itself
+# LIVE INPLAY GOOD is bought in play, so its CARD rate is not the rate he
+# gets: the reachable record is the bar (webapp.live_good's own numbers).
+LIVE_GOOD_REACH = {"over": (38, 48), "under": (29, 32)}
+
+
+def build_market(fixtures) -> None:
+    """Fill MARKET_BAR from this session's settled, counted cards at their
+    first-sight price — the same population the Profiles page counts."""
+    from scripts import forward_settle as _fs
+    MARKET_BAR.clear()
+    byday = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
+    final = {}
+    for f in fixtures:
+        if f.settled and "\u2014" in f.status:
+            sc = f.status.split("\u2014")[-1].strip().split(" ")[0]
+            if "-" in sc:
+                try:
+                    hg, ag = sc.split("-")
+                    final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
+                except ValueError:
+                    pass
+    seen = set()
+    if not FORWARD.exists():
+        return
+    for ln in FORWARD.read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        p = ln.split("\t")
+        if len(p) < 13 or p[1] < SESSION_DATE or _fs._artefact(p[5]):
+            continue
+        key = (p[1], p[3])
+        if key in seen:
+            continue
+        seen.add(key)
+        f = byday.get(key)
+        if f is None or key not in final or p[7].endswith("red") or is_declined(f):
+            continue
+        try:
+            need, best, claim = float(p[9]), float(p[11] or p[10]), float(p[6])
+        except ValueError:
+            continue
+        got = _fs._settle(p[5], *final[key])
+        if got is None or need <= 0:
+            continue
+        prof = profile_name(p[5], p[7], claim, (best / need - 1) * 100, best,
+                            all_seven(f, p[7]))
+        for k in ((prof, _struck(p[5])), (prof, "")):
+            n, h = MARKET_BAR.get(k, (0, 0))
+            MARKET_BAR[k] = (n + 1, h + bool(got[1]))
+
+
+def market_bar(f, cell: str) -> tuple | None:
+    """(profile, market, n, hit%, min price, note) for a card's own lane."""
+    import math
+    pb = card_profile(f)
+    if not pb or is_declined(f):
+        return None
+    prof = pb[0]
+    m = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?|1X|X2|12|DNB[12])", cell or "")
+    lane = _struck(m.group(1)) if m else ""
+    # LIVE INPLAY GOOD never quotes its card rate: the bar is the price
+    # the REACHABLE record needs. live_good answers for a card whose tier
+    # still says so; where the profile says it and the tier has moved on,
+    # the lane's own side decides, so the bar can never fall back to the
+    # 85% card rate the live entry does not deliver.
+    lg = live_good(f)
+    if prof == "LIVE INPLAY GOOD":
+        side = lg[0] if lg else ("over" if lane[:1] == "O" else
+                                 "under" if lane[:1] == "U" else None)
+        if side:
+            h, n = LIVE_GOOD_REACH[side]
+            price = lg[1] if lg else (LIVE_GOOD_OVER_FROM if side == "over"
+                                      else LIVE_GOOD_UNDER_FROM)
+            return (prof, lane, n, h / n * 100, price,
+                    "the REACHABLE live record, not the card rate")
+    rec, note = MARKET_BAR.get((prof, lane)), ""
+    if not rec or rec[0] < MARKET_MIN_N:
+        rec, note = MARKET_BAR.get((prof, "")), "the whole profile — too few on this market"
+    if not rec or not rec[1]:
+        return None
+    n, h = rec
+    return (prof, lane, n, h / n * 100, math.ceil(100 * n / h) / 100, note)
+
+
+# The profile names the bar prints: the unlabelled groups carry their
+# whole definition in the name, which does not fit on a card.
+SHORT_PROFILE = {PROFILES[7]: "all 7, under the floor",
+                 PROFILES[8]: "plain play", PROFILES[9]: "plain watch",
+                 PROFILES[10]: "5%+ under, band off"}
+
+
+def _buybar_html(f, cell: str) -> str:
+    got = market_bar(f, cell)
+    if not got or f.settled:
+        return ""
+    prof, lane, n, hit, price, note = got
+    name = SHORT_PROFILE.get(prof, prof)
+    where = f"{html.escape(name)} on {html.escape(lane)}" if lane and not note \
+        else html.escape(name)
+    return (f'<div class="buybar" title="What {html.escape(prof)} cards have '
+            f'done on this market at first sight: {hit:.1f}% on {n} settled '
+            f'({html.escape(note) if note else "this market only"}). '
+            f'{price:.2f} is where that record breaks even — under it the '
+            f'profile does not pay, over it the margin is yours.">'
+            f'\U0001f3af BUY FROM <b>{price:.2f}</b> '
+            f'<span class="dim">\u00b7 {where} lands {hit:.1f}% on {n}</span>'
+            f'</div>')
+
+
 def _medband_html(m) -> str:
     band, state, st = m
     rec = f"{band}: {st[2]:.0f}% on {st[1]}, {st[3]:+.1f}%"
@@ -1821,12 +1979,9 @@ def tier_edge(tier: str, price) -> float | None:
 
 
 def _edge_html(tier: str, price) -> str:
-    e = tier_edge(tier, price)
-    if e is None:
-        return ""
-    return (f' <span class="tedge" title="best price {float(price):.2f} against '
-            f'the {TIER_MIN[tier]:.2f} this tier needs to break even">'
-            f'+{e:.1f}% · min {TIER_MIN[tier]:.2f}</span>')
+    # The tier's floor and the price against it were two more numbers to
+    # buy against (14 Oct); the card carries one bar now, so this is off.
+    return ""
 
 
 def tier_of(f) -> str | None:
@@ -3104,6 +3259,8 @@ def _declined_base(f) -> bool:
         return True
     if medband_declined(f) or weak_declined(f):
         return True
+    if low_claim(f):
+        return True
     # DECLINED BY ITS OWN BAND RECORD (the mover, 14 Oct): a play or watch
     # cell that dropped under MOVE_DOWN_HIT on MOVE_MIN_N+ settled cards.
     if band_declined(f):
@@ -4123,8 +4280,8 @@ def _card(f, kind: str, reads: dict) -> str:
     # edge and the buy bracket, and was the only one of the five that
     # said nothing a symbol could not.
     star = ('<span class="best-tag" title="Read this lane first on this '
-            'card — not a claim that it is the better bet; the buy≥ '
-            'bracket decides that">★</span>')
+            'card — not a claim that it is the better bet; the buy bar '
+            'under the lane decides that">★</span>')
 
     def lane(which, cell, lab=None, noplay=False, terse=False, head="", extra=""):
         if cell.strip() in ("", "—", "— none"):
@@ -4162,7 +4319,9 @@ def _card(f, kind: str, reads: dict) -> str:
         return (f'<div class="lane{pl}"><span class="which">Tip {which}'
                 f"</span>{head} {_fmt(cell, f.teams, quoted=not past, fx=f)}{tail}"
                 f"{star if which == best else ''}{extra}"
-                f"{_lanebar(f, cell, lab, terse)}{live}</div>")
+                f"{_lanebar(f, cell, lab, terse)}"
+                f"{_buybar_html(f, cell) if which == best else ''}"
+                f"{live}</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -4854,6 +5013,10 @@ def main() -> None:
             hs3 += "hindsight" in f.tip3
 
     reads = _reads(fixtures)
+    # The card's one price comes from the record, so the record is read
+    # once here, before any card is drawn (the same place BAND_STATS is
+    # filled from).
+    build_market(fixtures)
     pending = [f for f in fixtures if not f.settled]
     # PLAYABLE now means what it says: cards the guard would actually
     # stake. It used to mean "a lane cleared the engine's edge bar", which
@@ -5916,6 +6079,9 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border:1px solid #2b3242; color:#c8d0e0; border-radius:6px;
   padding:7px 16px; font:inherit; cursor:pointer; }}
 .fxshut:hover {{ border-color:var(--gold); color:var(--gold); }}
+.buybar {{ margin:.25rem 0 .1rem; padding:.2rem .45rem; border-left:3px solid var(--gold);
+  background:rgba(214,170,74,.07); border-radius:3px; font-size:.95em; }}
+.buybar b {{ color:var(--gold); font-size:1.08em; }}
 .buyat {{ color:#cfd6e4; }}
 .buyat b {{ color:var(--gold); }}
 .fhelp {{ font-size:12px; margin:-4px 0 14px; color:#8a93a6; }}
