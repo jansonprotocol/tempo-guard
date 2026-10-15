@@ -164,9 +164,21 @@ jobs:
             if git diff --cached --quiet; then
               echo "nothing moved"
             else
-              if [ "$DUE" -eq 1 ] && [ "$RC" -eq 0 ] \
-                   && echo "$WHY" | grep -qE '^(kicked off|final|new row|changed)'; then
+              # DUE ALONE DECIDES THE DEPLOY (15 Oct: "live sweep is
+              # stuck again"). The old gate also required a structural
+              # change IN THIS PASS — but changes cluster: eight 21:00
+              # kickoffs all landed in one pass at 19:03, while DUE was
+              # still 0 (27 min since the last deploy), so they committed
+              # as skip ticks; by 19:06 when DUE flipped to 1, that pass
+              # saw "nothing moved" and never deployed, stranding the
+              # whole night's kickoffs and the 18:45 finals on main. The
+              # render changes every pass anyway (clock, live minutes),
+              # so a DUE pass always has something to deploy — gate on
+              # the clock only, and the accumulated structural changes
+              # ride along in index.html.
+              if [ "$DUE" -eq 1 ]; then
                 SUBJECT="live sweep [deploy]: $(date -u '+%Y-%m-%d %H:%M') UTC"
+                [ "$RC" -eq 0 ] || WHY="minutes only — web/live.json carries it to the page"
               elif [ "$RC" -eq 0 ]; then
                 SUBJECT="live sweep: $(date -u '+%Y-%m-%d %H:%M') UTC [skip render]"
               else
