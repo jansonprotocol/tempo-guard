@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 85.0%
 
     lane                        Tip 1              Tip 2
-    all matches            810 / 953  85.0%    531 / 759  70.0%
+    all matches            811 / 954  85.0%    531 / 759  70.0%
     played lanes  >+1%     300 / 352  85.2%    528 / 752  70.2%
     placed bets            245 / 313  78.3%    ROI +0.6%
 
@@ -1801,7 +1801,6 @@ that premium the book is keeping the insurance money.
 
 <table align="left"><tr><th align="left">🔴 PP Moved to 2026-10-14 <b>Atlético Nacional v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.4 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.20 (+5.4% margin) · <i>✗ gone</i></td><td><b>Atlético Nacional O1.5</b> 57.3% +17.7%<br>buy≥1.80 (+3.0% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 80.3% +16.4% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 15-10 01:30 <b>Independiente Santa Fe v Jaguares de Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.4 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td><b>Independiente Santa Fe O1.5</b> 56.8% +17.1%<br>buy≥1.81 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.9% +16.0% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-2 <b>Colorado Rapids v Minnesota United FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>U4.25 80.3% <b>+0.5%</b><br>buy≥1.35 (+6.0% margin)<br><i>U4.25 holding · half safe · 79% · fair 1.26</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 1-0 <b>LA Galaxy v Portland Timbers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>U4.25 80.4% <b>+0.6%</b><br>buy≥1.35 (+6.0% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · 91% · fair 1.10</i><br><i>also live: U2.5 tighter 49% fair 2.04 · O2.5 flip 51% fair 1.96</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-0 <b>Los Angeles FC v Austin FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>U4.25 80.6% <b>+0.9%</b><br>buy≥1.35 (+6.1% margin)<br><i>U4.25 holding · room for 4 · half from the 4th · 97% · fair 1.03</i><br><i>also live: O1.5 flip 51% fair 1.97 · U2.5 tighter 76% fair 1.32</i></td><td>U3.75 63.5% +1.1%<br>buy≥1.44 (+0.3% margin) · floor −11.5 · <i>room for 3</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.4% +13.2% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 2-3 <b>San Diego FC v Houston Dynamo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>U4.25 80.7% <b>+1.0%</b><br>buy≥1.34 (+6.1% margin)<br><i>U4.25 holding · ✗ gone</i></td><td>U3.75 63.7% +1.3%<br>buy≥1.44 (+0.3% margin) · floor −11.3 · <i>✗ gone</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 1X 73.8% +3.9% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2178,7 +2177,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 810 / 953   ·   85.0%**   ·   **Tip 2 — 531 / 759   ·   70.0%**
+**Tip 1 — 811 / 954   ·   85.0%**   ·   **Tip 2 — 531 / 759   ·   70.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.4 −3.1)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.4 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3916,6 +3915,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 1-0 · 15-10 02:30 <b>FC Dallas v Seattle Sounders FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>O1.5 80.7% <b>−0.9%</b><br>buy≥1.30 (+6.1% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 71.2% +10.9% · buy≥1.47 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-0 · 15-10 02:30 <b>Nashville SC v Sporting Kansas City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>O1.5 80.7% <b>−0.9%</b><br>buy≥1.29 (+6.1% margin)</td><td>✅ <b>Nashville SC O1.5</b> 65.3% +13.2%<br>buy≥1.59 (+3.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 84.7% +24.5% · buy≥1.24 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 15-10 02:30 <b>St. Louis City SC v Vancouver Whitecaps FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>O1.5 80.5% <b>−1.1%</b><br>buy≥1.26 (+6.1% margin)</td><td>❌ <b>St. Louis City SC O1.5</b> 56.6% +4.5%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 79.3% +3.6% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-2 · 15-10 03:30 <b>Colorado Rapids v Minnesota United FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>U4.25 80.3% <b>+0.5%</b><br>buy≥1.35 (+6.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 15-10 03:30 <b>Real Salt Lake v San Jose Earthquakes</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (82.0 +2.6)</td><td>U4.25 80.4% <b>+0.7%</b><br>buy≥1.35 (+6.0% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
