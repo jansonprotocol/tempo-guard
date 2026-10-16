@@ -3604,3 +3604,243 @@
 2026-10-15	bets	paid	u	1.20+	pre	3–6% over	4	75.0	-6.1
 2026-10-15	bets	paid	u	1.20+	pre	6–10% over	1	100.0	+40.0
 2026-10-15	bets	paid	u	1.20+	pre	10%+ over	2	50.0	-30.5
+2026-10-16	cards	card	all	all	all	10%+ under	209	84.7	-6.9
+2026-10-16	cards	card	all	all	all	5–10% under	280	86.4	-2.2
+2026-10-16	cards	card	all	all	all	3–5% under	72	80.6	-7.0
+2026-10-16	cards	card	all	all	all	0–3% under	117	86.3	+4.3
+2026-10-16	cards	card	all	all	all	0–3% over	17	88.2	+9.3
+2026-10-16	cards	card	all	all	all	3–6% over	16	93.8	+20.6
+2026-10-16	cards	card	all	all	all	6–10% over	35	85.7	+14.3
+2026-10-16	cards	card	all	all	all	10%+ over	2	100.0	+20.5
+2026-10-16	bets	card	all	all	all	10%+ under	13	69.2	-13.3
+2026-10-16	bets	card	all	all	all	5–10% under	36	91.7	+15.2
+2026-10-16	bets	card	all	all	all	3–5% under	8	62.5	-30.4
+2026-10-16	bets	card	all	all	all	0–3% under	25	84.0	+3.9
+2026-10-16	bets	card	all	all	all	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	all	all	all	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	all	all	all	6–10% over	17	88.2	+14.0
+2026-10-16	bets	card	all	all	all	10%+ over	0		
+2026-10-16	bets	card	all	all	pre	10%+ under	4	75.0	-9.5
+2026-10-16	bets	card	all	all	pre	5–10% under	23	87.0	+8.1
+2026-10-16	bets	card	all	all	pre	3–5% under	2	100.0	+23.5
+2026-10-16	bets	card	all	all	pre	0–3% under	21	85.7	+5.0
+2026-10-16	bets	card	all	all	pre	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	all	all	pre	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	all	all	pre	6–10% over	15	86.7	+11.2
+2026-10-16	bets	card	all	all	pre	10%+ over	0		
+2026-10-16	bets	paid	all	all	all	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	all	all	all	5–10% under	5	80.0	-6.4
+2026-10-16	bets	paid	all	all	all	3–5% under	2	100.0	+22.4
+2026-10-16	bets	paid	all	all	all	0–3% under	43	88.4	+8.2
+2026-10-16	bets	paid	all	all	all	0–3% over	26	84.6	+2.3
+2026-10-16	bets	paid	all	all	all	3–6% over	17	88.2	+11.6
+2026-10-16	bets	paid	all	all	all	6–10% over	12	83.3	+11.6
+2026-10-16	bets	paid	all	all	all	10%+ over	12	58.3	-18.5
+2026-10-16	bets	paid	all	all	pre	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	all	all	pre	5–10% under	5	80.0	-6.4
+2026-10-16	bets	paid	all	all	pre	3–5% under	1	100.0	+22.0
+2026-10-16	bets	paid	all	all	pre	0–3% under	35	88.6	+8.2
+2026-10-16	bets	paid	all	all	pre	0–3% over	20	85.0	+3.9
+2026-10-16	bets	paid	all	all	pre	3–6% over	11	90.9	+14.3
+2026-10-16	bets	paid	all	all	pre	6–10% over	7	71.4	-5.6
+2026-10-16	bets	paid	all	all	pre	10%+ over	4	75.0	+12.0
+2026-10-16	cards	card	all	1.20+	all	10%+ under	1	100.0	+20.0
+2026-10-16	cards	card	all	1.20+	all	5–10% under	18	88.9	+9.1
+2026-10-16	cards	card	all	1.20+	all	3–5% under	11	81.8	-0.5
+2026-10-16	cards	card	all	1.20+	all	0–3% under	63	85.7	+7.5
+2026-10-16	cards	card	all	1.20+	all	0–3% over	13	84.6	+6.7
+2026-10-16	cards	card	all	1.20+	all	3–6% over	15	93.3	+20.7
+2026-10-16	cards	card	all	1.20+	all	6–10% over	35	85.7	+14.3
+2026-10-16	cards	card	all	1.20+	all	10%+ over	2	100.0	+20.5
+2026-10-16	bets	card	all	1.20+	all	10%+ under	0		
+2026-10-16	bets	card	all	1.20+	all	5–10% under	5	80.0	-2.6
+2026-10-16	bets	card	all	1.20+	all	3–5% under	2	50.0	-36.9
+2026-10-16	bets	card	all	1.20+	all	0–3% under	13	92.3	+17.4
+2026-10-16	bets	card	all	1.20+	all	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	all	1.20+	all	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	all	1.20+	all	6–10% over	17	88.2	+14.0
+2026-10-16	bets	card	all	1.20+	all	10%+ over	0		
+2026-10-16	bets	card	all	1.20+	pre	10%+ under	0		
+2026-10-16	bets	card	all	1.20+	pre	5–10% under	5	80.0	-2.6
+2026-10-16	bets	card	all	1.20+	pre	3–5% under	1	100.0	+29.0
+2026-10-16	bets	card	all	1.20+	pre	0–3% under	10	100.0	+25.2
+2026-10-16	bets	card	all	1.20+	pre	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	all	1.20+	pre	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	all	1.20+	pre	6–10% over	15	86.7	+11.2
+2026-10-16	bets	card	all	1.20+	pre	10%+ over	0		
+2026-10-16	bets	paid	all	1.20+	all	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	all	1.20+	all	5–10% under	2	100.0	+18.7
+2026-10-16	bets	paid	all	1.20+	all	3–5% under	1	100.0	+22.0
+2026-10-16	bets	paid	all	1.20+	all	0–3% under	21	90.5	+11.6
+2026-10-16	bets	paid	all	1.20+	all	0–3% over	10	70.0	-13.6
+2026-10-16	bets	paid	all	1.20+	all	3–6% over	10	90.0	+14.4
+2026-10-16	bets	paid	all	1.20+	all	6–10% over	5	100.0	+33.0
+2026-10-16	bets	paid	all	1.20+	all	10%+ over	6	66.7	-6.4
+2026-10-16	bets	paid	all	1.20+	pre	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	all	1.20+	pre	5–10% under	2	100.0	+18.7
+2026-10-16	bets	paid	all	1.20+	pre	3–5% under	1	100.0	+22.0
+2026-10-16	bets	paid	all	1.20+	pre	0–3% under	21	90.5	+11.6
+2026-10-16	bets	paid	all	1.20+	pre	0–3% over	9	77.8	-3.5
+2026-10-16	bets	paid	all	1.20+	pre	3–6% over	9	88.9	+12.3
+2026-10-16	bets	paid	all	1.20+	pre	6–10% over	4	100.0	+32.2
+2026-10-16	bets	paid	all	1.20+	pre	10%+ over	3	66.7	-4.7
+2026-10-16	cards	card	o	all	all	10%+ under	92	88.0	-3.4
+2026-10-16	cards	card	o	all	all	5–10% under	44	84.1	-6.1
+2026-10-16	cards	card	o	all	all	3–5% under	13	84.6	+0.7
+2026-10-16	cards	card	o	all	all	0–3% under	35	80.0	+0.2
+2026-10-16	cards	card	o	all	all	0–3% over	0		
+2026-10-16	cards	card	o	all	all	3–6% over	0		
+2026-10-16	cards	card	o	all	all	6–10% over	21	85.7	+12.8
+2026-10-16	cards	card	o	all	all	10%+ over	0		
+2026-10-16	bets	card	o	all	all	10%+ under	6	83.3	+1.7
+2026-10-16	bets	card	o	all	all	5–10% under	9	88.9	+14.9
+2026-10-16	bets	card	o	all	all	3–5% under	1	0.0	-100.0
+2026-10-16	bets	card	o	all	all	0–3% under	5	100.0	+28.9
+2026-10-16	bets	card	o	all	all	0–3% over	0		
+2026-10-16	bets	card	o	all	all	3–6% over	0		
+2026-10-16	bets	card	o	all	all	6–10% over	8	87.5	+14.3
+2026-10-16	bets	card	o	all	all	10%+ over	0		
+2026-10-16	bets	card	o	all	pre	10%+ under	3	100.0	+22.0
+2026-10-16	bets	card	o	all	pre	5–10% under	8	87.5	+12.5
+2026-10-16	bets	card	o	all	pre	3–5% under	0		
+2026-10-16	bets	card	o	all	pre	0–3% under	4	100.0	+25.5
+2026-10-16	bets	card	o	all	pre	0–3% over	0		
+2026-10-16	bets	card	o	all	pre	3–6% over	0		
+2026-10-16	bets	card	o	all	pre	6–10% over	6	83.3	+7.3
+2026-10-16	bets	card	o	all	pre	10%+ over	0		
+2026-10-16	bets	paid	o	all	all	10%+ under	0		
+2026-10-16	bets	paid	o	all	all	5–10% under	0		
+2026-10-16	bets	paid	o	all	all	3–5% under	0		
+2026-10-16	bets	paid	o	all	all	0–3% under	9	100.0	+23.8
+2026-10-16	bets	paid	o	all	all	0–3% over	6	66.7	-19.7
+2026-10-16	bets	paid	o	all	all	3–6% over	5	100.0	+25.8
+2026-10-16	bets	paid	o	all	all	6–10% over	3	66.7	-12.7
+2026-10-16	bets	paid	o	all	all	10%+ over	6	83.3	+19.7
+2026-10-16	bets	paid	o	all	pre	10%+ under	0		
+2026-10-16	bets	paid	o	all	pre	5–10% under	0		
+2026-10-16	bets	paid	o	all	pre	3–5% under	0		
+2026-10-16	bets	paid	o	all	pre	0–3% under	7	100.0	+23.0
+2026-10-16	bets	paid	o	all	pre	0–3% over	5	80.0	-3.0
+2026-10-16	bets	paid	o	all	pre	3–6% over	5	100.0	+25.8
+2026-10-16	bets	paid	o	all	pre	6–10% over	2	50.0	-36.0
+2026-10-16	bets	paid	o	all	pre	10%+ over	2	100.0	+54.5
+2026-10-16	cards	card	o	1.20+	all	10%+ under	1	100.0	+20.0
+2026-10-16	cards	card	o	1.20+	all	5–10% under	1	100.0	+20.0
+2026-10-16	cards	card	o	1.20+	all	3–5% under	7	71.4	-13.6
+2026-10-16	cards	card	o	1.20+	all	0–3% under	33	78.8	-0.7
+2026-10-16	cards	card	o	1.20+	all	0–3% over	0		
+2026-10-16	cards	card	o	1.20+	all	3–6% over	0		
+2026-10-16	cards	card	o	1.20+	all	6–10% over	21	85.7	+12.8
+2026-10-16	cards	card	o	1.20+	all	10%+ over	0		
+2026-10-16	bets	card	o	1.20+	all	10%+ under	0		
+2026-10-16	bets	card	o	1.20+	all	5–10% under	0		
+2026-10-16	bets	card	o	1.20+	all	3–5% under	1	0.0	-100.0
+2026-10-16	bets	card	o	1.20+	all	0–3% under	4	100.0	+30.1
+2026-10-16	bets	card	o	1.20+	all	0–3% over	0		
+2026-10-16	bets	card	o	1.20+	all	3–6% over	0		
+2026-10-16	bets	card	o	1.20+	all	6–10% over	8	87.5	+14.3
+2026-10-16	bets	card	o	1.20+	all	10%+ over	0		
+2026-10-16	bets	card	o	1.20+	pre	10%+ under	0		
+2026-10-16	bets	card	o	1.20+	pre	5–10% under	0		
+2026-10-16	bets	card	o	1.20+	pre	3–5% under	0		
+2026-10-16	bets	card	o	1.20+	pre	0–3% under	3	100.0	+26.0
+2026-10-16	bets	card	o	1.20+	pre	0–3% over	0		
+2026-10-16	bets	card	o	1.20+	pre	3–6% over	0		
+2026-10-16	bets	card	o	1.20+	pre	6–10% over	6	83.3	+7.3
+2026-10-16	bets	card	o	1.20+	pre	10%+ over	0		
+2026-10-16	bets	paid	o	1.20+	all	10%+ under	0		
+2026-10-16	bets	paid	o	1.20+	all	5–10% under	0		
+2026-10-16	bets	paid	o	1.20+	all	3–5% under	0		
+2026-10-16	bets	paid	o	1.20+	all	0–3% under	2	100.0	+22.5
+2026-10-16	bets	paid	o	1.20+	all	0–3% over	3	33.3	-60.6
+2026-10-16	bets	paid	o	1.20+	all	3–6% over	3	100.0	+27.3
+2026-10-16	bets	paid	o	1.20+	all	6–10% over	2	100.0	+31.9
+2026-10-16	bets	paid	o	1.20+	all	10%+ over	3	100.0	+41.6
+2026-10-16	bets	paid	o	1.20+	pre	10%+ under	0		
+2026-10-16	bets	paid	o	1.20+	pre	5–10% under	0		
+2026-10-16	bets	paid	o	1.20+	pre	3–5% under	0		
+2026-10-16	bets	paid	o	1.20+	pre	0–3% under	2	100.0	+22.5
+2026-10-16	bets	paid	o	1.20+	pre	0–3% over	2	50.0	-40.0
+2026-10-16	bets	paid	o	1.20+	pre	3–6% over	3	100.0	+27.3
+2026-10-16	bets	paid	o	1.20+	pre	6–10% over	1	100.0	+28.0
+2026-10-16	bets	paid	o	1.20+	pre	10%+ over	1	100.0	+47.0
+2026-10-16	cards	card	u	all	all	10%+ under	115	81.7	-9.9
+2026-10-16	cards	card	u	all	all	5–10% under	232	86.6	-1.7
+2026-10-16	cards	card	u	all	all	3–5% under	58	79.3	-9.1
+2026-10-16	cards	card	u	all	all	0–3% under	76	88.2	+5.0
+2026-10-16	cards	card	u	all	all	0–3% over	17	88.2	+9.3
+2026-10-16	cards	card	u	all	all	3–6% over	15	93.3	+20.2
+2026-10-16	cards	card	u	all	all	6–10% over	14	85.7	+16.6
+2026-10-16	cards	card	u	all	all	10%+ over	1	100.0	+41.0
+2026-10-16	bets	card	u	all	all	10%+ under	7	57.1	-26.9
+2026-10-16	bets	card	u	all	all	5–10% under	27	92.6	+15.3
+2026-10-16	bets	card	u	all	all	3–5% under	7	71.4	-18.2
+2026-10-16	bets	card	u	all	all	0–3% under	20	80.0	-2.3
+2026-10-16	bets	card	u	all	all	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	u	all	all	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	u	all	all	6–10% over	9	88.9	+13.8
+2026-10-16	bets	card	u	all	all	10%+ over	0		
+2026-10-16	bets	card	u	all	pre	10%+ under	1	0.0	-100.0
+2026-10-16	bets	card	u	all	pre	5–10% under	15	86.7	+5.8
+2026-10-16	bets	card	u	all	pre	3–5% under	2	100.0	+23.5
+2026-10-16	bets	card	u	all	pre	0–3% under	17	82.4	+0.2
+2026-10-16	bets	card	u	all	pre	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	u	all	pre	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	u	all	pre	6–10% over	9	88.9	+13.8
+2026-10-16	bets	card	u	all	pre	10%+ over	0		
+2026-10-16	bets	paid	u	all	all	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	u	all	all	5–10% under	5	80.0	-6.4
+2026-10-16	bets	paid	u	all	all	3–5% under	2	100.0	+22.4
+2026-10-16	bets	paid	u	all	all	0–3% under	34	85.3	+4.0
+2026-10-16	bets	paid	u	all	all	0–3% over	20	90.0	+9.6
+2026-10-16	bets	paid	u	all	all	3–6% over	12	83.3	+5.6
+2026-10-16	bets	paid	u	all	all	6–10% over	9	88.9	+19.8
+2026-10-16	bets	paid	u	all	all	10%+ over	6	33.3	-55.2
+2026-10-16	bets	paid	u	all	pre	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	u	all	pre	5–10% under	5	80.0	-6.4
+2026-10-16	bets	paid	u	all	pre	3–5% under	1	100.0	+22.0
+2026-10-16	bets	paid	u	all	pre	0–3% under	28	85.7	+4.4
+2026-10-16	bets	paid	u	all	pre	0–3% over	15	86.7	+6.3
+2026-10-16	bets	paid	u	all	pre	3–6% over	6	83.3	+4.8
+2026-10-16	bets	paid	u	all	pre	6–10% over	5	80.0	+6.6
+2026-10-16	bets	paid	u	all	pre	10%+ over	2	50.0	-30.5
+2026-10-16	cards	card	u	1.20+	all	10%+ under	0		
+2026-10-16	cards	card	u	1.20+	all	5–10% under	17	88.2	+8.4
+2026-10-16	cards	card	u	1.20+	all	3–5% under	4	100.0	+22.5
+2026-10-16	cards	card	u	1.20+	all	0–3% under	28	92.9	+15.9
+2026-10-16	cards	card	u	1.20+	all	0–3% over	13	84.6	+6.7
+2026-10-16	cards	card	u	1.20+	all	3–6% over	14	92.9	+20.4
+2026-10-16	cards	card	u	1.20+	all	6–10% over	14	85.7	+16.6
+2026-10-16	cards	card	u	1.20+	all	10%+ over	1	100.0	+41.0
+2026-10-16	bets	card	u	1.20+	all	10%+ under	0		
+2026-10-16	bets	card	u	1.20+	all	5–10% under	5	80.0	-2.6
+2026-10-16	bets	card	u	1.20+	all	3–5% under	1	100.0	+29.0
+2026-10-16	bets	card	u	1.20+	all	0–3% under	9	88.9	+11.9
+2026-10-16	bets	card	u	1.20+	all	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	u	1.20+	all	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	u	1.20+	all	6–10% over	9	88.9	+13.8
+2026-10-16	bets	card	u	1.20+	all	10%+ over	0		
+2026-10-16	bets	card	u	1.20+	pre	10%+ under	0		
+2026-10-16	bets	card	u	1.20+	pre	5–10% under	5	80.0	-2.6
+2026-10-16	bets	card	u	1.20+	pre	3–5% under	1	100.0	+29.0
+2026-10-16	bets	card	u	1.20+	pre	0–3% under	7	100.0	+24.9
+2026-10-16	bets	card	u	1.20+	pre	0–3% over	10	80.0	-2.1
+2026-10-16	bets	card	u	1.20+	pre	3–6% over	10	90.0	+12.1
+2026-10-16	bets	card	u	1.20+	pre	6–10% over	9	88.9	+13.8
+2026-10-16	bets	card	u	1.20+	pre	10%+ over	0		
+2026-10-16	bets	paid	u	1.20+	all	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	u	1.20+	all	5–10% under	2	100.0	+18.7
+2026-10-16	bets	paid	u	1.20+	all	3–5% under	1	100.0	+22.0
+2026-10-16	bets	paid	u	1.20+	all	0–3% under	19	89.5	+10.4
+2026-10-16	bets	paid	u	1.20+	all	0–3% over	7	85.7	+7.2
+2026-10-16	bets	paid	u	1.20+	all	3–6% over	7	85.7	+8.8
+2026-10-16	bets	paid	u	1.20+	all	6–10% over	3	100.0	+33.7
+2026-10-16	bets	paid	u	1.20+	all	10%+ over	3	33.3	-53.7
+2026-10-16	bets	paid	u	1.20+	pre	10%+ under	2	100.0	+23.0
+2026-10-16	bets	paid	u	1.20+	pre	5–10% under	2	100.0	+18.7
+2026-10-16	bets	paid	u	1.20+	pre	3–5% under	1	100.0	+22.0
+2026-10-16	bets	paid	u	1.20+	pre	0–3% under	19	89.5	+10.4
+2026-10-16	bets	paid	u	1.20+	pre	0–3% over	7	85.7	+7.2
+2026-10-16	bets	paid	u	1.20+	pre	3–6% over	6	83.3	+4.8
+2026-10-16	bets	paid	u	1.20+	pre	6–10% over	3	100.0	+33.7
+2026-10-16	bets	paid	u	1.20+	pre	10%+ over	2	50.0	-30.5
