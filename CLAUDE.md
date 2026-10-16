@@ -373,6 +373,13 @@ market offered, never as what he would have got.
 
 - **The singles unit is €1.15** unless he says otherwise. Column 8 of
   config/bets.tsv is the stake and is required.
+- **Every slip he sends is a PLACED bet — log it.** (15 Oct, on a TOTO
+  compact "voorspellingen" overview read as an unplaced builder: "Toto is
+  placed around 1.15. That overview is just more compact. Handle my slips
+  always as placed ones.") The "PLAATS"/place button and "Je maakt kans
+  op" total in TOTO's compact view are not proof it is unplaced — it is
+  placed at the €1.15 unit. Never hold a slip back as a draft; log it and
+  run the wrong-lane and band checks as always.
 - **Price the line he actually bought**, not the card's rung, when they
   differ. The buy-from bar must be recomputed on his line.
 
