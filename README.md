@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            794 / 930  85.4%    532 / 753  70.7%
     played lanes  >+1%     309 / 360  85.8%    529 / 747  70.8%
-    placed bets            248 / 316  78.5%    ROI +0.8%
+    placed bets            249 / 317  78.5%    ROI +0.8%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3922,7 +3922,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 248 / 316  ·  ROI +0.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 249 / 317  ·  ROI +0.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -4251,6 +4251,14 @@ that premium the book is keeping the insurance money.
 | — open | Cerezo Osaka v Kawasaki Frontale | U4.5 | 1.21 | — | Unibet — pre-kickoff, struck 14 Oct evening CEST for 17 Oct 08:00. The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 86.5%, green, ★ STRONG at first sight (1.24 at 1xBet, +6.5% over the 1.164 bar; locked there). 1.21 is +4.0% over the bar. Buy bar ★ STRONG on U4.5 1.17 (90.5% on 21, break-even 1.11 +5%) — cleared. BAND VETOES at first sight (6-10% over): my bets 7 at 71% and -9.7%, all cards 13 at 77% and -1.5% — no line at 80%, one under 75%. Tracked only and unproven; it never argues against a bet already placed. |
 | — open | Kashiwa Reysol v Nagoya Grampus | U4.5 | 1.18 | — | Unibet — pre-kickoff, struck 14 Oct evening CEST for 17 Oct 12:00. The card prints U4.25, bought as U4.5 (struck line) — the card's own side, no wrong lane. Claim 85.5%, green, ★ STRONG at first sight (1.21 at TOTO, +3.1% over the 1.174 bar; locked there). 1.18 is +0.5% over the bar, three cents under the stamp. Buy bar ★ STRONG on U4.5 1.17 (90.5% on 21) — cleared by one cent. Band check at first sight (3-6% over): my bets 3 at 100%, all cards 4 at 100% — backs it, but thin. |
 | — open | América Mineiro v Operario PR | U3.5 | 1.29 | — | Unibet — pre-kickoff, struck 14 Oct evening CEST for 17 Oct 23:30. The card prints U3.0, bought as U3.5 (struck line) — the card's own side, no wrong lane. Claim 81.7%, orange, ★ STRONG at first sight (1.27 at Unibet (NL), 2.3% under the 1.300 bar; locked there). 1.29 is 0.8% under the bar, two cents over the stamp. Buy bar ★ STRONG on U3.5 1.22 (86.7% on 15, break-even 1.16 +5%) — cleared. Band check at first sight (0-3% under): my bets 23 at 83%, all cards 85 at 85% — backs it. |
+| — open | Toluca v Atlético San Luis | U4.5 | 1.25 | — | TOTO — pre-kickoff, struck 15 Oct for 18 Oct 03:00. Card prints U4.25, bought as U4.5 (struck line) — card's own side, no wrong lane. Claim 81.8%, orange, ★ STRONG at first sight (1.25 at Unibet (NL), 1.7% under the 1.271 bar; locked there). Buy bar ★ STRONG on U4.5 1.13 (93.1% on 29) — cleared. Band at first sight (0-3% under): backs it. |
+| — open | Cruz Azul v FC Juárez | U4.5 | 1.26 | — | TOTO — pre-kickoff, struck 15 Oct for 18 Oct 05:00. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 83.3%, orange — MILD (82-85 claim middle). Stamp 1.22 at Unibet (NL), +1.4% over the 1.203 bar. Buy bar MILD on U4.5 1.33 (79.2% on 24); 1.26 is UNDER that bar. Band at first sight (0-3% over): backs it. MILD's U4.5 is its weakest cell. |
+| — open | Lyngby v FC Nordsjaelland | U4.5 | 1.25 | — | TOTO — pre-kickoff, struck 15 Oct for 18 Oct 14:00. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 81.2%, orange, ★ STRONG at first sight (1.24 at Unibet (NL), 2.4% under the 1.271 bar; locked there). Buy bar ★ STRONG on U4.5 1.13 — cleared. Band at first sight (0-3% under): backs it. |
+| — open | Cienciano v UTC Cajamarca | U4.5 | 1.25 | — | TOTO — pre-kickoff, struck 15 Oct for 19 Oct 01:30 (PER-L1). NOT ON THE BOARD YET: the feed had not listed this fixture at log time, so there is no card to cross-check and it will not grade itself until the fill adds it. Card's own side assumed (under); no card to confirm a lane. Watch config/unreached.tsv if it never loads. |
+| — open | Bologna v Inter Milan | U4.5 | 1.16 | — | TOTO — pre-kickoff, struck 15 Oct for 17 Oct 18:00. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 85.9%, green, ★ STRONG at first sight (1.20 at 1xBet, +4.0% over the 1.154 bar; locked there). Buy bar ★ STRONG on U4.5 1.13 — cleared by 3c. Band at first sight (3-6% over): backs it. |
+| — open | Sligo Rovers v Dundalk | U4.5 | 1.18 | — | TOTO — pre-kickoff, struck 15 Oct for 17 Oct 20:45. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 84.8%, orange — MILD (82-85 middle). Stamp 1.23 at TOTO, +4.2% over the 1.180 bar. Buy bar MILD on U4.5 1.33 (79.2% on 24); 1.18 is WELL under that bar. Band at first sight (3-6% over): backs it. MILD's U4.5 is its weakest cell. |
+| — open | Millonarios v Jaguares de Córdoba | U4.5 | 1.20 | — | TOTO — pre-kickoff, struck 15 Oct for 18 Oct 01:05. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 85.9%, green, ★ STRONG at first sight (1.17 at Unibet (NL), +2.6% over the 1.140 bar; locked there). Buy bar ★ STRONG on U4.5 1.13 — cleared. Band at first sight (0-3% over): SPLIT — one line 80%+, one under; tracked only. |
+| ✅ | Helmond Sport v NAC Breda | O1.5 | 1.21 | 1.21x | TOTO — pre-kickoff, struck 16 Oct 21:10 CEST for 16 Oct 20:00, coupon 13233905414. Card's own side (O1.5), no wrong lane. Claim 83.3%, ★ STRONG board over. WON: 0-2. |
 
 <!-- HYPOTHESES:START -->
 
