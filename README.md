@@ -6,7 +6,7 @@
     lane                        Tip 1              Tip 2
     all matches            794 / 930  85.4%    532 / 753  70.7%
     played lanes  >+1%     309 / 360  85.8%    529 / 747  70.8%
-    placed bets            249 / 317  78.5%    ROI +0.8%
+    placed bets            250 / 319  78.4%    ROI +0.6%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -3922,7 +3922,7 @@ that premium the book is keeping the insurance money.
 
 ### 🟡 Actual placed bets
 
-**Settled: 249 / 317  ·  ROI +0.8%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 250 / 319  ·  ROI +0.6%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -4259,6 +4259,8 @@ that premium the book is keeping the insurance money.
 | — open | Sligo Rovers v Dundalk | U4.5 | 1.18 | — | TOTO — pre-kickoff, struck 15 Oct for 17 Oct 20:45. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 84.8%, orange — MILD (82-85 middle). Stamp 1.23 at TOTO, +4.2% over the 1.180 bar. Buy bar MILD on U4.5 1.33 (79.2% on 24); 1.18 is WELL under that bar. Band at first sight (3-6% over): backs it. MILD's U4.5 is its weakest cell. |
 | — open | Millonarios v Jaguares de Córdoba | U4.5 | 1.20 | — | TOTO — pre-kickoff, struck 15 Oct for 18 Oct 01:05. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 85.9%, green, ★ STRONG at first sight (1.17 at Unibet (NL), +2.6% over the 1.140 bar; locked there). Buy bar ★ STRONG on U4.5 1.13 — cleared. Band at first sight (0-3% over): SPLIT — one line 80%+, one under; tracked only. |
 | ✅ | Helmond Sport v NAC Breda | O1.5 | 1.21 | 1.21x | TOTO — pre-kickoff, struck 16 Oct 21:10 CEST for 16 Oct 20:00, coupon 13233905414. Card's own side (O1.5), no wrong lane. Claim 83.3%, ★ STRONG board over. WON: 0-2. |
+| ✅ | ŠK Slovan Bratislava v VfB Stuttgart | O1.5 | 1.23 | 1.23x | Unibet — in-play, struck 14 Oct 22:18 CEST (coupon 13226448280) on the 21:00 UCL match, card's own side (O1.5), no wrong lane. STRONG WATCH FROM, carried LIVE INPLAY GOOD — a live over, the kind the record supports. WON: 0-3. |
+| ❌ | Bodø/Glimt v Borussia Dortmund | O1.5 | 1.32 | 0.00x | Unibet — in-play, struck 14 Oct 21:32 CEST (coupon 13226202914) on the 21:00 UCL match, card's own side (O1.5), no wrong lane. STRONG WATCH FROM / LIVE INPLAY GOOD live over. LOST: 1-0 — goalless until late, one goal only, the exact live-over trap. |
 
 <!-- HYPOTHESES:START -->
 
