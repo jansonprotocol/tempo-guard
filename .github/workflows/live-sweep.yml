@@ -53,7 +53,7 @@ jobs:
       # Seconds between DEPLOY-tagged commits. A build takes longer than
       # a sweep pass, and a new deploy cancels the one in flight, so this
       # has to be comfortably longer than a build (14 Oct).
-      DEPLOY_EVERY: 1800
+      DEPLOY_EVERY: 180         # 3 min — the site branch builds in seconds
       # Every pass commits web/live.json, which the page polls from the
       # repository; the host is told to skip commits that only moved a
       # goal or a minute, so the deploy budget goes to kickoffs, finals
@@ -120,7 +120,14 @@ jobs:
               echo "::warning::sweep pass $pass failed — $(grep -E 'Error|Traceback' /tmp/sweep.out | tail -1)"
             fi
             cd ..
-            git add -A config/fixtures.tsv README.md web/ \
+            # THE 16 MB FILES NEVER TOUCH main (17 Oct). index.html and
+            # matchbank.json are served by Render from the `site` branch,
+            # so they are published there on a deploy pass, not committed
+            # here. main keeps the data and web/live.json ONLY —
+            # web/live.json because the page polls it from main's raw URL
+            # between deploys. This is what finally stops main's 1.8 GB
+            # history from growing at all.
+            git add -A config/fixtures.tsv README.md web/live.json \
                        config/forward_log.tsv config/reads_cache.json \
                        config/live_log.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv || true
             # Every pass commits — but not every commit is a deploy. The
@@ -154,14 +161,7 @@ jobs:
             AGE=$(( $(date +%s) - ${LAST:-0} ))
             [ "$AGE" -ge "$DEPLOY_EVERY" ] && DUE=1 || DUE=0
             echo "last deploy $((AGE/60)) min ago; due=$DUE"
-            # AND THE 16 MB FILES ONLY RIDE ALONG WITH A DEPLOY. Keeping
-            # them out of every tick is what stops the repository — and
-            # with it every future clone and build — from growing by a
-            # gigabyte a week.
-            if [ "$DUE" -eq 0 ]; then
-              git restore --staged web/index.html web/matchbank.json 2>/dev/null || true
-            fi
-            if git diff --cached --quiet; then
+            if git diff --cached --quiet && [ "$DUE" -eq 0 ]; then
               echo "nothing moved"
             else
               # DUE ALONE DECIDES THE DEPLOY (15 Oct: "live sweep is
@@ -186,16 +186,14 @@ jobs:
                 WHY="minutes only — web/live.json carries it to the page"
               fi
               echo "$SUBJECT — $WHY"
-              git commit -q -m "$SUBJECT" -m "$WHY"
-              # Someone may have pushed while this ran. Do not try to
-              # rebase a sweep over their change: on 7 Sep a re-price
-              # landed on main mid-loop and the rebase hit conflicts in
-              # fixtures.tsv and matchbank.json, files the old resolver
-              # never touched, and the pass died with exit 1. A sweep is
-              # reproducible from the feed, so the right move is to DROP
-              # this pass, reset onto what was pushed, and sweep again on
-              # top of it — the next pass writes the same scores onto the
-              # newer board.
+              # An empty commit is fine on a DUE pass with no data change:
+              # it carries the [deploy] marker that stamps the deploy
+              # clock (LAST, above) so the next DUE is measured from now.
+              git commit -q --allow-empty -m "$SUBJECT" -m "$WHY"
+              # Someone may have pushed while this ran. A sweep is
+              # reproducible from the feed, so the right move on a refused
+              # push is to DROP this pass, reset onto what was pushed, and
+              # sweep again on top of it.
               if ! git push origin HEAD:${{ github.ref_name }}; then
                 echo "push refused — resetting onto upstream and sweeping again"
                 git fetch origin ${{ github.ref_name }}
@@ -204,6 +202,16 @@ jobs:
                 echo "::endgroup::"
                 continue
               fi
+            fi
+            # THE DEPLOY ITSELF: publish web/ to the lightweight `site`
+            # branch, which Render serves. A parentless commit of ~30 MB,
+            # so the build takes seconds whatever main weighs. Only on a
+            # DUE pass, and never fatal — a failed publish just waits for
+            # the next one.
+            if [ "$DUE" -eq 1 ]; then
+              bash .github/publish-site.sh \
+                "site: $(date -u '+%Y-%m-%d %H:%M') UTC (live sweep)" || \
+                echo "::warning::site publish failed; next deploy retries"
             fi
             cd backend
             echo "::endgroup::"

@@ -129,14 +129,19 @@ jobs:
                        config/ladder_rates.tsv \
                        config/matchbank_retro.json \
                        config/forward_log.tsv \
-                       config/reads_cache.json README.md web/
+                       config/reads_cache.json README.md web/live.json
             if git diff --cached --quiet; then
               echo "nothing changed"; exit 0
             fi
             git commit -q -m "bank refresh: $(date -u '+%Y-%m-%d %H:%M') UTC" \
               -m "board results merged into the bank; live-safety bands re-measured on the last three weeks; board re-rendered"
             if git push origin HEAD:main; then
-              echo "pushed on try $try"; exit 0
+              echo "pushed on try $try"
+              # index.html/matchbank.json are served from the `site`
+              # branch, not main (17 Oct); publish the re-rendered board.
+              bash .github/publish-site.sh "site: bank refresh $(date -u '+%Y-%m-%d')" || \
+                echo "::warning::site publish failed"
+              exit 0
             fi
             echo "push refused on try $try — resetting onto main and running again"
           done

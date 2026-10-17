@@ -82,7 +82,9 @@ jobs:
           git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv \
                      config/unresolved.tsv \
                      config/reads_cache.json config/roi_log.tsv config/band_log.tsv \
-                     config/forward_log.tsv config/play_lock.tsv config/tier_band_log.tsv README.md web/
+                     config/forward_log.tsv config/play_lock.tsv config/tier_band_log.tsv README.md web/live.json
+          # index.html and matchbank.json go to the `site` branch on a
+          # successful push (publish-site.sh), never to main (17 Oct).
           if git diff --cached --quiet; then
             echo "nothing to add — the board already has the week"; exit 0
           fi
@@ -101,7 +103,10 @@ jobs:
           # since it edits rows the fill never touched.
           for try in $(seq 1 8); do
             if git push origin HEAD:main; then
-              echo "pushed on try $try"; exit 0
+              echo "pushed on try $try"
+              bash .github/publish-site.sh "site: board fill $(date -u '+%Y-%m-%d')" || \
+                echo "::warning::site publish failed"
+              exit 0
             fi
             echo "push refused on try $try — merging what the sweep pushed"
             git fetch origin main
@@ -113,7 +118,7 @@ jobs:
               git commit -q --no-edit
             }
             (cd backend && python scripts/board.py --allow-stale) || true
-            git add -A config README.md web/
+            git add -A config README.md web/live.json
             git diff --cached --quiet || git commit -q -m "re-render onto the sweep's push"
             sleep $((RANDOM % 20 + 5))
           done
