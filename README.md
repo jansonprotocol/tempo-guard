@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 85.5%
 
     lane                        Tip 1              Tip 2
-    all matches            807 / 944  85.5%    540 / 762  70.9%
+    all matches            808 / 945  85.5%    540 / 762  70.9%
     played lanes  >+1%     313 / 364  86.0%    537 / 756  71.0%
     placed bets            254 / 324  78.4%    ROI +0.7%
 
@@ -1806,7 +1806,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 16-10 20:45 <b>Drogheda United v Derry City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.3 capped)</td><td>U3.0 76.6% <b>+0.0%</b><br>buy≥1.43 (+1.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 72.6% +2.9% · buy≥1.45 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-10 20:45 <b>Galway United v Shamrock Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.3 capped)</td><td>U4.25 84.8% <b>−4.9%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 72.8% +3.1% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-10 20:45 <b>St Patricks Athletic v Shelbourne Dublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.3 capped)</td><td>U4.25 84.8% <b>−4.8%</b><br>buy≥1.19 (+5.4% margin)</td><td><b>Shelbourne Dublin U1.5</b> 75.3% +5.6%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.7% +12.7% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 0-1 <b>Mito HollyHock v Urawa Red Diamonds</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 88.1% <b>+0.0%</b><br>buy≥1.19 (+3.7% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 75.4% +2.1% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-10 12:00 <b>Kashiwa Reysol v Nagoya Grampus</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 85.5% <b>−2.6%</b><br>buy≥1.21 (+1.8% margin)</td><td><b>Kashiwa Reysol O0.5</b> 81.2% +6.8%<br>buy≥1.29 (+4.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.0% +3.7% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-10 12:30 <b>Erzurum BB v Eyüpspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (87.0 −1.1)</td><td>U4.25 85.0% <b>+0.7%</b><br>buy≥1.26 (+6.2% margin)</td><td>U3.75 70.5% +1.9%<br>buy≥1.32 (+0.7% margin) · floor −11.5</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.2% +2.1% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-10 13:00 <b>Dalian Yingbo v Shenzhen Peng City FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.6 +1.0)</td><td>U4.25 83.9% +4.9%<br>buy≥1.29 (+8.4% margin)</td><td><b>Shenzhen Peng City FC U1.5</b> 73.0% +12.0%<br>buy≥1.43 (+4.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 80.4% +19.5% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2096,7 +2095,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 807 / 944   ·   85.5%**   ·   **Tip 2 — 540 / 762   ·   70.9%**
+**Tip 1 — 808 / 945   ·   85.5%**   ·   **Tip 2 — 540 / 762   ·   70.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.4 −3.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3917,6 +3916,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-4 · 17-10 07:00 <b>Tokyo Verdy v FC Tokyo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 89.0% <b>+0.9%</b><br>buy≥1.18 (+4.3% margin)</td><td>✅ <b>FC Tokyo O0.5</b> 80.2% +10.6%<br>buy≥1.30 (+4.5% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 2-4 · 17-10 08:00 <b>Cerezo Osaka v Kawasaki Frontale</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 86.5% <b>−1.6%</b><br>buy≥1.20 (+2.5% margin)</td><td>✅ O1.75 74.9% +2.2%<br>buy≥1.41 (+1.0% margin) · floor −7.1</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.4% +2.1% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 17-10 08:00 <b>Kashima Antlers v V-Varen Nagasaki</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 86.5% <b>−1.6%</b><br>buy≥1.20 (+2.5% margin)</td><td>✅ <b>Kashima Antlers O0.5</b> 83.6% +9.2%<br>buy≥1.25 (+4.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.0% +18.5% · buy≥1.42 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 17-10 09:00 <b>Mito HollyHock v Urawa Red Diamonds</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 88.1% <b>+0.0%</b><br>buy≥1.19 (+3.7% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.4% +2.1% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
