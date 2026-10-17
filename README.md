@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 85.5%
 
     lane                        Tip 1              Tip 2
-    all matches            803 / 939  85.5%    536 / 758  70.7%
+    all matches            804 / 940  85.5%    536 / 758  70.7%
     played lanes  >+1%     312 / 363  86.0%    533 / 752  70.9%
     placed bets            254 / 323  78.6%    ROI +1.0%
 
@@ -1806,7 +1806,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 16-10 20:45 <b>Drogheda United v Derry City</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.3 capped)</td><td>U3.0 76.6% <b>+0.0%</b><br>buy≥1.43 (+1.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 72.6% +2.9% · buy≥1.45 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-10 20:45 <b>Galway United v Shamrock Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.3 capped)</td><td>U4.25 84.8% <b>−4.9%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 72.8% +3.1% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 16-10 20:45 <b>St Patricks Athletic v Shelbourne Dublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (89.3 capped)</td><td>U4.25 84.8% <b>−4.8%</b><br>buy≥1.19 (+5.4% margin)</td><td><b>Shelbourne Dublin U1.5</b> 75.3% +5.6%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 71.7% +12.7% · buy≥1.46 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+5' 0-0 <b>Tijuana v Puebla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.8 capped)</td><td>U4.25 83.4% <b>−0.9%</b><br>buy≥1.26 (+5.5% margin)<br><i>U4.25 holding · room for 4 · half from the 4th · as good as landed</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 72.5% +10.2% · buy≥1.45 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 2-0 <b>Shimizu S Pulse v Gamba Osaka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 88.7% <b>+0.6%</b><br>buy≥1.18 (+4.1% margin)<br><i>U4.25 holding · room for 2 · half from the 2nd · 83% · fair 1.20</i><br><i>also live: O3.5 flip 41% fair 2.42 · U3.5 tighter 59% fair 1.70</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-10 07:00 <b>Hiroshima Sanfrecce FC v Kyoto Purple Sanga</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 82.9% <b>−5.2%</b><br>buy≥1.25 (+1.3% margin)</td><td><b>Hiroshima Sanfrecce FC O1.5</b> 60.0% +20.3%<br>buy≥1.72 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 83.0% +27.5% · buy≥1.26 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 17-10 07:00 <b>JEF United Chiba v Yokohama F Marinos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.6)</td><td>U4.25 90.0% +1.9%<br>buy≥1.19 (+5.0% margin)</td><td>U3.75 77.8% +3.6%<br>buy≥1.26 (+4.3% margin) · floor −4.2</td></tr></table>
@@ -2103,7 +2102,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 803 / 939   ·   85.5%**   ·   **Tip 2 — 536 / 758   ·   70.7%**
+**Tip 1 — 804 / 940   ·   85.5%**   ·   **Tip 2 — 536 / 758   ·   70.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.4 −3.3)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3917,6 +3916,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 17-10 02:30 <b>Boca Juniors v Talleres</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.3 −0.1)</td><td>O1.0 87.5% <b>+0.4%</b><br>buy≥1.26 (+4.6% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 69.3% +4.9% · buy≥1.52 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-2 · 17-10 03:00 <b>Necaxa v Atlas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.8 capped)</td><td>U4.25 83.4% <b>−0.9%</b><br>buy≥1.26 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 17-10 05:00 <b>Atlante FC v Pumas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.8 capped)</td><td>U4.25 83.4% <b>−0.9%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-0 · 17-10 05:00 <b>Tijuana v Puebla</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.8 capped)</td><td>U4.25 83.4% <b>−0.9%</b><br>buy≥1.26 (+5.5% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 72.5% +10.2% · buy≥1.45 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
