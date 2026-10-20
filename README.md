@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 84.7%
 
     lane                        Tip 1              Tip 2
-    all matches            819 / 967  84.7%    526 / 763  68.9%
+    all matches            820 / 968  84.7%    526 / 763  68.9%
     played lanes  >+1%     317 / 373  85.0%    523 / 757  69.1%
     placed bets            259 / 334  77.5%    ROI -0.6%
 
@@ -1805,7 +1805,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 19-10 20:45 <b>Derry City v St Patricks Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (88.7 capped)</td><td>U4.25 84.8% <b>−4.7%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 19-10 20:45 <b>Waterford FC v Galway United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (88.7 capped)</td><td>U4.25 84.8% <b>−4.7%</b><br>buy≥1.20 (+5.4% margin)</td><td><b>Waterford FC O0.5</b> 80.0% +4.8%<br>buy≥1.32 (+5.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 73.7% +14.4% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 20-10 01:30 <b>Millonarios v Jaguares de Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.0 capped)</td><td>U4.25 85.9% <b>−5.4%</b><br>buy≥1.17 (+5.4% margin)</td><td><b>Millonarios O0.5</b> 81.2% +5.9%<br>buy≥1.30 (+5.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 75.5% +11.7% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 1-1 <b>Deportivo Riestra v Union Santa Fe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.2 −0.3)</td><td>O1.0 88.0% <b>+0.9%</b><br>buy≥1.25 (+5.0% margin)<br><i>O1.0 holding · ✓ landed · as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-1 <b>Deportivo Pasto v Alianza FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.0 capped)</td><td>U3.0 79.4% <b>+0.0%</b><br>buy≥1.26 (+1.2% margin)<br><i>U3.0 holding · room for 1 · 86% · fair 1.17</i><br><i>also live: O2.5 flip 37% fair 2.68 · U2.5 tighter 63% fair 1.59</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 20-10 17:00 <b>Diriyah Club v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.9 +0.9)</td><td>U4.25 85.9% +3.6%<br>buy≥1.24 (+8.5% margin)</td><td>U3.75 74.5% +8.8%<br>buy≥1.30 (+4.2% margin) · floor −0.5</td></tr></table>
 <table align="left"><tr><th align="left">🔵 20-10 17:10 <b>Al-Taawoun v Al-Qadsiah</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.9 +0.9)</td><td>U4.25 83.0% <b>+0.7%</b><br>buy≥1.27 (+3.2% margin)</td><td><b>Al-Qadsiah O1.5</b> 59.3% +21.3%<br>buy≥1.74 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB2 77.1% +33.2% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -1838,7 +1837,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 819 / 967   ·   84.7%**   ·   **Tip 2 — 526 / 763   ·   68.9%**
+**Tip 1 — 820 / 968   ·   84.7%**   ·   **Tip 2 — 526 / 763   ·   68.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.6 −3.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3917,6 +3916,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 20-10 00:00 <b>Sarmiento de Junin v Barracas Central</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.2 −0.3)</td><td>O1.0 89.3% +2.1%<br>buy≥1.23 (+5.3% margin)</td><td>✅ O1.75 65.3% +4.5%<br>buy≥1.73 (+3.6% margin) · floor −9.7</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 72.9% +4.6% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-0 · 20-10 00:30 <b>Goiás v Nautico PE</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.6 −3.0)</td><td>U3.0 81.4% <b>+0.4%</b><br>buy≥1.34 (+3.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 20-10 01:00 <b>Corinthians v Vitoria</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (76.3 −4.3)</td><td>U3.0 77.5% +2.2%<br>buy≥1.48 (+5.5% margin)</td><td>✅ <b>Vitoria U1.5</b> 75.4% +3.4%<br>buy≥1.39 (+4.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 70.7% +5.4% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-1 · 20-10 02:15 <b>Deportivo Riestra v Union Santa Fe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.2 −0.3)</td><td>O1.0 88.0% <b>+0.9%</b><br>buy≥1.25 (+5.0% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
