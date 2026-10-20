@@ -4,46 +4,44 @@
 # the cards fall back to the engine's own buy>= bar.
 # top: the three best book prices, best first, as 'price book|...'
 # fixture	which	lane	consensus	best	book	unibet_nl	books	top
-Deportivo Riestra v Union Santa Fe	1	O1.0	1.06	1.19	Pinnacle		10	1.19 Pinnacle|1.17 BetOnline.ag|1.15 BetAnything
-Deportivo Pasto v Alianza FC	1	U3.5	1.21	1.26	TOTO	1.21	2	1.26 TOTO|1.21 Unibet (NL)
-Diriyah Club v Al-Riyadh	1	U4.5	1.13	1.17	Unibet (SE)	1.17	6	1.17 Unibet (SE)|1.17 Unibet (NL)|1.13 LeoVegas (SE)
-Diriyah Club v Al-Riyadh	2	U3.75	1.43	1.48	Unibet (SE)	1.48	6	1.48 Unibet (SE)|1.48 Unibet (NL)|1.43 LeoVegas (SE)
-Al-Taawoun v Al-Qadsiah	1	U4.5	1.23	1.42	Pinnacle	1.23	6	1.42 Pinnacle|1.28 1xBet|1.23 Unibet (SE)
-Al-Taawoun v Al-Qadsiah	3	DNB2	1.26	1.28	888sport	1.26	13	1.28 888sport|1.28 William Hill|1.28 Winamax (FR)
-Al-Ettifaq v Al-Ittihad	1	U4.5	1.31	1.36	Pinnacle	1.31	7	1.36 Pinnacle|1.31 Unibet (NL)|1.31 Unibet (SE)
-Al-Ettifaq v Al-Ittihad	2	U3.75	1.78	1.88	Pinnacle	1.78	6	1.88 Pinnacle|1.78 Unibet (NL)|1.78 Unibet (SE)
-Al-Nassr v Neom	1	O1.5	1.10	1.24	Pinnacle	1.10	7	1.24 Pinnacle|1.14 TOTO|1.10 Unibet (NL)
-Al-Nassr v Neom	2	O2.25	1.44	1.81	Pinnacle	1.44	6	1.81 Pinnacle|1.44 Unibet (NL)|1.44 Unibet (SE)
-Al-Nassr v Neom	3	DNB1	1.22	1.24	Winamax (FR)	1.22	13	1.24 Winamax (FR)|1.23 William Hill|1.23 Winamax (DE)
+Diriyah Club v Al-Riyadh	1	U4.5	1.12	1.17	Unibet (SE)	1.17	7	1.17 Unibet (SE)|1.17 Unibet (NL)|1.13 LeoVegas (SE)
+Diriyah Club v Al-Riyadh	2	U3.75	1.41	1.48	Unibet (SE)	1.48	7	1.48 Unibet (SE)|1.48 Unibet (NL)|1.43 LeoVegas (SE)
+Al-Taawoun v Al-Qadsiah	1	U4.5	1.23	1.42	Pinnacle	1.23	7	1.42 Pinnacle|1.28 1xBet|1.28 Tipico
+Al-Taawoun v Al-Qadsiah	3	DNB2	1.26	1.28	888sport	1.26	13	1.28 888sport|1.28 William Hill|1.27 Winamax (FR)
+Al-Ettifaq v Al-Ittihad	1	U4.5	1.27	1.36	Pinnacle	1.31	8	1.36 Pinnacle|1.31 Unibet (NL)|1.31 Unibet (SE)
+Al-Ettifaq v Al-Ittihad	2	U3.75	1.73	1.88	Pinnacle	1.78	7	1.88 Pinnacle|1.78 Unibet (NL)|1.78 Unibet (SE)
+Al-Nassr v Neom	1	O1.5	1.10	1.24	Pinnacle	1.10	8	1.24 Pinnacle|1.14 TOTO|1.10 Unibet (NL)
+Al-Nassr v Neom	2	O2.25	1.44	1.81	Pinnacle	1.44	7	1.81 Pinnacle|1.44 Unibet (NL)|1.44 Unibet (SE)
+Al-Nassr v Neom	3	DNB1	1.22	1.23	Winamax (FR)	1.22	13	1.23 Winamax (FR)|1.23 Winamax (DE)|1.23 William Hill
 Wolverhampton Wanderers v Portsmouth	1	O1.5	1.21	1.31	Pinnacle	1.20	16	1.31 Pinnacle|1.24 TOTO|1.23 GTbets
 Wolverhampton Wanderers v Portsmouth	3	12	1.21	1.26	LeoVegas (SE)	1.19	20	1.26 LeoVegas (SE)|1.24 Coolbet|1.24 Pinnacle
 Blackpool v Milton Keynes Dons	1	U4.5	1.14	1.21	TOTO	1.11	14	1.21 TOTO|1.17 1xBet|1.17 Marathon Bet
 Blackpool v Milton Keynes Dons	3	DNB1	1.91	1.92	Nordic Bet	1.85	14	1.92 Nordic Bet|1.92 Betsson|1.92 Pinnacle
-Bromley FC v Leicester City	1	O1.5	1.12	1.26	Pinnacle	1.13	14	1.26 Pinnacle|1.24 Coolbet|1.23 BetOnline.ag
+Bromley FC v Leicester City	1	O1.5	1.13	1.25	Pinnacle	1.13	14	1.25 Pinnacle|1.24 Coolbet|1.22 BetOnline.ag
 Burton Albion v Bradford City	1	U4.5	1.05	1.10	BetOnline.ag	1.05	14	1.10 BetOnline.ag|1.10 TOTO|1.09 Pinnacle
 Burton Albion v Bradford City	2	U3.75	1.25	1.35	BetOnline.ag	1.25	13	1.35 BetOnline.ag|1.29 Pinnacle|1.26 Coolbet
-Cambridge United v Wycombe Wanderers	1	O1.5	1.19	1.30	Pinnacle	1.17	14	1.30 Pinnacle|1.27 BetOnline.ag|1.21 TOTO
-Doncaster Rovers v Stockport County FC	1	O1.5	1.18	1.29	Pinnacle	1.16	14	1.29 Pinnacle|1.25 BetOnline.ag|1.21 TOTO
+Cambridge United v Wycombe Wanderers	1	O1.5	1.19	1.31	Pinnacle	1.17	14	1.31 Pinnacle|1.27 BetOnline.ag|1.22 TOTO
+Doncaster Rovers v Stockport County FC	1	O1.5	1.19	1.29	Pinnacle	1.16	14	1.29 Pinnacle|1.25 BetOnline.ag|1.21 TOTO
 Huddersfield Town v Peterborough United	1	O1.5	1.09	1.20	Coolbet	1.07	14	1.20 Coolbet|1.12 TOTO|1.11 Nordic Bet
-Huddersfield Town v Peterborough United	3	DNB1	1.31	1.33	Codere (IT)	1.27	14	1.33 Codere (IT)|1.32 William Hill|1.32 888sport
-Luton v Barnsley	1	O1.5	1.08	1.10	Pinnacle	1.07	14	1.10 Pinnacle|1.10 TOTO|1.09 William Hill
-Luton v Barnsley	3	DNB1	1.29	1.31	BetOnline.ag	1.29	14	1.31 BetOnline.ag|1.30 888sport|1.30 William Hill
-Notts County v Sheffield Wednesday	1	U3.5	1.35	1.37	Pinnacle	1.36	12	1.37 Pinnacle|1.37 TOTO|1.36 Unibet (SE)
+Huddersfield Town v Peterborough United	3	DNB1	1.31	1.32	William Hill	1.27	14	1.32 William Hill|1.32 888sport|1.32 1xBet
+Luton v Barnsley	1	O1.5	1.08	1.10	Pinnacle	1.07	14	1.10 Pinnacle|1.09 William Hill|1.09 TOTO
+Luton v Barnsley	3	DNB1	1.29	1.31	BetOnline.ag	1.29	14	1.31 BetOnline.ag|1.30 Codere (IT)|1.30 888sport
+Notts County v Sheffield Wednesday	1	U3.5	1.35	1.36	Unibet (SE)	1.36	12	1.36 Unibet (SE)|1.36 LeoVegas (SE)|1.36 Unibet (NL)
 Oxford United v Wigan Athletic	1	O1.5	1.24	1.29	Pinnacle	1.18	14	1.29 Pinnacle|1.25 TOTO|1.24 BetOnline.ag
-Oxford United v Wigan Athletic	3	DNB1	1.52	1.54	Codere (IT)	1.50	14	1.54 Codere (IT)|1.53 1xBet|1.52 Marathon Bet
+Oxford United v Wigan Athletic	3	DNB1	1.52	1.57	888sport	1.50	14	1.57 888sport|1.57 William Hill|1.56 Codere (IT)
 Stevenage v Plymouth Argyle	1	O1.5	1.24	1.28	Pinnacle	1.24	14	1.28 Pinnacle|1.26 TOTO|1.25 Coolbet
-Wimbledon v Mansfield Town	1	U3.5	1.31	1.37	TOTO	1.31	14	1.37 TOTO|1.35 Nordic Bet|1.35 Betsson
+Wimbledon v Mansfield Town	1	U3.5	1.31	1.37	TOTO	1.31	14	1.37 TOTO|1.34 Nordic Bet|1.34 Betsson
 Wimbledon v Mansfield Town	2	U2.75	1.92	1.98	Nordic Bet	1.91	13	1.98 Nordic Bet|1.98 Betsson|1.97 Coolbet
-Deportivo Pereira v Boyacá Chicó FC	1	U3.5	1.20	1.28	TOTO	1.20	2	1.28 TOTO|1.20 Unibet (NL)
+Deportivo Pereira v Boyacá Chicó FC	1	U3.5	1.20	1.25	TOTO	1.20	2	1.25 TOTO|1.20 Unibet (NL)
 Londrina v Cuiabá	1	O1.0	1.03	1.10	Coolbet	1.02	9	1.10 Coolbet|1.04 Pinnacle|1.03 William Hill
 Londrina v Cuiabá	2	O1.75	1.36	1.66	Coolbet	1.37	11	1.66 Coolbet|1.37 Unibet (SE)|1.37 Unibet (NL)
 Internacional de Bogotá v Fortaleza CEIF	1	U4.5	1.05	1.07	TOTO	1.05	2	1.07 TOTO|1.05 Unibet (NL)
 Cúcuta Deportivo v Atlético Nacional	1	U4.5	1.10	1.10	Unibet (NL)	1.10	1	1.10 Unibet (NL)
-Guadalajara v Necaxa	1	U4.5	1.23	1.36	Pinnacle	1.24	15	1.36 Pinnacle|1.27 GTbets|1.27 TOTO
-Guadalajara v Necaxa	3	DNB1	1.22	1.24	888sport	1.23	16	1.24 888sport|1.23 William Hill|1.23 Betclic (FR)
-Atlético San Luis v Querétaro	1	U4.5	1.10	1.14	TOTO	1.11	15	1.14 TOTO|1.12 GTbets|1.11 BetOnline.ag
-FC Juárez v Atlante FC	1	U4.5	1.10	1.15	TOTO	1.10	15	1.15 TOTO|1.12 Coolbet|1.12 GTbets
-Tigres v León	1	U4.5	1.10	1.14	TOTO	1.11	15	1.14 TOTO|1.12 GTbets|1.12 Coolbet
+Guadalajara v Necaxa	1	U4.5	1.24	1.38	Pinnacle	1.24	15	1.38 Pinnacle|1.27 GTbets|1.27 TOTO
+Guadalajara v Necaxa	3	DNB1	1.22	1.24	888sport	1.23	16	1.24 888sport|1.23 William Hill|1.23 PMU (FR)
+Atlético San Luis v Querétaro	1	U4.5	1.10	1.13	TOTO	1.11	15	1.13 TOTO|1.11 BetOnline.ag|1.11 Unibet (NL)
+FC Juárez v Atlante FC	1	U4.5	1.10	1.15	TOTO	1.10	15	1.15 TOTO|1.12 GTbets|1.12 BetOnline.ag
+Tigres v León	1	U4.5	1.10	1.15	TOTO	1.11	15	1.15 TOTO|1.12 GTbets|1.12 Coolbet
 Levante v Athletic Club	1	O1.5	1.30	1.34	1xBet	1.30	13	1.34 1xBet|1.32 Coolbet|1.31 Pinnacle
-Levante v Athletic Club	3	12	1.33	1.40	Pinnacle	1.35	16	1.40 Pinnacle|1.39 Coolbet|1.38 BetOnline.ag
+Levante v Athletic Club	3	12	1.33	1.40	Pinnacle	1.35	17	1.40 Pinnacle|1.40 BetOnline.ag|1.39 Coolbet
 Randers v Brøndby	1	U4.5	1.13	1.17	TOTO	1.16	16	1.17 TOTO|1.16 Unibet (NL)|1.16 Unibet (SE)
