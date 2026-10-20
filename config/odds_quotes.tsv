@@ -4,40 +4,14 @@
 # the cards fall back to the engine's own buy>= bar.
 # top: the three best book prices, best first, as 'price book|...'
 # fixture	which	lane	consensus	best	book	unibet_nl	books	top
-Al-Ettifaq v Al-Ittihad	1	U4.5	1.31	1.38	Pinnacle	1.31	7	1.38 Pinnacle|1.31 Unibet (NL)|1.31 Unibet (SE)
-Al-Ettifaq v Al-Ittihad	2	U3.75	1.78	1.90	Pinnacle	1.78	6	1.90 Pinnacle|1.78 Unibet (NL)|1.78 Unibet (SE)
-Al-Nassr v Neom	1	O1.5	1.12	1.27	Pinnacle	1.12	7	1.27 Pinnacle|1.15 TOTO|1.12 Unibet (NL)
-Al-Nassr v Neom	2	O2.25	1.50	1.88	Pinnacle	1.50	6	1.88 Pinnacle|1.50 Unibet (NL)|1.50 Unibet (SE)
-Al-Nassr v Neom	3	DNB1	1.23	1.23	Unibet (NL)	1.23	13	1.23 Unibet (NL)|1.23 PMU (FR)|1.23 Unibet (SE)
-Wolverhampton Wanderers v Portsmouth	1	O1.5	1.21	1.27	Pinnacle	1.19	16	1.27 Pinnacle|1.25 TOTO|1.23 Coolbet
-Wolverhampton Wanderers v Portsmouth	3	12	1.21	1.26	LeoVegas (SE)	1.19	20	1.26 LeoVegas (SE)|1.25 BetOnline.ag|1.23 Coolbet
-Blackpool v Milton Keynes Dons	1	U4.5	1.15	1.20	TOTO	1.15	14	1.20 TOTO|1.17 Tipico|1.17 Nordic Bet
-Blackpool v Milton Keynes Dons	3	DNB1	1.70	1.72	Unibet (SE)	1.72	14	1.72 Unibet (SE)|1.72 Unibet (NL)|1.71 LeoVegas (SE)
-Bromley FC v Leicester City	1	O1.5	1.11	1.26	Pinnacle	1.11	14	1.26 Pinnacle|1.24 Coolbet|1.23 BetOnline.ag
-Burton Albion v Bradford City	1	U4.5	1.08	1.13	Pinnacle	1.06	14	1.13 Pinnacle|1.13 TOTO|1.10 BetOnline.ag
-Burton Albion v Bradford City	2	U3.75	1.31	1.37	Pinnacle	1.28	13	1.37 Pinnacle|1.33 BetOnline.ag|1.32 Coolbet
-Cambridge United v Wycombe Wanderers	1	O1.5	1.29	1.34	TOTO	1.25	14	1.34 TOTO|1.32 1xBet|1.32 Marathon Bet
-Doncaster Rovers v Stockport County FC	1	O1.5	1.17	1.29	Coolbet	1.15	13	1.29 Coolbet|1.26 Pinnacle|1.23 BetOnline.ag
-Huddersfield Town v Peterborough United	1	O1.5	1.07	1.09	TOTO	1.05	14	1.09 TOTO|1.08 Pinnacle|1.08 BetOnline.ag
-Huddersfield Town v Peterborough United	3	DNB1	1.28	1.30	888sport	1.26	14	1.30 888sport|1.30 William Hill|1.29 Codere (IT)
-Luton v Barnsley	1	O1.5	1.06	1.09	Pinnacle	1.05	14	1.09 Pinnacle|1.07 TOTO|1.06 William Hill
-Luton v Barnsley	3	DNB1	1.22	1.23	888sport	1.22	14	1.23 888sport|1.23 William Hill|1.23 LeoVegas (SE)
-Notts County v Sheffield Wednesday	1	U3.5	1.32	1.35	Unibet (SE)	1.35	12	1.35 Unibet (SE)|1.35 LeoVegas (SE)|1.35 Unibet (NL)
-Oxford United v Wigan Athletic	1	O1.5	1.24	1.27	Pinnacle	1.18	14	1.27 Pinnacle|1.25 Coolbet|1.25 TOTO
-Oxford United v Wigan Athletic	3	DNB1	1.52	1.57	Coolbet	1.50	14	1.57 Coolbet|1.56 Codere (IT)|1.56 888sport
-Stevenage v Plymouth Argyle	1	O1.5	1.24	1.28	Pinnacle	1.24	14	1.28 Pinnacle|1.26 TOTO|1.25 BetOnline.ag
-Wimbledon v Mansfield Town	1	U3.5	1.31	1.37	TOTO	1.31	14	1.37 TOTO|1.35 Nordic Bet|1.35 Betsson
-Wimbledon v Mansfield Town	2	U2.75	1.92	1.98	1xBet	1.91	13	1.98 1xBet|1.98 Marathon Bet|1.98 Nordic Bet
-Londrina v Cuiabá	1	O1.0	1.03	1.10	Coolbet	1.02	9	1.10 Coolbet|1.04 Pinnacle|1.03 William Hill
+Londrina v Cuiabá	1	O1.0	1.03	1.10	Coolbet	1.02	9	1.10 Coolbet|1.04 Pinnacle|1.03 Marathon Bet
 Londrina v Cuiabá	2	O1.75	1.36	1.66	Coolbet	1.37	11	1.66 Coolbet|1.37 Unibet (SE)|1.37 Unibet (NL)
-Cúcuta Deportivo v Atlético Nacional	1	U4.5	1.10	1.15	TOTO	1.10	2	1.15 TOTO|1.10 Unibet (NL)
-Guadalajara v Necaxa	1	U4.5	1.30	1.46	Pinnacle	1.24	15	1.46 Pinnacle|1.32 GTbets|1.32 TOTO
-Guadalajara v Necaxa	3	DNB1	1.20	1.23	PMU (FR)	1.23	16	1.23 PMU (FR)|1.23 LeoVegas (SE)|1.23 Unibet (NL)
+Cúcuta Deportivo v Atlético Nacional	1	U4.5	1.11	1.15	TOTO	1.11	2	1.15 TOTO|1.11 Unibet (NL)
+Guadalajara v Necaxa	1	U4.5	1.31	1.40	Pinnacle	1.27	15	1.40 Pinnacle|1.36 BetOnline.ag|1.36 TOTO
+Guadalajara v Necaxa	3	DNB1	1.20	1.22	888sport	1.20	16	1.22 888sport|1.22 William Hill|1.21 Betclic (FR)
 Atlético San Luis v Querétaro	1	U4.5	1.10	1.15	TOTO	1.11	15	1.15 TOTO|1.13 GTbets|1.12 Coolbet
 FC Juárez v Atlante FC	1	U4.5	1.10	1.15	TOTO	1.10	15	1.15 TOTO|1.13 Coolbet|1.12 GTbets
-Tigres v León	1	U4.5	1.09	1.14	Pinnacle	1.06	14	1.14 Pinnacle|1.14 TOTO|1.11 Coolbet
-Levante v Athletic Club	1	O1.5	1.30	1.34	1xBet	1.31	15	1.34 1xBet|1.32 Coolbet|1.32 Unibet (SE)
-Levante v Athletic Club	3	12	1.33	1.40	BetOnline.ag	1.38	19	1.40 BetOnline.ag|1.39 Pinnacle|1.38 Unibet (SE)
-Randers v Brøndby	1	U4.5	1.13	1.19	TOTO	1.16	17	1.19 TOTO|1.17 Nordic Bet|1.17 Betsson
-Deportivo Pereira v Boyacá Chicó FC	1	U3.5	1.23	1.23	TOTO		1	1.23 TOTO
-Internacional de Bogotá v Fortaleza CEIF	1	U4.5	1.07	1.07	TOTO		1	1.07 TOTO
+Tigres v León	1	U4.5	1.09	1.15	TOTO	1.06	14	1.15 TOTO|1.14 Pinnacle|1.11 Coolbet
+Levante v Athletic Club	1	O1.5	1.30	1.34	1xBet	1.31	15	1.34 1xBet|1.32 Unibet (SE)|1.31 Coolbet
+Levante v Athletic Club	3	12	1.33	1.39	Pinnacle	1.38	19	1.39 Pinnacle|1.39 BetOnline.ag|1.38 Unibet (SE)
+Randers v Brøndby	1	U4.5	1.15	1.20	TOTO	1.16	17	1.20 TOTO|1.17 Nordic Bet|1.17 Betsson
