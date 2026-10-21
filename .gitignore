@@ -16,12 +16,3 @@ venv/
 # Replay caches (regenerable)
 backend/.cache/
 config/odds_cache.json
-
-# The rendered page and its lookup bank (29 MB between them). They are
-# published to the `site` branch by .github/publish-site.sh, which force-
-# adds web/ from the working tree, and the site serves that branch — so
-# they must never be committed to main (17 Oct). Ignoring them is what
-# finally makes `git add -A web/...` in a workflow incapable of putting
-# them back; two jobs were still doing it on 21 Oct.
-web/index.html
-web/matchbank.json

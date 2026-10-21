@@ -64,11 +64,11 @@ jobs:
           git add -A config/fixtures.tsv config/unreached.tsv \
                      config/forward_log.tsv config/reads_cache.json \
                      config/band_log.tsv config/tier_band_log.tsv \
-                     config/roi_log.tsv README.md web/live.json
-          # web/live.json only: index.html and matchbank.json go to the
-          # `site` branch, never to main (17 Oct) — this job and the odds
-          # refresh were both still adding all of web/, which is 29 MB a
-          # push and the reason main kept growing after that rule.
+                     config/roi_log.tsv README.md web/
+          # All of web/: Render still deploys main, not `site` (21 Oct),
+          # so main's web/index.html is the live page. See the note in
+          # odds-refresh.yml — once the Render branch is set to `site`
+          # this becomes web/live.json alone.
           if git diff --cached --quiet; then
             echo "nothing stuck — board already clean"; exit 0
           fi
@@ -91,7 +91,7 @@ jobs:
               git commit -q --no-edit
             }
             (cd backend && python scripts/board.py --allow-stale) || true
-            git add -A config README.md web/live.json
+            git add -A config README.md web/
             git diff --cached --quiet || git commit -q -m "re-render onto the sweep's push"
             sleep $((RANDOM % 20 + 5))
           done

@@ -117,12 +117,17 @@ jobs:
             # at whatever the sweep saw at kickoff instead.
             # config/fixtures.tsv is in the list because this job can now
             # ADD cards (the cached-only fill above), not only price them.
-            # web/live.json ONLY: index.html and matchbank.json are 29 MB
-            # between them and belong on the `site` branch, never on main
-            # (17 Oct). This job was still committing both every push,
-            # which is how main went on growing after the rule, and why a
-            # deploy still had a 1.8 GB clone to do.
-            git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/live.json
+            #
+            # ALL OF web/, INCLUDING index.html (21 Oct). The 17 Oct rule
+            # says the page and the bank belong on the `site` branch and
+            # never on main — but RENDER IS STILL POINTED AT main (its
+            # service was made in the dashboard, so render.yaml's
+            # `branch: site` was never applied). So main's web/index.html
+            # IS the live site, and taking it off main froze the page on
+            # the last commit that had it. Put the branch right in the
+            # Render dashboard (Settings -> Build & Deploy -> Branch ->
+            # site) and this goes back to web/live.json alone.
+            git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/
             if git diff --cached --quiet; then
               echo "the market has not moved a printed lane"; exit 0
             fi
