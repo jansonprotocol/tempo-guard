@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 84.6%
 
     lane                        Tip 1              Tip 2
-    all matches            828 / 979  84.6%    529 / 771  68.6%
+    all matches            829 / 980  84.6%    529 / 771  68.6%
     played lanes  >+1%     318 / 376  84.6%    526 / 765  68.8%
     placed bets            259 / 335  77.3%    ROI -0.9%
 
@@ -1800,7 +1800,6 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔴 PP Moved to 2026-10-22 <b>Independiente Santa Fe v Jaguares de Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin) · <i>✗ gone</i></td><td><b>Independiente Santa Fe O1.5</b> 56.8% +17.1%<br>buy≥1.81 (+2.9% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.9% +16.0% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+5' 0-1 <b>FC Juárez v Atlante FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.6 capped)</td><td>U4.25 83.1% <b>−1.1%</b><br>buy≥1.21 (+5.4% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 21-10 05:00 <b>Tigres v León</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.6 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 21-10 20:00 <b>Levante v Athletic Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga (81.0 −3.1)</td><td>O1.5 77.6% +3.5%<br>buy≥1.31 (+1.8% margin)</td><td><b>Levante O1.5</b> 57.9% +16.1%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.7% +4.4% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 23-10 19:00 <b>Randers v Brøndby</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Superliga (81.2 −1.0)</td><td>U4.25 82.4% +1.9%<br>buy≥1.30 (+5.1% margin)</td><td><b>Brøndby O0.5</b> 81.5% +6.6%<br>buy≥1.32 (+7.8% margin) · team</td></tr></table>
@@ -1809,7 +1808,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 828 / 979   ·   84.6%**   ·   **Tip 2 — 529 / 771   ·   68.6%**
+**Tip 1 — 829 / 980   ·   84.6%**   ·   **Tip 2 — 529 / 771   ·   68.6%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.6 −3.0)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -3917,6 +3916,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-0 · 21-10 01:30 <b>Cúcuta Deportivo v Atlético Nacional</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.0 capped)</td><td>U4.25 86.2% <b>−5.1%</b><br>buy≥1.22 (+5.5% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 74.4% +2.6% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 21-10 02:07 <b>Guadalajara v Necaxa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.6 capped)</td><td>U4.25 83.2% <b>−0.9%</b><br>buy≥1.29 (+5.4% margin)</td><td>❌ <b>Guadalajara O1.5</b> 59.5% +10.9%<br>buy≥1.73 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 76.2% +13.9% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 21-10 03:00 <b>Atlético San Luis v Querétaro</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.6 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 21-10 03:00 <b>FC Juárez v Atlante FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.6 capped)</td><td>U4.25 83.1% <b>−1.1%</b><br>buy≥1.21 (+5.4% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
