@@ -13,6 +13,22 @@ from app.data.features import _canonical, _match_team
 from app.data.openfootball import parse_text
 
 
+def _page() -> str:
+    """The rendered web app, or a skip that says how to make one.
+
+    web/index.html is 15 MB and is no longer committed to main — it is
+    published to the `site` branch, which is what the site serves (17
+    Oct), and gitignored here so no workflow can put it back. It is a
+    build output like any other, so a test that reads it says how to
+    build it rather than dying on a missing file in a fresh clone."""
+    from scripts import webapp
+    path = webapp.ROOT / "web" / "index.html"
+    if not path.exists():
+        pytest.skip("no rendered page — build it first: "
+                    "cd backend && python scripts/board.py --allow-stale")
+    return path.read_text()
+
+
 def _ran(body: str) -> list[str]:
     """The engine commands a workflow step runs, in order, without the
     shell around them.
@@ -2205,7 +2221,7 @@ def test_declined_cards_keep_their_grades_under_a_name_the_record_cannot_read():
     # THE RENDERED PAGE, not just the source: this change was once lost
     # between the two, shipping a board with the old behaviour under a
     # commit message describing the new one.
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     assert "function wantsDeclined(" in app
     cards = re.findall(r'<details class="card done"[^>]*>', app)
     gone = [c for c in cards if 'data-nc="1"' in c]
@@ -2235,7 +2251,7 @@ def test_only_a_query_naming_declined_switches_the_counters():
     from pathlib import Path
     from scripts import webapp
 
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     js = app[app.index("function wantsDeclined("):app.index("function recount()")]
     node = shutil.which("node")
     cases = [("declined", 1), ("Declined,", 1), ("declined, serie a", 1),
@@ -2383,7 +2399,7 @@ def test_typo_tolerance_is_a_fallback_not_a_second_search():
     from pathlib import Path
     from scripts import webapp
 
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     assert "function exactAnywhere(" in app
     node = shutil.which("node")
     if not node:
@@ -2514,7 +2530,7 @@ def test_a_bare_lane_word_is_exact_on_both_bars():
     import re
     from scripts import board, webapp
 
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     i = app.index("function qterms(")
     q = app[i:app.index("\n}", i)]
     assert '"priced" || flat === "watch" || flat === "athena"' in q
@@ -2767,7 +2783,7 @@ def test_every_league_in_the_menu_is_written_out_with_its_country():
     import re
     from scripts import webapp
 
-    page = (webapp.ROOT / "web" / "index.html").read_text()
+    page = _page()
     rows = json.loads(re.search(r"const LGMENU = (\[.*?\]\]);",
                                 page, re.S).group(1))
     bank = json.loads(
@@ -2854,7 +2870,7 @@ def test_the_card_grid_is_the_search_the_bettor_was_typing():
 
     # And on the page: every grid re-derives from the card it sits on,
     # and no cell prints a percentage under the floor.
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     n = 0
     for f in board.load():
         rows = cardgrid.rows(f.code, webapp.label_any(f),
@@ -2958,7 +2974,7 @@ def test_a_declined_card_reads_the_declined_pool_and_never_the_record():
     # On the page: a declined card's grid is marked and tinted, a
     # counted card's is not, and every card that still shows nothing has
     # a reason — no tip at all, or a profile the bank has never seen.
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     blank = 0
     for f in board.load():
         h = webapp._profile_html(f)
@@ -3252,7 +3268,7 @@ def test_the_second_half_is_longer_than_forty_five_minutes():
     assert all(a >= b for a, b in zip(seq, seq[1:])), seq
     # the page computes it the same way, off the same constants
     from scripts import webapp
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     assert f"const SHARE = {F.SHARE}, STOPPAGE = {F.STOPPAGE};" in app
     assert "const half = 45 + STOPPAGE;" in app
 
@@ -3338,7 +3354,7 @@ def test_the_page_carries_the_ladder_and_can_rebuild_it():
     import re
     from scripts import board, webapp
     from scripts import fromhere as F
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     # the rungs and the window come from the module, never a second copy
     assert f"const LADDER = {_json.dumps(list(F.LADDER))}" in app
     assert f"SHORT = {F.SHORT}, LONG = {F.LONG}" in app
@@ -3481,7 +3497,7 @@ def test_the_card_and_the_bar_print_the_rung_record():
     import re
     from scripts import board, webapp
     from scripts import ladderrates as R
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
 
     rows = R.given_rows()
     assert len(rows) >= 3, rows
@@ -3584,7 +3600,7 @@ def test_half_time_keeps_its_live_box():
     # no clock at half time, which is also what keeps the ticker off it
     assert "data-mu=" not in hh and "data-min=" not in hh
     assert "data-mu=" in rh and "data-min=" in rh
-    app = (webapp.ROOT / "web" / "index.html").read_text()
+    app = _page()
     assert 'querySelectorAll(".also[data-mu]")' in app
     assert "function alsoBoxStatic(" in app
 

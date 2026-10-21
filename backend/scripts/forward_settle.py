@@ -38,21 +38,57 @@ BANK = ROOT / "web" / "matchbank.json"
 ORDER = ("super green", "green", "orange", "red", "super red")
 
 
+def _board_results() -> dict:
+    """Final scores off the board itself, keyed the same way.
+
+    THE BOARD, NOT THE BANK, IS WHERE A FORWARD ROW'S SCORE LIVES (21
+    Oct). Every row in the forward log is a board row, and the board
+    carries its own result in config/fixtures.tsv; the bank was only a
+    convenient packed copy. Reading it as the ONLY source made this
+    file's whole answer depend on a 13 MB render output — and when
+    web/index.html and web/matchbank.json were taken off main, as the
+    17 Oct rule says they should be, `rows()` would have come back
+    EMPTY on a fresh checkout until something had rendered. Empty is
+    the worst possible answer here: no exception, no warning, just
+    every profile reading as if nothing had ever settled.
+    """
+    from scripts import board
+    out = {}
+    for f in board.load():
+        if not (f.settled and "—" in f.status):
+            continue
+        sc = f.status.split("—")[-1].strip().split(" ")[0]
+        if "-" not in sc:
+            continue
+        try:
+            h, a = sc.split("-")
+            out[(f.kickoff.split(" ")[0], f.teams)] = (int(h), int(a))
+        except ValueError:
+            pass
+    return out
+
+
 def _results() -> dict:
-    """Final scores from the rendered bank, keyed by (date, fixture)."""
+    """Final scores keyed by (date, fixture) — the board's own, topped up
+    from the rendered bank, which reaches back past the board."""
     import json
+    out = _board_results()
     try:
         comps = json.loads(BANK.read_text())["comps"]
     except Exception:
-        return {}
-    out = {}
+        return out
     for _code, comp in comps.items():
         for m in comp.get("matches", []):
             sc = (m.get("score") or "").strip()
             if "-" in sc and m.get("mark") in ("✅", "✅½", "◦", "❌"):
                 try:
                     h, a = sc.split("-")
-                    out[(m["d"], f"{m['h']} v {m['a']}")] = (int(h), int(a))
+                    # setdefault: where both carry a fixture the BOARD
+                    # wins. It is the authority on its own rows, and it
+                    # is the one that takes extra time back off a
+                    # scoreline and notes a drifted date.
+                    out.setdefault((m["d"], f"{m['h']} v {m['a']}"),
+                                   (int(h), int(a)))
                 except ValueError:
                     pass
     return out

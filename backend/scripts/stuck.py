@@ -125,14 +125,78 @@ def recheck_cards(fixtures) -> list:
     return sorted(out, key=lambda f: f.kickoff, reverse=True)[:RECHECK_MAX]
 
 
-def _event(f, cache: dict):
+def _siblings(f, fixtures) -> list:
+    """Every OTHER board row for the same two clubs in the same
+    competition. Normally none; the board grows one whenever a match is
+    postponed, because the OFF mark holds the old row at its own kickoff
+    for ever (the first-sight stamp is keyed on it) while the fill adds
+    the replay at the new date."""
+    if " v " not in f.teams:
+        return []
+    home, away = (x.strip() for x in f.teams.split(" v ", 1))
+    out = []
+    for g in fixtures:
+        if g is f or g.code != f.code or " v " not in g.teams \
+                or g.kickoff == f.kickoff:
+            continue
+        gh, ga = (x.strip() for x in g.teams.split(" v ", 1))
+        if liveline.same_club(home, gh) and liveline.same_club(away, ga):
+            out.append(g)
+    return out
+
+
+def _nearer_row(ev, f, siblings) -> object | None:
+    """The sibling row this event belongs to instead of `f`, if there is
+    one — the row whose kickoff is strictly NEARER the day it was played.
+
+    ONE MATCH GRADES ONE ROW (21 Oct, found while reading why STRONG's
+    hitrate fell over the weekend). Millonarios v Jaguares de Córdoba
+    was played once, 17 Oct, 4-1, and the record counted it TWICE: the
+    18 Oct row took it from the sweep, and then this job's widened
+    re-ask found the very same match again for the 20 Oct row and graded
+    it there too — the row even carries the drift note this file writes,
+    "[played 2026-10-17]", which was the evidence. Two phantom rows were
+    in the record, a MISS doubled in ★ STRONG and a HIT doubled in LIVE
+    INPLAY GOOD (Qingdao Hainiu v Beijing, 0-3 on both 9 and 10 Oct).
+
+    The widened window is what makes this possible: ±7 days matches by
+    club name alone, and with two rows for one pair of clubs there is
+    nothing in a name to say which of them a match answers. The day it
+    was played says it. The nearest row owns the match; any other row is
+    answering for a fixture that did not happen, and leaving it stuck —
+    to be marked moved, or parked — is the honest outcome.
+    """
+    played = (ev.get("date") or "")[:10]
+    try:
+        day = dt.date.fromisoformat(played)
+        mine = abs((day - dt.date.fromisoformat(
+            f.kickoff.split(" ")[0])).days)
+    except ValueError:
+        return None
+    for g in siblings:
+        try:
+            theirs = abs((day - dt.date.fromisoformat(
+                g.kickoff.split(" ")[0])).days)
+        except ValueError:
+            continue
+        if theirs < mine:
+            return g
+    return None
+
+
+def _event(f, cache: dict, fixtures=None):
     """The fixture's own event anywhere in the widened window, or None.
 
     Nearest day first, so a kickoff that drifted by two days costs two
     extra calls rather than fourteen, and the first real match wins.
+
+    A match that belongs to a nearer sibling row is skipped rather than
+    returned — see _nearer_row. `fixtures` is the whole board; without it
+    the guard cannot run and the old behaviour stands.
     """
     home, away = ((x.strip() for x in f.teams.split(" v ", 1))
                   if " v " in f.teams else (f.teams, ""))
+    sibs = _siblings(f, fixtures) if fixtures is not None else []
     day = dt.datetime.strptime(f.kickoff.split(" ")[0], "%Y-%m-%d").date()
     for off in sorted(range(-WIDE_DAYS, WIDE_DAYS + 1), key=abs):
         d = (day + dt.timedelta(days=off)).strftime("%Y-%m-%d")
@@ -147,6 +211,13 @@ def _event(f, cache: dict):
             ca = next(x for x in comp["competitors"] if x["homeAway"] == "away")
             if liveline.same_club(home, ch["team"]["displayName"]) \
                     and liveline.same_club(away, ca["team"]["displayName"]):
+                owner = _nearer_row(cand, f, sibs)
+                if owner is not None:
+                    print(f"  {f.teams} ({f.kickoff}): the "
+                          f"{(cand.get('date') or '?')[:10]} match belongs "
+                          f"to the {owner.kickoff} row — not grading it "
+                          f"twice", file=sys.stderr)
+                    continue
                 return cand, ch, ca
     return None
 
@@ -212,7 +283,7 @@ def main() -> None:
     cache: dict = {}
     fixed, offed, moved, park, held = [], [], [], [], []
     for f in again + todo:
-        got = _event(f, cache)
+        got = _event(f, cache, fixtures)
         if got:
             ev, ch, ca = got
             cells = _graded(f, ev, ch, ca)
