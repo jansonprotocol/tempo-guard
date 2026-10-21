@@ -86,6 +86,17 @@ jobs:
             # The daily fill still runs and still pays for the leagues
             # that had no pending card to pull a listing for.
             python scripts/feedslate.py --write --cached-only --allow-stale || echo "::warning::the cached-only fill failed — the prices still refresh"
+            # AND QUOTE WHAT IT JUST ADDED, in the same run. "First sight
+            # > Price locked": a card with no market price has no
+            # first-sight stamp, so no locked lane, no tier and no band
+            # check, until some later refresh happens to reach it — and
+            # the first-sight stamp is the one thing that cannot be made
+            # again later. The pass above is what warmed the cache the
+            # fill read, so this second one re-reads the same listings
+            # and costs nothing. The order is forced: the fill cannot run
+            # first, because on a fresh runner the cache is cold and
+            # --cached-only would correctly find nothing.
+            python scripts/odds_api.py --quotes || echo "::warning::the new cards are unquoted until the next refresh"
             # --allow-stale: a card the sweep has not graded hours after
             # kickoff is the sweep's failure and is printed as such; it
             # must not stop the prices. Criciúma v Operário-PR, 22 Sep:

@@ -2169,8 +2169,15 @@ def test_something_pulls_the_odds_without_being_asked():
     # quote pass above has ALREADY paid for and asks the feed for nothing
     # else, so a match the feed starts pricing gets its card, its quote
     # and its first-sight stamp within two hours for no extra credits.
+    # quotes, fill, quotes AGAIN, render. The second quote pass is what
+    # gives a card the fill just added its first-sight stamp in the same
+    # run — the one thing that cannot be made again later — and it reads
+    # the listings the first pass cached, so it costs no credits. The
+    # order cannot be fill-first: on a fresh runner the cache is cold and
+    # --cached-only would rightly find nothing to add.
     assert ran == ["python scripts/odds_api.py --quotes",
                    "python scripts/feedslate.py --write --cached-only --allow-stale",
+                   "python scripts/odds_api.py --quotes",
                    "python scripts/board.py --allow-stale"], ran
     # and neither the fill nor the render may take the prices down with
     # it: both are guarded, because one verify line killing the whole job
