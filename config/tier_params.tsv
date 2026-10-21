@@ -1,5 +1,5 @@
 # Tier floors and near-tier FROM bands, set by scripts/tier_optimize.py
-# (two-day bank refresh). Last run 2026-10-19 12:48 UTC on 888 settled
+# (two-day bank refresh). Last run 2026-10-21 11:33 UTC on 909 settled
 # counted cards at first-sight prices. Floors move on 100+ cards and a 0.02+ step;
 # a FROM band is on at 81%+ on 15+ cards. Read by webapp at import.
 # MEDIUM bands: good at 80%+ with a gain on 5+; skip on a loss under 70%;
@@ -13,39 +13,39 @@
 # move	profile	band	promote|decline|none	n	hit	roi	since
 # kind	tier	value/band	n|state	hit|n	break-even|hit	note
 # medband	band	state	n	hit	roi	hard since
-floor	strong	1.17	159	86.2	1.161	held by hand (the bettor, 11 Oct); measured 1.161 on 159
-floor	medium	1.31	58	84.5	1.184	held: 58 settled, needs 100
-floor	strong watch	1.18	490	85.7	1.167	held: break-even 1.167 within 0.02 of 1.18
-from	strong	0–3% under	on	32	93.8	near strong: rules met, under the 1.17 floor
+floor	strong	1.17	168	85.7	1.167	held by hand (the bettor, 11 Oct); measured 1.167 on 168
+floor	medium	1.31	59	84.7	1.180	held: 59 settled, needs 100
+floor	strong watch	1.18	500	85.6	1.168	held: break-even 1.168 within 0.02 of 1.18
+from	strong	0–3% under	on	33	93.9	near strong: rules met, under the 1.17 floor
 from	strong	0–3% over	off	2	100.0	near strong: rules met, under the 1.17 floor
-from	strong watch	10%+ under	on	108	88.9	near strong watch: rules met, under the 1.18 floor
-from	strong watch	5–10% under	on	335	84.8	near strong watch: rules met, under the 1.18 floor
+from	strong watch	10%+ under	on	110	87.3	near strong watch: rules met, under the 1.18 floor
+from	strong watch	5–10% under	on	343	85.1	near strong watch: rules met, under the 1.18 floor
 medband	0–3% over	none	1	100.0	+31.0	
-medband	3–6% over	good	9	100.0	+35.4	
+medband	3–6% over	good	10	100.0	+35.1	
 medband	6–10% over	none	21	76.2	+2.7	
 medband	10%+ over	good	16	81.2	+11.7	
-move	★ STRONG	0–3% under	none	27	85.2	+4.0	
-move	★ STRONG	0–3% over	none	14	85.7	+4.5	
-move	★ STRONG	3–6% over	none	14	92.9	+17.4	
+move	★ STRONG	0–3% under	none	30	86.7	+5.7	
+move	★ STRONG	0–3% over	none	16	81.2	-0.9	
+move	★ STRONG	3–6% over	none	14	92.9	+16.9	
 move	★ STRONG	6–10% over	none	24	83.3	+10.0	
-move	MILD	0–3% under	none	22	86.4	+5.0	
+move	MILD	0–3% under	none	24	87.5	+6.5	
 move	MILD	0–3% over	none	8	75.0	-4.5	
 move	MILD	3–6% over	none	3	100.0	+30.3	
-move	MILD	6–10% over	none	13	69.2	-5.7	
-move	★ STRONG FROM	0–3% under	none	32	93.8	+6.9	
-move	LIVE INPLAY GOOD	10%+ under	none	106	88.7	-3.0	
-move	LIVE INPLAY GOOD	5–10% under	none	163	84.7	-5.7	
+move	MILD	6–10% over	none	14	64.3	-12.4	
+move	★ STRONG FROM	0–3% under	none	33	93.9	+7.1	
+move	LIVE INPLAY GOOD	10%+ under	none	108	87.0	-4.8	
+move	LIVE INPLAY GOOD	5–10% under	none	166	84.9	-5.5	
 move	STRONG WATCH	5–10% under	none	44	86.4	+4.5	
 move	STRONG WATCH FROM	10%+ under	none	2	100.0	+6.5	
-move	STRONG WATCH FROM	5–10% under	none	175	84.6	-4.8	
+move	STRONG WATCH FROM	5–10% under	none	180	85.0	-4.3	
 move	WEAK	3–5% under	none	30	80.0	-3.6	
 move	WEAK	0–3% over	none	1	100.0	+31.0	
-move	WEAK	3–6% over	none	9	100.0	+35.4	
+move	WEAK	3–6% over	none	10	100.0	+35.1	
 move	WEAK	6–10% over	none	21	76.2	+2.7	
 move	WEAK	10%+ over	none	46	73.9	+2.3	
 move	unlabelled · all 7 rates, under the floor	0–3% over	none	2	100.0	+15.5	
 move	unlabelled · plain play (fewer than 7, under the floor)	0–3% over	none	4	75.0	-13.0	
 move	unlabelled · plain play (fewer than 7, under the floor)	3–6% over	none	3	100.0	+18.3	
 move	unlabelled · plain play (fewer than 7, under the floor)	6–10% over	none	4	100.0	+28.8	
-move	unlabelled · plain watch (fewer than 7, 0–5% under)	3–5% under	none	70	78.6	-9.7	
+move	unlabelled · plain watch (fewer than 7, 0–5% under)	3–5% under	none	71	78.9	-9.4	
 move	unlabelled · plain watch (fewer than 7, 0–5% under)	0–3% under	none	51	80.4	-1.1	
