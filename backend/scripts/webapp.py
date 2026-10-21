@@ -2154,17 +2154,34 @@ def _prekick_html(f, cell: str) -> str:
     read against each other."""
     if f.settled or not live_state(f):
         return ""
+    inner = _prekick_inner(f, cell)
+    if not inner:
+        return ""
+    return f'<div class="prekick" title="{PREKICK_TITLE}">{inner}</div>'
+
+
+PREKICK_TITLE = ("What this card was worth before kickoff, on the same "
+                 "record the Playable board prices from. It is not a price "
+                 "to pay now \u2014 the live bar above is.")
+
+
+def _prekick_inner(f, cell: str) -> str:
+    """The pre-kickoff line's own content, without its box.
+
+    Shared with _buybar_html, which stamps it onto the pre-match bar as
+    data-pk so the PAGE can put it there itself the moment the whistle
+    goes (21 Oct) - see goLive in the script. The number is computed
+    HERE: the browser carries the live record, but not the first-sight
+    one, and a bar that invents a price is worse than no bar at all.
+    """
     got = market_bar(f, cell)
     if not got:
         return ""
     lead, n, hit, price = got[0]
     pb = card_profile(f)
     name = SHORT_PROFILE.get(pb[0], pb[0]) if pb else lead
-    return (f'<div class="prekick" title="What this card was worth before '
-            f'kickoff, on the same record the Playable board prices from. '
-            f'It is not a price to pay now — the live bar above is.">'
-            f'pre-kickoff call \u00b7 {html.escape(name)} '
-            f'{hit:.1f}% on {n} \u2192 <b>{price:.2f}</b></div>')
+    return (f'pre-kickoff call \u00b7 {html.escape(name)} '
+            f'{hit:.1f}% on {n} \u2192 <b>{price:.2f}</b>')
 
 
 # The profile names the bar prints: the unlabelled groups carry their
@@ -2184,7 +2201,23 @@ def _buybar_html(f, cell: str) -> str:
         f'\u2192 {p:.2f}</div>' for lbl, m, h, p in rest)
     tip = ("Two records price this card and the DEARER one leads, because a "
            "bar that names the looser one is not a guard. " if rest else "")
-    return (f'<div class="buybar" title="{tip}{hit:.1f}% on {n} settled cards '
+    # WHAT THIS BAR BECOMES WHEN THE WHISTLE GOES (21 Oct: "the running
+    # board is slow ... therefore users cant react on the scorelines").
+    # A card rendered before kickoff carries this pre-match bar, and the
+    # bar is measured on cards bought BEFORE kickoff — so it must come
+    # off the moment the match starts, not at the next deploy, whatever
+    # it costs to get the right one up. data-lb is the lane the live bar
+    # prices (live_advice reads the cell the same way) and data-pk is the
+    # dim pre-kickoff line this number moves down to, both so goLive can
+    # make the swap in the browser without inventing a single figure.
+    m = re.search(r"(?:^|[^A-Za-z])([OU]\d+(?:\.\d+)?)", cell or "")
+    lane = _struck(m.group(1)) if m else ""
+    live_keys = ""
+    if lane in LIVE_LINES:
+        pk = _prekick_inner(f, cell)
+        live_keys = (f' data-lb="{html.escape(lane)}"'
+                     + (f' data-pk="{html.escape(pk, quote=True)}"' if pk else ""))
+    return (f'<div class="buybar"{live_keys} title="{tip}{hit:.1f}% on {n} settled cards '
             f'({html.escape(lead)}). Break-even is {100 / hit:.2f}; the bar '
             f'adds {BUY_MARGIN * 100:.0f}% on top, which is the ROI you are '
             f'buying and the cushion under a rate measured on {n} cards. '
@@ -3724,6 +3757,36 @@ def _livetag_html(f) -> str:
     return f'<div class="livebar">{pill}{nocount}{_strikes_html(f)}</div>'
 
 
+def runs_when_live(f) -> bool:
+    """Will Running be this card's tab once the whistle goes?
+
+    THE SAME QUESTION ONE STEP EARLIER (21 Oct). running_call answers it
+    for a match ALREADY in progress — it refuses anything before kickoff
+    — and board.verify then applies two more clauses to partition the
+    pending tabs: a live-unsafe card is declined, and a STRONG WATCH card
+    reaches Running only where live_good backs a live buy. The page needs
+    the answer BEFORE kickoff, because a card rendered at 19:00 has to
+    know, when the score arrives at 20:45, whether to move itself to
+    Running rather than wait for a deploy to say so.
+
+    So this is that whole test with the clock taken out, stamped on the
+    card as data-run. test_data pins it against running_call and verify's
+    own clauses over the live board, because two definitions of Running
+    is exactly the drift board.verify exists to catch.
+    """
+    if f.settled or (f.status or "").startswith("PP"):
+        return False
+    if live_unsafe(f):
+        return False
+    good = live_good(f)
+    if tier_of(f) in ("strong watch", "strong watch from") and not good:
+        return False
+    call = was_called(f)
+    if not call:
+        return False
+    return call["mark"] in PLAYED_MARKS or bool(good)
+
+
 def running_call(f) -> dict | None:
     """The frozen call on a match in progress that the board had offered.
 
@@ -4501,7 +4564,10 @@ def _card(f, kind: str, reads: dict) -> str:
                     f' data-at="{int(__import__("time").time())}"')
         head = f'<span class="live"{tick}>🔴 {html.escape(f.status)}</span>'
     else:
-        head = f"🕑 {board._stamp(f)}"
+        # In a span of its own (21 Oct) so goLive can swap this stamp for
+        # a live clock when the whistle goes. It used to be bare text in
+        # the meta row, and bare text is not something a poller can find.
+        head = f'<span class="stamp">🕑 {board._stamp(f)}</span>'
 
     # The protocol's accent: the lane to read first on this card.
     # Reading guidance only, so a card past kickoff drops it — the star
@@ -4660,7 +4726,12 @@ def _card(f, kind: str, reads: dict) -> str:
         body += f'<div class="read">{read[1]}</div>'
     if not body:
         body = '<div class="read dim">nothing more on this one</div>'
-    return (f'<details class="card {kind}" '
+    # WHETHER RUNNING IS THIS CARD'S TAB ONCE IT KICKS OFF, stamped so
+    # the page can move it there itself the moment a score arrives —
+    # runs_when_live is board.verify's own partition with the clock taken
+    # out, so the page and the verify cannot disagree about Running.
+    runs = ' data-run="1"' if runs_when_live(f) else ""
+    return (f'<details class="card {kind}"{runs} '
             f'data-fx="{html.escape(f.teams)}" '
             f'data-t="{_haystack(f)}" '
             f'data-lg="{html.escape(_fold(f.league.lower()))}" '
@@ -6750,17 +6821,17 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
  </div>
  <div class="tabs">
   <a href="#home/playable" data-t="playable">🟢 Playing now
-   <span class="dim">{len(playable)}{f" · ★{strong_n}" if strong_n else ""}</span></a>
+   <span class="dim"><span class="n">{len(playable)}</span>{f" · ★{strong_n}" if strong_n else ""}</span></a>
   <a href="#home/watch" data-t="watch" class="amber">👀 Watch lanes
-   <span class="dim">{len(watch)}</span></a>
+   <span class="dim"><span class="n">{len(watch)}</span></span></a>
   <a href="#home/running" data-t="running" class="red">🔴 Running
-   <span class="dim">{len(running)}</span></a>
+   <span class="dim"><span class="n">{len(running)}</span></span></a>
   <a href="#home/declined" data-t="declined" class="dark">⛔ Declined
    <span class="dim">{len(declined)}</span></a>
   <a href="#home/bets" data-t="bets" class="gold">🟡 Found bets
    <span class="dim">{bh}/{bn}</span></a>
   <a href="#home/lanes" data-t="lanes" class="blue">🔵 Live Watch
-   <span class="dim">{len(waiting)} · no play</span></a>
+   <span class="dim"><span class="n">{len(waiting)}</span> · no play</span></a>
   <a href="#home/done" data-t="done" class="grey">⚪ Completed
    <span class="dim">{len(done)}</span></a>
  </div>
@@ -7803,6 +7874,97 @@ function liveBarHtml(lane, minute, goals) {{
     + (goals >= 3 ? "+" : "") + " in lands " + hit.toFixed(1) + "% on " + own[0]
     + pool + "</span>" + more;
 }}
+// A CARD GOES LIVE WITHOUT WAITING FOR A DEPLOY (21 Oct: "the running
+// board is slow. Some cards only come live after the match has been
+// 15-30 minutes live. There for users cant react on the scorelines").
+//
+// Which tab a card sat in used to come only from the deploy, and the
+// poller said as much: no live span, "needs the deploy", skip. So the
+// whole chain — ESPN notices the kickoff, a sweep pass renders a 15 MB
+// page, a deploy publishes it, the host builds it, a CDN serves it —
+// stood between the whistle and the card reaching Running, and a pass
+// that takes minutes puts a quarter of an hour in that chain. The score
+// was already arriving within one poll in web/live.json; it just had
+// nowhere on the card to land.
+//
+// It lands here instead. Everything this needs is already on the page:
+// the live record is embedded (LIVEBAR), so liveBarHtml can price the
+// lane at this minute with this many goals, and the pre-match bar
+// carries data-lb and data-pk for the swap. The deploy still owns the
+// board's structure; it is no longer what decides whether the bettor
+// can see a scoreline.
+const PK_TITLE = "{PREKICK_TITLE}";
+function goLive(card, hasMin) {{
+  // THE PRE-MATCH BAR COMES OFF. It is measured on cards bought BEFORE
+  // kickoff, and "a price measured on cards bought before kickoff is
+  // not the price to pay at 60' with a goal in" — so it does not stay a
+  // moment longer than the whistle, and its number moves down to the
+  // dim pre-kickoff line where it belongs. tickClocks fills the bar
+  // from the live record on the very next tick; until it does, the bar
+  // says it is reading rather than showing a price nobody should use.
+  for (const bar of card.querySelectorAll(".buybar[data-lb]")) {{
+    if (bar.classList.contains("live")) continue;
+    // NO MINUTE, NO BAR. Half time carries no clock, live_state returns
+    // nothing without one, and the server renders no bar at all then —
+    // so neither does this. A bar that cannot be priced is removed, not
+    // left saying "reading": the one thing it must never do is keep a
+    // pre-match number up while the match is being played.
+    if (!hasMin) {{ bar.remove(); continue; }}
+    bar.classList.add("live");
+    bar.removeAttribute("title");
+    bar.innerHTML = '\U0001F3AF LIVE BUY <span class="dim">\u00b7 reading the '
+      + "live record for this minute</span>";
+    const pk = bar.dataset.pk;
+    if (pk && !(bar.nextElementSibling
+                && bar.nextElementSibling.classList.contains("prekick"))) {{
+      const d = document.createElement("div");
+      d.className = "prekick"; d.title = PK_TITLE; d.innerHTML = pk;
+      bar.parentNode.insertBefore(d, bar.nextSibling);
+    }}
+  }}
+  // The star points at what to buy, and there is nothing left to buy.
+  for (const el of card.querySelectorAll(".best-tag")) el.remove();
+  // ONLY WHERE RUNNING IS REALLY THIS CARD'S TAB. data-run is
+  // runs_when_live, stamped server-side: a declined card, a postponed
+  // one and a STRONG WATCH card with no live_good behind it all belong
+  // where they already are, and the page must not invent a second
+  // opinion about Running in JavaScript.
+  if (!card.dataset.run) return;
+  const grid = runningGrid();
+  if (grid && card.parentNode !== grid) {{
+    grid.appendChild(card);
+    tabCounts();
+  }}
+}}
+
+// Running's own grid, MADE IF IT IS NOT THERE. An empty tab renders
+// "nothing here right now" and no grid at all, so the first card of the
+// evening had nowhere to be appended and silently stayed where it was —
+// which is the whole bug, on the one pass that matters most.
+function runningGrid() {{
+  const pane = document.getElementById("t-running");
+  if (!pane) return null;
+  let grid = pane.querySelector(".grid");
+  if (!grid) {{
+    for (const el of pane.querySelectorAll("p.dim")) el.remove();
+    grid = document.createElement("div");
+    grid.className = "grid";
+    pane.appendChild(grid);
+  }}
+  return grid;
+}}
+
+// The tab numbers after a card has moved. Counted off the panes
+// themselves, so they cannot drift from what is on screen.
+function tabCounts() {{
+  for (const [t, pane] of [["playable", "t-playable"], ["watch", "t-watch"],
+                           ["running", "t-running"], ["lanes", "t-lanes"]]) {{
+    const n = document.querySelectorAll("#" + pane + " .grid > .card").length;
+    const el = document.querySelector('.tabs a[data-t="' + t + '"] .n');
+    if (el) el.textContent = n;
+  }}
+}}
+
 function tickClocks() {{
   const now = Date.now() / 1000;
   for (const el of document.querySelectorAll(".live[data-min]")) {{
@@ -7873,12 +8035,31 @@ async function pollLive() {{
       // taken · in-play" pill, and patching it put "LIVE HT 1-1" on the
       // pill while the real status line kept ticking from its deploy-time
       // base — two clocks on one card (the bettor, 9 Sep).
-      const live = card.querySelector("summary .meta .live");
-      if (!live) continue;                    // not rendered as running: needs the deploy
+      let live = card.querySelector("summary .meta .live");
+      if (!live && !c.settled) {{
+        // RENDERED BEFORE KICKOFF (21 Oct). This used to `continue` with
+        // the note "needs the deploy", which is precisely why a card sat
+        // in Playable with a 1-1 scoreline nobody could see. The stamp
+        // span is swapped for a live clock, the card moves to Running,
+        // and its pre-match bar becomes the live one.
+        const stamp = card.querySelector("summary .meta .stamp");
+        if (stamp) {{
+          live = document.createElement("span");
+          live.className = "live";
+          stamp.replaceWith(live);
+          goLive(card, c.min !== undefined);
+        }}
+      }}
+      if (!live) continue;                    // settled and never rendered live
       if (c.settled) {{
         live.textContent = c.head || c.status;
         live.classList.remove("live"); delete live.dataset.min;
-        for (const el of card.querySelectorAll(".prog, .also")) el.remove();
+        // "A declined or settled card shows none" — the bars go with the
+        // whistle, the same way the server renders a settled card. A card
+        // this poller took live itself would otherwise keep a LIVE BUY
+        // price on a match that is over (21 Oct).
+        for (const el of card.querySelectorAll(".prog, .also, .buybar, .prekick"))
+          el.remove();
         continue;
       }}
       live.textContent = "🔴 " + c.status;
