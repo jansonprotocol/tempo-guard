@@ -71,25 +71,62 @@ jobs:
             git reset --hard origin/main
             cd backend
             python scripts/odds_api.py --quotes
+            # A NEW MATCH IN THE FEED IS A NEW CARD, NOW (21 Oct: "in the
+            # automatic flow it see new odds for new matches and new cards
+            # directly have to be made from those. First sight > Price
+            # locked"). This refresh already asked the feed for the whole
+            # upcoming fixture list of every league with a pending card —
+            # one call per league returns the competition, not the match —
+            # and until now it read the prices off those listings and
+            # threw the unknown fixtures away, leaving them for the daily
+            # 05:15 fill. --cached-only fills from exactly the listings
+            # this pass already paid for and skips every other league, so
+            # a match the feed starts pricing gets its card, its quote and
+            # its first-sight stamp inside two hours FOR NO EXTRA CREDITS.
+            # The daily fill still runs and still pays for the leagues
+            # that had no pending card to pull a listing for.
+            python scripts/feedslate.py --write --cached-only --allow-stale || echo "::warning::the cached-only fill failed — the prices still refresh"
             # --allow-stale: a card the sweep has not graded hours after
             # kickoff is the sweep's failure and is printed as such; it
             # must not stop the prices. Criciúma v Operário-PR, 22 Sep:
             # ESPN never listed it, the sweep could not grade it, and
             # every price refresh from 07:39 died on the verify.
-            python scripts/board.py --allow-stale
+            #
+            # AND NEITHER MAY ANY OTHER VERIFY LINE (21 Oct). This render
+            # is the last thing between the prices and the commit, and a
+            # raise out of it threw the whole refresh away — the same way
+            # one bad line cost the board fill six days of cards. The
+            # prices on file are correct whatever the render says about a
+            # tab, so the failure is annotated and the push still happens.
+            python scripts/board.py --allow-stale || echo "::error::board.verify failed during the odds refresh — the prices were committed anyway; the lines above say why"
             cd ..
             # forward_log.tsv too: the render stamps a card's first-sight
             # call (lane, bar, price) there, and until 21 Sep this job threw
             # that stamp away with its checkout — the card was then "called"
             # at whatever the sweep saw at kickoff instead.
-            git add -A config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/
+            # config/fixtures.tsv is in the list because this job can now
+            # ADD cards (the cached-only fill above), not only price them.
+            # web/live.json ONLY: index.html and matchbank.json are 29 MB
+            # between them and belong on the `site` branch, never on main
+            # (17 Oct). This job was still committing both every push,
+            # which is how main went on growing after the rule, and why a
+            # deploy still had a 1.8 GB clone to do.
+            git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/live.json
             if git diff --cached --quiet; then
               echo "the market has not moved a printed lane"; exit 0
             fi
             git commit -q -m "odds refresh: $(date -u '+%Y-%m-%d %H:%M') UTC" \
               -m "Market prices re-pulled for every pending lane and the board re-rendered, so a card's PLAY or watch reflects what is buyable now."
             if git push origin HEAD:main; then
-              echo "pushed on try $try"; exit 0
+              echo "pushed on try $try"
+              # AND PUT IT ON THE PAGE (21 Oct). The site serves the `site`
+              # branch, so until now a price move or a new card committed
+              # here reached the page only when the next live sweep or
+              # board fill happened to publish — which, with the fill
+              # failing, meant the site could sit a day behind the board.
+              bash .github/publish-site.sh "site: odds refresh $(date -u '+%Y-%m-%d %H:%M') UTC" || \
+                echo "::warning::site publish failed"
+              exit 0
             fi
             echo "push refused on try $try — resetting onto main and pulling again"
           done

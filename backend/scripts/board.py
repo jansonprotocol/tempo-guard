@@ -512,6 +512,7 @@ def verify(quiet: bool = False, allow_stale: bool = False) -> None:
     parse. A mismatch raises — a wrong board is worse than no board.
     """
     import json
+    import re
     import shutil
     import subprocess
     import tempfile
@@ -621,13 +622,36 @@ def verify(quiet: bool = False, allow_stale: bool = False) -> None:
             if got != len(want):
                 bad.append(f"app tab {pid} shows {got} cards, "
                            f"expected {len(want)}")
-        # and nothing may sit in two pending tabs
-        for f in pending:
-            n = sum(1 for pid in ("t-playable", "t-watch", "t-running",
-                                  "t-declined", "t-lanes")
-                    if in_app(f.teams, panes.get(pid, "")))
-            if n > 1:
-                bad.append(f"{f.teams!r} is in {n} pending tabs")
+        # and nothing may sit in two pending tabs — COUNTED BY ROW, not
+        # by name. Two pending rows can honestly carry the same two
+        # clubs: scripts/stuck.py marks a postponed card "PP Moved to
+        # <date>" and NEVER rewrites its kickoff (14 Oct, because the
+        # first-sight stamp is keyed on it), so the board keeps the old
+        # row while the fill adds the replay at its new date. The old
+        # check asked whether the NAME turned up in more than one pane
+        # and called that the board contradicting itself. It was not: from
+        # 15 to 21 Oct it failed the board fill every single day on
+        # Independiente Santa Fe v Jaguares de Córdoba — postponed on the
+        # 15th, re-listed for the 22nd — and six days of cards died with
+        # the raise, which is why no new card reached the board all week.
+        # So count instead: the five panes together must carry each name
+        # exactly as many times as the board has pending rows for it. A
+        # card rendered in two tabs still fails, by being one too many.
+        # A row is (fixture, kickoff): the card already stamps both on
+        # its element — data-fx for the search, data-k for the kickoff
+        # sort — and [^>]* keeps the pair inside one opening tag, so the
+        # pattern matches that card and no other.
+        from collections import Counter
+        want_rows = Counter((f.teams, f.kickoff) for f in pending)
+        for (name, ko), want_n in want_rows.items():
+            pat = re.compile(f'data-fx="{re.escape(_h.escape(name))}"'
+                             f'[^>]*?data-k="{re.escape(_h.escape(ko))}"')
+            got_n = sum(len(pat.findall(panes.get(pid, "")))
+                        for pid in ("t-playable", "t-watch", "t-running",
+                                    "t-declined", "t-lanes"))
+            if got_n != want_n:
+                bad.append(f"{name!r} ({ko}) is on {got_n} pending cards "
+                           f"across the tabs, expected {want_n}")
 
         # 6. The ledger reaches the app too.
         for name in set(bets):
@@ -678,7 +702,6 @@ def verify(quiet: bool = False, allow_stale: bool = False) -> None:
     #     sat dated 24 Aug while DEFENSE_BLEND, the whole Club Elo cup lane
     #     and the 0.82 cup floor shipped underneath it. Now every constant
     #     it names is read back out of the live code and compared.
-    import re
     from app.data import club_elo, features
     from app.engine import market_select, pricing, result_market, team_total
     live = {

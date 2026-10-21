@@ -62,9 +62,27 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
           cd backend
+          # THE WRITE IS NOT THE VERIFY (21 Oct, after a week with no new
+          # cards: "no new cards where automatically been made. This has
+          # to stop"). futurematch.add_slate has already written
+          # config/fixtures.tsv by the time the fill renders, so a raise
+          # out of board.verify at the END of the fill does not undo the
+          # cards — it only kills this step before `git add`, and the
+          # whole day's work goes in the bin. That is what happened every
+          # day from 15 to 21 Oct: 412 priced cards built and discarded
+          # each morning on one bad verify line, while the board sat on
+          # three pending fixtures.
+          #
+          # So the fill's exit code is CARRIED, not swallowed: the run
+          # goes on to commit and push what it already built, and then
+          # `finish` below exits with that same code, so the job still
+          # goes red and the BOARD VERIFY FAILED lines are still the
+          # reason. Nothing here makes a failing verify pass — it just
+          # stops a failing verify from also costing the cards.
           # --allow-stale: an unswept no-feed card hours past kickoff is
           # the sweep's problem, not a reason to leave the week unfilled
-          python scripts/feedslate.py --write --allow-stale
+          FILL_RC=0
+          python scripts/feedslate.py --write --allow-stale || FILL_RC=$?
           # QUOTE WHAT THE FILL JUST ADDED (11 Oct). The fill prices its
           # new cards through the engine but leaves nearly all of them
           # without a MARKET price — 303 cards landed on 11 Oct and only
@@ -79,6 +97,17 @@ jobs:
           # the feed's, on the Amsterdam clock — a moved match or a typo
           python scripts/feedslate.py --clock || true
           cd ..
+          # Every exit from here on goes through this, so the fill's own
+          # verdict is the job's verdict however the push went.
+          finish() {
+            if [ "${FILL_RC:-0}" -ne 0 ]; then
+              echo "::error::the fill committed its cards, then board.verify" \
+                   "failed (exit $FILL_RC) — the BOARD VERIFY FAILED lines" \
+                   "above say why"
+              exit "$FILL_RC"
+            fi
+            exit 0
+          }
           git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv \
                      config/unresolved.tsv \
                      config/reads_cache.json config/roi_log.tsv config/band_log.tsv \
@@ -86,7 +115,7 @@ jobs:
           # index.html and matchbank.json go to the `site` branch on a
           # successful push (publish-site.sh), never to main (17 Oct).
           if git diff --cached --quiet; then
-            echo "nothing to add — the board already has the week"; exit 0
+            echo "nothing to add — the board already has the week"; finish
           fi
           n=$(git diff --cached --numstat config/fixtures.tsv | cut -f1)
           git commit -q -m "board fill: $(date -u '+%Y-%m-%d') — ${n:-0} cards from the feed" \
@@ -106,7 +135,7 @@ jobs:
               echo "pushed on try $try"
               bash .github/publish-site.sh "site: board fill $(date -u '+%Y-%m-%d')" || \
                 echo "::warning::site publish failed"
-              exit 0
+              finish
             fi
             echo "push refused on try $try — merging what the sweep pushed"
             git fetch origin main

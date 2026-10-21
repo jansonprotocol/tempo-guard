@@ -107,9 +107,16 @@ def _on_board(code: str, home: str, away: str, day: dt.date, fixtures) -> bool:
 
 
 def build(days: int = DAYS, now: dt.datetime | None = None,
-          only: list[str] | None = None) -> tuple[list[tuple], list[tuple]]:
+          only: list[str] | None = None,
+          cached_only: bool = False) -> tuple[list[tuple], list[tuple]]:
     """(rows, skipped): rows are (kickoff, code, league, "Home v Away")
-    ready for a slate file; skipped are (code, "Home v Away", why)."""
+    ready for a slate file; skipped are (code, "Home v Away", why).
+
+    `cached_only` fills from the odds feed ONLY where the league's
+    fixture listing is already cached and fresh, so the pass spends no
+    credits — the shape the two-hourly odds refresh runs in. The ESPN
+    passes below are unaffected: ESPN is free and has no quota to
+    protect."""
     from app.data import store
     from scripts.board import load
     from scripts.ingest_board import _resolve
@@ -134,6 +141,10 @@ def build(days: int = DAYS, now: dt.datetime | None = None,
         if code.startswith("INT-"):
             continue
         if not oa.carried(code):
+            continue
+        # The listing is free when the quote pass has just pulled it, and
+        # two credits when it has not. --cached-only takes the free ones.
+        if cached_only and not oa.cached(code):
             continue
         events = oa.fetch_league(code)
         if not events:
@@ -331,11 +342,14 @@ def main() -> None:
                   f"board {ours}, feed {theirs} (Amsterdam)")
         print(f"{len(off)} pending cards off the feed's clock", file=sys.stderr)
         return
-    rows, skipped = build(days, only=only)
+    cached_only = "--cached-only" in args
+    rows, skipped = build(days, only=only, cached_only=cached_only)
     for r in rows:
         print("\t".join(r))
     print(f"{len(rows)} fixtures the board does not have, next {days} days, "
-          f"{len({r[1] for r in rows})} leagues", file=sys.stderr)
+          f"{len({r[1] for r in rows})} leagues"
+          + (" (cached leagues only — no credits spent)" if cached_only else ""),
+          file=sys.stderr)
     # THE REFUSALS GO IN A FILE, NOT JUST A LOG (the bettor, 14 Oct, after
     # spotting two missing Champions League cards on his phone). A name
     # the engine cannot resolve is a card that never exists, and the only
@@ -344,16 +358,23 @@ def main() -> None:
     # rewritten every run, so it is a live list of what the board is
     # missing right now, not a history.
     stamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
-    UNRESOLVED.write_text(
-        "# Fixtures the feed carries that the board REFUSED: the engine "
-        "could not resolve a club\n# against that competition's own store, "
-        "and it never guesses. Rewritten every fill run.\n"
-        "# A fix is an alias in config/team_aliases.json where the club is "
-        "stored under another\n# spelling, or nothing at all where the "
-        "league has no store — then there is no history\n# to price it "
-        "with and the refusal is the right answer.\n"
-        f"# as of {stamp} UTC\n# code\tfixture\twhy\n"
-        + "".join(f"{c}\t{t}\t{w}\n" for c, t, w in skipped))
+    if cached_only:
+        # This pass saw only the leagues whose listing was already cached,
+        # so its refusals are not the live list of what the board is
+        # missing — rewriting the file would read as if every league it
+        # skipped had come good. The daily fill owns this file.
+        pass
+    else:
+        UNRESOLVED.write_text(
+            "# Fixtures the feed carries that the board REFUSED: the engine "
+            "could not resolve a club\n# against that competition's own "
+            "store, and it never guesses. Rewritten every fill run.\n"
+            "# A fix is an alias in config/team_aliases.json where the club "
+            "is stored under another\n# spelling, or nothing at all where "
+            "the league has no store — then there is no history\n# to price "
+            "it with and the refusal is the right answer.\n"
+            f"# as of {stamp} UTC\n# code\tfixture\twhy\n"
+            + "".join(f"{c}\t{t}\t{w}\n" for c, t, w in skipped))
     if skipped:
         print("skipped (name unresolved — never guessed; add the alias to "
               "config/team_aliases.json):", file=sys.stderr)

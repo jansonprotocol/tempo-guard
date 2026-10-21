@@ -12,6 +12,25 @@ import pytest
 from app.data.features import _canonical, _match_team
 from app.data.openfootball import parse_text
 
+
+def _ran(body: str) -> list[str]:
+    """The engine commands a workflow step runs, in order, without the
+    shell around them.
+
+    The guards matter — `|| true`, `|| FILL_RC=$?`, `|| echo ::error::`
+    — but they are not what these tests are pinning, and comparing whole
+    shell lines meant a guard added to a command silently broke an
+    unrelated assertion about which commands ran. So the guard is cut
+    here and asserted on its own where it matters."""
+    out = []
+    for ln in body.splitlines():
+        ln = ln.strip()
+        if "scripts/" not in ln or not ln.startswith("python"):
+            continue
+        out.append(ln.split("||")[0].split("|")[0].strip().rstrip("\\").strip())
+    return out
+
+
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
 RESULTS_MID = """\
@@ -1049,6 +1068,14 @@ def test_board_verify_passes_on_the_committed_board():
     board satisfies it, so a broken render cannot be committed green."""
     from scripts import board
 
+    # web/index.html is no longer committed to main — it is 15 MB and is
+    # published to the `site` branch (17 Oct) — and verify SKIPS every app
+    # check when the file is absent, which would let this test pass on a
+    # fresh clone while checking almost nothing. So say so instead.
+    page = board.ROOT / "web" / "index.html"
+    if not page.exists():
+        pytest.skip("render the page first (python scripts/board.py): "
+                    "without it verify checks the README only")
     board.verify(quiet=True)
 
 
@@ -2115,11 +2142,26 @@ def test_something_pulls_the_odds_without_being_asked():
     wf = pathlib.Path(__file__).resolve().parents[2] / ".github" / "workflows"
     y = (wf / "odds-refresh.yml").read_text()
     body = y[y.index("steps:"):]
-    ran = [ln.strip() for ln in body.splitlines() if "scripts/" in ln and "python" in ln]
+    ran = _ran(body)
     # --allow-stale since 22 Sep: an ungraded card hours after kickoff is
     # the sweep's failure, printed, not a reason to stop the prices — the
-    # refresh died on it four times over that morning
-    assert ran == ["python scripts/odds_api.py --quotes", "python scripts/board.py --allow-stale"], ran
+    # refresh died on it four times over that morning.
+    #
+    # The fill in the middle is 21 Oct ("in the automatic flow it see new
+    # odds for new matches and new cards directly have to be made from
+    # those"): --cached-only builds cards from the league listings the
+    # quote pass above has ALREADY paid for and asks the feed for nothing
+    # else, so a match the feed starts pricing gets its card, its quote
+    # and its first-sight stamp within two hours for no extra credits.
+    assert ran == ["python scripts/odds_api.py --quotes",
+                   "python scripts/feedslate.py --write --cached-only --allow-stale",
+                   "python scripts/board.py --allow-stale"], ran
+    # and neither the fill nor the render may take the prices down with
+    # it: both are guarded, because one verify line killing the whole job
+    # is what cost the board fill six days of cards in October
+    for cmd in ("feedslate.py --write --cached-only", "board.py --allow-stale"):
+        line = next(ln for ln in body.splitlines() if cmd in ln)
+        assert "||" in line, f"{cmd} must not be able to fail the prices"
     assert "cron:" in y and "ODDS_API_KEY" in y
     # a missing secret must FAIL, not skip: odds_api exits 0 without a key,
     # so a silent skip would rebuild exactly the staleness this job ends
@@ -3947,12 +3989,36 @@ def test_the_board_fills_itself_from_the_feed(monkeypatch, tmp_path):
     # the daily job: lists, fills through the slate path, commits the
     # board and its first-sight stamps, and fails loudly without the key
     import pathlib
+    import re
     wf = pathlib.Path(__file__).resolve().parents[2] / ".github" / "workflows"
     y = (wf / "board-fill.yml").read_text()
     body = y[y.index("steps:"):]
-    ran = [ln.strip() for ln in body.splitlines() if "scripts/" in ln and "python" in ln]
+    ran = _ran(body)
+    # --quotes and the render joined the job on 11 Oct, so the fill's new
+    # cards carry a market price and a first-sight stamp the same run.
     assert ran == ["python scripts/feedslate.py --write --allow-stale",
-                   "python scripts/feedslate.py --clock || true"], ran
+                   "python scripts/odds_api.py --quotes",
+                   "python scripts/board.py --allow-stale",
+                   "python scripts/feedslate.py --clock"], ran
+    # THE FILL'S EXIT CODE IS CARRIED, NOT OBEYED (21 Oct). add_slate has
+    # already written config/fixtures.tsv when the fill renders, so a
+    # raise out of board.verify at the end of it does not undo the cards
+    # — it only kills the step before `git add`, which discarded 412
+    # priced cards every morning from 15 to 21 Oct. The run now commits
+    # what it built and `finish` exits with the fill's own code, so the
+    # job still goes red: nothing here makes a failing verify pass.
+    fill = next(ln for ln in body.splitlines()
+                if "feedslate.py --write" in ln)
+    assert "FILL_RC=$?" in fill, fill
+    assert 'exit "$FILL_RC"' in body, "the fill's failure must still fail the job"
+    # Every way out of the step goes through finish(), so the fill's own
+    # verdict is the job's verdict however the push went.
+    assert "finish()" in body, "the fill needs one way out, and it is finish()"
+    calls = re.findall(r"(?:^\s*|;\s*)finish\s*$", body, re.M)
+    assert len(calls) == 2, calls
+    after = body[body.index("finish()"):]
+    assert after.count("exit 0") == 1, \
+        "the only bare `exit 0` left is finish()'s own"
     assert "cron:" in y and "secrets.ODDS_API_KEY" in y and "exit 1" in y
     for path in ("config/fixtures.tsv", "config/forward_log.tsv", "config/odds_quotes.tsv"):
         assert path in body, path

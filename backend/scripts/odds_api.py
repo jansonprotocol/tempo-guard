@@ -172,6 +172,28 @@ def carried(code: str) -> bool:
     return bool(sports_for(code))
 
 
+def cached(code: str) -> bool:
+    """Is this competition's fixture listing ALREADY in the cache and
+    fresh — so asking for it again costs nothing?
+
+    The quote pass calls fetch_league for every league that has a pending
+    card, and one such call returns the competition's whole upcoming
+    fixture list, most of which the board does not carry yet. The bettor,
+    21 Oct, after a week with no new cards: "in the automatic flow it see
+    new odds for new matches and new cards directly have to be made from
+    those." It can be made from the listing the refresh has already paid
+    for, which is what scripts/feedslate.py --cached-only does: it fills
+    only from leagues this answers True for, so the two-hourly refresh
+    builds cards for nothing extra and the daily fill still pays for the
+    leagues that had no pending card to pull."""
+    keys = sports_for(code)
+    if not keys:
+        return False
+    c = _cache()
+    now = time.time()
+    return all(c.get(k) and (now - c[k]["at"]) < FRESH_MIN * 60 for k in keys)
+
+
 def _cache() -> dict:
     try:
         return json.loads(CACHE.read_text())
