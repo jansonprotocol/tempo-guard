@@ -44,7 +44,10 @@ permissions:
 jobs:
   quotes:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # 30, not 20: the pricing pass plus up to eight push attempts, each
+    # a merge and a re-render against a sweep that pushes every two
+    # minutes. The old 20 was set when this job only pulled prices.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -66,84 +69,115 @@ jobs:
         run: |
           git config user.name  "tempo-guard bot"
           git config user.email "noreply@anthropic.com"
-          for try in 1 2 3; do
-            git fetch origin main
-            git reset --hard origin/main
-            cd backend
-            python scripts/odds_api.py --quotes
-            # A NEW MATCH IN THE FEED IS A NEW CARD, NOW (21 Oct: "in the
-            # automatic flow it see new odds for new matches and new cards
-            # directly have to be made from those. First sight > Price
-            # locked"). This refresh already asked the feed for the whole
-            # upcoming fixture list of every league with a pending card —
-            # one call per league returns the competition, not the match —
-            # and until now it read the prices off those listings and
-            # threw the unknown fixtures away, leaving them for the daily
-            # 05:15 fill. --cached-only fills from exactly the listings
-            # this pass already paid for and skips every other league, so
-            # a match the feed starts pricing gets its card, its quote and
-            # its first-sight stamp inside two hours FOR NO EXTRA CREDITS.
-            # The daily fill still runs and still pays for the leagues
-            # that had no pending card to pull a listing for.
-            python scripts/feedslate.py --write --cached-only --allow-stale || echo "::warning::the cached-only fill failed — the prices still refresh"
-            # AND QUOTE WHAT IT JUST ADDED, in the same run. "First sight
-            # > Price locked": a card with no market price has no
-            # first-sight stamp, so no locked lane, no tier and no band
-            # check, until some later refresh happens to reach it — and
-            # the first-sight stamp is the one thing that cannot be made
-            # again later. The pass above is what warmed the cache the
-            # fill read, so this second one re-reads the same listings
-            # and costs nothing. The order is forced: the fill cannot run
-            # first, because on a fresh runner the cache is cold and
-            # --cached-only would correctly find nothing.
-            python scripts/odds_api.py --quotes || echo "::warning::the new cards are unquoted until the next refresh"
-            # --allow-stale: a card the sweep has not graded hours after
-            # kickoff is the sweep's failure and is printed as such; it
-            # must not stop the prices. Criciúma v Operário-PR, 22 Sep:
-            # ESPN never listed it, the sweep could not grade it, and
-            # every price refresh from 07:39 died on the verify.
-            #
-            # AND NEITHER MAY ANY OTHER VERIFY LINE (21 Oct). This render
-            # is the last thing between the prices and the commit, and a
-            # raise out of it threw the whole refresh away — the same way
-            # one bad line cost the board fill six days of cards. The
-            # prices on file are correct whatever the render says about a
-            # tab, so the failure is annotated and the push still happens.
-            python scripts/board.py --allow-stale || echo "::error::board.verify failed during the odds refresh — the prices were committed anyway; the lines above say why"
-            cd ..
-            # forward_log.tsv too: the render stamps a card's first-sight
-            # call (lane, bar, price) there, and until 21 Sep this job threw
-            # that stamp away with its checkout — the card was then "called"
-            # at whatever the sweep saw at kickoff instead.
-            # config/fixtures.tsv is in the list because this job can now
-            # ADD cards (the cached-only fill above), not only price them.
-            #
-            # ALL OF web/, INCLUDING index.html (21 Oct). The 17 Oct rule
-            # says the page and the bank belong on the `site` branch and
-            # never on main — but RENDER IS STILL POINTED AT main (its
-            # service was made in the dashboard, so render.yaml's
-            # `branch: site` was never applied). So main's web/index.html
-            # IS the live site, and taking it off main froze the page on
-            # the last commit that had it. Put the branch right in the
-            # Render dashboard (Settings -> Build & Deploy -> Branch ->
-            # site) and this goes back to web/live.json alone.
-            git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/
-            if git diff --cached --quiet; then
-              echo "the market has not moved a printed lane"; exit 0
-            fi
-            git commit -q -m "odds refresh: $(date -u '+%Y-%m-%d %H:%M') UTC" \
-              -m "Market prices re-pulled for every pending lane and the board re-rendered, so a card's PLAY or watch reflects what is buyable now."
+          # The pricing runs ONCE; the push loop at the foot is what
+          # handles the sweep pushing underneath us. There used to be a
+          # "re-price from scratch" loop around all of this, which is
+          # exactly how three refreshes in a row burned their twenty
+          # minutes and committed nothing.
+          git fetch origin main
+          git reset --hard origin/main
+          cd backend
+          python scripts/odds_api.py --quotes
+          # A NEW MATCH IN THE FEED IS A NEW CARD, NOW (21 Oct: "in the
+          # automatic flow it see new odds for new matches and new cards
+          # directly have to be made from those. First sight > Price
+          # locked"). This refresh already asked the feed for the whole
+          # upcoming fixture list of every league with a pending card —
+          # one call per league returns the competition, not the match —
+          # and until now it read the prices off those listings and
+          # threw the unknown fixtures away, leaving them for the daily
+          # 05:15 fill. --cached-only fills from exactly the listings
+          # this pass already paid for and skips every other league, so
+          # a match the feed starts pricing gets its card, its quote and
+          # its first-sight stamp inside two hours FOR NO EXTRA CREDITS.
+          # The daily fill still runs and still pays for the leagues
+          # that had no pending card to pull a listing for.
+          python scripts/feedslate.py --write --cached-only --allow-stale || echo "::warning::the cached-only fill failed — the prices still refresh"
+          # AND QUOTE WHAT IT JUST ADDED, in the same run. "First sight
+          # > Price locked": a card with no market price has no
+          # first-sight stamp, so no locked lane, no tier and no band
+          # check, until some later refresh happens to reach it — and
+          # the first-sight stamp is the one thing that cannot be made
+          # again later. The pass above is what warmed the cache the
+          # fill read, so this second one re-reads the same listings
+          # and costs nothing. The order is forced: the fill cannot run
+          # first, because on a fresh runner the cache is cold and
+          # --cached-only would correctly find nothing.
+          python scripts/odds_api.py --quotes || echo "::warning::the new cards are unquoted until the next refresh"
+          # --allow-stale: a card the sweep has not graded hours after
+          # kickoff is the sweep's failure and is printed as such; it
+          # must not stop the prices. Criciúma v Operário-PR, 22 Sep:
+          # ESPN never listed it, the sweep could not grade it, and
+          # every price refresh from 07:39 died on the verify.
+          #
+          # AND NEITHER MAY ANY OTHER VERIFY LINE (21 Oct). This render
+          # is the last thing between the prices and the commit, and a
+          # raise out of it threw the whole refresh away — the same way
+          # one bad line cost the board fill six days of cards. The
+          # prices on file are correct whatever the render says about a
+          # tab, so the failure is annotated and the push still happens.
+          python scripts/board.py --allow-stale || echo "::error::board.verify failed during the odds refresh — the prices were committed anyway; the lines above say why"
+          cd ..
+          # forward_log.tsv too: the render stamps a card's first-sight
+          # call (lane, bar, price) there, and until 21 Sep this job threw
+          # that stamp away with its checkout — the card was then "called"
+          # at whatever the sweep saw at kickoff instead.
+          # config/fixtures.tsv is in the list because this job can now
+          # ADD cards (the cached-only fill above), not only price them.
+          #
+          # ALL OF web/, INCLUDING index.html (21 Oct). The 17 Oct rule
+          # says the page and the bank belong on the `site` branch and
+          # never on main — but RENDER IS STILL POINTED AT main (its
+          # service was made in the dashboard, so render.yaml's
+          # `branch: site` was never applied). So main's web/index.html
+          # IS the live site, and taking it off main froze the page on
+          # the last commit that had it. Put the branch right in the
+          # Render dashboard (Settings -> Build & Deploy -> Branch ->
+          # site) and this goes back to web/live.json alone.
+          git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/
+          if git diff --cached --quiet; then
+            echo "the market has not moved a printed lane"; exit 0
+          fi
+          git commit -q -m "odds refresh: $(date -u '+%Y-%m-%d %H:%M') UTC" \
+            -m "Market prices re-pulled for every pending lane and the board re-rendered, so a card's PLAY or watch reflects what is buyable now."
+          # THE PUSH, NOT THE PRICING, IS WHAT LOSES THE RACE — the
+          # same lesson the board fill learned on 11 Oct, relearned
+          # here on 22 Oct. This job now commits a 19 MB index.html
+          # while the live sweep pushes every two minutes, so a refused
+          # push is normal. The old loop answered one by throwing the
+          # whole pass away and re-pricing from scratch — four minutes
+          # of quotes, fill and render — which simply lost the same
+          # race again, three times, and the job died with the page it
+          # had just built still uncommitted. Three refreshes in a row
+          # failed that way and the site sat thirty hours stale.
+          #
+          # So the pricing happens ONCE. A refused push is answered by
+          # merging what the sweep pushed and re-rendering on top of
+          # it, which takes seconds. -X ours keeps this pass's prices
+          # where a hunk truly collides; the sweep's own lines merge
+          # cleanly, since it edits rows this job never touches.
+          for push in $(seq 1 8); do
             if git push origin HEAD:main; then
-              echo "pushed on try $try"
-              # AND PUT IT ON THE PAGE (21 Oct). The site serves the `site`
-              # branch, so until now a price move or a new card committed
-              # here reached the page only when the next live sweep or
-              # board fill happened to publish — which, with the fill
-              # failing, meant the site could sit a day behind the board.
+              echo "pushed on try $push"
+              # AND PUT IT ON THE `site` BRANCH TOO, for when the
+              # Render service is finally pointed at it.
               bash .github/publish-site.sh "site: odds refresh $(date -u '+%Y-%m-%d %H:%M') UTC" || \
                 echo "::warning::site publish failed"
               exit 0
             fi
-            echo "push refused on try $try — resetting onto main and pulling again"
+            echo "push refused on try $push — merging what the sweep pushed"
+            git fetch origin main
+            git merge -X ours --no-edit origin/main || {
+              for f in $(git diff --name-only --diff-filter=U); do
+                git checkout --ours -- "$f" || git checkout MERGE_HEAD -- "$f"
+                git add "$f"
+              done
+              git commit -q --no-edit
+            }
+            (cd backend && python scripts/board.py --allow-stale) || \
+              echo "::error::the re-render failed; see the lines above"
+            git add -A config README.md web/
+            git diff --cached --quiet || git commit -q -m "re-render onto the sweep's push"
+            sleep $((RANDOM % 15 + 5))
           done
-          echo "could not push after 3 tries"; exit 1
+          echo "::error::could not push after 8 tries"; exit 1

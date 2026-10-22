@@ -4033,6 +4033,18 @@ def _needs(cell: str, starred_label: str | None) -> tuple:
     input — so the card says so rather than dressing the two up alike.
     """
     c = _claim(cell)
+    # A CLAIM OF ZERO IS NOT A PROBABILITY, AND ONE BAD CARD MAY NOT TAKE
+    # THE BOARD DOWN (22 Oct). Four COL-PA cards price at "O1.5 0.0%",
+    # and 1/(0/100) raised ZeroDivisionError out of the middle of the
+    # render — so webapp.main() died, no index.html was written, and the
+    # page the site serves sat unchanged for thirty hours while the board
+    # underneath it went on being graded. A rate of zero cannot imply a
+    # price at any margin, so it is read the way a missing claim is read:
+    # no bar on that lane, the rest of the card unaffected. The 0.0%
+    # itself is an engine fault and is still there to be fixed; what is
+    # fixed here is that it can no longer stop every other card printing.
+    if c is not None and c <= 0:
+        c = None
     if starred_label and c is not None:
         if starred_label == "released":
             return (play_bar(c, cell, measured=SAYS["released"] * 100)[0],

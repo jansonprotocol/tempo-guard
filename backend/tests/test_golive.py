@@ -163,3 +163,45 @@ def test_the_tab_counts_can_be_corrected(page):
         m = re.search(f'data-t="{t}"[^>]*>.*?<span class="dim">'
                       r'(<span class="n">\d+</span>)', page, re.S)
         assert m, t
+
+
+# ── one bad card may not take the board down ────────────────────────────────
+
+def test_a_zero_claim_prices_nothing_instead_of_raising():
+    """Four COL-PA cards print "O1.5 0.0%", and 1/(0/100) raised
+    ZeroDivisionError out of the middle of _card -> _lanebar -> _needs.
+    webapp.main() died with it, no index.html was written, and the page
+    the site serves sat unchanged for thirty hours while the board
+    underneath it went on being graded — three odds refreshes in a row.
+
+    A rate of zero cannot imply a price at any margin, so it is read the
+    way a missing claim is read: no bar on that lane, every other card
+    untouched."""
+    dead = "O1.5 0.0% **−97.0%** · buy≥0.04"
+    assert w._needs(dead, None) == (None, None, False)
+    assert w._needs(dead, "orange") == (None, None, False)
+    # Zero is the only degenerate value that can reach here: _claim's
+    # regex captures digits and never a sign, so "-2.0%" reads as 2.0
+    # and prices like any other thin claim. The guard is `<= 0` anyway,
+    # because a bar that cannot be computed should not be computed.
+    assert w._claim("O1.5 -2.0% · buy≥1.10") == 2.0
+
+
+def test_a_real_claim_still_prices():
+    price, hit, solid = w._needs("U4.5 85.0% +2.0% · buy≥1.20", None)
+    assert hit == 0.85 and price > 1 and solid is False
+
+
+def test_every_pending_card_on_the_board_renders():
+    """The guard that would have caught it: no card may raise while the
+    page is being built."""
+    from scripts import board
+    reads = {}
+    for f in board.load():
+        if f.settled:
+            continue
+        try:
+            w._card(f, "play", reads)
+        except Exception as exc:                      # noqa: BLE001
+            raise AssertionError(f"{f.teams} ({f.kickoff}) raised "
+                                 f"{type(exc).__name__}: {exc}") from exc
