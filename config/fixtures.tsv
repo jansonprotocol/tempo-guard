@@ -949,7 +949,7 @@
 2026-09-22 18:00	ALG-L1	Ligue 1	Biskra v Saoura	U3.0 87.4% +4.7% · buy≥1.30 (+9.9% margin)	✅ **Biskra U1.5** 75.4% +14.3% (team) · buy≥1.38 (+4.2% margin)	✅ HIT — 0-0	
 2026-09-23 01:00	COL-PA	Categoría Primera A	Ind. Medellín v Jaguares	U4.25 85.9% **−5.3%** · buy≥1.18 (+5.4% margin)	✅ **Ind. Medellín O0.5** 80.1% +4.5% (team) · buy≥1.31 (+5.1% margin)	✅ HIT — 2-1	✅ DNB1 71.0% +6.7% · buy≥1.48 · probation
 2026-09-23 03:00	COL-PA	Categoría Primera A	Santa Fe v Dep. Cali	U4.25 85.9% **−5.3%** · buy≥1.17 (+5.4% margin)	— none	✅ HIT — 0-1	
-2026-10-23 19:00	DEN-SL	Superliga	Randers v Brøndby	U4.25 82.4% +1.9% · buy≥1.30 (+5.1% margin)	**Brøndby O0.5** 81.5% +6.6% (team) · buy≥1.32 (+7.8% margin)	LIVE 45'+3' 1-1	
+2026-10-23 19:00	DEN-SL	Superliga	Randers v Brøndby	U4.25 82.4% +1.9% · buy≥1.30 (+5.1% margin)	**Brøndby O0.5** 81.5% +6.6% (team) · buy≥1.32 (+7.8% margin)	LIVE HT 1-1	
 2026-09-23 22:00	PER-L1	Liga 1	ADT v Cienciano	U4.25 81.1% **−5.9%** · buy≥1.24 (+6.5% margin)	✅ **Cienciano O0.5** 80.3% +16.7% (team) · buy≥1.37 (+9.7% margin)	✅ HIT — 2-1	
 2026-09-24 02:30	COL-PA	Categoría Primera A	América v Águilas Doradas	U4.25 86.1% **−5.2%** · buy≥1.20 (+5.4% margin)	✅ **América O0.5** 77.9% +2.4% (team) · buy≥1.30 (+1.1% margin)	✅ HIT — 1-0	✅ DNB1 71.8% +7.6% · buy≥1.46 · probation
 2026-09-24 03:30	MLS	MLS	Seattle v Salt Lake	U4.25 80.7% **+0.8%** · buy≥1.32 (+6.1% margin)	✅ U3.75 65.7% +3.2% (floor −9.3) · buy≥1.40 (+0.4% margin)	✅ HIT — 2-0	
@@ -2166,8 +2166,8 @@
 2026-10-23 15:30	SAU-PL	Pro League	Al-Faisaly KSA FC v Al-Nassr	O1.5 82.8% +3.5% · buy≥1.24 (+3.1% margin)	✅ **Al-Nassr O1.5** 67.9% +29.7% (team) · buy≥1.53 (+3.8% margin)	✅ HIT — 1-3	✅ DNB2 76.7% +32.3% · buy≥1.37 · probation
 2026-10-23 17:30	SAU-PL	Pro League	Al-Ittihad v Diriyah Club	U4.25 83.2% **+0.9%** · buy≥1.27 (+3.3% margin)	✅ U3.75 66.9% +1.2% (floor −8.1) · buy≥1.38 (+0.5% margin)	✅ HIT — 2-0	
 2026-10-23 18:00	POL-EK	Ekstraklasa	Motor Lublin v Zagłębie Lubin	U4.25 86.1% **+0.5%** · buy≥1.23 (+7.2% margin)	U3.75 74.3% +4.0% (floor −3.7) · buy≥1.33 (+5.9% margin)		
-2026-10-23 18:30	GER-B2	2. Bundesliga	SV Darmstadt 98 v FC St. Pauli	U4.25 83.5% +2.1% · buy≥1.28 (+5.3% margin)	U3.75 67.4% +2.9% (floor −7.6) · buy≥1.37 (+0.5% margin)	LIVE 59' 0-0	
-2026-10-23 18:30	GER-B2	2. Bundesliga	VfL Bochum v VfL Wolfsburg	O1.5 83.4% +3.2% · buy≥1.26 (+5.3% margin)	**VfL Wolfsburg O1.5** 57.7% +17.7% (team) · buy≥1.79 (+3.0% margin)	LIVE 60' 0-1	12 77.5% +3.0% · buy≥1.36 · probation
+2026-10-23 18:30	GER-B2	2. Bundesliga	SV Darmstadt 98 v FC St. Pauli	U4.25 83.5% +2.1% · buy≥1.28 (+5.3% margin)	U3.75 67.4% +2.9% (floor −7.6) · buy≥1.37 (+0.5% margin)	LIVE 61' 0-0	
+2026-10-23 18:30	GER-B2	2. Bundesliga	VfL Bochum v VfL Wolfsburg	O1.5 83.4% +3.2% · buy≥1.26 (+5.3% margin)	**VfL Wolfsburg O1.5** 57.7% +17.7% (team) · buy≥1.79 (+3.0% margin)	LIVE 63' 0-1	12 77.5% +3.0% · buy≥1.36 · probation
 2026-10-23 18:30	RUS-PL	Premier League	FC Akhmat Grozny v Gazovik Orenburg	U3.0 78.5% +5.5% · buy≥1.43 (+4.4% margin)	U2.75 57.7% +6.6% (floor −20.3) · buy≥1.60 (+3.0% margin)		
 2026-10-23 19:00	SWE-AL	Allsvenskan	IF Elfsborg v Malmo FF	O1.5 78.7% **+0.4%** · buy≥1.29 (+1.7% margin)	— none	LIVE HT 0-0	DNB1 68.7% +14.5% · buy≥1.53 · probation
 2026-10-23 19:00	SWE-AL	Allsvenskan	Västerås SK v Halmstads BK	U4.25 83.2% **−0.2%** · buy≥1.20 (+5.1% margin)	**Halmstads BK U1.5** 75.1% +12.2% (team) · buy≥1.39 (+4.2% margin)	LIVE HT 1-0	DNB1 72.3% +18.1% · buy≥1.45 · probation
