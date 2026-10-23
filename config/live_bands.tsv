@@ -11,7 +11,7 @@
 # every INT-* code pooled under league 'INT' (source 'family'), read only
 # where the league's own row is thin, at the same floor.
 # Thresholds: safe >= 79, cautious >= 77, else unsafe.
-# written	2026-10-21
+# written	2026-10-23
 # The 'flip' rows: priced plays with that tag that also print that lane,
 # paired on the board's last 21 days — n cards where tip 1 graded and
 # that lane won or lost (a push on the lane is no bet), hit = THAT lane,
@@ -20,9 +20,9 @@
 # settled cards, red out; 'decline' under 77% on 15+ cards, else
 # 'keep', the seed under the floor. A declined combo files under Declined.
 # league	lane	band	n	hit	said	label	source
-*	athena	+1 up	14439	83.6	82.7	safe	global
-*	athena	−1..+1	6983	83.7	83.3	safe	global
-*	athena	−4..−1	3616	86.2	84.4	safe	global
+*	athena	+1 up	14434	83.6	82.7	safe	global
+*	athena	−1..+1	6987	83.7	83.3	safe	global
+*	athena	−4..−1	3615	86.3	84.4	safe	global
 *	athena	−4 down	3316	88.3	83.4	safe	global
 *	watch	+1 up	1087	82.4	82.1	safe	global
 *	watch	−1..+1	441	85.3	81.5	safe	global
@@ -70,7 +70,7 @@ CHN-SL	athena	−1..+1	108	80.6	81.5	safe	league
 CHN-SL	athena	−4..−1	2	50.0	77.5	safe	thin
 COL-PA	athena	+1 up	1	100.0	77.6	safe	thin
 COL-PA	athena	−1..+1	383	76.5	80.6	unsafe	league
-COL-PA	athena	−4 down	410	90.7	85.3	safe	league
+COL-PA	athena	−4 down	410	91.0	84.9	safe	league
 CRO-1L	athena	+1 up	2	50.0	81.2	safe	thin
 CRO-1L	athena	−1..+1	131	87.8	85.5	safe	league
 CRO-1L	athena	−4..−1	136	89.0	86.4	safe	league
@@ -97,7 +97,7 @@ ENG-CH	priced	−1..+1	4	75.0	72.4	unsafe	thin
 ENG-CH	priced	−4 down	13	76.9	83.5	unsafe	thin
 ENG-CH	priced	all	55	83.6	79.8	safe	pooled
 ENG-L1	athena	+1 up	354	80.8	77.7	safe	league
-ENG-L1	athena	−1..+1	6	83.3	73.5	safe	thin
+ENG-L1	athena	−1..+1	7	85.7	73.5	safe	thin
 ENG-L1	athena	−4 down	291	85.9	83.1	safe	league
 ENG-L2	athena	+1 up	362	86.7	86.9	safe	league
 ENG-L2	athena	−1..+1	273	87.9	87.2	safe	league
@@ -125,9 +125,9 @@ ESP-L2	priced	+1 up	1	100.0	72.7	unsafe	thin
 ESP-L2	priced	−1..+1	44	70.5	77.9	unsafe	thin
 ESP-L2	priced	−4 down	49	67.3	84.3	unsafe	thin
 ESP-L2	priced	all	94	69.1	81.2	unsafe	pooled
-ESP-LL	athena	+1 up	372	81.7	79.1	safe	league
+ESP-LL	athena	+1 up	367	81.7	79.1	safe	league
 ESP-LL	athena	−1..+1	3	100.0	73.6	safe	thin
-ESP-LL	athena	−4..−1	141	92.9	84.7	safe	league
+ESP-LL	athena	−4..−1	139	93.5	84.7	safe	league
 ESP-LL	watch	+1 up	48	91.7	78.6	safe	thin
 ESP-LL	watch	−4..−1	34	82.4	84.8	safe	thin
 ESP-LL	priced	+1 up	32	75.0	78.6	unsafe	thin
@@ -231,10 +231,10 @@ MAR-BP	athena	+1 up	1	100.0	72.2	safe	thin
 MAR-BP	athena	−1..+1	85	80.0	81.4	safe	league
 MAR-BP	athena	−4 down	89	94.4	86.0	safe	league
 MEX-LMX	athena	+1 up	8	100.0	84.8	safe	thin
-MEX-LMX	athena	−1..+1	189	79.9	80.9	safe	league
-MEX-LMX	athena	−4..−1	447	81.0	82.9	safe	league
+MEX-LMX	athena	−1..+1	193	79.8	80.9	safe	league
+MEX-LMX	athena	−4..−1	448	81.0	82.9	safe	league
 MEX-LMX	athena	−4 down	11	90.9	81.0	safe	thin
-MLS	athena	+1 up	133	84.2	81.3	safe	league
+MLS	athena	+1 up	133	85.0	81.3	safe	league
 MLS	athena	−1..+1	436	79.1	80.4	safe	league
 MLS	athena	−4..−1	231	79.2	80.5	safe	league
 NED-D2	athena	+1 up	537	83.8	83.1	safe	league
@@ -286,8 +286,8 @@ RSA-PL	athena	−4 down	57	93.0	89.6	safe	league
 RUS-PL	athena	+1 up	137	83.2	79.9	safe	league
 RUS-PL	athena	−1..+1	204	87.3	86.8	safe	league
 RUS-PL	athena	−4..−1	70	84.3	84.9	safe	league
-SAU-PL	athena	+1 up	496	85.5	83.7	safe	league
-SAU-PL	athena	−1..+1	107	81.3	81.1	safe	league
+SAU-PL	athena	+1 up	496	85.7	83.7	safe	league
+SAU-PL	athena	−1..+1	106	82.1	81.1	safe	league
 SAU-PL	athena	−4..−1	6	83.3	76.5	safe	thin
 SCO-CH	athena	+1 up	203	90.6	89.1	safe	league
 SCO-CH	athena	−1..+1	98	81.6	87.3	safe	league
@@ -352,36 +352,36 @@ UKR-PL	athena	−1..+1	28	82.1	77.7	safe	thin
 UKR-PL	athena	−4..−1	2	50.0	84.3	safe	thin
 UKR-PL	athena	−4 down	108	90.7	84.3	safe	league
 flipbank	flip	unsafe tip3	254	77.6	70.1	flipped	bank
-flip	flip	unsafe tip3	18	83.3	77.8	flipped	bank
+flip	flip	unsafe tip3	19	84.2	78.9	flipped	bank
 flipbank	flip	unsafe tip2	397	64.7	69.5	hold	bank
-flip	flip	unsafe tip2	30	66.7	73.3	hold	bank
+flip	flip	unsafe tip2	31	67.7	74.2	hold	bank
 flipbank	flip	cautious tip3	111	78.4	74.8	hold	bank
-flip	flip	cautious tip3	53	94.3	75.5	flipped	board
+flip	flip	cautious tip3	56	92.9	76.8	flipped	board
 flipbank	flip	cautious tip2	322	64.9	77.0	hold	bank
-flip	flip	cautious tip2	126	62.7	77.0	hold	board
+flip	flip	cautious tip2	132	61.4	78.0	hold	board
 flipbank	flip	safe tip3	223	77.1	74.9	hold	bank
 flip	flip	safe tip3	18	83.3	66.7	hold	bank
 flipbank	flip	safe tip2	282	72.7	80.1	hold	bank
 flip	flip	safe tip2	21	76.2	81.0	hold	bank
-combobank	athena	clean	21620	84.7	83.5	keep	bank
-combo	athena	clean	667	85.3	83.3	keep	board
-combobank	athena	score under 0	4155	82.8	82.2	keep	bank
-combo	athena	score under 0	83	78.3	82.3	keep	board
-combobank	athena	score under 0 + over lane	2579	81.8	79.7	keep	bank
-combo	athena	score under 0 + over lane	63	84.1	81.1	keep	board
-combobank	priced	priced play	617	76.3	82.5	decline	bank
-combo	priced	priced play	299	76.6	82.6	decline	board
-combobank	priced	score under 0 + priced play	275	73.1	81.9	decline	bank
-combo	priced	score under 0 + priced play	113	73.5	80.5	decline	board
-combobank	priced	score under 0 + priced play + over lane	365	72.9	78.9	decline	bank
-combo	priced	score under 0 + priced play + over lane	74	81.1	80.5	keep	board
-combobank	watch	score under 0 + watch card	484	81.6	82.1	keep	bank
-combo	watch	score under 0 + watch card	105	81.0	80.9	keep	board
-combobank	watch	score under 0 + watch card + over lane	389	85.9	80.1	keep	bank
-combo	watch	score under 0 + watch card + over lane	64	75.0	79.8	decline	board
+combobank	athena	clean	21594	84.7	83.5	keep	bank
+combo	athena	clean	670	85.1	83.3	keep	board
+combobank	athena	score under 0	4168	82.8	82.2	keep	bank
+combo	athena	score under 0	84	78.6	82.3	keep	board
+combobank	athena	score under 0 + over lane	2590	81.8	79.7	keep	bank
+combo	athena	score under 0 + over lane	65	84.6	81.0	keep	board
+combobank	priced	priced play	616	76.3	82.5	decline	bank
+combo	priced	priced play	314	77.4	82.7	keep	board
+combobank	priced	score under 0 + priced play	277	72.9	81.8	decline	bank
+combo	priced	score under 0 + priced play	115	73.9	80.5	decline	board
+combobank	priced	score under 0 + priced play + over lane	364	73.1	78.9	decline	bank
+combo	priced	score under 0 + priced play + over lane	76	81.6	80.4	keep	board
+combobank	watch	score under 0 + watch card	485	81.6	82.1	keep	bank
+combo	watch	score under 0 + watch card	107	81.3	80.9	keep	board
+combobank	watch	score under 0 + watch card + over lane	388	85.8	80.1	keep	bank
+combo	watch	score under 0 + watch card + over lane	65	75.4	79.8	decline	board
 combobank	watch	watch card	1157	83.0	83.4	keep	bank
-combo	watch	watch card	331	81.0	83.4	keep	board
-release	O1.5	under 75	221	81.4	71.9	released	halves 79.2/83.5
+combo	watch	watch card	341	80.9	83.0	keep	board
+release	O1.5	under 75	224	81.7	71.2	released	halves 79.4/83.8
 release	U2.75	under 75	1	0.0	62.6	declined	too few
 release	U3.0	under 75	249	75.1	74.2	declined	halves 73.4/76.9
 release	U4.25	under 75	1	100.0	64.3	declined	too few
