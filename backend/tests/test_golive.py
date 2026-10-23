@@ -80,17 +80,34 @@ def test_a_declined_card_never_runs(fixtures):
 
 
 def test_the_page_stamps_data_run_on_exactly_those_cards(page, fixtures):
-    """The page's own answer, read back off it."""
+    """The page's own answer, read back off it.
+
+    ONLY ON CARDS THAT CANNOT HAVE MOVED SINCE THE RENDER. The page is a
+    snapshot; runs_when_live is computed now, off a fixtures file the
+    sweep rewrites every two minutes and off a clock that keeps going. A
+    card crossing its kickoff between the two makes the comparison fail
+    on a disagreement that never existed — which is exactly what this
+    test did on the evening of 22 Oct, with nine matches going live
+    while the suite ran. A card an hour or more from kickoff is stable
+    in both, and there are hundreds of them, so the check keeps its
+    teeth without the flake.
+    """
+    import datetime as dt
+    import html as _h
+    safe = (dt.datetime.now() + dt.timedelta(hours=1)).strftime("%Y-%m-%d %H:%M")
+    checked = 0
     for f in fixtures:
-        if f.settled:
+        if f.settled or f.status or f.kickoff <= safe:
             continue
         tag = re.search(
             f'<details class="card [a-z ]*?"( data-run="1")? '
-            f'data-fx="{re.escape(__import__("html").escape(f.teams))}"',
-            page)
+            f'data-fx="{re.escape(_h.escape(f.teams))}"', page)
         if not tag:
             continue                      # not on a pending tab
         assert bool(tag.group(1)) == w.runs_when_live(f), f.teams
+        checked += 1
+    if not checked:
+        pytest.skip("no card is far enough from kickoff to compare safely")
 
 
 def test_every_card_the_render_put_on_running_carries_the_stamp(page):

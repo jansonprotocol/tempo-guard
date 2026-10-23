@@ -125,16 +125,13 @@ jobs:
           # config/fixtures.tsv is in the list because this job can now
           # ADD cards (the cached-only fill above), not only price them.
           #
-          # ALL OF web/, INCLUDING index.html (21 Oct). The 17 Oct rule
-          # says the page and the bank belong on the `site` branch and
-          # never on main — but RENDER IS STILL POINTED AT main (its
-          # service was made in the dashboard, so render.yaml's
-          # `branch: site` was never applied). So main's web/index.html
-          # IS the live site, and taking it off main froze the page on
-          # the last commit that had it. Put the branch right in the
-          # Render dashboard (Settings -> Build & Deploy -> Branch ->
-          # site) and this goes back to web/live.json alone.
-          git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/
+          # web/live.json ONLY. index.html and matchbank.json are 33 MB
+          # between them and live on the `site` branch, which Render now
+          # actually serves (22 Oct — the dashboard branch was set, so
+          # the 17 Oct rule is finally true rather than aspirational).
+          # web/live.json stays because the page polls it from main's raw
+          # URL between deploys.
+          git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/live.json
           if git diff --cached --quiet; then
             echo "the market has not moved a printed lane"; exit 0
           fi
@@ -159,8 +156,7 @@ jobs:
           for push in $(seq 1 8); do
             if git push origin HEAD:main; then
               echo "pushed on try $push"
-              # AND PUT IT ON THE `site` BRANCH TOO, for when the
-              # Render service is finally pointed at it.
+              # AND PUBLISH: `site` is what Render serves.
               bash .github/publish-site.sh "site: odds refresh $(date -u '+%Y-%m-%d %H:%M') UTC" || \
                 echo "::warning::site publish failed"
               exit 0
@@ -176,7 +172,7 @@ jobs:
             }
             (cd backend && python scripts/board.py --allow-stale) || \
               echo "::error::the re-render failed; see the lines above"
-            git add -A config README.md web/
+            git add -A config README.md web/live.json
             git diff --cached --quiet || git commit -q -m "re-render onto the sweep's push"
             sleep $((RANDOM % 15 + 5))
           done

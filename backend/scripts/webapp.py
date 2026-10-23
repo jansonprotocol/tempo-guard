@@ -2186,6 +2186,12 @@ def _prekick_inner(f, cell: str) -> str:
 
 # The profile names the bar prints: the unlabelled groups carry their
 # whole definition in the name, which does not fit on a card.
+# A visitor thinks of a UCL qualifier as a UCL game, so the lookup form
+# folds the -Q competitions into their parents. Named once because two
+# places need the same list: the merge itself, and the country map that
+# must not announce a code the merge is about to remove.
+CUP_FOLD = (("UCL-Q", "UCL"), ("UEL-Q", "UEL"), ("UECL-Q", "UECL"))
+
 SHORT_PROFILE = {PROFILES[7]: "all 7, under the floor",
                  PROFILES[8]: "plain play", PROFILES[9]: "plain watch",
                  PROFILES[10]: "5%+ under, band off"}
@@ -6072,10 +6078,18 @@ def main() -> None:
     for f in fixtures:
         _lands.setdefault(_fold(f.league.lower()), set()).add(_country(f.code))
     # Country per competition code, for the bank cards' own filter.
-    _codes = {f.code for f in fixtures}
-    _bankfile = ROOT / "web" / "matchbank.json"
-    if _bankfile.exists():
-        _codes |= set(_json.loads(_bankfile.read_text())["comps"])
+    # FROM `bank`, NOT FROM THE LAST RENDER'S OUTPUT FILE (22 Oct). This
+    # read web/matchbank.json — the file this very function writes a few
+    # lines below, as dict(comps=bank, ...) — so the render depended on
+    # its own previous output being on disk. On a fresh checkout there is
+    # none, and every bank-only competition silently lost its country.
+    # `bank` is already the retrosim bank merged with the board, which is
+    # exactly what that file's "comps" holds, so it is read in process
+    # and the dependency goes away.
+    # ...minus the qualifiers, which fold into their parents a few lines
+    # below. The old read happened to come out folded because it was
+    # reading the PREVIOUS render's output, written after the fold.
+    _codes = ({f.code for f in fixtures} | set(bank)) - {q for q, _ in CUP_FOLD}
     countries_js = _json.dumps({c: _country(c) for c in sorted(_codes)
                                 if _country(c)})
     leagues_js = _json.dumps(sorted(
@@ -6089,8 +6103,7 @@ def main() -> None:
     # too: the -Q competitions fold into their parents for lookup. The
     # board itself keeps the distinction (different baselines, different
     # badges) — this merge is presentation only.
-    for q, parent in (("UCL-Q", "UCL"), ("UEL-Q", "UEL"),
-                      ("UECL-Q", "UECL")):
+    for q, parent in CUP_FOLD:
         if q in bank:
             names = {"UCL": "UEFA Champions League",
                      "UEL": "UEFA Europa League",

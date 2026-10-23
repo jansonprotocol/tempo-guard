@@ -16,3 +16,11 @@ venv/
 # Replay caches (regenerable)
 backend/.cache/
 config/odds_cache.json
+
+# The rendered page and its lookup bank, 33 MB between them. They are
+# build outputs: publish-site.sh force-adds them from the working tree
+# to the `site` branch, which is the branch Render serves (22 Oct).
+# Ignoring them here is what stops a `git add -A web/...` in a workflow
+# putting them back on main and growing it 33 MB a push.
+web/index.html
+web/matchbank.json
