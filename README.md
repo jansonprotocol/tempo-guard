@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 84.5%
 
     lane                        Tip 1              Tip 2
-    all matches            984 / 1164  84.5%    630 / 905  69.6%
+    all matches            985 / 1165  84.5%    630 / 905  69.6%
     played lanes  >+1%     367 / 430  85.3%    627 / 899  69.7%
     placed bets            259 / 335  77.3%    ROI -0.9%
 
@@ -2224,7 +2224,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 23-10 20:45 <b>Galway United v St Patricks Athletic</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (88.7 capped)</td><td>U3.0 76.2% <b>+0.0%</b><br>buy≥1.43 (+1.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 23-10 20:45 <b>Waterford FC v Drogheda United</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (88.7 capped)</td><td>U4.25 84.9% <b>−4.5%</b><br>buy≥1.20 (+5.4% margin)</td><td><b>Waterford FC O1.5</b> 56.7% +15.3%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 76.6% +16.9% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 23-10 21:00 <b>Shamrock Rovers v Sligo Rovers</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier Division (88.7 capped)</td><td>U4.25 84.8% <b>−4.6%</b><br>buy≥1.20 (+5.4% margin)</td><td><b>Shamrock Rovers O1.5</b> 64.9% +23.6%<br>buy≥1.59 (+3.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 84.4% +24.7% · buy≥1.24 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+9' 0-1 <b>Atlante FC v Atlético San Luis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.26 (+5.5% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-10 07:00 <b>Hiroshima Sanfrecce FC v Shimizu S Pulse</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.1 +1.5)</td><td>U4.25 82.8% <b>−5.3%</b><br>buy≥1.25 (+1.3% margin)</td><td><b>Hiroshima Sanfrecce FC O1.5</b> 56.5% +16.8%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 81.0% +25.9% · buy≥1.30 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-10 08:00 <b>Kashima Antlers v Kashiwa Reysol</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.1 +1.5)</td><td>U4.25 81.7% <b>−6.4%</b><br>buy≥1.27 (+1.3% margin)</td><td><b>Kashima Antlers O1.5</b> 55.6% +15.9%<br>buy≥1.85 (+2.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.2% +4.7% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 24-10 08:00 <b>Tokyo Verdy v Avispa Fukuoka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.1 +1.5)</td><td>U4.25 90.5% +2.5%<br>buy≥1.16 (+5.1% margin)</td><td><b>Tokyo Verdy U1.5</b> 73.3% +13.0%<br>buy≥1.42 (+4.1% margin) · team</td></tr></table>
@@ -2632,7 +2631,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 984 / 1164   ·   84.5%**   ·   **Tip 2 — 630 / 905   ·   69.6%**
+**Tip 1 — 985 / 1165   ·   84.5%**   ·   **Tip 2 — 630 / 905   ·   69.6%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (84.3 −3.1)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (91.0 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -4838,6 +4837,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-1 · 24-10 02:15 <b>CA Tigre BA v Atlético Tucuman</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.3 −0.2)</td><td>U3.0 85.9% +1.2%<br>buy≥1.25 (+3.5% margin)</td><td>✅ U2.75 68.0% +1.8%<br>buy≥1.35 (+0.6% margin) · floor −7.0</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 24-10 03:00 <b>Necaxa v FC Juárez</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.0% <b>−1.2%</b><br>buy≥1.20 (+5.4% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 74.9% +12.8% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 1-0 · 24-10 03:10 <b>Atlético Junior v Águilas Doradas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (91.0 capped)</td><td>O1.5 85.6% <b>−11.3%</b><br>buy≥1.12 (+5.3% margin)</td><td>❌ <b>Atlético Junior O1.5</b> 59.5% +19.6%<br>buy≥1.73 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.0% +7.3% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 24-10 05:00 <b>Atlante FC v Atlético San Luis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.26 (+5.5% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
