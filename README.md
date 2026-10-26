@@ -1,10 +1,10 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 84.9%
+## CURRENT CONFIRMED HITRATE: 84.8%
 
     lane                        Tip 1              Tip 2
-    all matches            1081 / 1274  84.9%    694 / 995  69.7%
+    all matches            1081 / 1275  84.8%    694 / 995  69.7%
     played lanes  >+1%     403 / 474  85.0%    691 / 989  69.9%
     placed bets            259 / 335  77.3%    ROI -0.9%
 
@@ -2431,7 +2431,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 25-10 18:30 <b>Aris Thessaloniki v Atromitos Athens</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (78.4 −5.3)</td><td>O1.5 77.2% +3.2%<br>buy≥1.37 (+5.4% margin)</td><td><b>Aris Thessaloniki O0.5</b> 78.2% +4.0%<br>buy≥1.39 (+9.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-10 19:00 <b>OFI Crete v PAOK Thessaloniki</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (78.4 −5.3)</td><td>O1.0 82.1% <b>−10.8%</b><br>buy≥1.18 (+6.7% margin)</td><td>U3.5 74.4% +1.7%<br>buy≥1.40 (+3.9% margin) · floor −0.6</td></tr></table>
 <table align="left"><tr><th align="left">🔵 25-10 20:45 <b>Paris Saint Germain v Lyon</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ligue 1 (79.7 −2.9)</td><td>O1.5 79.0% +1.2%<br>buy≥1.32 (+4.0% margin)</td><td><b>Paris Saint Germain O0.5</b> 83.0% +5.2%<br>buy≥1.31 (+9.1% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+8' 4-1 <b>Tijuana v Santos Laguna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.0 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)<br><i>U4.25 holding · ✗ gone</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-10 17:00 <b>Besiktas JK v Basaksehir</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (87.1 −1.3)</td><td>U4.25 81.9% <b>−2.5%</b><br>buy≥1.31 (+5.4% margin)</td><td><b>Besiktas JK O1.5</b> 57.1% +10.6%<br>buy≥1.80 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.5% +4.3% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-10 17:00 <b>Çaykur Rizespor v Trabzonspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (87.1 −1.3)</td><td>U4.25 85.0% <b>+0.7%</b><br>buy≥1.27 (+6.2% margin)</td><td><b>Trabzonspor O0.5</b> 80.9% +11.6%<br>buy≥1.34 (+8.5% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-10 19:00 <b>FC Copenhagen v OB Odense BK</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Superliga (81.3 −1.0)</td><td>O1.5 85.0% +4.0%<br>buy≥1.27 (+9.1% margin)</td><td><b>FC Copenhagen O1.5</b> 68.5% +20.6%<br>buy≥1.52 (+3.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 86.8% +29.4% · buy≥1.21 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2817,7 +2816,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1081 / 1274   ·   84.9%**   ·   **Tip 2 — 694 / 995   ·   69.7%**
+**Tip 1 — 1081 / 1275   ·   84.8%**   ·   **Tip 2 — 694 / 995   ·   69.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.4 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (90.5 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -5285,6 +5284,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-2 · 26-10 02:00 <b>Los Angeles FC v LA Galaxy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (83.6 +4.0)</td><td>U4.25 80.1% <b>+0.6%</b><br>buy≥1.36 (+5.9% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 26-10 02:05 <b>América v Pachuca</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.0 capped)</td><td>U4.25 82.0% <b>−2.2%</b><br>buy≥1.31 (+5.1% margin)</td><td>❌ <b>América O1.5</b> 59.8% +11.4%<br>buy≥1.73 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 80.1% +18.0% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-1 · 26-10 02:15 <b>Deportes Tolima v Deportivo Pasto</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (90.5 capped)</td><td>O1.5 85.6% <b>−11.4%</b><br>buy≥1.12 (+5.3% margin)</td><td>❌ <b>Deportes Tolima O1.5</b> 76.0% +36.1%<br>buy≥1.37 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 83.8% +11.9% · buy≥1.25 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 4-1 · 26-10 04:10 <b>Tijuana v Santos Laguna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (81.0 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.27 (+5.5% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
