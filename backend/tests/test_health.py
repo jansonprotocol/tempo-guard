@@ -189,3 +189,42 @@ def test_the_watchdog_imports_nothing_heavy():
     for heavy in ("import pandas", "import requests", "from app",
                   "import pyarrow", "from scripts import board"):
         assert heavy not in src, heavy
+
+
+# ── the watchdog's own workflow ─────────────────────────────────────────────
+
+def _health_yml() -> str:
+    import pathlib
+    return (pathlib.Path(__file__).resolve().parents[2] / ".github"
+            / "workflows" / "health.yml").read_text(encoding="utf-8")
+
+
+def test_the_alarm_reads_the_real_exit_code():
+    """`python health.py | tee f` then `$?` reads TEE's exit code, which
+    is always 0 — so the first version of this workflow reported healthy
+    while the check said SICK and raised no alarm at all. A watchdog
+    that cannot fail is worse than no watchdog."""
+    y = _health_yml()
+    import re
+    piped = re.search(r"python scripts/health\.py[^\n|]*\|[^\n]*tee[^\n]*\n"
+                      r"\s*(?:RC=)?\$\?|"
+                      r"\|\s*tee[^\n]*\n\s*echo \"sick=\$\?\"", y)
+    assert piped is None, "the exit code is being read from a pipeline"
+    assert "RC=$?" in y and "sick=$RC" in y, \
+        "the exit code must come from the unpiped run"
+
+
+def test_the_alarm_raises_something_a_person_receives():
+    """Going red is not telling anyone: nobody reads a green tick and
+    nobody reads a red one either."""
+    y = _health_yml()
+    assert "gh issue create" in y and "gh issue comment" in y, \
+        "a sick board must reach the bettor, not just the Actions tab"
+    assert "gh issue close" in y, \
+        "an open issue must mean something is wrong RIGHT NOW"
+
+
+def test_the_watchdog_runs_before_any_dependency_install():
+    y = _health_yml()
+    assert y.index("scripts/health.py") < y.index("pip install"), \
+        "health.py must answer before pip can fail"

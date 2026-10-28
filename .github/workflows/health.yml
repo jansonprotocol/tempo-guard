@@ -61,9 +61,17 @@ jobs:
         run: |
           cd backend
           set +e
-          python scripts/health.py | tee /tmp/health.txt
-          echo "sick=$?" >> "$GITHUB_OUTPUT"
+          # NOT `python ... | tee` AND THEN `$?`. After a pipeline $? is
+          # the exit code of the LAST command — tee's, which is always 0
+          # — so the first version of this step reported HEALTHY while
+          # the check was saying SICK, and raised no alarm at all. A
+          # watchdog that cannot fail is worse than no watchdog, so the
+          # code is taken from the unpiped run and nothing else.
           python scripts/health.py --json > /tmp/health.json 2>/dev/null
+          RC=$?
+          python scripts/health.py > /tmp/health.txt 2>&1
+          echo "sick=$RC" >> "$GITHUB_OUTPUT"
+          cat /tmp/health.txt
           set -e
           echo '### health' >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
