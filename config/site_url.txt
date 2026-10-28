@@ -6,6 +6,8 @@
 # served a four-day-old page while every publish landed correctly).
 #
 # A Render static site that is recreated gets a NEW hostname, so this
-# changes with it. One line, no scheme-less forms, trailing slash fine.
+# changes with it — as it did on 28 Oct, when the Render account ran
+# out and the site was rebuilt as tempo-guard-0xe7. One line, no
+# scheme-less forms, trailing slash fine.
 # Override for a one-off check with ATHENA_SITE_URL=... in the env.
-https://tempo-guard.onrender.com/
+https://tempo-guard-0xe7.onrender.com/
