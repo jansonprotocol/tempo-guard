@@ -1,0 +1,124 @@
+# Does the board the bettor SEES match the board this repository has?
+#
+# WHY THIS EXISTS (the bettor, 28 Oct, for the fourth time in eight days:
+# "I want this to stop happening and the app to start working
+# independant. I dont want to have to ask again in a few days.")
+#
+# Every fault so far has been invisible while it happened, and every one
+# was found by eye:
+#
+#   15-21 Oct  the fill was discarded daily on one verify line; the board
+#              ran down to three pending cards.
+#   22 Oct     the renderer raised ZeroDivisionError on a 0.0% claim and
+#              wrote no page for thirty hours.
+#   24-28 Oct  the host stopped deploying and served a four-day-old page
+#              while every publish kept landing on the `site` branch.
+#   21-28 Oct  the sweep left 4-to-7 hour holes whenever it handed the
+#              chain back to a cron that does not come.
+#
+# The workflows were GREEN for all of it. They had to be: each job
+# checked its own step, and what broke was always downstream of the last
+# thing that checks itself. Nothing compared the end of the pipe with
+# the start — so this does, and it is the only job here that leaves the
+# repository to look at what the reader actually gets.
+#
+# It heals what it can reach and SAYS SO when it cannot. Going red is
+# not saying so: nobody reads a green tick, and nobody reads a red one
+# either. An issue arrives as mail.
+name: health (what the reader sees)
+
+on:
+  schedule:
+    - cron: "17,47 * * * *"    # twice an hour, off the other jobs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write               # to dispatch the healing runs
+  issues: write                # to raise and close the alarm
+
+concurrency:
+  group: health
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE_TITLE: "⚠ ATHENA is not reaching the page"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # scripts/health.py imports nothing but the standard library, on
+      # purpose: a watchdog that needs a dependency install is a watchdog
+      # that fails for its own reasons. No pip above this line.
+      - id: check
+        run: |
+          cd backend
+          set +e
+          python scripts/health.py | tee /tmp/health.txt
+          echo "sick=$?" >> "$GITHUB_OUTPUT"
+          python scripts/health.py --json > /tmp/health.json 2>/dev/null
+          set -e
+          echo '### health' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/health.txt >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      # HEAL WHAT CAN BE HEALED, before shouting about it. Each check
+      # names the job that fixes it; a stuck sweep and a short horizon
+      # both have one, and both are a dispatch away.
+      - if: steps.check.outputs.sick != '0'
+        run: |
+          jq -r '.checks | to_entries[] | select(.value.ok|not) | .value.heal' \
+            /tmp/health.json | sort -u > /tmp/heal.txt
+          while read -r job; do
+            case "$job" in
+              live-sweep.yml|board-fill.yml)
+                echo "dispatching $job"
+                gh workflow run "$job" --ref "${{ github.ref_name }}" || true ;;
+              publish)
+                echo "re-rendering and re-publishing the site branch"
+                pip install -q -r backend/requirements.txt
+                (cd backend && python scripts/board.py --allow-stale) || \
+                  echo "::error::the render failed — see above"
+                bash .github/publish-site.sh \
+                  "site: health re-publish $(date -u '+%Y-%m-%d %H:%M') UTC" || \
+                  echo "::warning::re-publish failed" ;;
+            esac
+          done < /tmp/heal.txt
+
+      # THE ALARM. One issue, reopened and updated rather than a new one
+      # every half hour, so the mail is a thread and not a flood.
+      - if: steps.check.outputs.sick != '0'
+        run: |
+          BODY=$(printf '%s\n\n```\n%s\n```\n\n%s\n\n%s\n' \
+            "ATHENA's own health check says the board the site serves is not the board this repository holds." \
+            "$(cat /tmp/health.txt)" \
+            "The run that found it: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            "A \`deploy\` line means the host has stopped building: the data and the \`site\` branch are fine and nothing in CI can fix it. Check the Render dashboard (Settings → Build & Deploy) — the other checks heal themselves and this issue closes on its own when they do.")
+          NUM=$(gh issue list --state open --search "$ISSUE_TITLE in:title" \
+                  --json number --jq '.[0].number' 2>/dev/null || true)
+          if [ -n "$NUM" ] && [ "$NUM" != "null" ]; then
+            gh issue comment "$NUM" --body "$BODY"
+          else
+            gh issue create --title "$ISSUE_TITLE" --body "$BODY" || true
+          fi
+          echo "::error::$(tail -1 /tmp/health.txt)"
+          exit 1
+
+      # And close it the moment the board is whole again, so an open
+      # issue always means something is actually wrong right now.
+      - if: steps.check.outputs.sick == '0'
+        run: |
+          NUM=$(gh issue list --state open --search "$ISSUE_TITLE in:title" \
+                  --json number --jq '.[0].number' 2>/dev/null || true)
+          if [ -n "$NUM" ] && [ "$NUM" != "null" ]; then
+            gh issue close "$NUM" --comment "Healthy again as of $(date -u '+%Y-%m-%d %H:%M') UTC — every check passes." || true
+          fi
+          echo "healthy"

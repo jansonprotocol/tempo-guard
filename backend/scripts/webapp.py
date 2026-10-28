@@ -6431,6 +6431,11 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border:1px solid #2b3242; color:#c8d0e0; border-radius:6px;
   padding:7px 16px; font:inherit; cursor:pointer; }}
 .fxshut:hover {{ border-color:var(--gold); color:var(--gold); }}
+#stalebar {{ display:none; position:sticky; top:0; z-index:99;
+  background:#7f1d1d; color:#fff; padding:.55rem .9rem; font-weight:600;
+  line-height:1.35; border-bottom:2px solid #ef4444; }}
+#stalebar b {{ color:#fecaca; }}
+#stalebar .sub {{ display:block; font-weight:400; opacity:.85; font-size:.92em; }}
 .buybar {{ margin:.25rem 0 .1rem; padding:.2rem .45rem; border-left:3px solid var(--gold);
   background:rgba(214,170,74,.07); border-radius:3px; font-size:.95em; }}
 .buybar b {{ color:var(--gold); font-size:1.08em; }}
@@ -6799,6 +6804,7 @@ h3.hyp .n {{ background:var(--card); border:1px solid var(--edge);
 .wrap {{ overflow-x:auto; }}
 footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
 </style></head><body>
+<div id="stalebar"></div>
 <nav>
  <img src="athena-logo.png" alt="ATHENA">
  <span class="brand"><b>{TITLE}</b><span class="stage">{STAGE}</span></span>
@@ -8035,6 +8041,45 @@ tickClocks(); setInterval(tickClocks, 15000);
 // deploy. Polled every 90s while the tab is visible; the API allows 60
 // unauthenticated requests an hour per address, the raw mirror is the
 // fallback and lags a few minutes.
+// THE PAGE KNOWS HOW OLD IT IS, AND SAYS SO (28 Oct).
+//
+// Every failure in this project so far has been invisible: the board
+// fill deadlocked for six days, the renderer crashed on a divide by
+// zero for thirty hours, and the host quietly stopped deploying on
+// 24 Oct and served a four-day-old page until somebody noticed by eye.
+// Each time the workflows were green, because each time the thing that
+// broke was downstream of everything that checks itself.
+//
+// So the page checks. BUILT_AT is stamped in at render; web/live.json
+// is polled from main's RAW GitHub URL every 90 seconds, which does not
+// touch the host at all, so its `at` is the true current time of the
+// board however stale this document is. The difference between the two
+// is exactly how far behind the reader is looking, and past a threshold
+// the page says so in red across the top rather than letting a stale
+// board read as a quiet one.
+const BUILT_AT = {int(__import__("time").time())};
+const STALE_WARN = 45 * 60;      // the page should never be this old
+function agoWords(sec) {{
+  const d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600),
+        m = Math.floor(sec % 3600 / 60);
+  if (d) return d + (d > 1 ? " days" : " day") + (h ? ", " + h + "h" : "");
+  if (h) return h + "h" + (m ? " " + m + "m" : "");
+  return m + " min";
+}}
+function markStale(liveAt) {{
+  const bar = document.getElementById("stalebar");
+  if (!bar || !liveAt) return;
+  const age = liveAt - BUILT_AT;
+  if (age < STALE_WARN) {{ bar.style.display = "none"; return; }}
+  bar.innerHTML = "\u26a0\ufe0f THIS PAGE IS <b>" + agoWords(age)
+    + " OUT OF DATE</b> \u2014 the board has moved on without it."
+    + '<span class="sub">The scores and cards below are from the last '
+    + "build that reached you; the live record itself is current. This "
+    + "means the site is not being rebuilt \u2014 the deploy is stuck, "
+    + "not the data.</span>";
+  bar.style.display = "block";
+}}
+
 const LIVE_API = "https://api.github.com/repos/{REPO}/contents/web/live.json?ref=main";
 const LIVE_RAW = "https://raw.githubusercontent.com/{REPO}/main/web/live.json";
 let liveSeen = 0;
@@ -8051,7 +8096,12 @@ async function pollLive() {{
       if (r.ok) data = await r.json();
     }} catch (e) {{ return; }}
   }}
-  if (!data || !data.cards || !(data.at > liveSeen)) return;
+  if (!data || !data.cards) return;
+  // BEFORE the unchanged-data return: a page whose deploy has died sees
+  // the same live.json over and over, and that is precisely when the
+  // reader most needs telling.
+  markStale(data.at);
+  if (!(data.at > liveSeen)) return;
   liveSeen = data.at;
   for (const [fx, c] of Object.entries(data.cards)) {{
     for (const card of document.querySelectorAll('.card[data-fx="' + CSS.escape(fx) + '"]')) {{

@@ -49,6 +49,11 @@ jobs:
       # of sweeping inside the budget. Beyond it the run goes home and the
       # cron (or the previous run's hand-over) asks again later.
       WAIT_MAX: 16800
+      # How long a run parks when the board has no pending fixture at
+      # all. Shorter than WAIT_MAX because that state is itself a fault
+      # — the fill has not run — and the sooner a successor looks again
+      # the sooner the board recovers on its own.
+      EMPTY_PARK: 3600          # 1h
       SWEEP_EVERY: 90           # seconds between passes (the bettor, 8 Sep: "a bit more faster")
       # Seconds between DEPLOY-tagged commits. A build takes longer than
       # a sweep pass, and a new deploy cancels the one in flight, so this
@@ -76,12 +81,24 @@ jobs:
           cd backend
           WAIT=$(python scripts/livecheck.py --wait)
           python scripts/livecheck.py || true
+          # A RUN NEVER GOES HOME — IT PARKS (28 Oct). Going home handed
+          # the chain back to the cron, and the cron does not come: over
+          # 21-28 Oct it left gaps of 4.4h, 4.9h, 6.0h and 6.7h between
+          # sweeps, every one of them starting at a run that found the
+          # next kickoff too far off and exited. The file already says a
+          # */5 schedule "is a floor GitHub does not honour" — so nothing
+          # may depend on it. The run sleeps instead and hands over on
+          # the way out, which keeps the chain alive on its own clock.
+          # Runner minutes are free on a public repository; a board that
+          # stops updating for six hours is not.
           if [ "$WAIT" -lt 0 ]; then
-            echo "nothing on the board — go home"
+            echo "::warning::no pending fixture on the board at all — the fill has not run; parking $((EMPTY_PARK/60)) min and handing over"
+            sleep "$EMPTY_PARK"
             echo "go=no" >> "$GITHUB_OUTPUT"; exit 0
           fi
           if [ "$WAIT" -gt "$WAIT_MAX" ]; then
-            echo "next kickoff is $((WAIT/60)) min away — beyond the wait window, go home"
+            echo "next kickoff is $((WAIT/60)) min away — parking $((WAIT_MAX/60)) min, then handing over"
+            sleep "$WAIT_MAX"
             echo "go=no" >> "$GITHUB_OUTPUT"; exit 0
           fi
           if [ "$WAIT" -gt 0 ]; then
@@ -241,11 +258,40 @@ jobs:
         run: |
           cd backend
           WAIT=$(python scripts/livecheck.py --wait)
+          # ALWAYS. The two early exits that used to live here — "nothing
+          # on the board" and "leaving it to the cron" — are the only
+          # ways the chain could end, and between them they account for
+          # every multi-hour hole in the sweep history. The gate above
+          # has already slept for whichever case applies, so dispatching
+          # now simply continues the chain; it cannot spin, because the
+          # successor's own gate parks before it does anything. The cron
+          # stays as the resurrector for a run that dies outright, which
+          # is all it was ever reliable enough to be.
           if [ "$WAIT" -lt 0 ]; then
-            echo "nothing on the board — no follow-up"; exit 0
+            echo "::warning::board has no pending fixture — handing over anyway so the chain survives"
+          else
+            echo "handing over (next kickoff in $((WAIT/60)) min)"
           fi
-          if [ "$WAIT" -gt "$WAIT_MAX" ]; then
-            echo "next kickoff is $((WAIT/60)) min away — leaving it to the cron"; exit 0
-          fi
-          echo "dispatching the follow-up run (next sweep due in $((WAIT/60)) min)"
           gh workflow run live-sweep.yml --ref "${{ github.ref_name }}"
+
+          # AND THE WATCHDOG DOES NOT DEPEND ON ITS OWN CRON EITHER.
+          # health.py is standard library and answers in a moment, and
+          # this chain hops continuously, so every hop can ask whether
+          # the page the bettor sees still matches the board — the one
+          # fault no job here can see from the inside. Only a sick answer
+          # wakes the alarm job, and only if it has not run in the last
+          # hour, so a deploy that stays broken cannot spin it.
+          if python scripts/health.py --quiet; then
+            echo "health: the reader sees the current board"
+          else
+            LAST=$(gh run list --workflow=health.yml --limit 1 \
+                     --json createdAt --jq '.[0].createdAt' 2>/dev/null || true)
+            AGE=99999
+            [ -n "$LAST" ] && AGE=$(( $(date +%s) - $(date -d "$LAST" +%s) ))
+            if [ "$AGE" -ge 3600 ]; then
+              echo "::warning::health check failed — waking the health job"
+              gh workflow run health.yml --ref "${{ github.ref_name }}" || true
+            else
+              echo "health check failed; the health job ran $((AGE/60)) min ago, leaving it"
+            fi
+          fi
