@@ -48,7 +48,26 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "config" / "fixtures.tsv"
 LIVE_JSON = ROOT / "web" / "live.json"
-SITE_URL = "https://tempo-guard.onrender.com/"
+SITE_FILE = ROOT / "config" / "site_url.txt"
+
+
+def site_url() -> str:
+    """Where the board is published. From the environment first, then
+    config/site_url.txt — NOT hardcoded here, because a Render static
+    site that is recreated gets a new hostname, and a watchdog still
+    polling the old one would cry wolf for ever while the real page sat
+    healthy and unwatched."""
+    import os
+    env = os.environ.get("ATHENA_SITE_URL", "").strip()
+    if env:
+        return env
+    if SITE_FILE.exists():
+        for ln in SITE_FILE.read_text(encoding="utf-8").splitlines():
+            ln = ln.strip()
+            if ln and not ln.startswith("#"):
+                return ln
+    raise SystemExit("no site URL: set ATHENA_SITE_URL or write "
+                     "config/site_url.txt")
 BOARD_TZ = ZoneInfo("Europe/Amsterdam")
 
 SETTLED = ("✅", "❌", "◦")
@@ -167,7 +186,7 @@ def check(now: dt.datetime | None = None, served: str | None = None,
     # building, and nothing inside CI can see that.
     if served is None:
         try:
-            served = _get(SITE_URL)
+            served = _get(site_url())
         except Exception as exc:                            # noqa: BLE001
             out["deploy"] = dict(ok=False, heal="publish",
                                  detail=f"the site did not answer: {exc}")

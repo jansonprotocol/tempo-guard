@@ -1,0 +1,11 @@
+# Where the board is published — the one place this address is written.
+#
+# The health check (scripts/health.py) fetches this and compares what it
+# gets against the page the `site` branch holds, which is the only way
+# to see the host having quietly stopped deploying (24-28 Oct, when it
+# served a four-day-old page while every publish landed correctly).
+#
+# A Render static site that is recreated gets a NEW hostname, so this
+# changes with it. One line, no scheme-less forms, trailing slash fine.
+# Override for a one-off check with ATHENA_SITE_URL=... in the env.
+https://tempo-guard.onrender.com/

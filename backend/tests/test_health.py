@@ -228,3 +228,40 @@ def test_the_watchdog_runs_before_any_dependency_install():
     y = _health_yml()
     assert y.index("scripts/health.py") < y.index("pip install"), \
         "health.py must answer before pip can fail"
+
+
+# ── where the board is published is configuration, not code ────────────────
+
+def test_the_site_url_comes_from_the_env_first(monkeypatch, tmp_path):
+    monkeypatch.setenv("ATHENA_SITE_URL", "https://example.test/board/")
+    assert h.site_url() == "https://example.test/board/"
+
+
+def test_the_site_url_falls_back_to_the_config_file(monkeypatch, tmp_path):
+    monkeypatch.delenv("ATHENA_SITE_URL", raising=False)
+    f = tmp_path / "site_url.txt"
+    f.write_text("# a comment\n\nhttps://new-host.onrender.com/\n",
+                 encoding="utf-8")
+    monkeypatch.setattr(h, "SITE_FILE", f)
+    assert h.site_url() == "https://new-host.onrender.com/"
+
+
+def test_no_site_url_anywhere_is_a_clear_error(monkeypatch, tmp_path):
+    monkeypatch.delenv("ATHENA_SITE_URL", raising=False)
+    monkeypatch.setattr(h, "SITE_FILE", tmp_path / "absent.txt")
+    with pytest.raises(SystemExit, match="no site URL"):
+        h.site_url()
+
+
+def test_the_host_is_not_hardcoded_in_the_checker():
+    """A Render static site that is recreated gets a NEW hostname. A
+    watchdog still polling the old one cries wolf for ever while the
+    real page sits healthy and unwatched — so the address lives in
+    config/site_url.txt, where changing it is a one-line edit."""
+    import pathlib
+    src = pathlib.Path(h.__file__).read_text(encoding="utf-8")
+    body = src[src.index("def site_url"):src.index("def _rows")]
+    rest = src.replace(body, "")
+    assert "onrender.com" not in rest, \
+        "the published address must not be written into the code"
+    assert (h.ROOT / "config" / "site_url.txt").exists()
