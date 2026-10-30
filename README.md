@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 84.8%
 
     lane                        Tip 1              Tip 2
-    all matches            1119 / 1320  84.8%    717 / 1028  69.7%
-    played lanes  >+1%     419 / 491  85.3%    714 / 1022  69.9%
+    all matches            1120 / 1321  84.8%    718 / 1029  69.8%
+    played lanes  >+1%     420 / 492  85.4%    715 / 1023  69.9%
     placed bets            259 / 335  77.3%    ROI -0.9%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 1133 / 1513   ·   74.9%**   ·   **Tip 1 — 419 / 491   ·   85.3%**   ·   **Tip 2 — 714 / 1022   ·   69.9%**
+**Playable — 1135 / 1515   ·   74.9%**   ·   **Tip 1 — 420 / 492   ·   85.4%**   ·   **Tip 2 — 715 / 1023   ·   69.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.3 −3.9)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.1 +1.7)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2178,7 +2178,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 30-10 00:15 <b>América de Cali v Fortaleza CEIF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (89.6 capped)</td><td>— under +1%</td><td>✅ <b>América de Cali O1.5</b> 64.3% +24.5%<br>buy≥1.61 (+3.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 79.9% +16.0% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 30-10 01:30 <b>Melgar v Comerciantes Unidos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 79.1% +4.3%<br>buy≥1.38 (+9.3% margin)</td><td>❌ <b>Melgar O1.5</b> 59.9% +11.8%<br>buy≥1.72 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 75.9% +8.6% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 30-10 14:45 <b>Abha Club v Al-Ittihad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.5 +0.7)</td><td>— under +1%</td><td>✅ <b>Al-Ittihad O0.5</b> 83.2% +11.0%<br>buy≥1.28 (+6.7% margin) · team</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+8' 1-2 <b>Diriyah Club v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.5 +0.7)</td><td>U4.25 86.0% +3.7%<br>buy≥1.27 (+8.5% margin)<br><i>U4.25 holding · room for 1 · half from the 1st · 98% · fair 1.02</i></td><td><b>Diriyah Club U1.5</b> 75.2% +20.0%<br>buy≥1.39 (+4.2% margin) · team · <i>next goal hurts</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 30-10 15:50 <b>Diriyah Club v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.5 +0.7)</td><td>U4.25 86.0% +3.7%<br>buy≥1.27 (+8.5% margin)</td><td>✅ <b>Diriyah Club U1.5</b> 75.2% +20.0%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 30-10 18:00 <b>Cracovia Kraków v Motor Lublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −5.4)</td><td>— under +1%</td><td>U3.75 73.9% +3.2%<br>buy≥1.29 (+2.3% margin) · floor −4.1</td></tr></table>
 <table align="left"><tr><th align="left">🟢 30-10 18:00 <b>Torku Konyaspor v Galatasaray</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (87.5 −1.0)</td><td>— under +1%</td><td>U3.75 70.8% +2.3%<br>buy≥1.32 (+0.7% margin) · floor −11.2</td></tr></table>
 <table align="left"><tr><th align="left">🟢 30-10 18:30 <b>Arminia Bielefeld v Eintracht Braunschweig</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (81.9 −0.3)</td><td>O1.5 81.8% +1.7%<br>buy≥1.28 (+4.6% margin)</td><td><b>Arminia Bielefeld O1.5</b> 57.9% +9.0%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.6% +4.3% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2508,7 +2508,6 @@ that premium the book is keeping the insurance money.
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
 <table align="left"><tr><th align="left">🔴 PP Moved to 2026-10-22 <b>Independiente Santa Fe v Jaguares de Córdoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (89.6 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin) · <i>✗ gone</i></td><td><b>Independiente Santa Fe O1.5</b> 56.8% +17.1%<br>buy≥1.81 (+2.9% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.9% +16.0% · buy≥1.31 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+8' 1-2 <b>Diriyah Club v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.5 +0.7)</td><td>U4.25 86.0% +3.7%<br>buy≥1.27 (+8.5% margin)<br><i>U4.25 holding · room for 1 · half from the 1st · 98% · fair 1.02</i></td><td><b>Diriyah Club U1.5</b> 75.2% +20.0%<br>buy≥1.39 (+4.2% margin) · team · <i>next goal hurts</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 30-10 18:00 <b>Cracovia Kraków v Motor Lublin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.0 −5.4)</td><td>U4.25 86.1% <b>+0.3%</b><br>buy≥1.23 (+7.2% margin)</td><td>U3.75 73.9% +3.2%<br>buy≥1.29 (+2.3% margin) · floor −4.1</td></tr></table>
 <table align="left"><tr><th align="left">🔵 30-10 18:00 <b>Torku Konyaspor v Galatasaray</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (87.5 −1.0)</td><td>U4.25 85.0% <b>+0.8%</b><br>buy≥1.25 (+6.2% margin)</td><td>U3.75 70.8% +2.3%<br>buy≥1.32 (+0.7% margin) · floor −11.2</td></tr></table>
 <table align="left"><tr><th align="left">🔵 30-10 18:30 <b>Arminia Bielefeld v Eintracht Braunschweig</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>2. Bundesliga (81.9 −0.3)</td><td>O1.5 81.8% +1.7%<br>buy≥1.28 (+4.6% margin)</td><td><b>Arminia Bielefeld O1.5</b> 57.9% +9.0%<br>buy≥1.78 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.6% +4.3% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2916,7 +2915,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1119 / 1320   ·   84.8%**   ·   **Tip 2 — 717 / 1028   ·   69.7%**
+**Tip 1 — 1120 / 1321   ·   84.8%**   ·   **Tip 2 — 718 / 1029   ·   69.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.3 −3.9)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (89.6 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -5505,6 +5504,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-1 · 30-10 01:30 <b>Melgar v Comerciantes Unidos</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga 1 (75.5 −4.1)</td><td>O1.5 79.1% +4.3%<br>buy≥1.38 (+9.3% margin)</td><td>❌ <b>Melgar O1.5</b> 59.9% +11.8%<br>buy≥1.72 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ◦ DNB1 75.9% +8.6% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 30-10 02:30 <b>Atlético Nacional v Independiente Santa Fe</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (89.6 capped)</td><td>O1.5 0.0% <b>−97.0%</b><br>buy≥0.01 (−100.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-1 · 30-10 14:45 <b>Abha Club v Al-Ittihad</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.5 +0.7)</td><td>U4.25 83.0% <b>+0.6%</b><br>buy≥1.27 (+3.2% margin)</td><td>✅ <b>Al-Ittihad O0.5</b> 83.2% +11.0%<br>buy≥1.28 (+6.7% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-2 · 30-10 15:50 <b>Diriyah Club v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.5 +0.7)</td><td>U4.25 86.0% +3.7%<br>buy≥1.27 (+8.5% margin)</td><td>✅ <b>Diriyah Club U1.5</b> 75.2% +20.0%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 
 <br clear="all">
 
