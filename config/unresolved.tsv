@@ -3,7 +3,7 @@
 # A fix is an alias in config/team_aliases.json where the club is stored under another
 # spelling, or nothing at all where the league has no store — then there is no history
 # to price it with and the refusal is the right answer.
-# as of 2026-10-29 11:29 UTC
+# as of 2026-10-30 11:21 UTC
 # code	fixture	why
 AUT-BL	Austria Wien v Rapid Wien	home name unresolved
 BEL-PL	SK Beveren v Union Saint-Gilloise	away name unresolved
@@ -11,3 +11,10 @@ GRE-SL	Kalamata FC v Iraklis FC	home name unresolved
 POR-PL	Casa Pia v Sporting Lisbon	away name unresolved
 TUR-SL	Amed SK v Eyüpspor	home name unresolved
 UCL	Viking FK v Sabah FK	away name unresolved
+UECL	Red Star Belgrade v Inter Club d'Escaldes	home name unresolved
+UECL	FC Copenhagen v FC Iberia 1999	away name unresolved
+UECL	FC Lugano v FK Kauno Žalgiris	away name unresolved
+UECL	Riga FC v FK Jablonec	home name unresolved
+UECL	Universitatea Craiova v KF Egnatia	away name unresolved
+UEL	NEC Nijmegen v Omonoia FC	away name unresolved
+UEL	Torreense v FC Ararat-Armenia	home name unresolved
