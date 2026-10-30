@@ -13412,5 +13412,29 @@
 "Elo 1652 v 1752 · even tie on Elo",
 "Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Real Sociedad</b> at 1652 against <b>Lyon</b> at 1752: an even tie on club strength."
 ],
-"UEL|Sparta Prague v Bournemouth|2026-11-05": null
+"UEL|Sparta Prague v Bournemouth|2026-11-05": null,
+"UEL|AZ Alkmaar v Juventus|2026-11-05": [
+"Elo 1563 v 1819 · Elo mismatch",
+"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>AZ Alkmaar</b> at 1563 against <b>Juventus</b> at 1819: a mismatch — <b>Juventus</b> is the far stronger club."
+],
+"UEL|Bayer Leverkusen v Marseille|2026-11-05": null,
+"UEL|Benfica v Lech Poznań|2026-11-05": [
+"Elo 1807 v 1506 · Elo mismatch",
+"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Benfica</b> at 1807 against <b>Lech Poznań</b> at 1506: a mismatch — <b>Benfica</b> is the far stronger club."
+],
+"UEL|Celta Vigo v Union Saint-Gilloise|2026-11-05": [
+"Elo 1708 v 1699 · even tie on Elo",
+"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>Celta Vigo</b> at 1708 against <b>Union Saint-Gilloise</b> at 1699: an even tie on club strength."
+],
+"UEL|Celtic v Besiktas JK|2026-11-05": null,
+"UEL|Hapoel Be'er Sheva v OFI Crete|2026-11-05": null,
+"UEL|SK Sturm Graz v NK Celje|2026-11-05": [
+"Elo 1449 v 1439 · even tie on Elo",
+"Athena prices cups from Club Elo — strength measured across every competition, not just the domestic league. It reads <b>SK Sturm Graz</b> at 1449 against <b>NK Celje</b> at 1439: an even tie on club strength."
+],
+"UEL|Sunderland v Dinamo Zagreb|2026-11-05": null,
+"BRA-SA|Palmeiras v Remo|2026-11-05": [
+"strong attack",
+"<b>SE Palmeiras</b>: strong attack, elite defence, good form, top by results (2) — against <b>Clube do Remo</b>: weak attack, poor form."
+]
 }
