@@ -1175,6 +1175,47 @@ STRONG_WEAK_BANDS = ("3–5% under", "10%+ over")  # all seven here: WEAK
 # calling it strong, and names the 1.20 its own rate needs.
 MILD_CLAIM_LO, MILD_CLAIM_HI = 82.0, 85.0
 MILD_BREAKEVEN = 1.20
+#
+# AND TWO BANDS CHANGED SIDES (the bettor, 31 Oct, having deliberately
+# sat out and watched the table instead of betting it: "I am already
+# seeing that Strong 3-6% is become MILD and Mild 0-3% under is Strong.
+# You may swap those for me").
+#
+# The claim split above sorts an all-seven card by what it says about
+# itself. These two cells say something different, consistently, and
+# the gap did not close as volume came in — it opened:
+#
+#   ★ STRONG · 3–6% over    20 cards  80.0%  +0.9%  break-even 1.25
+#       cumulative: 86% (7) -> 90% (10) -> 93% (14) -> 83% (18) -> 80%
+#   MILD · 0–3% under       36 cards  88.9%  +7.9%  break-even 1.12
+#       cumulative: 92% (13) -> 86% (21) -> 86% (22) -> 91% (34) -> 89%
+#
+# STRONG's 3–6% over band is now WORSE than MILD overall (81.9%) and
+# its +0.9% is a loss at a book he can reach; MILD's 0–3% under band is
+# BETTER than STRONG overall (84.0%) and the cheapest cell on the page.
+# Each is in the wrong tier, so the band overrides the claim for these
+# two and only these two. Separation after the swap: STRONG 86.2%
+# (+6.5%, b/e 1.16), MILD 76.8% (-0.9%, b/e 1.30).
+#
+# BOTH ARE STILL THIN — 20 and 36 cards, and each has swung 14 points
+# across its life. He knows; it is why he has not been betting them.
+MILD_BANDS = ("3–6% over",)       # all-seven cells that behave like MILD
+STRONG_BANDS = ("0–3% under",)    # ...and like STRONG, whatever the claim
+
+
+def mild_cell(claim: float | None, band: str) -> bool:
+    """Is an all-seven card at a STRONG price MILD rather than STRONG?
+
+    The one definition. profile_name answers the record with it and
+    mild() answers the pill with it, because a board that calls a card
+    STRONG while the record files it under MILD is the drift
+    board.verify exists to catch.
+    """
+    if band in STRONG_BANDS:
+        return False
+    if band in MILD_BANDS:
+        return True
+    return claim is not None and MILD_CLAIM_LO <= claim < MILD_CLAIM_HI
 _SEVEN_BUSY: set = set()
 
 
@@ -1479,11 +1520,19 @@ def live_good(f) -> tuple[str, float] | None:
 
 
 def mild(f) -> bool:
-    """A STRONG card whose claim sits in the soft 82-85% middle."""
+    """A STRONG card the record files under MILD: the soft 82-85% claim
+    middle, or one of the two bands that changed sides on 31 Oct.
+
+    Read through card_profile so the pill and the record answer from the
+    SAME call — profile_name — rather than from two copies of the rule.
+    The claim test stays as the fallback for a card with no price, where
+    there is no band to read."""
     if tier_of(f) != "strong":
         return False
-    c = _claim(f.tip1)
-    return c is not None and MILD_CLAIM_LO <= c < MILD_CLAIM_HI
+    pb = card_profile(f)
+    if pb:
+        return pb[0] == PROFILES[1]
+    return mild_cell(_claim(f.tip1), "")
 
 
 def _live_good_html(lg) -> str:
@@ -1599,8 +1648,7 @@ def profile_name(lane, lab, claim, gap, best, seven) -> str:
     if seven and band in STRONG_WEAK_BANDS and best >= fsr:
         return PROFILES[6]      # a band STRONG gave up
     if seven and gap >= -STRONG_UNDER and best >= fsr:
-        return PROFILES[1] if MILD_CLAIM_LO <= claim < MILD_CLAIM_HI \
-            else PROFILES[0]
+        return PROFILES[1] if mild_cell(claim, band) else PROFILES[0]
     if seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
         return PROFILES[2]
     if lgood_:
@@ -3947,10 +3995,15 @@ def _guard(f, best: int) -> str:
                 f'{html.escape(why)} — out of the record whatever the price">'
                 f'\u26d4 declined \u00b7 {html.escape(why)}</span>')
     elif v["strong"] and mild(f):
-        mark = ('<span class="vmark mild" title="STRONG, but in the soft '
-                f'{MILD_CLAIM_LO:.0f}-{MILD_CLAIM_HI:.0f}% claim middle: 35 of '
-                '42 (83.3%) against 88.6% below it and 92.3% above. Still a '
-                f'play, and it needs {MILD_BREAKEVEN:.2f} to break even.">'
+        _why = ("in the 3\u20136% over band, which STRONG gave up on "
+                "31 Oct: 16 of 20 (80.0%), +0.9% at a feed price and so "
+                "a loss at a book you can reach"
+                if (card_profile(f) or ("", ""))[1] in MILD_BANDS else
+                f"in the soft {MILD_CLAIM_LO:.0f}-{MILD_CLAIM_HI:.0f}% "
+                "claim middle: 35 of 42 (83.3%) against 88.6% below it "
+                "and 92.3% above")
+        mark = (f'<span class="vmark mild" title="STRONG, but {_why}. Still '
+                f'a play, and it needs {MILD_BREAKEVEN:.2f} to break even.">'
                 f'MILD · PLAY{_edge_html("strong", odds)}</span>')
     elif v["strong"]:
         mark = ('<span class="vmark strong">★ STRONG · PLAY'

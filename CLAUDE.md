@@ -337,6 +337,43 @@ the 1.20 its own rate needs. webapp.mild; its own row on Profiles, search
 word `tier mild`. The optimizer still measures MILD inside STRONG for the
 floor — splitting that is a separate decision.
 
+**TWO BANDS CHANGED SIDES.** (31 Oct, after deliberately sitting out
+the tips to watch the table instead: "all the bands were still to tin to
+be able to blindly trust it ... I am already seeing that Strong 3-6% is
+become MILD and Mild 0-3% under is Strong. You may swap those for me.")
+The claim split sorts an all-seven card by what it says about itself;
+these two cells said something different, and the gap OPENED as volume
+came in rather than closing:
+
+- **★ STRONG · 3–6% over** — 20 cards, 80.0%, +0.9%, break-even 1.25.
+  Cumulatively 86% (7) → 93% (14) → 83% (18) → 80% (20). Worse than
+  MILD overall (81.9%), and +0.9% at a FEED price is a loss at a book he
+  can reach. → **MILD**.
+- **MILD · 0–3% under** — 36 cards, 88.9%, +7.9%, break-even 1.12.
+  Cumulatively 92% (13) → 86% (22) → 91% (34) → 89% (36). Better than
+  STRONG overall (84.0%), and the cheapest cell on the page.
+  → **★ STRONG**.
+
+For these two the BAND overrides the claim; every other cell still goes
+by claim. `webapp.MILD_BANDS`, `webapp.STRONG_BANDS`, and one test —
+`webapp.mild_cell` — which profile_name answers the record with and
+mild() answers the pill with, so the two cannot drift. After the swap
+STRONG reads 86.2% (+6.5%, break-even 1.16) and MILD 76.8% (−0.9%,
+break-even 1.30).
+
+AND THAT LEAVES MILD UNDERWATER, which is his to decide, not mine. A
+76.8% tier returning −0.9% at a feed price is what the 10%+ over band
+was moved out of STRONG for on 14 Oct. Its drag is one cell: MILD ·
+6–10% over, 17 cards at 64.7% and −12.3%. The band mover declines a
+play cell under 80% with a non-positive ROI at MOVE_MIN_N = 30, so that
+cell declines itself at 30 if it holds — 13 cards away.
+
+HE IS WAITING ON VOLUME, NOT ON A VERDICT. "I still want those bands to
+become stronger in volume to start relying more on it." Both moved
+cells have swung 14 points across their lives; 6–10% over has swung 23.
+Do not read a cell of 20 as settled, and do not quietly re-tune one
+because a week went badly — bring him the trajectory and let him call it.
+
 **THE 10%+ OVER BAND LEFT STRONG.** (14 Oct: "move over 10% from STRONG
 to weak. ROI and hitrate are negative".) 18 of 25, 72.0%, break-even
 1.39, and +0.5% only at a feed price he cannot reach. It is also where
