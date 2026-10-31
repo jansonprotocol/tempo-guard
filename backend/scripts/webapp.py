@@ -2043,6 +2043,207 @@ LIVE_MIN_N = 12             # cards before a live cell speaks
 LIVE_DEAD = 55.0            # under this the card's own lane is called dead
 
 
+# THE LEAGUE CROSS-CHECK (the bettor, 31 Oct, reading the league x
+# profile grid: "Look at Mexico for example at sw from. 79%. Strong
+# watch has a higher expectancy. A big veto > decline there would help
+# then ... put a little confirmation or veto under the give final athena
+# lane: something in the idea of 'cross checked: OK' or 'cross checked:
+# veto'. Also put a little current nummer it reflects on next it ...
+# Let athena also keep track of those numbers so they stay up to date.
+# Numbers are somewhere to tin to immediately start declining. But good
+# data to have to start.")
+#
+# What it asks: how has THIS COMPETITION done inside THIS PROFILE, on
+# the settled counted cards. Nothing band-specific — the profile whole.
+#
+# IT IS COMPARED WITH THE PROFILE, NOT WITH THE BOARD, and that is the
+# whole arithmetic of it. Leagues sit unevenly across profiles — MLS is
+# thick in the watch families, BRA-SB in the play ones — so a league's
+# raw rate mostly reports which profiles it lands in. The baseline is
+# the profile's own rate with THIS league taken out, so a league never
+# helps set the bar it is judged against.
+#
+# THRESHOLDS, from what the record can actually resolve: a ten-point
+# gap separates on about thirty cards, a five-point gap needs three
+# hundred. So a cell under LEAGUE_MIN_N says "thin" and nothing else,
+# and only a gap of LEAGUE_VETO points or more is called a veto.
+#
+# A FLAG, NOT A DECLINE, exactly as the band check is: "numbers are
+# somewhere to tin to immediately start declining". It moves no card,
+# no tier and no record. config/league_cell_log.tsv keeps one row per
+# pending card so the flag's own worth can be measured later, the way
+# config/tier_band_log.tsv does for the band.
+LEAGUE_CELL: dict = {}      # (profile, code) -> (n, hits); (profile, "") = all
+LEAGUE_MIN_N = 10           # under this a cell only ever says "thin"
+LEAGUE_VETO = 5.0           # points under the profile before it vetoes
+LEAGUE_OK = 2.0             # ...and within this of it before it confirms
+
+
+def build_league(fixtures) -> None:
+    """Fill LEAGUE_CELL from the settled counted cards at first sight —
+    the same population the Profiles page and build_market count."""
+    from scripts import forward_settle as _fs
+    LEAGUE_CELL.clear()
+    byday = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
+    final = {}
+    for f in fixtures:
+        if f.settled and "\u2014" in f.status:
+            sc = f.status.split("\u2014")[-1].strip().split(" ")[0]
+            if "-" in sc:
+                try:
+                    hg, ag = sc.split("-")
+                    final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
+                except ValueError:
+                    pass
+    if not FORWARD.exists():
+        return
+    seen = set()
+    for ln in FORWARD.read_text().splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        p = ln.split("\t")
+        if len(p) < 13 or p[1] < SESSION_DATE or _fs._artefact(p[5]):
+            continue
+        key = (p[1], p[3])
+        if key in seen:
+            continue
+        seen.add(key)
+        f = byday.get(key)
+        if f is None or key not in final or p[7].endswith("red") \
+                or is_declined(f):
+            continue
+        try:
+            need, best, claim = float(p[9]), float(p[11] or p[10]), float(p[6])
+        except ValueError:
+            continue
+        got = _fs._settle(p[5], *final[key])
+        if got is None or need <= 0:
+            continue
+        prof = profile_name(p[5], p[7], claim, (best / need - 1) * 100, best,
+                            all_seven(f, p[7]))
+        for k in ((prof, p[2]), (prof, "")):
+            n, h = LEAGUE_CELL.get(k, (0, 0))
+            LEAGUE_CELL[k] = (n + 1, h + bool(got[1]))
+
+
+def league_read(prof: str | None, code: str) -> dict | None:
+    """This league's record inside this profile, against the profile's
+    own rate with the league removed."""
+    if not prof or not code or not LEAGUE_CELL:
+        return None
+    cell = LEAGUE_CELL.get((prof, code))
+    whole = LEAGUE_CELL.get((prof, ""))
+    if not cell or not whole:
+        return None
+    n, h = cell
+    wn, wh = whole
+    on, oh = wn - n, wh - h          # leave-one-out: the rest of the profile
+    if on < LEAGUE_MIN_N:
+        return None                  # nothing honest to compare against
+    rate, base = 100 * h / n, 100 * oh / on
+    return dict(code=code, profile=prof, n=n, hit=h, rate=rate,
+                base=base, base_n=on, gap=rate - base)
+
+
+def league_call(f) -> dict | None:
+    """'ok', 'veto', 'close' or 'thin' for this card, with the numbers
+    behind it. A flag only — it moves nothing."""
+    pb = card_profile(f)
+    if not pb:
+        return None
+    rd = league_read(pb[0], f.code)
+    if not rd:
+        return None
+    if rd["n"] < LEAGUE_MIN_N:
+        rd["call"] = "thin"
+    elif rd["gap"] <= -LEAGUE_VETO:
+        rd["call"] = "veto"
+    elif rd["gap"] >= -LEAGUE_OK:
+        rd["call"] = "ok"
+    else:
+        rd["call"] = "close"
+    return rd
+
+
+SHORT_LEAGUE_PROFILE = {PROFILES[0]: "STRONG", PROFILES[1]: "MILD",
+                        PROFILES[2]: "STRONG FROM",
+                        PROFILES[3]: "LIVE INPLAY GOOD",
+                        PROFILES[4]: "STRONG WATCH",
+                        PROFILES[5]: "STRONG WATCH FROM",
+                        PROFILES[6]: "WEAK",
+                        PROFILES[7]: "all 7, under the floor",
+                        PROFILES[8]: "plain play", PROFILES[9]: "plain watch",
+                        PROFILES[10]: "5%+ under, band off"}
+
+
+def _crosscheck_html(f) -> str:
+    """The cross-check line under the card's final lane."""
+    rd = league_call(f)
+    if not rd or f.settled:
+        return ""
+    word = {"ok": "OK", "veto": "VETO", "close": "close",
+            "thin": "thin"}[rd["call"]]
+    mark = {"ok": "\u2713", "veto": "\u26a0\ufe0f", "close": "\u00b7",
+            "thin": "\u00b7"}[rd["call"]]
+    prof = SHORT_LEAGUE_PROFILE.get(rd["profile"], rd["profile"])
+    tip = ("How this competition has done inside this profile, on the "
+           f"settled counted cards: {rd['hit']} of {rd['n']}. Against the "
+           f"same profile with {rd['code']} taken out, {rd['base']:.0f}% on "
+           f"{rd['base_n']} \u2014 a gap of {rd['gap']:+.0f} points. "
+           f"Tracked only: it moves no card, no tier and no record. Under "
+           f"{LEAGUE_MIN_N} cards it says thin and nothing more.")
+    return (f'<div class="xcheck {rd["call"]}" title="{html.escape(tip)}">'
+            f'{mark} cross-checked: <b>{word}</b> '
+            f'<span class="dim">\u00b7 {html.escape(rd["code"])} in '
+            f'{html.escape(prof)} {rd["rate"]:.0f}% on {rd["n"]} '
+            f'\u00b7 profile {rd["base"]:.0f}%</span></div>')
+
+
+LEAGUE_CELL_LOG = ROOT / "config" / "league_cell_log.tsv"
+_LCL_HEAD = (
+    "# Does the league back the profile? One row per pending card, the\n"
+    "# league's record inside its profile (webapp.league_read /\n"
+    "# league_call) as it stood at the last render before kickoff;\n"
+    "# rewritten while the card is pending, frozen from kickoff. The\n"
+    "# baseline is the profile with THIS league taken out, so a league\n"
+    "# never sets the bar it is judged against. TRACKED ONLY: it moves no\n"
+    "# card, no tier and no record (bettor, 31 Oct: \"numbers are somewhere\n"
+    "# to tin to immediately start declining. But good data to have\").\n"
+    "# date\tfixture\tcode\tprofile\tn\thit\tbase_n\tbase\tgap\tcall\tread_at\n")
+
+
+def league_cell_log(fixtures) -> list[list[str]]:
+    """Update config/league_cell_log.tsv for the pending cards and
+    return every row."""
+    rows: dict = {}
+    if LEAGUE_CELL_LOG.exists():
+        for ln in LEAGUE_CELL_LOG.read_text().splitlines():
+            if ln.startswith("#") or not ln.strip():
+                continue
+            q = ln.split("\t")
+            if len(q) >= 11:
+                rows[(q[0], q[1])] = q
+    now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
+    # a card taken off the board has no result coming at that date
+    on_board = {(f.kickoff.split(" ")[0], f.teams) for f in fixtures}
+    rows = {k: q for k, q in rows.items() if k in on_board}
+    for f in fixtures:
+        if f.settled or f.status or odds_api.started(f.kickoff):
+            continue
+        key = (f.kickoff.split(" ")[0], f.teams)
+        rd = league_call(f)
+        if not rd:
+            rows.pop(key, None)
+            continue
+        rows[key] = [key[0], f.teams, rd["code"], rd["profile"],
+                     str(rd["n"]), f"{rd['rate']:.1f}", str(rd["base_n"]),
+                     f"{rd['base']:.1f}", f"{rd['gap']:+.1f}", rd["call"], now]
+    out = [rows[k] for k in sorted(rows)]
+    LEAGUE_CELL_LOG.write_text(_LCL_HEAD
+                               + "".join("\t".join(r) + "\n" for r in out))
+    return out
+
+
 def build_live(fixtures) -> None:
     """Fill LIVE_BAR from the settled counted cards that have a timeline."""
     from scripts import forward_settle as _fs
@@ -4712,7 +4913,12 @@ def _card(f, kind: str, reads: dict) -> str:
                 f"{_lanebar(f, cell, lab, terse)}"
                 f"{_buybar_html(f, cell) if which == best else ''}"
                 f"{_livebar_html(f, cell)}{live}"
-                f"{_prekick_html(f, cell)}</div>")
+                f"{_prekick_html(f, cell)}"
+                # the league cross-check sits under the card's FINAL
+                # lane, which is the starred one before kickoff and the
+                # struck one after it
+                f"{_crosscheck_html(f) if which == (best or 1) else ''}"
+                "</div>")
 
     read = reads.get(f"{f.code}|{f.teams}|{f.kickoff.split(' ')[0]}")
     kw = (f'<div class="kw">🧠 {html.escape(read[0])}</div>' if read else "")
@@ -5414,6 +5620,7 @@ def main() -> None:
     # filled from).
     build_market(fixtures)
     build_live(fixtures)
+    build_league(fixtures)
     pending = [f for f in fixtures if not f.settled]
     # PLAYABLE now means what it says: cards the guard would actually
     # stake. It used to mean "a lane cleared the engine's edge bar", which
@@ -5892,6 +6099,7 @@ def main() -> None:
             ip="in-play" in b["note"]))
     band_log(_crow, _logbets)
     tier_band = tier_band_html(tier_band_log(fixtures), fixtures)
+    league_cell_log(fixtures)
     profiles_modal = profiles_html(fixtures)
 
     def _short(note: str, cap: int = 64) -> str:
@@ -6484,6 +6692,14 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
   border:1px solid #2b3242; color:#c8d0e0; border-radius:6px;
   padding:7px 16px; font:inherit; cursor:pointer; }}
 .fxshut:hover {{ border-color:var(--gold); color:var(--gold); }}
+.xcheck {{ margin:.1rem 0 .15rem; padding:.12rem .4rem; font-size:.88em;
+  border-left:3px solid var(--dim); color:var(--dim); }}
+.xcheck b {{ letter-spacing:.02em; }}
+.xcheck.ok {{ border-left-color:#4ade80; color:#bbf7d0; }}
+.xcheck.ok b {{ color:#4ade80; }}
+.xcheck.veto {{ border-left-color:#ef4444; color:#fecaca; }}
+.xcheck.veto b {{ color:#f87171; }}
+.xcheck.close {{ border-left-color:#fbbf24; }}
 #stalebar {{ display:none; position:sticky; top:0; z-index:99;
   background:#7f1d1d; color:#fff; padding:.55rem .9rem; font-weight:600;
   line-height:1.35; border-bottom:2px solid #ef4444; }}

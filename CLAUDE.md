@@ -62,6 +62,54 @@ tier?" table): on its first as-of read, 4 Oct, vetoed tiered cards had
 landed 16 of 17 and backed ones 82 of 94 — no edge yet. Say so whenever
 it fires; it never argues against a bet already placed.
 
+**THE THIRD CHECK: DOES THE LEAGUE BACK THE PROFILE?** (31 Oct, reading
+the league x profile grid: "Look at Mexico for example at sw from. 79%.
+Strong watch has a higher expectancy. A big veto > decline there would
+help then ... put a little confirmation or veto under the give final
+athena lane: something in the idea of 'cross checked: OK' or 'cross
+checked: veto'. Also put a little current nummer it reflects on next
+it ... Let athena also keep track of those numbers so they stay up to
+date.") Under the card's FINAL lane, below the buy bar:
+
+    ✓ cross-checked: OK   · ENG-PL in STRONG 89% on 9 · profile 86%
+    ⚠️ cross-checked: VETO · MEX-LMX in STRONG WATCH FROM 79% on 34 · profile 86%
+
+How THIS competition has done inside THIS profile on the settled
+counted cards. Not band-specific — the profile whole, which is what he
+asked for. `webapp.league_call`, filled once per render by
+`build_league` the way MARKET_BAR and BAND_STATS are, so the numbers
+move with the record.
+
+IT IS COMPARED WITH THE PROFILE, NOT THE BOARD, and that is the whole
+arithmetic. Leagues sit unevenly across profiles — MLS is thick in the
+watch families, BRA-SB in the play ones — so a league's raw rate mostly
+reports which profiles it lands in. The baseline is the profile's own
+rate with THAT LEAGUE TAKEN OUT, so a league never sets the bar it is
+judged against.
+
+THE WORDS: **veto** at `LEAGUE_VETO` (5) points or more under the
+profile, **OK** within `LEAGUE_OK` (2) of it or better, **close** in
+between, **thin** under `LEAGUE_MIN_N` (10) cards, which says nothing
+else. The thresholds come from what the record can resolve: a ten-point
+gap separates on about thirty cards, a five-point gap needs three
+hundred.
+
+A FLAG, NOT A DECLINE — his words, "numbers are somewhere to tin to
+immediately start declining. But good data to have to start." It moves
+no card, no tier, no record and no tab. config/league_cell_log.tsv
+keeps one row per pending card, frozen at kickoff, so the flag's own
+worth can be measured later exactly as config/tier_band_log.tsv does
+for the band check.
+
+WHAT IT READ ON THE FIRST RUN: 204 cards carried a line — 117 thin, 44
+OK, 24 close, 19 veto. His own example came out as he called it,
+MEX-LMX in STRONG WATCH FROM at 79% on 34 against a profile of 86%.
+The other two he named read differently against the profile baseline
+than against Mexico: ENG-CH 83% on 23 and FRA-L2 82% on 40 are both
+`close`, slightly UNDER the 86% profile rather than above it — they
+look strong next to Mexico, not next to their own profile. TUR-SL at
+88% on 17 is OK.
+
 **WEAK MEANS NO PLAY.** (4 Oct: "Medium actually looks weak to me ... label
 it weak"; then "everything else is also weak, all below 75% ... leaving it
 now for data, but weak basically means no plays.") The tier once called
