@@ -31,6 +31,8 @@ Measuring it needs care that eyeballing a grid does not give:
 
     python scripts/league_profile.py              the whole report
     python scripts/league_profile.py --table      just profile x league
+    python scripts/league_profile.py --grid       every league x every
+                                                  profile, nothing hidden
     python scripts/league_profile.py --min 20     raise the volume bar
 
 READ-ONLY. Nothing here moves a card, a tier or a band.
@@ -141,6 +143,51 @@ def survivors(rows: list[dict], by_profile: dict) -> list[dict]:
     return out
 
 
+def grid(rows: list[dict], by_profile: dict) -> None:
+    """Every league against every profile, nothing suppressed.
+
+    He asked to see all of it and draw his own conclusion, so this hides
+    no cell for being small — but a cell of one or two is a coin, and
+    the n is printed beside every rate so it cannot be read as anything
+    else. The z on the right is the stratified, leave-one-out figure
+    from the report below; it is the only column that accounts for a
+    league's profile mix, which is why a big rate in a thin column
+    usually means nothing."""
+    profs = sorted(by_profile, key=lambda k: -len(by_profile[k]))
+    short = {w.PROFILES[0]: "STRONG", w.PROFILES[1]: "MILD",
+             w.PROFILES[2]: "S-FROM", w.PROFILES[3]: "LIVEGOOD",
+             w.PROFILES[4]: "SWATCH", w.PROFILES[5]: "SW-FROM",
+             w.PROFILES[6]: "WEAK"}
+    head = [short.get(p, p.split("·")[-1].strip()[:8]) for p in profs]
+    zs = {d["code"]: d for d in survivors(rows, by_profile)}
+    codes = sorted({r["code"] for r in rows},
+                   key=lambda c: -len([r for r in rows if r["code"] == c]))
+    print("EVERY LEAGUE x EVERY PROFILE — rate·cards, nothing hidden")
+    print("  a cell of 1 or 2 is a coin; the z column is the only one that "
+          "accounts for profile mix\n")
+    print(f"  {'league':9} " + " ".join(f"{h:>8}" for h in head)
+          + f" | {'all':>9} {'z':>6}")
+    for c in codes:
+        mine = [r for r in rows if r["code"] == c]
+        cells = []
+        for p in profs:
+            k = [r for r in by_profile[p] if r["code"] == c]
+            cells.append(f"{rate(k)[2]:3.0f}%·{len(k):<3}" if k else " " * 8)
+        n, h, hr = rate(mine)
+        z = zs.get(c, {}).get("z")
+        ztxt = f"{z:+6.2f}" if z is not None else "     -"
+        print(f"  {c:9} " + " ".join(cells)
+              + f" | {hr:3.0f}%·{n:<4} {ztxt}")
+    tot = []
+    for p in profs:
+        n, h, hr = rate(by_profile[p])
+        tot.append(f"{hr:3.0f}%·{n:<3}")
+    n, h, hr = rate(rows)
+    print(f"  {'ALL':9} " + " ".join(tot) + f" | {hr:3.0f}%·{n:<4}")
+    print(f"\n  columns: " + " · ".join(f"{s_}={p}" for s_, p in
+                                        zip(head, profs)))
+
+
 def main() -> None:
     args = sys.argv[1:]
     rows = pm.cards()
@@ -156,6 +203,10 @@ def main() -> None:
     print(f"{len(rows)} settled counted cards · "
           f"{len({r['code'] for r in rows})} competitions · "
           f"{len(by_profile)} profiles\n")
+
+    if "--grid" in args:
+        grid(rows, by_profile)
+        return
 
     print("PROFILE x LEAGUE")
     for prof in sorted(by_profile, key=lambda k: -len(by_profile[k])):
