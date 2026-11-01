@@ -56,11 +56,49 @@ top and again at the bottom, bold, with the symbol. Legs where it agrees
 are said so in one line; close, split and thin go in the body. Both
 alerts can fire on one slip; name each once at each end.
 
-THIS IS A FLAG, NOT A DECLINE, AND IT IS UNPROVEN. The band check is
-tracked only (config/tier_band_log.tsv, the "Does the band back the
-tier?" table): on its first as-of read, 4 Oct, vetoed tiered cards had
-landed 16 of 17 and backed ones 82 of 94 — no edge yet. Say so whenever
-it fires; it never argues against a bet already placed.
+THIS IS A FLAG, NOT A DECLINE. It never argues against a bet already
+placed.
+
+AND AFTER A MONTH OF LIVE ROWS, SCORED: THE VETO IS THE ONE WORD THAT
+SAYS NOTHING. (1 Nov: "What about this tracking? Is it helpfull? We
+have been tracking those to see if it in reality says something. Does
+it though?") `scripts/flag_worth.py band` scores every word against
+what the card's own TIER already predicts — stratified, leave-one-out,
+because the words are not spread evenly across tiers and a veto lands
+far more often on a weak card than on a STRONG one. On the 681 rows
+read live and frozen at kickoff:
+
+    word       cards       rate   tier predicts      z
+    confirms   355/421    84.3%          84.0%    +0.16
+    split      143/161    88.8%          84.7%    +1.45
+    close        4/12     33.3%          74.5%    -3.36
+    vetoes      18/26     69.2%          72.3%    -0.36
+    thin         3/5      60.0%          64.5%    -0.21
+
+**vetoes adds nothing.** Its raw 69.2% looks alarming and is entirely
+the tier it lands on: those cards were already predicted at 72.3%.
+Over the full 1,312 rows including the backfilled ones it reads +0.96,
+slightly BETTER than its tier. Two populations, both saying the same
+thing — the veto is describing which cards it fires on, not their
+outcome.
+
+**close is the only word with signal**, and it is the quiet one: z
+-2.83 over all rows (36/53, 67.9% against 82.6% predicted) and -3.36
+live. Both lines sitting in the 75-80% zone is a real warning; one line
+under 75%, which is what earns a veto, is not. Thin — 53 cards, 12 of
+them live — so it is suggestive, not settled.
+
+SO THE ALERT IS POINTED AT THE WRONG WORD. The rule above says a leg
+whose band DOES NOT AGREE gets the top-and-bottom alert. On the record
+so far that alert fires on noise, and the word that would have earned
+it goes in the body. HIS CALL, not mine — the rule stands until he
+changes it. Say the state of the evidence whenever the alert fires.
+
+THE BACKFILLED ROWS ARE NOT EVIDENCE. The log's earliest 632 rows were
+reconstructed "as-of" rather than read at the time, on a median of six
+of his own bets against fifteen on the live rows, and including them
+flips the veto from 69.2% to 91.9%. flag_worth excludes them by
+default; `--all` puts them back.
 
 **THE THIRD CHECK: DOES THE LEAGUE BACK THE PROFILE?** (31 Oct, reading
 the league x profile grid: "Look at Mexico for example at sw from. 79%.
