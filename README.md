@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 84.7%
 
     lane                        Tip 1              Tip 2
-    all matches            1226 / 1448  84.7%    791 / 1136  69.6%
+    all matches            1227 / 1449  84.7%    791 / 1136  69.6%
     played lanes  >+1%     469 / 550  85.3%    788 / 1130  69.7%
     placed bets            259 / 335  77.3%    ROI -0.9%
 
@@ -2780,8 +2780,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 01-11 18:00 <b>PAOK Thessaloniki v Asteras Tripolis</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (78.4 −5.3)</td><td>O1.0 82.1% <b>−10.8%</b><br>buy≥1.18 (+6.7% margin)</td><td>U3.5 74.4% +1.7%<br>buy≥1.40 (+3.9% margin) · floor −0.6</td></tr></table>
 <table align="left"><tr><th align="left">🔵 01-11 20:00 <b>Panathinaikos v AEK Athens</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (78.4 −5.3)</td><td>O1.0 82.0% <b>−10.8%</b><br>buy≥1.17 (+6.6% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Moved to 2026-11-02 <b>Tenerife v Andorra CF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (86.3 capped)</td><td>U3.0 75.9% <b>+0.0%</b><br>buy≥1.40 (+1.0% margin) · <i>✗ gone</i></td><td>— none</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+2' 1-3 <b>Los Angeles FC v Minnesota United FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (83.9 +3.9)</td><td>O1.5 80.7% <b>−1.1%</b><br>buy≥1.30 (+6.1% margin)<br><i>O1.5 holding · ✓ landed · as good as landed</i><br><i>also live: U4.5 flip 80% fair 1.26</i></td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.8% +2.5% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 44' 1-0 <b>Portland Timbers v Houston Dynamo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (83.9 +3.9)</td><td>U4.25 79.9% <b>+0.4%</b><br>buy≥1.36 (+5.9% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · 90% · fair 1.11</i><br><i>also live: U2.5 tighter 48% fair 2.10 · O2.5 flip 52% fair 1.91</i></td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 45'+2' 1-0 <b>Portland Timbers v Houston Dynamo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (83.9 +3.9)</td><td>U4.25 79.9% <b>+0.4%</b><br>buy≥1.36 (+5.9% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · 90% · fair 1.11</i><br><i>also live: U2.5 tighter 48% fair 2.06 · O2.5 flip 52% fair 1.94</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 02-11 16:00 <b>Kryliya Sovetov v Zenit St Petersburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (83.9 −1.7)</td><td>O1.5 79.9% +5.9%<br>buy≥1.31 (+4.5% margin)</td><td><b>Zenit St Petersburg O0.5</b> 80.0% +12.5%<br>buy≥1.31 (+4.6% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 74.8% +2.3% · buy≥1.40 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 02-11 16:15 <b>Oviedo v Las Palmas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (86.3 capped)</td><td>U4.25 84.4% <b>−4.8%</b><br>buy≥1.21 (+5.4% margin)</td><td><b>Oviedo O0.5</b> 80.0% +3.7%<br>buy≥1.33 (+6.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 70.4% +7.5% · buy≥1.49 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 02-11 17:00 <b>Atromitos Athens v Volos FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (78.4 −5.3)</td><td>O1.5 76.4% +2.4%<br>buy≥1.38 (+5.2% margin)</td><td><b>Atromitos Athens O1.5</b> 57.6% +16.2%<br>buy≥1.79 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.5% +23.8% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3210,7 +3209,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1226 / 1448   ·   84.7%**   ·   **Tip 2 — 791 / 1136   ·   69.6%**
+**Tip 1 — 1227 / 1449   ·   84.7%**   ·   **Tip 2 — 791 / 1136   ·   69.6%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.4 −3.8)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (89.6 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -6065,6 +6064,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-2 · 02-11 01:00 <b>New England Revolution v Inter Miami CF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (83.9 +3.9)</td><td>U4.25 80.0% <b>+0.5%</b><br>buy≥1.36 (+5.9% margin)</td><td>✅ <b>Inter Miami CF O1.5</b> 57.5% +16.7%<br>buy≥1.79 (+3.0% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.1% +2.8% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 02-11 02:00 <b>Cruz Azul v León</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.7 capped)</td><td>O1.5 77.6% <b>+0.0%</b><br>buy≥1.26 (+1.9% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 76.8% +2.1% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-11 02:15 <b>Deportivo Cali v Boyacá Chicó FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (89.6 capped)</td><td>O1.5 85.7% <b>−11.2%</b><br>buy≥1.13 (+5.4% margin)</td><td>✅ <b>Deportivo Cali O1.5</b> 60.3% +20.5%<br>buy≥1.71 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 81.7% +17.6% · buy≥1.29 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-3 · 02-11 02:30 <b>Los Angeles FC v Minnesota United FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (83.9 +3.9)</td><td>O1.5 80.7% <b>−1.1%</b><br>buy≥1.30 (+6.1% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 77.8% +2.5% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
