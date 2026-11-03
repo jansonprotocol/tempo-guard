@@ -2960,8 +2960,8 @@
 2026-11-05 01:30	BRA-SA	Brasileirão	Sao Paulo v Corinthians	U3.0 77.4% +2.1% · buy≥1.48 (+5.4% margin)	U2.75 56.4% +2.5% (floor −18.6) · buy≥1.58 (−0.3% margin)		DNB1 68.1% +2.4% · buy≥1.54 · probation
 2026-11-05 02:30	PER-L1	Liga 1	Universitario v Sport Boys	O1.5 80.3% +5.3% · buy≥1.37 (+9.7% margin)	O2.25 58.0% +7.6% (floor −17.0) · buy≥1.58 (+3.0% margin)		12 78.9% +3.3% · buy≥1.33 · probation
 2026-11-04 16:30	UEL	Europa League	Rennes v Olympiakos Piraeus	— no tip: engine abstained (thin history or an unresolved name)	—		
-2026-11-05 14:25	SAU-PL	Pro League	Al-Kholood v Al-Khaleej	U4.25 85.6% +3.3% · buy≥1.25 (+5.0% margin)	U3.75 70.3% +4.6% (floor −4.7) · buy≥1.37 (+3.9% margin)		
-2026-11-05 18:30	SAU-PL	Pro League	Al-Qadsiah v Al-Fayha	O1.5 81.0% +1.5% · buy≥1.26 (+1.7% margin)	**Al-Qadsiah O1.5** 62.2% +17.2% (team) · buy≥1.66 (+3.4% margin)		DNB1 82.3% +26.9% · buy≥1.28 · probation
+2026-11-05 14:25	SAU-PL	Pro League	Al-Kholood v Al-Khaleej	U4.25 85.6% +3.3% · buy≥1.25 (+5.0% margin)	U3.75 70.3% +4.6% (floor −4.7) · buy≥1.37 (+3.9% margin)	PP Postponed	
+2026-11-05 18:30	SAU-PL	Pro League	Al-Qadsiah v Al-Fayha	O1.5 81.0% +1.5% · buy≥1.26 (+1.7% margin)	**Al-Qadsiah O1.5** 62.2% +17.2% (team) · buy≥1.66 (+3.4% margin)	PP Postponed	DNB1 82.3% +26.9% · buy≥1.28 · probation
 2026-11-05 18:45	UEL	Europa League	AC Milan v Ferencváros TC	— no tip: engine abstained (thin history or an unresolved name)	—		
 2026-11-05 18:45	UEL	Europa League	Anderlecht v Salzburg	U4.25 85.0% **+1.0%** · buy≥1.25 (+4.8% margin)	U3.75 69.5% +1.4% (floor −12.5) · buy≥1.34 (+0.7% margin)		
 2026-11-05 18:45	UEL	Europa League	Crystal Palace v TSG Hoffenheim	U4.25 81.8% **−2.2%** · buy≥1.28 (+2.5% margin)	— none		
@@ -2979,7 +2979,7 @@
 2026-11-05 21:00	UEL	Europa League	Sunderland v Dinamo Zagreb	— no tip: engine abstained (thin history or an unresolved name)	—		
 2026-11-05 23:30	BRA-SA	Brasileirão	Palmeiras v Remo	U4.25 82.8% **−6.0%** · buy≥1.22 (+6.8% margin)	**Remo U1.5** 75.4% +3.4% (team) · buy≥1.39 (+4.7% margin)		DNB1 74.3% +8.5% · buy≥1.41 · probation
 2026-11-06 01:30	BRA-SA	Brasileirão	Cruzeiro v Bahia	U4.25 82.9% **−5.8%** · buy≥1.24 (+6.8% margin)	**Cruzeiro O1.5** 52.4% +8.5% (team) · buy≥1.95 (+2.5% margin)		12 78.1% +4.9% · buy≥1.35 · probation
-2026-11-05 16:10	SAU-PL	Pro League	Abha Club v Al-Shabab	U4.25 86.0% +3.8% · buy≥1.26 (+8.5% margin)	U3.75 72.3% +6.6% (floor −2.7) · buy≥1.33 (+4.0% margin)		
+2026-11-05 16:10	SAU-PL	Pro League	Abha Club v Al-Shabab	U4.25 86.0% +3.8% · buy≥1.26 (+8.5% margin)	U3.75 72.3% +6.6% (floor −2.7) · buy≥1.33 (+4.0% margin)	PP Postponed	
 2026-11-05 18:45	UECL	Conference League	AGF Aarhus v SC Braga	— no tip: engine abstained (thin history or an unresolved name)	—		
 2026-11-05 18:45	UECL	Conference League	Atalanta BC v FC Kairat	O1.5 86.1% +10.9% · buy≥1.26 (+8.2% margin)	O2.25 70.2% +19.5% (floor −11.8) · buy≥1.36 (+3.9% margin)		
 2026-11-05 18:45	UECL	Conference League	FC Midtjylland v Ajax	U4.25 86.1% **−0.1%** · buy≥1.23 (+4.9% margin)	— none		
@@ -2993,13 +2993,13 @@
 2026-11-05 21:00	UECL	Conference League	Getafe v Brighton and Hove Albion	— no tip: engine abstained (thin history or an unresolved name)	—		
 2026-11-05 21:00	UECL	Conference League	Panathinaikos FC v PFC CSKA Sofia	U4.25 82.7% **−3.6%** · buy≥1.26 (+2.3% margin)	— none		
 2026-11-05 21:00	UECL	Conference League	Sint Truiden v SK Brann	U4.25 89.4% +3.2% · buy≥1.19 (+5.7% margin)	U3.75 76.3% +4.9% (floor −5.7) · buy≥1.28 (+4.3% margin)		
-2026-11-06 15:30	SAU-PL	Pro League	Al-Fateh v Al-Riyadh	U4.25 86.0% +3.8% · buy≥1.27 (+8.5% margin)	U3.75 72.1% +6.4% (floor −2.9) · buy≥1.34 (+4.0% margin)		
-2026-11-06 15:55	SAU-PL	Pro League	Al-Hazem v Al-Nassr	O1.5 82.4% +3.0% · buy≥1.25 (+2.7% margin)	**Al-Nassr O1.5** 58.3% +20.2% (team) · buy≥1.77 (+3.1% margin)		
+2026-11-06 15:30	SAU-PL	Pro League	Al-Fateh v Al-Riyadh	U4.25 86.0% +3.8% · buy≥1.27 (+8.5% margin)	U3.75 72.1% +6.4% (floor −2.9) · buy≥1.34 (+4.0% margin)	PP Postponed	
+2026-11-06 15:55	SAU-PL	Pro League	Al-Hazem v Al-Nassr	O1.5 82.4% +3.0% · buy≥1.25 (+2.7% margin)	**Al-Nassr O1.5** 58.3% +20.2% (team) · buy≥1.77 (+3.1% margin)	PP Postponed	
 2026-11-06 18:00	POL-EK	Ekstraklasa	Motor Lublin v Wisła Płock	U4.25 86.1% **+0.4%** · buy≥1.22 (+7.2% margin)	U3.75 74.7% +4.1% (floor −3.3) · buy≥1.32 (+6.2% margin)		
 2026-11-06 18:00	TUR-SL	Süper Lig	Gazişehir Gaziantep v Kasimpasa SK	U4.25 84.9% **+0.6%** · buy≥1.24 (+6.2% margin)	U3.75 71.9% +3.3% (floor −10.1) · buy≥1.30 (+0.8% margin)		
 2026-11-06 18:30	GER-B2	2. Bundesliga	Dynamo Dresden v Greuther Fürth	U4.25 82.0% **+0.6%** · buy≥1.30 (+4.8% margin)	— none		12 76.4% +2.2% · buy≥1.37 · probation
 2026-11-06 18:30	GER-B2	2. Bundesliga	Eintracht Braunschweig v FC Energie Cottbus	O1.5 80.4% **+0.3%** · buy≥1.29 (+3.6% margin)	— none		12 77.1% +2.9% · buy≥1.36 · probation
-2026-11-06 18:30	SAU-PL	Pro League	Al-Ittihad v Neom	O1.5 80.5% +1.0% · buy≥1.26 (+1.3% margin)	O2.25 58.2% +1.6% (floor −16.8) · buy≥1.52 (−0.1% margin)		
+2026-11-06 18:30	SAU-PL	Pro League	Al-Ittihad v Neom	O1.5 80.5% +1.0% · buy≥1.26 (+1.3% margin)	O2.25 58.2% +1.6% (floor −16.8) · buy≥1.52 (−0.1% margin)	PP Postponed	
 2026-11-06 19:00	DEN-SL	Superliga	Silkeborg IF v Lyngby	U4.25 82.5% +2.2% · buy≥1.30 (+5.1% margin)	U3.75 66.1% +3.0% (floor −8.9) · buy≥1.40 (+0.4% margin)		
 2026-11-06 19:00	SWE-AL	Allsvenskan	Hammarby IF v IF Elfsborg	O1.5 81.0% +2.9% · buy≥1.28 (+3.4% margin)	O2.25 59.0% +4.3% (floor −16.0) · buy≥1.56 (+3.1% margin)		
 2026-11-06 20:00	NED-D2	Eerste Divisie	FC Dordrecht v NAC Breda	O1.5 82.6% **+0.4%** · buy≥1.26 (+3.7% margin)	**NAC Breda O1.5** 63.2% +22.2% (team) · buy≥1.64 (+3.4% margin)		
@@ -3046,7 +3046,7 @@
 2026-11-07 14:00	ESP-LL	LaLiga	Málaga v Real Racing Club de Santander	U4.25 84.9% **−1.9%** · buy≥1.23 (+5.8% margin)	**Real Racing Club de Santander O1.5** 56.0% +24.2% (team) · buy≥1.84 (+2.8% margin)		12 77.1% +2.9% · buy≥1.36 · probation
 2026-11-07 14:00	FRA-L2	Ligue 2	Clermont v Rodez AF	U3.0 78.8% +4.1% · buy≥1.49 (+9.2% margin)	U2.75 58.2% +5.0% (floor −19.8) · buy≥1.59 (+3.0% margin)		
 2026-11-07 14:00	TUR-SL	Süper Lig	Samsunspor v Torku Konyaspor	U4.25 84.8% **+0.4%** · buy≥1.21 (+6.1% margin)	**Torku Konyaspor U1.5** 73.5% +7.6% (team) · buy≥1.42 (+4.1% margin)		DNB1 67.6% +6.1% · buy≥1.55 · probation
-2026-11-07 14:20	SAU-PL	Pro League	Al-Faisaly KSA FC v Diriyah Club	U4.25 86.0% +3.7% · buy≥1.26 (+8.5% margin)	U3.75 73.1% +7.4% (floor −1.9) · buy≥1.32 (+4.1% margin)		
+2026-11-07 14:20	SAU-PL	Pro League	Al-Faisaly KSA FC v Diriyah Club	U4.25 86.0% +3.7% · buy≥1.26 (+8.5% margin)	U3.75 73.1% +7.4% (floor −1.9) · buy≥1.32 (+4.1% margin)	PP Postponed	
 2026-11-07 14:30	RUS-PL	Premier League	FC Akhmat Grozny v Rodina Moscow	— no tip: engine abstained (thin history or an unresolved name)	—		
 2026-11-07 14:45	POL-EK	Ekstraklasa	Śląsk Wrocław v Piast Gliwice	U4.25 85.6% **−0.1%** · buy≥1.27 (+7.1% margin)	— none		12 75.6% +2.6% · buy≥1.39 · probation
 2026-11-07 15:00	ITA-SB	Serie B	Cesena FC v US Catanzaro 1929	U3.0 74.6% **−0.2%** · buy≥1.49 (+1.0% margin)	**Cesena FC O0.5** 82.0% +4.6% (team) · buy≥1.33 (+9.0% margin)		12 76.8% +8.9% · buy≥1.37 · probation
@@ -3057,7 +3057,7 @@
 2026-11-07 15:30	GER-BL	Bundesliga	FSV Mainz 05 v Bayern Munich	O1.5 86.8% +4.3% · buy≥1.24 (+9.1% margin)	**Bayern Munich O1.5** 68.6% +28.2% (team) · buy≥1.51 (+3.8% margin)		12 80.9% +6.6% · buy≥1.30 · probation
 2026-11-07 15:30	GER-BL	Bundesliga	RB Leipzig v Augsburg	O1.5 86.7% +4.1% · buy≥1.23 (+9.0% margin)	**RB Leipzig O1.5** 69.4% +19.0% (team) · buy≥1.50 (+3.9% margin)		12 81.4% +7.0% · buy≥1.29 · probation
 2026-11-07 15:30	GER-BL	Bundesliga	SC Paderborn v Eintracht Frankfurt	U4.25 83.1% +4.6% · buy≥1.32 (+7.7% margin)	U3.75 66.9% +6.1% (floor −8.1) · buy≥1.42 (+3.7% margin)		
-2026-11-07 15:30	SAU-PL	Pro League	Al-Ettifaq v Al-Hilal	O1.5 83.5% +4.1% · buy≥1.28 (+6.9% margin)	**Al-Hilal O1.5** 66.7% +28.6% (team) · buy≥1.55 (+3.7% margin)		12 79.9% +2.5% · buy≥1.31 · probation
+2026-11-07 15:30	SAU-PL	Pro League	Al-Ettifaq v Al-Hilal	O1.5 83.5% +4.1% · buy≥1.28 (+6.9% margin)	**Al-Hilal O1.5** 66.7% +28.6% (team) · buy≥1.55 (+3.7% margin)	PP Postponed	12 79.9% +2.5% · buy≥1.31 · probation
 2026-11-07 16:00	BEL-PL	Pro League	Westerlo v Charleroi	O1.5 80.9% +4.6% · buy≥1.30 (+5.4% margin)	**Westerlo O1.5** 51.7% +7.7% (team) · buy≥1.98 (+2.4% margin)		12 78.6% +4.5% · buy≥1.34 · probation
 2026-11-07 16:00	ENG-CH	Championship	Birmingham City v Swansea City	O1.5 75.1% +2.2% · buy≥1.36 (+1.8% margin)	**Birmingham City O0.5** 79.5% +2.3% (team) · buy≥1.32 (+5.1% margin)		12 76.4% +2.8% · buy≥1.37 · probation
 2026-11-07 16:00	ENG-CH	Championship	Blackburn Rovers v West Ham United	O1.5 81.8% +8.9% · buy≥1.33 (+9.1% margin)	**West Ham United O1.5** 58.4% +27.3% (team) · buy≥1.76 (+3.1% margin)		12 78.9% +5.3% · buy≥1.33 · probation
@@ -3094,7 +3094,7 @@
 2026-11-07 18:30	ESP-LL	LaLiga	CA Osasuna v Athletic Bilbao	U3.0 79.1% +6.9% · buy≥1.44 (+6.2% margin)	U2.75 58.5% +8.3% (floor −16.5) · buy≥1.58 (+3.1% margin)		
 2026-11-07 18:30	GER-BL	Bundesliga	VfB Stuttgart v Werder Bremen	O1.5 84.0% +1.5% · buy≥1.25 (+5.0% margin)	**VfB Stuttgart O1.5** 60.3% +9.9% (team) · buy≥1.71 (+3.2% margin)		12 79.1% +4.7% · buy≥1.33 · probation
 2026-11-07 18:30	GRE-SL	Super League	Aris Thessaloniki v Panetolikos Agrinio	O1.5 76.2% +2.3% · buy≥1.38 (+5.1% margin)	**Aris Thessaloniki O0.5** 78.9% +4.8% (team) · buy≥1.38 (+9.2% margin)		DNB1 74.2% +18.1% · buy≥1.42 · probation
-2026-11-07 18:30	SAU-PL	Pro League	Al-Ahli v Al-Taawoun	O1.5 83.7% +4.3% · buy≥1.28 (+7.0% margin)	**Al-Ahli O1.5** 73.1% +28.2% (team) · buy≥1.42 (+4.1% margin)		DNB1 88.7% +33.4% · buy≥1.18 · probation
+2026-11-07 18:30	SAU-PL	Pro League	Al-Ahli v Al-Taawoun	O1.5 83.7% +4.3% · buy≥1.28 (+7.0% margin)	**Al-Ahli O1.5** 73.1% +28.2% (team) · buy≥1.42 (+4.1% margin)	PP Postponed	DNB1 88.7% +33.4% · buy≥1.18 · probation
 2026-11-07 18:45	NED-ED	Eredivisie	ADO Den Haag v Sparta Rotterdam	U4.25 84.0% +5.2% · buy≥1.31 (+7.9% margin)	U3.75 68.1% +6.9% (floor −6.9) · buy≥1.40 (+3.8% margin)		
 2026-11-07 18:45	SCO-PL	Premiership	Aberdeen v Hibernian	U4.25 85.3% +1.6% · buy≥1.21 (+5.3% margin)	U3.75 73.8% +6.2% (floor −1.2) · buy≥1.31 (+4.1% margin)		
 2026-11-07 19:00	CHI-PD	Primera División	La Serena v Palestino	O1.5 79.3% +3.1% · buy≥1.30 (+3.0% margin)	O2.25 56.5% +4.4% (floor −21.5) · buy≥1.61 (+2.9% margin)		
