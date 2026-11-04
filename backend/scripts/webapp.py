@@ -2132,18 +2132,19 @@ def league_read(prof: str | None, code: str) -> dict | None:
     own rate with the league removed."""
     if not prof or not code or not LEAGUE_CELL:
         return None
-    cell = LEAGUE_CELL.get((prof, code))
-    whole = LEAGUE_CELL.get((prof, ""))
-    if not cell or not whole:
-        return None
-    n, h = cell
-    wn, wh = whole
+    # A LEAGUE WITH NO CARDS IN THIS PROFILE STILL ANSWERS (4 Nov: "not
+    # league specific numbers stated. If it's 0 games, state that"). It
+    # used to return nothing, so the card carried no line at all and
+    # read as if the check had been forgotten. It now says 0 games, and
+    # a profile too thin to compare against prints no baseline.
+    n, h = LEAGUE_CELL.get((prof, code), (0, 0))
+    wn, wh = LEAGUE_CELL.get((prof, ""), (0, 0))
     on, oh = wn - n, wh - h          # leave-one-out: the rest of the profile
-    if on < LEAGUE_MIN_N:
-        return None                  # nothing honest to compare against
-    rate, base = 100 * h / n, 100 * oh / on
+    rate = 100 * h / n if n else None
+    base = 100 * oh / on if on >= LEAGUE_MIN_N else None
+    gap = rate - base if rate is not None and base is not None else None
     return dict(code=code, profile=prof, n=n, hit=h, rate=rate,
-                base=base, base_n=on, gap=rate - base)
+                base=base, base_n=on, gap=gap)
 
 
 def league_call(f) -> dict | None:
@@ -2155,7 +2156,7 @@ def league_call(f) -> dict | None:
     rd = league_read(pb[0], f.code)
     if not rd:
         return None
-    if rd["n"] < LEAGUE_MIN_N:
+    if rd["n"] < LEAGUE_MIN_N or rd["gap"] is None:
         rd["call"] = "thin"
     elif rd["gap"] <= -LEAGUE_VETO:
         rd["call"] = "veto"
@@ -2194,13 +2195,15 @@ def league_frozen(f) -> dict | None:
                 if len(q) < 10:
                     continue
                 try:
-                    n, rate, bn = int(q[4]), float(q[5]), int(q[6])
-                    base, gap = float(q[7]), float(q[8])
+                    num = lambda x: float(x) if x.strip() else None
+                    n, rate, bn = int(q[4]), num(q[5]), int(q[6])
+                    base, gap = num(q[7]), num(q[8])
                 except ValueError:
                     continue
                 _LEAGUE_FROZEN[(q[0], q[1])] = dict(
                     code=q[2], profile=q[3], n=n, rate=rate,
-                    hit=round(n * rate / 100), base_n=bn, base=base,
+                    hit=round(n * rate / 100) if rate is not None else 0,
+                    base_n=bn, base=base,
                     gap=gap, call=q[9], frozen=True)
     return _LEAGUE_FROZEN.get((f.kickoff.split(" ")[0], f.teams))
 
@@ -2226,10 +2229,19 @@ def _crosscheck_html(f) -> str:
     mark = {"ok": "\u2713", "veto": "\u26a0\ufe0f", "close": "\u00b7",
             "thin": "\u00b7"}[rd["call"]]
     prof = SHORT_LEAGUE_PROFILE.get(rd["profile"], rd["profile"])
+    games = "1 game" if rd["n"] == 1 else f"{rd['n']} games"
+    here = (f"{rd['rate']:.0f}% on {games}" if rd["n"] else "0 games yet")
+    base = (f" \u00b7 profile {rd['base']:.0f}%" if rd["base"] is not None
+            else " \u00b7 profile too thin to compare")
     tip = ("How this competition has done inside this profile, on the "
-           f"settled counted cards: {rd['hit']} of {rd['n']}. Against the "
-           f"same profile with {rd['code']} taken out, {rd['base']:.0f}% on "
-           f"{rd['base_n']} \u2014 a gap of {rd['gap']:+.0f} points. "
+           f"settled counted cards: {rd['hit']} of {rd['n']}. "
+           + (f"Against the same profile with {rd['code']} taken out, "
+              f"{rd['base']:.0f}% on {rd['base_n']}"
+              + (f" \u2014 a gap of {rd['gap']:+.0f} points. "
+                 if rd["gap"] is not None else ". ")
+              if rd["base"] is not None else
+              f"The rest of the profile has under {LEAGUE_MIN_N} cards, "
+              "too few to compare against. ") +
            f"Tracked only: it moves no card, no tier and no record. Under "
            f"{LEAGUE_MIN_N} cards it says thin and nothing more."
            + (" As it stood at kickoff." if rd.get("frozen") else
@@ -2237,8 +2249,7 @@ def _crosscheck_html(f) -> str:
     return (f'<div class="xcheck {rd["call"]}" title="{html.escape(tip)}">'
             f'{mark} cross-checked: <b>{word}</b> '
             f'<span class="dim">\u00b7 {html.escape(rd["code"])} in '
-            f'{html.escape(prof)} {rd["rate"]:.0f}% on {rd["n"]} '
-            f'\u00b7 profile {rd["base"]:.0f}%</span></div>')
+            f'{html.escape(prof)} {here}{base}</span></div>')
 
 
 LEAGUE_CELL_LOG = ROOT / "config" / "league_cell_log.tsv"
@@ -2278,8 +2289,12 @@ def league_cell_log(fixtures) -> list[list[str]]:
             rows.pop(key, None)
             continue
         rows[key] = [key[0], f.teams, rd["code"], rd["profile"],
-                     str(rd["n"]), f"{rd['rate']:.1f}", str(rd["base_n"]),
-                     f"{rd['base']:.1f}", f"{rd['gap']:+.1f}", rd["call"], now]
+                     str(rd["n"]),
+                     f"{rd['rate']:.1f}" if rd["rate"] is not None else "",
+                     str(rd["base_n"]),
+                     f"{rd['base']:.1f}" if rd["base"] is not None else "",
+                     f"{rd['gap']:+.1f}" if rd["gap"] is not None else "",
+                     rd["call"], now]
     out = [rows[k] for k in sorted(rows)]
     LEAGUE_CELL_LOG.write_text(_LCL_HEAD
                                + "".join("\t".join(r) + "\n" for r in out))
@@ -3129,74 +3144,14 @@ def _gap_html(g: dict | None) -> str:
            f"(buy-from less 3%), {g['src']}: {books}. Search gap 8 for the "
            "6–10% band, gap>6 or gap<-3 for a threshold. Information only.")
     cls = " over3" if hi >= 3 else ""
-    # The band's record, at the BEST price's band — the same banding as
-    # the Found bets panel: counted cards only, by the card's first-sight
-    # best price; the bettor's bets at the price he paid (30 Sep).
-    at = gap_band(hi)
-    stats = ""
-    rd = band_read(g)
-    if rd:
-        price, lo_p, hi_p, cs, bs = (rd["price"], rd["lo_p"], rd["hi_p"],
-                                     rd["cs"], rd["bs"])
-
-        def cell(who, n, hit, roi):
-            return (f"<div>{who} <b>{n}</b>"
-                    + (f" · {hit:.0f}% · <b>{roi:+.1f}%</b>" if n else "")
-                    + "</div>")
-        stake = sum(st for _h, st, _r in bs)
-        mine = cell("my bets", len(bs),
-                    sum(h for h, _s, _r in bs) / len(bs) * 100 if bs else 0,
-                    sum(st * (r - 1) for _h, st, r in bs) / stake * 100
-                    if stake else 0)
-        every = cell("all cards", len(cs),
-                     sum(h for h, _p in cs) / len(cs) * 100 if cs else 0,
-                     sum(pl for _h, pl in cs) / len(cs) * 100 if cs else 0)
-        which = (f"<div>{at if b1 != b2 else 'this band'}, priced "
-                 f"{lo_p:.2f}–{hi_p:.2f}</div>")
-        # THE VERDICT WORD IS GONE (1 Nov: "Dump this tracking. The new
-        # by league tracking looks more promissing"). It read "band backs
-        # it" / "vetoes" / "close" here, and scoring it against what each
-        # card's TIER already predicted showed the veto carried nothing:
-        # 69.2% raw on the live rows against a tier that predicted 72.3%,
-        # and +0.96 — slightly BETTER than its tier — across all 1,312
-        # rows. It was describing which cards it fired on, not how they
-        # finished. The three lines above it stay: the band's own record
-        # is the class rate he buys on, and that was never the part that
-        # failed.
-        stats = (f'<div class="gapstats" title="Counted cards in the {at} '
-                 f'band whose first-sight best price was within '
-                 f'{PRICE_NEAR:.2f} of this card\'s {price:.2f}: your settled '
-                 f'bets on the card\'s own lane at the price you paid, and '
-                 f'every card at the feed\'s best EU price.">'
-                 f'{which}{mine}{every}</div>')
+    # THE BAND RECORD LINES ARE GONE TOO (4 Nov: "I also still see: my
+    # bets and all cards from band hitrates tracking. It can go"). The
+    # verdict word went on 1 Nov; "this band, priced … / my bets … / all
+    # cards …" under it went three days later. The VS BAR line stays: it
+    # is the card's own gap band, which every profile is built on.
     return (f'<div class="gapbar{cls}" title="{html.escape(tip)}">'
             f'<span class="bl">VS BAR</span> <b>{rng}</b> '
-            f'<span class="dim">· {band}</span></div>{stats}')
-
-
-# Filled once per render from the Found bets panel's populations, before
-# any card is drawn; empty means the line is left off.
-BAND_STATS: dict = {}
-PRICE_NEAR = 0.10
-
-
-def band_read(g: dict | None) -> dict | None:
-    """The like-for-like record behind a card's VS BAR line: the band its
-    best price sits in, cards and bets within PRICE_NEAR of that price."""
-    if not g or not BAND_STATS:
-        return None
-    at = gap_band(g["hi"])
-    price = max(p for p, _b in g["top"])
-    lo_p, hi_p = price - PRICE_NEAR, price + PRICE_NEAR
-    near = lambda bp: lo_p - 1e-9 <= bp <= hi_p + 1e-9
-    cards, bets = BAND_STATS["cards"], BAND_STATS["bets"]
-    cs = [(h, pl) for band, bp, h, pl in cards if band == at and near(bp)]
-    bs = [(h, st, r) for band, bp, h, st, r in bets if band == at and near(bp)]
-    return dict(at=at, price=price, lo_p=lo_p, hi_p=hi_p, cs=cs, bs=bs,
-                my_n=len(bs),
-                my_hit=sum(h for h, _s, _r in bs) / len(bs) * 100 if bs else None,
-                all_n=len(cs),
-                all_hit=sum(h for h, _p in cs) / len(cs) * 100 if cs else None)
+            f'<span class="dim">· {band}</span></div>')
 
 
 BAND_LOG = ROOT / "config" / "band_log.tsv"
@@ -5026,8 +4981,7 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
         "<b>PLAY</b> pill, the engine's claim, the best price and its book. "
         "Under it <b>VS BAR</b>: how far that price sits over the card's play "
         "bar, as a range across the three best books, and the band it lands "
-        "in \u2014 with what that band has done, <b>my bets</b> at your price "
-        "and <b>all cards</b> at the feed's best. PLAY means the best price "
+        "in. PLAY means the best price "
         "cleared the bar; if your own book is short of it, it is not a bet "
         "there.") + show(
         strong, "play", "2 \u00b7 A strong play",
@@ -5071,9 +5025,7 @@ def _learn(playable: list, waiting: list, reads: dict) -> str:
          "range from the third-best to the best book before kickoff (one "
          "number after it, the first-sight price). Eight bands: 10%+ under, "
          "5\u201310, 3\u20135, 0\u20133 under, 0\u20133 over, 3\u20136, 6\u201310, 10%+ over; amber "
-         "from 3% over. The line under it is that band's record on counted "
-         "cards: <b>my bets</b> at the price you paid, <b>all cards</b> at "
-         "the feed's best. Search it with <code>gap 8</code>, "
+         "from 3% over. Search it with <code>gap 8</code>, "
          "<code>gap&gt;6</code>, <code>gap&lt;-3</code>."),
         ("Found bets bands", "the same eight bands on the Found bets tab, "
          "behind the button under the filter: your bets and all cards side "
@@ -5465,7 +5417,7 @@ def main() -> None:
 
     reads = _reads(fixtures)
     # The card's one price comes from the record, so the record is read
-    # once here, before any card is drawn (the same place BAND_STATS is
+    # once here, before any card is drawn (the same place MARKET_BAR is
     # filled from).
     build_market(fixtures)
     build_live(fixtures)
@@ -5902,15 +5854,8 @@ def main() -> None:
     cards_bands_tpl = "".join(_cards_tpl(k, fl) for k in ("all", "o", "u")
                               for fl in (0.0, MIN_PRICE))
 
-    # The same two populations for every card's VS BAR line, kept card by
-    # card so the line can compare like with like — the same band AND a
-    # price within PRICE_NEAR of this card's (the bettor, 1 Oct). Counted
-    # cards only, banded and priced by the card's first-sight best price;
-    # the bets at the price paid, pushes as hits, ROI on stake.
-    BAND_STATS.clear()
-    BAND_STATS["cards"] = [(band, best, hit, pl)
-                           for band, _side, best, hit, pl in _crow]
-    BAND_STATS["bets"] = []
+    # The settled bets, banded, for config/band_log.tsv (the card's own
+    # "my bets / all cards" lines that read them left on 4 Nov).
     _logbets: list = []
     for b in bet_rows:
         if b["mark"] == "open":
@@ -5926,9 +5871,6 @@ def main() -> None:
             ret = float(b["ret"].rstrip("x"))
         except ValueError:
             continue
-        BAND_STATS["bets"].append((gap_band(cg * 100), cb,
-                                   not b["mark"].startswith("❌"),
-                                   b["stake"], ret))
         pg = _bar_gap(b)
         _logbets.append(dict(
             card=gap_band(cg * 100),
@@ -6468,9 +6410,6 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.mskipv {{ color:#f0b26b; border-color:#7a5420; }}
 .vmark .tedge.lstop {{ color:#f08a7e; opacity:1; font-weight:600; }}
 .vmark .tedge {{ font-weight:400; opacity:.8; margin-left:2px; }}
-.gapstats {{ font-size:11px; color:var(--dim); margin:0 0 3px;
-  font-variant-numeric:tabular-nums; }}
-.gapstats b {{ color:var(--fg, inherit); }}
 .gapbar {{ font-size:12px; margin:3px 0 2px; color:var(--dim); }}
 .gapbar .bl {{ font-size:10px; letter-spacing:.1em; }}
 .gapbar b {{ color:var(--fg, inherit); font-variant-numeric:tabular-nums; }}

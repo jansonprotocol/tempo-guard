@@ -59,10 +59,12 @@ the band back the tier?" table off the Found bets tab, `band_call` and
 from every job's commit list. Recoverable from git history if the
 question is ever reopened.
 
-WHAT STAYS is the band's own RECORD on the card — "this band, priced
-1.09–1.29 / my bets 44 · 89% · +12.4% / all cards 494 · 84% · −4.6%".
-That is the class rate he buys on (see HIS METHOD below) and it was
-never the part that failed; only the verdict drawn from it was.
+AND THE RECORD LINES WENT AFTER IT (4 Nov: "I also still see: my bets
+and all cards from band hitrates tracking. It can go"). "this band,
+priced … / my bets … / all cards …" is off the card too, with
+`band_read` and BAND_STATS. The VS BAR line stays — it is the card's own
+gap band, which every profile and the buy bar are built on — and the
+Found bets tab's band tables and config/band_log.tsv are untouched.
 
 SO THERE IS NO SECOND ALERT ON A SLIP ANY MORE. The wrong-lane alert
 above is the only one. The league cross-check below is a flag on the
@@ -83,7 +85,10 @@ date.") Under the card's FINAL lane, below the buy bar:
     ⚠️ cross-checked: VETO · MEX-LMX in STRONG WATCH FROM 79% on 34 · profile 86%
 
 How THIS competition has done inside THIS profile on the settled
-counted cards. Not band-specific — the profile whole, which is what he
+counted cards. A league with no cards in the profile yet still gets
+the line and says so — "BRA-SA in MILD 0 games yet" (4 Nov: "If it's 0
+games, state that") — and it stays on the card after kickoff and on
+Completed, read from the log as it was frozen at kickoff. Not band-specific — the profile whole, which is what he
 asked for. `webapp.league_call`, filled once per render by
 `build_league` the way MARKET_BAR and BAND_STATS are, so the numbers
 move with the record.

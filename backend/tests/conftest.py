@@ -2,7 +2,7 @@
 Test isolation: webapp's caches do not survive a test.
 
 scripts/webapp.py holds its expensive reads in module-level dicts —
-MARKET_BAR, LIVE_BAR, BAND_STATS, the frozen forward log and the rest —
+MARKET_BAR, LIVE_BAR, the frozen forward log and the rest —
 filled once per render and never cleared, which is exactly right in a
 job that renders once and exits.
 
@@ -25,7 +25,7 @@ import pytest
 
 # (attribute, value to reset it to). A dict is emptied in place rather
 # than rebound, because callers hold references to these objects.
-_EMPTY = ("MARKET_BAR", "LIVE_BAR", "BAND_STATS", "FROM_STATS",
+_EMPTY = ("MARKET_BAR", "LIVE_BAR", "FROM_STATS",
           "BAND_MOVES", "MOVE_STATS", "_SEVEN_DONE", "_LIVE_HIST",
           "_FIRST", "_LOCKS")
 _NONE = ("_QUOTES", "_SLICES", "_LOGGED", "_FROZEN", "_REVIEW", "_BOOK",

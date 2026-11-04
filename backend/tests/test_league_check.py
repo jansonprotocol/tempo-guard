@@ -73,8 +73,11 @@ def test_a_thin_cell_says_thin_and_nothing_else(cell):
     assert call(cell, "TINY") == "thin"
 
 
-def test_a_league_with_no_record_in_this_profile_says_nothing(cell):
-    assert w.league_read(cell, "NOWHERE") is None
+def test_a_league_with_no_record_in_this_profile_says_zero_games(cell):
+    """4 Nov: "If it's 0 games, state that." The line is never missing."""
+    rd = w.league_read(cell, "NOWHERE")
+    assert rd["n"] == 0 and rd["rate"] is None and rd["gap"] is None
+    assert rd["base"] is not None
 
 
 # ── the arithmetic that makes it honest ────────────────────────────────────
@@ -93,7 +96,8 @@ def test_a_league_that_is_almost_the_whole_profile_is_not_compared(monkeypatch):
     P = "p"
     monkeypatch.setitem(w.LEAGUE_CELL, (P, ""), (30, 24))
     monkeypatch.setitem(w.LEAGUE_CELL, (P, "BIG"), (25, 20))
-    assert w.league_read(P, "BIG") is None     # only 5 others
+    rd = w.league_read(P, "BIG")                # only 5 others
+    assert rd["base"] is None and rd["gap"] is None
 
 
 def test_the_gap_is_against_the_profile_not_the_board(cell, monkeypatch):
