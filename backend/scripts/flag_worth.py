@@ -1,15 +1,13 @@
 """
 Is a tracked flag worth anything?
 
-Two flags are kept purely so this question can be asked later:
-config/tier_band_log.tsv (does the gap band back the tier? 2 Oct) and
+A flag is kept purely so this question can be asked later:
 config/league_cell_log.tsv (does the league back the profile? 31 Oct).
-Both are frozen at kickoff, so each row is a genuine prediction made
+It is frozen at kickoff, so each row is a genuine prediction made
 before the match — which is the only kind worth scoring.
 
-    python scripts/flag_worth.py band      does the band back the tier?
     python scripts/flag_worth.py league    does the league back the profile?
-    python scripts/flag_worth.py band --all   include backfilled rows
+    python scripts/flag_worth.py league --all   include backfilled rows
 
 THE TEST THAT MATTERS IS STRATIFIED. A flag's words are not spread
 evenly across tiers — a veto lands far more often on a weak card than
@@ -40,11 +38,12 @@ from scripts import board, profile_mine as pm  # noqa: E402
 ROOT = Path(__file__).resolve().parents[2]
 HIT_MARKS = ("✅", "◦")        # a hit, and a push, which counts as one
 
+# The band check was retired on 1 Nov after this script scored it: its
+# veto read +0.96 against the tier it fired on, which is to say it was
+# describing which cards it landed on and not how they finished. Its
+# log is gone with it (recoverable from git history if the question is
+# ever reopened), so only the league cross-check is scorable here.
 LOGS = {
-    "band": dict(path=ROOT / "config" / "tier_band_log.tsv",
-                 title="Does the band back the tier?",
-                 stratum=2, call=10, read_at=11, ncols=12,
-                 order=("confirms", "split", "close", "vetoes", "thin")),
     "league": dict(path=ROOT / "config" / "league_cell_log.tsv",
                    title="Does the league back the profile?",
                    stratum=3, call=9, read_at=10, ncols=11,
@@ -123,7 +122,7 @@ def score(rs: list[dict], word: str) -> dict | None:
 
 def main() -> None:
     args = sys.argv[1:]
-    which = next((a for a in args if a in LOGS), "band")
+    which = next((a for a in args if a in LOGS), "league")
     spec = LOGS[which]
     rs = rows(spec, include_backfill="--all" in args)
     if not rs:

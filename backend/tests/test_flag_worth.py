@@ -1,10 +1,11 @@
 """
 Scoring a tracked flag — and not being fooled by which cards it lands on.
 
-Two flags exist purely to be scored later: the band check (2 Oct) and
-the league cross-check (31 Oct). Both are frozen at kickoff, so each
-row is a real prediction. The question "does it say anything" has one
-honest form and several misleading ones.
+One flag exists purely to be scored later: the league cross-check
+(31 Oct), frozen at kickoff so each row is a real prediction. The band
+check was the first, and this script is what retired it on 1 Nov — its
+veto scored +0.96 against the tier it fired on, so it was describing
+which cards it landed on, not how they finished.
 
 THE TRAP THIS EXISTS TO AVOID: a flag's words are not spread evenly
 across tiers. A veto lands far more often on a weak card than on a
@@ -87,10 +88,10 @@ def test_backfilled_rows_are_left_out_by_default(tmp_path, monkeypatch):
     log = tmp_path / "f.tsv"
     log.write_text(
         "# head\n"
-        "2026-10-01\tA v B\tx\tl\t1.2\tb\t1\t\t1\t\tvetoes\tas-of\n"
-        "2026-10-02\tC v D\tx\tl\t1.2\tb\t1\t\t1\t\tvetoes\t2026-10-02 10:00\n",
+        "2026-10-01\tA v B\tENG-PL\tp\t9\t50.0\t90\t85.0\t-35.0\tveto\tas-of\n"
+        "2026-10-02\tC v D\tENG-PL\tp\t9\t50.0\t90\t85.0\t-35.0\tveto\t2026-10-02 10:00\n",
         encoding="utf-8")
-    spec = dict(fw.LOGS["band"], path=log)
+    spec = dict(fw.LOGS["league"], path=log)
     monkeypatch.setattr(fw, "results", lambda: {("2026-10-01", "A v B"): True,
                                                 ("2026-10-02", "C v D"): True})
     assert [r["date"] for r in fw.rows(spec)] == ["2026-10-02"]
@@ -101,10 +102,10 @@ def test_only_settled_rows_are_scored(tmp_path, monkeypatch):
     log = tmp_path / "f.tsv"
     log.write_text(
         "# head\n"
-        "2026-10-02\tC v D\tx\tl\t1.2\tb\t1\t\t1\t\tvetoes\t2026-10-02 10:00\n"
-        "2026-12-30\tE v F\tx\tl\t1.2\tb\t1\t\t1\t\tvetoes\t2026-10-02 10:00\n",
+        "2026-10-02\tC v D\tENG-PL\tp\t9\t50.0\t90\t85.0\t-35.0\tveto\t2026-10-02 10:00\n"
+        "2026-12-30\tE v F\tENG-PL\tp\t9\t50.0\t90\t85.0\t-35.0\tveto\t2026-10-02 10:00\n",
         encoding="utf-8")
-    spec = dict(fw.LOGS["band"], path=log)
+    spec = dict(fw.LOGS["league"], path=log)
     monkeypatch.setattr(fw, "results", lambda: {("2026-10-02", "C v D"): True})
     assert len(fw.rows(spec)) == 1
 
@@ -116,8 +117,16 @@ def test_a_push_counts_as_a_hit():
 
 # ── both logs are wired, and read at the right columns ────────────────────
 
-def test_both_tracked_flags_can_be_scored():
-    assert set(fw.LOGS) == {"band", "league"}
+def test_the_retired_band_check_is_not_scorable_any_more():
+    """It was dumped on 1 Nov after this script showed its veto carried
+    nothing; the log went with it. A stale entry here would read a file
+    that no longer exists and report an empty flag as a healthy one."""
+    assert "band" not in fw.LOGS
+    assert not (fw.ROOT / "config" / "tier_band_log.tsv").exists()
+
+
+def test_every_wired_flag_can_be_scored():
+    assert set(fw.LOGS) == {"league"}
     for name, spec in fw.LOGS.items():
         assert spec["call"] < spec["ncols"] and spec["read_at"] < spec["ncols"]
         assert spec["stratum"] < spec["call"]

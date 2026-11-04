@@ -146,7 +146,7 @@ jobs:
             # history from growing at all.
             git add -A config/fixtures.tsv README.md web/live.json \
                        config/forward_log.tsv config/reads_cache.json \
-                       config/live_log.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv || true
+                       config/live_log.tsv config/band_log.tsv config/league_cell_log.tsv config/play_lock.tsv config/roi_log.tsv || true
             # Every pass commits — but not every commit is a deploy. The
             # page polls web/live.json from the repository between
             # deploys, so a goal or a minute goes out as a small "live
@@ -294,4 +294,25 @@ jobs:
             else
               echo "health check failed; the health job ran $((AGE/60)) min ago, leaving it"
             fi
+          fi
+
+          # AND THE PRICES AND NEW CARDS DO NOT WAIT ON THEIR CRON (4 Nov:
+          # "check if the automatic flows have added the most recent new
+          # matches directly to the board, such we dont get behind"). The
+          # odds refresh is what turns a match the feed starts pricing
+          # into a card with a first-sight stamp, and it is on a two-hour
+          # cron that GitHub fired about four times a day from 29 Oct to
+          # 4 Nov — every run green, with gaps of five to seven hours
+          # between them. This chain hops all day, so it carries the
+          # refresh the way it carries the watchdog: when the last one is
+          # more than 2.5 hours old (any status — a run still going counts),
+          # start one. That restores the cadence the job was costed at,
+          # twelve passes a day, and no more.
+          LAST=$(gh run list --workflow=odds-refresh.yml --limit 1 \
+                   --json createdAt --jq '.[0].createdAt' 2>/dev/null || true)
+          AGE=99999
+          [ -n "$LAST" ] && AGE=$(( $(date +%s) - $(date -d "$LAST" +%s) ))
+          if [ "$AGE" -ge 9000 ]; then
+            echo "the odds refresh last ran $((AGE/60)) min ago — starting one"
+            gh workflow run odds-refresh.yml --ref "${{ github.ref_name }}" || true
           fi

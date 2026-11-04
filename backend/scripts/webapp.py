@@ -2068,11 +2068,12 @@ LIVE_DEAD = 55.0            # under this the card's own lane is called dead
 # hundred. So a cell under LEAGUE_MIN_N says "thin" and nothing else,
 # and only a gap of LEAGUE_VETO points or more is called a veto.
 #
-# A FLAG, NOT A DECLINE, exactly as the band check is: "numbers are
-# somewhere to tin to immediately start declining". It moves no card,
-# no tier and no record. config/league_cell_log.tsv keeps one row per
-# pending card so the flag's own worth can be measured later, the way
-# config/tier_band_log.tsv does for the band.
+# A FLAG, NOT A DECLINE: "numbers are somewhere to tin to immediately
+# start declining". It moves no card, no tier and no record.
+# config/league_cell_log.tsv keeps one row per pending card so the
+# flag's own worth can be measured later with scripts/flag_worth.py —
+# which is exactly how the band check it replaces was retired, its veto
+# having scored +0.96 against the tier it fired on (1 Nov).
 LEAGUE_CELL: dict = {}      # (profile, code) -> (n, hits); (profile, "") = all
 LEAGUE_MIN_N = 10           # under this a cell only ever says "thin"
 LEAGUE_VETO = 5.0           # points under the profile before it vetoes
@@ -3107,18 +3108,22 @@ def _gap_html(g: dict | None) -> str:
                      sum(pl for _h, pl in cs) / len(cs) * 100 if cs else 0)
         which = (f"<div>{at if b1 != b2 else 'this band'}, priced "
                  f"{lo_p:.2f}–{hi_p:.2f}</div>")
-        call = band_call(rd)
-        says = (f'<div class="bcall bc-{call}" title="Tracked only, never '
-                f'used: a band reading 80%+ on both lines confirms a tier, '
-                f'none at 80% with a line under 75% vetoes it, 75-80% is close '
-                f'(the bettor, 2 and 4 Oct).">band '
-                f'{BAND_CALL_WORD[call]}</div>')
+        # THE VERDICT WORD IS GONE (1 Nov: "Dump this tracking. The new
+        # by league tracking looks more promissing"). It read "band backs
+        # it" / "vetoes" / "close" here, and scoring it against what each
+        # card's TIER already predicted showed the veto carried nothing:
+        # 69.2% raw on the live rows against a tier that predicted 72.3%,
+        # and +0.96 — slightly BETTER than its tier — across all 1,312
+        # rows. It was describing which cards it fired on, not how they
+        # finished. The three lines above it stay: the band's own record
+        # is the class rate he buys on, and that was never the part that
+        # failed.
         stats = (f'<div class="gapstats" title="Counted cards in the {at} '
                  f'band whose first-sight best price was within '
                  f'{PRICE_NEAR:.2f} of this card\'s {price:.2f}: your settled '
                  f'bets on the card\'s own lane at the price you paid, and '
                  f'every card at the feed\'s best EU price.">'
-                 f'{which}{mine}{every}{says}</div>')
+                 f'{which}{mine}{every}</div>')
     return (f'<div class="gapbar{cls}" title="{html.escape(tip)}">'
             f'<span class="bl">VS BAR</span> <b>{rng}</b> '
             f'<span class="dim">· {band}</span></div>{stats}')
@@ -3130,22 +3135,16 @@ BAND_STATS: dict = {}
 PRICE_NEAR = 0.10
 
 
-def band_read(g: dict | None, before: str | None = None) -> dict | None:
+def band_read(g: dict | None) -> dict | None:
     """The like-for-like record behind a card's VS BAR line: the band its
-    best price sits in, cards and bets within PRICE_NEAR of that price.
-    With `before` (a date), only what was played on an earlier day — the
-    reading as it could have been seen before that card kicked off."""
+    best price sits in, cards and bets within PRICE_NEAR of that price."""
     if not g or not BAND_STATS:
         return None
     at = gap_band(g["hi"])
     price = max(p for p, _b in g["top"])
     lo_p, hi_p = price - PRICE_NEAR, price + PRICE_NEAR
     near = lambda bp: lo_p - 1e-9 <= bp <= hi_p + 1e-9
-    if before:
-        cards = [r[1:] for r in BAND_STATS.get("cards_d", []) if r[0] < before]
-        bets = [r[1:] for r in BAND_STATS.get("bets_d", []) if r[0] < before]
-    else:
-        cards, bets = BAND_STATS["cards"], BAND_STATS["bets"]
+    cards, bets = BAND_STATS["cards"], BAND_STATS["bets"]
     cs = [(h, pl) for band, bp, h, pl in cards if band == at and near(bp)]
     bs = [(h, st, r) for band, bp, h, st, r in bets if band == at and near(bp)]
     return dict(at=at, price=price, lo_p=lo_p, hi_p=hi_p, cs=cs, bs=bs,
@@ -3154,212 +3153,6 @@ def band_read(g: dict | None, before: str | None = None) -> dict | None:
                 all_n=len(cs),
                 all_hit=sum(h for h, _p in cs) / len(cs) * 100 if cs else None)
 
-
-# DOES THE BAND BACK THE TIER? (the bettor, 2 Oct: "keep track of when the
-# gap bands, or parts of them, start justifying or confirming the
-# strong/medium tags, or by chance veto-ing it ... too early now to
-# already use, but perhaps worthy to keep track"). His two examples: a
-# STRONG card whose band read 82% and 87% and landed — the band
-# confirmed; a STRONG WATCH whose band read 67% and 77% and lost — the
-# band said coin flip. So: every line with BAND_CALL_MIN or more behind
-# it at 80%+ confirms, every such line under 80% vetoes, one of each is
-# split, and too few on both is thin. TRACKED ONLY: it moves no card.
-#
-# LOOSENED THE SAME WEEK (the bettor, 4 Oct, on Portugal v Norway reading
-# 78% and 79%: "I think we set the veto lines a bit too strict, this one is
-# actually pretty good"). A veto now needs a line under BAND_VETO_HIT —
-# his coin-flip example had a 67% in it — and a band with no line at 80%
-# but none under 75% reads CLOSE: short of backing, not against.
-BAND_CALL_HIT = 80.0
-BAND_VETO_HIT = 75.0
-BAND_CALL_MIN = 3
-BAND_CALL_WORD = {"confirms": "backs it · both lines 80%+",
-                  "close": "close · 75–80%, short of backing",
-                  "split": "split · one line 80%+, one under",
-                  "vetoes": "vetoes · under 80%, a line under 75%",
-                  "thin": "too thin to read"}
-
-
-def _call_of(my_n, my_hit, all_n, all_hit) -> str:
-    rates = [h for n, h in ((my_n, my_hit), (all_n, all_hit))
-             if n >= BAND_CALL_MIN and h is not None]
-    if not rates:
-        return "thin"
-    if all(h >= BAND_CALL_HIT for h in rates):
-        return "confirms"
-    if any(h >= BAND_CALL_HIT for h in rates):
-        return "split"
-    if any(h < BAND_VETO_HIT for h in rates):
-        return "vetoes"
-    return "close"
-
-
-def band_call(rd: dict | None) -> str:
-    if not rd:
-        return "thin"
-    return _call_of(rd["my_n"], rd["my_hit"], rd["all_n"], rd["all_hit"])
-
-
-TIER_BAND_LOG = ROOT / "config" / "tier_band_log.tsv"
-_TBL_HEAD = ("# Does the band back the tier? One row per tiered card, the band's\n"
-             "# like-for-like reading (webapp.band_read / band_call) as it stood at\n"
-             "# the last render before kickoff; rewritten while the card is pending,\n"
-             "# frozen from kickoff. Tracked only: it moves no card (bettor, 2 Oct).\n"
-             "# date\tfixture\ttier\tlane\tprice\tband\tmy_n\tmy_hit\tall_n\t"
-             "all_hit\tcall\tread_at\n")
-
-
-def tier_band_log(fixtures) -> list[list[str]]:
-    """Update config/tier_band_log.tsv for the pending tiered cards and
-    return every row."""
-    rows: dict = {}
-    if TIER_BAND_LOG.exists():
-        for ln in TIER_BAND_LOG.read_text().splitlines():
-            if ln.startswith("#") or not ln.strip():
-                continue
-            q = ln.split("\t")
-            if len(q) >= 12:
-                # re-read under the current lines, so a frozen row follows
-                # a change of the thresholds rather than keeping the old word
-                try:
-                    q[10] = _call_of(int(q[6]), float(q[7]) if q[7] else None,
-                                     int(q[8]), float(q[9]) if q[9] else None)
-                except ValueError:
-                    pass
-                rows[(q[0], q[1])] = q
-    now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M")
-    # A card taken off the board (postponed, cleared until re-dated) has
-    # no result coming at that date: its row goes rather than sit open.
-    on_board = {(f.kickoff.split(" ")[0], f.teams) for f in fixtures}
-    rows = {k: q for k, q in rows.items() if k in on_board}
-    for f in fixtures:
-        if f.settled or f.status or odds_api.started(f.kickoff):
-            continue
-        key = (f.kickoff.split(" ")[0], f.teams)
-        t = tier_of(f)
-        v = verdict(f, _star(f)) if t else None
-        g = price_gap(f, _star(f), v) if v else None
-        if not t or not g:
-            rows.pop(key, None)
-            continue
-        rd = band_read(g)
-        fmt = lambda x: "" if x is None else f"{x:.1f}"
-        rows[key] = [key[0], f.teams, t, v["lane"], f"{rd['price'] if rd else g['hi']:.2f}",
-                     gap_band(g["hi"]),
-                     str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
-                     str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
-                     band_call(rd), now]
-    # RE-READ AT FIRST SIGHT. Rows frozen at kickoff before the first-sight
-    # lock (4 Oct, about 19:45 UTC) were read at the live price of the
-    # moment; a card from that day is re-read once at its first-sight price,
-    # against cards and bets from earlier days only, and marked "relocked".
-    fxk = {(f.kickoff.split(" ")[0], f.teams): f for f in fixtures}
-    for key, q in list(rows.items()):
-        if q[0] < "2026-10-04" or q[11] in ("as-of", "relocked") \
-                or q[11] >= "2026-10-04 19:45":
-            continue
-        f = fxk.get(key)
-        if f is None or not (f.settled or f.status or odds_api.started(f.kickoff)):
-            continue
-        t = tier_of(f)
-        g = price_gap(f, _star_any(f) or 1, None) if t else None
-        if not g:
-            rows.pop(key, None)
-            continue
-        rd = band_read(g, before=key[0])
-        fmt = lambda x: "" if x is None else f"{x:.1f}"
-        rows[key] = [key[0], f.teams, t, g["lane"],
-                     f"{rd['price'] if rd else g['hi']:.2f}", gap_band(g["hi"]),
-                     str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
-                     str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
-                     band_call(rd), "relocked"]
-    # AS-OF BACKFILL (the bettor, 4 Oct: "can we backfill the completed
-    # tiered cards with good decent data?"). A settled session card with a
-    # tier and no row is read against only the cards and bets played on an
-    # EARLIER day than its own, so no result — its own or a same-day one —
-    # is in its reading. Marked "as-of" in read_at, never "live".
-    for f in fixtures:
-        key = (f.kickoff.split(" ")[0], f.teams)
-        if key in rows or not f.settled or key[0] < SESSION_DATE:
-            continue
-        t = tier_of(f)
-        if not t:
-            continue
-        g = price_gap(f, _star_any(f) or 1, None)
-        if not g:
-            continue
-        rd = band_read(g, before=key[0])
-        fmt = lambda x: "" if x is None else f"{x:.1f}"
-        rows[key] = [key[0], f.teams, t, g["lane"], f"{rd['price'] if rd else 0:.2f}",
-                     gap_band(g["hi"]),
-                     str(rd["my_n"] if rd else 0), fmt(rd and rd["my_hit"]),
-                     str(rd["all_n"] if rd else 0), fmt(rd and rd["all_hit"]),
-                     band_call(rd), "as-of"]
-    out = sorted(rows.values(), key=lambda q: (q[0], q[1]))
-    try:
-        TIER_BAND_LOG.write_text(_TBL_HEAD + "".join("\t".join(q) + "\n"
-                                                     for q in out))
-    except OSError:
-        pass
-    return out
-
-
-def tier_band_html(rows, fixtures) -> str:
-    """The tier x band-read table for the Found bets tab."""
-    from scripts import forward_settle as _fs
-    final = {}
-    for f in fixtures:
-        if f.settled and "—" in f.status:
-            sc_ = f.status.split("—")[-1].strip().split(" ")[0]
-            if "-" in sc_:
-                try:
-                    hg, ag = sc_.split("-")
-                    final[(f.kickoff.split(" ")[0], f.teams)] = (int(hg), int(ag))
-                except ValueError:
-                    pass
-    calls = ("confirms", "close", "split", "vetoes", "thin")
-    tiers = (("strong", "\u2605 STRONG"), ("medium", "WEAK"),
-             ("strong watch", "STRONG WATCH"),
-             ("strong from", "\u2605 STRONG FROM"),
-             ("strong watch from", "STRONG WATCH FROM"))
-    agg = {(t, c): [0, 0, 0] for t, _w in tiers for c in calls}
-    for q in rows:
-        k = (q[2], q[10])
-        if k not in agg:
-            continue
-        sc = final.get((q[0], q[1]))
-        got = _fs._settle(q[3], *sc) if sc else None
-        if got is None:
-            agg[k][2] += 1
-        else:
-            agg[k][0] += 1
-            agg[k][1] += bool(got[1])
-    if not rows:
-        return ""
-
-    def cell(n, h, pend):
-        s_ = f"{h}/{n} · {h / n * 100:.0f}%" if n else "—"
-        return s_ + (f' <span class="dim">+{pend} open</span>' if pend else "")
-    body = "".join(
-        f"<tr><td>{w}</td>" + "".join(f"<td>{cell(*agg[(t, c)])}</td>"
-                                      for c in calls) + "</tr>"
-        for t, w in tiers)
-    return ('<div class="wrap tbwrap"><div class="roihead"><span class="l">'
-            'Does the band back the tier?</span> <span class="s">tracked only '
-            '\u00b7 live since 2 Oct, earlier cards read as-of</span></div><table class="bandtable"><tr>'
-            '<th>tier</th><th>band confirms</th><th>close</th><th>split</th>'
-            '<th>band vetoes</th><th>thin</th></tr>' + body + '</table>'
-            '<div class="s">Each tiered card\'s VS BAR record line as it stood '
-            'before kickoff: <b>confirms</b> when every line with '
-            f'{BAND_CALL_MIN}+ behind it reads {BAND_CALL_HIT:.0f}%+ (my bets '
-            f'and all cards), <b>close</b> when none reaches {BAND_CALL_HIT:.0f}% '
-            f'but none is under {BAND_VETO_HIT:.0f}%, <b>vetoes</b> when none '
-            f'reaches {BAND_CALL_HIT:.0f}% and one is under {BAND_VETO_HIT:.0f}%, '
-            '<b>split</b> one line 80%+ and one under, <b>thin</b> too '
-            'few to read. Cards before 2 Oct are backfilled AS-OF: each read only '
-            'against cards and bets played on an earlier day than its own. '
-            'Landed / settled, pushes as hits. It moves no card.'
-            '</div></div>')
 
 BAND_LOG = ROOT / "config" / "band_log.tsv"
 ROI_LOG = ROOT / "config" / "roi_log.tsv"
@@ -5991,7 +5784,6 @@ def main() -> None:
     # stamped lane. A result lane (DNB, double chance) is in "all" only.
     _crow: list = []          # (band, side, best, hit, P/L) per counted card
     _cseen: set = set()
-    _crow_day: list = []      # the match date of each _crow row, same order
     # COUNTED CARDS ONLY (the bettor, 30 Sep: "just show it excluding
     # declined all the time"): a card that is declined now — red, super
     # red, a board rule or the profile review — is out of both tables,
@@ -6010,7 +5802,6 @@ def main() -> None:
         if got is None or need <= 0:
             continue
         _cseen.add(key)
-        _crow_day.append(key[0])
         _crow.append((gap_band((best / need - 1) * 100),
                       {"O": "o", "U": "u"}.get(st[5][:1]), best, got[1],
                       got[0] * (best - 1) if got[0] > 0 else got[0]))
@@ -6064,11 +5855,6 @@ def main() -> None:
     BAND_STATS["cards"] = [(band, best, hit, pl)
                            for band, _side, best, hit, pl in _crow]
     BAND_STATS["bets"] = []
-    # The same rows with their match date, for the as-of backfill of the
-    # band check: a card is read against what had settled before its day.
-    BAND_STATS["cards_d"] = [(d,) + (band, best, hit, pl) for d, (band, _s, best,
-                             hit, pl) in zip(_crow_day, _crow)]
-    BAND_STATS["bets_d"] = []
     _logbets: list = []
     for b in bet_rows:
         if b["mark"] == "open":
@@ -6087,9 +5873,6 @@ def main() -> None:
         BAND_STATS["bets"].append((gap_band(cg * 100), cb,
                                    not b["mark"].startswith("❌"),
                                    b["stake"], ret))
-        if fx is not None:
-            BAND_STATS["bets_d"].append((fx.kickoff.split(" ")[0],)
-                                        + BAND_STATS["bets"][-1])
         pg = _bar_gap(b)
         _logbets.append(dict(
             card=gap_band(cg * 100),
@@ -6098,7 +5881,6 @@ def main() -> None:
             hit=not b["mark"].startswith("❌"), stake=b["stake"], ret=ret,
             ip="in-play" in b["note"]))
     band_log(_crow, _logbets)
-    tier_band = tier_band_html(tier_band_log(fixtures), fixtures)
     league_cell_log(fixtures)
     profiles_modal = profiles_html(fixtures)
 
@@ -6623,11 +6405,6 @@ nav a.on {{ color:var(--tx); background:var(--card); }}
 .vmark.lgood {{ color:#8ee6c8; border-color:#2a7a60; background:#10251f; font-weight:600; }}
 .vmark.sfrom {{ color:#d9b65c; border-color:#6b5520; border-style:dashed; }}
 .vmark.swfrom {{ color:#86a9d6; border-color:#2c4f80; border-style:dashed; }}
-.bcall {{ margin-top:2px; font-size:.92em; }}
-.bcall.bc-confirms {{ color:#7fd18b; }}
-.bcall.bc-vetoes {{ color:#f08a7e; }}
-.bcall.bc-close {{ color:#e3c46b; }}
-.bcall.bc-split, .bcall.bc-thin {{ opacity:.75; }}
 .tbwrap .bandtable td:first-child {{ white-space:nowrap; }}
 .vmark .tedge.mgood {{ color:#7fd18b; opacity:1; font-weight:600; }}
 .vmark .tedge.mskip {{ color:#f0b26b; opacity:1; }}
@@ -7240,7 +7017,7 @@ footer {{ color:var(--dim); font-size:12px; margin:26px 0 8px; }}
   <b>live unsafe</b>, <b>live cautious</b> or <b>live safe</b> on any
   tab to find cards by their tag.</div>
   {_grid(declined, "declined", reads)}</div>
- <div class="tabpane" id="t-bets">{bets_meta}{roi_chart}{tier_band}<div class="wrap">
+ <div class="tabpane" id="t-bets">{bets_meta}{roi_chart}<div class="wrap">
   <table id="t-betstable" class="sortable">
   <tr><th data-sort="s">·</th>
   <th data-sort="s" data-dir="asc" class="asc">Kickoff</th>

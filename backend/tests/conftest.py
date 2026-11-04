@@ -54,6 +54,17 @@ def _clear_webapp_caches():
         locks_read = getattr(w, "_LOCKS_READ", None)
         if isinstance(locks_read, list):
             del locks_read[:]
+        # BAND_MOVES, MOVE_STATS and FROM_STATS are not render caches:
+        # _load_tier_params fills them from config/tier_params.tsv when
+        # webapp is imported. Emptying them left every test after the
+        # first reading a board with the band mover switched off — which
+        # went unseen until the mover declined its first cell (MILD ·
+        # 3–6% over, 3 Nov) and the page and the test disagreed about a
+        # card it had declined. So they are emptied and read back from
+        # the file, the state a fresh job starts in.
+        load = getattr(w, "_load_tier_params", None)
+        if load is not None:
+            load()
 
     reset()
     yield

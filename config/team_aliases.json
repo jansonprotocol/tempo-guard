@@ -77,6 +77,7 @@
   "Sporting Clube de Portugal": "Sp Lisbon",
   "Sporting": "Sp Lisbon",
   "Sporting CP": "Sp Lisbon",
+  "Sporting Lisbon": "Sp Lisbon",
   "Vitória": "Guimaraes"
  },
  "FRA-L2": {
@@ -126,7 +127,8 @@
  "TUR-SL": {
   "Başakşehir": "Buyuksehyr",
   "Basaksehir": "Buyuksehyr",
-  "Amed": "Amedspor"
+  "Amed": "Amedspor",
+  "Amed SK": "Amedspor"
  },
  "ESP-L2": {
   "Sporting": "Sporting Gijón",
@@ -169,7 +171,9 @@
  },
  "BEL-PL": {
   "OH Leuven": "Oud-Heverlee Leuven",
-  "Sint Truiden": "St Truiden"
+  "Sint Truiden": "St Truiden",
+  "Union Saint-Gilloise": "St. Gilloise",
+  "Union SG": "St. Gilloise"
  },
  "BRA-SA": {
   "Atlético-MG": "CA Mineiro",
@@ -187,6 +191,8 @@
   "Peterborough": "Peterboro"
  },
  "AUT-BL": {
-  "LASK": "LASK Linz"
+  "LASK": "LASK Linz",
+  "Rapid Wien": "Rapid Vienna",
+  "Austria Wien": "Austria Vienna"
  }
 }

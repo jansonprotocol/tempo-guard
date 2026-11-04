@@ -11,7 +11,7 @@ whenever a better analysis happens let it change them. Make sure
 everything stays in sync."
 
 Run every two days by bank-refresh, before the render, so the board, the
-search words, the band-check table and Learn all read the same file.
+search words, the band tables and Learn all read the same file.
 
 THE POPULATION is the one every band table uses: this session's settled,
 counted cards (not red, not declined), each at its FIRST-SIGHT best price
@@ -80,9 +80,9 @@ MED_BAD_HIT, MED_HARD_N = 70.0, 50
 # THE MOVER'S BARS (the bettor, 14 Oct: "85%+ positive ROI on 30+
 # promotes ... when now playable or watch profiles in their bandsample
 # start dropping below a good hitrate ... they can move to declined").
-# 80% is the board's own word for a good rate — the band check's bar and
-# the WEAK band mark's — and a play cell is held unless the ROI agrees
-# with the hit rate, because a feed ROI is optimistic for him anyway.
+# 80% is the board's own word for a good rate — the WEAK band mark's —
+# and a play cell is held unless the ROI agrees with the hit rate,
+# because a feed ROI is optimistic for him anyway.
 MOVE_MIN_N = w.MOVE_MIN_N           # 30
 MOVE_UP_HIT = w.MOVE_UP_HIT         # 85.0
 MOVE_DOWN_HIT = w.MOVE_DOWN_HIT     # 80.0

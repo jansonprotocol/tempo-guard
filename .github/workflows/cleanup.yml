@@ -63,7 +63,7 @@ jobs:
           cd ..
           git add -A config/fixtures.tsv config/unreached.tsv \
                      config/forward_log.tsv config/reads_cache.json \
-                     config/band_log.tsv config/tier_band_log.tsv \
+                     config/band_log.tsv config/league_cell_log.tsv \
                      config/roi_log.tsv README.md web/live.json
           # web/live.json only: index.html and matchbank.json live on the
           # `site` branch, which Render serves since 22 Oct.

@@ -110,8 +110,8 @@ jobs:
           }
           git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv \
                      config/unresolved.tsv \
-                     config/reads_cache.json config/roi_log.tsv config/band_log.tsv \
-                     config/forward_log.tsv config/play_lock.tsv config/tier_band_log.tsv README.md web/live.json
+                     config/reads_cache.json config/roi_log.tsv config/band_log.tsv config/league_cell_log.tsv \
+                     config/forward_log.tsv config/play_lock.tsv README.md web/live.json
           # index.html and matchbank.json go to the `site` branch on a
           # successful push (publish-site.sh), never to main (17 Oct).
           if git diff --cached --quiet; then

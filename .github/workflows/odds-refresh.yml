@@ -41,6 +41,13 @@ on:
 permissions:
   contents: write
 
+# The live sweep now starts this job when the cron has not (4 Nov), so a
+# dispatched run and a scheduled one can land together; the second waits
+# for the first rather than racing it to the same push.
+concurrency:
+  group: odds-refresh
+  cancel-in-progress: false
+
 jobs:
   quotes:
     runs-on: ubuntu-latest
@@ -131,7 +138,7 @@ jobs:
           # the 17 Oct rule is finally true rather than aspirational).
           # web/live.json stays because the page polls it from main's raw
           # URL between deploys.
-          git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/tier_band_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/live.json
+          git add -A config/fixtures.tsv config/odds_quotes.tsv config/last_quotes.tsv config/band_log.tsv config/league_cell_log.tsv config/play_lock.tsv config/roi_log.tsv config/reads_cache.json config/forward_log.tsv README.md web/live.json
           if git diff --cached --quiet; then
             echo "the market has not moved a printed lane"; exit 0
           fi

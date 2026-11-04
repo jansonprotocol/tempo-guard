@@ -37,68 +37,38 @@ times. Everything else goes between. When the slip is clean, say so in
 one line up front so the silence reads as a check rather than an
 omission.
 
-**THE SECOND ALERT: DOES THE GAP BAND AGREE?** (4 Oct: "Remove the over
-the bar alert. Replace with: gap bands agree or don't.") It replaces the
-more-than-3%-over-the-bar alert of 25-27 Sep, which is retired: the
-over-3% gap is no longer flagged on a slip at all.
+**THE SECOND ALERT IS RETIRED — THE BAND CHECK IS DUMPED.** (1 Nov,
+after it was scored: "Dump this tracking. The new by league tracking
+looks more promissing.") From 4 Oct a leg whose gap band "did not
+agree" got the top-and-bottom alert treatment. It was tracked for a
+month precisely so this could be asked, and the answer was no.
 
-Every leg's card carries a band check under its VS BAR line: the
-like-for-like record of its gap band (same band, best price within
-±0.10), my bets and all cards, read by `webapp.band_call`:
+`scripts/flag_worth.py` scored every word against what the card's own
+TIER already predicted — stratified, leave-one-out, because the words
+are not spread evenly across tiers and a veto lands far more often on a
+weak card than on a STRONG one. On the 681 rows read live and frozen at
+kickoff: **vetoes 69.2% against a tier that predicted 72.3%, z −0.36**;
+across all 1,312 rows including the backfilled ones, **+0.96 — slightly
+BETTER than its tier**. The veto was describing which cards it fired
+on, not how they finished. `close` was the only word with signal
+(z −2.83) and it was the one that never got an alert.
 
-- **agrees** — "backs it": every line with 3+ behind it at 80%+;
-- **does not agree** — "vetoes": no line at 80%, and one under 75%;
-- in between — "close" (75-80%, none under 75), "split" (one line 80%+,
-  one under), "thin" (too few to read).
+SO IT IS GONE, not demoted: the verdict word off the card, the "Does
+the band back the tier?" table off the Found bets tab, `band_call` and
+`_call_of` out of webapp, config/tier_band_log.tsv deleted and dropped
+from every job's commit list. Recoverable from git history if the
+question is ever reopened.
 
-A leg whose band DOES NOT AGREE gets the alert treatment: named at the
-top and again at the bottom, bold, with the symbol. Legs where it agrees
-are said so in one line; close, split and thin go in the body. Both
-alerts can fire on one slip; name each once at each end.
+WHAT STAYS is the band's own RECORD on the card — "this band, priced
+1.09–1.29 / my bets 44 · 89% · +12.4% / all cards 494 · 84% · −4.6%".
+That is the class rate he buys on (see HIS METHOD below) and it was
+never the part that failed; only the verdict drawn from it was.
 
-THIS IS A FLAG, NOT A DECLINE. It never argues against a bet already
-placed.
-
-AND AFTER A MONTH OF LIVE ROWS, SCORED: THE VETO IS THE ONE WORD THAT
-SAYS NOTHING. (1 Nov: "What about this tracking? Is it helpfull? We
-have been tracking those to see if it in reality says something. Does
-it though?") `scripts/flag_worth.py band` scores every word against
-what the card's own TIER already predicts — stratified, leave-one-out,
-because the words are not spread evenly across tiers and a veto lands
-far more often on a weak card than on a STRONG one. On the 681 rows
-read live and frozen at kickoff:
-
-    word       cards       rate   tier predicts      z
-    confirms   355/421    84.3%          84.0%    +0.16
-    split      143/161    88.8%          84.7%    +1.45
-    close        4/12     33.3%          74.5%    -3.36
-    vetoes      18/26     69.2%          72.3%    -0.36
-    thin         3/5      60.0%          64.5%    -0.21
-
-**vetoes adds nothing.** Its raw 69.2% looks alarming and is entirely
-the tier it lands on: those cards were already predicted at 72.3%.
-Over the full 1,312 rows including the backfilled ones it reads +0.96,
-slightly BETTER than its tier. Two populations, both saying the same
-thing — the veto is describing which cards it fires on, not their
-outcome.
-
-**close is the only word with signal**, and it is the quiet one: z
--2.83 over all rows (36/53, 67.9% against 82.6% predicted) and -3.36
-live. Both lines sitting in the 75-80% zone is a real warning; one line
-under 75%, which is what earns a veto, is not. Thin — 53 cards, 12 of
-them live — so it is suggestive, not settled.
-
-SO THE ALERT IS POINTED AT THE WRONG WORD. The rule above says a leg
-whose band DOES NOT AGREE gets the top-and-bottom alert. On the record
-so far that alert fires on noise, and the word that would have earned
-it goes in the body. HIS CALL, not mine — the rule stands until he
-changes it. Say the state of the evidence whenever the alert fires.
-
-THE BACKFILLED ROWS ARE NOT EVIDENCE. The log's earliest 632 rows were
-reconstructed "as-of" rather than read at the time, on a median of six
-of his own bets against fifteen on the live rows, and including them
-flips the veto from 69.2% to 91.9%. flag_worth excludes them by
-default; `--all` puts them back.
+SO THERE IS NO SECOND ALERT ON A SLIP ANY MORE. The wrong-lane alert
+above is the only one. The league cross-check below is a flag on the
+card and is NOT an alert — it has not earned one, and the band check is
+the reason that bar now exists: a flag gets the alert treatment when
+flag_worth says it predicts, not before.
 
 **THE THIRD CHECK: DOES THE LEAGUE BACK THE PROFILE?** (31 Oct, reading
 the league x profile grid: "Look at Mexico for example at sw from. 79%.
@@ -136,8 +106,8 @@ A FLAG, NOT A DECLINE — his words, "numbers are somewhere to tin to
 immediately start declining. But good data to have to start." It moves
 no card, no tier, no record and no tab. config/league_cell_log.tsv
 keeps one row per pending card, frozen at kickoff, so the flag's own
-worth can be measured later exactly as config/tier_band_log.tsv does
-for the band check.
+worth can be measured later — `scripts/flag_worth.py` scores it, the
+same way it scored and retired the band check on 1 Nov.
 
 WHAT IT READ ON THE FIRST RUN: 204 cards carried a line — 117 thin, 44
 OK, 24 close, 19 veto. His own example came out as he called it,
@@ -502,7 +472,7 @@ market offered, never as what he would have got.
   always as placed ones.") The "PLAATS"/place button and "Je maakt kans
   op" total in TOTO's compact view are not proof it is unplaced — it is
   placed at the €1.15 unit. Never hold a slip back as a draft; log it and
-  run the wrong-lane and band checks as always.
+  run the wrong-lane check as always.
 - **Price the line he actually bought**, not the card's rung, when they
   differ. The buy-from bar must be recomputed on his line.
 
