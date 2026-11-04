@@ -29,7 +29,7 @@ _EMPTY = ("MARKET_BAR", "LIVE_BAR", "BAND_STATS", "FROM_STATS",
           "BAND_MOVES", "MOVE_STATS", "_SEVEN_DONE", "_LIVE_HIST",
           "_FIRST", "_LOCKS")
 _NONE = ("_QUOTES", "_SLICES", "_LOGGED", "_FROZEN", "_REVIEW", "_BOOK",
-         "_COUNTRIES", "_LEAGUE_NAMES")
+         "_COUNTRIES", "_LEAGUE_NAMES", "_LEAGUE_FROZEN")
 
 
 @pytest.fixture(autouse=True)

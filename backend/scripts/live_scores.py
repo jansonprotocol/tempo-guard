@@ -46,6 +46,13 @@ ESPN = {
     "NGA-PL": "nga.1", "SUI-SL": "sui.1",
     "JPN-J1": "jpn.1", "MLS": "usa.1", "NOR-EL": "nor.1",
     "UCL-Q": "uefa.champions_qual",
+    # Added 4 Nov, after 70-odd cards from these three were parked as
+    # "no ESPN slug" since mid-October and fell out of every number on
+    # the board. ESPN carries all three with finals (checked against the
+    # scoreboard's own league name: Austrian Bundesliga, Russian Premier
+    # League, Greek Super League). Poland is still absent — ESPN answers
+    # 400 on every pol.* slug — so it stays a hand grade.
+    "AUT-BL": "aut.1", "RUS-PL": "rus.1", "GRE-SL": "gre.1",
 }
 
 

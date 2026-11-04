@@ -2177,10 +2177,49 @@ SHORT_LEAGUE_PROFILE = {PROFILES[0]: "STRONG", PROFILES[1]: "MILD",
                         PROFILES[10]: "5%+ under, band off"}
 
 
+_LEAGUE_FROZEN = None
+
+
+def league_frozen(f) -> dict | None:
+    """The cross-check as config/league_cell_log.tsv froze it at kickoff,
+    or None where the log has no row for this card."""
+    global _LEAGUE_FROZEN
+    if _LEAGUE_FROZEN is None:
+        _LEAGUE_FROZEN = {}
+        if LEAGUE_CELL_LOG.exists():
+            for ln in LEAGUE_CELL_LOG.read_text().splitlines():
+                if ln.startswith("#") or not ln.strip():
+                    continue
+                q = ln.split("\t")
+                if len(q) < 10:
+                    continue
+                try:
+                    n, rate, bn = int(q[4]), float(q[5]), int(q[6])
+                    base, gap = float(q[7]), float(q[8])
+                except ValueError:
+                    continue
+                _LEAGUE_FROZEN[(q[0], q[1])] = dict(
+                    code=q[2], profile=q[3], n=n, rate=rate,
+                    hit=round(n * rate / 100), base_n=bn, base=base,
+                    gap=gap, call=q[9], frozen=True)
+    return _LEAGUE_FROZEN.get((f.kickoff.split(" ")[0], f.teams))
+
+
 def _crosscheck_html(f) -> str:
-    """The cross-check line under the card's final lane."""
-    rd = league_call(f)
-    if not rd or f.settled:
+    """The cross-check line under the card's final lane.
+
+    IT STAYS ON THE CARD (4 Nov: "make sure that the line of the league
+    hitrate per profile always stays on the card"). It used to come off
+    the moment a card settled. After kickoff it reads the row the log
+    froze at kickoff — what the card said when it could still be bought
+    — and only a card older than the log (31 Oct) falls back to the
+    record as it stands now, which the hover says."""
+    rd = None
+    if f.settled or _past_kick(f):
+        rd = league_frozen(f)
+    if rd is None:
+        rd = league_call(f)
+    if not rd:
         return ""
     word = {"ok": "OK", "veto": "VETO", "close": "close",
             "thin": "thin"}[rd["call"]]
@@ -2192,7 +2231,9 @@ def _crosscheck_html(f) -> str:
            f"same profile with {rd['code']} taken out, {rd['base']:.0f}% on "
            f"{rd['base_n']} \u2014 a gap of {rd['gap']:+.0f} points. "
            f"Tracked only: it moves no card, no tier and no record. Under "
-           f"{LEAGUE_MIN_N} cards it says thin and nothing more.")
+           f"{LEAGUE_MIN_N} cards it says thin and nothing more."
+           + (" As it stood at kickoff." if rd.get("frozen") else
+              " As the record stands now." if f.settled else ""))
     return (f'<div class="xcheck {rd["call"]}" title="{html.escape(tip)}">'
             f'{mark} cross-checked: <b>{word}</b> '
             f'<span class="dim">\u00b7 {html.escape(rd["code"])} in '
@@ -2402,7 +2443,11 @@ def _prekick_html(f, cell: str) -> str:
     kickoff"). The live bar prices the match as it stands now; this says
     what the board offered before a ball was kicked, so the two can be
     read against each other."""
-    if f.settled or not live_state(f):
+    # On Completed too (4 Nov): the card keeps what it offered before a
+    # ball was kicked. Dim and labelled as the pre-kickoff call, so it
+    # never reads as a price to pay; a declined card had no bar, so it
+    # gets none here either (market_bar answers None for it).
+    if not (f.settled or live_state(f)):
         return ""
     inner = _prekick_inner(f, cell)
     if not inner:
@@ -4302,10 +4347,15 @@ def _lanebar(f, cell: str, starred_label: str | None, terse: bool = False) -> st
     what the league's band has landed instead.
     """
     need, _hit, solid = _needs(cell, starred_label)
-    if need is None or _past_kick(f):
+    if need is None:
         return ""
+    # The claim-band line is history, not a price, so it stays on the
+    # card after kickoff and on Completed (4 Nov); the PASS / DECLINE
+    # below is a live price test and does not.
     if terse:
         return _cellbar(f, cell)
+    if _past_kick(f):
+        return ""
     lane = _struck(_rung(cell))
     q = quotes().get((f.teams, lane)) if lane else None
     soft = "" if solid else (' <span class="dim" title="This bar comes from '
@@ -4610,10 +4660,16 @@ def _card(f, kind: str, reads: dict) -> str:
     badge = rates().get(f.code)
     league = html.escape(f.league) + (
         f' <span class="badge">{html.escape(badge)}</span>' if badge else "")
+    # A COMPLETED CARD KEEPS ITS DATE (4 Nov: "everything that always has
+    # been on the card when its going to completed. For example im not
+    # seeing the date on the cards when its on completed"). The result
+    # used to take the stamp's place in the meta row; it now sits beside
+    # it, so a finished card still says when it was played.
+    when = f'<span class="stamp">🕑 {board._stamp(f)}</span>'
     if f.status.startswith("FT"):
-        head = f"⚪ {html.escape(f.status[3:] or f.status)}"
+        head = f"⚪ {html.escape(f.status[3:] or f.status)} · {when}"
     elif f.settled:
-        head = f"{f.status[:1]} {html.escape(board._mark(f))}"
+        head = f"{f.status[:1]} {html.escape(board._mark(f))} · {when}"
     elif f.status:
         # The clock keeps running between sweeps (the bettor's ask, 8 Sep):
         # the span carries the minute and the moment it was rendered, and
@@ -4762,7 +4818,7 @@ def _card(f, kind: str, reads: dict) -> str:
     # them apart from an instruction.
     badge, vmark = _guard(f, best)
     gp = price_gap(f, best, v)
-    face = lane(seq[0], cells[seq[0]], lab, terse=bool(v),
+    face = lane(seq[0], cells[seq[0]], lab, terse=bool(v) or past,
                 noplay=mark and not playing and not v,
                 head=(" " + vmark) if vmark else "", extra=_gap_html(gp))
     rest = "".join(lane(w, cells[w], None, noplay=mark) for w in seq[1:])

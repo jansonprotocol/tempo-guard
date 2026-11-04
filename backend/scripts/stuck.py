@@ -69,7 +69,7 @@ PARK_AFTER_H = 12
 WIDE_DAYS = 7           # days either side of the board date pass one asks
 PARK_STATUS = "FT — no source"
 RECHECK_DAYS = 10       # a parked row is re-asked for this long
-RECHECK_MAX = 10        # parked rows re-asked in one run
+RECHECK_MAX = 40        # parked rows re-asked in one run
 MAX_CARDS = 25          # stuck cards handled in one run, newest first
 
 
@@ -271,6 +271,21 @@ def main() -> None:
                 hours = v
             else:
                 cap = v
+    # --recheck-days / --recheck-max widen the re-ask for a one-off
+    # backfill (4 Nov: a slug added late leaves weeks of parked rows that
+    # the normal ten-a-run, ten-day window never reaches again).
+    global RECHECK_DAYS, RECHECK_MAX
+    for flag in ("--recheck-days", "--recheck-max"):
+        if flag in sys.argv:
+            i = sys.argv.index(flag)
+            try:
+                v = int(sys.argv[i + 1])
+            except (IndexError, ValueError):
+                raise SystemExit(f"{flag} needs a number")
+            if flag == "--recheck-days":
+                RECHECK_DAYS = v
+            else:
+                RECHECK_MAX = v
     fixtures = board.load()
     todo = stuck_cards(fixtures, hours)[:cap]
     again = recheck_cards(fixtures)
