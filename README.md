@@ -4,8 +4,8 @@
 ## CURRENT CONFIRMED HITRATE: 85.0%
 
     lane                        Tip 1              Tip 2
-    all matches            1216 / 1430  85.0%    778 / 1134  68.6%
-    played lanes  >+1%     478 / 562  85.1%    775 / 1126  68.8%
+    all matches            1217 / 1431  85.0%    779 / 1135  68.6%
+    played lanes  >+1%     479 / 563  85.1%    776 / 1127  68.9%
     placed bets            274 / 351  78.1%    ROI -0.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 1253 / 1688   ·   74.2%**   ·   **Tip 1 — 478 / 562   ·   85.1%**   ·   **Tip 2 — 775 / 1126   ·   68.8%**
+**Playable — 1255 / 1690   ·   74.3%**   ·   **Tip 1 — 479 / 563   ·   85.1%**   ·   **Tip 2 — 776 / 1127   ·   68.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2494,7 +2494,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-0 · 05-11 18:45 <b>KuPS Kuopio v Gent</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>U4.25 88.7% +2.4%<br>buy≥1.20 (+5.6% margin)</td><td>✅ U3.75 75.1% +3.7%<br>buy≥1.29 (+4.2% margin) · floor −6.9</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 05-11 18:45 <b>Lincoln Red Imps FC v Hajduk Split</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>U4.25 87.9% +1.7%<br>buy≥1.21 (+5.4% margin)</td><td>✅ U3.75 73.9% +2.5%<br>buy≥1.27 (+0.9% margin) · floor −8.1</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 05-11 18:45 <b>Trabzonspor v SC Freiburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>— under +1%</td><td>✅ U3.75 72.9% +1.5%<br>buy≥1.28 (+0.8% margin) · floor −9.1</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 0-2 <b>Aldosivi Mar del Plata v River Plate</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>O1.0 89.1% +2.0%<br>buy≥1.23 (+5.3% margin)<br><i>O1.0 holding · ✓ landed · as good as landed</i></td><td>O1.75 65.1% +4.2%<br>buy≥1.74 (+3.6% margin) · floor −9.9 · <i>needs 1 more (half in)</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 73.1% +4.5% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 05-11 19:00 <b>Aldosivi Mar del Plata v River Plate</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>O1.0 89.1% +2.0%<br>buy≥1.23 (+5.3% margin)</td><td>✅ O1.75 65.1% +4.2%<br>buy≥1.74 (+3.6% margin) · floor −9.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 73.1% +4.5% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 05-11 21:00 <b>Benfica v Lech Poznań</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Europa League (85.4 +0.1)</td><td>O1.5 82.4% +4.7%<br>buy≥1.29 (+6.2% margin)</td><td>O2.25 63.5% +9.3%<br>buy≥1.47 (+3.5% margin) · floor −18.5</td></tr></table>
 <table align="left"><tr><th align="left">🟢 05-11 21:00 <b>Celta Vigo v Union Saint-Gilloise</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Europa League (85.4 +0.1)</td><td>U4.25 86.2% +2.2%<br>buy≥1.24 (+5.2% margin)</td><td>U3.75 71.3% +3.2%<br>buy≥1.31 (+0.8% margin) · floor −10.7</td></tr></table>
 <table align="left"><tr><th align="left">🟢 05-11 21:00 <b>SK Sturm Graz v NK Celje</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Europa League (85.4 +0.1)</td><td>U4.25 87.4% +3.4%<br>buy≥1.22 (+5.5% margin)</td><td>U3.75 73.1% +5.0%<br>buy≥1.32 (+4.1% margin) · floor −8.9</td></tr></table>
@@ -2805,7 +2805,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Kholood v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 85.6% +3.3%<br>buy≥1.25 (+5.0% margin)</td><td>U3.75 70.3% +4.6%<br>buy≥1.37 (+3.9% margin) · floor −4.7</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Abha Club v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.26 (+8.5% margin)</td><td>U3.75 72.3% +6.6%<br>buy≥1.33 (+4.0% margin) · floor −2.7</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Qadsiah v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>O1.5 81.0% +1.5%<br>buy≥1.26 (+1.7% margin)</td><td><b>Al-Qadsiah O1.5</b> 62.2% +17.2%<br>buy≥1.66 (+3.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 82.3% +26.9% · buy≥1.28 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 0-2 <b>Aldosivi Mar del Plata v River Plate</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>O1.0 89.1% +2.0%<br>buy≥1.23 (+5.3% margin)<br><i>O1.0 holding · ✓ landed · as good as landed</i></td><td>O1.75 65.1% +4.2%<br>buy≥1.74 (+3.6% margin) · floor −9.9 · <i>needs 1 more (half in)</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 73.1% +4.5% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 05-11 21:00 <b>AZ Alkmaar v Juventus</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Europa League (85.4 +0.1)</td><td>U4.25 84.3% <b>+0.3%</b><br>buy≥1.26 (+4.3% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 05-11 21:00 <b>Bayer Leverkusen v Marseille</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Europa League (85.4 +0.1)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 05-11 21:00 <b>Benfica v Lech Poznań</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Europa League (85.4 +0.1)</td><td>O1.5 82.4% +4.7%<br>buy≥1.29 (+6.2% margin)</td><td>O2.25 63.5% +9.3%<br>buy≥1.47 (+3.5% margin) · floor −18.5</td></tr></table>
@@ -3160,7 +3159,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1216 / 1430   ·   85.0%**   ·   **Tip 2 — 778 / 1134   ·   68.6%**
+**Tip 1 — 1217 / 1431   ·   85.0%**   ·   **Tip 2 — 779 / 1135   ·   68.6%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (89.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -6131,6 +6130,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 1-0 · 05-11 18:45 <b>Lincoln Red Imps FC v Hajduk Split</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>U4.25 87.9% +1.7%<br>buy≥1.21 (+5.4% margin)</td><td>✅ U3.75 73.9% +2.5%<br>buy≥1.27 (+0.9% margin) · floor −8.1</td></tr></table>
 <table align="left"><tr><th align="left">⚪ 2-0 (no tip) · 05-11 18:45 <b>Mjällby AIF v FK Borac Banja Luka</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 05-11 18:45 <b>Trabzonspor v SC Freiburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>U4.25 87.3% +1.0%<br>buy≥1.22 (+5.2% margin)</td><td>✅ U3.75 72.9% +1.5%<br>buy≥1.28 (+0.8% margin) · floor −9.1</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 05-11 19:00 <b>Aldosivi Mar del Plata v River Plate</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>O1.0 89.1% +2.0%<br>buy≥1.23 (+5.3% margin)</td><td>✅ O1.75 65.1% +4.2%<br>buy≥1.74 (+3.6% margin) · floor −9.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 73.1% +4.5% · buy≥1.44 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
