@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 85.0%
+## CURRENT CONFIRMED HITRATE: 84.9%
 
     lane                        Tip 1              Tip 2
-    all matches            1223 / 1439  85.0%    784 / 1141  68.7%
-    played lanes  >+1%     482 / 567  85.0%    781 / 1133  68.9%
+    all matches            1223 / 1440  84.9%    785 / 1142  68.7%
+    played lanes  >+1%     482 / 567  85.0%    782 / 1134  69.0%
     placed bets            274 / 352  77.8%    ROI -0.3%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 1263 / 1700   ·   74.3%**   ·   **Tip 1 — 482 / 567   ·   85.0%**   ·   **Tip 2 — 781 / 1133   ·   68.9%**
+**Playable — 1264 / 1701   ·   74.3%**   ·   **Tip 1 — 482 / 567   ·   85.0%**   ·   **Tip 2 — 782 / 1134   ·   69.0%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2503,7 +2503,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 6-1 · 05-11 23:30 <b>Palmeiras v Remo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>✅ <b>Remo U1.5</b> 75.4% +3.4%<br>buy≥1.39 (+4.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.3% +8.5% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-0 · 05-11 23:30 <b>Botafogo-SP v Londrina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>— under +1%</td><td>✅ O1.75 68.6% +2.8%<br>buy≥1.58 (+0.6% margin) · floor −6.4</td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-11 00:00 <b>Universidad de Concepción v O'Higgins</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (84.3 −1.0)</td><td>U3.0 78.8% +8.7%<br>buy≥1.44 (+5.9% margin)</td><td>U4.25 86.9% +1.5%<br>buy≥1.18 (+6.2% margin) · lower edge</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+8' 3-2 <b>Cruzeiro v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td><b>Cruzeiro O1.5</b> 52.4% +8.5%<br>buy≥1.95 (+2.5% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.1% +4.9% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-2 · 06-11 01:30 <b>Cruzeiro v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>✅ <b>Cruzeiro O1.5</b> 52.4% +8.5%<br>buy≥1.95 (+2.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.1% +4.9% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Fateh v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.27 (+8.5% margin)</td><td>U3.75 72.1% +6.4%<br>buy≥1.34 (+4.0% margin) · floor −2.9</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Hazem v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>O1.5 82.4% +3.0%<br>buy≥1.25 (+2.7% margin)</td><td><b>Al-Nassr O1.5</b> 58.3% +20.2%<br>buy≥1.77 (+3.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 06-11 17:30 <b>Lokomotiv Moscow v Rubin Kazan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.6 −1.7)</td><td>— under +1%</td><td><b>Rubin Kazan U1.5</b> 75.4% +5.8%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 66.0% +5.2% · buy≥1.59 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2818,7 +2818,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Abha Club v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.26 (+8.5% margin)</td><td>U3.75 72.3% +6.6%<br>buy≥1.33 (+4.0% margin) · floor −2.7</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Qadsiah v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>O1.5 81.0% +1.5%<br>buy≥1.26 (+1.7% margin)</td><td><b>Al-Qadsiah O1.5</b> 62.2% +17.2%<br>buy≥1.66 (+3.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 82.3% +26.9% · buy≥1.28 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-11 00:00 <b>Universidad de Concepción v O'Higgins</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (84.3 −1.0)</td><td>U3.0 78.8% +8.7%<br>buy≥1.44 (+5.9% margin)</td><td>U4.25 86.9% +1.5%<br>buy≥1.18 (+6.2% margin) · lower edge</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+8' 3-2 <b>Cruzeiro v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.8%</b><br>buy≥1.24 (+6.8% margin)<br><i>U4.25 holding · ✗ gone</i></td><td><b>Cruzeiro O1.5</b> 52.4% +8.5%<br>buy≥1.95 (+2.5% margin) · team · <i>✓ landed</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 12 78.1% +4.9% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Fateh v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.27 (+8.5% margin)</td><td>U3.75 72.1% +6.4%<br>buy≥1.34 (+4.0% margin) · floor −2.9</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Hazem v Al-Nassr</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>O1.5 82.4% +3.0%<br>buy≥1.25 (+2.7% margin)</td><td><b>Al-Nassr O1.5</b> 58.3% +20.2%<br>buy≥1.77 (+3.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-11 17:30 <b>Lokomotiv Moscow v Rubin Kazan</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.6 −1.7)</td><td>U4.25 86.8% <b>−0.4%</b><br>buy≥1.19 (+5.5% margin)</td><td><b>Rubin Kazan U1.5</b> 75.4% +5.8%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 66.0% +5.2% · buy≥1.59 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3167,7 +3166,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1223 / 1439   ·   85.0%**   ·   **Tip 2 — 784 / 1141   ·   68.7%**
+**Tip 1 — 1223 / 1440   ·   84.9%**   ·   **Tip 2 — 785 / 1142   ·   68.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (89.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -6155,6 +6154,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-1 · 05-11 23:15 <b>Gimnasia La Plata v Belgrano de Cordoba</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>O1.0 88.1% <b>+0.9%</b><br>buy≥1.25 (+5.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">❌ 6-1 · 05-11 23:30 <b>Palmeiras v Remo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.8% <b>−6.0%</b><br>buy≥1.22 (+6.8% margin)</td><td>✅ <b>Remo U1.5</b> 75.4% +3.4%<br>buy≥1.39 (+4.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 74.3% +8.5% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-0 · 05-11 23:30 <b>Botafogo-SP v Londrina</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>O1.0 88.5% <b>−1.0%</b><br>buy≥1.20 (+6.1% margin)</td><td>✅ O1.75 68.6% +2.8%<br>buy≥1.58 (+0.6% margin) · floor −6.4</td></tr></table>
+<table align="left"><tr><th align="left">❌ 3-2 · 06-11 01:30 <b>Cruzeiro v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.8%</b><br>buy≥1.24 (+6.8% margin)</td><td>✅ <b>Cruzeiro O1.5</b> 52.4% +8.5%<br>buy≥1.95 (+2.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.1% +4.9% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 
 <br clear="all">
 
