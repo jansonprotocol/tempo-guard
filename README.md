@@ -2800,6 +2800,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🟢 12-11 23:00 <b>Aruba v Martinique</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>U3.75 64.0% +3.7%<br>buy≥1.57 (+9.4% margin) · floor −11.0</td></tr></table>
 <table align="left"><tr><th align="left">🟢 13-11 00:00 <b>Antigua and Barbuda v Trinidad and Tobago</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>U3.75 62.1% +1.8%<br>buy≥1.55 (+5.4% margin) · floor −12.9</td></tr></table>
 <table align="left"><tr><th align="left">🟢 13-11 01:30 <b>Curaçao v Panama</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>O2.25 70.8% +8.9%<br>buy≥1.44 (+11.5% margin) · floor −4.2</td></tr></table>
+<table align="left"><tr><th align="left">🟢 13-11 13:00 <b>Singapore v Paraguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.5% +2.0%<br>buy≥1.34 (+6.0% margin)</td><td>O2.25 56.5% +5.2%<br>buy≥1.61 (+2.9% margin) · floor −18.5</td></tr></table>
 
 <br clear="all">
 
@@ -3161,6 +3162,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 12-11 23:00 <b>Aruba v Martinique</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.3% <b>−4.8%</b><br>buy≥1.37 (+8.7% margin)</td><td>U3.75 64.0% +3.7%<br>buy≥1.57 (+9.4% margin) · floor −11.0</td></tr></table>
 <table align="left"><tr><th align="left">🔵 13-11 00:00 <b>Antigua and Barbuda v Trinidad and Tobago</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.4% <b>−4.6%</b><br>buy≥1.40 (+8.7% margin)</td><td>U3.75 62.1% +1.8%<br>buy≥1.55 (+5.4% margin) · floor −12.9</td></tr></table>
 <table align="left"><tr><th align="left">🔵 13-11 01:30 <b>Curaçao v Panama</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.6% <b>−10.3%</b><br>buy≥1.23 (+8.5% margin)</td><td>O2.25 70.8% +8.9%<br>buy≥1.44 (+11.5% margin) · floor −4.2</td></tr></table>
+<table align="left"><tr><th align="left">🔵 13-11 13:00 <b>Singapore v Paraguay</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Friendlies (74.0 −1.7)</td><td>O1.5 77.5% +2.0%<br>buy≥1.34 (+6.0% margin)</td><td>O2.25 56.5% +5.2%<br>buy≥1.61 (+2.9% margin) · floor −18.5</td></tr></table>
 
 <br clear="all">
 
