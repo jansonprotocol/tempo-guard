@@ -4,7 +4,7 @@
 ## CURRENT CONFIRMED HITRATE: 85.0%
 
     lane                        Tip 1              Tip 2
-    all matches            1244 / 1464  85.0%    800 / 1164  68.7%
+    all matches            1245 / 1465  85.0%    800 / 1164  68.7%
     played lanes  >+1%     492 / 577  85.3%    797 / 1156  68.9%
     placed bets            276 / 354  78.0%    ROI -0.2%
 
@@ -2848,7 +2848,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>Al-Ittihad v Neom</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>O1.5 80.5% +1.0%<br>buy≥1.26 (+1.3% margin)</td><td>O2.25 58.2% +1.6%<br>buy≥1.52 (−0.1% margin) · floor −16.8</td></tr></table>
 <table align="left"><tr><th align="left">🔴 PP Postponed <b>CD Castellón v SD Eibar</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>LaLiga 2 (83.6 capped)</td><td>O1.5 71.2% <b>+0.0%</b><br>buy≥1.28 (+0.8% margin)</td><td><b>CD Castellón O1.5</b> 54.1% +12.4%<br>buy≥1.90 (+2.7% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 78.0% +15.1% · buy≥1.35 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 06-11 20:30 <b>Wisła Kraków v Cracovia Kraków</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.4 −5.1)</td><td>U4.25 85.9% <b>+0.1%</b><br>buy≥1.27 (+7.2% margin)</td><td><b>Wisła Kraków O0.5</b> 82.0% +3.2%<br>buy≥1.30 (+6.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 75.6% +14.9% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+3' 0-2 <b>Atlante FC v Santos Laguna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.3% <b>−0.9%</b><br>buy≥1.25 (+5.4% margin)<br><i>U4.25 holding · room for 2 · half from the 2nd · as good as landed</i></td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔴 LIVE HT 0-0 <b>Shimizu S Pulse v Tokyo Verdy</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>U4.25 90.5% +2.7%<br>buy≥1.16 (+5.1% margin)<br><i>U4.25 holding · room for 4 · half from the 4th · 99% · fair 1.01</i><br><i>also live: O1.5 flip 39% fair 2.59 · O0.5 flip 74% fair 1.36</i></td><td><b>Tokyo Verdy U1.5</b> 75.2% +8.5%<br>buy≥1.38 (+4.2% margin) · team · <i>room for 1</i></td></tr><tr><td colspan="3"><sub>Tip 3 · 1X 74.6% +7.3% · buy≥1.41 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 07-11 06:00 <b>Nagoya Grampus v Kyoto Purple Sanga</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>U4.25 88.3% <b>+0.4%</b><br>buy≥1.19 (+3.8% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 75.7% +2.2% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 07-11 06:00 <b>Yokohama F Marinos v Fagiano Okayama</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>U4.25 88.3% <b>+0.4%</b><br>buy≥1.19 (+3.8% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 66.0% +10.5% · buy≥1.59 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3176,7 +3175,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1244 / 1464   ·   85.0%**   ·   **Tip 2 — 800 / 1164   ·   68.7%**
+**Tip 1 — 1245 / 1465   ·   85.0%**   ·   **Tip 2 — 800 / 1164   ·   68.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (89.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -6207,6 +6206,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 0-3 · 07-11 02:00 <b>Fortaleza CEIF v Independiente Medellín</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (89.1 capped)</td><td>O1.5 85.7% <b>−11.2%</b><br>buy≥1.13 (+5.3% margin)</td><td>❌ <b>Fortaleza CEIF O1.5</b> 56.5% +16.8%<br>buy≥1.82 (+2.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 78.2% +6.2% · buy≥1.34 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-1 · 07-11 02:00 <b>Atlético San Luis v FC Juárez</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.1% <b>−1.0%</b><br>buy≥1.22 (+5.4% margin)</td><td>✅ <b>FC Juárez U1.5</b> 74.9% +10.1%<br>buy≥1.39 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ DNB1 79.1% +17.6% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 07-11 02:00 <b>Necaxa v Tijuana</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.4% <b>−0.8%</b><br>buy≥1.26 (+5.5% margin)</td><td>❌ <b>Tijuana O0.5</b> 80.1% +10.0%<br>buy≥1.34 (+7.2% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-2 · 07-11 04:00 <b>Atlante FC v Santos Laguna</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.9 capped)</td><td>U4.25 83.3% <b>−0.9%</b><br>buy≥1.25 (+5.4% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
