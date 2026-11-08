@@ -1,11 +1,11 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
 
-## CURRENT CONFIRMED HITRATE: 84.9%
+## CURRENT CONFIRMED HITRATE: 85.0%
 
     lane                        Tip 1              Tip 2
-    all matches            1298 / 1528  84.9%    838 / 1216  68.9%
-    played lanes  >+1%     511 / 600  85.2%    834 / 1207  69.1%
+    all matches            1299 / 1529  85.0%    839 / 1217  68.9%
+    played lanes  >+1%     512 / 601  85.2%    835 / 1208  69.1%
     placed bets            279 / 357  78.2%    ROI -0.0%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -119,7 +119,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 1345 / 1807   ·   74.4%**   ·   **Tip 1 — 511 / 600   ·   85.2%**   ·   **Tip 2 — 834 / 1207   ·   69.1%**
+**Playable — 1347 / 1809   ·   74.5%**   ·   **Tip 1 — 512 / 601   ·   85.2%**   ·   **Tip 2 — 835 / 1208   ·   69.1%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -2677,7 +2677,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 6-1 · 08-11 08:30 <b>Shanghai SIPG FC v Liaoning Tieren FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +0.9)</td><td>— under +1%</td><td>✅ <b>Shanghai SIPG FC O1.5</b> 55.2% +4.4%<br>buy≥1.86 (+2.8% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 75.3% +14.3% · buy≥1.39 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 08-11 08:30 <b>Yunnan Yukun v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +0.9)</td><td>O1.5 83.9% +1.7%<br>buy≥1.24 (+5.1% margin)</td><td>❌ <b>Wuhan Three Towns O1.5</b> 59.4% +20.7%<br>buy≥1.74 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.6% +4.3% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-0 · 08-11 08:30 <b>Zhejiang v Henan FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +0.9)</td><td>U4.25 82.6% +3.7%<br>buy≥1.33 (+7.5% margin)</td><td>❌ U3.75 66.2% +4.9%<br>buy≥1.44 (+3.7% margin) · floor −8.8</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+12' 1-0 <b>JEF United Chiba v Mito HollyHock</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>U4.25 90.0% +2.1%<br>buy≥1.18 (+5.0% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td>U3.75 78.5% +4.7%<br>buy≥1.25 (+4.4% margin) · floor −3.5 · <i>room for 2</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 08-11 09:00 <b>JEF United Chiba v Mito HollyHock</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>U4.25 90.0% +2.1%<br>buy≥1.18 (+5.0% margin)</td><td>✅ U3.75 78.5% +4.7%<br>buy≥1.25 (+4.4% margin) · floor −3.5</td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-11 12:00 <b>FC Copenhagen v Brondby IF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Superliga (80.9 −1.1)</td><td>O1.5 84.8% +3.6%<br>buy≥1.23 (+9.0% margin)</td><td><b>FC Copenhagen O1.5</b> 74.7% +26.8%<br>buy≥1.39 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 86.5% +29.2% · buy≥1.21 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-11 12:00 <b>Kryliya Sovetov v Gazovik Orenburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.6 −1.7)</td><td>— under +1%</td><td><b>Gazovik Orenburg U1.5</b> 75.4% +5.8%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 70.9% +10.1% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 08-11 12:15 <b>Vitesse v De Graafschap</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Eerste Divisie (83.3 +1.9)</td><td>U4.25 81.8% +2.8%<br>buy≥1.29 (+3.1% margin)</td><td>U3.75 65.1% +3.7%<br>buy≥1.46 (+3.6% margin) · floor −9.9</td></tr></table>
@@ -2902,7 +2902,6 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 08-11 01:00 <b>Independiente v Deportivo Riestra</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>U3.0 88.2% +3.5%<br>buy≥1.22 (+5.0% margin)</td><td>U2.75 71.5% +5.3%<br>buy≥1.33 (+4.0% margin) · floor −3.5</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-11 01:00 <b>San Lorenzo v Platense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>O1.0 85.4% <b>−1.8%</b><br>buy≥1.29 (+3.1% margin)</td><td><b>San Lorenzo U1.5</b> 75.4% +8.3%<br>buy≥1.38 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-11 01:00 <b>Union Santa Fe v Velez Sarsfield BA</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera División (88.8 −0.3)</td><td>O1.0 89.8% +2.6%<br>buy≥1.17 (+5.4% margin)</td><td><b>Velez Sarsfield BA O0.5</b> 79.8% +22.1%<br>buy≥1.31 (+4.4% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 76.4% +7.8% · buy≥1.37 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+12' 1-0 <b>JEF United Chiba v Mito HollyHock</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>U4.25 90.0% +2.1%<br>buy≥1.18 (+5.0% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td>U3.75 78.5% +4.7%<br>buy≥1.25 (+4.4% margin) · floor −3.5 · <i>room for 2</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-11 11:30 <b>Çaykur Rizespor v Erzurum BB</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (86.7 −1.3)</td><td>U4.25 84.1% <b>−0.3%</b><br>buy≥1.28 (+6.0% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-11 12:00 <b>FC Copenhagen v Brondby IF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Superliga (80.9 −1.1)</td><td>O1.5 84.8% +3.6%<br>buy≥1.23 (+9.0% margin)</td><td><b>FC Copenhagen O1.5</b> 74.7% +26.8%<br>buy≥1.39 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 86.5% +29.2% · buy≥1.21 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 08-11 12:00 <b>Kryliya Sovetov v Gazovik Orenburg</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Premier League (84.6 −1.7)</td><td>U4.25 87.0% <b>−0.3%</b><br>buy≥1.21 (+5.5% margin)</td><td><b>Gazovik Orenburg U1.5</b> 75.4% +5.8%<br>buy≥1.38 (+4.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 70.9% +10.1% · buy≥1.48 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3111,7 +3110,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1298 / 1528   ·   84.9%**   ·   **Tip 2 — 838 / 1216   ·   68.9%**
+**Tip 1 — 1299 / 1529   ·   85.0%**   ·   **Tip 2 — 839 / 1217   ·   68.9%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.1 −3.9)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (89.1 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -6277,6 +6276,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 4-0 · 08-11 08:30 <b>Shanghai Shenhua FC v Qingdao West Coast FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +0.9)</td><td>O1.5 82.3% <b>+0.1%</b><br>buy≥1.26 (+4.0% margin)</td><td>— none</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ DNB1 73.6% +12.6% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 08-11 08:30 <b>Yunnan Yukun v Wuhan Three Towns</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +0.9)</td><td>O1.5 83.9% +1.7%<br>buy≥1.24 (+5.1% margin)</td><td>❌ <b>Wuhan Three Towns O1.5</b> 59.4% +20.7%<br>buy≥1.74 (+3.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.6% +4.3% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 4-0 · 08-11 08:30 <b>Zhejiang v Henan FC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Super League (83.4 +0.9)</td><td>U4.25 82.6% +3.7%<br>buy≥1.33 (+7.5% margin)</td><td>❌ U3.75 66.2% +4.9%<br>buy≥1.44 (+3.7% margin) · floor −8.8</td></tr></table>
+<table align="left"><tr><th align="left">✅ 1-0 · 08-11 09:00 <b>JEF United Chiba v Mito HollyHock</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.2 +1.9)</td><td>U4.25 90.0% +2.1%<br>buy≥1.18 (+5.0% margin)</td><td>✅ U3.75 78.5% +4.7%<br>buy≥1.25 (+4.4% margin) · floor −3.5</td></tr></table>
 
 <br clear="all">
 
