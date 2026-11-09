@@ -12,9 +12,9 @@
 # unmatched	Croatia v Czechia	INT-UEFA	2026-11-15	Kosovo v Israel | Georgia v Hungary | Norway v Wales | Austria v Republic of Ireland
 # unmatched	France v Türkiye	INT-UEFA	2026-11-15	Kosovo v Israel | Georgia v Hungary | Norway v Wales | Austria v Republic of Ireland
 Kristiansund BK v Vålerenga	1	O1.5	1.07	1.11	Pinnacle	1.05	16	1.11 Pinnacle|1.11 Coolbet|1.10 TOTO
-Sabadell FC v Real Sociedad B	1	U3.5	1.24	1.33	1xBet		14	1.33 1xBet|1.31 Pinnacle|1.30 Marathon Bet
+Sabadell FC v Real Sociedad B	1	U3.5	1.24	1.33	1xBet		13	1.33 1xBet|1.31 Pinnacle|1.30 Marathon Bet
 Sabadell FC v Real Sociedad B	3	DNB1	1.36	1.39	Betclic (FR)		17	1.39 Betclic (FR)|1.38 Winamax (FR)|1.37 Betsson
-Atlético Junior v Cúcuta Deportivo	1	O1.5	1.21	1.23	TOTO	1.21	2	1.23 TOTO|1.21 Unibet (NL)
+Atlético Junior v Cúcuta Deportivo	1	O1.5	1.21	1.21	Unibet (NL)	1.21	1	1.21 Unibet (NL)
 Londrina v Nautico PE	1	U3.5	1.39	1.45	TOTO	1.39	12	1.45 TOTO|1.40 1xBet|1.40 Marathon Bet
 Londrina v Nautico PE	2	U2.75	2.08	2.12	Nordic Bet	2.08	11	2.12 Nordic Bet|2.11 1xBet|2.11 Marathon Bet
 Londrina v Nautico PE	3	DNB1	1.30	1.31	BetOnline.ag	1.25	13	1.31 BetOnline.ag|1.31 888sport|1.31 William Hill
@@ -23,7 +23,7 @@ Armenia v Cyprus	2	U3.75	1.25	1.29	1xBet		9	1.29 1xBet|1.27 Marathon Bet|1.25 Un
 Türkiye v Belgium	1	O1.5	1.13	1.24	BetOnline.ag		12	1.24 BetOnline.ag|1.16 TOTO|1.15 1xBet
 Türkiye v Belgium	3	12	1.22	1.28	1xBet		15	1.28 1xBet|1.27 Pinnacle|1.27 Unibet (SE)
 Albania v Finland	1	U4.5	1.03	1.06	1xBet		9	1.06 1xBet|1.06 TOTO|1.05 Marathon Bet
-Albania v Finland	2	U3.75	1.18	1.22	1xBet		9	1.22 1xBet|1.21 Marathon Bet|1.19 LeoVegas (SE)
+Albania v Finland	2	U3.75	1.19	1.22	1xBet		9	1.22 1xBet|1.21 Marathon Bet|1.19 LeoVegas (SE)
 Czechia v Spain	1	O1.5	1.09	1.13	1xBet		12	1.13 1xBet|1.12 TOTO|1.11 Marathon Bet
 Czechia v Spain	3	12	1.07	1.10	1xBet		13	1.10 1xBet|1.10 Unibet (SE)|1.09 BetOnline.ag
 England v Croatia	1	O1.5	1.11	1.23	BetOnline.ag		12	1.23 BetOnline.ag|1.15 1xBet|1.15 TOTO
@@ -31,7 +31,7 @@ England v Croatia	3	DNB1	1.11	1.14	Betclic (FR)		15	1.14 Betclic (FR)|1.13 MyBoo
 Italy v France	1	O1.5	1.18	1.34	Pinnacle		12	1.34 Pinnacle|1.29 BetOnline.ag|1.20 1xBet
 Montenegro v Latvia	1	U4.5	1.09	1.13	1xBet		10	1.13 1xBet|1.13 TOTO|1.11 Marathon Bet
 Montenegro v Latvia	3	DNB1	1.16	1.17	Winamax (FR)		13	1.17 Winamax (FR)|1.16 Winamax (DE)|1.16 PMU (FR)
-San Marino v Belarus	1	U3.5	1.47	1.55	Unibet (SE)		10	1.55 Unibet (SE)|1.55 LeoVegas (SE)|1.52 Marathon Bet
+San Marino v Belarus	1	U3.5	1.47	1.55	Unibet (SE)		9	1.55 Unibet (SE)|1.55 LeoVegas (SE)|1.52 Marathon Bet
 Moldova v Kazakhstan	1	U4.5	1.02	1.05	TOTO		7	1.05 TOTO|1.04 1xBet|1.03 Marathon Bet
 Moldova v Kazakhstan	2	U3.75	1.16	1.18	1xBet		9	1.18 1xBet|1.16 Marathon Bet|1.16 Unibet (SE)
 Leganés v Burgos CF	1	U3.5	1.19	1.31	Pinnacle	1.19	15	1.31 Pinnacle|1.27 BetOnline.ag|1.26 1xBet
@@ -39,7 +39,7 @@ Andorra v Gibraltar	1	U3.5	1.06	1.10	1xBet		9	1.10 1xBet|1.10 TOTO|1.08 Marathon
 Andorra v Gibraltar	2	U2.75	1.32	1.35	1xBet		9	1.35 1xBet|1.35 William Hill|1.34 Marathon Bet
 Bulgaria v Iceland	1	U4.5	1.05	1.09	1xBet		9	1.09 1xBet|1.09 TOTO|1.07 Marathon Bet
 Liechtenstein v Azerbaijan	1	U3.5	1.24	1.29	1xBet		10	1.29 1xBet|1.27 Marathon Bet|1.27 TOTO
-Luxembourg v Estonia	1	U3.5	1.15	1.21	1xBet		8	1.21 1xBet|1.20 TOTO|1.19 Marathon Bet
+Luxembourg v Estonia	1	U3.5	1.15	1.21	1xBet		7	1.21 1xBet|1.19 Marathon Bet|1.16 William Hill
 Luxembourg v Estonia	3	1X	1.24	1.31	1xBet		10	1.31 1xBet|1.30 Marathon Bet|1.26 MyBookie.ag
 Netherlands v Greece	1	O1.5	1.16	1.34	Pinnacle		12	1.34 Pinnacle|1.30 BetOnline.ag|1.20 1xBet
 Netherlands v Greece	3	DNB1	1.25	1.28	Winamax (FR)		15	1.28 Winamax (FR)|1.27 MyBookie.ag|1.26 Betclic (FR)
@@ -50,7 +50,7 @@ Slovakia v Faroe Islands	1	U4.5	1.10	1.14	1xBet		9	1.14 1xBet|1.12 Marathon Bet|
 Slovenia v Switzerland	1	O1.5	1.33	1.35	1xBet		10	1.35 1xBet|1.34 Betsson|1.34 Nordic Bet
 Slovenia v Switzerland	3	DNB2	1.31	1.32	William Hill		13	1.32 William Hill|1.32 888sport|1.31 MyBookie.ag
 Exeter City v Cheltenham Town	1	U4.5	1.06	1.07	Pinnacle		9	1.07 Pinnacle|1.07 Nordic Bet|1.07 Betsson
-Exeter City v Cheltenham Town	3	DNB1	1.58	1.60	Nordic Bet		10	1.60 Nordic Bet|1.60 Betsson|1.59 William Hill
+Exeter City v Cheltenham Town	3	DNB1	1.59	1.64	Coolbet		10	1.64 Coolbet|1.60 Nordic Bet|1.60 Betsson
 Real Valladolid CF v CD Castellón	1	O1.5	1.19	1.28	Pinnacle	1.19	15	1.28 Pinnacle|1.24 BetOnline.ag|1.22 TOTO
 Real Valladolid CF v CD Castellón	3	12	1.25	1.31	Coolbet	1.29	18	1.31 Coolbet|1.30 1xBet|1.29 Unibet (NL)
 Kosovo v Israel	1	U4.5	1.08	1.12	1xBet		10	1.12 1xBet|1.12 TOTO|1.10 Marathon Bet
@@ -81,7 +81,7 @@ Rochdale v York City	1	U4.5	1.15	1.17	Nordic Bet		9	1.17 Nordic Bet|1.17 Betsson
 Rochdale v York City	3	12	1.21	1.22	Coolbet		10	1.22 Coolbet|1.22 Nordic Bet|1.22 Betsson
 Salford City v Northampton Town	1	U4.5	1.06	1.07	Pinnacle		9	1.07 Pinnacle|1.07 Nordic Bet|1.07 Betsson
 Salford City v Northampton Town	2	O1.75	1.27	1.30	Pinnacle		9	1.30 Pinnacle|1.27 Marathon Bet|1.27 1xBet
-Salford City v Northampton Town	3	DNB1	1.58	1.60	Nordic Bet		10	1.60 Nordic Bet|1.60 Betsson|1.59 William Hill
+Salford City v Northampton Town	3	DNB1	1.59	1.64	Coolbet		10	1.64 Coolbet|1.60 Nordic Bet|1.60 Betsson
 Shrewsbury Town v Oldham Athletic	1	U4.5	1.07	1.08	Pinnacle		9	1.08 Pinnacle|1.07 Nordic Bet|1.07 Betsson
 Swindon Town v Grimsby Town	1	U4.5	1.16	1.17	Tipico		9	1.17 Tipico|1.17 Marathon Bet|1.17 Nordic Bet
 Walsall v Barnet	1	O1.5	1.18	1.32	Coolbet		6	1.32 Coolbet|1.18 Betsson|1.18 Nordic Bet
@@ -90,7 +90,7 @@ Real Sociedad B v Sporting Gijón	1	U4.5	1.05	1.05	Unibet (SE)		2	1.05 Unibet (S
 Georgia v Hungary	1	U4.5	1.02	1.05	1xBet		6	1.05 1xBet|1.05 TOTO|1.04 Marathon Bet
 Georgia v Hungary	2	U3.75	1.17	1.20	1xBet		7	1.20 1xBet|1.18 Marathon Bet|1.17 Unibet (SE)
 Norway v Wales	1	O1.5	1.10	1.21	BetOnline.ag		12	1.21 BetOnline.ag|1.14 1xBet|1.14 TOTO
-Norway v Wales	3	DNB1	1.12	1.15	Winamax (FR)		15	1.15 Winamax (FR)|1.15 Betclic (FR)|1.14 MyBookie.ag
+Norway v Wales	3	DNB1	1.12	1.15	Winamax (FR)		15	1.15 Winamax (FR)|1.14 MyBookie.ag|1.14 Betclic (FR)
 Almería v Andorra CF	1	O1.5	1.16	1.29	Coolbet	1.11	15	1.29 Coolbet|1.24 Pinnacle|1.20 BetOnline.ag
 Almería v Andorra CF	3	DNB1	1.38	1.42	Winamax (FR)	1.35	18	1.42 Winamax (FR)|1.41 BetOnline.ag|1.41 Winamax (DE)
 Mallorca v Córdoba	1	U4.5	1.13	1.19	1xBet	1.15	15	1.19 1xBet|1.17 TOTO|1.16 Marathon Bet
@@ -120,7 +120,7 @@ Austria v Republic of Ireland	3	DNB1	1.29	1.31	William Hill		10	1.31 William Hil
 Northern Ireland v Ukraine	1	U4.5	1.03	1.06	1xBet		6	1.06 1xBet|1.06 TOTO|1.04 Marathon Bet
 Northern Ireland v Ukraine	2	U3.75	1.16	1.21	1xBet		7	1.21 1xBet|1.20 Marathon Bet|1.19 William Hill
 Northern Ireland v Ukraine	3	1X	1.31	1.37	1xBet		11	1.37 1xBet|1.35 Marathon Bet|1.35 LeoVegas (SE)
-Portugal v Denmark	1	O1.5	1.15	1.31	Pinnacle		10	1.31 Pinnacle|1.28 BetOnline.ag|1.17 1xBet
+Portugal v Denmark	1	O1.5	1.15	1.30	Pinnacle		10	1.30 Pinnacle|1.28 BetOnline.ag|1.17 1xBet
 Portugal v Denmark	3	12	1.16	1.22	1xBet		13	1.22 1xBet|1.22 Unibet (SE)|1.21 Marathon Bet
 Romania v Poland	1	O1.5	1.21	1.25	1xBet		8	1.25 1xBet|1.25 TOTO|1.23 Marathon Bet
 Sweden v Bosnia-Herzegovina	1	U4.5	1.17	1.20	TOTO		8	1.20 TOTO|1.19 1xBet|1.17 Marathon Bet
