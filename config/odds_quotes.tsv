@@ -20,9 +20,9 @@
 # unmatched	Greece v Serbia	INT-UEFA	2026-11-16	Spain v England | France v Turkey
 # unmatched	North Macedonia v Slovenia	INT-UEFA	2026-11-16	Spain v England | France v Turkey
 # unmatched	Switzerland v Scotland	INT-UEFA	2026-11-16	Spain v England | France v Turkey
-Londrina v Nautico PE	1	U3.5	1.39	1.45	TOTO	1.39	12	1.45 TOTO|1.40 1xBet|1.40 Marathon Bet
-Londrina v Nautico PE	2	U2.75	2.08	2.12	Nordic Bet	2.08	11	2.12 Nordic Bet|2.11 1xBet|2.11 Marathon Bet
-Londrina v Nautico PE	3	DNB1	1.30	1.32	BetOnline.ag	1.25	13	1.32 BetOnline.ag|1.31 888sport|1.31 William Hill
+Londrina v Nautico PE	1	U3.5	1.39	1.47	TOTO	1.39	12	1.47 TOTO|1.46 William Hill|1.44 1xBet
+Londrina v Nautico PE	2	U2.75	2.08	2.25	William Hill	2.08	11	2.25 William Hill|2.21 1xBet|2.21 Marathon Bet
+Londrina v Nautico PE	3	DNB1	1.30	1.31	William Hill	1.25	13	1.31 William Hill|1.31 Pinnacle|1.31 1xBet
 Armenia v Cyprus	1	U4.5	1.06	1.13	BetAnything		10	1.13 BetAnything|1.09 1xBet|1.09 TOTO
 Armenia v Cyprus	2	U3.75	1.25	1.39	BetAnything		10	1.39 BetAnything|1.29 1xBet|1.27 Marathon Bet
 Türkiye v Belgium	1	O1.5	1.13	1.24	BetAnything		13	1.24 BetAnything|1.24 BetOnline.ag|1.16 TOTO
@@ -66,14 +66,14 @@ Stockport County FC v Reading	1	O1.5	1.16	1.29	Coolbet	1.13	13	1.29 Coolbet|1.26
 Stockport County FC v Reading	3	DNB1	1.50	1.53	888sport	1.46	13	1.53 888sport|1.53 William Hill|1.51 Codere (IT)
 Wigan Athletic v Barnsley	1	U3.5	1.48	1.54	TOTO	1.47	13	1.54 TOTO|1.52 Marathon Bet|1.51 1xBet
 Wigan Athletic v Barnsley	2	U2.75	2.30	2.40	1xBet	2.30	12	2.40 1xBet|2.38 Marathon Bet|2.35 Tipico
-Wimbledon v Blackpool	1	U3.5	1.35	1.40	TOTO	1.31	13	1.40 TOTO|1.36 Pinnacle|1.35 1xBet
+Wimbledon v Blackpool	1	U3.5	1.35	1.40	TOTO	1.31	13	1.40 TOTO|1.36 Coolbet|1.36 Pinnacle
 Wimbledon v Blackpool	3	DNB2	1.91	2.00	Tipico	1.87	13	2.00 Tipico|1.94 888sport|1.94 William Hill
 Bristol Rovers v Chesterfield FC	1	U4.5	1.09	1.17	TOTO	1.09	13	1.17 TOTO|1.11 Coolbet|1.10 Marathon Bet
 Bristol Rovers v Chesterfield FC	2	O1.75	1.20	1.29	Pinnacle	1.18	12	1.29 Pinnacle|1.21 Nordic Bet|1.21 Betsson
 Bristol Rovers v Chesterfield FC	3	12	1.26	1.32	Pinnacle	1.24	13	1.32 Pinnacle|1.29 Coolbet|1.29 1xBet
 Colchester United v Gillingham	1	U4.5	1.07	1.13	TOTO	1.07	13	1.13 TOTO|1.09 Pinnacle|1.07 Marathon Bet
 Colchester United v Gillingham	3	12	1.27	1.30	Pinnacle	1.24	13	1.30 Pinnacle|1.28 1xBet|1.28 Coolbet
-Crewe Alexandra v Newport County	1	U4.5	1.07	1.14	TOTO	1.08	13	1.14 TOTO|1.08 Coolbet|1.08 Unibet (NL)
+Crewe Alexandra v Newport County	1	U4.5	1.08	1.14	TOTO	1.08	13	1.14 TOTO|1.08 Marathon Bet|1.08 Nordic Bet
 Port Vale v Accrington Stanley	1	U4.5	1.05	1.11	Pinnacle	1.05	13	1.11 Pinnacle|1.10 TOTO|1.06 Coolbet
 Port Vale v Accrington Stanley	2	O1.75	1.29	1.30	Nordic Bet	1.26	12	1.30 Nordic Bet|1.30 Betsson|1.30 Marathon Bet
 Port Vale v Accrington Stanley	3	12	1.27	1.31	Pinnacle	1.24	13	1.31 Pinnacle|1.29 Nordic Bet|1.29 Betsson
@@ -84,7 +84,7 @@ Salford City v Northampton Town	2	O1.75	1.27	1.30	Pinnacle	1.21	12	1.30 Pinnacle
 Salford City v Northampton Town	3	DNB1	1.59	1.71	LeoVegas (SE)	1.71	13	1.71 LeoVegas (SE)|1.71 Unibet (NL)|1.71 Unibet (SE)
 Shrewsbury Town v Oldham Athletic	1	U4.5	1.07	1.13	TOTO	1.04	13	1.13 TOTO|1.08 Pinnacle|1.07 Nordic Bet
 Swindon Town v Grimsby Town	1	U4.5	1.12	1.22	TOTO	1.12	13	1.22 TOTO|1.17 Tipico|1.17 Marathon Bet
-Real Sociedad B v Sporting Gijón	1	U4.5	1.08	1.13	TOTO		13	1.13 TOTO|1.12 1xBet|1.10 Pinnacle
+Real Sociedad B v Sporting Gijón	1	U4.5	1.08	1.13	1xBet		13	1.13 1xBet|1.13 TOTO|1.10 Marathon Bet
 NAC Breda v FC Emmen	1	O1.5	1.08	1.13	TOTO	1.08	2	1.13 TOTO|1.08 Unibet (NL)
 Georgia v Hungary	1	U4.5	1.02	1.05	1xBet		6	1.05 1xBet|1.05 TOTO|1.04 Marathon Bet
 Georgia v Hungary	2	U3.75	1.17	1.20	1xBet		7	1.20 1xBet|1.18 Marathon Bet|1.17 Unibet (SE)
@@ -116,8 +116,8 @@ América Mineiro v Avai	1	U3.5	1.29	1.31	Pinnacle		8	1.31 Pinnacle|1.31 TOTO|1.3
 América Mineiro v Avai	2	U2.75	1.86	1.88	Pinnacle		7	1.88 Pinnacle|1.87 Coolbet|1.86 1xBet
 Clube de Regatas Brasil v Ceará	1	O1.0	1.02	1.02	Coolbet		2	1.02 Coolbet|1.01 Pinnacle
 Clube de Regatas Brasil v Ceará	2	O1.75	1.18	1.32	Coolbet		8	1.32 Coolbet|1.25 Pinnacle|1.18 1xBet
-Ponte Preta v Operario PR	1	U3.5	1.32	1.34	Pinnacle		5	1.34 Pinnacle|1.32 Coolbet|1.32 1xBet
-Ponte Preta v Operario PR	2	U2.75	1.92	1.96	Pinnacle		5	1.96 Pinnacle|1.92 1xBet|1.92 Marathon Bet
+Ponte Preta v Operario PR	1	U3.5	1.34	1.34	Pinnacle		5	1.34 Pinnacle|1.34 1xBet|1.34 Marathon Bet
+Ponte Preta v Operario PR	2	U2.75	1.96	1.97	1xBet		5	1.97 1xBet|1.97 Marathon Bet|1.96 Pinnacle
 Sport Recife v Goiás	1	O1.0	1.02	1.02	Pinnacle		1	1.02 Pinnacle
 Sport Recife v Goiás	2	O1.75	1.20	1.28	Pinnacle		8	1.28 Pinnacle|1.20 Coolbet|1.20 William Hill
 Austria v Republic of Ireland	1	O1.5	1.26	1.26	1xBet		7	1.26 1xBet|1.26 Unibet (SE)|1.26 LeoVegas (SE)
@@ -129,8 +129,8 @@ Portugal v Denmark	1	O1.5	1.15	1.30	Pinnacle		10	1.30 Pinnacle|1.27 BetOnline.ag
 Portugal v Denmark	3	12	1.16	1.22	1xBet		13	1.22 1xBet|1.22 Unibet (SE)|1.21 Pinnacle
 Romania v Poland	1	O1.5	1.21	1.25	1xBet		8	1.25 1xBet|1.25 TOTO|1.23 Marathon Bet
 Sweden v Bosnia-Herzegovina	1	U4.5	1.17	1.21	1xBet		8	1.21 1xBet|1.21 TOTO|1.19 Marathon Bet
-Oviedo v Girona FC	1	O1.5	1.28	1.32	TOTO	1.28	15	1.32 TOTO|1.31 Pinnacle|1.29 Coolbet
-Oviedo v Girona FC	3	12	1.29	1.34	Pinnacle	1.32	17	1.34 Pinnacle|1.33 1xBet|1.33 Coolbet
+Oviedo v Girona FC	1	O1.5	1.28	1.32	1xBet	1.28	15	1.32 1xBet|1.32 TOTO|1.31 Pinnacle
+Oviedo v Girona FC	3	12	1.29	1.34	Pinnacle	1.32	17	1.34 Pinnacle|1.34 1xBet|1.33 Coolbet
 Mirassol v Atletico Mineiro	1	U3.5	1.32	1.35	1xBet	1.31	17	1.35 1xBet|1.35 Pinnacle|1.35 TOTO
 Querétaro v Monterrey	1	U4.5	1.14	1.17	GTbets	1.12	13	1.17 GTbets|1.16 Nordic Bet|1.16 Betsson
 Chapecoense v Vasco da Gama	1	U3.5	1.43	1.49	1xBet	1.42	17	1.49 1xBet|1.49 GTbets|1.49 TOTO
