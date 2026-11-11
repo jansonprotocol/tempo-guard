@@ -2964,6 +2964,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🟢 18-11 01:00 <b>French Guiana v St. Vincent and the Grenadines</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td><b>St. Vincent and the Grenadines O0.5</b> 77.5% +10.3%<br>buy≥1.46 (+13.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 18-11 01:00 <b>United States v Haiti</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td><b>United States O0.5</b> 81.4% +9.8%<br>buy≥1.40 (+14.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 18-11 02:00 <b>El Salvador v St. Martin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td><b>St. Martin O1.5</b> 63.0% +26.3%<br>buy≥1.73 (+9.1% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">🟢 18-11 03:30 <b>Mexico v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>O2.25 64.8% +2.6%<br>buy≥1.48 (+6.3% margin) · floor −10.2</td></tr></table>
+<table align="left"><tr><th align="left">🟢 18-11 04:00 <b>Nicaragua v Montserrat</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>— under +1%</td><td>U3.75 67.9% +7.8%<br>buy≥1.50 (+10.7% margin) · floor −7.1</td></tr></table>
 
 <br clear="all">
 
@@ -3188,6 +3190,8 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 18-11 01:00 <b>French Guiana v St. Vincent and the Grenadines</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.9% <b>−10.1%</b><br>buy≥1.28 (+8.6% margin)</td><td><b>St. Vincent and the Grenadines O0.5</b> 77.5% +10.3%<br>buy≥1.46 (+13.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-11 01:00 <b>United States v Haiti</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.8% <b>−10.2%</b><br>buy≥1.26 (+8.6% margin)</td><td><b>United States O0.5</b> 81.4% +9.8%<br>buy≥1.40 (+14.1% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 18-11 02:00 <b>El Salvador v St. Martin</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 73.1% <b>−9.9%</b><br>buy≥1.31 (+8.7% margin)</td><td><b>St. Martin O1.5</b> 63.0% +26.3%<br>buy≥1.73 (+9.1% margin) · team</td></tr></table>
+<table align="left"><tr><th align="left">🔵 18-11 03:30 <b>Mexico v Jamaica</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>O1.5 72.9% <b>−10.1%</b><br>buy≥1.28 (+8.6% margin)</td><td>O2.25 64.8% +2.6%<br>buy≥1.48 (+6.3% margin) · floor −10.2</td></tr></table>
+<table align="left"><tr><th align="left">🔵 18-11 04:00 <b>Nicaragua v Montserrat</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Nations League & qualifiers (60.8 −11.2)</td><td>U4.25 73.0% <b>−4.9%</b><br>buy≥1.32 (+8.6% margin)</td><td>U3.75 67.9% +7.8%<br>buy≥1.50 (+10.7% margin) · floor −7.1</td></tr></table>
 
 <br clear="all">
 
