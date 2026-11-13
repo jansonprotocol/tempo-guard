@@ -2974,6 +2974,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🟢 19-11 01:30 <b>Corinthians v Botafogo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 76.7% +1.7%<br>buy≥1.49 (+5.2% margin)</td><td>U2.75 55.5% +2.0%<br>buy≥1.60 (−0.4% margin) · floor −19.5</td></tr></table>
 <table align="left"><tr><th align="left">🟢 19-11 01:30 <b>Grêmio v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>O1.75 73.4% +1.4%<br>buy≥1.48 (+2.9% margin) · floor −1.6</td></tr></table>
 <table align="left"><tr><th align="left">🟢 19-11 23:30 <b>Vasco da Gama v Internacional</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 78.2% +3.2%<br>buy≥1.46 (+5.7% margin)</td><td>U2.75 57.4% +3.9%<br>buy≥1.61 (+3.0% margin) · floor −17.6</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 68.0% +2.1% · buy≥1.54 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🟢 20-11 01:30 <b>Sao Paulo v Fluminense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>— under +1%</td><td>O1.75 73.9% +2.0%<br>buy≥1.47 (+3.4% margin) · floor −1.1</td></tr></table>
 
 <br clear="all">
 
@@ -3187,6 +3188,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 19-11 01:30 <b>Grêmio v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.8%</b><br>buy≥1.23 (+6.8% margin)</td><td>O1.75 73.4% +1.4%<br>buy≥1.48 (+2.9% margin) · floor −1.6</td></tr></table>
 <table align="left"><tr><th align="left">🔵 19-11 23:30 <b>Vasco da Gama v Internacional</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 78.2% +3.2%<br>buy≥1.46 (+5.7% margin)</td><td>U2.75 57.4% +3.9%<br>buy≥1.61 (+3.0% margin) · floor −17.6</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 68.0% +2.1% · buy≥1.54 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 19-11 23:30 <b>Vitoria v Bragantino-SP</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 75.3% <b>+0.3%</b><br>buy≥1.53 (+4.6% margin)</td><td>— none</td></tr></table>
+<table align="left"><tr><th align="left">🔵 20-11 01:30 <b>Sao Paulo v Fluminense</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U4.25 82.9% <b>−5.8%</b><br>buy≥1.24 (+6.8% margin)</td><td>O1.75 73.9% +2.0%<br>buy≥1.47 (+3.4% margin) · floor −1.1</td></tr></table>
 
 <br clear="all">
 
