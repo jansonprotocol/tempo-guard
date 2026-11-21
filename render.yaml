@@ -1,0 +1,25 @@
+# Render. The site is static and already rendered: scripts/board.py
+# writes web/index.html, so there is nothing to build and no server to
+# run — a Static Site that publishes web/ as it is.
+#
+# IT SERVES THE `site` BRANCH, NOT main (17 Oct). A Render deploy clones
+# the branch it serves, and main carries 1.8 GB of history, so a clone
+# took tens of minutes and builds piled up and cancelled each other.
+# `.github/publish-site.sh` rewrites the `site` branch as a single
+# parentless commit holding only web/, so Render clones ~30 MB and
+# builds in seconds. index.html and matchbank.json live only on `site`;
+# web/live.json stays on main because the page polls it from main's raw
+# URL between deploys. If this ever runs as a Blueprint, `branch: site`
+# is what matters; on a dashboard-created service set the branch to
+# `site` there (Settings -> Build & Deploy -> Branch).
+services:
+  - type: web
+    name: athena
+    runtime: static
+    branch: site
+    buildCommand: ""
+    staticPublishPath: web
+    headers:
+      - path: /index.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
