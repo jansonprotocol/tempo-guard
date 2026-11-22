@@ -3775,6 +3775,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">🔵 29-11 00:30 <b>FC Cincinnati v Nashville SC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (86.3 +5.9)</td><td>O1.5 80.6% <b>−1.4%</b><br>buy≥1.28 (+6.1% margin)</td><td><b>Nashville SC O0.5</b> 79.7% +5.6%<br>buy≥1.37 (+9.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-11 01:00 <b>Botafogo v Bahia</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 76.5% +1.4%<br>buy≥1.50 (+5.2% margin)</td><td>U2.75 55.3% +1.7%<br>buy≥1.61 (−0.4% margin) · floor −19.7</td></tr></table>
 <table align="left"><tr><th align="left">🔵 29-11 02:30 <b>Los Angeles FC v St. Louis City SC</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (86.3 +5.9)</td><td>O1.5 80.6% <b>−1.3%</b><br>buy≥1.28 (+6.1% margin)</td><td><b>St. Louis City SC O0.5</b> 82.9% +8.8%<br>buy≥1.33 (+10.1% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.5% +2.1% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">🔵 29-11 04:30 <b>Portland Timbers v FC Dallas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Major League Soccer (86.3 +5.9)</td><td>O1.5 80.6% <b>−1.3%</b><br>buy≥1.29 (+6.1% margin)</td><td>— none</td></tr></table>
 
 <br clear="all">
 
