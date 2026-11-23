@@ -454,6 +454,16 @@ on ITS OWN bar, not the mover's: **25 settled cards at 80%+, ROI not
 asked** (`WEAK_U35_UP_N`, `WEAK_U35_UP_HIT`), and the pill then reads
 ★ STRONG · PLAY. Under the bar again, it goes back by itself.
 
+THREE MORE CELLS GOT THE SAME BAR THE SAME DAY (23 Nov: "still very
+thin, but as soon as those go to 25 cards and stay around the same
+level (80%+), it can promote just as we did with U3.5"):
+unlabelled plain play · 3–6% over (14, 92.9%, +11.8%), WEAK · 3–6% over
+(14, 85.7%, +16.3%) and unlabelled plain play · 0–3% over (19, 89.5%,
++10.2%). `webapp.STRONG_FAST_CELLS` holds all four (the U3.5 cell
+included); each promotes to ★ STRONG at `STRONG_FAST_N` (25) and
+`STRONG_FAST_HIT` (80%), ROI not asked, and goes back by itself. The
+Profiles page's inside-decline row shows the count against 25.
+
 WHAT THE 12 ARE, said when it was built: 10 all-seven, 2 with fewer
 than seven rates (both Championship, Cardiff); 7 are Série B matches
 with Ponte Preta in them, three stamped at 1.79-1.99, which carry most

@@ -262,10 +262,10 @@ def main() -> None:
             roi = sum(c["pl"] for c in xs) / n * 100
             prev = w.MOVE_STATS.get((prof, band))
             was = prev[0] if prev else "none"
-            if prof == w.WEAK_U35:
-                # its own bar (23 Nov): 25 cards at 80%+, ROI not asked
-                mv = ("promote" if n >= w.WEAK_U35_UP_N
-                      and hit >= w.WEAK_U35_UP_HIT else "none")
+            if (prof, band) in w.STRONG_FAST_CELLS:
+                # their own bar (23 Nov): 25 cards at 80%+, ROI not asked
+                mv = ("promote" if n >= w.STRONG_FAST_N
+                      and hit >= w.STRONG_FAST_HIT else "none")
             elif n < MOVE_MIN_N:
                 mv = "none"
             elif kind == "no play":

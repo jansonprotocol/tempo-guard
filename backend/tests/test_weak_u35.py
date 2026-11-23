@@ -24,3 +24,13 @@ def test_its_bar_is_25_cards_at_80_and_it_is_a_no_play_cell_until_then():
     assert w.WEAK_U35_UP_N == 25 and w.WEAK_U35_UP_HIT == 80.0
     assert w.profile_kind(w.WEAK_U35) == "no play"
     assert w.WEAK_U35 in w.PROFILES
+
+
+def test_the_fast_cells_are_the_four_he_named_and_share_one_bar():
+    plain = w.U_ + "plain play (fewer than 7, under the floor)"
+    assert w.STRONG_FAST_CELLS == {
+        (w.WEAK_U35, "10%+ over"), ("WEAK", "3–6% over"),
+        (plain, "3–6% over"), (plain, "0–3% over")}
+    assert w.STRONG_FAST_N == 25 and w.STRONG_FAST_HIT == 80.0
+    assert all(p in w.PROFILES for p, _b in w.STRONG_FAST_CELLS)
+    assert all(b in {x[2] for x in w.GAP_BANDS} for _p, b in w.STRONG_FAST_CELLS)
