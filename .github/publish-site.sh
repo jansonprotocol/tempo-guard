@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Publish web/ to the lightweight `site` branch as a single ORPHAN commit.
+# Publish web/ to the lightweight `site` branch as a single ORPHAN commit,
+# then start the GitHub Pages deploy that serves it.
 #
 # WHY (17 Oct: "the real fix is still the separate lightweight publish
 # branch so deploys can run every couple of minutes without choking on
@@ -26,7 +27,16 @@ tree="$(GIT_INDEX_FILE="$idx" git write-tree)"
 commit="$(git commit-tree "$tree" -m "$msg")"
 for try in 1 2 3; do
   if git push -f origin "$commit:refs/heads/site"; then
-    echo "published web/ to site ($commit) on try $try"; exit 0
+    echo "published web/ to site ($commit) on try $try"
+    # AND SERVE IT (23 Nov): GitHub Pages deploys the site branch through
+    # .github/workflows/pages.yml. A push made with the job token starts
+    # no workflow by itself, so the deploy is asked for here. Never fatal:
+    # the hourly schedule in pages.yml catches a missed one.
+    if [ -n "${GH_TOKEN:-}" ] && command -v gh >/dev/null; then
+      gh workflow run pages.yml --ref main || \
+        echo "::warning::could not start the Pages deploy; the hourly one will"
+    fi
+    exit 0
   fi
   sleep $((try * 3))
 done

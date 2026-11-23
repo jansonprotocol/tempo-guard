@@ -44,6 +44,7 @@ jobs:
     # The job's whole life, waiting included; GitHub kills a job at 6h.
     timeout-minutes: 355
     env:
+      GH_TOKEN: ${{ github.token }}   # publish-site.sh starts the Pages deploy
       LEAD_BUDGET_MIN: 340      # minutes the job plans around
       # Sleep at most this long for a kickoff: 4h40, which leaves an hour
       # of sweeping inside the budget. Beyond it the run goes home and the

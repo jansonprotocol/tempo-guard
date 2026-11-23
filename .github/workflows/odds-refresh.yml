@@ -40,6 +40,7 @@ on:
 
 permissions:
   contents: write
+  actions: write               # publish-site.sh starts the Pages deploy
 
 # The live sweep now starts this job when the cron has not (4 Nov), so a
 # dispatched run and a scheduled one can land together; the second waits
@@ -51,6 +52,8 @@ concurrency:
 jobs:
   quotes:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}   # publish-site.sh starts the Pages deploy
     # 30, not 20: the pricing pass plus up to eight push attempts, each
     # a merge and a re-render against a sweep that pushes every two
     # minutes. The old 20 was set when this job only pulled prices.

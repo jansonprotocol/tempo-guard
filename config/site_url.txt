@@ -10,5 +10,7 @@
 # out and the site was rebuilt as tempo-guard-0xe7, and on 13 Nov, when
 # it was republished as tempo-guard-kdr0. One line, no
 # scheme-less forms, trailing slash fine.
+# 23 Nov: moved to GitHub Pages (.github/workflows/pages.yml), which has
+# no free-tier account to run out, so this address should not change again.
 # Override for a one-off check with ATHENA_SITE_URL=... in the env.
-https://tempo-guard-kdr0.onrender.com/
+https://jansonprotocol.github.io/tempo-guard/
