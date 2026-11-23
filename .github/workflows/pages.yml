@@ -1,0 +1,57 @@
+# Serve the board from GitHub Pages: https://jansonprotocol.github.io/tempo-guard/
+#
+# WHY (the bettor, 23 Nov, after rebuilding the Render site on a new
+# account for the third time: "it will keep biting free usage very fast
+# ... can we not just use the Github ... as its reflective app display?").
+# The repository is public, so GitHub Pages costs nothing and has no
+# account to run out: it hosts the same page Render did, scripts and live
+# polling included. A README cannot do that — GitHub renders markdown but
+# runs no JavaScript, so there would be no tabs, no search, no clock and
+# no live scores.
+#
+# WHAT IT DEPLOYS: the `site` branch's web/ folder, exactly what Render
+# served. .github/publish-site.sh pushes that branch and then starts this
+# workflow, so every publish the jobs already make becomes a Pages deploy.
+# A push made with the job token starts no workflow on its own, which is
+# why the dispatch is explicit. The hourly schedule is only a safety net.
+#
+# Deploying through Actions rather than "deploy from a branch" matters:
+# a branch deploy is capped at about ten builds an hour and runs Jekyll
+# over the page; this path has neither.
+#
+# ONE-TIME SETUP, by hand: Settings → Pages → Source: "GitHub Actions".
+name: pages (serve the board)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 * * * *"      # hourly safety net, off the other jobs
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. A newer request waits behind the running one and
+# replaces any older request still waiting, so a burst of publishes
+# collapses into one deploy of the latest page.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+      - id: deployment
+        uses: actions/deploy-pages@v4

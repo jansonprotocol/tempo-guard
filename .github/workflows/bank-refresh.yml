@@ -73,10 +73,13 @@ on:
 
 permissions:
   contents: write
+  actions: write               # publish-site.sh starts the Pages deploy
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}   # publish-site.sh starts the Pages deploy
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4

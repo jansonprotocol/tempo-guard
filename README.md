@@ -1,5 +1,7 @@
 # ATHENA — TEMPO GUARD · PRE-ALFA 2
 
+**▶ Live board: [jansonprotocol.github.io/tempo-guard](https://jansonprotocol.github.io/tempo-guard/)** — tabs, search, live scores, updated by the jobs below.
+
 
 ## CURRENT CONFIRMED HITRATE: 85.0%
 
