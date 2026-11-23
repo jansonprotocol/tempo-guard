@@ -358,14 +358,14 @@ flipbank	flip	unsafe tip3	303	78.2	70.3	flipped	bank
 flip	flip	unsafe tip3	43	79.1	79.1	flipped	bank
 flipbank	flip	unsafe tip2	581	63.2	71.6	hold	bank
 flip	flip	unsafe tip2	61	65.6	80.3	hold	board
-flipbank	flip	cautious tip3	72	76.4	72.2	hold	bank
-flip	flip	cautious tip3	76	81.6	77.6	hold	board
-flipbank	flip	cautious tip2	126	71.4	75.4	hold	bank
-flip	flip	cautious tip2	135	69.6	80.0	hold	board
-flipbank	flip	safe tip3	167	78.4	75.4	hold	bank
-flip	flip	safe tip3	21	85.7	81.0	hold	bank
-flipbank	flip	safe tip2	222	71.2	80.2	hold	bank
-flip	flip	safe tip2	23	69.6	78.3	hold	bank
+flipbank	flip	cautious tip3	68	69.1	75.0	hold	bank
+flip	flip	cautious tip3	74	81.1	77.0	hold	board
+flipbank	flip	cautious tip2	150	64.7	76.0	hold	bank
+flip	flip	cautious tip2	137	67.9	80.3	hold	board
+flipbank	flip	safe tip3	171	81.3	74.3	flipped	bank
+flip	flip	safe tip3	23	87.0	82.6	flipped	bank
+flipbank	flip	safe tip2	198	76.3	80.3	hold	bank
+flip	flip	safe tip2	21	81.0	76.2	hold	bank
 combobank	athena	clean	21645	84.7	83.4	keep	bank
 combo	athena	clean	1018	86.5	83.2	keep	board
 combobank	athena	score under 0	4187	82.5	82.1	keep	bank
