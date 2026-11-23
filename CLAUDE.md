@@ -442,6 +442,24 @@ the losses sat: 35% of every STRONG loss against 17% of the wins. It
 joins 3-5% under in `STRONG_WEAK_BANDS`, and the strong test is gated on
 both at source. STRONG now reads 90 of 103, 87.4%, break-even 1.14.
 
+**WEAK'S U3.5 CELL IS ITS OWN ROW, AND IT CAN EARN STRONG.** (23 Nov,
+on the WEAK 10%+ over cell — 107 cards, 74.8%, +4.7% — split by lane:
+"This one is really good! U3.5 lane 12 83% +32%. Can we make that its
+own seperate band, and once it hits 25 cards and still is above 80%
+hitrate, it can promote to strong?") `webapp.WEAK_U35` is a profile of
+its own: a WEAK card (either route in) whose struck lane is U3.5 and
+whose band is 10%+ over. It is still declined and still counts inside
+decline; WEAK 10%+ over keeps the other 95 (73.7%, +1.2%). It promotes
+on ITS OWN bar, not the mover's: **25 settled cards at 80%+, ROI not
+asked** (`WEAK_U35_UP_N`, `WEAK_U35_UP_HIT`), and the pill then reads
+★ STRONG · PLAY. Under the bar again, it goes back by itself.
+
+WHAT THE 12 ARE, said when it was built: 10 all-seven, 2 with fewer
+than seven rates (both Championship, Cardiff); 7 are Série B matches
+with Ponte Preta in them, three stamped at 1.79-1.99, which carry most
+of the +32%. A thin cell leaning on one club and three long prices —
+watch the next 13 before reading the rate as the cell's.
+
 **HIS METHOD: THE CLASS RATE, THEN WAIT FOR THE PRICE.** (5 Oct: "All is
 moot. As we have found out how all cards are performing, that's the only
 number that counts. Each time and band is measured, that's the only rate

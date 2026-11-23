@@ -1621,6 +1621,23 @@ PROFILES = ["\u2605 STRONG", "MILD", "\u2605 STRONG FROM", "LIVE INPLAY GOOD",
             U_ + "plain play (fewer than 7, under the floor)",
             U_ + "plain watch (fewer than 7, 0\u20135% under)",
             U_ + "5%+ under, band off"]
+
+# WEAK'S U3.5 CELL GETS ITS OWN ROW (the bettor, 23 Nov, reading the WEAK
+# 10%+ over cell — 107 cards, 74.8%, +4.7% — split by lane, where U3.5 stood
+# at 10 of 12, 83%, +32%: "Can we make that its own seperate band, and once
+# it hits 25 cards and still is above 80% hitrate, it can promote to
+# strong?"). Its cards are WEAK by every other rule — both routes in: an
+# all-seven card more than 10% over the bar, and a play with fewer than
+# seven rates — so the cell sits inside decline and keeps counting there.
+# tier_optimize promotes it on ITS OWN bar, not the mover's: WEAK_U35_UP_N
+# settled cards at WEAK_U35_UP_HIT or better, ROI not asked (his words).
+# Promoted, the pill reads ★ STRONG · PLAY; under the bar again, it goes
+# back by itself, like every other mover cell.
+WEAK_U35 = "WEAK \u00b7 U3.5, 10%+ over"
+WEAK_U35_LANE, WEAK_U35_BAND = "U3.5", "10%+ over"
+WEAK_U35_UP_N = 25
+WEAK_U35_UP_HIT = 80.0
+PROFILES.append(WEAK_U35)
 # What the board DOES with a profile, which is what decides the direction
 # the mover may move one of its bands: a play, a watch/live pill bought at
 # a price the feed never printed, or no play at all.
@@ -1645,8 +1662,11 @@ def profile_name(lane, lab, claim, gap, best, seven) -> str:
         best >= fsw or band in FROM_BANDS["strong watch"])
     lgood_ = watch_ and (side == "O" or (side == "U" and lab.startswith("green")
                                          and claim >= LIVE_GOOD_UNDER_CLAIM))
+    weak = PROFILES[6]
+    if band == WEAK_U35_BAND and str(lane or "").startswith(WEAK_U35_LANE):
+        weak = WEAK_U35         # its own cell (23 Nov), both routes into WEAK
     if seven and band in STRONG_WEAK_BANDS and best >= fsr:
-        return PROFILES[6]      # a band STRONG gave up
+        return weak             # a band STRONG gave up
     if seven and gap >= -STRONG_UNDER and best >= fsr:
         return PROFILES[1] if mild_cell(claim, band) else PROFILES[0]
     if seven and gap >= -STRONG_UNDER and band in FROM_BANDS["strong"]:
@@ -1658,7 +1678,7 @@ def profile_name(lane, lab, claim, gap, best, seven) -> str:
     if gap <= -STRONG_WATCH_UNDER and band in FROM_BANDS["strong watch"]:
         return PROFILES[5]
     if not seven and gap >= 0 and best >= fm:
-        return PROFILES[6]
+        return weak
     if seven and gap >= -STRONG_UNDER:
         return PROFILES[7]
     if gap >= 0:
@@ -2175,7 +2195,8 @@ SHORT_LEAGUE_PROFILE = {PROFILES[0]: "STRONG", PROFILES[1]: "MILD",
                         PROFILES[6]: "WEAK",
                         PROFILES[7]: "all 7, under the floor",
                         PROFILES[8]: "plain play", PROFILES[9]: "plain watch",
-                        PROFILES[10]: "5%+ under, band off"}
+                        PROFILES[10]: "5%+ under, band off",
+                        WEAK_U35: "WEAK U3.5"}
 
 
 _LEAGUE_FROZEN = None
@@ -2502,7 +2523,7 @@ def _prekick_inner(f, cell: str) -> str:
 # must not announce a code the merge is about to remove.
 CUP_FOLD = (("UCL-Q", "UCL"), ("UEL-Q", "UEL"), ("UECL-Q", "UECL"))
 
-SHORT_PROFILE = {PROFILES[7]: "all 7, under the floor",
+SHORT_PROFILE = {WEAK_U35: "WEAK U3.5", PROFILES[7]: "all 7, under the floor",
                  PROFILES[8]: "plain play", PROFILES[9]: "plain watch",
                  PROFILES[10]: "5%+ under, band off"}
 
@@ -4002,6 +4023,17 @@ def _guard(f, best: int) -> str:
     elif v["strong"]:
         mark = ('<span class="vmark strong">★ STRONG · PLAY'
                 f'{_edge_html("strong", odds)}</span>')
+    elif v["play"] and band_promoted(f) \
+            and (card_profile(f) or ("", ""))[0] == WEAK_U35:
+        mv = band_move(f)
+        mark = ('<span class="vmark strong" title="PROMOTED TO STRONG on its '
+                f'own record — WEAK U3.5 at 10%+ over: {mv[1]} settled cards, '
+                f'{mv[2]:.1f}%, over the {WEAK_U35_UP_HIT:.0f}% on '
+                f'{WEAK_U35_UP_N}+ it promotes on (since {mv[4] or "today"}). '
+                'It goes back to WEAK by itself if the record slips.">'
+                f'\u2605 STRONG \u00b7 PLAY{_edge_html("strong", odds)}'
+                f'<span class="tedge mgood"> \u25b2 U3.5 \u00b7 {mv[2]:.0f}% '
+                f'on {mv[1]}</span></span>')
     elif v["play"] and band_promoted(f):
         mv, pb = band_move(f), (card_profile(f) or ("", ""))
         mark = ('<span class="vmark lgood" title="PROMOTED by its own band '
@@ -5289,11 +5321,16 @@ def profiles_html(fixtures) -> str:
     dec.sort(key=lambda kv: -kv[1][1])
     drows = []
     for (prof, band), (st_, n_, hit_, roi_, _since) in dec:
-        mv = ("\u25b2 PROMOTED" if st_ == "promote" else
-              f"\u26d4 DECLINED \u00b7 under {MOVE_DOWN_HIT:.0f}%"
-              if st_ == "decline" else
-              f"{MOVE_UP_HIT:.0f}% and a gain on {MOVE_MIN_N}+ promotes"
-              if n_ < MOVE_MIN_N or hit_ < MOVE_UP_HIT or roi_ <= 0 else "")
+        if prof == WEAK_U35:
+            mv = ("\u25b2 PROMOTED TO \u2605 STRONG" if st_ == "promote" else
+                  f"{WEAK_U35_UP_HIT:.0f}% on {WEAK_U35_UP_N}+ promotes to "
+                  f"\u2605 STRONG ({n_}/{WEAK_U35_UP_N})")
+        else:
+            mv = ("\u25b2 PROMOTED" if st_ == "promote" else
+                f"\u26d4 DECLINED \u00b7 under {MOVE_DOWN_HIT:.0f}%"
+                if st_ == "decline" else
+                f"{MOVE_UP_HIT:.0f}% and a gain on {MOVE_MIN_N}+ promotes"
+                if n_ < MOVE_MIN_N or hit_ < MOVE_UP_HIT or roi_ <= 0 else "")
         cls = "pos" if roi_ > 0 else "neg"
         drows.append(f'<tr><td class="pband">{prof} \u00b7 {band}</td>'
                      f'<td>{n_}</td><td>{hit_:.1f}%</td>'
