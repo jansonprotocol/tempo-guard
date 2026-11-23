@@ -1,0 +1,94 @@
+# Ship what a working session pushes: merge it into main, render the
+# board, publish it to the `site` branch and on to GitHub Pages.
+#
+# WHY (the bettor, 23 Nov: "whenever we push and commit something here
+# together, it reached the pages directly without any extra actions").
+# A session's work used to stop at its own branch: someone had to open a
+# pull request and merge it, and the page then waited for whichever job
+# rendered next. Now a push to a session branch (claude/...) is merged
+# into main here, and a push to main that touches the code is rendered
+# and published here, so the change is live a few minutes after the push.
+#
+# THE MERGE NEVER FORCES. A plain merge of the session branch into main;
+# if the two truly conflict, the job fails and says so, and nothing is
+# pushed. Pushes made by the jobs themselves (with the job token) start
+# no workflow, so this can never loop on its own output.
+name: ship (session push to the live page)
+
+on:
+  push:
+    branches:
+      - "claude/**"
+      - main
+    paths:
+      - "backend/**"
+      - "config/team_aliases.json"
+      - "config/club_nicknames.tsv"
+      - ".github/**"
+      - "CLAUDE.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write               # publish-site.sh starts the Pages deploy
+
+concurrency:
+  group: ship
+  cancel-in-progress: false
+
+jobs:
+  ship:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r backend/requirements.txt
+      - name: merge the session branch into main
+        if: github.ref_name != 'main'
+        run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          git fetch origin "${{ github.ref_name }}"
+          if ! git merge --no-edit "origin/${{ github.ref_name }}"; then
+            echo "::error::${{ github.ref_name }} conflicts with main — merge it by hand"
+            git merge --abort || true
+            exit 1
+          fi
+      - name: render, commit and publish
+        run: |
+          git config user.name  "tempo-guard bot"
+          git config user.email "noreply@anthropic.com"
+          (cd backend && python scripts/board.py --allow-stale) || \
+            echo "::error::the render failed — see above; the code is merged anyway"
+          git add -A config README.md web/live.json
+          git diff --cached --quiet || \
+            git commit -q -m "ship: render after ${{ github.ref_name }} $(date -u '+%Y-%m-%d %H:%M') UTC"
+          # The sweep pushes main every few minutes, so a refused push is
+          # answered the way every other job answers one: merge what it
+          # pushed and try again. Never a force push.
+          for try in $(seq 1 8); do
+            if git push origin HEAD:main; then
+              echo "pushed on try $try"
+              bash .github/publish-site.sh "site: ship $(date -u '+%Y-%m-%d %H:%M') UTC" || \
+                echo "::warning::site publish failed; the next job publishes"
+              exit 0
+            fi
+            git fetch origin main
+            git merge -X ours --no-edit origin/main || {
+              for f in $(git diff --name-only --diff-filter=U); do
+                git checkout --ours -- "$f" || git checkout MERGE_HEAD -- "$f"
+                git add "$f"
+              done
+              git commit -q --no-edit
+            }
+            sleep $((RANDOM % 15 + 5))
+          done
+          echo "::error::could not push to main after 8 tries"; exit 1
