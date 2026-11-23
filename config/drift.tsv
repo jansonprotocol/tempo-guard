@@ -4,39 +4,36 @@
 # must not move on its own, or an improvement cannot be told from a
 # ruler that shifted. A flag is an invitation to look, not a verdict.
 # thresholds: label 2 points, side 2 points, bar 0.02, floor 200 cards
-# written	2026-11-21
+# written	2026-11-23
 # check	subject	n	measured	code_says	delta	flag
 label	green+	619	92.89	92.10	0.79	0
-label	green	9072	88.24	88.00	0.24	0
-label	orange	15182	83.66	82.90	0.76	0
-label	released	262	81.68	80.90	0.78	0
-label	pink	6396	78.16	78.30	-0.14	0
-label	super red	264	75.00	77.05	-2.05	1
-label	red	1652	74.03	75.70	-1.67	0
-side	claim 70-76: over vs under	1954	76.91	73.86	3.05	1
-side	claim 76-80: over vs under	6260	78.84	77.11	1.73	0
-side	claim 80-85: over vs under	14882	82.71	83.74	-1.03	0
-side	claim 85-90: over vs under	8853	89.53	87.79	1.74	0
-ladder	green+ over green	9691	92.89	88.24	4.65	0
-ladder	green over orange	24254	88.24	83.66	4.58	0
-ladder	orange over pink	21578	83.66	78.16	5.50	0
-bar	85+ at 1.14	514	-0.02	0.58	-0.05	1
-bar	80–85 at 1.18	1686	-1.86	-1.60	-0.09	1
-bar	75–80 at 1.31	663	-0.81	1.98	-0.04	1
-strong	star at +6.34 vs the rest	50	70.00	74.75	-4.75	1
-strong	star ROI vs the rest	50	-10.92	-1.99	-8.93	1
+label	green	9087	88.22	88.00	0.22	0
+label	orange	15218	83.64	82.90	0.74	0
+label	released	268	80.60	80.90	-0.30	0
+label	pink	6406	78.11	78.30	-0.19	0
+label	super red	272	75.37	77.05	-1.68	0
+label	red	1650	73.94	75.70	-1.76	0
+side	claim 70-76: over vs under	1957	77.00	73.64	3.37	1
+side	claim 76-80: over vs under	6271	78.82	77.04	1.78	0
+side	claim 80-85: over vs under	14915	82.65	83.74	-1.09	0
+side	claim 85-90: over vs under	8864	89.38	87.80	1.58	0
+ladder	green+ over green	9706	92.89	88.22	4.67	0
+ladder	green over orange	24305	88.22	83.64	4.58	0
+ladder	orange over pink	21624	83.64	78.11	5.53	0
+bar	85+ at 1.14	508	-0.03	0.55	-0.05	1
+bar	80–85 at 1.18	1681	-1.86	-1.64	-0.09	1
+bar	75–80 at 1.31	656	-1.05	1.82	-0.04	1
+strong	star at +6.34 vs the rest	49	69.39	74.28	-4.89	0
+strong	star ROI vs the rest	49	-11.76	-2.63	-9.12	0
 cell	SUI-SL unders	183	76.50	83.23	-6.73	0
-cell	NOR-EL unders	203	78.82	84.03	-5.22	0
-cell	SWE-AL overs	204	75.98	80.04	-4.06	0
+cell	NOR-EL unders	207	78.74	83.98	-5.23	0
 cell	SCO-L2 unders	164	85.37	81.30	4.07	0
 cell	CRO-1L unders	268	90.30	86.15	4.15	0
-cell	NED-ED overs	260	88.46	84.22	4.24	0
-cell	BEL-PL overs	214	83.64	79.36	4.29	0
 cell	SUI-SL overs	258	86.05	81.64	4.40	0
-cell	ESP-LL unders	376	85.90	81.44	4.46	0
 cell	SCO-L1 unders	233	89.70	85.20	4.50	0
+cell	ESP-LL unders	378	85.98	81.44	4.54	0
 cell	UCL overs	268	84.70	79.92	4.78	0
-cell	TUR-SL unders	439	89.07	84.07	4.99	0
-cell	COL-PA unders	364	90.93	85.91	5.02	0
-cell	ESP-LL overs	178	83.71	78.65	5.06	0
-cell	INT-UEFA overs	155	87.10	80.42	6.67	0
+cell	TUR-SL unders	443	88.94	84.06	4.88	0
+cell	COL-PA unders	366	90.98	85.91	5.07	0
+cell	ESP-LL overs	181	83.98	78.72	5.26	0
+cell	INT-UEFA overs	155	87.10	80.42	6.68	0

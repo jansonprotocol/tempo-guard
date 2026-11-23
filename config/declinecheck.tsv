@@ -5,30 +5,30 @@
 # BANK rows are the bank in two halves by date and pooled.
 # verdict: separates = declined landed 2+ under kept; BACKWARDS = 2+ over;
 # thin = under 15 declined cards, not judged.
-# written	2026-11-21
+# written	2026-11-23
 # source	window	rule	n	hit	kept_n	kept	verdict
-board	21d	tier red	82	67.1	410	85.6	separates
-board	21d	live unsafe · athena	29	86.2	410	85.6	no separation
-board	21d	live unsafe · watch	0		410	85.6	thin
-board	21d	live unsafe · priced	57	87.7	410	85.6	BACKWARDS
-board	21d	strike combo	301	82.7	410	85.6	separates
-board	all	tier red	342	72.8	1679	84.5	separates
-board	all	live unsafe · athena	127	80.3	1679	84.5	separates
-board	all	live unsafe · watch	0		1679	84.5	thin
-board	all	live unsafe · priced	208	78.4	1679	84.5	separates
-board	all	strike combo	1051	79.4	1679	84.5	separates
-bank	A	tier red	877	74.5	14304	85.0	separates
-bank	A	live unsafe · athena	1081	76.4	14304	85.0	separates
-bank	A	live unsafe · watch	0		14304	85.0	thin
-bank	A	live unsafe · priced	459	73.6	14304	85.0	separates
-bank	A	strike combo	0		14304	85.0	thin
-bank	B	tier red	1039	73.9	14321	84.4	separates
-bank	B	live unsafe · athena	1139	73.0	14321	84.4	separates
-bank	B	live unsafe · watch	0		14321	84.4	thin
-bank	B	live unsafe · priced	227	70.0	14321	84.4	separates
-bank	B	strike combo	0		14321	84.4	thin
-bank	all	tier red	1916	74.2	28625	84.7	separates
-bank	all	live unsafe · athena	2220	74.7	28625	84.7	separates
-bank	all	live unsafe · watch	0		28625	84.7	thin
-bank	all	live unsafe · priced	686	72.4	28625	84.7	separates
-bank	all	strike combo	0		28625	84.7	thin
+board	21d	tier red	83	65.1	402	86.8	separates
+board	21d	live unsafe · athena	32	84.4	402	86.8	separates
+board	21d	live unsafe · watch	0		402	86.8	thin
+board	21d	live unsafe · priced	65	78.5	402	86.8	separates
+board	21d	strike combo	256	81.2	402	86.8	separates
+board	all	tier red	358	72.1	1888	84.9	separates
+board	all	live unsafe · athena	143	80.4	1888	84.9	separates
+board	all	live unsafe · watch	0		1888	84.9	thin
+board	all	live unsafe · priced	234	77.4	1888	84.9	separates
+board	all	strike combo	973	78.1	1888	84.9	separates
+bank	A	tier red	884	74.5	14240	85.0	separates
+bank	A	live unsafe · athena	1176	76.0	14240	85.0	separates
+bank	A	live unsafe · watch	0		14240	85.0	thin
+bank	A	live unsafe · priced	460	73.3	14240	85.0	separates
+bank	A	strike combo	0		14240	85.0	thin
+bank	B	tier red	1038	73.8	14249	84.4	separates
+bank	B	live unsafe · athena	1248	73.8	14249	84.4	separates
+bank	B	live unsafe · watch	0		14249	84.4	thin
+bank	B	live unsafe · priced	225	69.8	14249	84.4	separates
+bank	B	strike combo	0		14249	84.4	thin
+bank	all	tier red	1922	74.1	28489	84.7	separates
+bank	all	live unsafe · athena	2424	74.9	28489	84.7	separates
+bank	all	live unsafe · watch	0		28489	84.7	thin
+bank	all	live unsafe · priced	685	72.1	28489	84.7	separates
+bank	all	strike combo	0		28489	84.7	thin
