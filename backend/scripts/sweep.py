@@ -44,7 +44,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts import liveline
-from scripts.board import FIXTURES, OFF_MARK, load
+from scripts.board import FIXTURES, OFF_MARK, close_off, load
 from scripts.live_scores import ESPN
 
 # Cup codes ESPN serves under their own slugs; the qualifiers share the
@@ -584,7 +584,7 @@ def main() -> None:
                 # Saturday, 26 Sep. So the row is MARKED — still
                 # unsettled, still no score, feeding no tally — and the
                 # board holds it until the fixture is re-dated.
-                off = f"{OFF_MARK} {(detail or name.removeprefix('STATUS_').title())}"
+                off = close_off(detail or name.removeprefix('STATUS_').title())
                 if off != f.status:
                     _write_row(lines, f, f.tip2, off, f.tip3)
                     changed.append(f"{f.teams}: {off}  [ESPN {name}]")

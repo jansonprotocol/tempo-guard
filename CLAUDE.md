@@ -497,10 +497,19 @@ market offered, never as what he would have got.
     the same grader the sweep and the hand path use (extra time comes off
     the scoreline the same way, and a drift of more than a day is noted on
     the row as `[played <date>]`);
-  - **marks a fixture the feed says was postponed, cancelled or MOVED**
-    with the OFF mark (`PP Moved to <date>`): no result at this kickoff,
-    so it holds its place, unsettled, until a person re-dates it, and it
-    no longer rots. THE KICKOFF COLUMN IS NEVER REWRITTEN — a card's
+  - **closes a fixture the feed says was postponed, cancelled or MOVED**
+    as `FT — postponed (<why>), off the board until the fill re-adds it`
+    (13 Nov: "live watch board still holds a lot of postponed cards,
+    remove them. Automatic card filler will bring them back when a new
+    date has been given"). It used to be held unsettled under the `PP`
+    mark until a person re-dated it, which nobody did. Closed is settled:
+    off every pending tab, no tally, no hit rate, no ROI. The live sweep
+    does the same the moment ESPN says postponed, and the cleanup job
+    closes any row still held under the old mark. `feedslate._on_board`
+    ignores a closed row at any OTHER date, so the fill makes a fresh
+    card when the feed lists the match again; at its OWN date the closed
+    row still blocks, because the feed keeps listing a postponed match at
+    its old kickoff for a while. THE KICKOFF COLUMN IS NEVER REWRITTEN — a card's
     first-sight stamp is keyed on (date, fixture), so moving the date
     would orphan its locked lane, tier and band;
   - **parks what nothing carries at all** (nine board codes have no ESPN
