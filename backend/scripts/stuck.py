@@ -287,6 +287,21 @@ def main() -> None:
             else:
                 RECHECK_MAX = v
     fixtures = board.load()
+    # ROWS STILL HELD UNDER THE OLD PP MARK ARE CLOSED (13 Nov): before the
+    # postponed-card rule changed, a postponed row was held unsettled until
+    # a person re-dated it. Each one is closed here the same way a new one
+    # is, so the fill can bring the match back at its new date.
+    held_off = [f for f in fixtures if not f.settled and board.is_off(f.status)]
+    if held_off:
+        lines = board.FIXTURES.read_text().split("\n")
+        for f in held_off:
+            why = f.status[len(board.OFF_MARK):].strip() or "Postponed"
+            if write:
+                sweep._write_row(lines, f, f.tip2, board.close_off(why), f.tip3)
+            print(("closed " if write else "would close ") + f"{f.teams}: {why}")
+        if write:
+            board.FIXTURES.write_text("\n".join(lines))
+            fixtures = board.load()
     todo = stuck_cards(fixtures, hours)[:cap]
     again = recheck_cards(fixtures)
     if not todo and not again:
@@ -309,8 +324,7 @@ def main() -> None:
                 continue
             name = ev["status"]["type"].get("name") or ""
             if name in sweep.OFF_NAMES:
-                off = (f"{board.OFF_MARK} "
-                       f"{name.removeprefix('STATUS_').title()}")
+                off = board.close_off(name.removeprefix('STATUS_').title())
                 if write and not parked(f.status):
                     sweep._write_row(lines, f, f.tip2, off, f.tip3)
                 offed.append(f"{f.teams}: {off}")
@@ -324,7 +338,7 @@ def main() -> None:
             # stamp is keyed on (date, fixture), and moving the date would
             # orphan its locked lane, tier and band.
             when = (ev.get("date") or "")[:10]
-            off = f"{board.OFF_MARK} Moved to {when or '?'}"
+            off = board.close_off(f"moved to {when or '?'}")
             if write and f.status.strip() != off:
                 sweep._write_row(lines, f, f.tip2, off, f.tip3)
             moved.append(f"{f.teams}: {off} ({name or '?'})")

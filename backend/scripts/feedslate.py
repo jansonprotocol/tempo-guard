@@ -94,10 +94,18 @@ def _kickoff(commence: str) -> dt.datetime:
 
 def _on_board(code: str, home: str, away: str, day: dt.date, fixtures) -> bool:
     from scripts.liveline import same_club
+    from scripts.board import off_closed
     for f in fixtures:
         if f.code != code or " v " not in f.teams:
             continue
         fd = dt.date.fromisoformat(f.kickoff.split(" ")[0])
+        # A postponed row closed off the board does not block its re-add
+        # at a NEW date. At its own date it still counts as on the board:
+        # the feed keeps listing a postponed match at its old kickoff for
+        # a while, and re-adding it there would only be closed again by
+        # the next sweep, every two hours, as a fresh duplicate card.
+        if off_closed(f.status) and fd != day:
+            continue
         if abs((fd - day).days) > 1:
             continue
         h, a = (x.strip() for x in f.teams.split(" v ", 1))

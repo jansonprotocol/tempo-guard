@@ -53,6 +53,27 @@ def is_off(status: str) -> bool:
     return status.startswith(OFF_MARK)
 
 
+# A POSTPONED CARD LEAVES THE BOARD (the bettor, 13 Nov: "live watch board
+# still holds a lot of postponed cards, remove them. Automatic card filler
+# will bring them back when a new date has been given"). The OFF mark above
+# held a postponed row unsettled until a person re-dated it, which never
+# happened: 26 such rows sat on the pending tabs, the oldest a month old.
+# Now the row is CLOSED — "FT", so settled, off every pending tab, in no
+# tally, no hit rate and no ROI — and the fill makes a fresh card when the
+# feed lists the fixture at its new date (feedslate._on_board ignores a
+# closed row at any other date, so it cannot block the re-add).
+OFF_CLOSED = "FT — postponed"
+
+
+def off_closed(status: str) -> bool:
+    return (status or "").startswith(OFF_CLOSED)
+
+
+def close_off(why: str) -> str:
+    """The status a postponed, cancelled or moved row is closed with."""
+    return f"{OFF_CLOSED} ({why}), off the board until the fill re-adds it"
+
+
 # The rendered region: from the playable heading to the placed-bets heading.
 # The placed-bets table keeps its own shape (different data), and the header
 # span at the top of the page is rendered separately by render_header. Two
