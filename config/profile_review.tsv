@@ -4,39 +4,39 @@
 # board; 'release' puts a declined one back; 'hold' does nothing.
 # Bar: n>=30, >=10 a half, |ROI|>=5%, both halves one side of zero, |t|>=2.33.
 # group	side	band	n	hit	roi	half_a	half_b	t	label
-counted	O	10%+ under	197	86.8	-5.3	-3.9	-6.7	-2.01	hold
-counted	O	5–10% under	155	83.2	-7.0	-7.0	-7.0	-2.07	hold
+counted	O	10%+ under	199	86.9	-5.2	-3.8	-6.6	-1.97	hold
+counted	O	5–10% under	160	81.9	-8.5	-7.6	-9.3	-2.48	decline
 counted	O	3–5% under	14	100.0	+17.2	+18.6	+15.9	+18.01	hold
 counted	O	0–3% under	61	78.7	-2.4	+4.7	-9.2	-0.36	hold
 counted	O	0–3% over	0						hold
 counted	O	3–6% over	0						hold
-counted	O	6–10% over	29	89.7	+17.2	+4.2	+29.3	+2.28	hold
+counted	O	6–10% over	30	90.0	+17.6	+5.7	+29.5	+2.41	hold
 counted	O	10%+ over	0						hold
-counted	U	10%+ under	180	85.6	-6.6	-9.9	-3.3	-2.29	hold
-counted	U	5–10% under	540	85.6	-3.1	-2.5	-3.7	-1.79	hold
-counted	U	3–5% under	128	80.5	-8.1	-15.9	-0.4	-2.02	hold
-counted	U	0–3% under	205	86.3	+2.7	+0.6	+4.8	+0.93	hold
-counted	U	0–3% over	13	76.9	-3.7	-15.0	+6.0	-0.24	hold
-counted	U	3–6% over	42	81.0	+2.8	+14.3	-8.8	+0.36	hold
+counted	U	10%+ under	182	85.7	-6.5	-9.7	-3.2	-2.28	hold
+counted	U	5–10% under	544	85.7	-3.0	-2.4	-3.6	-1.75	hold
+counted	U	3–5% under	130	80.8	-7.8	-15.5	-0.2	-1.97	hold
+counted	U	0–3% under	209	86.6	+2.9	-0.2	+6.1	+1.04	hold
+counted	U	0–3% over	14	71.4	-10.6	-27.1	+6.0	-0.67	hold
+counted	U	3–6% over	44	79.5	+1.0	+14.8	-12.9	+0.12	hold
 counted	U	6–10% over	44	70.5	-5.5	+4.8	-15.9	-0.59	hold
 counted	U	10%+ over	0						hold
-rule	O	10%+ under	70	88.6	+0.1	-6.3	+6.6	+0.03	hold
-rule	O	5–10% under	56	87.5	+7.5	+9.6	+5.4	+1.36	hold
+rule	O	10%+ under	76	89.5	+1.1	-4.8	+7.0	+0.26	hold
+rule	O	5–10% under	59	86.4	+5.9	+10.0	+1.9	+1.07	hold
 rule	O	3–5% under	65	75.4	-6.7	-7.6	-5.8	-1.00	hold
-rule	O	0–3% under	66	72.7	-6.3	-10.1	-2.5	-0.88	hold
-rule	O	0–3% over	106	79.2	+2.1	+1.7	+2.5	+0.41	hold
-rule	O	3–6% over	95	75.8	-1.6	-10.5	+7.1	-0.28	hold
-rule	O	6–10% over	33	72.7	-4.9	+0.1	-9.6	-0.47	hold
-rule	O	10%+ over	55	63.6	+55.5	+122.4	-9.0	+1.50	hold
-rule	U	10%+ under	50	82.0	-0.8	+5.9	-7.5	-0.12	hold
-rule	U	5–10% under	76	81.6	+5.2	+1.7	+8.6	+0.89	hold
-rule	U	3–5% under	67	76.1	-5.3	-1.9	-8.5	-0.80	hold
-rule	U	0–3% under	80	81.2	+4.8	-6.2	+15.7	+0.83	hold
-rule	U	0–3% over	94	77.7	-2.8	-7.6	+2.1	-0.51	hold
+rule	O	0–3% under	68	73.5	-5.3	-8.9	-1.7	-0.76	hold
+rule	O	0–3% over	109	78.0	+0.5	+2.3	-1.3	+0.09	hold
+rule	O	3–6% over	98	76.5	-0.7	-8.7	+7.4	-0.12	hold
+rule	O	6–10% over	35	74.3	-3.1	+2.2	-8.1	-0.31	hold
+rule	O	10%+ over	56	62.5	+52.7	+119.0	-13.6	+1.45	hold
+rule	U	10%+ under	53	79.2	-4.1	+6.8	-14.6	-0.60	hold
+rule	U	5–10% under	79	81.0	+4.5	+2.5	+6.5	+0.78	hold
+rule	U	3–5% under	68	76.5	-4.9	-1.4	-8.5	-0.76	hold
+rule	U	0–3% under	83	80.7	+4.2	-5.0	+13.1	+0.73	hold
+rule	U	0–3% over	94	78.7	-1.4	-4.8	+2.0	-0.26	hold
 rule	U	3–6% over	63	81.0	+8.0	+11.6	+4.5	+1.19	hold
 rule	U	6–10% over	66	77.3	+6.6	+7.6	+5.6	+0.92	hold
 rule	U	10%+ over	117	73.5	+8.3	+6.4	+10.3	+1.33	hold
-red	O	10%+ under	18	88.9	-0.8	-0.9	-0.8	-0.10	hold
+red	O	10%+ under	19	89.5	+0.2	-0.9	+1.2	+0.03	hold
 red	O	5–10% under	29	69.0	-14.2	-9.1	-19.0	-1.31	hold
 red	O	3–5% under	20	70.0	-9.5	-21.8	+2.7	-0.70	hold
 red	O	0–3% under	22	86.4	+14.0	+32.3	-4.3	+1.41	hold
@@ -44,12 +44,12 @@ red	O	0–3% over	11	63.6	-14.9	-19.8	-10.8	-0.73	hold
 red	O	3–6% over	4	75.0	+2.8	-32.0	+37.5	+0.08	hold
 red	O	6–10% over	1	100.0	+40.0		+40.0		hold
 red	O	10%+ over	5	40.0	-31.8	-15.0	-43.0	-0.76	hold
-red	U	10%+ under	35	62.9	-24.7	-23.4	-25.9	-2.47	hold
-red	U	5–10% under	42	73.8	-3.5	+1.0	-7.9	-0.38	hold
+red	U	10%+ under	37	62.2	-25.5	-20.8	-30.0	-2.63	hold
+red	U	5–10% under	43	72.1	-5.7	+1.0	-12.1	-0.63	hold
 red	U	3–5% under	10	70.0	-6.4	+6.0	-18.8	-0.31	hold
 red	U	0–3% under	26	61.5	-14.6	-5.5	-23.8	-1.08	hold
 red	U	0–3% over	11	54.5	-25.4	+11.2	-55.8	-1.18	hold
-red	U	3–6% over	8	37.5	-47.6	-66.8	-28.5	-1.86	hold
+red	U	3–6% over	9	44.4	-37.0	-66.8	-13.2	-1.48	hold
 red	U	6–10% over	7	57.1	-6.4	-30.3	+11.5	-0.23	hold
 red	U	10%+ over	7	71.4	+17.6	+16.0	+18.8	+0.57	hold
 super red	O	10%+ under	5	100.0	+15.4	+18.0	+13.7	+11.00	hold
