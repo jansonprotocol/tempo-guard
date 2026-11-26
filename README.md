@@ -6,9 +6,9 @@
 ## CURRENT CONFIRMED HITRATE: 85.3%
 
     lane                        Tip 1              Tip 2
-    all matches            1511 / 1771  85.3%    983 / 1389  70.8%
-    played lanes  >+1%     526 / 622  84.6%    978 / 1381  70.8%
-    placed bets            280 / 360  77.8%    ROI -0.5%
+    all matches            1512 / 1772  85.3%    984 / 1390  70.8%
+    played lanes  >+1%     527 / 623  84.6%    979 / 1382  70.8%
+    placed bets            281 / 361  77.8%    ROI -0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
 
@@ -121,7 +121,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 1504 / 2003   ·   75.1%**   ·   **Tip 1 — 526 / 622   ·   84.6%**   ·   **Tip 2 — 978 / 1381   ·   70.8%**
+**Playable — 1506 / 2005   ·   75.1%**   ·   **Tip 1 — 527 / 623   ·   84.6%**   ·   **Tip 2 — 979 / 1382   ·   70.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.5 −3.7)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.6 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3291,7 +3291,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 3-1 · 26-11 02:30 <b>Atlético Nacional v Independiente Medellín</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (88.2 capped)</td><td>— under +1%</td><td>❌ <b>Independiente Medellín O1.5</b> 61.5% +36.2%<br>buy≥1.68 (+3.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 26-11 04:10 <b>Monterrey v América</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.5 capped)</td><td>— under +1%</td><td>❌ <b>América O1.5</b> 59.6% +24.1%<br>buy≥1.73 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 78.9% +4.4% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 26-11 15:25 <b>Al-Fateh v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.26 (+8.5% margin)</td><td>✅ U3.75 73.0% +7.4%<br>buy≥1.32 (+4.1% margin) · floor −2.0</td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 0-1 <b>Abha Club v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 85.2% +3.0%<br>buy≥1.25 (+4.8% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td><b>Al-Shabab O0.5</b> 80.4% +7.8%<br>buy≥1.30 (+4.5% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 26-11 16:05 <b>Abha Club v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 85.2% +3.0%<br>buy≥1.25 (+4.8% margin)</td><td>✅ <b>Al-Shabab O0.5</b> 80.4% +7.8%<br>buy≥1.30 (+4.5% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-11 18:30 <b>Al-Faisaly KSA FC v Diriyah Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.26 (+8.5% margin)</td><td>U3.75 72.5% +6.9%<br>buy≥1.33 (+4.1% margin) · floor −2.5</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-11 18:45 <b>Ajax v FC Thun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>— under +1%</td><td>O1.75 76.9% +1.5%<br>buy≥1.36 (+1.1% margin) · floor −5.1</td></tr></table>
 <table align="left"><tr><th align="left">🟢 26-11 18:45 <b>FK Jablonec v FC Lugano</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>U4.25 87.4% +1.3%<br>buy≥1.22 (+5.3% margin)</td><td>U3.75 73.0% +1.9%<br>buy≥1.28 (+0.9% margin) · floor −9.0</td></tr></table>
@@ -3602,8 +3602,7 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+4' 0-1 <b>Abha Club v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 85.2% +3.0%<br>buy≥1.25 (+4.8% margin)<br><i>U4.25 holding · room for 3 · half from the 3rd · as good as landed</i></td><td><b>Al-Shabab O0.5</b> 80.4% +7.8%<br>buy≥1.30 (+4.5% margin) · team · <i>✓ landed</i></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 72' 1-0 <b>FC Kairat v Mjällby AIF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
+<table align="left"><tr><th align="left">🔴 LIVE 75' 1-0 <b>FC Kairat v Mjällby AIF</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-11 18:30 <b>Al-Faisaly KSA FC v Diriyah Club</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.26 (+8.5% margin)</td><td>U3.75 72.5% +6.9%<br>buy≥1.33 (+4.1% margin) · floor −2.5</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-11 18:45 <b>Ajax v FC Thun</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>U4.25 81.2% <b>−4.9%</b><br>buy≥1.27 (+1.3% margin)</td><td>O1.75 76.9% +1.5%<br>buy≥1.36 (+1.1% margin) · floor −5.1</td></tr></table>
 <table align="left"><tr><th align="left">🔵 26-11 18:45 <b>Brighton and Hove Albion v Universitatea Craiova</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Conference League (86.4 +0.7)</td><td>— no tip: engine abstained (thin history or an unresolved name)</td><td>—</td></tr></table>
@@ -3954,7 +3953,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1511 / 1771   ·   85.3%**   ·   **Tip 2 — 983 / 1389   ·   70.8%**
+**Tip 1 — 1512 / 1772   ·   85.3%**   ·   **Tip 2 — 984 / 1390   ·   70.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.5 −3.7)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (88.2 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -7855,12 +7854,13 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 3-1 · 26-11 02:30 <b>Atlético Nacional v Independiente Medellín</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Primera A (88.2 capped)</td><td>O1.5 0.0% <b>−59.1%</b><br>buy≥0.04 (−100.0% margin)</td><td>❌ <b>Independiente Medellín O1.5</b> 61.5% +36.2%<br>buy≥1.68 (+3.3% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">❌ 0-0 · 26-11 04:10 <b>Monterrey v América</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.5 capped)</td><td>O1.5 77.7% <b>+0.0%</b><br>buy≥1.21 (+2.0% margin)</td><td>❌ <b>América O1.5</b> 59.6% +24.1%<br>buy≥1.73 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ❌ 12 78.9% +4.4% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-0 · 26-11 15:25 <b>Al-Fateh v Al-Riyadh</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 86.0% +3.8%<br>buy≥1.26 (+8.5% margin)</td><td>✅ U3.75 73.0% +7.4%<br>buy≥1.32 (+4.1% margin) · floor −2.0</td></tr></table>
+<table align="left"><tr><th align="left">✅ 0-1 · 26-11 16:05 <b>Abha Club v Al-Shabab</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 85.2% +3.0%<br>buy≥1.25 (+4.8% margin)</td><td>✅ <b>Al-Shabab O0.5</b> 80.4% +7.8%<br>buy≥1.30 (+4.5% margin) · team</td></tr></table>
 
 <br clear="all">
 
 ### 🟡 Actual placed bets
 
-**Settled: 280 / 360  ·  ROI -0.5%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
+**Settled: 281 / 361  ·  ROI -0.4%  ·  flat stakes** — settled through real settlement fractions by the ledger; a push or half-win counts as a hit, a half-loss does not. Notes travel with the bet in `config/bets.tsv`.
 
 | Result | Fixture | Lane | Odds | Return | Note |
 |---|---|---|---|---|---|
@@ -8218,7 +8218,7 @@ that premium the book is keeping the insurance money.
 | ✅ | Platense v Central Córdoba | U3.5 | 1.23 | 1.23x | Unibet — pre-kickoff, one of four €1 singles in a 1 Nov coupon, for 2 Nov 23:00. Card prints U3.0, bought as U3.5 — card's own side, no wrong lane. Claim 87.6%, green, ★ STRONG at first sight (1.18 at 1xBet, 0-3% under the 1.193 bar). Buy bar ★ STRONG on U3.5 1.17 (90.5% on 21) — cleared. League: ARG-PD thin (6). WON: 2-0. |
 | ✅ | Internacional v Coritiba | U3.5 | 1.35 | 1.35x | Unibet — pre-kickoff, one of four €1 singles in a 1 Nov coupon, for 4 Nov 01:30. Card prints U3.0, bought as U3.5 — card's own side, no wrong lane. Claim 81.7%, orange, ★ STRONG at first sight (1.38 at 1xBet, 0-3% over the 1.377 bar). Buy bar ★ STRONG on U3.5 1.17 — cleared. League: BRA-SA thin (2). WON: 1-0. |
 | ✅ | Flamengo v Grêmio | U4.5 | 1.28 | 1.28x | Unibet — pre-kickoff, one of four €1 singles in a 1 Nov coupon, for 4 Nov 23:30. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 82.9%, orange, MILD at first sight (1.28 at Unibet (NL), 6-10% over the 1.203 bar). Buy bar MILD on U4.5 1.45 (72.7% on 11); 1.28 is under it, and MILD · 6-10% over is the weakest cell on the page. League: BRA-SA in MILD, 0 games yet. |
-| — open | Abha Club v Al-Shabab | U4.5 | 1.20 | — | Unibet — pre-kickoff, one of four €1 singles in a 1 Nov coupon, for 5 Nov 16:10. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 86.0%, green, ★ STRONG at first sight (1.22 at Unibet (SE), 0-3% under the 1.222 bar). Buy bar ★ STRONG on U4.5 now 1.30; 1.20 is under it. THE BOARD MARKS THIS FIXTURE POSTPONED (ESPN) while Unibet still lists it open for 5 Nov 16:10: if it is played, the cleanup job grades it; if not, the bet is void at the book. |
+| ✅ | Abha Club v Al-Shabab | U4.5 | 1.20 | 1.20x | Unibet — pre-kickoff, one of four €1 singles in a 1 Nov coupon, for 5 Nov 16:10. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 86.0%, green, ★ STRONG at first sight (1.22 at Unibet (SE), 0-3% under the 1.222 bar). Buy bar ★ STRONG on U4.5 now 1.30; 1.20 is under it. THE BOARD MARKS THIS FIXTURE POSTPONED (ESPN) while Unibet still lists it open for 5 Nov 16:10: if it is played, the cleanup job grades it; if not, the bet is void at the book. |
 | ❌ | Banfield v Atlético Tucuman | U3.5 | 1.25 | 0.00x | Unibet — pre-kickoff, €1 of a two-single coupon, for 8 Nov 01:00. Card prints U3.0, bought as U3.5 — card's own side, no wrong lane. Claim 85.5%, green, ★ STRONG at first sight (1.22 at Unibet (SE), 0-3% over the 1.212 bar). Buy bar ★ STRONG on U3.5 1.17 — cleared. League: ARG-PD thin (7). |
 | ✅ | Central Córdoba v Lanus | U3.5 | 1.21 | 1.21x | Unibet — pre-kickoff, €1 of a two-single coupon, for 8 Nov 01:00. Card prints U3.0, bought as U3.5 — card's own side, no wrong lane. Claim 85.5%, green, ★ STRONG at first sight (1.20 at Unibet (SE), 0-3% under the 1.212 bar). Buy bar ★ STRONG on U3.5 1.17 — cleared. League: ARG-PD thin (7). |
 | ❌ | VfL Bochum v Karlsruher SC | U4.5 | 1.26 | 0.00x | Unibet — pre-kickoff, coupon 13305337419, struck 1 Nov 18:47 CET for 8 Nov 13:30. Card prints U4.25, bought as U4.5 — card's own side, no wrong lane. Claim 84.6%, orange; first sight 1.25 at LeoVegas (SE), 3-6% over the 1.203 bar, but fewer than seven rates and under its tier's floor — an untiered play, which reads as WEAK and is DECLINED, so it carries no buy bar. League: GER-B2 thin (1). |
