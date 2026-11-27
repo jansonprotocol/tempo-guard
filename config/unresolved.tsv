@@ -3,13 +3,6 @@
 # A fix is an alias in config/team_aliases.json where the club is stored under another
 # spelling, or nothing at all where the league has no store — then there is no history
 # to price it with and the refusal is the right answer.
-# as of 2026-11-26 15:06 UTC
+# as of 2026-11-27 14:58 UTC
 # code	fixture	why
 GRE-SL	AE Kifisia FC v Kalamata FC	away name unresolved
-UECL	FC Iberia 1999 v Getafe	home name unresolved
-UECL	FK Kauno Žalgiris v Riga FC	home name unresolved
-UECL	KF Egnatia v Lincoln Red Imps FC	home name unresolved
-UECL	Inter Club d'Escaldes v FC Copenhagen	home name unresolved
-UECL	Gent v Red Star Belgrade	away name unresolved
-UEL	Torreense v Celtic	home name unresolved
-UEL	Juventus v Omonoia FC	away name unresolved
