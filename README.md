@@ -6,8 +6,8 @@
 ## CURRENT CONFIRMED HITRATE: 85.2%
 
     lane                        Tip 1              Tip 2
-    all matches            1517 / 1780  85.2%    987 / 1396  70.7%
-    played lanes  >+1%     531 / 629  84.4%    982 / 1388  70.7%
+    all matches            1518 / 1781  85.2%    988 / 1397  70.7%
+    played lanes  >+1%     532 / 630  84.4%    983 / 1389  70.8%
     placed bets            281 / 361  77.8%    ROI -0.4%
 
 **All matches** is the engine: every fixture priced, bet or not. **Played lanes** is the same count over the lanes with real edge — what was buyable, tracked in its own block below. **Placed bets** is the book. Rendered by `python scripts/board.py` from `config/fixtures.tsv`, never typed · over/under markets only · live tips, not backtests
@@ -121,7 +121,7 @@ that premium the book is keeping the insurance money.
 > [!TIP]
 > The block the bankroll follows: every lane carrying an edge above **+1%**, Tip 1 and Tip 2 alike. A tip at zero edge is the base rate wearing a probability — measured over 7,576 tips, lanes under +1% stated edge returned +0.3 points of real edge against +1.7 to +4.3 for everything above. A cell below the threshold says so instead of hiding; the counter counts lanes, not cards.
 
-**Playable — 1513 / 2017   ·   75.0%**   ·   **Tip 1 — 531 / 629   ·   84.4%**   ·   **Tip 2 — 982 / 1388   ·   70.7%**
+**Playable — 1515 / 2019   ·   75.0%**   ·   **Tip 1 — 532 / 630   ·   84.4%**   ·   **Tip 2 — 983 / 1389   ·   70.8%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.5 −3.7)</td><td>— under +1%</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-0 · 02-09 12:00 <b>Cerezo Osaka v Kashiwa</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>J1 League (90.6 +2.0)</td><td>— under +1%</td><td>✅ O1.75 78.1% +5.6%<br>buy≥1.39 (+4.3% margin) · floor −3.9</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 75.9% +2.5% · buy≥1.38 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3310,7 +3310,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">✅ 2-3 · 26-11 21:00 <b>Doncaster Rovers v Huddersfield Town</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>League One (80.3 −2.8)</td><td>O1.5 77.7% +4.2%<br>buy≥1.38 (+7.5% margin)</td><td>✅ <b>Huddersfield Town O1.5</b> 59.8% +26.7%<br>buy≥1.72 (+3.2% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 79.1% +3.9% · buy≥1.33 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">❌ 3-1 · 27-11 00:00 <b>Sao Paulo v Remo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 77.5% +2.4%<br>buy≥1.47 (+5.5% margin)</td><td>❌ U2.75 56.5% +3.0%<br>buy≥1.58 (−0.3% margin) · floor −18.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-4 · 27-11 04:10 <b>León v Cruz Azul</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.5 capped)</td><td>— under +1%</td><td>✅ <b>Cruz Azul O0.5</b> 79.2% +8.8%<br>buy≥1.35 (+6.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 77.3% +2.8% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-1 <b>Al-Kholood v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 83.4% +1.2%<br>buy≥1.26 (+3.5% margin)<br><i>U4.25 holding · room for 1 · half from the 1st · 98% · fair 1.02</i></td><td><b>Al-Kholood O0.5</b> 80.4% +2.7%<br>buy≥1.26 (+1.2% margin) · team · <i>✓ landed</i></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 27-11 13:15 <b>Al-Kholood v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 83.4% +1.2%<br>buy≥1.26 (+3.5% margin)</td><td>✅ <b>Al-Kholood O0.5</b> 80.4% +2.7%<br>buy≥1.26 (+1.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-11 15:20 <b>Al-Qadsiah v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>O1.5 83.2% +3.7%<br>buy≥1.28 (+6.6% margin)</td><td><b>Al-Qadsiah O1.5</b> 60.8% +16.0%<br>buy≥1.70 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.8% +24.5% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-11 18:00 <b>Raków Częstochowa v Piast Gliwice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.3 −5.3)</td><td>O1.5 79.2% +3.2%<br>buy≥1.33 (+5.5% margin)</td><td><b>Piast Gliwice O0.5</b> 79.0% +8.6%<br>buy≥1.38 (+8.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.1% +3.5% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🟢 27-11 18:00 <b>Alanyaspor v Torku Konyaspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (87.4 −1.0)</td><td>— under +1%</td><td>U3.75 77.6% +9.3%<br>buy≥1.28 (+6.2% margin) · floor −4.4</td></tr><tr><td colspan="3"><sub>Tip 3 · 1X 73.7% +2.7% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3614,7 +3614,6 @@ that premium the book is keeping the insurance money.
 > [!NOTE]
 > Every fixture Athena has priced that has not finished, playable or not — this and the completed block are the ENGINE's record. The typed source is `config/fixtures.tsv`; grade a fixture there and re-render with `python scripts/board.py`. The numbers after each league are its **(hit gap)** over its last 200 replayed matches — read the gap before trusting a row.
 
-<table align="left"><tr><th align="left">🔴 LIVE 90'+7' 2-1 <b>Al-Kholood v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 83.4% +1.2%<br>buy≥1.26 (+3.5% margin)<br><i>U4.25 holding · room for 1 · half from the 1st · 98% · fair 1.02</i></td><td><b>Al-Kholood O0.5</b> 80.4% +2.7%<br>buy≥1.26 (+1.2% margin) · team · <i>✓ landed</i></td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-11 15:20 <b>Al-Qadsiah v Al-Fayha</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>O1.5 83.2% +3.7%<br>buy≥1.28 (+6.6% margin)</td><td><b>Al-Qadsiah O1.5</b> 60.8% +16.0%<br>buy≥1.70 (+3.3% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · DNB1 79.8% +24.5% · buy≥1.32 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-11 18:00 <b>Raków Częstochowa v Piast Gliwice</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Ekstraklasa (80.3 −5.3)</td><td>O1.5 79.2% +3.2%<br>buy≥1.33 (+5.5% margin)</td><td><b>Piast Gliwice O0.5</b> 79.0% +8.6%<br>buy≥1.38 (+8.9% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · 12 77.1% +3.5% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
 <table align="left"><tr><th align="left">🔵 27-11 18:00 <b>Alanyaspor v Torku Konyaspor</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Süper Lig (87.4 −1.0)</td><td>U4.25 84.6% <b>+0.4%</b><br>buy≥1.18 (+6.1% margin)</td><td>U3.75 77.6% +9.3%<br>buy≥1.28 (+6.2% margin) · floor −4.4</td></tr><tr><td colspan="3"><sub>Tip 3 · 1X 73.7% +2.7% · buy≥1.43 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
@@ -3945,7 +3944,7 @@ that premium the book is keeping the insurance money.
 
 ## ⚪ Completed FUTURE match bettips
 
-**Tip 1 — 1517 / 1780   ·   85.2%**   ·   **Tip 2 — 987 / 1396   ·   70.7%**
+**Tip 1 — 1518 / 1781   ·   85.2%**   ·   **Tip 2 — 988 / 1397   ·   70.7%**
 
 <table align="left"><tr><th align="left">✅ 0-0 · 02-09 00:30 <b>Londrina v Juventude</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão Série B (83.5 −3.7)</td><td>U3.0 82.0% <b>+0.6%</b><br>buy≥1.33 (+3.5% margin)</td><td>✅ <b>Londrina U1.5</b> 75.0% +13.3%<br>buy≥1.39 (+4.2% margin) · team</td></tr></table>
 <table align="left"><tr><th align="left">✅ 1-2 · 02-09 03:00 <b>Fortaleza CEIF v Once Caldas</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Categoría Primera A (88.2 capped)</td><td>U4.25 86.0% <b>−5.3%</b><br>buy≥1.19 (+5.4% margin)</td><td>— none</td></tr></table>
@@ -7881,6 +7880,7 @@ that premium the book is keeping the insurance money.
 <table align="left"><tr><th align="left">❌ 3-1 · 27-11 00:00 <b>Sao Paulo v Remo</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Brasileirão (75.8 −5.5)</td><td>U3.0 77.5% +2.4%<br>buy≥1.47 (+5.5% margin)</td><td>❌ U2.75 56.5% +3.0%<br>buy≥1.58 (−0.3% margin) · floor −18.5</td></tr></table>
 <table align="left"><tr><th align="left">✅ 2-1 · 27-11 02:00 <b>Pachuca v Guadalajara</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.5 capped)</td><td>U4.25 83.4% <b>−0.7%</b><br>buy≥1.29 (+5.5% margin)</td><td>— none</td></tr></table>
 <table align="left"><tr><th align="left">✅ 0-4 · 27-11 04:10 <b>León v Cruz Azul</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Liga MX (80.5 capped)</td><td>O1.5 77.7% <b>+0.0%</b><br>buy≥1.24 (+2.0% margin)</td><td>✅ <b>Cruz Azul O0.5</b> 79.2% +8.8%<br>buy≥1.35 (+6.5% margin) · team</td></tr><tr><td colspan="3"><sub>Tip 3 · ✅ 12 77.3% +2.8% · buy≥1.36 · probation — result lane, outside every tally until it earns in</sub></td></tr></table>
+<table align="left"><tr><th align="left">✅ 2-1 · 27-11 13:15 <b>Al-Kholood v Al-Khaleej</b></th><th align="left">Tip 1</th><th align="left">Tip 2</th></tr><tr><td>Pro League (85.4 +0.7)</td><td>U4.25 83.4% +1.2%<br>buy≥1.26 (+3.5% margin)</td><td>✅ <b>Al-Kholood O0.5</b> 80.4% +2.7%<br>buy≥1.26 (+1.2% margin) · team</td></tr></table>
 
 <br clear="all">
 
